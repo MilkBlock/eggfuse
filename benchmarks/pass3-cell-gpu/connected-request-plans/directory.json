@@ -1,0 +1,871 @@
+{
+ "conjugate-gradient": {
+  "vanilla": {
+   "runs": 2896,
+   "rhs": 131371,
+   "ms": [
+    368.597041,
+    356.021959,
+    323.972166,
+    331.45925
+   ],
+   "median_ms": 343.7406045
+  },
+  "off": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 131371,
+   "neural_rhs": 131371,
+   "fresh": 97139,
+   "direct_cells": 97026,
+   "source_pass_rhs": 131371,
+   "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+   "wire_bytes": 6182696,
+   "root_row_decodes": 0,
+   "root_header_checks": 853372,
+   "owned_slot_transfers": 131371,
+   "raw": "10431860128350219007",
+   "emitted": [
+    243383,
+    83313
+   ],
+   "wire_hash": "6168948855503912532",
+   "commits": "ef8d551cdc8dc317259602b5552be49fdf83e415e69f8a16f6d58018e00cbb32",
+   "physical": "704047e92ded5214ed806cbfed9eeb7ca4aa1911d3cab455e005ec1df78893e8",
+   "multi": "cc1f53cfe0ac95a4f39d82de5595e7de19be4c96e42907893311b5cfdda75887",
+   "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+   "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+   "rejected": 0,
+   "root_allocated": 96535,
+   "applied": 131371,
+   "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+   "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+   "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+   "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+   "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+   "ms": [
+    623.183625,
+    706.680042,
+    642.899541,
+    601.1402919999999
+   ],
+   "counts": {
+    "approximate_visits": 407758,
+    "calls": 8494,
+    "committed": 57695,
+    "exhausted": 0,
+    "learned_pointers": 381563,
+    "peak_rule_tuples": 2283,
+    "point_reads": 37475,
+    "primitive_evals": 12928,
+    "raw_parent_rejects": 196,
+    "raw_root_slots": 189794,
+    "raw_tuples": 83313,
+    "rejected_pointers": 0,
+    "root_offers": 1920295,
+    "score_bucket_reads": 392920,
+    "shortlisted": 0,
+    "stale_candidates": 3814,
+    "table_rebuilds": 91,
+    "unsupported": 0,
+    "validated": 57695,
+    "verified_parent_tuples": 83117,
+    "visible_rows": 10593
+   },
+   "bridge": {
+    "active": {},
+    "audited_directory_reads": 0,
+    "cached": 0,
+    "cached_empty": 0,
+    "calls": 0,
+    "directory_misses": 0,
+    "directory_reads": 0,
+    "directory_reuses": 0,
+    "directory_rows": 0,
+    "found": 0,
+    "over_budget": 0,
+    "raw": 0,
+    "requests": 0,
+    "root_rows": 0,
+    "score_visits": 0
+   },
+   "finite_control_original_digest": "10431860128350219007",
+   "median_ms": 633.041583
+  },
+  "request": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 131371,
+   "neural_rhs": 131371,
+   "fresh": 97139,
+   "direct_cells": 97026,
+   "source_pass_rhs": 131371,
+   "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+   "wire_bytes": 6182696,
+   "root_row_decodes": 0,
+   "root_header_checks": 853372,
+   "owned_slot_transfers": 131371,
+   "raw": "8631291994695441933",
+   "emitted": [
+    243383,
+    83320
+   ],
+   "wire_hash": "17269674927358673813",
+   "commits": "a5de90be38bfaeafce4c63b25a2ddc3c0426bc4c613b5600ab1303e41882cfa2",
+   "physical": "de42dcc9e68bd7d1a891fc6d7aaa4144f0392426fad928bc30c6f65ebfad2f6e",
+   "multi": "d7c9fc49210bc21c06c93f479fda543b5e2baa69950c876e7b5874b60666ccc7",
+   "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+   "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+   "rejected": 0,
+   "root_allocated": 96535,
+   "applied": 131371,
+   "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+   "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+   "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+   "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+   "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+   "ms": [
+    628.1726669999999,
+    638.7669999999999,
+    636.8803750000001,
+    597.1426250000001
+   ],
+   "counts": {
+    "approximate_visits": 479323,
+    "calls": 8494,
+    "committed": 57695,
+    "exhausted": 0,
+    "learned_pointers": 453128,
+    "peak_rule_tuples": 2283,
+    "point_reads": 37489,
+    "primitive_evals": 12928,
+    "raw_parent_rejects": 189,
+    "raw_root_slots": 189815,
+    "raw_tuples": 83320,
+    "rejected_pointers": 0,
+    "root_offers": 1985214,
+    "score_bucket_reads": 451167,
+    "shortlisted": 0,
+    "stale_candidates": 3812,
+    "table_rebuilds": 91,
+    "unsupported": 0,
+    "validated": 57695,
+    "verified_parent_tuples": 83131,
+    "visible_rows": 10593
+   },
+   "bridge": {
+    "active": {
+     "312": [
+      4,
+      853
+     ],
+     "440": [
+      4,
+      7
+     ],
+     "441": [
+      4,
+      7
+     ],
+     "500": [
+      24,
+      0
+     ],
+     "504": [
+      43,
+      559
+     ],
+     "507": [
+      98,
+      2867
+     ]
+    },
+    "audited_directory_reads": 0,
+    "cached": 0,
+    "cached_empty": 0,
+    "calls": 177,
+    "directory_misses": 0,
+    "directory_reads": 0,
+    "directory_reuses": 0,
+    "directory_rows": 0,
+    "found": 123756,
+    "over_budget": 0,
+    "raw": 4293,
+    "requests": 182687,
+    "root_rows": 188090,
+    "score_visits": 123708
+   },
+   "median_ms": 632.526521
+  },
+  "memo": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 131371,
+   "neural_rhs": 131371,
+   "fresh": 97139,
+   "direct_cells": 97026,
+   "source_pass_rhs": 131371,
+   "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+   "wire_bytes": 6182696,
+   "root_row_decodes": 0,
+   "root_header_checks": 853372,
+   "owned_slot_transfers": 131371,
+   "raw": "8631291994695441933",
+   "emitted": [
+    243383,
+    83320
+   ],
+   "wire_hash": "17269674927358673813",
+   "commits": "a5de90be38bfaeafce4c63b25a2ddc3c0426bc4c613b5600ab1303e41882cfa2",
+   "physical": "de42dcc9e68bd7d1a891fc6d7aaa4144f0392426fad928bc30c6f65ebfad2f6e",
+   "multi": "d7c9fc49210bc21c06c93f479fda543b5e2baa69950c876e7b5874b60666ccc7",
+   "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+   "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+   "rejected": 0,
+   "root_allocated": 96535,
+   "applied": 131371,
+   "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+   "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+   "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+   "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+   "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+   "ms": [
+    649.7869579999999,
+    623.6733340000001,
+    650.116125,
+    600.955209
+   ],
+   "counts": {
+    "approximate_visits": 479323,
+    "calls": 8494,
+    "committed": 57695,
+    "exhausted": 0,
+    "learned_pointers": 453128,
+    "peak_rule_tuples": 2283,
+    "point_reads": 37489,
+    "primitive_evals": 12928,
+    "raw_parent_rejects": 189,
+    "raw_root_slots": 189815,
+    "raw_tuples": 83320,
+    "rejected_pointers": 0,
+    "root_offers": 1985214,
+    "score_bucket_reads": 451167,
+    "shortlisted": 0,
+    "stale_candidates": 3812,
+    "table_rebuilds": 91,
+    "unsupported": 0,
+    "validated": 57695,
+    "verified_parent_tuples": 83131,
+    "visible_rows": 10593
+   },
+   "bridge": {
+    "active": {
+     "312": [
+      4,
+      853
+     ],
+     "440": [
+      4,
+      7
+     ],
+     "441": [
+      4,
+      7
+     ],
+     "500": [
+      24,
+      0
+     ],
+     "504": [
+      43,
+      559
+     ],
+     "507": [
+      98,
+      2867
+     ]
+    },
+    "audited_directory_reads": 0,
+    "cached": 73101,
+    "cached_empty": 30007,
+    "calls": 177,
+    "directory_misses": 0,
+    "directory_reads": 0,
+    "directory_reuses": 0,
+    "directory_rows": 0,
+    "found": 123756,
+    "over_budget": 0,
+    "raw": 4293,
+    "requests": 109586,
+    "root_rows": 188090,
+    "score_visits": 123708
+   },
+   "median_ms": 636.730146
+  },
+  "directory": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 131371,
+   "neural_rhs": 131371,
+   "fresh": 97139,
+   "direct_cells": 97026,
+   "source_pass_rhs": 131371,
+   "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+   "wire_bytes": 6182696,
+   "root_row_decodes": 0,
+   "root_header_checks": 853372,
+   "owned_slot_transfers": 131371,
+   "raw": "8631291994695441933",
+   "emitted": [
+    243383,
+    83320
+   ],
+   "wire_hash": "17269674927358673813",
+   "commits": "a5de90be38bfaeafce4c63b25a2ddc3c0426bc4c613b5600ab1303e41882cfa2",
+   "physical": "de42dcc9e68bd7d1a891fc6d7aaa4144f0392426fad928bc30c6f65ebfad2f6e",
+   "multi": "d7c9fc49210bc21c06c93f479fda543b5e2baa69950c876e7b5874b60666ccc7",
+   "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+   "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+   "rejected": 0,
+   "root_allocated": 96535,
+   "applied": 131371,
+   "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+   "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+   "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+   "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+   "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+   "ms": [
+    679.513,
+    632.837,
+    668.997708,
+    597.311459
+   ],
+   "counts": {
+    "approximate_visits": 479323,
+    "calls": 8494,
+    "committed": 57695,
+    "exhausted": 0,
+    "learned_pointers": 453128,
+    "peak_rule_tuples": 2283,
+    "point_reads": 37489,
+    "primitive_evals": 12928,
+    "raw_parent_rejects": 189,
+    "raw_root_slots": 189815,
+    "raw_tuples": 83320,
+    "rejected_pointers": 0,
+    "root_offers": 1985214,
+    "score_bucket_reads": 451167,
+    "shortlisted": 0,
+    "stale_candidates": 3812,
+    "table_rebuilds": 91,
+    "unsupported": 0,
+    "validated": 57695,
+    "verified_parent_tuples": 83131,
+    "visible_rows": 10593
+   },
+   "bridge": {
+    "active": {
+     "312": [
+      4,
+      853
+     ],
+     "440": [
+      4,
+      7
+     ],
+     "441": [
+      4,
+      7
+     ],
+     "500": [
+      24,
+      0
+     ],
+     "504": [
+      43,
+      559
+     ],
+     "507": [
+      98,
+      2867
+     ]
+    },
+    "audited_directory_reads": 182687,
+    "cached": 0,
+    "cached_empty": 0,
+    "calls": 177,
+    "directory_misses": 58931,
+    "directory_reads": 182687,
+    "directory_reuses": 101,
+    "directory_rows": 48828,
+    "found": 123756,
+    "over_budget": 0,
+    "raw": 4293,
+    "requests": 0,
+    "root_rows": 188090,
+    "score_visits": 123708
+   },
+   "median_ms": 650.9173539999999
+  }
+ },
+ "3mm": {
+  "vanilla": {
+   "runs": 4260,
+   "rhs": 294917,
+   "ms": [
+    947.583667,
+    911.2084580000001,
+    835.2414580000001,
+    864.149416
+   ],
+   "median_ms": 887.678937
+  },
+  "off": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "neural_rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 20817600,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "7377151213120924531",
+   "emitted": [
+    845168,
+    220972
+   ],
+   "wire_hash": "15785836946056912275",
+   "commits": "efb7993f5a2133149ca81ae9aa479a8b8de7111be99d2fb0e1c7945d357c1fc8",
+   "physical": "78498066eae00dba42a33f18c2d215abfbe3b493e9e002e51087b4e74b283376",
+   "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    1912.2785,
+    1970.5842499999999,
+    1803.0909579999998,
+    1924.158916
+   ],
+   "counts": {
+    "approximate_visits": 1327608,
+    "calls": 11689,
+    "committed": 146965,
+    "exhausted": 0,
+    "learned_pointers": 1265810,
+    "peak_rule_tuples": 5350,
+    "point_reads": 104197,
+    "primitive_evals": 38655,
+    "raw_parent_rejects": 704,
+    "raw_root_slots": 526429,
+    "raw_tuples": 220972,
+    "rejected_pointers": 0,
+    "root_offers": 5121580,
+    "score_bucket_reads": 1414931,
+    "shortlisted": 0,
+    "stale_candidates": 13704,
+    "table_rebuilds": 86,
+    "unsupported": 0,
+    "validated": 146965,
+    "verified_parent_tuples": 220268,
+    "visible_rows": 29379
+   },
+   "bridge": {
+    "active": {},
+    "audited_directory_reads": 0,
+    "cached": 0,
+    "cached_empty": 0,
+    "calls": 0,
+    "directory_misses": 0,
+    "directory_reads": 0,
+    "directory_reuses": 0,
+    "directory_rows": 0,
+    "found": 0,
+    "over_budget": 0,
+    "raw": 0,
+    "requests": 0,
+    "root_rows": 0,
+    "score_visits": 0
+   },
+   "median_ms": 1918.2187079999999
+  },
+  "request": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "neural_rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 20817600,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "18060082570461632284",
+   "emitted": [
+    845168,
+    220962
+   ],
+   "wire_hash": "6479534112543401933",
+   "commits": "c86318eadae06969dc4865b76bfb83a462727c2da13dcb6adefccd2916ce4017",
+   "physical": "5150ccae2032a0e1201818f5a490dcec6b01bae2d3484dd5e082b6183dd71863",
+   "multi": "fc5efcd784deecf9998f68851c6a17aa7f8a20f29358d1f1da6c9f40a38f42d4",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    1997.3308749999999,
+    1929.150166,
+    1911.958625,
+    1901.8119580000002
+   ],
+   "counts": {
+    "approximate_visits": 1607492,
+    "calls": 11689,
+    "committed": 146965,
+    "exhausted": 0,
+    "learned_pointers": 1545694,
+    "peak_rule_tuples": 5350,
+    "point_reads": 104227,
+    "primitive_evals": 38655,
+    "raw_parent_rejects": 664,
+    "raw_root_slots": 526399,
+    "raw_tuples": 220962,
+    "rejected_pointers": 0,
+    "root_offers": 5351098,
+    "score_bucket_reads": 1622850,
+    "shortlisted": 0,
+    "stale_candidates": 13702,
+    "table_rebuilds": 86,
+    "unsupported": 0,
+    "validated": 146965,
+    "verified_parent_tuples": 220298,
+    "visible_rows": 29379
+   },
+   "bridge": {
+    "active": {
+     "312": [
+      7,
+      2373
+     ],
+     "440": [
+      7,
+      15
+     ],
+     "441": [
+      7,
+      15
+     ],
+     "504": [
+      54,
+      1598
+     ],
+     "507": [
+      125,
+      8364
+     ]
+    },
+    "audited_directory_reads": 0,
+    "cached": 0,
+    "cached_empty": 0,
+    "calls": 200,
+    "directory_misses": 0,
+    "directory_reads": 0,
+    "directory_reuses": 0,
+    "directory_rows": 0,
+    "found": 454818,
+    "over_budget": 0,
+    "raw": 12365,
+    "requests": 613362,
+    "root_rows": 629433,
+    "score_visits": 455562
+   },
+   "median_ms": 1920.5543954999998
+  },
+  "memo": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "neural_rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 20817600,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "18060082570461632284",
+   "emitted": [
+    845168,
+    220962
+   ],
+   "wire_hash": "6479534112543401933",
+   "commits": "c86318eadae06969dc4865b76bfb83a462727c2da13dcb6adefccd2916ce4017",
+   "physical": "5150ccae2032a0e1201818f5a490dcec6b01bae2d3484dd5e082b6183dd71863",
+   "multi": "fc5efcd784deecf9998f68851c6a17aa7f8a20f29358d1f1da6c9f40a38f42d4",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    2000.938375,
+    1983.205417,
+    1847.2401670000002,
+    1876.3634169999998
+   ],
+   "counts": {
+    "approximate_visits": 1607492,
+    "calls": 11689,
+    "committed": 146965,
+    "exhausted": 0,
+    "learned_pointers": 1545694,
+    "peak_rule_tuples": 5350,
+    "point_reads": 104227,
+    "primitive_evals": 38655,
+    "raw_parent_rejects": 664,
+    "raw_root_slots": 526399,
+    "raw_tuples": 220962,
+    "rejected_pointers": 0,
+    "root_offers": 5351098,
+    "score_bucket_reads": 1622850,
+    "shortlisted": 0,
+    "stale_candidates": 13702,
+    "table_rebuilds": 86,
+    "unsupported": 0,
+    "validated": 146965,
+    "verified_parent_tuples": 220298,
+    "visible_rows": 29379
+   },
+   "bridge": {
+    "active": {
+     "312": [
+      7,
+      2373
+     ],
+     "440": [
+      7,
+      15
+     ],
+     "441": [
+      7,
+      15
+     ],
+     "504": [
+      54,
+      1598
+     ],
+     "507": [
+      125,
+      8364
+     ]
+    },
+    "audited_directory_reads": 0,
+    "cached": 260452,
+    "cached_empty": 87087,
+    "calls": 200,
+    "directory_misses": 0,
+    "directory_reads": 0,
+    "directory_reuses": 0,
+    "directory_rows": 0,
+    "found": 454818,
+    "over_budget": 0,
+    "raw": 12365,
+    "requests": 352910,
+    "root_rows": 629433,
+    "score_visits": 455562
+   },
+   "median_ms": 1929.7844169999998
+  },
+  "directory": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "neural_rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 20817600,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "18060082570461632284",
+   "emitted": [
+    845168,
+    220962
+   ],
+   "wire_hash": "6479534112543401933",
+   "commits": "c86318eadae06969dc4865b76bfb83a462727c2da13dcb6adefccd2916ce4017",
+   "physical": "5150ccae2032a0e1201818f5a490dcec6b01bae2d3484dd5e082b6183dd71863",
+   "multi": "fc5efcd784deecf9998f68851c6a17aa7f8a20f29358d1f1da6c9f40a38f42d4",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    2110.7866249999997,
+    1983.924792,
+    1874.8630830000002,
+    1880.482292
+   ],
+   "counts": {
+    "approximate_visits": 1607492,
+    "calls": 11689,
+    "committed": 146965,
+    "exhausted": 0,
+    "learned_pointers": 1545694,
+    "peak_rule_tuples": 5350,
+    "point_reads": 104227,
+    "primitive_evals": 38655,
+    "raw_parent_rejects": 664,
+    "raw_root_slots": 526399,
+    "raw_tuples": 220962,
+    "rejected_pointers": 0,
+    "root_offers": 5351098,
+    "score_bucket_reads": 1622850,
+    "shortlisted": 0,
+    "stale_candidates": 13702,
+    "table_rebuilds": 86,
+    "unsupported": 0,
+    "validated": 146965,
+    "verified_parent_tuples": 220298,
+    "visible_rows": 29379
+   },
+   "bridge": {
+    "active": {
+     "312": [
+      7,
+      2373
+     ],
+     "440": [
+      7,
+      15
+     ],
+     "441": [
+      7,
+      15
+     ],
+     "504": [
+      54,
+      1598
+     ],
+     "507": [
+      125,
+      8364
+     ]
+    },
+    "audited_directory_reads": 613362,
+    "cached": 0,
+    "cached_empty": 0,
+    "calls": 200,
+    "directory_misses": 158544,
+    "directory_reads": 613362,
+    "directory_reuses": 95,
+    "directory_rows": 178749,
+    "found": 454818,
+    "over_budget": 0,
+    "raw": 12365,
+    "requests": 0,
+    "root_rows": 629433,
+    "score_visits": 455562
+   },
+   "median_ms": 1932.203542
+  }
+ }
+}
