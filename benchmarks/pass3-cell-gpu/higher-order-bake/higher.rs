@@ -29,6 +29,8 @@ struct Config {
     profile: bool,
     #[serde(default)]
     recycle: bool,
+    #[serde(default)]
+    transaction_batch: usize,
 }
 #[derive(Clone, Copy, Debug)]
 pub struct Request {
@@ -84,6 +86,28 @@ struct Layout {
     template: usize,
     arity: usize,
 }
+// Snapshot only an actually published row. The graph can mutate before the original
+// consumer reads it, so its captured source version is checked again at consumption.
+#[derive(Clone, Copy)]
+struct Event {
+    source: Dependency,
+    origin: Option<Origin>,
+    version: u64,
+    value: i64,
+}
+#[derive(Default)]
+struct Transactions {
+    limit: usize,
+    queue: Vec<Event>,
+    peak: usize,
+    reasons: [u64; 5],
+    lengths: Vec<u64>,
+    offered: u64,
+    completed: u64,
+    requests: u64,
+    requests_per_batch: Vec<u64>,
+    audit: Vec<(Dependency, u64, i64, Option<(usize, usize, usize, u64)>)>,
+}
 struct State {
     family: Family,
     table: usize,
@@ -93,6 +117,7 @@ struct State {
     recursive: bool,
     profile: bool,
     recycle: bool,
+    tx: Transactions,
     active: Option<Origin>,
     last_child: Option<(usize, Child)>,
     pending: FxHashMap<Dependency, Child>,
@@ -164,6 +189,9 @@ pub fn configure(p: &Program, data: Option<&[u8]>) -> Result<()> {
         return Ok(());
     };
     let c: Config = serde_json::from_slice(data).map_err(|e| e.to_string())?;
+    if c.transaction_batch > 32 {
+        return Err("maximum transaction capacity is 32".into());
+    }
     let f = c.family;
     let t = p
         .tables
@@ -241,6 +269,13 @@ pub fn configure(p: &Program, data: Option<&[u8]>) -> Result<()> {
             recursive: c.recursive,
             profile: c.profile,
             recycle: c.recycle,
+            tx: Transactions {
+                limit: c.transaction_batch,
+                queue: Vec::with_capacity(c.transaction_batch),
+                lengths: vec![0; 33],
+                requests_per_batch: vec![0; 33],
+                ..Default::default()
+            },
             active: None,
             last_child: None,
             pending: Default::default(),
@@ -367,82 +402,170 @@ pub fn publish(
         if table != s.table {
             return Ok(());
         }
-        if s.pending.remove(&w).is_some() {
-            s.counts[8] += 1;
-        }
-        if s.profile {
-            s.seen.remove(&w);
-        }
-        let Some(o) = origin else { return Ok(()) };
-        let version = g.visible_epoch(w).ok_or("missing published owner")?;
-        if s.profile {
-            s.seen.insert(w, (o, version));
-        }
-        if !o.admitted {
+        let version = if origin.is_some() {
+            g.visible_epoch(w).ok_or("missing published owner")?
+        } else {
+            0
+        };
+        let value = if origin.is_some_and(|o| o.admitted) {
+            match key.get(s.family.column) {
+                Some(Value::Int(v)) => *v,
+                _ => return Err("invalid published integer".into()),
+            }
+        } else {
+            0
+        };
+        let mut e = Event {
+            source: w,
+            origin,
+            version,
+            value,
+        };
+        s.tx.offered += 1;
+        s.tx.requests += u64::from(origin.is_some_and(|o| o.admitted));
+        if s.tx.limit == 0 {
+            validate(s, &mut e)?;
+            apply(s, e);
             return Ok(());
         }
-        let value = match key.get(s.family.column) {
-            Some(Value::Int(v)) => *v,
-            _ => return Err("invalid published integer".into()),
-        };
-        let mut depth = 1;
-        let inherited = o.inherited.and_then(|prior| {
-            let dec = s.parents[o.rid]
-                .iter()
-                .find(|(idx, _)| *idx == o.effect)?
-                .1?;
-            Some((prior, prior.value.wrapping_sub(dec)))
-        });
-        if let Some((prior, expected)) = inherited {
-            if expected != value {
-                return Err("inherited port disagrees with actual source return".into());
-            }
-            depth = prior.depth + 1;
-            s.counts[10] += 1;
-            // Only the greater branch can emit this checked subtraction, and its successful
-            // source Run has already advanced that consumer watermark to o.epoch. An immutable
-            // older constructor generation can no longer enable either exclusive branch.
-            if s.recycle
-                && prior.version < o.epoch
-                && s.pending
-                    .get(&prior.source)
-                    .is_some_and(|v| v.generation == prior.generation)
-            {
-                s.pending.remove(&prior.source);
-                s.counts[14] += 1;
-            }
+        if s.tx.queue.iter().any(|old| old.source == w) {
+            drain(s, 2)?;
         }
-        s.generation += 1;
-        s.counts[1] += 1;
-        s.counts[2
-            + usize::from(value >= s.family.threshold)
-            + usize::from(value > s.family.threshold)] += 1;
-        let c = Child {
-            root: o.ordinal,
-            serial: o.serial,
-            owner: o.owner,
-            producer: o.rid,
-            effect: o.effect,
-            issue: o.epoch,
-            version,
-            source: w,
-            value,
-            branch: if value == s.family.threshold {
-                1
-            } else if value > s.family.threshold {
-                2
-            } else {
-                0
-            },
-            depth,
-            generation: s.generation,
-        };
-        s.pending.insert(w, c);
-        s.peak = s.peak.max(s.pending.len());
-        s.peak_capacity = s.peak_capacity.max(s.pending.capacity());
-        s.depth = s.depth.max(depth);
+        s.tx.queue.push(e);
+        s.tx.peak = s.tx.peak.max(s.tx.queue.len());
+        if s.tx.queue.len() == s.tx.limit {
+            drain(s, 0)?;
+        }
         Ok(())
     })
+}
+fn drain(s: &mut State, reason: usize) -> Result<()> {
+    let n = s.tx.queue.len();
+    if n == 0 {
+        return Ok(());
+    }
+    s.tx.reasons[reason] += 1;
+    s.tx.lengths[n] += 1;
+    // Retain the fixed allocation. Applying events in source order is observable on
+    // replacement and on inherited-generation checks.
+    let mut queue = std::mem::take(&mut s.tx.queue);
+    let mut admitted = 0;
+    for e in &mut queue {
+        validate(s, e)?;
+        admitted += usize::from(e.origin.is_some_and(|o| o.admitted));
+    }
+    s.tx.requests_per_batch[admitted] += 1;
+    for e in queue.drain(..) {
+        apply(s, e);
+    }
+    s.tx.queue = queue;
+    Ok(())
+}
+pub fn barrier(reason: usize) -> Result<()> {
+    STATE.with_borrow_mut(|state| {
+        if let Some(s) = state {
+            drain(s, reason)
+        } else {
+            Ok(())
+        }
+    })
+}
+// Validate the entire immutable read set before changing the request frontier.
+fn validate(s: &State, event: &mut Event) -> Result<()> {
+    let Some(o) = event.origin.as_mut().filter(|o| o.admitted) else {
+        return Ok(());
+    };
+    let Some(prior) = o.inherited else {
+        return Ok(());
+    };
+    let dec = s.parents[o.rid]
+        .iter()
+        .find(|(idx, _)| *idx == o.effect)
+        .and_then(|(_, d)| *d);
+    if let Some(dec) = dec {
+        if prior.value.wrapping_sub(dec) != event.value {
+            return Err("inherited port disagrees with actual source return".into());
+        }
+    } else {
+        o.inherited = None;
+    }
+    Ok(())
+}
+fn apply(s: &mut State, event: Event) {
+    let Event {
+        source: w,
+        origin,
+        version,
+        value,
+    } = event;
+    s.tx.completed += 1;
+    if s.profile {
+        s.tx.audit.push((
+            w,
+            version,
+            value,
+            origin.map(|o| (o.ordinal, o.rid, o.effect, o.serial)),
+        ));
+    }
+    if s.pending.remove(&w).is_some() {
+        s.counts[8] += 1;
+    }
+    if s.profile {
+        s.seen.remove(&w);
+    }
+    let Some(o) = origin else { return };
+    if s.profile {
+        s.seen.insert(w, (o, version));
+    }
+    if !o.admitted {
+        return;
+    }
+    let mut depth = 1;
+    if let Some(prior) = o.inherited {
+        depth = prior.depth + 1;
+        s.counts[10] += 1;
+        // Only the greater branch can emit this checked subtraction, and its successful
+        // source Run has already advanced that consumer watermark to o.epoch. An immutable
+        // older constructor generation can no longer enable either exclusive branch.
+        if s.recycle
+            && prior.version < o.epoch
+            && s.pending
+                .get(&prior.source)
+                .is_some_and(|v| v.generation == prior.generation)
+        {
+            s.pending.remove(&prior.source);
+            s.counts[14] += 1;
+        }
+    }
+    s.generation += 1;
+    s.counts[1] += 1;
+    s.counts
+        [2 + usize::from(value >= s.family.threshold) + usize::from(value > s.family.threshold)] +=
+        1;
+    let c = Child {
+        root: o.ordinal,
+        serial: o.serial,
+        owner: o.owner,
+        producer: o.rid,
+        effect: o.effect,
+        issue: o.epoch,
+        version,
+        source: w,
+        value,
+        branch: if value == s.family.threshold {
+            1
+        } else if value > s.family.threshold {
+            2
+        } else {
+            0
+        },
+        depth,
+        generation: s.generation,
+    };
+    s.pending.insert(w, c);
+    s.peak = s.peak.max(s.pending.len());
+    s.peak_capacity = s.peak_capacity.max(s.pending.capacity());
+    s.depth = s.depth.max(depth);
 }
 pub fn handles(rid: usize) -> bool {
     STATE.with_borrow(|s| {
@@ -576,6 +699,6 @@ pub fn commit(rid: usize, run: u64, ordinal: usize, w: Option<Dependency>, c: Op
 pub fn report() -> J {
     STATE.with_borrow(|state|state.as_ref().map_or(J::Null,|s|json!({
     "counts":s.counts,"retired":s.counts[14],"peak_payload_bytes":s.peak*std::mem::size_of::<(Dependency,Child)>(),"peak_hash_capacity":s.peak_capacity,"final_pending":s.pending.len(),"projected":s.projected,"peak_pending":s.peak,"max_chain":s.depth,"request_logical_bytes":s.issued_bytes,
-    "winners":s.winners,"observed":s.opportunities.iter().map(|(&(rid,e),counts)|json!([rid,e,counts])).collect::<Vec<_>>()
+    "transactions":{"offered":s.tx.offered,"completed":s.tx.completed,"requests":s.tx.requests,"requests_per_batch":s.tx.requests_per_batch,"peak":s.tx.peak,"snapshot_bytes":std::mem::size_of::<Event>(),"reserved_queue_bytes":s.tx.queue.capacity()*std::mem::size_of::<Event>(),"flush_reasons":s.tx.reasons,"batch_hist":s.tx.lengths,"source_order":s.tx.audit},"winners":s.winners,"observed":s.opportunities.iter().map(|(&(rid,e),counts)|json!([rid,e,counts])).collect::<Vec<_>>()
 })))
 }

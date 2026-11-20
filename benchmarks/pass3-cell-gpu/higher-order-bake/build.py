@@ -1,5 +1,5 @@
 """Compile the checked joint Rust implementation with the request-dependent template overlay."""
-import argparse,importlib.util,inspect,json
+import argparse,hashlib,importlib.util,inspect,json
 from pathlib import Path
 import subprocess,sys,tempfile
 HERE=Path(__file__).resolve().parent
@@ -9,6 +9,19 @@ BASE='6c2e1583'
 def load(name,path):
     spec=importlib.util.spec_from_file_location(name,path)
     module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module);return module
+
+
+def installed_receipt(out):
+    """Fingerprint the compiled crate, which may differ from a concurrently edited checkout."""
+    src=out/'tree/engine/cell-runtime'
+    files=['src/higher.rs','src/stage_spine.rs','src/joint_root.rs','src/single_witness.rs',
+           'src/runtime.rs','examples/joint_witness_session.rs']
+    if (src/'src/higher_pairs.rs').exists():
+        files+=['src/higher_pairs.rs','src/ordinary_witness.rs','src/ordinary_shortlist.rs','src/graph.rs']
+    data=json.loads((out/'build.json').read_bytes())
+    return dict(installer_revision=BASE,native_revision=data['base'],
+                executable_sha256=hashlib.sha256((out/'session').read_bytes()).hexdigest(),
+                compiled_files={name:hashlib.sha256((src/name).read_bytes()).hexdigest() for name in files})
 
 
 def build(out,pairs):
@@ -31,6 +44,7 @@ def build(out,pairs):
         scope=dict(joint.__dict__,higher_install=install_experiment,worktree=HERE.parents[2])
         exec(compile(src,str(joint.__file__),'exec'),scope)
         scope['build'](out,True,True,True)
+        (out/'higher-build.json').write_text(json.dumps(installed_receipt(out),indent=1)+'\n')
 
 
 if __name__=='__main__':

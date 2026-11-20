@@ -34,6 +34,10 @@ A separate round-two control checks the source table generation, the exact previ
 
 The second family shares two neural parent pointers across source rules 509 and 510. It saved 202–349 raw tuples per workload and seed on the four smaller programs. On two larger unseen programs the frozen SubTuple library admitted 413 and 1,006 real child RHS. End-to-end gains varied across seeds. [Layouts, tests, timers and separate vanillas](SIBLINGS.md)
 
+## Deferred request transactions
+
+At a real parent publication the guard can capture a versioned receipt and defer its verification until a bounded batch drains. Paired limits 0, 1, 8 and 32 preserve every source and parent-child record. A limit of 32 turns 435 sum-bits publications into 47 drains, with all 194 actual guard computations retained. The whole-pass timings vary by workload. [Source barriers, physical bytes and all timings](TRANSACTIONS.md)
+
 ## Reproduction
 
 Use the external workspace environment with the frozen source families and image exports. Every output directory must be new. The builder checks out the joint experiment installer from `6c2e1583` and builds the corresponding native crate privately with Cargo. Executing the compiled session requires no Python inference.

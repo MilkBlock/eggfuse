@@ -1,0 +1,13 @@
+{
+ "installer_revision": "6c2e1583",
+ "native_revision": "31bf7e41",
+ "executable_sha256": "61668d4267a2e9309a390da0103091cdc65c9b70e8fee2cdc3aed3972c1d9b0c",
+ "compiled_files": {
+  "src/higher.rs": "59953ebb023c8fde88b4f87fe851df666ef558d2ce5911af68b67f3a8a09a454",
+  "src/stage_spine.rs": "a955b90e9644c2d9036153c0ae1af1a92a88644b55c5e9e55ab77758c8777503",
+  "src/joint_root.rs": "25212e3d61ba566f1ee1e1041be11fc08c9b90f02b09cbf20f273a8998a89841",
+  "src/single_witness.rs": "f02d6ba8b202653303bdcf285e7db9f67813dab383cac7b4d414a5e7e8e94131",
+  "src/runtime.rs": "6e5eec1455e5a675985d6c067c300cc9261933942eec2caa4ce39570cee9fcec",
+  "examples/joint_witness_session.rs": "ac4badb4cbad7f21fa6b8405785cdb7ec5abe71eab96f3cf2ea028f974e780f8"
+ }
+}

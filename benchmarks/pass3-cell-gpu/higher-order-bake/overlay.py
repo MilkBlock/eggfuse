@@ -16,6 +16,10 @@ def install(crate):
     shutil.copyfile(HERE/'higher.rs',src/'higher.rs')
     with (src/'lib.rs').open('a') as f:f.write('\npub mod higher;\n')
 
+    p=src/'runtime.rs'
+    start='    fn run(&mut self, set: &str, path: Rc<[usize]>, iterations: Rc<[u64]>) -> Result<bool> {'
+    change(p,start,start+'\n        crate::higher::barrier(1)?;')
+
     # Issue the symbolic conditional alongside the model-chosen parent's physical inputs.
     # The request is a member of the actual packet until verification/commit; its materialized
     # frontier starts only when the parent's checked output is published by the source.
@@ -48,7 +52,7 @@ pub(crate) fn from_conditional(run:u64,rid:usize,parent:&crate::higher::Child)->
                 self.install_anchor(w, table, publication);''')
     p=src/'single_witness.rs'
     change(p,'struct Token{recipe:', 'struct Token{higher:Option<crate::higher::Child>,recipe:')
-    change(p,'        let mut offers=Vec::new();let mut delivered=0;', '        let higher_rule=crate::higher::handles(rid);\n        let mut offers=Vec::new();let mut delivered=0;')
+    change(p,'        let mut offers=Vec::new();let mut delivered=0;', '        let higher_rule=crate::higher::handles(rid);if higher_rule{crate::higher::barrier(3)?;}\n        let mut offers=Vec::new();let mut delivered=0;')
     change(p,'            let f=self.features(g,r,&p,row.as_ref(),wm);','''            if let Some(visible)=row.as_ref().filter(|_|higher_rule){
                 match crate::higher::choose(rid,visible,wm){
                     crate::higher::Choice::Regular=>{}
@@ -80,5 +84,6 @@ pub(crate) fn from_conditional(run:u64,rid:usize,parent:&crate::higher::Child)->
     change(p,'        let initial_cells = runtime.graph.stats.cells_created;','''        let higher_config=req.get("higher_config").filter(|v|!v.is_null()).map(serde_json::to_vec).transpose()?;
         crate_configure_higher(&program,higher_config.as_deref())?;
         let initial_cells = runtime.graph.stats.cells_created;''')
+    change(p,'        let ms = start.elapsed()', '        eggfuse_cell_runtime::higher::barrier(4)?;\n        let ms = start.elapsed()')
     change(p,'fn main() -> Result', 'use eggfuse_cell_runtime::higher::configure as crate_configure_higher;\nfn main() -> Result')
     change(p,'        if one_shot {','        report["higher"]=eggfuse_cell_runtime::higher::report();\n        if one_shot {') if p.read_text().count('        if one_shot {')==1 else change(p,'        if one_shot {\n            let single =','        report["higher"]=eggfuse_cell_runtime::higher::report();\n        if one_shot {\n            let single =')
