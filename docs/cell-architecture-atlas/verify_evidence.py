@@ -32,7 +32,7 @@ def check():
     plates=json.loads((HERE/'plates.json').read_text())
     md=(HERE/'README.md').read_text()
     evidence=dict(re.findall(r'^- (S\d+)　\[.*?\]\(([^)]+)\)',md,re.M))
-    assert len(plates)==29
+    assert len(plates)==32
     for i,p in enumerate(plates,1):
         assert p['id'].startswith(f'{i:02}-') and p['arms'] and p['measure'] and p['status'].startswith(('已测','实跑'))
         assert p['title'] in md and (HERE/'figures'/f"{p['id']}.svg").is_file()
@@ -117,7 +117,17 @@ def check():
         with (folder/f'{name}-runs.tsv').open() as f:
             rows=list(csv.DictReader(f,delimiter='\t'))
         assert len(rows)==n and sum(int(r['spine_count']) for r in rows)==res
-    print('Verified all 29 plates, including two full ordered Pass 3 audits, row contributions and paired CLI timings.')
+    profile=json.loads((folder.parent/'profile/results/profile.json').read_text())['cases']
+    for n,runs in [('sum-bits',1428),('dot-product',1535)]:
+        item=profile[n]
+        for arm in ('baseline','prefix'):
+            phases=item['modes'][arm]['detail']
+            assert phases['verified'] and phases['runs']==runs and len(phases['groups_ms'])==6
+            assert abs(sum(phases['groups_ms'].values())-phases['phase_sum_ms'])<1e-5
+            assert item['checks'][arm]['acceptance']=='pass'
+        assert item['modes']['prefix']['work']['dfs_iterations']<item['modes']['baseline']['work']['dfs_iterations']
+        assert len(item['cold']['prefix']['samples'])==8
+    print('Verified all 32 plates, including two full ordered Pass 3 audits, row contributions and paired CLI timings.')
 
 
 if __name__=='__main__':check()

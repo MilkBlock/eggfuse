@@ -24,6 +24,9 @@ inline long rawfield(device const int *rom,device const long *lits,device const 
 constant int UF_SIZE=NSYMBOLS+ROW_CAP+2;
 constant int UNION_LOG=6*ROW_CAP+2*UF_SIZE+2*TRACE_CAP;
 constant int BIRTH_RUN=UNION_LOG+4*UF_SIZE;
+inline void count_work(device int *state,int i,int value){
+    if(COUNT_WORK)atomic_fetch_add_explicit((device atomic_int *)(state+51+i),value,memory_order_relaxed);
+}
 inline int root_id(device const int *meta,int v){
     device const int *parent=meta+6*ROW_CAP;
     while(parent[v])v=parent[v];
@@ -61,6 +64,14 @@ constant int SHARD_NEXT=BIRTH_RUN+8*ROW_CAP;
 constant int SHARD_HEAD=TABLES*(1+256*USE_INDEX);
 constant int ROW_OWNER=SHARD_NEXT+ROW_CAP;
 inline int shard_of(device const int *meta,int row){return LEARN_OWNER?meta[ROW_OWNER+row]:row%PARTS;}
+// Conservative upper bounds, never reset on retirement. Every write to a
+// row's matching epoch must also update its table and (when enabled) shard.
+constant int HIGH_WATER=SHARD_HEAD+((TILES>1 || LEARN_OWNER)?TABLES*PARTS:0);
+inline void touch_row(device int *meta,device int *head,int row,int t,int epoch){
+    meta[6*row+4]=epoch;
+    if(HOT_FILTER)head[HIGH_WATER+t]=epoch;
+    if((HOT_FILTER==2 || HOT_FILTER==3))head[HIGH_WATER+TABLES+t*PARTS+shard_of(meta,row)]=epoch;
+}
 inline void append_shard(device const int *rom,device int *meta,device int *head,int id,int t,long first){
     if(TILES>1 || LEARN_OWNER){
         int shard=id%PARTS;
@@ -178,8 +189,14 @@ inline int find_key(device const int *,device const long *,device const int *,de
 inline device const int *anchor(device const int *meta,int row){return meta+BIRTH_RUN+ROW_CAP+5*row;}
 inline device int *anchor(device int *meta,int row){return meta+BIRTH_RUN+ROW_CAP+5*row;}
 inline void publish_anchor(device const int *rom,device int *state,device int *meta,int t,int row,
-                           int root,int producer,int depth){
+                           int root,int producer,int depth,device int *pending=nullptr){
     if(!SPINE_ON || row<0 || !root || !rom[DEMANDED+t])return;
+    if(pending){
+        int n=pending[0]++;
+        if(n>=TRACE_CAP){state[5]=19;return;}
+        device int *e=pending+1+5*n;e[0]=t;e[1]=row;e[2]=root;e[3]=producer;e[4]=depth;
+        return;
+    }
     device int *h=anchor(meta,row);
     h[0]=root;h[1]=producer;h[2]=depth;h[3]=state[3];h[4]=++state[17];
 }
@@ -196,19 +213,21 @@ inline int reserve_token(device int *count){
     if(pos<0 || pos>=(SHARED_ARENA?2:1)*TOKEN_CAP){token_error(count,-2);return -1;}
     return pos;
 }
+template<bool CERT=false>
 inline void route(device int *state,device const int *rom,device const long *lits,device const int *meta,
                   device const long *dyn,device const int *head,device const int *rule,
                   device const int *path,int pivot,int last,int lane,int lanes,
-                  device int *cnt,device long *bank){
+                  device int *cnt,device long *bank,device int *certs){
     int table0=path[0];
     for(int seed=(TILES>1 || LEARN_OWNER)?head[SHARD_HEAD+table0*PARTS+lane]:head[table0];seed>=0;seed=(TILES>1 || LEARN_OWNER)?meta[SHARD_NEXT+seed]:meta[6*seed+5]){
         device const int *h=anchor(meta,seed);
         if(shard_of(meta,seed)!=lane || meta[6*seed+3] || !h[0] || meta[6*seed+4]<last)continue;
-        long env[MAXSLOTS];bool matched=true;
+        long env[MAXSLOTS];int witness[DEPTH];bool matched=true;
         for(int pos=0;pos<rule[0] && matched;pos++){
             device const int *op=path+4*pos,*args=rom+op[2];int t=op[0],n=op[1],row=seed;
             if(t<0){
                 long v=0;matched=prim(state,-1-t,operand(args[0],env,lits),operand(args[1],env,lits),v);
+                if(CERT)witness[pos]=-1;
                 if(op[3]&(1<<(n-1)))env[args[n-1]]=v;
                 else matched &= operand(args[n-1],env,lits)==v;
             }else{
@@ -217,6 +236,7 @@ inline void route(device int *state,device const int *rom,device const long *lit
                     row=find_key(rom,lits,meta,dyn,head,t,n-1,key);
                     if(row<0 || meta[6*row+3]){matched=false;break;}
                 }
+                if(CERT)witness[pos]=row;
                 for(int j=0;j<n;j++){
                     long v=field(rom,lits,meta,dyn,row,j);
                     if(op[3]&(1<<j))env[args[j]]=v;
@@ -226,32 +246,50 @@ inline void route(device int *state,device const int *rom,device const long *lit
         }
         if(!matched)continue;
         int j=reserve_token(cnt);if(j<0)return;
+        if(CERT){
+            device int *dst=certs+j*(DEPTH+3);
+            dst[0]=int(path-rom);dst[1]=seed;dst[2]=pivot;
+            for(int k=0;k<rule[0];k++)dst[3+k]=witness[k];
+            continue;
+        }
         int width=input_width(rule);device long *out=bank+j*(width+5);
         for(int k=0;k<rule[4];k++)out[k]=env[rom[rule[5]+k]];
         out[width]=seed;out[width+1]=h[0];out[width+2]=h[1];out[width+3]=h[2];
         out[width+4]=long((table(rom,table0)[1]?0:ROW_CAP)+seed)*DEPTH+pivot;
     }
 }
+template<int PART=0,bool CERT=false>
 inline void do_search(device const int *rom,device const long *lits,device int *state,
                    device const int *meta,device const long *dyn,device const int *head,
                    device const int *wm,device int *count,device long *tok,constant int &lanes,
-                   uint gid){
+                   uint gid,device int *certs=nullptr){
     if(state[5]||state[7])return;
     device const int *rs=rom+SETS+2*state[4];int idx=gid/PARTS,lane=gid%PARTS;
     if(idx>=rs[0])return;
+    count_work(state,0,1);
     int r=rom[rs[1]+idx];device const int *rule=rom+RULE+7*r;
     int bank=SHARED_ARENA?2*r:r*PARTS+lane;if(!SHARED_ARENA)count[bank]=0;
     int width=input_width(rule);device long *target=tok+token_offset(rom,r)+(SHARED_ARENA?0:lane)*TOKEN_CAP*(width+5);
-    int q=rule[0],pivot=-1,last=wm[r];
-    for(int j=0;j<q;j++){int t=rom[rule[1]+4*j];if(t>=0){if(pivot<0)pivot=j;if(head[t]<0)return;}}
+    int q=rule[0],pivot=-1,last=wm[r],last_fresh=-1;
+    for(int j=0;j<q;j++){int t=rom[rule[1]+4*j];if(t>=0){if(pivot<0)pivot=j;if(head[t]<0)return;
+        if(HOT_FILTER && head[HIGH_WATER+t]>=last)last_fresh=j;
+    }}
+    if(HOT_FILTER && rule[6] && last>0 && pivot>=0 && last_fresh<0){count_work(state,1,1);return;}
+    if((HOT_FILTER==2 || HOT_FILTER==3) && rule[6] && last>0 && pivot==last_fresh && pivot>=0){
+        int t=rom[rule[1]+4*pivot];
+        if(head[HIGH_WATER+TABLES+t*PARTS+lane]<last){count_work(state,2,1);return;}
+    }
     if(pivot<0 && lane)return;
     if(q==0 && rule[6] && last>=0)return;
     device const int *sp=rom+SPINE+4*r;
-    if(SPINE_ON)for(int k=0;k<sp[0];k++){
+    if(SPINE_ON && PART!=1)for(int k=0;k<sp[0];k++){
         device const int *e=rom+sp[1]+2*k;
-        route(state,rom,lits,meta,dyn,head,rule,rom+e[1],e[0],last,lane,PARTS,count+bank,target);
+        if(HOT_FILTER && head[HIGH_WATER+rom[e[1]]]<last)continue;
+        if((HOT_FILTER==2 || HOT_FILTER==3) && head[HIGH_WATER+TABLES+rom[e[1]]*PARTS+lane]<last)continue;
+        route<CERT>(state,rom,lits,meta,dyn,head,rule,rom+e[1],e[0],last,lane,PARTS,count+bank,target,CERT?certs+r*(2*TOKEN_CAP)*(DEPTH+3):nullptr);
         if(!SHARED_ARENA && count[bank]<0)return;
     }
+    if(PART==2)return;
     bool routed[DEPTH];routed[0]=false;
     long env[MAXSLOTS];int cur[DEPTH],epoch[DEPTH],witness[DEPTH];cur[0]=-2;epoch[0]=0;
     int depth=0,visits=0;
@@ -260,6 +298,12 @@ inline void do_search(device const int *rom,device const long *lits,device int *
         if(depth==q){
             if(!routed[depth] && (!rule[6] || epoch[depth]>=last)){
                 int pos=reserve_token(count+bank);if(pos<0)return;
+                if(CERT){
+                    device int *dst=certs+(r*2*TOKEN_CAP+pos)*(DEPTH+3);
+                    dst[0]=-1;dst[1]=pivot>=0?witness[pivot]:-1;dst[2]=0;
+                    for(int k=0;k<q;k++)dst[3+k]=witness[k];
+                    depth--;continue;
+                }
                 device long *out=target+pos*(width+5);
                 for(int j=0;j<rule[4];j++)out[j]=env[rom[rule[5]+j]];
                 out[width]=pivot>=0?witness[pivot]:-1;out[width+1]=0;out[width+3]=0;out[width+4]=0;
@@ -278,6 +322,7 @@ inline void do_search(device const int *rom,device const long *lits,device int *
         if(row<0){cur[depth]=-2;depth--;continue;}
         bool ok=true;int version=epoch[depth];
         if(t<0){
+            if(CERT)witness[depth]=-1;
             cur[depth]=-1;long val=0;
             ok=prim(state,-1-t,operand(args[0],env,lits),operand(args[1],env,lits),val);
             int lastcol=op[1]-1,key=args[lastcol];
@@ -286,6 +331,7 @@ inline void do_search(device const int *rom,device const long *lits,device int *
         }else{
             device const int *m=meta+6*row;cur[depth]=point?-1:(((TILES>1 || LEARN_OWNER) && depth==pivot)?meta[SHARD_NEXT+row]:m[5]);
             if(m[3] || (depth==pivot && shard_of(meta,row)!=lane))continue;
+            if((HOT_FILTER==2 || HOT_FILTER==4) && rule[6] && depth==last_fresh && version<last && m[4]<last)continue;
             // A certified functional continuation owns every suffix from this
             // specific published witness. Other pivots remain in the residual join.
             if(PRUNE_ROUTED && SPINE_ON && (sp[2]&(1<<depth)) && m[4]>=last && anchor(meta,row)[0])continue;
@@ -299,6 +345,7 @@ inline void do_search(device const int *rom,device const long *lits,device int *
         if(ok){routed[depth+1]=routed[depth] || (SPINE_ON && t>=0 && (sp[2]&(1<<depth)) && meta[6*row+4]>=last && anchor(meta,row)[0]);
             depth++;epoch[depth]=version;cur[depth]=-2;}
     }
+    count_work(state,3,visits);
 }
 constant int INDEX_NEXT=BIRTH_RUN+6*ROW_CAP;
 constant int INDEX_BUCKET=INDEX_NEXT+ROW_CAP;
@@ -358,7 +405,7 @@ inline int find_key(device const int *rom,device const long *lits,device const i
 inline int insert_row(device const int *rom,device int *state,device int *meta,device long *dyn,device int *head,
                       int t,int n,thread long *values){
     int id=state[0];if(id>=ROW_CAP){state[5]=2;return -1;}
-    state[0]++;device int *m=meta+6*id;m[0]=t;m[1]=-1;m[2]=0;m[3]=0;m[4]=state[3];m[5]=head[t];head[t]=id;append_shard(rom,meta,head,id,t,n>1?values[0]:0);
+    state[0]++;device int *m=meta+6*id;m[0]=t;m[1]=-1;m[2]=0;m[3]=0;m[5]=head[t];head[t]=id;append_shard(rom,meta,head,id,t,n>1?values[0]:0);touch_row(meta,head,id,t,state[3]);
     meta[BIRTH_RUN+id]=state[18]?-state[3]:state[3];
     for(int j=0;j<n;j++){
         dyn[id*WIDTH+j]=values[j];
@@ -410,6 +457,7 @@ inline void repair(device const int *rom,device const long *lits,device int *sta
         for(int row=0;row<state[0];row++){
             device int *m=meta+6*row;if(m[3]==2)continue;
             int t=m[0];device const int *spec=table(rom,t);int last=spec[0]-1;
+            count_work(state,4,1);
             bool changed=false,key_changed=false;
             for(int j=0;j<=last;j++)if(spec[3]&(1<<j)){
                 int v=int(rawfield(rom,lits,meta,dyn,row,j));
@@ -419,10 +467,11 @@ inline void repair(device const int *rom,device const long *lits,device int *sta
                 }
             }
             if(!changed)continue;
-            m[4]=state[3];if(!key_changed)continue;
+            touch_row(meta,head,row,t,state[3]);if(!key_changed)continue;
             long key[WIDTH];
             for(int j=0;j<last;j++)key[j]=field(rom,lits,meta,dyn,row,j);
-            for(int other=head[t];other>=0;other=meta[6*other+5]){
+            int start=INDEX_REPAIR?head[TABLES+t*256+key_bucket(key,last)]:head[t];
+            for(int other=start;other>=0;other=INDEX_REPAIR?meta[INDEX_NEXT+other]:meta[6*other+5]){
                 if(other==row || meta[6*other+3]==2)continue;
                 bool same=true;for(int j=0;j<last;j++)if(key[j]!=directory_key(rom,lits,meta,dyn,other,j)){same=false;break;}
                 if(!same)continue;
@@ -431,9 +480,9 @@ inline void repair(device const int *rom,device const long *lits,device int *sta
                 if(spec[1])unite(state,meta,old,v);
                 else{
                     long next=merge_value(rom,lits,state,meta,dyn,head,t,old,v);
-                    if(next!=old){if(meta[6*keep+1]>=0){state[5]=13;return;}log_write(state,writes,-1,-1,t,keep,key,last,true,old,next);dyn[keep*WIDTH+last]=next;meta[6*keep+4]=state[3];}
+                    if(next!=old){if(meta[6*keep+1]>=0){state[5]=13;return;}log_write(state,writes,-1,-1,t,keep,key,last,true,old,next);dyn[keep*WIDTH+last]=next;touch_row(meta,head,keep,t,state[3]);}
                 }
-                if(meta[6*drop+3]==1){meta[6*keep+3]=1;meta[6*keep+4]=state[3];}
+                if(meta[6*drop+3]==1){meta[6*keep+3]=1;touch_row(meta,head,keep,t,state[3]);}
                 if(SPINE_ON){
                     device int *lost=anchor(meta,drop),*saved=anchor(meta,keep);
                     if(lost[3]==state[3] && lost[4]>saved[4])for(int j=0;j<5;j++)saved[j]=lost[j];
@@ -452,17 +501,21 @@ inline void repair(device const int *rom,device const long *lits,device int *sta
         }
     }
 }
+template<int PART=0>
 inline void do_commit(device const int *rom,device const long *lits,device int *state,device int *meta,
                    device long *dyn,device int *head,device int *wm,device const int *count,device long *tok,
                    device long *rhs,device long *writes,device int *runs,device int *resumes,constant int &lanes,
-                   uint gid){
+                   uint gid,device int *scratch=nullptr){
     if(gid||state[5]||state[7])return;
-    int run=state[3],base_rhs=state[9],base_write=state[10];device const int *rs=rom+SETS+2*state[4];
+    int run=state[3],base_rhs=state[9],base_write=state[10];
+    device int *pending=PART==2?scratch+RULES*513+2:nullptr;
+    if(pending)pending[0]=0;
+    device const int *rs=rom+SETS+2*state[4];
     for(int idx=0;idx<rs[0];idx++){
         int rid=rom[rs[1]+idx];device const int *rule=rom+RULE+7*rid;
         wm[rid]=run;int ordered[512],n=0;
         int width=input_width(rule),stride=width+5;device const long *bank=tok+token_offset(rom,rid);
-        for(int lane=0;lane<(SHARED_ARENA?1:PARTS);lane++){
+        if(PART!=2)for(int lane=0;lane<(SHARED_ARENA?1:PARTS);lane++){
             int bound=SHARED_ARENA?count[2*rid]:count[PARTS*rid+lane];
             if(SHARED_ARENA && count[2*rid+1])bound=count[2*rid+1];if(bound<0){state[5]=bound==-1?3:4;state[6]=rid;return;}
             for(int i=0;i<bound;i++){
@@ -478,9 +531,19 @@ inline void do_commit(device const int *rom,device const long *lits,device int *
                 ordered[at]=pos;n++;
             }
         }
+        if(PART==1){
+            int unique=0;
+            for(int i=0;i<n;i++){
+                if(i && compare(bank+ordered[i]*stride,bank+ordered[i-1]*stride,rule[4])==0)continue;
+                scratch[rid*513+1+unique++]=ordered[i];
+            }
+            scratch[rid*513]=unique;continue;
+        }
+        if(PART==2)n=scratch[rid*513];
         for(int i=0;i<n;i++){
-            device const long *values=bank+ordered[i]*stride;
-            if(i && compare(values,bank+ordered[i-1]*stride,rule[4])==0)continue;
+            int pos=PART==2?scratch[rid*513+1+i]:ordered[i];
+            device const long *values=bank+pos*stride;
+            if(PART!=2 && i && compare(values,bank+ordered[i-1]*stride,rule[4])==0)continue;
 #if AUDIT_ROWS
             int proposals[2]={0,0};
             for(int j=i;j<n;j++){
@@ -526,17 +589,17 @@ inline void do_commit(device const int *rom,device const long *lits,device int *
                 int found=find_key(rom,lits,meta,dyn,head,t,arity,args);
                 if(kind==1){
                     if(found<0){args[arity]=long(NSYMBOLS+1+state[0]);found=insert_row(rom,state,meta,dyn,head,t,arity+1,args);}
-                    if(found<0)return;publish_anchor(rom,state,meta,t,found,cursor,rid,depth);env[op[2]]=field(rom,lits,meta,dyn,found,arity);continue;
+                    if(found<0)return;publish_anchor(rom,state,meta,t,found,cursor,rid,depth,pending);env[op[2]]=field(rom,lits,meta,dyn,found,arity);continue;
                 }
                 if(kind==5){
-                    if(found>=0 && !meta[6*found+3]){meta[6*found+3]=1;meta[6*found+4]=run;state[8]=1;}
+                    if(found>=0 && !meta[6*found+3]){meta[6*found+3]=1;touch_row(meta,head,found,t,run);state[8]=1;}
                     continue;
                 }
                 if(kind!=2){state[5]=11;state[6]=rid;return;}
                 if(schema[1]){
                     if(found<0)found=insert_row(rom,state,meta,dyn,head,t,arity+1,args);
                     else submit_union(state,meta,field(rom,lits,meta,dyn,found,arity),args[arity]);
-                    if(state[5])return;publish_anchor(rom,state,meta,t,found,cursor,rid,depth);
+                    if(state[5])return;publish_anchor(rom,state,meta,t,found,cursor,rid,depth,pending);
                     continue;
                 }
                 bool had_old=found>=0;long previous=0;
@@ -544,16 +607,17 @@ inline void do_commit(device const int *rom,device const long *lits,device int *
                     long old=field(rom,lits,meta,dyn,found,arity),v=args[arity];
                     previous=old;v=merge_value(rom,lits,state,meta,dyn,head,t,old,v);
                     if(state[5]){state[6]=rid;return;}
-                    if(old==v){publish_anchor(rom,state,meta,t,found,cursor,rid,depth);continue;}
+                    if(old==v){publish_anchor(rom,state,meta,t,found,cursor,rid,depth,pending);continue;}
                     if(meta[6*found+1]>=0){state[5]=13;state[6]=rid;return;}
-                    dyn[found*WIDTH+arity]=v;meta[6*found+4]=run;state[8]=1;
+                    dyn[found*WIDTH+arity]=v;touch_row(meta,head,found,t,run);state[8]=1;
                 }else{found=insert_row(rom,state,meta,dyn,head,t,arity+1,args);if(found<0)return;}
-                publish_anchor(rom,state,meta,t,found,cursor,rid,depth);
+                publish_anchor(rom,state,meta,t,found,cursor,rid,depth,pending);
                 log_write(state,writes,rid,state[9]-base_rhs-1,t,found,args,arity,had_old,previous,
                           field(rom,lits,meta,dyn,found,arity));if(state[5])return;
             }
         }
     }
+    if(PART){if(PART==2){scratch[RULES*513]=base_rhs;scratch[RULES*513+1]=base_write;}return;}
     state[18]=1;repair(rom,lits,state,meta,dyn,head,writes);state[18]=0;if(state[5])return;
     if(state[8])state[2]++;
     device int *out=runs+(run-1)*6;out[0]=state[4];out[1]=state[9]-base_rhs;out[2]=state[10]-base_write;
@@ -598,3 +662,85 @@ kernel void run_batch(device const int *rom,device const long *lits,device int *
 kernel void export_roots(device const int *meta,device int *roots,uint id [[thread_position_in_grid]]){
     roots[id]=root_id(meta,int(id));
 }
+
+#if PHASE_TIMING
+kernel void entry_only(device const int *rom,device const long *lits,device int *state,
+                   device const int *meta,device const long *dyn,device const int *head,
+                   device const int *wm,device int *count,device long *tok,constant int &lanes,
+                   uint gid [[thread_position_in_grid]]){ do_search<1,false>(rom,lits,state,meta,dyn,head,wm,count,tok,lanes,gid); }
+kernel void spine_only(device const int *rom,device const long *lits,device int *state,
+                   device const int *meta,device const long *dyn,device const int *head,
+                   device const int *wm,device int *count,device long *tok,constant int &lanes,
+                   uint gid [[thread_position_in_grid]]){ do_search<2,false>(rom,lits,state,meta,dyn,head,wm,count,tok,lanes,gid); }
+kernel void entry_matches(device const int *rom,device const long *lits,device int *state,
+                   device const int *meta,device const long *dyn,device const int *head,
+                   device const int *wm,device int *count,device long *tok,constant int &lanes,device int *certs,
+                   uint gid [[thread_position_in_grid]]){ do_search<1,true>(rom,lits,state,meta,dyn,head,wm,count,tok,lanes,gid,certs); }
+kernel void spine_matches(device const int *rom,device const long *lits,device int *state,
+                   device const int *meta,device const long *dyn,device const int *head,
+                   device const int *wm,device int *count,device long *tok,constant int &lanes,device int *certs,
+                   uint gid [[thread_position_in_grid]]){ do_search<2,true>(rom,lits,state,meta,dyn,head,wm,count,tok,lanes,gid,certs); }
+kernel void sort_unique(device const int *rom,device const long *lits,device int *state,device int *meta,
+                   device long *dyn,device int *head,device int *wm,device const int *count,device long *tok,
+                   device long *rhs,device long *writes,device int *runs,device int *resumes,constant int &lanes,device int *scratch,
+                   uint gid [[thread_position_in_grid]]){ do_commit<1>(rom,lits,state,meta,dyn,head,wm,count,tok,rhs,writes,runs,resumes,lanes,gid,scratch); }
+kernel void apply_rhs(device const int *rom,device const long *lits,device int *state,device int *meta,
+                   device long *dyn,device int *head,device int *wm,device const int *count,device long *tok,
+                   device long *rhs,device long *writes,device int *runs,device int *resumes,constant int &lanes,device int *scratch,
+                   uint gid [[thread_position_in_grid]]){ do_commit<2>(rom,lits,state,meta,dyn,head,wm,count,tok,rhs,writes,runs,resumes,lanes,gid,scratch); }
+kernel void emit_tokens(device const int *rom,device const long *lits,device int *state,device const int *meta,
+                        device const long *dyn,device const int *count,device long *tok,device const int *certs,
+                        uint gid [[thread_position_in_grid]]){
+    if(state[5]||state[7])return;
+    device const int *rs=rom+SETS+2*state[4];int idx=gid/PARTS,lane=gid%PARTS;
+    if(idx>=rs[0])return;
+    int rid=rom[rs[1]+idx];device const int *rule=rom+RULE+7*rid;
+    for(int pos=lane;pos<count[2*rid];pos+=PARTS){
+        if(pos>=2*TOKEN_CAP){state[5]=4;return;}
+        device const int *rec=certs+(rid*2*TOKEN_CAP+pos)*(DEPTH+3);
+        bool routed=rec[0]>=0;device const int *path=rom+(routed?rec[0]:rule[1]);
+        long env[MAXSLOTS];
+        for(int k=0;k<rule[0];k++){
+            device const int *op=path+4*k,*args=rom+op[2];
+            if(op[0]<0){
+                int j=op[1]-1;
+                if(op[3]&(1<<j)){
+                    long v=0;
+                    if(!prim(state,-1-op[0],operand(args[0],env,lits),operand(args[1],env,lits),v)){state[5]=8;return;}
+                    env[args[j]]=v;
+                }
+            }else{
+                for(int j=0;j<op[1];j++)if(op[3]&(1<<j))env[args[j]]=field(rom,lits,meta,dyn,rec[3+k],j);
+            }
+        }
+        int width=input_width(rule),seed=rec[1];
+        device long *out=tok+token_offset(rom,rid)+pos*(width+5);
+        for(int k=0;k<rule[4];k++)out[k]=env[rom[rule[5]+k]];
+        out[width]=seed;out[width+1]=0;out[width+3]=0;out[width+4]=0;
+        if(routed){
+            device const int *h=anchor(meta,seed);
+            out[width+1]=h[0];out[width+2]=h[1];out[width+3]=h[2];
+            out[width+4]=long((table(rom,path[0])[1]?0:ROW_CAP)+seed)*DEPTH+rec[2];
+        }
+    }
+}
+kernel void publish_spine(device const int *rom,device int *state,device int *meta,device const int *scratch,
+                          uint gid [[thread_position_in_grid]]){
+    if(gid||state[5]||state[7])return;
+    device const int *pending=scratch+RULES*513+2;
+    for(int i=0;i<pending[0];i++){
+        device const int *e=pending+1+5*i;
+        publish_anchor(rom,state,meta,e[0],e[1],e[2],e[3],e[4]);
+    }
+}
+kernel void finish_repair(device const int *rom,device const long *lits,device int *state,device int *meta,
+                   device long *dyn,device int *head,device long *writes,device int *runs,device const int *scratch,
+                   uint gid [[thread_position_in_grid]]){
+    if(gid||state[5]||state[7])return;
+    int run=state[3],base_rhs=scratch[RULES*513],base_write=scratch[RULES*513+1];
+    state[18]=1;repair(rom,lits,state,meta,dyn,head,writes);state[18]=0;if(state[5])return;
+    if(state[8])state[2]++;
+    device int *out=runs+(run-1)*6;out[0]=state[4];out[1]=state[9]-base_rhs;out[2]=state[10]-base_write;
+    out[3]=state[8];out[4]=state[0];out[5]=state[2];state[11]=run;
+}
+#endif

@@ -329,6 +329,15 @@ PLATES=[
 ('27-batch-axis',[('Split dispatch', ['source Run', 'parallel queries', 'ordered commit', '3 device calls']), ('Fuse Runs', ['one group', '1 / 4 / 16 Runs', 'barrier per Run', 'same visibility']), ('Tile entries', ['frozen Run', 'disjoint entry lists', 'ordered commit', 'parallel within graph'])],pass3_path),
 ('28-binding-bank',[('Dense private', ['each worker', 'max-width tokens', 'private reservation', '836.6 MiB at 8 tiles']), ('Packed private', ['each worker', 'rule-width tokens', 'private reservation', '220.7 MiB at 8 tiles']), ('Packed shared', ['both rows', 'reserve rule slots', 'sort and commit', '27.6 MiB at 32 tiles'])],pass3_path),
 ('29-full-cli',[('One GPU row', ['one policy row', '64 work tiles', 'commit graph', '2.423 / 4.268 s']), ('Two GPU rows', ['two policy rows', '32 tiles per row', 'commit graph', '2.423 / 4.263 s']), ('Learned routing', ['shared row scores', 'assign entrance', 'exact join + commit', 'both seeds pass'])],pass3_path)]
+PLATES.extend([
+    ('30-cold-resident', [('CPU', ['parse + inject', 'native inference', 'export', '22 / 19 ms resident']),
+        ('GPU before', ['import + ingest', 'device inference', 'export', '1525 / 3341 ms']),
+        ('GPU after', ['import + ingest', 'pruned inference', 'export', '828 / 897 ms'])], pass3_path),
+    ('32-delta-pruning', [('Leaf', ['scan table', 'expand suffix', 'test epoch', '52M / 74M loops']),
+        ('Table', ['read high water', 'skip stale table set', 'expand + test', '981 / 1593 ms']),
+        ('Table + prefix', ['last fresh source', 'inspect row epoch', 'skip stale suffix', '13M / 15M loops'])], pass3_path),
+])
+
 def synthesis():
     a=Art();W,H=1100,335;a.rect(0,0,W,H,BG,r=0)
     for x,w,h in [(10,316,"SHARED TEMPLATE"),(338,374,"INSTANCE POLICY"),(723,367,"JOINT OUTCOME")]:

@@ -31,13 +31,15 @@ def pointer(weight,physical,dev):
 
 
 @torch.inference_mode()
-def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='learned',union='fenced',directory='published',spine=True,lookup='hash',batch_runs=0,tiles=32,token_layout='packed',arena='shared',router=None,export_only=False,token_cap=256,scalars='integer',profile_prims=False,prune=False,row_audit=False):
+def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='learned',union='fenced',directory='published',spine=True,lookup='hash',batch_runs=0,tiles=32,token_layout='packed',arena='shared',router=None,export_only=False,token_cap=256,scalars='integer',profile_prims=False,prune=False,row_audit=False,measure_resident=None,hot_filter=4,index_repair=False,count_work=False):
     if os.environ.get('PYTORCH_ENABLE_MPS_FALLBACK','0')!='0' or not torch.backends.mps.is_available():
         raise RuntimeError('Metal GPU required')
     if steps<0 or steps>4096:raise ValueError('Run budget outside trace capacity')
     if lookup not in ('scan','point','hash') or batch_runs<0 or batch_runs>32:raise ValueError('lookup or batch budget')
     if lookup=='hash' and directory!='published':raise ValueError('hash keys require published-key storage')
     if batch_runs and capture:raise ValueError('use split dispatch to capture every Run')
+    if index_repair and (lookup!='hash' or directory!='published'):
+        raise ValueError('indexed repair requires a published full-key index')
     start=perf_counter_ns();p=json.loads(packet.read_text())
     if p['schema']!='eggfuse.gpu-ingress/1':raise ValueError('expected offline device manifest')
     image_path=packet.with_name('device.npz')
@@ -48,7 +50,7 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
     dev=torch.device('mps')
     if router and lanes!=2:raise ValueError('trained router requires two rows')
     limits = dict(
-        AUDIT_ROWS=int(row_audit), RUN_CAP=max(steps, 1), PRUNE_ROUTED=int(prune),
+        COUNT_WORK=int(count_work), INDEX_REPAIR=int(index_repair), PHASE_TIMING=int(measure_resident is not None), HOT_FILTER=int(hot_filter), AUDIT_ROWS=int(row_audit), RUN_CAP=max(steps, 1), PRUNE_ROUTED=int(prune),
         SCALAR_MODE=('integer', 'guarded', 'lossy').index(scalars), PROFILE_PRIMS=int(profile_prims),
         LEARN_OWNER=int(router is not None), ROUTER=len(rom), SHARED_ARENA=int(arena=='shared'),
         PACK_TOKENS=int(token_layout=='packed'), TILES=tiles, PARTS=lanes*tiles,
@@ -65,8 +67,11 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
     cap=limits['ROW_CAP'];uf_size=cap+layout['NSYMBOLS']+2
     union_log=6*cap+2*uf_size+2*limits['TRACE_CAP']
     birth_run=union_log+4*uf_size
-    state=zeros(51);regs=zeros(layout['REGS'])
-    meta=zeros(((birth_run+(10*cap if router else 9*cap if tiles>1 else (6*cap+(2*cap if lookup=='hash' else 0)))+5)//6,6));head=zeros(layout['TABLES']*((257 if lookup=='hash' else 1)+(lanes*tiles if tiles>1 or router else 0)))
+    state=zeros(56);regs=zeros(layout['REGS'])
+    meta=zeros(((birth_run+(10*cap if router else 9*cap if tiles>1 else (6*cap+(2*cap if lookup=='hash' else 0)))+5)//6,6))
+    head_words=(257 if lookup=='hash' else 1)+(lanes*tiles if tiles>1 or router else 0)
+    head_words+=int(hot_filter>0)+(lanes*tiles if hot_filter in (2,3) else 0)
+    head=zeros(layout['TABLES']*head_words)
     dyn=zeros((cap*(2 if directory=='published' else 1),layout['WIDTH']),torch.int64);wm=zeros(layout['RULES'])-1
     banks=2 if arena=='shared' else lanes*tiles
     count=zeros((layout['RULES'],banks));cols=layout['TOTAL_TOKEN_COLS'] if token_layout=='packed' else layout['RULES']*limits['TOKEN_WIDTH']
@@ -102,17 +107,24 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
         uf=meta.view(-1)[6*limits['ROW_CAP']:6*limits['ROW_CAP']+limits['ROW_CAP']+layout['NSYMBOLS']+2]
         snapshots.append((bank,meta[:1024].clone(),state.clone(),uf.clone()))
     if capture:observe()
-    if batch_runs:
-        for base in range(0,steps,batch_runs):
-            lib.run_batch(prog,literal,state,regs,meta,dyn,head,wm,count,tokens,rhs,writes,runs,resumes,
-                          lanes,min(steps-base,batch_runs),threads=32,group_size=32,arg_casts={14:'int32',15:'int32'})
-    else:
-        for _ in range(steps):
-            if arena=='shared':count.zero_()
-            lib.next_run(prog,state,regs,count,threads=1)
-            lib.search(prog,literal,state,meta,dyn,head,wm,count,tokens,lanes,threads=width,arg_casts={9:'int32'})
-            lib.commit(prog,literal,state,meta,dyn,head,wm,count,tokens,rhs,writes,runs,resumes,lanes,threads=1,arg_casts={13:'int32'})
-            if capture:observe()
+    def infer():
+        if batch_runs:
+            for base in range(0,steps,batch_runs):
+                lib.run_batch(prog,literal,state,regs,meta,dyn,head,wm,count,tokens,rhs,writes,runs,resumes,
+                              lanes,min(steps-base,batch_runs),threads=32,group_size=32,arg_casts={14:'int32',15:'int32'})
+        else:
+            for _ in range(steps):
+                if arena=='shared':count.zero_()
+                lib.next_run(prog,state,regs,count,threads=1)
+                lib.search(prog,literal,state,meta,dyn,head,wm,count,tokens,lanes,threads=width,arg_casts={9:'int32'})
+                lib.commit(prog,literal,state,meta,dyn,head,wm,count,tokens,rhs,writes,runs,resumes,lanes,threads=1,arg_casts={13:'int32'})
+                if capture:observe()
+    if measure_resident is not None:
+        buffers=dict(prog=prog,literal=literal,state=state,regs=regs,meta=meta,dyn=dyn,head=head,
+                     wm=wm,count=count,tokens=tokens,rhs=rhs,writes=writes,runs=runs,resumes=resumes)
+        measure_resident(infer,buffers,constants,width,steps,lanes)
+        after_init=perf_counter_ns()
+    infer()
     torch.mps.synchronize();after_exec=perf_counter_ns()
     out=torch.empty_like(dyn)
     lib.export_rows(prog,literal,state,meta,dyn,out,threads=limits['ROW_CAP'])
@@ -144,7 +156,7 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
             if s[0]>len(bank):raise ValueError('audit snapshot too small')
             frames[f'rows_{j}']=take(bank,s[0]);frames[f'meta_{j}']=take(m,s[0]);frames[f'parents_{j}']=take(uf,s[0]+layout['NSYMBOLS']+2)
         np.savez_compressed(root/'snapshots.npz',**frames)
-    record=dict(row_audit=row_audit,prune=prune,scalars=scalars,profile_prims=profile_prims,token_cap=token_cap,export_only=export_only,router=hashlib.sha256(router.read_bytes()).hexdigest() if router else None,arena=arena,token_layout=token_layout,token_bank_bytes=tokens.numel()*8,tiles=tiles,lookup=lookup,batch_runs=batch_runs,spine=spine,directory=directory,union=union,reader=reader,port_weight_sha256=hashlib.sha256(port_weights.read_bytes()).hexdigest(),capture=capture,packet_sha256=hashlib.sha256(packet.read_bytes()).hexdigest(),weight_sha256=hashlib.sha256(weight.read_bytes()).hexdigest(),
+    record=dict(entry_clock_ns=start,count_work=count_work,index_repair=index_repair,hot_filter=hot_filter,row_audit=row_audit,prune=prune,scalars=scalars,profile_prims=profile_prims,token_cap=token_cap,export_only=export_only,router=hashlib.sha256(router.read_bytes()).hexdigest() if router else None,arena=arena,token_layout=token_layout,token_bank_bytes=tokens.numel()*8,tiles=tiles,lookup=lookup,batch_runs=batch_runs,spine=spine,directory=directory,union=union,reader=reader,port_weight_sha256=hashlib.sha256(port_weights.read_bytes()).hexdigest(),capture=capture,packet_sha256=hashlib.sha256(packet.read_bytes()).hexdigest(),weight_sha256=hashlib.sha256(weight.read_bytes()).hexdigest(),
                 lanes=lanes,requested=steps,state=st,finished=bool(st[7]) and not st[5],completed=st[11],fault=st[5],
                 fault_rule=st[6] if st[5] else None,sets=sets,strings=strings,
                 setup_ms=(after_init-start)/1e6,inference_ms=(after_exec-after_init)/1e6,
@@ -177,4 +189,7 @@ if __name__=='__main__':
     parser.add_argument('--profile-prims',action='store_true')
     parser.add_argument('--prune-routed',action='store_true')
     parser.add_argument('--row-audit',action='store_true')
-    a=parser.parse_args();execute(a.packet,a.weight,a.port_weights,a.runs,a.rows,a.output,a.capture_prefix,a.reader,a.union,a.directory,a.spine,a.lookup,a.batch_runs,a.tiles,a.token_layout,a.arena,a.router,a.export_only,a.token_cap,a.scalars,a.profile_prims,a.prune_routed,a.row_audit)
+    parser.add_argument('--freshness',type=int,choices=(0,1,2,3,4),default=4,help='0 baseline; 1 table only; 2 table, shard and prefix; 3 omit prefix; 4 omit shard')
+    parser.add_argument('--index-repair',action='store_true')
+    parser.add_argument('--count-work',action='store_true')
+    a=parser.parse_args();execute(a.packet,a.weight,a.port_weights,a.runs,a.rows,a.output,a.capture_prefix,a.reader,a.union,a.directory,a.spine,a.lookup,a.batch_runs,a.tiles,a.token_layout,a.arena,a.router,a.export_only,a.token_cap,a.scalars,a.profile_prims,a.prune_routed,a.row_audit,hot_filter=a.freshness,index_repair=a.index_repair,count_work=a.count_work)
