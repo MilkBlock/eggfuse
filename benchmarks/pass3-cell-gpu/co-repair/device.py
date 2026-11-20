@@ -12,7 +12,7 @@ def files(root,reference,case):
             reference/f'oracle-{case}' if anchor else data/'reference',
             reference/f'release-{case}' if anchor else data/'device')
 
-def execute_case(root,reference,weights,case,dest,edges=(),mode=1,members=1,trace=False,count=True,resident=None,sparse_words=False,nested=False,solo=False):
+def execute_case(root,reference,weights,case,dest,edges=(),mode=1,members=1,trace=False,count=True,resident=None,sparse_words=False,nested=False,solo=False,region=None):
     image,oracle,gold=files(root,reference,case)
     tables=read(image/'ingress.json')['tables']
     by_name={t['name']:i for i,t in enumerate(tables)}
@@ -30,6 +30,13 @@ def execute_case(root,reference,weights,case,dest,edges=(),mode=1,members=1,trac
     blank=[-1]*(len(read(image/'ingress.json')['rules'])*layout['DEPTH'])
     policy=dict(ids=[],select=False,notify=True,entries=blank,pivots=blank,tables=[0]*len(tables),
                 shapes=shapes,group=dict(edges=ids,mode=mode,members=members,trace=trace,sparse_words=sparse_words,nested=nested,solo=solo))
+    if region is not None:
+        policy.pop('group')
+        if region.get('full'):
+            policy['notify']=True
+        else:
+            policy['notify']=not region['capture']
+            policy['region']=region
     execute(image/'device.json',weights,reference/'ports-1703.pt',2048,2,dest,
             block_study=policy,count_work=count,measure_resident=resident)
     # The independent ordered audit already aligned the gold trace to Rust.

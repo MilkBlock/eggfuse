@@ -1,0 +1,38 @@
+{
+  "train": [
+    "affine-twins",
+    "clamped-ramp",
+    "segmented-prefix",
+    "window-laplacian"
+  ],
+  "static": {
+    "budget": 32,
+    "window": 32,
+    "capture": false,
+    "weights": [
+      2,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "bias": -24,
+    "build_price": 1
+  },
+  "learned": {
+    "budget": 32,
+    "window": 32,
+    "capture": false,
+    "weights": [
+      2.799521405892607,
+      -0.07474586181872632,
+      2.386782781894036,
+      0.03065469163679264,
+      -0.28381166222742843,
+      0.018811094670803514
+    ],
+    "bias": -19.37545386896067,
+    "build_price": 1
+  }
+}

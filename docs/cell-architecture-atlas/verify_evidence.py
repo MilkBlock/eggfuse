@@ -38,7 +38,7 @@ def check():
         if i<=37:
             assert p['status'].startswith(('已测','实跑'))
         else:
-            if i in (38,39,40,46,55):assert p['status'].startswith('已测')
+            if i in (38,39,40,41,46,55):assert p['status'].startswith('已测')
             else:assert p['status']=='待验证 · 实验设计'
             arms=p['diagram']
             assert len(arms)>=2 and len({a['title'] for a in arms})==len(arms)
@@ -193,7 +193,18 @@ def check():
                 assert len(data['samples'])==10 and data['counts']['bindings']==baseline['counts']['bindings']
                 assert all(data[k]==baseline[k] for k in ('rhs','writes','spine','final','runs'))
         assert signals[f'sum-bits/{seed}']['double_hash-8']['counts']['from_proposal']==889
-    print('Verified 42 measured plates, 13 pending designs, and all diagrams.')
+    region=folder.parent/'region-admission'
+    bounded=json.loads((region/'results.json').read_text())
+    strata=json.loads((region/'strata.json').read_text())
+    for n,v in bounded.items():
+        arms=v['arms']
+        for k,a in arms.items():
+            assert len(a['samples_ms'])==8 and a['exact'] and a['runs']==arms['full']['runs']
+            if k=='full':continue
+            assert a['index_bytes']<arms['full']['index_bytes'] and a['maintenance'][3]<=32
+            assert sum(t['saved_clean_rows'] for t in strata[n][k].values())==a['price']['clean_rows_saved']
+            assert arms['hindsight']['price']['priced_work']>=a['price']['priced_work']
+    print('Verified 43 measured plates, 12 pending designs, and all diagrams.')
 
 
 if __name__=='__main__':check()

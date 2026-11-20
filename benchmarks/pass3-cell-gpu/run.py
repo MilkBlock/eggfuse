@@ -71,6 +71,17 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
         limits.update(BLOCK_STUDY=1,SELECT_BLOCKS=int(block_study['select']),INDEX_NOTIFY=int(block_study['notify']),
                       LIBRARY_SIZE=len(block_study['ids']))
     grouping=block_study.get('group') if block_study else None
+    region=block_study.get('region') if block_study else None
+    if region:
+        if grouping:raise ValueError('independent region and co-repair trials')
+        cap=limits['ROW_CAP'];budget=int(region['budget']);window=int(region['window'])
+        if not 1<=budget<=cap//32 or window<1:raise ValueError('invalid region budget')
+        region_base=limits['BLOCK_BASE']+3*cap+layout['TABLES']*lanes*tiles
+        reg_payload=region_base+3*(cap//32)+2*budget
+        reg_counter=88+3*len(block_study['ids'])+2*(1+max(block_study['shapes']))
+        region_trace=region['capture']
+        limits.update(REG_BASE=region_base,REG_BUDGET=budget,REG_WINDOW=window,REG_COUNTER=reg_counter,
+                      REGION_CAPTURE=int(region_trace),REGION_SELECT=int(not region_trace),REGION_ORACLE=int('oracle' in region))
     if grouping:
         mode=grouping['mode'];trace=grouping.get('trace',False)
         if mode not in (1,2,3,4) or not block_study['notify'] or (trace and mode!=1):
@@ -96,6 +107,18 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
         for name,values in [('bake_entries',block_study['entries']),('repair_shapes',block_study['shapes']),('bake_pivots',block_study['pivots']),('bake_tables',block_study['tables'])]:
             constants+='\nconstant int '+name+'[]={'+','.join(map(str,values))+'};'
     shader=(HERE/'executor.metal').read_text()
+    if region:
+        coefs=region['weights']
+        if len(coefs)!=6 or not all(np.isfinite(v) for v in [*coefs,region['bias'],region['build_price']]):
+            raise ValueError('invalid region model')
+        constants+='\nconstant float region_weights[]={'+','.join(str(float(n))+'f' for n in coefs)+'};'
+        constants+='\nconstant float region_bias='+str(float(region['bias']))+'f;'
+        constants+='\nconstant float region_build_price='+str(float(region['build_price']))+'f;'
+        if 'oracle' in region:
+            oracle=region['oracle']
+            if len(oracle)!=(steps//window+1)*(cap//32//32):raise ValueError('invalid oracle window grid')
+            constants+='\nconstant uint region_oracle[]={'+','.join(str(int(x))+'u' for x in oracle)+'};'
+        shader=shader.replace('// REGION_DEVICE_FUNCTIONS',(HERE/'region-admission/policy.metal').read_text())
     if grouping:
         values=[str(int(v)) for edge in edges for v in edge] or ['-1']
         constants+='\nconstant int co_library[]={'+','.join(values)+'};'
@@ -110,17 +133,20 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
     cap=limits['ROW_CAP'];uf_size=cap+layout['NSYMBOLS']+2
     union_log=6*cap+2*uf_size+2*limits['TRACE_CAP']
     birth_run=union_log+4*uf_size
-    state=zeros(group_counter+16 if grouping else 88+3*len(block_study['ids'])+2*(1+max(block_study['shapes'])) if block_study else 69 if sets_enabled else 56);regs=zeros(layout['REGS'])
+    state=zeros(reg_counter+7 if region else group_counter+16 if grouping else 88+3*len(block_study['ids'])+2*(1+max(block_study['shapes'])) if block_study else 69 if sets_enabled else 56);regs=zeros(layout['REGS'])
     meta_words=birth_run+(10*cap if router else 9*cap if tiles>1 else (6+2*int(lookup=='hash'))*cap)
     if sets_enabled:meta_words=set_base+126
     if block_study:meta_words=limits['BLOCK_BASE']+3*cap+layout["TABLES"]*lanes*tiles
+    if region:
+        region_windows=steps//window+1
+        meta_words=reg_payload+(8*region_windows*(cap//32) if region_trace else (region_windows*(cap//32//32) if count_work else 0))
     if grouping:meta_words=group_words
     meta=zeros(((meta_words+5)//6,6))
     head_words=(257 if lookup=='hash' else 1)+(lanes*tiles if tiles>1 or router else 0)
     head_words+=int(hot_filter>0)+(lanes*tiles if hot_filter in (2,3) else 0)
     head_size=layout['TABLES']*head_words
     if block_study and block_study['notify']:
-        head_size+=(cap//32)*(uf_size+2)
+        head_size+=(2*(cap//32)+2*uf_size*budget) if region else (cap//32)*(uf_size+2)
     if grouping and grouping.get('sparse_words'):
         head_size+=uf_size*((cap//32+31)//32)
     head=zeros(head_size)
@@ -185,6 +211,14 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
     root.mkdir(parents=True,exist_ok=True)
     def take(t,stop):return t[:stop].cpu().numpy()
     set_members=meta.view(-1)[set_base:set_base+63].cpu().numpy() if sets_enabled else np.empty(0,np.int32)
+    if region and region_trace and not st[5]:
+        mem=meta.view(-1)
+        records=mem[reg_payload:].cpu().numpy()[:8*region_windows*(cap//32)]
+        np.savez_compressed(root/'regions.npz',windows=records.reshape(region_windows,cap//32,8)[:(st[11]+window-1)//window])
+    if region and not region_trace and count_work and not st[5]:
+        mem=meta.view(-1)
+        selected_windows=mem[reg_payload:reg_payload+region_windows*(cap//32//32)].cpu().numpy().reshape(region_windows,-1)
+        np.savez_compressed(root/'selected.npz',words=selected_windows)
     if grouping and count_work and mode>=2 and not st[5]:
         mem=meta.view(-1)
         np.savez_compressed(root/'owners.npz',
@@ -227,6 +261,9 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
                 fault_rule=st[6] if st[5] else None,sets=sets,strings=strings,
                 setup_ms=(after_init-start)/1e6,inference_ms=(after_exec-after_init)/1e6,
                 total_ms=(perf_counter_ns()-start)/1e6)
+    if region:
+        record['region']=dict(budget=budget,window=window,counters=st[reg_counter:],
+                              index_bytes=(meta_words-region_base+head_size-layout['TABLES']*head_words)*4)
     if grouping:
         record['co_repair']=dict(mode=mode,members=members,counters=st[group_counter:],
                                  extra_meta_bytes=(group_words-group_base)*4,

@@ -122,6 +122,7 @@ inline void study_add(device int *s,int index,int n=1){
     if(COUNT_WORK)atomic_fetch_add_explicit((device atomic_int *)(s+index),n,memory_order_relaxed);
 }
 #endif
+// REGION_DEVICE_FUNCTIONS
 #if INDEX_NOTIFY
 // A constructor's direct fields never lose a dependency except by retirement
 // or union. Moving (and retaining) reverse bits is conservative across both.
@@ -137,6 +138,9 @@ inline device uint *active_words(device uint *bits,int root){
 // CO_REPAIR_DEVICE_FUNCTIONS
 inline void subscribe_row(device const int *rom,device const long *lits,device int *meta,device long const *dyn,
                           device int *head,device int *state,int row,int t){
+#if REGION_SELECT
+    region_add(rom,lits,meta,dyn,head,state,row,t);return;
+#endif
     device uint *bits=(device uint *)(head+NOTIFY_BASE);
     uint mask=1u<<(row%32);int word=row/32;
     if(repair_shapes[t]<0){bits[word]|=mask;return;}
@@ -155,6 +159,9 @@ inline void subscribe_row(device const int *rom,device const long *lits,device i
     }
 }
 inline void notify_roots(device int *meta,device int *head,device int *state,int hi,int lo){
+#if REGION_SELECT
+    region_notify(meta,head,state,hi,lo);return;
+#endif
     device uint *bits=(device uint *)(head+NOTIFY_BASE);
     int end=(state[0]+31)/32;
     for(int w=0;w<end;w++){
@@ -720,6 +727,9 @@ inline void repair(device const int *rom,device const long *lits,device int *sta
 #endif
     int passes=0;
     while(state[12] && !state[5]){
+#if REGION_SELECT || REGION_CAPTURE
+        state[REG_COUNTER]++;
+#endif
         if(++passes>ROW_CAP){state[5]=15;return;}
         state[12]=0;
         for(int row=0;row<state[0];row++){
@@ -763,6 +773,12 @@ inline void repair(device const int *rom,device const long *lits,device int *sta
 #endif
 #if BLOCK_STUDY
             if(repair_shapes[t]>=0){
+#if REGION_SELECT || REGION_CAPTURE
+                meta[REG_CHANGES+row/32]+=int(changed);
+#if REGION_CAPTURE
+                meta[REG_PAYLOAD+8*(((state[3]-1)/REG_WINDOW)*REG_WORDS+row/32)+6+int(changed)]++;
+#endif
+#endif
                 if(COUNT_WORK){
                     state[70]++;
                     state[88+3*LIBRARY_SIZE+2*repair_shapes[t]+int(changed)]++;
@@ -950,6 +966,9 @@ inline void do_commit(device const int *rom,device const long *lits,device int *
     }
     if(PART){if(PART==2){scratch[RULES*513]=base_rhs;scratch[RULES*513+1]=base_write;}return;}
     state[18]=1;repair(rom,lits,state,meta,dyn,head,writes);state[18]=0;if(state[5])return;
+#if REGION_CAPTURE || REGION_SELECT
+    region_boundary(rom,lits,meta,dyn,head,state);
+#endif
     if(state[8])state[2]++;
     device int *out=runs+(run-1)*6;out[0]=state[4];out[1]=state[9]-base_rhs;out[2]=state[10]-base_write;
     out[3]=state[8];out[4]=state[0];out[5]=state[2];state[11]=run;
@@ -1070,6 +1089,9 @@ kernel void finish_repair(device const int *rom,device const long *lits,device i
     if(gid||state[5]||state[7])return;
     int run=state[3],base_rhs=scratch[RULES*513],base_write=scratch[RULES*513+1];
     state[18]=1;repair(rom,lits,state,meta,dyn,head,writes);state[18]=0;if(state[5])return;
+#if REGION_CAPTURE || REGION_SELECT
+    region_boundary(rom,lits,meta,dyn,head,state);
+#endif
     if(state[8])state[2]++;
     device int *out=runs+(run-1)*6;out[0]=state[4];out[1]=state[9]-base_rhs;out[2]=state[10]-base_write;
     out[3]=state[8];out[4]=state[0];out[5]=state[2];state[11]=run;

@@ -61,6 +61,7 @@ out.extend(["## 现有配对数据", "![冻结检查点的第二 Run 完整非�
                 ('S31','真实程序与 union 前观察','../../benchmarks/pass3-cell-gpu/co-repair/CORPUS.md'),
                 ('S32','图 38–40、55 的选择、嵌套和通知目录消融','../../benchmarks/pass3-cell-gpu/co-repair/README.md'),
                 ('S33','图 46 父引用碰撞与容量对照','../../benchmarks/pass3-cell-gpu/key-signals/README.md'),
+                ('S34','图 41 固定空间的区域位置与迁移','../../benchmarks/pass3-cell-gpu/region-admission/README.md'),
                 ('M1','Gilmer 等，ICML 2017，消息传递神经网络','https://proceedings.mlr.press/v70/gilmer17a.html'),
                 ('M2','Foerster 等，AAAI 2018，反事实多智能体信用分配','https://arxiv.org/abs/1705.08926')]),
             "## 重新生成",

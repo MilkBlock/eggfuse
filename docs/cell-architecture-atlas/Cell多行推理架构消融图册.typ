@@ -105,7 +105,7 @@ card([部署时],[冻结编码器并缓存每个模板的端口向量，记录�
     table(columns:(37mm,24mm,1fr),stroke:(bottom:0.45pt+hair),inset:(x:4pt,y:3.1pt),
       ..guide.order.map(r => (text(size:9pt,weight:"bold",r.at(0)),text(size:9pt,fill:teal,r.at(1)),text(size:9pt,r.at(2)))).flatten())
     v(1fr)
-    small[本节数字来自既有实验 S8、S10、S12、S24、S28–S30。图 38–40、46、55 已有实测，其余待测图单列。]
+    small[本节数字来自既有实验 S8、S10、S12、S24、S28–S30。图 38–41、46、55 已有实测，其余待测图单列。]
     pagebreak()
     kicker[实验协议   /   共享的正确性和计时口径]
     v(2mm)
@@ -223,10 +223,11 @@ card([从训练监督看],[字段投影让合法绑定的字段读出正确。�
 #src("S31","真实程序与 union 观察","benchmarks/pass3-cell-gpu/co-repair/CORPUS.md")
 #src("S32","图 38–40、55 成本消融","benchmarks/pass3-cell-gpu/co-repair/README.md")
 #src("S33","图 46 输入编码与宽度","benchmarks/pass3-cell-gpu/key-signals/README.md")
+#src("S34","图 41 固定空间的选择","benchmarks/pass3-cell-gpu/region-admission/README.md")
 #v(5mm)
 #linebar()
 #label[两篇用于构造对照的原始文献]
 #v(1.5mm)
 #text(size:9pt)[*M1*　Gilmer 等，#emph[Neural Message Passing for Quantum Chemistry]，ICML 2017。#link("https://proceedings.mlr.press/v70/gilmer17a.html")[PMLR 原文]。 *M2*　Foerster 等，#emph[Counterfactual Multi-Agent Policy Gradients]，AAAI 2018。#link("https://arxiv.org/abs/1705.08926")[论文原文]。]
 #v(1fr)
-#small[版次 20　·　2026 年 11 月 20 日　·　图的 SVG 与生成源码随文档提供，可在修改架构后更新。]
+#small[版次 21　·　2026 年 11 月 20 日　·　图的 SVG 与生成源码随文档提供，可在修改架构后更新。]
