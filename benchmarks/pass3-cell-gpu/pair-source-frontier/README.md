@@ -29,3 +29,11 @@ python benchmarks/pass3-cell-gpu/pair-source-frontier/verify.py
 A broader static survey allows recursively connected unique lookup and primitive outputs from any one of the independent parents, including rules with more than two parents. It finds 15 candidate interfaces on the shared source rules. In 3mm only seven were active: they account for 267,433 raw tuples and 267,175 of these already belong to the directly supported arithmetic rule. Deriche had eight active interfaces and 277,385 of their 278,192 raw tuples belonged to the same rule. These counts describe reachable shapes and total receipts at their rules, not additional eliminated work. The wider lookup chains are not enabled by this experiment. [Static interfaces and observed support](opportunities.json)
 
 In a separate compiled source fixture the same extractor finds addition, reversed-parent subtraction and multiplication plans, including checked overflow. Both arithmetic treatments reduce the 45 proposed parent tuples to the six true RHS occurrences. Disabling the projected evidence restores all 45. Source graph, Runs, writes, resumes, unions and Cell IDs agree. [Fixture source](arithmetic.egg) · [Native results](fixture.json)
+
+The separate seed-1709 deployment used the same frozen compiler strategy on three cases.
+
+| Source | Raw tuples before → after | Original / cached (ms) |
+|---|---:|---:|
+| sum-bits | 7,966 → 5,908 | 34.57 / 35.96 |
+| dot-product | 8,662 → 7,205 | 30.87 / 30.78 |
+| jacobi-1d | 50,231 → 33,296 | 189.36 / 185.97 |

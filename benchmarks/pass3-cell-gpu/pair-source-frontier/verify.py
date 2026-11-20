@@ -23,6 +23,16 @@ def verify(folder):
                 for f in ('raw','multi','commits','physical','children'):
                     assert row[f]==arms['cached'][f]
         assert arms['indexed']['equations']['index_probes']>0
+    repeat=read('seed1709.json');assert set(repeat)=={'sum-bits','dot-product','jacobi-1d'}
+    for case,arms in repeat.items():
+        for name,v in arms.items():
+            assert len(v['ms'])==6 and median(v['ms'])==v['median_ms']
+            if name=='vanilla':continue
+            assert all(v['checks'].values()) and v['neural_rhs']==v['rhs']==arms['vanilla']['rhs'] and 100*v['direct_cells']>=98*v['fresh']
+            for f in ('cells','state_sha','single_winners','multi_winners','root_ids','root_parents','nested_ids'):
+                assert v[f]==arms['off'][f]
+        assert arms['cached']['counts']['raw_tuples']<arms['off']['counts']['raw_tuples']
+        assert arms['indexed']['raw']==arms['cached']['raw']
     profiles=read('profile.json')
     for case,r in profiles.items():
         for w,v in r['by_width'].items():
