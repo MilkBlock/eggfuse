@@ -18,10 +18,42 @@ pub struct Plan {
     pub joins: Vec<[usize; 4]>,
     pub entries: Vec<[i32; 3]>, // rule, pivot, table; absent transferred leaf has rule -1
     pub sets: Vec<String>,
+    #[serde(default)]
+    schedule: Option<RowSchedule>,
 }
+
+#[derive(Clone, Copy, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+enum Admission {
+    Free,
+    FreeOnce,
+    Static,
+    Transfer,
+}
+
+#[derive(Clone, Copy, Deserialize)]
+struct RowSchedule {
+    rows: usize,
+    waves: usize,
+    admission: Admission,
+}
+
+// Hash only the stable physical source and typed entrance. Ownership never uses a
+// result value, source winner label or future update.
+fn owner(observation: &[i64; 8], rows: usize) -> usize {
+    let leaf = observation[0] as u64 / 8;
+    let address = observation[1] as u64;
+    (address
+        .wrapping_mul(0x9e3779b1)
+        .wrapping_add(leaf.wrapping_mul(0x85ebca77))
+        % rows as u64) as usize
+}
+
+type Decision = ([f32; 12], Option<usize>, Option<usize>, [f32; 8]);
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub(crate) enum Kind {
+    Census,
     Raw,
     Leaf,
     Macro,
@@ -57,7 +89,10 @@ pub(crate) struct Policy {
     pub(crate) residual: bool,
     observe: bool,
     corrupt: bool,
-    prev: [[f32; 12]; 2],
+    prev: Vec<[f32; 12]>,
+    transfers: Vec<(u64, usize, usize, usize, usize, usize, u64, Dependency)>,
+    handoff_scores: usize,
+    idle_slots: usize,
     ids: BTreeMap<Dependency, usize>,
     published: BTreeMap<Dependency, (u64, usize)>,
     issued: Vec<Issued>,
@@ -65,7 +100,7 @@ pub(crate) struct Policy {
     pending: BTreeMap<(usize, usize, Dependency), (usize, usize)>, // token, output port
     ordinal: usize,
     epoch: u64,
-    observations: Vec<(usize, Vec<[i64; 8]>, [[f32; 12]; 2])>,
+    observations: Vec<(usize, Vec<[i64; 8]>, Vec<[f32; 12]>)>,
     root_attempts: u64,
     child_attempts: u64,
     raw_rejections: u64,
@@ -85,6 +120,7 @@ impl Policy {
         corrupt: bool,
     ) -> Result<Self> {
         let kind = match kind {
+            "census" if residual && observe => Kind::Census,
             "raw" => Kind::Raw,
             "leaf" => Kind::Leaf,
             "macro" => Kind::Macro,
@@ -131,13 +167,25 @@ impl Policy {
                 return Err("macro output disagrees with certified next entrance".into());
             }
         }
+        if kind == Kind::Census && p.schedule.is_some() {
+            return Err("census has one exhaustive issuance".into());
+        }
+        let rows = p.schedule.map_or(2, |s| s.rows);
+        if let Some(s) = p.schedule {
+            if !(1..=4).contains(&rows) || !(1..=8).contains(&s.waves) {
+                return Err("unsupported row/wave dimensions".into());
+            }
+        }
         Ok(Self {
             p,
             kind,
             residual,
             observe,
             corrupt,
-            prev: [[0.; 12]; 2],
+            prev: vec![[0.; 12]; rows],
+            transfers: Vec::new(),
+            handoff_scores: 0,
+            idle_slots: 0,
             ids: BTreeMap::new(),
             published: BTreeMap::new(),
             issued: vec![],
@@ -303,105 +351,176 @@ impl Policy {
                 physical.push(row.clone());
             }
         }
-        self.scored += 2 * obs.len();
-        for lane in 0..2 {
-            let (next, winning, unit, wanted_rank) = self.forward(lane, set_id, &obs);
-            self.prev[lane] = next;
-            let Some(index) = winning else { continue };
-            let action = obs[index][0] as usize;
-            let leaf = action / 8;
-            let [rid, pivot, _] = self.p.entries[leaf];
-            let anchor = &physical[index];
-            let rule = &g.program.rules[rid as usize];
-            let code = match self.kind {
-                Kind::Raw => rid as usize,
-                Kind::Leaf => leaf,
-                Kind::Macro => unit.unwrap_or(leaf),
-            };
-            let mut raw = None;
-            let mut suffix_rank = -1;
-            if self.kind == Kind::Raw {
-                let mut rows = vec![(pivot as usize, anchor.clone())];
-                if rule.query.len() == 2 {
-                    let pos = 1 - pivot as usize;
-                    let Call::Table(t) = rule.query[pos].call else {
-                        unreachable!()
+        let schedule = self.p.schedule.unwrap_or(RowSchedule {
+            rows: 2,
+            waves: 1,
+            admission: Admission::Free,
+        });
+        let mut reserved = vec![false; obs.len()];
+        for wave in 0..schedule.waves {
+            let mut decisions = Vec::with_capacity(schedule.rows);
+            if self.kind == Kind::Census {
+                // Training-only exact opportunity scan. These candidates never count as learned emissions.
+                decisions.extend((0..obs.len()).map(|i| ([0.; 12], Some(i), None, [0.; 8])));
+            }
+            for lane in 0..if self.kind == Kind::Census {
+                0
+            } else {
+                schedule.rows
+            } {
+                let mut scores = 0;
+                let decision = self.forward(lane, set_id, &obs, |i| {
+                    let eligible = match schedule.admission {
+                        Admission::Free => true,
+                        Admission::FreeOnce => !reserved[i],
+                        Admission::Static | Admission::Transfer => {
+                            !reserved[i] && owner(&obs[i], schedule.rows) == lane
+                        }
                     };
-                    if !bank.contains_key(&(t as i32)) {
-                        bank.insert(t as i32, Self::native_rows(g, t)?);
+                    scores += usize::from(eligible);
+                    eligible
+                });
+                self.scored += scores;
+                decisions.push(decision);
+            }
+            // Publish reservations only after all simultaneous proposals. A free
+            // wave may contain duplicate claims; the source verifier deduplicates them.
+            for decision in &decisions {
+                if let Some(i) = decision.1 {
+                    reserved[i] = true;
+                }
+            }
+            if schedule.admission == Admission::Transfer {
+                let busy: Vec<_> = decisions.iter().map(|d| d.1.is_some()).collect();
+                for lane in 0..schedule.rows {
+                    if busy[lane] {
+                        continue;
                     }
-                    let candidates = &bank[&(t as i32)];
-                    if !candidates.is_empty() && !self.corrupt {
-                        let pick = (0..candidates.len())
-                            .max_by(|&i, &j| {
-                                wanted_rank[i].total_cmp(&wanted_rank[j]).then(j.cmp(&i))
-                            })
-                            .unwrap();
-                        suffix_rank = pick as i32;
-                        rows.push((pos, candidates[pick].clone()));
+                    let mut scores = 0;
+                    let borrowed = self.forward(lane, set_id, &obs, |i| {
+                        let eligible = !reserved[i] && busy[owner(&obs[i], schedule.rows)];
+                        scores += usize::from(eligible);
+                        eligible
+                    });
+                    self.scored += scores;
+                    self.handoff_scores += scores;
+                    if let Some(i) = borrowed.1 {
+                        reserved[i] = true;
+                        self.transfers.push((
+                            epoch,
+                            wave,
+                            owner(&obs[i], schedule.rows),
+                            lane,
+                            obs[i][0] as usize / 8,
+                            obs[i][1] as usize,
+                            physical[i].epoch,
+                            physical[i].witness,
+                        ));
+                        decisions[lane] = borrowed;
                     }
                 }
-                // Project the *proposed* fields with first definition wins. No key lookup and no LHS test here.
-                let mut env = BTreeMap::new();
-                for (pos, row) in &rows {
-                    for (arg, value) in rule.query[*pos].args.iter().zip(row.values.iter()) {
-                        if let Arg::Slot(s) = arg {
-                            env.entry(*s).or_insert_with(|| value.clone());
+            }
+            for (lane, (next, winning, unit, wanted_rank)) in decisions.into_iter().enumerate() {
+                if self.kind != Kind::Census {
+                    self.prev[lane] = next;
+                }
+                self.idle_slots += usize::from(winning.is_none());
+                let Some(index) = winning else { continue };
+                let action = obs[index][0] as usize;
+                let leaf = action / 8;
+                let [rid, pivot, _] = self.p.entries[leaf];
+                let anchor = &physical[index];
+                let rule = &g.program.rules[rid as usize];
+                let code = match self.kind {
+                    Kind::Raw => rid as usize,
+                    Kind::Census | Kind::Leaf => leaf,
+                    Kind::Macro => unit.unwrap_or(leaf),
+                };
+                let mut raw = None;
+                let mut suffix_rank = -1;
+                if self.kind == Kind::Raw {
+                    let mut rows = vec![(pivot as usize, anchor.clone())];
+                    if rule.query.len() == 2 {
+                        let pos = 1 - pivot as usize;
+                        let Call::Table(t) = rule.query[pos].call else {
+                            unreachable!()
+                        };
+                        if !bank.contains_key(&(t as i32)) {
+                            bank.insert(t as i32, Self::native_rows(g, t)?);
+                        }
+                        let candidates = &bank[&(t as i32)];
+                        if !candidates.is_empty() && !self.corrupt {
+                            let pick = (0..candidates.len())
+                                .max_by(|&i, &j| {
+                                    wanted_rank[i].total_cmp(&wanted_rank[j]).then(j.cmp(&i))
+                                })
+                                .unwrap();
+                            suffix_rank = pick as i32;
+                            rows.push((pos, candidates[pick].clone()));
                         }
                     }
+                    // Project the *proposed* fields with first definition wins. No key lookup and no LHS test here.
+                    let mut env = BTreeMap::new();
+                    for (pos, row) in &rows {
+                        for (arg, value) in rule.query[*pos].args.iter().zip(row.values.iter()) {
+                            if let Arg::Slot(s) = arg {
+                                env.entry(*s).or_insert_with(|| value.clone());
+                            }
+                        }
+                    }
+                    let vals = rule
+                        .inputs
+                        .iter()
+                        .filter_map(|s| env.get(s).map(|v| (*s, v.clone())))
+                        .collect();
+                    self.raw_field_count += rule.inputs.len();
+                    raw = Some(Raw {
+                        rows: rows
+                            .into_iter()
+                            .map(|(pos, row)| (pos, row.witness))
+                            .collect(),
+                        values: vals,
+                    });
                 }
-                let vals = rule
-                    .inputs
-                    .iter()
-                    .filter_map(|s| env.get(s).map(|v| (*s, v.clone())))
-                    .collect();
-                self.raw_field_count += rule.inputs.len();
-                raw = Some(Raw {
-                    rows: rows
-                        .into_iter()
-                        .map(|(pos, row)| (pos, row.witness))
-                        .collect(),
-                    values: vals,
+                let id = self.issued.len();
+                self.issued.push(Issued {
+                    epoch,
+                    lane: wave * schedule.rows + lane,
+                    leaf,
+                    code,
+                    anchor: anchor.witness,
+                    raw,
+                    root_ordinal: 0,
+                    child_ordinal: 0,
+                    child_epoch: 0,
+                    root_verified: false,
+                    child_verified: false,
+                    produced: None,
+                    address: obs[index][1] as usize,
+                    suffix_rank,
                 });
+                // Discharge the submitted envelope itself. A macro supplies no separate root token:
+                // its library id decodes to both the first entrance and the later output-port instruction.
+                let (entry_rule, entry_pivot) = match self.kind {
+                    Kind::Raw => (code, self.issued[id].raw.as_ref().unwrap().rows[0].0),
+                    Kind::Census | Kind::Leaf | Kind::Macro => {
+                        let initial = if code < 32 {
+                            code
+                        } else {
+                            self.p.joins.iter().find(|j| j[0] == code).unwrap()[1]
+                        };
+                        let [r, p, _] = self.p.entries[initial];
+                        (r as usize, p as usize)
+                    }
+                };
+                self.current
+                    .entry((entry_rule, entry_pivot, anchor.witness))
+                    .or_default()
+                    .push(id);
             }
-            let id = self.issued.len();
-            self.issued.push(Issued {
-                epoch,
-                lane,
-                leaf,
-                code,
-                anchor: anchor.witness,
-                raw,
-                root_ordinal: 0,
-                child_ordinal: 0,
-                child_epoch: 0,
-                root_verified: false,
-                child_verified: false,
-                produced: None,
-                address: obs[index][1] as usize,
-                suffix_rank,
-            });
-            // Discharge the submitted envelope itself. A macro supplies no separate root token:
-            // its library id decodes to both the first entrance and the later output-port instruction.
-            let (entry_rule, entry_pivot) = match self.kind {
-                Kind::Raw => (code, self.issued[id].raw.as_ref().unwrap().rows[0].0),
-                Kind::Leaf | Kind::Macro => {
-                    let initial = if code < 32 {
-                        code
-                    } else {
-                        self.p.joins.iter().find(|j| j[0] == code).unwrap()[1]
-                    };
-                    let [r, p, _] = self.p.entries[initial];
-                    (r as usize, p as usize)
-                }
-            };
-            self.current
-                .entry((entry_rule, entry_pivot, anchor.witness))
-                .or_default()
-                .push(id);
         }
         if self.observe {
-            self.observations.push((set_id, obs, self.prev));
+            self.observations.push((set_id, obs, self.prev.clone()));
         }
         Ok(())
     }
@@ -410,10 +529,12 @@ impl Policy {
         lane: usize,
         stage: usize,
         obs: &[[i64; 8]],
-    ) -> ([f32; 12], Option<usize>, Option<usize>, [f32; 8]) {
+        mut eligible: impl FnMut(usize) -> bool,
+    ) -> Decision {
         let w = &self.p.root;
         let h = &self.p.head;
         let prev = self.prev[lane];
+        let lane = lane % 2; // Tie the learned row roles when expanding the frozen two-row policy.
         let jcount = self.p.joins.len();
         let mut state = [0f32; 8];
         let mut token = [0f32; 12];
@@ -436,6 +557,9 @@ impl Policy {
         let mut winner = None;
         let mut keys = [0f32; 8];
         for (n, f) in obs.iter().enumerate() {
+            if !eligible(n) {
+                continue;
+            }
             let action = f[0] as usize;
             let l = action / 8;
             let rank = action % 8;
@@ -591,7 +715,7 @@ impl Policy {
             .filter(|(_, v)| v.child_ordinal > 0)
             .map(|(id, v)| json!([id, v.anchor, v.produced]))
             .collect();
-        json!({"issued":records,"raw_payloads":raw,"provenance":provenance,"actions_scored":self.scored,"point_reads":self.point_reads,"kind":format!("{:?}",self.kind),"residual":self.residual,"source_runs":self.at_boundary,
+        json!({"handoffs":self.transfers,"handoff_scores":self.handoff_scores,"idle_slots":self.idle_slots,"issued":records,"raw_payloads":raw,"provenance":provenance,"actions_scored":self.scored,"point_reads":self.point_reads,"kind":format!("{:?}",self.kind),"residual":self.residual,"source_runs":self.at_boundary,
                "root_attempts":self.root_attempts,"child_attempts":self.child_attempts,"raw_rejections":self.raw_rejections,
                "explicit_fields":self.raw_field_count,"rhs":self.ordinal,"observations":self.observations})
     }

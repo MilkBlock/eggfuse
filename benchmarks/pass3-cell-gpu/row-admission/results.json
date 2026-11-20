@@ -1,0 +1,4810 @@
+{
+ "sum-bits/1703": {
+  "1x8-free": {
+   "runs": 1428,
+   "rhs": 7265,
+   "slots": 11424,
+   "issued": 544,
+   "idle": 10880,
+   "duplicates": 476,
+   "roots": 56,
+   "children": 20,
+   "neural": 76,
+   "exact": 7189,
+   "by_row": [
+    76
+   ],
+   "nonempty": 527,
+   "fully_neural_nonempty": 1,
+   "scored": 141536,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    4,
+    0
+   ],
+   "ms": [
+    34.425708,
+    39.274125,
+    38.981,
+    37.444625,
+    35.863583999999996,
+    40.669667
+   ],
+   "cli_ms": [
+    148.777167,
+    171.955916,
+    163.436,
+    157.552417,
+    154.163333,
+    164.066
+   ],
+   "aligned": true,
+   "known_root_opportunities": 247,
+   "missed_known_root_opportunities": 191,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 38.2128125
+  },
+  "1x8-free_once": {
+   "runs": 1428,
+   "rhs": 7265,
+   "slots": 11424,
+   "issued": 308,
+   "idle": 11116,
+   "duplicates": 0,
+   "roots": 235,
+   "children": 87,
+   "neural": 322,
+   "exact": 6943,
+   "by_row": [
+    322
+   ],
+   "nonempty": 527,
+   "fully_neural_nonempty": 5,
+   "scored": 140135,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    23,
+    0
+   ],
+   "ms": [
+    34.835083000000004,
+    41.196834,
+    36.061707999999996,
+    36.177375,
+    36.30225,
+    36.170583
+   ],
+   "cli_ms": [
+    148.714708,
+    165.811875,
+    157.182625,
+    154.468458,
+    155.808333,
+    155.640583
+   ],
+   "aligned": true,
+   "known_root_opportunities": 247,
+   "missed_known_root_opportunities": 12,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 36.173979
+  },
+  "1x8-static": {
+   "runs": 1428,
+   "rhs": 7265,
+   "slots": 11424,
+   "issued": 308,
+   "idle": 11116,
+   "duplicates": 0,
+   "roots": 235,
+   "children": 87,
+   "neural": 322,
+   "exact": 6943,
+   "by_row": [
+    322
+   ],
+   "nonempty": 527,
+   "fully_neural_nonempty": 5,
+   "scored": 140135,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    23,
+    0
+   ],
+   "ms": [
+    35.858666,
+    38.332333000000006,
+    37.298958,
+    36.250459,
+    35.926041999999995,
+    37.010709000000006
+   ],
+   "cli_ms": [
+    150.788166,
+    162.425708,
+    159.207042,
+    153.514084,
+    155.158958,
+    156.644667
+   ],
+   "aligned": true,
+   "known_root_opportunities": 247,
+   "missed_known_root_opportunities": 12,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 36.630584
+  },
+  "1x8-transfer": {
+   "runs": 1428,
+   "rhs": 7265,
+   "slots": 11424,
+   "issued": 308,
+   "idle": 11116,
+   "duplicates": 0,
+   "roots": 235,
+   "children": 87,
+   "neural": 322,
+   "exact": 6943,
+   "by_row": [
+    322
+   ],
+   "nonempty": 527,
+   "fully_neural_nonempty": 5,
+   "scored": 140135,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    23,
+    0
+   ],
+   "ms": [
+    35.461125,
+    40.769541,
+    41.034084,
+    36.557249999999996,
+    38.302375,
+    37.371583
+   ],
+   "cli_ms": [
+    149.288833,
+    160.494167,
+    167.2235,
+    154.234167,
+    160.88275,
+    156.001875
+   ],
+   "aligned": true,
+   "known_root_opportunities": 247,
+   "missed_known_root_opportunities": 12,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 37.836979
+  },
+  "2x4-free": {
+   "runs": 1428,
+   "rhs": 7265,
+   "slots": 11424,
+   "issued": 544,
+   "idle": 10880,
+   "duplicates": 472,
+   "roots": 59,
+   "children": 21,
+   "neural": 80,
+   "exact": 7185,
+   "by_row": [
+    76,
+    4
+   ],
+   "nonempty": 527,
+   "fully_neural_nonempty": 1,
+   "scored": 141536,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    4,
+    0
+   ],
+   "ms": [
+    34.420083,
+    36.644875,
+    35.73625,
+    35.617666,
+    37.12525,
+    37.63875
+   ],
+   "cli_ms": [
+    148.223375,
+    156.554916,
+    154.222459,
+    154.873,
+    155.936,
+    159.199917
+   ],
+   "aligned": true,
+   "known_root_opportunities": 247,
+   "missed_known_root_opportunities": 188,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 36.1905625,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "2x4-free_once": {
+   "runs": 1428,
+   "rhs": 7265,
+   "slots": 11424,
+   "issued": 434,
+   "idle": 10990,
+   "duplicates": 214,
+   "roots": 177,
+   "children": 57,
+   "neural": 234,
+   "exact": 7031,
+   "by_row": [
+    230,
+    4
+   ],
+   "nonempty": 527,
+   "fully_neural_nonempty": 4,
+   "scored": 140752,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    15,
+    0
+   ],
+   "ms": [
+    34.592375000000004,
+    40.304333,
+    36.968792,
+    35.60675,
+    36.697874999999996,
+    37.808375
+   ],
+   "cli_ms": [
+    148.618917,
+    166.516875,
+    156.336875,
+    152.717708,
+    158.33025,
+    156.937209
+   ],
+   "aligned": true,
+   "known_root_opportunities": 247,
+   "missed_known_root_opportunities": 70,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 36.833333499999995,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "2x4-static": {
+   "runs": 1428,
+   "rhs": 7265,
+   "slots": 11424,
+   "issued": 306,
+   "idle": 11118,
+   "duplicates": 0,
+   "roots": 236,
+   "children": 89,
+   "neural": 325,
+   "exact": 6940,
+   "by_row": [
+    164,
+    161
+   ],
+   "nonempty": 527,
+   "fully_neural_nonempty": 5,
+   "scored": 70158,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    23,
+    0
+   ],
+   "ms": [
+    34.917417,
+    39.435083000000006,
+    34.828208,
+    33.645250000000004,
+    33.7505,
+    35.820375
+   ],
+   "cli_ms": [
+    153.977542,
+    167.929417,
+    154.112208,
+    152.88075,
+    151.164042,
+    158.598667
+   ],
+   "aligned": true,
+   "known_root_opportunities": 247,
+   "missed_known_root_opportunities": 11,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 34.872812499999995,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "2x4-transfer": {
+   "runs": 1428,
+   "rhs": 7265,
+   "slots": 11424,
+   "issued": 308,
+   "idle": 11116,
+   "duplicates": 0,
+   "roots": 236,
+   "children": 89,
+   "neural": 325,
+   "exact": 6940,
+   "by_row": [
+    162,
+    163
+   ],
+   "nonempty": 527,
+   "fully_neural_nonempty": 5,
+   "scored": 71174,
+   "transfer_scored": 1021,
+   "transfers": 5,
+   "transfer_root_wins": 1,
+   "point_reads": [
+    23,
+    0
+   ],
+   "ms": [
+    36.571,
+    39.888625,
+    35.8715,
+    34.872542,
+    34.838875,
+    34.679583
+   ],
+   "cli_ms": [
+    152.724375,
+    167.792459,
+    157.476333,
+    153.494125,
+    152.401209,
+    153.433542
+   ],
+   "aligned": true,
+   "known_root_opportunities": 247,
+   "missed_known_root_opportunities": 11,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 35.372021000000004,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "4x2-free": {
+   "runs": 1428,
+   "rhs": 7265,
+   "slots": 11424,
+   "issued": 544,
+   "idle": 10880,
+   "duplicates": 472,
+   "roots": 59,
+   "children": 21,
+   "neural": 80,
+   "exact": 7185,
+   "by_row": [
+    76,
+    4,
+    0,
+    0
+   ],
+   "nonempty": 527,
+   "fully_neural_nonempty": 1,
+   "scored": 141536,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    4,
+    0
+   ],
+   "ms": [
+    33.870458,
+    39.594375,
+    35.625875,
+    36.123833,
+    37.025875,
+    35.9405
+   ],
+   "cli_ms": [
+    149.610292,
+    170.017584,
+    153.990042,
+    156.415375,
+    156.579042,
+    159.764417
+   ],
+   "aligned": true,
+   "known_root_opportunities": 247,
+   "missed_known_root_opportunities": 188,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 36.0321665
+  },
+  "4x2-free_once": {
+   "runs": 1428,
+   "rhs": 7265,
+   "slots": 11424,
+   "issued": 520,
+   "idle": 10904,
+   "duplicates": 387,
+   "roots": 110,
+   "children": 32,
+   "neural": 142,
+   "exact": 7123,
+   "by_row": [
+    138,
+    4,
+    0,
+    0
+   ],
+   "nonempty": 527,
+   "fully_neural_nonempty": 4,
+   "scored": 141252,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    8,
+    0
+   ],
+   "ms": [
+    34.4955,
+    38.625292,
+    36.71675,
+    36.738082999999996,
+    35.902499999999996,
+    36.622291000000004
+   ],
+   "cli_ms": [
+    148.951209,
+    162.389375,
+    156.433917,
+    158.08875,
+    157.335208,
+    157.185292
+   ],
+   "aligned": true,
+   "known_root_opportunities": 247,
+   "missed_known_root_opportunities": 137,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 36.669520500000004
+  },
+  "4x2-static": {
+   "runs": 1428,
+   "rhs": 7265,
+   "slots": 11424,
+   "issued": 298,
+   "idle": 11126,
+   "duplicates": 0,
+   "roots": 232,
+   "children": 83,
+   "neural": 315,
+   "exact": 6950,
+   "by_row": [
+    78,
+    74,
+    79,
+    84
+   ],
+   "nonempty": 527,
+   "fully_neural_nonempty": 5,
+   "scored": 35174,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    21,
+    0
+   ],
+   "ms": [
+    30.747416,
+    36.715208,
+    37.221042000000004,
+    33.981249999999996,
+    32.835917,
+    32.628125000000004
+   ],
+   "cli_ms": [
+    145.261458,
+    161.715333,
+    164.221625,
+    155.157458,
+    152.227375,
+    151.809
+   ],
+   "aligned": true,
+   "known_root_opportunities": 247,
+   "missed_known_root_opportunities": 15,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 33.4085835
+  },
+  "4x2-transfer": {
+   "runs": 1428,
+   "rhs": 7265,
+   "slots": 11424,
+   "issued": 307,
+   "idle": 11117,
+   "duplicates": 0,
+   "roots": 236,
+   "children": 85,
+   "neural": 321,
+   "exact": 6944,
+   "by_row": [
+    78,
+    80,
+    80,
+    83
+   ],
+   "nonempty": 527,
+   "fully_neural_nonempty": 5,
+   "scored": 37711,
+   "transfer_scored": 2544,
+   "transfers": 14,
+   "transfer_root_wins": 9,
+   "point_reads": [
+    23,
+    0
+   ],
+   "ms": [
+    35.459167,
+    38.794125,
+    37.959582999999995,
+    34.337582999999995,
+    34.425542,
+    33.222500000000004
+   ],
+   "cli_ms": [
+    153.740791,
+    168.845125,
+    166.704917,
+    155.268833,
+    154.99675,
+    152.684583
+   ],
+   "aligned": true,
+   "known_root_opportunities": 247,
+   "missed_known_root_opportunities": 11,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 34.9423545
+  },
+  "exact": {
+   "ms": [
+    25.710416,
+    29.935416999999998,
+    29.879875,
+    29.116375,
+    26.439792,
+    26.472458
+   ],
+   "median_ms": 27.7944165
+  }
+ },
+ "sum-bits/1709": {
+  "1x8-free": {
+   "runs": 1428,
+   "rhs": 7265,
+   "slots": 11424,
+   "issued": 524,
+   "idle": 10900,
+   "duplicates": 458,
+   "roots": 56,
+   "children": 20,
+   "neural": 76,
+   "exact": 7189,
+   "by_row": [
+    76
+   ],
+   "nonempty": 527,
+   "fully_neural_nonempty": 1,
+   "scored": 141536,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    4,
+    0
+   ],
+   "ms": [
+    41.7365,
+    37.255334,
+    38.433333,
+    36.026625,
+    38.513583999999994,
+    35.750625
+   ],
+   "cli_ms": [
+    174.879958,
+    155.399542,
+    163.812792,
+    155.8355,
+    161.684292,
+    154.464375
+   ],
+   "aligned": true,
+   "known_root_opportunities": 281,
+   "missed_known_root_opportunities": 225,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 37.8443335
+  },
+  "1x8-free_once": {
+   "runs": 1428,
+   "rhs": 7265,
+   "slots": 11424,
+   "issued": 329,
+   "idle": 11095,
+   "duplicates": 0,
+   "roots": 268,
+   "children": 86,
+   "neural": 354,
+   "exact": 6911,
+   "by_row": [
+    354
+   ],
+   "nonempty": 527,
+   "fully_neural_nonempty": 7,
+   "scored": 140065,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    19,
+    0
+   ],
+   "ms": [
+    37.080417,
+    36.784791,
+    36.028916,
+    35.966416,
+    40.064083000000004,
+    36.106167
+   ],
+   "cli_ms": [
+    156.943458,
+    155.735125,
+    155.67325,
+    155.407458,
+    167.527458,
+    154.223167
+   ],
+   "aligned": true,
+   "known_root_opportunities": 281,
+   "missed_known_root_opportunities": 13,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 36.445479
+  },
+  "1x8-static": {
+   "runs": 1428,
+   "rhs": 7265,
+   "slots": 11424,
+   "issued": 329,
+   "idle": 11095,
+   "duplicates": 0,
+   "roots": 268,
+   "children": 86,
+   "neural": 354,
+   "exact": 6911,
+   "by_row": [
+    354
+   ],
+   "nonempty": 527,
+   "fully_neural_nonempty": 7,
+   "scored": 140065,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    19,
+    0
+   ],
+   "ms": [
+    36.808125,
+    36.540292,
+    36.81325,
+    38.040625,
+    37.058375,
+    36.481833
+   ],
+   "cli_ms": [
+    156.757375,
+    156.420583,
+    153.787042,
+    157.314084,
+    157.791125,
+    154.509958
+   ],
+   "aligned": true,
+   "known_root_opportunities": 281,
+   "missed_known_root_opportunities": 13,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 36.8106875
+  },
+  "1x8-transfer": {
+   "runs": 1428,
+   "rhs": 7265,
+   "slots": 11424,
+   "issued": 329,
+   "idle": 11095,
+   "duplicates": 0,
+   "roots": 268,
+   "children": 86,
+   "neural": 354,
+   "exact": 6911,
+   "by_row": [
+    354
+   ],
+   "nonempty": 527,
+   "fully_neural_nonempty": 7,
+   "scored": 140065,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    19,
+    0
+   ],
+   "ms": [
+    37.86575,
+    37.643042,
+    36.7285,
+    37.193208999999996,
+    37.712250000000004,
+    37.38975
+   ],
+   "cli_ms": [
+    157.535459,
+    158.498291,
+    157.080291,
+    154.997292,
+    156.609625,
+    156.927
+   ],
+   "aligned": true,
+   "known_root_opportunities": 281,
+   "missed_known_root_opportunities": 13,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 37.516396
+  },
+  "2x4-free": {
+   "runs": 1428,
+   "rhs": 7265,
+   "slots": 11424,
+   "issued": 524,
+   "idle": 10900,
+   "duplicates": 458,
+   "roots": 56,
+   "children": 20,
+   "neural": 76,
+   "exact": 7189,
+   "by_row": [
+    76,
+    0
+   ],
+   "nonempty": 527,
+   "fully_neural_nonempty": 1,
+   "scored": 141536,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    4,
+    0
+   ],
+   "ms": [
+    36.169792,
+    35.766290999999995,
+    37.187125,
+    35.595417,
+    36.126459,
+    36.2135
+   ],
+   "cli_ms": [
+    154.4565,
+    154.757417,
+    156.121541,
+    153.458042,
+    155.277875,
+    155.692292
+   ],
+   "aligned": true,
+   "known_root_opportunities": 281,
+   "missed_known_root_opportunities": 225,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 36.1481255,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "2x4-free_once": {
+   "runs": 1428,
+   "rhs": 7265,
+   "slots": 11424,
+   "issued": 462,
+   "idle": 10962,
+   "duplicates": 231,
+   "roots": 194,
+   "children": 54,
+   "neural": 248,
+   "exact": 7017,
+   "by_row": [
+    248,
+    0
+   ],
+   "nonempty": 527,
+   "fully_neural_nonempty": 6,
+   "scored": 140788,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    14,
+    0
+   ],
+   "ms": [
+    36.225791,
+    36.881083000000004,
+    37.402249999999995,
+    35.775124999999996,
+    35.469291,
+    36.792625
+   ],
+   "cli_ms": [
+    154.243625,
+    155.442208,
+    158.6585,
+    155.531042,
+    155.044,
+    158.303666
+   ],
+   "aligned": true,
+   "known_root_opportunities": 281,
+   "missed_known_root_opportunities": 87,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 36.509208,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "2x4-static": {
+   "runs": 1428,
+   "rhs": 7265,
+   "slots": 11424,
+   "issued": 327,
+   "idle": 11097,
+   "duplicates": 0,
+   "roots": 268,
+   "children": 87,
+   "neural": 355,
+   "exact": 6910,
+   "by_row": [
+    181,
+    174
+   ],
+   "nonempty": 527,
+   "fully_neural_nonempty": 7,
+   "scored": 70125,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    19,
+    0
+   ],
+   "ms": [
+    33.640583,
+    33.888166999999996,
+    34.50175,
+    33.226334,
+    33.689959,
+    34.110208
+   ],
+   "cli_ms": [
+    152.286041,
+    153.70425,
+    152.396708,
+    150.927625,
+    152.187292,
+    154.724542
+   ],
+   "aligned": true,
+   "known_root_opportunities": 281,
+   "missed_known_root_opportunities": 13,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 33.789063,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "2x4-transfer": {
+   "runs": 1428,
+   "rhs": 7265,
+   "slots": 11424,
+   "issued": 329,
+   "idle": 11095,
+   "duplicates": 0,
+   "roots": 268,
+   "children": 87,
+   "neural": 355,
+   "exact": 6910,
+   "by_row": [
+    179,
+    176
+   ],
+   "nonempty": 527,
+   "fully_neural_nonempty": 7,
+   "scored": 71039,
+   "transfer_scored": 918,
+   "transfers": 5,
+   "transfer_root_wins": 1,
+   "point_reads": [
+    19,
+    0
+   ],
+   "ms": [
+    34.853375,
+    35.015541999999996,
+    34.573291999999995,
+    34.505416,
+    34.59675,
+    34.582667
+   ],
+   "cli_ms": [
+    154.086209,
+    153.677084,
+    154.951125,
+    152.798875,
+    153.100167,
+    153.843666
+   ],
+   "aligned": true,
+   "known_root_opportunities": 281,
+   "missed_known_root_opportunities": 13,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 34.5897085,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "4x2-free": {
+   "runs": 1428,
+   "rhs": 7265,
+   "slots": 11424,
+   "issued": 524,
+   "idle": 10900,
+   "duplicates": 458,
+   "roots": 56,
+   "children": 20,
+   "neural": 76,
+   "exact": 7189,
+   "by_row": [
+    76,
+    0,
+    0,
+    0
+   ],
+   "nonempty": 527,
+   "fully_neural_nonempty": 1,
+   "scored": 141536,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    4,
+    0
+   ],
+   "ms": [
+    36.012,
+    36.236540999999995,
+    36.947334,
+    35.732917,
+    36.403625000000005,
+    35.846416999999995
+   ],
+   "cli_ms": [
+    155.404875,
+    155.027917,
+    156.360583,
+    153.22,
+    155.008166,
+    153.802334
+   ],
+   "aligned": true,
+   "known_root_opportunities": 281,
+   "missed_known_root_opportunities": 225,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 36.124270499999994
+  },
+  "4x2-free_once": {
+   "runs": 1428,
+   "rhs": 7265,
+   "slots": 11424,
+   "issued": 508,
+   "idle": 10916,
+   "duplicates": 381,
+   "roots": 107,
+   "children": 33,
+   "neural": 140,
+   "exact": 7125,
+   "by_row": [
+    140,
+    0,
+    0,
+    0
+   ],
+   "nonempty": 527,
+   "fully_neural_nonempty": 4,
+   "scored": 141272,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    8,
+    0
+   ],
+   "ms": [
+    35.702167,
+    37.56275,
+    35.617999999999995,
+    37.385042,
+    36.365916,
+    35.921584
+   ],
+   "cli_ms": [
+    152.761084,
+    163.125125,
+    156.313791,
+    158.117625,
+    156.064125,
+    154.277875
+   ],
+   "aligned": true,
+   "known_root_opportunities": 281,
+   "missed_known_root_opportunities": 174,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 36.14375
+  },
+  "4x2-static": {
+   "runs": 1428,
+   "rhs": 7265,
+   "slots": 11424,
+   "issued": 322,
+   "idle": 11102,
+   "duplicates": 0,
+   "roots": 266,
+   "children": 85,
+   "neural": 351,
+   "exact": 6914,
+   "by_row": [
+    87,
+    85,
+    89,
+    90
+   ],
+   "nonempty": 527,
+   "fully_neural_nonempty": 7,
+   "scored": 35160,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    18,
+    0
+   ],
+   "ms": [
+    33.451125,
+    33.789083,
+    32.342667,
+    32.353209,
+    36.32025,
+    33.280792
+   ],
+   "cli_ms": [
+    154.911042,
+    160.199084,
+    149.142667,
+    150.602792,
+    163.7515,
+    150.172375
+   ],
+   "aligned": true,
+   "known_root_opportunities": 281,
+   "missed_known_root_opportunities": 15,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 33.3659585
+  },
+  "4x2-transfer": {
+   "runs": 1428,
+   "rhs": 7265,
+   "slots": 11424,
+   "issued": 329,
+   "idle": 11095,
+   "duplicates": 0,
+   "roots": 267,
+   "children": 86,
+   "neural": 353,
+   "exact": 6912,
+   "by_row": [
+    84,
+    91,
+    90,
+    88
+   ],
+   "nonempty": 527,
+   "fully_neural_nonempty": 7,
+   "scored": 37487,
+   "transfer_scored": 2334,
+   "transfers": 12,
+   "transfer_root_wins": 6,
+   "point_reads": [
+    18,
+    0
+   ],
+   "ms": [
+    35.79775,
+    36.897542,
+    33.323875,
+    33.62925,
+    34.742459000000004,
+    36.01025
+   ],
+   "cli_ms": [
+    159.218542,
+    158.970167,
+    151.593709,
+    153.73025,
+    154.736916,
+    161.136708
+   ],
+   "aligned": true,
+   "known_root_opportunities": 281,
+   "missed_known_root_opportunities": 14,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 35.2701045
+  },
+  "exact": {
+   "ms": [
+    29.014792,
+    26.815125,
+    27.251875,
+    26.737667,
+    27.930708,
+    26.413625
+   ],
+   "median_ms": 27.033499999999997
+  }
+ },
+ "dot-product/1703": {
+  "1x8-free": {
+   "runs": 1535,
+   "rhs": 6704,
+   "slots": 12280,
+   "issued": 384,
+   "idle": 11896,
+   "duplicates": 335,
+   "roots": 46,
+   "children": 9,
+   "neural": 55,
+   "exact": 6649,
+   "by_row": [
+    55
+   ],
+   "nonempty": 546,
+   "fully_neural_nonempty": 3,
+   "scored": 155968,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    0,
+    0
+   ],
+   "ms": [
+    33.6205,
+    34.103583,
+    36.051209,
+    34.000958,
+    36.008584000000006,
+    34.4965
+   ],
+   "cli_ms": [
+    154.768041,
+    155.8845,
+    165.314917,
+    156.365209,
+    164.15525,
+    156.366958
+   ],
+   "aligned": true,
+   "known_root_opportunities": 203,
+   "missed_known_root_opportunities": 157,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 34.3000415
+  },
+  "1x8-free_once": {
+   "runs": 1535,
+   "rhs": 6704,
+   "slots": 12280,
+   "issued": 216,
+   "idle": 12064,
+   "duplicates": 0,
+   "roots": 194,
+   "children": 65,
+   "neural": 259,
+   "exact": 6445,
+   "by_row": [
+    259
+   ],
+   "nonempty": 546,
+   "fully_neural_nonempty": 6,
+   "scored": 155007,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    0,
+    0
+   ],
+   "ms": [
+    33.216708,
+    34.052125000000004,
+    34.077957999999995,
+    33.640083000000004,
+    34.54425,
+    33.829499999999996
+   ],
+   "cli_ms": [
+    154.28175,
+    156.761166,
+    156.598792,
+    161.663875,
+    158.083083,
+    157.557291
+   ],
+   "aligned": true,
+   "known_root_opportunities": 203,
+   "missed_known_root_opportunities": 9,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 33.9408125
+  },
+  "1x8-static": {
+   "runs": 1535,
+   "rhs": 6704,
+   "slots": 12280,
+   "issued": 216,
+   "idle": 12064,
+   "duplicates": 0,
+   "roots": 194,
+   "children": 65,
+   "neural": 259,
+   "exact": 6445,
+   "by_row": [
+    259
+   ],
+   "nonempty": 546,
+   "fully_neural_nonempty": 6,
+   "scored": 155007,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    0,
+    0
+   ],
+   "ms": [
+    33.702542,
+    33.948875,
+    33.556000000000004,
+    36.175833,
+    33.646583,
+    36.243792
+   ],
+   "cli_ms": [
+    154.89575,
+    156.164875,
+    155.579417,
+    160.8585,
+    155.198916,
+    161.174667
+   ],
+   "aligned": true,
+   "known_root_opportunities": 203,
+   "missed_known_root_opportunities": 9,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 33.825708500000005
+  },
+  "1x8-transfer": {
+   "runs": 1535,
+   "rhs": 6704,
+   "slots": 12280,
+   "issued": 216,
+   "idle": 12064,
+   "duplicates": 0,
+   "roots": 194,
+   "children": 65,
+   "neural": 259,
+   "exact": 6445,
+   "by_row": [
+    259
+   ],
+   "nonempty": 546,
+   "fully_neural_nonempty": 6,
+   "scored": 155007,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    0,
+    0
+   ],
+   "ms": [
+    35.6965,
+    37.540542,
+    34.85425,
+    36.015834,
+    34.598708,
+    35.641041
+   ],
+   "cli_ms": [
+    159.34525,
+    161.896917,
+    157.192083,
+    162.680417,
+    156.270167,
+    158.54625
+   ],
+   "aligned": true,
+   "known_root_opportunities": 203,
+   "missed_known_root_opportunities": 9,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 35.6687705
+  },
+  "2x4-free": {
+   "runs": 1535,
+   "rhs": 6704,
+   "slots": 12280,
+   "issued": 384,
+   "idle": 11896,
+   "duplicates": 330,
+   "roots": 51,
+   "children": 14,
+   "neural": 65,
+   "exact": 6639,
+   "by_row": [
+    55,
+    10
+   ],
+   "nonempty": 546,
+   "fully_neural_nonempty": 3,
+   "scored": 155968,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    0,
+    0
+   ],
+   "ms": [
+    34.432708,
+    33.560333,
+    33.408042,
+    33.994499999999995,
+    34.131584,
+    33.711
+   ],
+   "cli_ms": [
+    158.809125,
+    154.62825,
+    157.565291,
+    156.437625,
+    156.205167,
+    157.478375
+   ],
+   "aligned": true,
+   "known_root_opportunities": 203,
+   "missed_known_root_opportunities": 152,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 33.85275,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "2x4-free_once": {
+   "runs": 1535,
+   "rhs": 6704,
+   "slots": 12280,
+   "issued": 294,
+   "idle": 11986,
+   "duplicates": 142,
+   "roots": 140,
+   "children": 41,
+   "neural": 181,
+   "exact": 6523,
+   "by_row": [
+    171,
+    10
+   ],
+   "nonempty": 546,
+   "fully_neural_nonempty": 6,
+   "scored": 155410,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    0,
+    0
+   ],
+   "ms": [
+    34.335875,
+    34.161208,
+    34.016208,
+    35.597708,
+    33.879375,
+    33.069666
+   ],
+   "cli_ms": [
+    158.862167,
+    157.885,
+    155.473708,
+    160.920625,
+    157.40275,
+    154.928542
+   ],
+   "aligned": true,
+   "known_root_opportunities": 203,
+   "missed_known_root_opportunities": 63,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 34.088708,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "2x4-static": {
+   "runs": 1535,
+   "rhs": 6704,
+   "slots": 12280,
+   "issued": 215,
+   "idle": 12065,
+   "duplicates": 0,
+   "roots": 194,
+   "children": 66,
+   "neural": 260,
+   "exact": 6444,
+   "by_row": [
+    131,
+    129
+   ],
+   "nonempty": 546,
+   "fully_neural_nonempty": 6,
+   "scored": 77569,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    0,
+    0
+   ],
+   "ms": [
+    31.712208999999998,
+    31.265958000000005,
+    31.0305,
+    30.897584,
+    33.532417,
+    30.401625000000003
+   ],
+   "cli_ms": [
+    155.225875,
+    153.518917,
+    152.374417,
+    153.377416,
+    159.684958,
+    153.017542
+   ],
+   "aligned": true,
+   "known_root_opportunities": 203,
+   "missed_known_root_opportunities": 9,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 31.148229,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "2x4-transfer": {
+   "runs": 1535,
+   "rhs": 6704,
+   "slots": 12280,
+   "issued": 216,
+   "idle": 12064,
+   "duplicates": 0,
+   "roots": 194,
+   "children": 66,
+   "neural": 260,
+   "exact": 6444,
+   "by_row": [
+    132,
+    128
+   ],
+   "nonempty": 546,
+   "fully_neural_nonempty": 6,
+   "scored": 78036,
+   "transfer_scored": 472,
+   "transfers": 4,
+   "transfer_root_wins": 1,
+   "point_reads": [
+    0,
+    0
+   ],
+   "ms": [
+    32.799917,
+    35.574707999999994,
+    31.787999999999997,
+    32.763583,
+    32.43075,
+    32.224250000000005
+   ],
+   "cli_ms": [
+    154.910625,
+    161.5215,
+    152.144792,
+    153.704917,
+    156.53575,
+    156.855667
+   ],
+   "aligned": true,
+   "known_root_opportunities": 203,
+   "missed_known_root_opportunities": 9,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 32.5971665,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "4x2-free": {
+   "runs": 1535,
+   "rhs": 6704,
+   "slots": 12280,
+   "issued": 384,
+   "idle": 11896,
+   "duplicates": 330,
+   "roots": 51,
+   "children": 14,
+   "neural": 65,
+   "exact": 6639,
+   "by_row": [
+    55,
+    10,
+    0,
+    0
+   ],
+   "nonempty": 546,
+   "fully_neural_nonempty": 3,
+   "scored": 155968,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    0,
+    0
+   ],
+   "ms": [
+    34.5805,
+    32.905917,
+    32.684666,
+    33.336458,
+    33.606291000000006,
+    33.523209
+   ],
+   "cli_ms": [
+    155.823125,
+    154.588334,
+    152.976541,
+    152.561833,
+    155.750083,
+    156.563375
+   ],
+   "aligned": true,
+   "known_root_opportunities": 203,
+   "missed_known_root_opportunities": 152,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 33.4298335
+  },
+  "4x2-free_once": {
+   "runs": 1535,
+   "rhs": 6704,
+   "slots": 12280,
+   "issued": 356,
+   "idle": 11924,
+   "duplicates": 262,
+   "roots": 88,
+   "children": 23,
+   "neural": 111,
+   "exact": 6593,
+   "by_row": [
+    101,
+    10,
+    0,
+    0
+   ],
+   "nonempty": 546,
+   "fully_neural_nonempty": 5,
+   "scored": 155756,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    0,
+    0
+   ],
+   "ms": [
+    33.711,
+    33.719583,
+    34.746667,
+    33.509666,
+    33.539208,
+    33.757541
+   ],
+   "cli_ms": [
+    154.635917,
+    157.63975,
+    155.657459,
+    154.866375,
+    155.646041,
+    157.211833
+   ],
+   "aligned": true,
+   "known_root_opportunities": 203,
+   "missed_known_root_opportunities": 115,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 33.7152915
+  },
+  "4x2-static": {
+   "runs": 1535,
+   "rhs": 6704,
+   "slots": 12280,
+   "issued": 213,
+   "idle": 12067,
+   "duplicates": 0,
+   "roots": 192,
+   "children": 64,
+   "neural": 256,
+   "exact": 6448,
+   "by_row": [
+    66,
+    58,
+    64,
+    68
+   ],
+   "nonempty": 546,
+   "fully_neural_nonempty": 6,
+   "scored": 38850,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    0,
+    0
+   ],
+   "ms": [
+    29.256458,
+    32.318958,
+    29.909833,
+    30.769833,
+    30.545959,
+    29.780874999999998
+   ],
+   "cli_ms": [
+    151.569125,
+    161.409625,
+    154.102792,
+    152.499959,
+    152.675042,
+    151.999542
+   ],
+   "aligned": true,
+   "known_root_opportunities": 203,
+   "missed_known_root_opportunities": 11,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 30.227896
+  },
+  "4x2-transfer": {
+   "runs": 1535,
+   "rhs": 6704,
+   "slots": 12280,
+   "issued": 216,
+   "idle": 12064,
+   "duplicates": 0,
+   "roots": 194,
+   "children": 65,
+   "neural": 259,
+   "exact": 6445,
+   "by_row": [
+    65,
+    62,
+    66,
+    66
+   ],
+   "nonempty": 546,
+   "fully_neural_nonempty": 6,
+   "scored": 39796,
+   "transfer_scored": 951,
+   "transfers": 8,
+   "transfer_root_wins": 5,
+   "point_reads": [
+    0,
+    0
+   ],
+   "ms": [
+    30.21125,
+    31.511417,
+    31.208458,
+    30.68375,
+    31.012042,
+    32.793833
+   ],
+   "cli_ms": [
+    152.201125,
+    153.989792,
+    155.0345,
+    152.683834,
+    154.678833,
+    156.899416
+   ],
+   "aligned": true,
+   "known_root_opportunities": 203,
+   "missed_known_root_opportunities": 9,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 31.11025
+  },
+  "exact": {
+   "ms": [
+    23.548958,
+    23.844666,
+    23.76025,
+    23.743042,
+    23.630667000000003,
+    23.813666
+   ],
+   "median_ms": 23.751646
+  }
+ },
+ "dot-product/1709": {
+  "1x8-free": {
+   "runs": 1535,
+   "rhs": 6704,
+   "slots": 12280,
+   "issued": 388,
+   "idle": 11892,
+   "duplicates": 338,
+   "roots": 46,
+   "children": 9,
+   "neural": 55,
+   "exact": 6649,
+   "by_row": [
+    55
+   ],
+   "nonempty": 546,
+   "fully_neural_nonempty": 3,
+   "scored": 155968,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    0,
+    0
+   ],
+   "ms": [
+    35.844875,
+    34.321290999999995,
+    33.606542000000005,
+    34.896833,
+    35.12370799999999,
+    31.97075
+   ],
+   "cli_ms": [
+    165.162208,
+    156.830917,
+    157.524334,
+    158.818833,
+    156.352083,
+    152.833916
+   ],
+   "aligned": true,
+   "known_root_opportunities": 233,
+   "missed_known_root_opportunities": 187,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 34.609061999999994
+  },
+  "1x8-free_once": {
+   "runs": 1535,
+   "rhs": 6704,
+   "slots": 12280,
+   "issued": 240,
+   "idle": 12040,
+   "duplicates": 0,
+   "roots": 221,
+   "children": 64,
+   "neural": 285,
+   "exact": 6419,
+   "by_row": [
+    285
+   ],
+   "nonempty": 546,
+   "fully_neural_nonempty": 7,
+   "scored": 154922,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    0,
+    0
+   ],
+   "ms": [
+    34.691291,
+    34.422542,
+    34.279083,
+    34.716125,
+    33.464292,
+    32.20125
+   ],
+   "cli_ms": [
+    160.685792,
+    158.696334,
+    161.231416,
+    160.85925,
+    154.840208,
+    150.468042
+   ],
+   "aligned": true,
+   "known_root_opportunities": 233,
+   "missed_known_root_opportunities": 12,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 34.3508125
+  },
+  "1x8-static": {
+   "runs": 1535,
+   "rhs": 6704,
+   "slots": 12280,
+   "issued": 240,
+   "idle": 12040,
+   "duplicates": 0,
+   "roots": 221,
+   "children": 64,
+   "neural": 285,
+   "exact": 6419,
+   "by_row": [
+    285
+   ],
+   "nonempty": 546,
+   "fully_neural_nonempty": 7,
+   "scored": 154922,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    0,
+    0
+   ],
+   "ms": [
+    33.401792,
+    34.031125,
+    33.786207999999995,
+    35.319458,
+    33.382584,
+    31.995707999999997
+   ],
+   "cli_ms": [
+    156.986625,
+    159.736708,
+    157.871791,
+    163.058459,
+    156.819083,
+    150.193083
+   ],
+   "aligned": true,
+   "known_root_opportunities": 233,
+   "missed_known_root_opportunities": 12,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 33.593999999999994
+  },
+  "1x8-transfer": {
+   "runs": 1535,
+   "rhs": 6704,
+   "slots": 12280,
+   "issued": 240,
+   "idle": 12040,
+   "duplicates": 0,
+   "roots": 221,
+   "children": 64,
+   "neural": 285,
+   "exact": 6419,
+   "by_row": [
+    285
+   ],
+   "nonempty": 546,
+   "fully_neural_nonempty": 7,
+   "scored": 154922,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    0,
+    0
+   ],
+   "ms": [
+    36.032125,
+    35.01325,
+    35.169542,
+    34.797334,
+    34.426542,
+    32.901832999999996
+   ],
+   "cli_ms": [
+    165.497875,
+    157.588834,
+    157.618083,
+    156.965584,
+    156.983834,
+    153.858708
+   ],
+   "aligned": true,
+   "known_root_opportunities": 233,
+   "missed_known_root_opportunities": 12,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 34.905292
+  },
+  "2x4-free": {
+   "runs": 1535,
+   "rhs": 6704,
+   "slots": 12280,
+   "issued": 390,
+   "idle": 11890,
+   "duplicates": 340,
+   "roots": 46,
+   "children": 9,
+   "neural": 55,
+   "exact": 6649,
+   "by_row": [
+    55,
+    0
+   ],
+   "nonempty": 546,
+   "fully_neural_nonempty": 3,
+   "scored": 155968,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    0,
+    0
+   ],
+   "ms": [
+    33.912666,
+    34.432542,
+    33.860458,
+    36.992,
+    32.607375,
+    32.414125
+   ],
+   "cli_ms": [
+    156.515084,
+    156.635417,
+    156.320958,
+    162.150667,
+    157.249166,
+    150.145709
+   ],
+   "aligned": true,
+   "known_root_opportunities": 233,
+   "missed_known_root_opportunities": 187,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 33.886562,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "2x4-free_once": {
+   "runs": 1535,
+   "rhs": 6704,
+   "slots": 12280,
+   "issued": 324,
+   "idle": 11956,
+   "duplicates": 162,
+   "roots": 151,
+   "children": 36,
+   "neural": 187,
+   "exact": 6517,
+   "by_row": [
+    187,
+    0
+   ],
+   "nonempty": 546,
+   "fully_neural_nonempty": 7,
+   "scored": 155434,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    0,
+    0
+   ],
+   "ms": [
+    33.617541,
+    33.963208,
+    33.765,
+    33.5685,
+    31.851458,
+    32.354416
+   ],
+   "cli_ms": [
+    157.907042,
+    158.271375,
+    161.3665,
+    156.878875,
+    150.259417,
+    150.048125
+   ],
+   "aligned": true,
+   "known_root_opportunities": 233,
+   "missed_known_root_opportunities": 82,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 33.5930205,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "2x4-static": {
+   "runs": 1535,
+   "rhs": 6704,
+   "slots": 12280,
+   "issued": 239,
+   "idle": 12041,
+   "duplicates": 0,
+   "roots": 221,
+   "children": 64,
+   "neural": 285,
+   "exact": 6419,
+   "by_row": [
+    142,
+    143
+   ],
+   "nonempty": 546,
+   "fully_neural_nonempty": 7,
+   "scored": 77533,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    0,
+    0
+   ],
+   "ms": [
+    31.130292,
+    33.774542,
+    30.660667,
+    30.968083,
+    31.688958000000003,
+    30.542958
+   ],
+   "cli_ms": [
+    152.797375,
+    157.896666,
+    152.24575,
+    155.427542,
+    153.0005,
+    151.954834
+   ],
+   "aligned": true,
+   "known_root_opportunities": 233,
+   "missed_known_root_opportunities": 12,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 31.049187500000002,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "2x4-transfer": {
+   "runs": 1535,
+   "rhs": 6704,
+   "slots": 12280,
+   "issued": 240,
+   "idle": 12040,
+   "duplicates": 0,
+   "roots": 221,
+   "children": 64,
+   "neural": 285,
+   "exact": 6419,
+   "by_row": [
+    143,
+    142
+   ],
+   "nonempty": 546,
+   "fully_neural_nonempty": 7,
+   "scored": 77983,
+   "transfer_scored": 457,
+   "transfers": 5,
+   "transfer_root_wins": 1,
+   "point_reads": [
+    0,
+    0
+   ],
+   "ms": [
+    32.968917,
+    32.841417,
+    33.820125,
+    32.527917,
+    32.309667,
+    30.492458
+   ],
+   "cli_ms": [
+    155.614375,
+    156.782542,
+    157.542542,
+    158.383083,
+    153.372917,
+    153.313625
+   ],
+   "aligned": true,
+   "known_root_opportunities": 233,
+   "missed_known_root_opportunities": 12,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 32.684667000000005,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "4x2-free": {
+   "runs": 1535,
+   "rhs": 6704,
+   "slots": 12280,
+   "issued": 390,
+   "idle": 11890,
+   "duplicates": 341,
+   "roots": 46,
+   "children": 9,
+   "neural": 55,
+   "exact": 6649,
+   "by_row": [
+    55,
+    0,
+    0,
+    0
+   ],
+   "nonempty": 546,
+   "fully_neural_nonempty": 3,
+   "scored": 155968,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    0,
+    0
+   ],
+   "ms": [
+    33.891083,
+    34.260458,
+    34.343417,
+    34.140292,
+    34.081958,
+    32.56225
+   ],
+   "cli_ms": [
+    157.232625,
+    159.637209,
+    157.485667,
+    159.343541,
+    154.985334,
+    152.314041
+   ],
+   "aligned": true,
+   "known_root_opportunities": 233,
+   "missed_known_root_opportunities": 187,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 34.111125
+  },
+  "4x2-free_once": {
+   "runs": 1535,
+   "rhs": 6704,
+   "slots": 12280,
+   "issued": 360,
+   "idle": 11920,
+   "duplicates": 270,
+   "roots": 84,
+   "children": 18,
+   "neural": 102,
+   "exact": 6602,
+   "by_row": [
+    102,
+    0,
+    0,
+    0
+   ],
+   "nonempty": 546,
+   "fully_neural_nonempty": 5,
+   "scored": 155772,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    0,
+    0
+   ],
+   "ms": [
+    33.463167,
+    33.744167,
+    34.089292,
+    33.750375,
+    34.370833000000005,
+    32.905833
+   ],
+   "cli_ms": [
+    155.460291,
+    158.090291,
+    156.402084,
+    159.572083,
+    156.294375,
+    155.665375
+   ],
+   "aligned": true,
+   "known_root_opportunities": 233,
+   "missed_known_root_opportunities": 149,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 33.747271
+  },
+  "4x2-static": {
+   "runs": 1535,
+   "rhs": 6704,
+   "slots": 12280,
+   "issued": 238,
+   "idle": 12042,
+   "duplicates": 0,
+   "roots": 220,
+   "children": 64,
+   "neural": 284,
+   "exact": 6420,
+   "by_row": [
+    71,
+    66,
+    71,
+    76
+   ],
+   "nonempty": 546,
+   "fully_neural_nonempty": 7,
+   "scored": 38836,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    0,
+    0
+   ],
+   "ms": [
+    29.882915999999998,
+    29.552125,
+    29.634667,
+    30.605209000000002,
+    29.870084000000002,
+    28.394
+   ],
+   "cli_ms": [
+    150.638042,
+    151.23225,
+    150.8335,
+    154.147917,
+    151.386583,
+    154.073209
+   ],
+   "aligned": true,
+   "known_root_opportunities": 233,
+   "missed_known_root_opportunities": 13,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 29.7523755
+  },
+  "4x2-transfer": {
+   "runs": 1535,
+   "rhs": 6704,
+   "slots": 12280,
+   "issued": 239,
+   "idle": 12041,
+   "duplicates": 0,
+   "roots": 221,
+   "children": 64,
+   "neural": 285,
+   "exact": 6419,
+   "by_row": [
+    70,
+    68,
+    73,
+    74
+   ],
+   "nonempty": 546,
+   "fully_neural_nonempty": 7,
+   "scored": 39564,
+   "transfer_scored": 734,
+   "transfers": 7,
+   "transfer_root_wins": 4,
+   "point_reads": [
+    0,
+    0
+   ],
+   "ms": [
+    30.162375,
+    30.889208,
+    30.920791,
+    31.330499999999997,
+    30.956792,
+    29.856333
+   ],
+   "cli_ms": [
+    151.346667,
+    154.787959,
+    153.458709,
+    156.879458,
+    153.568459,
+    152.293334
+   ],
+   "aligned": true,
+   "known_root_opportunities": 233,
+   "missed_known_root_opportunities": 12,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 30.904999500000002
+  },
+  "exact": {
+   "ms": [
+    24.194582999999998,
+    24.306333,
+    23.395041,
+    24.823959,
+    24.037,
+    24.011166
+   ],
+   "median_ms": 24.1157915
+  }
+ },
+ "gemm-bias-relu/1703": {
+  "1x8-free": {
+   "runs": 1652,
+   "rhs": 15462,
+   "slots": 13216,
+   "issued": 376,
+   "idle": 12840,
+   "duplicates": 328,
+   "roots": 43,
+   "children": 14,
+   "neural": 57,
+   "exact": 15405,
+   "by_row": [
+    57
+   ],
+   "nonempty": 592,
+   "fully_neural_nonempty": 4,
+   "scored": 225904,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    3,
+    0
+   ],
+   "ms": [
+    64.616209,
+    64.581458,
+    64.10445800000001,
+    62.938584000000006,
+    63.402208,
+    67.018542
+   ],
+   "cli_ms": [
+    191.66275,
+    189.917125,
+    187.002417,
+    186.857291,
+    187.397291,
+    196.919583
+   ],
+   "aligned": true,
+   "known_root_opportunities": 216,
+   "missed_known_root_opportunities": 173,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 64.34295800000001
+  },
+  "1x8-free_once": {
+   "runs": 1652,
+   "rhs": 15462,
+   "slots": 13216,
+   "issued": 220,
+   "idle": 12996,
+   "duplicates": 0,
+   "roots": 198,
+   "children": 96,
+   "neural": 294,
+   "exact": 15168,
+   "by_row": [
+    294
+   ],
+   "nonempty": 592,
+   "fully_neural_nonempty": 7,
+   "scored": 224947,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    7,
+    0
+   ],
+   "ms": [
+    64.677417,
+    68.239959,
+    63.026708,
+    67.36583399999999,
+    62.56845799999999,
+    65.263875
+   ],
+   "cli_ms": [
+    188.460708,
+    195.068708,
+    189.806042,
+    193.480125,
+    186.554459,
+    192.782
+   ],
+   "aligned": true,
+   "known_root_opportunities": 216,
+   "missed_known_root_opportunities": 18,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 64.970646
+  },
+  "1x8-static": {
+   "runs": 1652,
+   "rhs": 15462,
+   "slots": 13216,
+   "issued": 220,
+   "idle": 12996,
+   "duplicates": 0,
+   "roots": 198,
+   "children": 96,
+   "neural": 294,
+   "exact": 15168,
+   "by_row": [
+    294
+   ],
+   "nonempty": 592,
+   "fully_neural_nonempty": 7,
+   "scored": 224947,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    7,
+    0
+   ],
+   "ms": [
+    62.147334,
+    64.20208400000001,
+    62.562875000000005,
+    65.050708,
+    75.805542,
+    65.36649999999999
+   ],
+   "cli_ms": [
+    188.101375,
+    188.018542,
+    186.709417,
+    189.86375,
+    216.909209,
+    194.603417
+   ],
+   "aligned": true,
+   "known_root_opportunities": 216,
+   "missed_known_root_opportunities": 18,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 64.626396
+  },
+  "1x8-transfer": {
+   "runs": 1652,
+   "rhs": 15462,
+   "slots": 13216,
+   "issued": 220,
+   "idle": 12996,
+   "duplicates": 0,
+   "roots": 198,
+   "children": 96,
+   "neural": 294,
+   "exact": 15168,
+   "by_row": [
+    294
+   ],
+   "nonempty": 592,
+   "fully_neural_nonempty": 7,
+   "scored": 224947,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    7,
+    0
+   ],
+   "ms": [
+    63.713041,
+    65.160334,
+    62.95079200000001,
+    64.560542,
+    67.364833,
+    66.639625
+   ],
+   "cli_ms": [
+    189.13025,
+    188.043791,
+    186.063334,
+    189.887042,
+    197.580958,
+    192.708375
+   ],
+   "aligned": true,
+   "known_root_opportunities": 216,
+   "missed_known_root_opportunities": 18,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 64.860438
+  },
+  "2x4-free": {
+   "runs": 1652,
+   "rhs": 15462,
+   "slots": 13216,
+   "issued": 376,
+   "idle": 12840,
+   "duplicates": 326,
+   "roots": 44,
+   "children": 15,
+   "neural": 59,
+   "exact": 15403,
+   "by_row": [
+    57,
+    2
+   ],
+   "nonempty": 592,
+   "fully_neural_nonempty": 4,
+   "scored": 225904,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    3,
+    0
+   ],
+   "ms": [
+    62.876166999999995,
+    62.51975,
+    62.579625,
+    63.434709000000005,
+    67.695416,
+    64.69800000000001
+   ],
+   "cli_ms": [
+    186.6915,
+    184.365667,
+    185.567459,
+    188.061625,
+    197.810375,
+    191.227542
+   ],
+   "aligned": true,
+   "known_root_opportunities": 216,
+   "missed_known_root_opportunities": 172,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 63.155438000000004,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "2x4-free_once": {
+   "runs": 1652,
+   "rhs": 15462,
+   "slots": 13216,
+   "issued": 290,
+   "idle": 12926,
+   "duplicates": 144,
+   "roots": 134,
+   "children": 51,
+   "neural": 185,
+   "exact": 15277,
+   "by_row": [
+    183,
+    2
+   ],
+   "nonempty": 592,
+   "fully_neural_nonempty": 7,
+   "scored": 225380,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    7,
+    0
+   ],
+   "ms": [
+    62.419708,
+    62.72575,
+    69.643292,
+    67.04525,
+    67.06237499999999,
+    65.80820800000001
+   ],
+   "cli_ms": [
+    184.978375,
+    186.084334,
+    209.084084,
+    200.334375,
+    196.172042,
+    194.197042
+   ],
+   "aligned": true,
+   "known_root_opportunities": 216,
+   "missed_known_root_opportunities": 82,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 66.426729,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "2x4-static": {
+   "runs": 1652,
+   "rhs": 15462,
+   "slots": 13216,
+   "issued": 219,
+   "idle": 12997,
+   "duplicates": 0,
+   "roots": 198,
+   "children": 95,
+   "neural": 293,
+   "exact": 15169,
+   "by_row": [
+    141,
+    152
+   ],
+   "nonempty": 592,
+   "fully_neural_nonempty": 7,
+   "scored": 112534,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    7,
+    0
+   ],
+   "ms": [
+    63.355042,
+    58.439459,
+    59.342,
+    62.723708,
+    59.436334,
+    61.412834
+   ],
+   "cli_ms": [
+    187.227542,
+    181.037125,
+    183.53225,
+    192.931583,
+    184.00075,
+    186.740042
+   ],
+   "aligned": true,
+   "known_root_opportunities": 216,
+   "missed_known_root_opportunities": 18,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 60.424583999999996,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "2x4-transfer": {
+   "runs": 1652,
+   "rhs": 15462,
+   "slots": 13216,
+   "issued": 220,
+   "idle": 12996,
+   "duplicates": 0,
+   "roots": 198,
+   "children": 95,
+   "neural": 293,
+   "exact": 15169,
+   "by_row": [
+    141,
+    152
+   ],
+   "nonempty": 592,
+   "fully_neural_nonempty": 7,
+   "scored": 112894,
+   "transfer_scored": 360,
+   "transfers": 1,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    7,
+    0
+   ],
+   "ms": [
+    63.079333,
+    61.124917,
+    60.947375,
+    62.92416600000001,
+    61.179291,
+    64.340042
+   ],
+   "cli_ms": [
+    188.5155,
+    187.39975,
+    184.191875,
+    187.8845,
+    185.403417,
+    191.602917
+   ],
+   "aligned": true,
+   "known_root_opportunities": 216,
+   "missed_known_root_opportunities": 18,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 62.0517285,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "4x2-free": {
+   "runs": 1652,
+   "rhs": 15462,
+   "slots": 13216,
+   "issued": 376,
+   "idle": 12840,
+   "duplicates": 326,
+   "roots": 44,
+   "children": 15,
+   "neural": 59,
+   "exact": 15403,
+   "by_row": [
+    57,
+    2,
+    0,
+    0
+   ],
+   "nonempty": 592,
+   "fully_neural_nonempty": 4,
+   "scored": 225904,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    3,
+    0
+   ],
+   "ms": [
+    63.20891700000001,
+    61.138999999999996,
+    62.853916,
+    64.607042,
+    69.419042,
+    65.85475000000001
+   ],
+   "cli_ms": [
+    190.626291,
+    183.243125,
+    185.6165,
+    187.929333,
+    200.219167,
+    194.490208
+   ],
+   "aligned": true,
+   "known_root_opportunities": 216,
+   "missed_known_root_opportunities": 172,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 63.90797950000001
+  },
+  "4x2-free_once": {
+   "runs": 1652,
+   "rhs": 15462,
+   "slots": 13216,
+   "issued": 352,
+   "idle": 12864,
+   "duplicates": 263,
+   "roots": 82,
+   "children": 27,
+   "neural": 109,
+   "exact": 15353,
+   "by_row": [
+    107,
+    2,
+    0,
+    0
+   ],
+   "nonempty": 592,
+   "fully_neural_nonempty": 7,
+   "scored": 225712,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    4,
+    0
+   ],
+   "ms": [
+    68.289,
+    62.540708,
+    63.267167,
+    63.541374999999995,
+    65.233958,
+    69.102291
+   ],
+   "cli_ms": [
+    195.23675,
+    186.629958,
+    189.35725,
+    189.087375,
+    192.702166,
+    199.375959
+   ],
+   "aligned": true,
+   "known_root_opportunities": 216,
+   "missed_known_root_opportunities": 134,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 64.3876665
+  },
+  "4x2-static": {
+   "runs": 1652,
+   "rhs": 15462,
+   "slots": 13216,
+   "issued": 218,
+   "idle": 12998,
+   "duplicates": 0,
+   "roots": 197,
+   "children": 95,
+   "neural": 292,
+   "exact": 15170,
+   "by_row": [
+    73,
+    72,
+    67,
+    80
+   ],
+   "nonempty": 592,
+   "fully_neural_nonempty": 7,
+   "scored": 56334,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    7,
+    0
+   ],
+   "ms": [
+    58.780209,
+    61.240415999999996,
+    59.91425,
+    58.6495,
+    61.350041000000004,
+    61.580334
+   ],
+   "cli_ms": [
+    185.253959,
+    188.460458,
+    188.855584,
+    183.076333,
+    187.242167,
+    192.427208
+   ],
+   "aligned": true,
+   "known_root_opportunities": 216,
+   "missed_known_root_opportunities": 19,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 60.577332999999996
+  },
+  "4x2-transfer": {
+   "runs": 1652,
+   "rhs": 15462,
+   "slots": 13216,
+   "issued": 220,
+   "idle": 12996,
+   "duplicates": 0,
+   "roots": 198,
+   "children": 96,
+   "neural": 294,
+   "exact": 15168,
+   "by_row": [
+    76,
+    72,
+    67,
+    79
+   ],
+   "nonempty": 592,
+   "fully_neural_nonempty": 7,
+   "scored": 57303,
+   "transfer_scored": 972,
+   "transfers": 5,
+   "transfer_root_wins": 3,
+   "point_reads": [
+    7,
+    0
+   ],
+   "ms": [
+    59.556583,
+    58.396499999999996,
+    59.968708,
+    59.318625,
+    58.127625,
+    62.940833000000005
+   ],
+   "cli_ms": [
+    185.327542,
+    184.830709,
+    185.810917,
+    182.072417,
+    182.785167,
+    189.369791
+   ],
+   "aligned": true,
+   "known_root_opportunities": 216,
+   "missed_known_root_opportunities": 18,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 59.437604
+  },
+  "exact": {
+   "ms": [
+    48.434208,
+    47.935917,
+    48.481916,
+    48.022916,
+    48.862584,
+    50.190542
+   ],
+   "median_ms": 48.458062
+  }
+ },
+ "gemm-bias-relu/1709": {
+  "1x8-free": {
+   "runs": 1652,
+   "rhs": 15462,
+   "slots": 13216,
+   "issued": 376,
+   "idle": 12840,
+   "duplicates": 328,
+   "roots": 43,
+   "children": 14,
+   "neural": 57,
+   "exact": 15405,
+   "by_row": [
+    57
+   ],
+   "nonempty": 592,
+   "fully_neural_nonempty": 4,
+   "scored": 225904,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    2,
+    0
+   ],
+   "ms": [
+    64.737625,
+    70.61141599999999,
+    66.34533300000001,
+    68.455833,
+    65.598,
+    67.5415
+   ],
+   "cli_ms": [
+    191.025292,
+    199.731666,
+    195.114041,
+    197.956167,
+    195.325833,
+    196.283
+   ],
+   "aligned": true,
+   "known_root_opportunities": 238,
+   "missed_known_root_opportunities": 195,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 66.94341650000001
+  },
+  "1x8-free_once": {
+   "runs": 1652,
+   "rhs": 15462,
+   "slots": 13216,
+   "issued": 242,
+   "idle": 12974,
+   "duplicates": 0,
+   "roots": 218,
+   "children": 94,
+   "neural": 312,
+   "exact": 15150,
+   "by_row": [
+    312
+   ],
+   "nonempty": 592,
+   "fully_neural_nonempty": 8,
+   "scored": 224873,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    8,
+    0
+   ],
+   "ms": [
+    70.27033300000001,
+    68.171042,
+    66.196417,
+    66.23504199999999,
+    68.74974999999999,
+    68.18625
+   ],
+   "cli_ms": [
+    201.088125,
+    199.915875,
+    194.478709,
+    192.983584,
+    202.580958,
+    197.969291
+   ],
+   "aligned": true,
+   "known_root_opportunities": 238,
+   "missed_known_root_opportunities": 20,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 68.178646
+  },
+  "1x8-static": {
+   "runs": 1652,
+   "rhs": 15462,
+   "slots": 13216,
+   "issued": 242,
+   "idle": 12974,
+   "duplicates": 0,
+   "roots": 218,
+   "children": 94,
+   "neural": 312,
+   "exact": 15150,
+   "by_row": [
+    312
+   ],
+   "nonempty": 592,
+   "fully_neural_nonempty": 8,
+   "scored": 224873,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    8,
+    0
+   ],
+   "ms": [
+    67.41812499999999,
+    65.91033300000001,
+    65.72262500000001,
+    66.222042,
+    66.453708,
+    68.490958
+   ],
+   "cli_ms": [
+    197.639416,
+    192.777208,
+    194.708042,
+    193.205334,
+    195.707791,
+    198.966917
+   ],
+   "aligned": true,
+   "known_root_opportunities": 238,
+   "missed_known_root_opportunities": 20,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 66.337875
+  },
+  "1x8-transfer": {
+   "runs": 1652,
+   "rhs": 15462,
+   "slots": 13216,
+   "issued": 242,
+   "idle": 12974,
+   "duplicates": 0,
+   "roots": 218,
+   "children": 94,
+   "neural": 312,
+   "exact": 15150,
+   "by_row": [
+    312
+   ],
+   "nonempty": 592,
+   "fully_neural_nonempty": 8,
+   "scored": 224873,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    8,
+    0
+   ],
+   "ms": [
+    68.9795,
+    68.61212499999999,
+    66.690083,
+    69.403875,
+    65.535292,
+    67.841834
+   ],
+   "cli_ms": [
+    199.565792,
+    196.929583,
+    196.031792,
+    200.117417,
+    193.426834,
+    196.736583
+   ],
+   "aligned": true,
+   "known_root_opportunities": 238,
+   "missed_known_root_opportunities": 20,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 68.2269795
+  },
+  "2x4-free": {
+   "runs": 1652,
+   "rhs": 15462,
+   "slots": 13216,
+   "issued": 376,
+   "idle": 12840,
+   "duplicates": 328,
+   "roots": 43,
+   "children": 14,
+   "neural": 57,
+   "exact": 15405,
+   "by_row": [
+    57,
+    0
+   ],
+   "nonempty": 592,
+   "fully_neural_nonempty": 4,
+   "scored": 225904,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    2,
+    0
+   ],
+   "ms": [
+    67.770584,
+    67.506833,
+    68.473291,
+    65.506834,
+    64.844208,
+    65.733792
+   ],
+   "cli_ms": [
+    197.925125,
+    197.179917,
+    198.062875,
+    191.995125,
+    193.142917,
+    193.414291
+   ],
+   "aligned": true,
+   "known_root_opportunities": 238,
+   "missed_known_root_opportunities": 195,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 66.6203125,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "2x4-free_once": {
+   "runs": 1652,
+   "rhs": 15462,
+   "slots": 13216,
+   "issued": 316,
+   "idle": 12900,
+   "duplicates": 158,
+   "roots": 145,
+   "children": 51,
+   "neural": 196,
+   "exact": 15266,
+   "by_row": [
+    196,
+    0
+   ],
+   "nonempty": 592,
+   "fully_neural_nonempty": 8,
+   "scored": 225384,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    8,
+    0
+   ],
+   "ms": [
+    65.247917,
+    65.252833,
+    68.132417,
+    66.176209,
+    63.845,
+    66.303709
+   ],
+   "cli_ms": [
+    194.241584,
+    192.301792,
+    199.836584,
+    192.719292,
+    193.593375,
+    200.757333
+   ],
+   "aligned": true,
+   "known_root_opportunities": 238,
+   "missed_known_root_opportunities": 93,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 65.71452099999999,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "2x4-static": {
+   "runs": 1652,
+   "rhs": 15462,
+   "slots": 13216,
+   "issued": 240,
+   "idle": 12976,
+   "duplicates": 0,
+   "roots": 218,
+   "children": 94,
+   "neural": 312,
+   "exact": 15150,
+   "by_row": [
+    161,
+    151
+   ],
+   "nonempty": 592,
+   "fully_neural_nonempty": 8,
+   "scored": 112509,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    8,
+    0
+   ],
+   "ms": [
+    62.155084,
+    63.083749999999995,
+    61.787915999999996,
+    62.198083000000004,
+    60.691125,
+    65.467916
+   ],
+   "cli_ms": [
+    192.934208,
+    192.582833,
+    189.650458,
+    189.657208,
+    190.14625,
+    196.394541
+   ],
+   "aligned": true,
+   "known_root_opportunities": 238,
+   "missed_known_root_opportunities": 20,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 62.17658350000001,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "2x4-transfer": {
+   "runs": 1652,
+   "rhs": 15462,
+   "slots": 13216,
+   "issued": 241,
+   "idle": 12975,
+   "duplicates": 0,
+   "roots": 218,
+   "children": 94,
+   "neural": 312,
+   "exact": 15150,
+   "by_row": [
+    161,
+    151
+   ],
+   "nonempty": 592,
+   "fully_neural_nonempty": 8,
+   "scored": 113115,
+   "transfer_scored": 607,
+   "transfers": 2,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    8,
+    0
+   ],
+   "ms": [
+    63.294292,
+    65.284625,
+    76.457584,
+    67.042875,
+    63.86966700000001,
+    66.663041
+   ],
+   "cli_ms": [
+    191.601917,
+    195.831875,
+    210.021916,
+    197.55975,
+    193.859084,
+    195.478708
+   ],
+   "aligned": true,
+   "known_root_opportunities": 238,
+   "missed_known_root_opportunities": 20,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 65.97383300000001,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "4x2-free": {
+   "runs": 1652,
+   "rhs": 15462,
+   "slots": 13216,
+   "issued": 376,
+   "idle": 12840,
+   "duplicates": 328,
+   "roots": 43,
+   "children": 14,
+   "neural": 57,
+   "exact": 15405,
+   "by_row": [
+    57,
+    0,
+    0,
+    0
+   ],
+   "nonempty": 592,
+   "fully_neural_nonempty": 4,
+   "scored": 225904,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    2,
+    0
+   ],
+   "ms": [
+    66.77475,
+    66.942125,
+    67.994959,
+    65.95841700000001,
+    66.344459,
+    72.873625
+   ],
+   "cli_ms": [
+    196.319,
+    196.861541,
+    202.704583,
+    195.999166,
+    196.446541,
+    203.575416
+   ],
+   "aligned": true,
+   "known_root_opportunities": 238,
+   "missed_known_root_opportunities": 195,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 66.85843750000001
+  },
+  "4x2-free_once": {
+   "runs": 1652,
+   "rhs": 15462,
+   "slots": 13216,
+   "issued": 352,
+   "idle": 12864,
+   "duplicates": 264,
+   "roots": 81,
+   "children": 26,
+   "neural": 107,
+   "exact": 15355,
+   "by_row": [
+    107,
+    0,
+    0,
+    0
+   ],
+   "nonempty": 592,
+   "fully_neural_nonempty": 7,
+   "scored": 225712,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    4,
+    0
+   ],
+   "ms": [
+    65.691292,
+    67.291,
+    65.537625,
+    65.49458299999999,
+    67.741041,
+    65.397375
+   ],
+   "cli_ms": [
+    203.92675,
+    196.176833,
+    196.997834,
+    192.740708,
+    196.05775,
+    194.86375
+   ],
+   "aligned": true,
+   "known_root_opportunities": 238,
+   "missed_known_root_opportunities": 157,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 65.61445850000001
+  },
+  "4x2-static": {
+   "runs": 1652,
+   "rhs": 15462,
+   "slots": 13216,
+   "issued": 239,
+   "idle": 12977,
+   "duplicates": 0,
+   "roots": 217,
+   "children": 94,
+   "neural": 311,
+   "exact": 15151,
+   "by_row": [
+    84,
+    73,
+    77,
+    77
+   ],
+   "nonempty": 592,
+   "fully_neural_nonempty": 8,
+   "scored": 56322,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    6,
+    0
+   ],
+   "ms": [
+    68.476917,
+    58.983124999999994,
+    61.471209,
+    58.849291,
+    61.812583999999994,
+    59.365583
+   ],
+   "cli_ms": [
+    197.464292,
+    185.4775,
+    194.546834,
+    184.682417,
+    192.88725,
+    186.146375
+   ],
+   "aligned": true,
+   "known_root_opportunities": 238,
+   "missed_known_root_opportunities": 21,
+   "first_idle_run_with_known_omission": 797,
+   "median_ms": 60.418396
+  },
+  "4x2-transfer": {
+   "runs": 1652,
+   "rhs": 15462,
+   "slots": 13216,
+   "issued": 241,
+   "idle": 12975,
+   "duplicates": 0,
+   "roots": 218,
+   "children": 94,
+   "neural": 312,
+   "exact": 15150,
+   "by_row": [
+    85,
+    74,
+    76,
+    77
+   ],
+   "nonempty": 592,
+   "fully_neural_nonempty": 8,
+   "scored": 57152,
+   "transfer_scored": 835,
+   "transfers": 5,
+   "transfer_root_wins": 3,
+   "point_reads": [
+    8,
+    0
+   ],
+   "ms": [
+    60.94575,
+    62.00625,
+    62.363792000000004,
+    62.261333,
+    63.475542,
+    63.191959000000004
+   ],
+   "cli_ms": [
+    188.488917,
+    190.403417,
+    190.530542,
+    191.258625,
+    192.858625,
+    192.69975
+   ],
+   "aligned": true,
+   "known_root_opportunities": 238,
+   "missed_known_root_opportunities": 20,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 62.3125625
+  },
+  "exact": {
+   "ms": [
+    52.885,
+    51.475874999999995,
+    50.725417,
+    54.746125,
+    52.485875,
+    52.241042
+   ],
+   "median_ms": 52.3634585
+  }
+ },
+ "stable-argmax/1703": {
+  "1x8-free": {
+   "runs": 1149,
+   "rhs": 8190,
+   "slots": 9192,
+   "issued": 320,
+   "idle": 8872,
+   "duplicates": 279,
+   "roots": 36,
+   "children": 11,
+   "neural": 47,
+   "exact": 8143,
+   "by_row": [
+    47
+   ],
+   "nonempty": 399,
+   "fully_neural_nonempty": 1,
+   "scored": 135704,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    3,
+    0
+   ],
+   "ms": [
+    35.991041,
+    38.356292,
+    38.412417,
+    36.59275,
+    37.257625000000004,
+    36.1135
+   ],
+   "cli_ms": [
+    155.0115,
+    165.047167,
+    164.769708,
+    158.022125,
+    165.534041,
+    155.424792
+   ],
+   "aligned": true,
+   "known_root_opportunities": 180,
+   "missed_known_root_opportunities": 144,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 36.92518750000001
+  },
+  "1x8-free_once": {
+   "runs": 1149,
+   "rhs": 8190,
+   "slots": 9192,
+   "issued": 184,
+   "idle": 9008,
+   "duplicates": 0,
+   "roots": 167,
+   "children": 72,
+   "neural": 239,
+   "exact": 7951,
+   "by_row": [
+    239
+   ],
+   "nonempty": 399,
+   "fully_neural_nonempty": 3,
+   "scored": 134887,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    5,
+    0
+   ],
+   "ms": [
+    35.963791,
+    38.197125,
+    36.232625,
+    35.504334,
+    37.053000000000004,
+    35.761125
+   ],
+   "cli_ms": [
+    156.122208,
+    161.213916,
+    158.202,
+    156.29475,
+    162.709375,
+    157.454458
+   ],
+   "aligned": true,
+   "known_root_opportunities": 180,
+   "missed_known_root_opportunities": 13,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 36.098208
+  },
+  "1x8-static": {
+   "runs": 1149,
+   "rhs": 8190,
+   "slots": 9192,
+   "issued": 184,
+   "idle": 9008,
+   "duplicates": 0,
+   "roots": 167,
+   "children": 72,
+   "neural": 239,
+   "exact": 7951,
+   "by_row": [
+    239
+   ],
+   "nonempty": 399,
+   "fully_neural_nonempty": 3,
+   "scored": 134887,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    5,
+    0
+   ],
+   "ms": [
+    37.370042,
+    36.355458,
+    37.161542,
+    37.356,
+    36.289457999999996,
+    36.209916
+   ],
+   "cli_ms": [
+    159.50625,
+    159.171042,
+    159.330708,
+    159.069,
+    160.073958,
+    157.451667
+   ],
+   "aligned": true,
+   "known_root_opportunities": 180,
+   "missed_known_root_opportunities": 13,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 36.7585
+  },
+  "1x8-transfer": {
+   "runs": 1149,
+   "rhs": 8190,
+   "slots": 9192,
+   "issued": 184,
+   "idle": 9008,
+   "duplicates": 0,
+   "roots": 167,
+   "children": 72,
+   "neural": 239,
+   "exact": 7951,
+   "by_row": [
+    239
+   ],
+   "nonempty": 399,
+   "fully_neural_nonempty": 3,
+   "scored": 134887,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    5,
+    0
+   ],
+   "ms": [
+    37.548875,
+    37.004125,
+    38.558917,
+    36.58408300000001,
+    41.029042000000004,
+    38.54875
+   ],
+   "cli_ms": [
+    163.641667,
+    159.5715,
+    163.424583,
+    159.014667,
+    163.199584,
+    162.355833
+   ],
+   "aligned": true,
+   "known_root_opportunities": 180,
+   "missed_known_root_opportunities": 13,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 38.0488125
+  },
+  "2x4-free": {
+   "runs": 1149,
+   "rhs": 8190,
+   "slots": 9192,
+   "issued": 320,
+   "idle": 8872,
+   "duplicates": 273,
+   "roots": 42,
+   "children": 16,
+   "neural": 58,
+   "exact": 8132,
+   "by_row": [
+    47,
+    11
+   ],
+   "nonempty": 399,
+   "fully_neural_nonempty": 1,
+   "scored": 135704,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    3,
+    0
+   ],
+   "ms": [
+    36.310750000000006,
+    36.490292000000004,
+    37.323667,
+    37.047125,
+    36.320333000000005,
+    36.096999999999994
+   ],
+   "cli_ms": [
+    158.421667,
+    159.567708,
+    160.400875,
+    158.404875,
+    158.9035,
+    157.325917
+   ],
+   "aligned": true,
+   "known_root_opportunities": 180,
+   "missed_known_root_opportunities": 138,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 36.40531250000001,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "2x4-free_once": {
+   "runs": 1149,
+   "rhs": 8190,
+   "slots": 9192,
+   "issued": 250,
+   "idle": 8942,
+   "duplicates": 119,
+   "roots": 121,
+   "children": 43,
+   "neural": 164,
+   "exact": 8026,
+   "by_row": [
+    153,
+    11
+   ],
+   "nonempty": 399,
+   "fully_neural_nonempty": 3,
+   "scored": 135214,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    5,
+    0
+   ],
+   "ms": [
+    37.71375,
+    36.3365,
+    36.563291,
+    36.21875,
+    36.256459,
+    37.449999999999996
+   ],
+   "cli_ms": [
+    158.920208,
+    156.269292,
+    159.029125,
+    158.9095,
+    159.071958,
+    160.226292
+   ],
+   "aligned": true,
+   "known_root_opportunities": 180,
+   "missed_known_root_opportunities": 59,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 36.4498955,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "2x4-static": {
+   "runs": 1149,
+   "rhs": 8190,
+   "slots": 9192,
+   "issued": 184,
+   "idle": 9008,
+   "duplicates": 0,
+   "roots": 167,
+   "children": 69,
+   "neural": 236,
+   "exact": 7954,
+   "by_row": [
+    110,
+    126
+   ],
+   "nonempty": 399,
+   "fully_neural_nonempty": 3,
+   "scored": 67495,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    5,
+    0
+   ],
+   "ms": [
+    33.200458000000005,
+    32.921042,
+    34.416791,
+    33.648458,
+    33.196541,
+    33.725375
+   ],
+   "cli_ms": [
+    153.746125,
+    151.621417,
+    157.021542,
+    159.605625,
+    154.379791,
+    153.98425
+   ],
+   "aligned": true,
+   "known_root_opportunities": 180,
+   "missed_known_root_opportunities": 13,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 33.424458,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "2x4-transfer": {
+   "runs": 1149,
+   "rhs": 8190,
+   "slots": 9192,
+   "issued": 184,
+   "idle": 9008,
+   "duplicates": 0,
+   "roots": 167,
+   "children": 69,
+   "neural": 236,
+   "exact": 7954,
+   "by_row": [
+    110,
+    126
+   ],
+   "nonempty": 399,
+   "fully_neural_nonempty": 3,
+   "scored": 67769,
+   "transfer_scored": 274,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    5,
+    0
+   ],
+   "ms": [
+    34.950625,
+    34.335834000000006,
+    35.646042,
+    35.087167,
+    34.706084,
+    34.924458
+   ],
+   "cli_ms": [
+    155.311125,
+    154.098791,
+    159.529458,
+    157.960666,
+    154.671333,
+    154.21325
+   ],
+   "aligned": true,
+   "known_root_opportunities": 180,
+   "missed_known_root_opportunities": 13,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 34.9375415,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "4x2-free": {
+   "runs": 1149,
+   "rhs": 8190,
+   "slots": 9192,
+   "issued": 320,
+   "idle": 8872,
+   "duplicates": 273,
+   "roots": 42,
+   "children": 16,
+   "neural": 58,
+   "exact": 8132,
+   "by_row": [
+    47,
+    11,
+    0,
+    0
+   ],
+   "nonempty": 399,
+   "fully_neural_nonempty": 1,
+   "scored": 135704,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    3,
+    0
+   ],
+   "ms": [
+    39.724375,
+    35.982292,
+    36.680083,
+    37.678042000000005,
+    38.664333,
+    36.060375
+   ],
+   "cli_ms": [
+    167.063041,
+    158.144167,
+    158.96775,
+    164.786,
+    161.826917,
+    158.040458
+   ],
+   "aligned": true,
+   "known_root_opportunities": 180,
+   "missed_known_root_opportunities": 138,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 37.1790625
+  },
+  "4x2-free_once": {
+   "runs": 1149,
+   "rhs": 8190,
+   "slots": 9192,
+   "issued": 308,
+   "idle": 8884,
+   "duplicates": 225,
+   "roots": 77,
+   "children": 25,
+   "neural": 102,
+   "exact": 8088,
+   "by_row": [
+    91,
+    11,
+    0,
+    0
+   ],
+   "nonempty": 399,
+   "fully_neural_nonempty": 2,
+   "scored": 135520,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    4,
+    0
+   ],
+   "ms": [
+    36.190292,
+    37.946374999999996,
+    36.060916999999996,
+    36.038875,
+    36.602625,
+    36.903833
+   ],
+   "cli_ms": [
+    157.53275,
+    159.732042,
+    159.387417,
+    158.652291,
+    160.784584,
+    159.488875
+   ],
+   "aligned": true,
+   "known_root_opportunities": 180,
+   "missed_known_root_opportunities": 103,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 36.3964585
+  },
+  "4x2-static": {
+   "runs": 1149,
+   "rhs": 8190,
+   "slots": 9192,
+   "issued": 181,
+   "idle": 9011,
+   "duplicates": 0,
+   "roots": 164,
+   "children": 71,
+   "neural": 235,
+   "exact": 7955,
+   "by_row": [
+    62,
+    58,
+    49,
+    66
+   ],
+   "nonempty": 399,
+   "fully_neural_nonempty": 3,
+   "scored": 33801,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    5,
+    0
+   ],
+   "ms": [
+    34.646916,
+    32.767958,
+    33.064625,
+    32.726083,
+    34.768292,
+    32.867625
+   ],
+   "cli_ms": [
+    158.49275,
+    153.975167,
+    152.5355,
+    151.6705,
+    165.009791,
+    157.277792
+   ],
+   "aligned": true,
+   "known_root_opportunities": 180,
+   "missed_known_root_opportunities": 16,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 32.966125
+  },
+  "4x2-transfer": {
+   "runs": 1149,
+   "rhs": 8190,
+   "slots": 9192,
+   "issued": 184,
+   "idle": 9008,
+   "duplicates": 0,
+   "roots": 167,
+   "children": 72,
+   "neural": 239,
+   "exact": 7951,
+   "by_row": [
+    62,
+    61,
+    50,
+    66
+   ],
+   "nonempty": 399,
+   "fully_neural_nonempty": 3,
+   "scored": 34658,
+   "transfer_scored": 857,
+   "transfers": 3,
+   "transfer_root_wins": 3,
+   "point_reads": [
+    5,
+    0
+   ],
+   "ms": [
+    34.574917,
+    33.842791,
+    33.1405,
+    33.221417,
+    35.118375,
+    34.608708
+   ],
+   "cli_ms": [
+    157.898,
+    155.526292,
+    153.557209,
+    155.792917,
+    159.870958,
+    160.442209
+   ],
+   "aligned": true,
+   "known_root_opportunities": 180,
+   "missed_known_root_opportunities": 13,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 34.208854
+  },
+  "exact": {
+   "ms": [
+    27.561,
+    29.264708,
+    29.931292000000003,
+    27.584375,
+    28.038375000000002,
+    27.532375000000002
+   ],
+   "median_ms": 27.811375
+  }
+ },
+ "stable-argmax/1709": {
+  "1x8-free": {
+   "runs": 1149,
+   "rhs": 8190,
+   "slots": 9192,
+   "issued": 320,
+   "idle": 8872,
+   "duplicates": 280,
+   "roots": 36,
+   "children": 11,
+   "neural": 47,
+   "exact": 8143,
+   "by_row": [
+    47
+   ],
+   "nonempty": 399,
+   "fully_neural_nonempty": 1,
+   "scored": 135704,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    2,
+    0
+   ],
+   "ms": [
+    35.558416,
+    36.214916,
+    35.97925,
+    34.872542,
+    35.885959,
+    37.217292
+   ],
+   "cli_ms": [
+    155.561583,
+    157.914459,
+    155.512625,
+    156.63525,
+    156.177792,
+    160.601833
+   ],
+   "aligned": true,
+   "known_root_opportunities": 209,
+   "missed_known_root_opportunities": 173,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 35.9326045
+  },
+  "1x8-free_once": {
+   "runs": 1149,
+   "rhs": 8190,
+   "slots": 9192,
+   "issued": 212,
+   "idle": 8980,
+   "duplicates": 0,
+   "roots": 195,
+   "children": 69,
+   "neural": 264,
+   "exact": 7926,
+   "by_row": [
+    264
+   ],
+   "nonempty": 399,
+   "fully_neural_nonempty": 4,
+   "scored": 134796,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    7,
+    0
+   ],
+   "ms": [
+    35.620416,
+    36.382667,
+    35.949124999999995,
+    37.062625000000004,
+    35.689583,
+    37.792167
+   ],
+   "cli_ms": [
+    156.108875,
+    158.23875,
+    156.241416,
+    163.1545,
+    155.981084,
+    160.803916
+   ],
+   "aligned": true,
+   "known_root_opportunities": 209,
+   "missed_known_root_opportunities": 14,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 36.165896
+  },
+  "1x8-static": {
+   "runs": 1149,
+   "rhs": 8190,
+   "slots": 9192,
+   "issued": 212,
+   "idle": 8980,
+   "duplicates": 0,
+   "roots": 195,
+   "children": 69,
+   "neural": 264,
+   "exact": 7926,
+   "by_row": [
+    264
+   ],
+   "nonempty": 399,
+   "fully_neural_nonempty": 4,
+   "scored": 134796,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    7,
+    0
+   ],
+   "ms": [
+    36.243083000000006,
+    36.147999999999996,
+    35.772958,
+    36.867833000000005,
+    36.241792000000004,
+    36.631792000000004
+   ],
+   "cli_ms": [
+    157.767625,
+    157.508792,
+    155.762625,
+    159.826833,
+    157.1395,
+    161.078666
+   ],
+   "aligned": true,
+   "known_root_opportunities": 209,
+   "missed_known_root_opportunities": 14,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 36.24243750000001
+  },
+  "1x8-transfer": {
+   "runs": 1149,
+   "rhs": 8190,
+   "slots": 9192,
+   "issued": 212,
+   "idle": 8980,
+   "duplicates": 0,
+   "roots": 195,
+   "children": 69,
+   "neural": 264,
+   "exact": 7926,
+   "by_row": [
+    264
+   ],
+   "nonempty": 399,
+   "fully_neural_nonempty": 4,
+   "scored": 134796,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    7,
+    0
+   ],
+   "ms": [
+    36.710792,
+    37.7735,
+    36.654625,
+    37.367875000000005,
+    36.44625,
+    37.786125
+   ],
+   "cli_ms": [
+    157.813875,
+    160.998958,
+    160.523917,
+    159.327375,
+    156.687333,
+    160.425709
+   ],
+   "aligned": true,
+   "known_root_opportunities": 209,
+   "missed_known_root_opportunities": 14,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 37.0393335
+  },
+  "2x4-free": {
+   "runs": 1149,
+   "rhs": 8190,
+   "slots": 9192,
+   "issued": 320,
+   "idle": 8872,
+   "duplicates": 280,
+   "roots": 36,
+   "children": 11,
+   "neural": 47,
+   "exact": 8143,
+   "by_row": [
+    47,
+    0
+   ],
+   "nonempty": 399,
+   "fully_neural_nonempty": 1,
+   "scored": 135704,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    2,
+    0
+   ],
+   "ms": [
+    37.41125,
+    36.546292,
+    37.93225,
+    35.936791,
+    38.588417,
+    35.557708
+   ],
+   "cli_ms": [
+    160.516958,
+    159.570875,
+    161.482916,
+    160.111667,
+    161.378334,
+    162.447291
+   ],
+   "aligned": true,
+   "known_root_opportunities": 209,
+   "missed_known_root_opportunities": 173,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 36.978771,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "2x4-free_once": {
+   "runs": 1149,
+   "rhs": 8190,
+   "slots": 9192,
+   "issued": 278,
+   "idle": 8914,
+   "duplicates": 138,
+   "roots": 129,
+   "children": 38,
+   "neural": 167,
+   "exact": 8023,
+   "by_row": [
+    165,
+    2
+   ],
+   "nonempty": 399,
+   "fully_neural_nonempty": 4,
+   "scored": 135250,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    6,
+    0
+   ],
+   "ms": [
+    36.247541,
+    36.970833,
+    39.38175,
+    37.409875,
+    36.878292,
+    36.863959
+   ],
+   "cli_ms": [
+    158.507,
+    162.716083,
+    165.346458,
+    160.904791,
+    159.543333,
+    163.251625
+   ],
+   "aligned": true,
+   "known_root_opportunities": 209,
+   "missed_known_root_opportunities": 80,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 36.9245625,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "2x4-static": {
+   "runs": 1149,
+   "rhs": 8190,
+   "slots": 9192,
+   "issued": 212,
+   "idle": 8980,
+   "duplicates": 0,
+   "roots": 195,
+   "children": 69,
+   "neural": 264,
+   "exact": 7926,
+   "by_row": [
+    137,
+    127
+   ],
+   "nonempty": 399,
+   "fully_neural_nonempty": 4,
+   "scored": 67461,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    7,
+    0
+   ],
+   "ms": [
+    35.510042,
+    34.001041,
+    33.848458,
+    36.3095,
+    33.960542000000004,
+    34.946625000000004
+   ],
+   "cli_ms": [
+    157.3235,
+    156.106708,
+    160.035042,
+    159.822667,
+    160.604458,
+    160.541375
+   ],
+   "aligned": true,
+   "known_root_opportunities": 209,
+   "missed_known_root_opportunities": 14,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 34.473833,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "2x4-transfer": {
+   "runs": 1149,
+   "rhs": 8190,
+   "slots": 9192,
+   "issued": 212,
+   "idle": 8980,
+   "duplicates": 0,
+   "roots": 195,
+   "children": 69,
+   "neural": 264,
+   "exact": 7926,
+   "by_row": [
+    137,
+    127
+   ],
+   "nonempty": 399,
+   "fully_neural_nonempty": 4,
+   "scored": 67784,
+   "transfer_scored": 323,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    7,
+    0
+   ],
+   "ms": [
+    35.792708,
+    35.487458,
+    36.277459,
+    34.130333,
+    34.965292000000005,
+    35.764417
+   ],
+   "cli_ms": [
+    160.032583,
+    157.92825,
+    160.124,
+    156.046916,
+    155.7695,
+    159.542458
+   ],
+   "aligned": true,
+   "known_root_opportunities": 209,
+   "missed_known_root_opportunities": 14,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 35.6259375,
+   "without_residual": {
+    "runs": 208,
+    "rhs": 0,
+    "first_divergence": 1
+   }
+  },
+  "4x2-free": {
+   "runs": 1149,
+   "rhs": 8190,
+   "slots": 9192,
+   "issued": 320,
+   "idle": 8872,
+   "duplicates": 280,
+   "roots": 36,
+   "children": 11,
+   "neural": 47,
+   "exact": 8143,
+   "by_row": [
+    47,
+    0,
+    0,
+    0
+   ],
+   "nonempty": 399,
+   "fully_neural_nonempty": 1,
+   "scored": 135704,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    2,
+    0
+   ],
+   "ms": [
+    36.072125,
+    36.724917000000005,
+    36.357,
+    35.836375,
+    36.818208999999996,
+    36.241416
+   ],
+   "cli_ms": [
+    158.092875,
+    158.459333,
+    159.83875,
+    157.27325,
+    162.171292,
+    158.965541
+   ],
+   "aligned": true,
+   "known_root_opportunities": 209,
+   "missed_known_root_opportunities": 173,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 36.299208
+  },
+  "4x2-free_once": {
+   "runs": 1149,
+   "rhs": 8190,
+   "slots": 9192,
+   "issued": 304,
+   "idle": 8888,
+   "duplicates": 227,
+   "roots": 71,
+   "children": 20,
+   "neural": 91,
+   "exact": 8099,
+   "by_row": [
+    89,
+    2,
+    0,
+    0
+   ],
+   "nonempty": 399,
+   "fully_neural_nonempty": 2,
+   "scored": 135544,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    4,
+    0
+   ],
+   "ms": [
+    36.810500000000005,
+    38.211542,
+    36.771958,
+    36.464583000000005,
+    36.107167000000004,
+    36.49025
+   ],
+   "cli_ms": [
+    158.764,
+    161.94325,
+    159.9755,
+    161.192917,
+    158.5105,
+    158.238458
+   ],
+   "aligned": true,
+   "known_root_opportunities": 209,
+   "missed_known_root_opportunities": 138,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 36.631104
+  },
+  "4x2-static": {
+   "runs": 1149,
+   "rhs": 8190,
+   "slots": 9192,
+   "issued": 210,
+   "idle": 8982,
+   "duplicates": 0,
+   "roots": 193,
+   "children": 73,
+   "neural": 266,
+   "exact": 7924,
+   "by_row": [
+    76,
+    59,
+    63,
+    68
+   ],
+   "nonempty": 399,
+   "fully_neural_nonempty": 4,
+   "scored": 33787,
+   "transfer_scored": 0,
+   "transfers": 0,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    7,
+    0
+   ],
+   "ms": [
+    33.162041,
+    33.072042,
+    33.325374999999994,
+    33.027208,
+    32.49225,
+    33.29725
+   ],
+   "cli_ms": [
+    154.636167,
+    155.36525,
+    156.203791,
+    154.28875,
+    154.371958,
+    154.952791
+   ],
+   "aligned": true,
+   "known_root_opportunities": 209,
+   "missed_known_root_opportunities": 16,
+   "first_idle_run_with_known_omission": 148,
+   "median_ms": 33.1170415
+  },
+  "4x2-transfer": {
+   "runs": 1149,
+   "rhs": 8190,
+   "slots": 9192,
+   "issued": 212,
+   "idle": 8980,
+   "duplicates": 0,
+   "roots": 194,
+   "children": 73,
+   "neural": 267,
+   "exact": 7923,
+   "by_row": [
+    76,
+    59,
+    63,
+    69
+   ],
+   "nonempty": 399,
+   "fully_neural_nonempty": 4,
+   "scored": 34681,
+   "transfer_scored": 896,
+   "transfers": 3,
+   "transfer_root_wins": 0,
+   "point_reads": [
+    7,
+    0
+   ],
+   "ms": [
+    33.439457999999995,
+    33.724208999999995,
+    34.789542,
+    32.819708000000006,
+    33.895416999999995,
+    33.279208999999994
+   ],
+   "cli_ms": [
+    155.656292,
+    156.459041,
+    157.471542,
+    155.51175,
+    155.333834,
+    157.507666
+   ],
+   "aligned": true,
+   "known_root_opportunities": 209,
+   "missed_known_root_opportunities": 15,
+   "first_idle_run_with_known_omission": null,
+   "median_ms": 33.581833499999995
+  },
+  "exact": {
+   "ms": [
+    27.012292,
+    28.920833,
+    28.195999999999998,
+    27.034375,
+    27.665542000000002,
+    30.861791
+   ],
+   "median_ms": 27.930771
+  }
+ }
+}
