@@ -5209,5 +5209,402 @@
         ]
       }
     ]
+  },
+  {
+    "id": "95-certified-row-dispatch",
+    "section": "部署与行数",
+    "title": "训练得到的八行调度器，究竟需要几行？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "在同一规则内分配地址评分时，编译器能否在部署前证明调度器的输出，并消除动态分派？",
+    "arms": "a　固定一行，复用相同评分输入。b　强制最多八行，分别测单线程与线程池。c　加载有 120 个参数的调度头，验证其动作区间。",
+    "fix": "冻结源顺序、同一组权重与地址。核对每份分数摘要、已接受的父、原 Run 有效写入、真实构造与最终图。",
+    "measure": "3mm 有 845,168 份待评分地址。一行执行 8,611 次求值，八行分开缓存增至 50,109 次。强制八线程从 1,946.31 升至 2,418.36 ms。",
+    "note": "两个种子的调度器对整个已认证输入域都选择一行。结论限于同一规则内的评分分摊。",
+    "src": "S84",
+    "diagram": [
+      {
+        "title": "Shared one",
+        "layers": [
+          [
+            [
+              "s",
+              "one address bank"
+            ]
+          ],
+          [
+            [
+              "n",
+              "reuse equal scores"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Forced eight",
+        "layers": [
+          [
+            [
+              "s",
+              "partition addresses"
+            ]
+          ],
+          [
+            [
+              "n",
+              "eight local caches"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Certified policy",
+        "layers": [
+          [
+            [
+              "n",
+              "trained gate"
+            ]
+          ],
+          [
+            [
+              "v",
+              "bound all logits"
+            ]
+          ],
+          [
+            [
+              "s",
+              "emit one-row call"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "96-checked-binding-transfer",
+    "section": "证书与实例的生存期",
+    "title": "一个已经验过的绑定需要保存几次？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "单父结果已持有核验过的端口值。把这份结果移动到提交槽，并在最后消费者离开后释放多父票据，可以省去多少存储？",
+    "arms": "a　复制绑定并保留整轮票据。b　移动单父凭证，复用已检查的输入向量。c　保留全局票号，在 Run 边界回收本轮目录。",
+    "fix": "完整 CPU Pass 3，原规则顺序、全部原始提案、物理 Cell 与获胜父逐项核对。用破坏输入槽的反例检验凭证。",
+    "measure": "3mm 省去 646,333 次输入值复制，目录峰值从 146,965 降至 7,696 个条目。联合路径完整推理 1,969.04→1,924.78 ms，四组中三组更快。",
+    "note": "单独缩短票据寿命时，3mm 的新进程峰值 RSS 中位数从 747.14 降至 693.50 MiB，常驻推理从 1,969.04 增至 2,003.33 ms。两种测量分别运行。",
+    "src": "S85",
+    "diagram": [
+      {
+        "title": "Original",
+        "layers": [
+          [
+            [
+              "n",
+              "verified binding"
+            ]
+          ],
+          [
+            [
+              "s",
+              "copy inputs"
+            ]
+          ],
+          [
+            [
+              "s",
+              "keep all tickets"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Move receipt",
+        "layers": [
+          [
+            [
+              "v",
+              "verified slots"
+            ]
+          ],
+          [
+            [
+              "s",
+              "move to winner"
+            ]
+          ],
+          [
+            [
+              "v",
+              "ordered RHS"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Run directory",
+        "layers": [
+          [
+            [
+              "s",
+              "stable serials"
+            ]
+          ],
+          [
+            [
+              "v",
+              "consume at Run"
+            ]
+          ],
+          [
+            [
+              "s",
+              "retire entries"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "97-suffix-watermarks",
+    "section": "跨 Run 的新鲜度证明",
+    "title": "下一次选择父端口时，必须先解码整张表吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "多父计划只需要判定某张表里是否还有达到本 Run 水位的行。可以把一次存在性检查缩成一个有版本的源引用。",
+    "arms": "a　从完整源帧读取最大 epoch。b　读取已发布的表头，后面的表已满足水位时跳过前面的表。c　保存命中地址，跨表版本重新验证成员资格、可见性和 epoch。",
+    "fix": "同一已训练 CPU 路径。详细执行独立解码并核对新增证据，所有原始提案、获胜父、Run 事件和物理 Cell 与基线一致。",
+    "measure": "3mm／Deriche 分别跳过 16,290／18,033 次水位读取，跨版本重用 264／314 条证据。两者最终解码的变更行数都与基线完全相同。",
+    "note": "携带证据时 3mm 为 1,939.59 ms，原路径为 1,948.06 ms。Deriche 为 3,569.16 与 3,536.42 ms。此处的地址仅证明新鲜度。",
+    "src": "S86",
+    "diagram": [
+      {
+        "title": "Full frame",
+        "layers": [
+          [
+            [
+              "s",
+              "decode rows"
+            ]
+          ],
+          [
+            [
+              "v",
+              "maximum epoch"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Threshold",
+        "layers": [
+          [
+            [
+              "s",
+              "published headers"
+            ]
+          ],
+          [
+            [
+              "v",
+              "watermark met"
+            ]
+          ],
+          [
+            [
+              "s",
+              "skip prior reads"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Carry witness",
+        "layers": [
+          [
+            [
+              "s",
+              "prior address"
+            ]
+          ],
+          [
+            [
+              "v",
+              "recheck membership"
+            ]
+          ],
+          [
+            [
+              "v",
+              "visible and fresh"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "98-owner-action-returns",
+    "section": "高阶 Cell 的训练信号",
+    "title": "模型能选对两个已分配 owner 的合并动作吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "同一准备状态分别运行保留与合并，能直接测量动作的分配收益。在可用样本很少时，哪种训练目标能利用这对回执？",
+    "arms": "a　冻结始终保留和始终合并两个控制。b　在相同样本上优化 Bernoulli 门控的期望奖励。c　回归两次执行相差的字节，正收益时发起合并。",
+    "fix": "同一九参数头，特征只含当时可见的成员、槽位、操作、代次与模板计数。原生执行返回动作回执，独立核对逐 Run 语义与旧端口。",
+    "measure": "使用相同混合样本时，期望奖励头保留全部。回归头在四个准备好机会的工作负载中兑现 192／416 B，同时避开小样例的 224 B 损失。",
+    "note": "四个真实程序按自然调度均出现零个覆盖双方全部成员的候选。准备状态下的条件收益不能推算自然推理加速。",
+    "src": "S87",
+    "diagram": [
+      {
+        "title": "Matched actions",
+        "layers": [
+          [
+            [
+              "s",
+              "same two owners"
+            ]
+          ],
+          [
+            [
+              "v",
+              "keep / compose"
+            ]
+          ],
+          [
+            [
+              "s",
+              "measured bytes"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Expected reward",
+        "layers": [
+          [
+            [
+              "n",
+              "Bernoulli score"
+            ]
+          ],
+          [
+            [
+              "t",
+              "paired return"
+            ]
+          ],
+          [
+            [
+              "s",
+              "keep all"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Return regression",
+        "layers": [
+          [
+            [
+              "n",
+              "predict byte delta"
+            ]
+          ],
+          [
+            [
+              "v",
+              "check owner receipt"
+            ]
+          ],
+          [
+            [
+              "s",
+              "apply chosen action"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "99-connected-request-plans",
+    "section": "高阶请求与父选择",
+    "title": "一次有完整键的请求，能替代一次独立父选择吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "在规则 507，一个 CellSpineView8 端口唯一确定 ExtractedExpr 的键。它的结果是选择 TCPair 所需的连接值。",
+    "arms": "a　独立提出三个父，再验证。b　先选 CellSpineView8，由完整键请求获得 ExtractedExpr，用返回端口选 TCPair。c　将同一不可变请求结果共享给后续选择。",
+    "fix": "保持原三地址证书和发布顺序，检查实际获胜父及物理 Cell。点查服务提供中间父的来源地址，其余两父来自生成器。",
+    "measure": "341 个多父计划中，64 个可以通过连接请求减少选择数。3mm 的在线子集执行 613,362 次点查，签发 12,365 个三地址证书。完整推理从 1,866.79 增至 1,929.50 ms。",
+    "note": "3mm 的独立配对里，共享函数表把 613,362 次点查全部改成目录读取，时间为 1,932.20 ms，直接点查为 1,920.55 ms。根候选仍逐一访问。",
+    "src": "S88",
+    "diagram": [
+      {
+        "title": "Three choices",
+        "layers": [
+          [
+            [
+              "n",
+              "TCPair"
+            ]
+          ],
+          [
+            [
+              "n",
+              "ExtractedExpr"
+            ]
+          ],
+          [
+            [
+              "n",
+              "view parent"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Connected request",
+        "layers": [
+          [
+            [
+              "n",
+              "view parent"
+            ]
+          ],
+          [
+            [
+              "v",
+              "read function by key"
+            ]
+          ],
+          [
+            [
+              "n",
+              "choose TCPair"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Reuse request",
+        "layers": [
+          [
+            [
+              "s",
+              "checked function view"
+            ]
+          ],
+          [
+            [
+              "n",
+              "select using value"
+            ]
+          ],
+          [
+            [
+              "v",
+              "seal original triple"
+            ]
+          ]
+        ]
+      }
+    ]
   }
 ]
