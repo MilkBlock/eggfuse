@@ -34,4 +34,6 @@ if __name__ == '__main__':
     assert lookup['sum-bits/1703']['corruption_rejected'] == {'weights': True, 'table': True}
     check('packed-results.json', ('tied',), ANCHORS | {'conjugate-gradient'}, (1703,),
           ('weights', 'table', 'packed'))
-    print('Verified ten workload/seed batches, sealed proposals, all source events, and actual Cell IDs.')
+    check('packed-three-results.json', ('tied3',), ANCHORS | {'conjugate-gradient'}, (1703,),
+          ('weights', 'table', 'packed'))
+    print('Verified fourteen workload/seed batches, sealed proposals, all source events, and actual Cell IDs.')

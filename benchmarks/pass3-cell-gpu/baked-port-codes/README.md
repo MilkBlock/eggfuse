@@ -17,6 +17,8 @@ Seed 1703, one tied Q/K view, radius zero. The tied Q/K projection shares 160 sc
 
 Separate six-way controls cover asymmetric three-view radius-two and tied one-view radius-zero policies, seeds 1703 and 1709. Changing weights, view count or radius can change the proposal stream. Within each family, the table implementations preserve raw proposal and physical identities. Every tested arm reproduced ordered RHS, effective writes, Spine, union, schedule and final graph. Checkpoint loading and 65,536-entry Bake timings are recorded separately. The two larger workloads were frozen in the compact recipe study before observing their results.
 
+A separate matched three-view run uses the same tied checkpoint with three salted inputs and compares dense scoring, table-backed scoring and packed zero-radius lookups. On conjugate-gradient, the three-view times were 2,536.9 / 2,348.1 / 2,094.6 ms against vanilla 360.5 ms. The other packed medians were 58.5 / 55.0 / 461.9 ms on sum-bits, dot-product and Jacobi. One-view and three-view measurements come from separate sessions. The within-family source and candidate identity checks run independently.
+
 ## Reproduction
 
 First prepare the frozen workload bundles and original vanilla programs using the adjacent compact-recipes study. Set EXP to a writable experiment root. Run from the EggFuse worktree with Python and NumPy available. Choose fresh output directories.
@@ -25,5 +27,6 @@ First prepare the frozen workload bundles and original vanilla programs using th
 python benchmarks/pass3-cell-gpu/baked-port-codes/build.py "$EXP/baked"
 python benchmarks/pass3-cell-gpu/baked-port-codes/measure.py "$EXP/baked" "$EXP/vanilla" "$EXP/bundles" "$EXP/lookup"
 python benchmarks/pass3-cell-gpu/baked-port-codes/measure.py "$EXP/baked" "$EXP/vanilla" "$EXP/bundles" "$EXP/packed" --packed --seeds 1703 --cases sum-bits dot-product jacobi-1d conjugate-gradient
+python benchmarks/pass3-cell-gpu/baked-port-codes/measure.py "$EXP/baked" "$EXP/vanilla" "$EXP/bundles" "$EXP/three" --packed --packed-views 3 --seeds 1703 --cases sum-bits dot-product jacobi-1d conjugate-gradient
 python benchmarks/pass3-cell-gpu/baked-port-codes/check_results.py
 ```
