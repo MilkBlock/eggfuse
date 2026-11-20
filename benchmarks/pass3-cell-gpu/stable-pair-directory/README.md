@@ -21,3 +21,15 @@ python benchmarks/pass3-cell-gpu/stable-pair-directory/study.py "$EXP" "$EXP/sta
 python benchmarks/pass3-cell-gpu/stable-pair-directory/study.py "$EXP" "$EXP/stable/session" "$EXP/stable-big" --cases 3mm deriche --arms rebuild patched --repeats 4
 python benchmarks/pass3-cell-gpu/stable-pair-directory/verify.py
 ```
+
+## Follow the actual immutable frame transition
+
+A separate control registers an address only after the ordinary source-frame updater successfully constructs a new version from the exact changed set. For the issuer these addresses are a complete description of the difference from the previous frame: every other row was transferred unchanged. Multiple transitions can be chained when the stored through-generation equals the next old generation. A missed link or oversized pending set triggers a rebuild. This permits reusing a directory even across unrelated global unions while validating its exact contents against the new source frame. A previous whole-frame rebuild breaks the chain.
+
+| Workload | Original | Graph journal | Frame transition (ms) | Patched addresses | Rebuild rows, graph journal → frame transition | Cross-union patches |
+|---|---:|---:|---:|---:|---:|---:|
+| sum-bits | 34.29 | 33.96 | 33.40 | 1,760 | 19,941 → 1,025 | 163 |
+| jacobi-1d | 179.27 | 183.81 | 172.79 | 15,587 | 153,211 → 2,924 | 325 |
+| 3mm | 2072.29 | 2231.79 | 2076.37 | 81,279 | 1,452,277 → 13,308 | 599 |
+
+The frame transition greatly reduces rebuilding of learned postings. It did not produce a repeatable overall win over the original on all three programs. Four interleaved repeats, seed 1703. [Native source receipts and time](snapshots.json)
