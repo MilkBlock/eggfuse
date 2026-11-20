@@ -31,7 +31,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "eggfuse-cell-runtime --program FILE [--inspect-program | --output DIR] [--audit-stages] [--extract-unit-cost OPERATOR]"
         );
         #[cfg(feature = "slot-transfer-audit")]
-        println!("  --audit-events | --audit-repair-inputs (include pre-union dependencies and ordered key repairs)");
+        println!("  --audit-events | --audit-repair-inputs (include pre-union dependencies and ordered key repairs)\n  --audit-cell-origins (physical allocations per committed RHS ordinal)");
         #[cfg(feature = "gpu-bindings")]
         #[cfg(target_os = "macos")]
         println!("  --unique-parent point|metal|model [--parent-weights FILE] (certified complete keys)");
@@ -85,7 +85,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
         match flag.as_str() {
             #[cfg(feature = "slot-transfer-audit")]
-            "--audit-events" | "--audit-repair-inputs" => {}
+            "--audit-events" | "--audit-repair-inputs" | "--audit-cell-origins" => {}
             #[cfg(all(feature = "gpu-bindings", target_os = "macos"))]
             "--unique-parent" | "--parent-weights" => {
                 flags.next().filter(|v| !v.starts_with("--")).ok_or("missing unique-parent option")?;
@@ -236,6 +236,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if overlap_completion { graph.use_overlapped_completion()?; }
     std::fs::create_dir(&out)?;
     let mut runtime = Executor::new(graph, audit);
+    #[cfg(feature="slot-transfer-audit")]
+    let initial_cells=runtime.graph.stats.cells_created;
+    #[cfg(feature="slot-transfer-audit")]
+    if args.iter().any(|v|v=="--audit-cell-origins"){runtime.allocation_audit=Some(Vec::new());}
     #[cfg(feature="action-units")]
     if opt("--action-policy").is_none() && ["--action-kind","--actions-only","--action-observe","--action-bad-witness"].iter().any(|flag|args.iter().any(|v|v==flag)){
         return Err("action options require --action-policy".into());
@@ -429,6 +433,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     runtime.write_keepers(&out)?;
     let report_start = Instant::now();
     let mut report = runtime.report();
+    #[cfg(feature="slot-transfer-audit")]
+    if let Some(rows)=runtime.allocation_audit.take(){
+        let allocation=serde_json::json!({"initial_cells":initial_cells,"final_allocations":runtime.graph.stats.cells_created,
+            "by_rhs":rows});
+        std::fs::write(std::path::Path::new(&out).join("cell-origins.json"),serde_json::to_vec(&allocation)?)?;
+    }
     #[cfg(feature="action-units")]
     if let Some(units)=runtime.action_report(){report["action_units"]=units;}
     #[cfg(feature="precomputed-forest")]

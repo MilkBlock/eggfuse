@@ -87,6 +87,14 @@ certificate can justify several rule applications when the template proves them.
   graph. Report what happens with exact completion disabled. For a feedback vs
   batch comparison, hold the action library and proposal budget fixed.
 
+The coverage target is at least 98% of distinct committed source RHS occurrences
+on each full Pass 3 workload. Record model-issued Cell certificates, actual RHS
+ordinals won by each, physical Cell allocations during those bindings, and exact
+residuals separately. Reject changes in ordered RHS, effective writes, Spine and
+final graph. A verified opportunity ceiling, all-candidate diagnostic, or sum
+of independent provider runs does not establish combined neural coverage.
+[Source denominators and attribution](benchmarks/pass3-cell-gpu/coverage-target/README.md).
+
 Consult the existing evidence before proposing these mechanisms as new:
 
 - [Pair → Chain](benchmarks/multi-row-generation/README.md) generated children

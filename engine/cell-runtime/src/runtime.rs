@@ -133,6 +133,8 @@ impl CellResultObserver {
 pub struct Executor {
     #[cfg(feature = "gpu-bindings")]
     pub gpu_bindings: Option<crate::gpu_bindings::Producer>,
+    #[cfg(feature="slot-transfer-audit")]
+    pub allocation_audit: Option<Vec<[u64;4]>>,
     pub gpu_selector: Option<crate::gpu_selector::Selector>,
     #[cfg(feature = "sparse-cells")]
     query_workers: Option<query_workers::Workers>,
@@ -336,6 +338,8 @@ impl Executor {
         graph.receipt_tracking =
             (stage_spine.enabled && stage_spine.receipts) || entry_schedule.enabled;
         let mut e = Self {
+            #[cfg(feature="slot-transfer-audit")]
+            allocation_audit: None,
             #[cfg(feature = "sparse-cells")]
             query_workers: None,
             completion: None,
@@ -2091,12 +2095,18 @@ impl Executor {
         b: Binding,
         #[cfg(feature = "structural-depth")] evidence: Option<crate::depth_runtime::Evidence>,
     ) -> Result<()> {
+        #[cfg(feature="slot-transfer-audit")]
+        let before=self.allocation_audit.as_ref().map(|_|(self.graph.stats.cells_created,self.graph.stats.logical_facts_created));
         if self.graph.needs_ownership_entry(rid) {
             let anchors=self.graph.program.cell_ownership.entries[rid].iter().map(|&a|b.known.receipt(a)).collect::<smallvec::SmallVec<[_;4]>>();
             self.graph.begin_owner_entry(rid,&anchors);
         }
         let result=self.apply_owned(rid,b,#[cfg(feature="structural-depth")] evidence);
         self.graph.end_owner_entry();
+        #[cfg(feature="slot-transfer-audit")]
+        if let (Some(rows),Some((cells,facts)))=(&mut self.allocation_audit,before) {
+            rows.push([self.graph.epoch,rid as u64,self.graph.stats.cells_created-cells,self.graph.stats.logical_facts_created-facts]);
+        }
         result
     }
     fn apply_owned(
