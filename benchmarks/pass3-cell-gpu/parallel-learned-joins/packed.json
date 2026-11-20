@@ -1,0 +1,5146 @@
+{
+ "sum-bits": {
+  "arms": {
+   "vanilla": {
+    "ms": [
+     22.050083,
+     22.86875,
+     23.080833,
+     21.854166000000003,
+     23.449583999999998,
+     22.318125000000002
+    ],
+    "rhs": 7265,
+    "graph": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "median_ms": 22.5934375
+   },
+   "original": {
+    "ms": [
+     32.806042,
+     37.724459,
+     36.014459,
+     36.848958,
+     34.439208,
+     34.621375
+    ],
+    "samples": [],
+    "identity": {
+     "rhs": 7265,
+     "raw": "17414028777030180372",
+     "multi": "610dfa1c4493d42974e60b18d2a28f83cd47e1291ea30ca8e32661d590d96148",
+     "physical": "5593e014d39131e75e0ee17e760c12376b22c833419460bbd05b2366b6ed4c26",
+     "commits": "f101cef4d1703641c695269f6e26f8057eb806b23a2affc9cde155314ff14f46",
+     "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+     "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+     "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+     "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+     "root_ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+     "nested_ids": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+     "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+     "direct_cells": 5867,
+     "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+     "raw_sha": "610dfa1c4493d42974e60b18d2a28f83cd47e1291ea30ca8e32661d590d96148",
+     "published": 7970,
+     "verified": 7970,
+     "rejects": 0
+    },
+    "fresh": 5868,
+    "aligned": true,
+    "audit": {
+     "attempts": 0,
+     "blocked_ns": 0,
+     "by_rule": {},
+     "calls": 0,
+     "column_refusals": 0,
+     "dir_keys": 0,
+     "dispatch_ns": 0,
+     "groups": 0,
+     "guard_rows": 0,
+     "merge_ns": 0,
+     "multicore_calls": 0,
+     "peak_overlap": 0,
+     "peak_workers": 0,
+     "pool_start_ns": 0,
+     "preparation_ns": 0,
+     "raw": 0,
+     "roots": 0,
+     "selected": 0,
+     "small": 0,
+     "speculative": 0,
+     "worker_ns": 0,
+     "worker_span_ns": 0
+    },
+    "median_ms": 35.317917
+   },
+   "1": {
+    "ms": [
+     48.34587500000001,
+     43.040291,
+     46.861625,
+     42.240834,
+     41.04025,
+     38.508917
+    ],
+    "samples": [
+     {
+      "preparation_ns": 605663,
+      "pool_start_ns": 38583,
+      "dispatch_ns": 1918418,
+      "blocked_ns": 5127525,
+      "worker_ns": 788001,
+      "merge_ns": 268084,
+      "peak_workers": 1,
+      "peak_overlap": 1,
+      "multicore_calls": 0,
+      "worker_span_ns": 787667
+     },
+     {
+      "preparation_ns": 537704,
+      "pool_start_ns": 29459,
+      "dispatch_ns": 1512376,
+      "blocked_ns": 3903491,
+      "worker_ns": 801292,
+      "merge_ns": 150302,
+      "peak_workers": 1,
+      "peak_overlap": 1,
+      "multicore_calls": 0,
+      "worker_span_ns": 801084
+     },
+     {
+      "preparation_ns": 598495,
+      "pool_start_ns": 31917,
+      "dispatch_ns": 1482953,
+      "blocked_ns": 3881379,
+      "worker_ns": 798493,
+      "merge_ns": 190954,
+      "peak_workers": 1,
+      "peak_overlap": 1,
+      "multicore_calls": 0,
+      "worker_span_ns": 798244
+     },
+     {
+      "preparation_ns": 529832,
+      "pool_start_ns": 29959,
+      "dispatch_ns": 1291041,
+      "blocked_ns": 3461354,
+      "worker_ns": 758177,
+      "merge_ns": 163962,
+      "peak_workers": 1,
+      "peak_overlap": 1,
+      "multicore_calls": 0,
+      "worker_span_ns": 758052
+     },
+     {
+      "preparation_ns": 500831,
+      "pool_start_ns": 46291,
+      "dispatch_ns": 1188673,
+      "blocked_ns": 3352099,
+      "worker_ns": 780293,
+      "merge_ns": 167579,
+      "peak_workers": 1,
+      "peak_overlap": 1,
+      "multicore_calls": 0,
+      "worker_span_ns": 780126
+     },
+     {
+      "preparation_ns": 479294,
+      "pool_start_ns": 29417,
+      "dispatch_ns": 1198708,
+      "blocked_ns": 3351330,
+      "worker_ns": 766595,
+      "merge_ns": 145533,
+      "peak_workers": 1,
+      "peak_overlap": 1,
+      "multicore_calls": 0,
+      "worker_span_ns": 766386
+     }
+    ],
+    "identity": {
+     "rhs": 7265,
+     "raw": "17414028777030180372",
+     "multi": "610dfa1c4493d42974e60b18d2a28f83cd47e1291ea30ca8e32661d590d96148",
+     "physical": "5593e014d39131e75e0ee17e760c12376b22c833419460bbd05b2366b6ed4c26",
+     "commits": "f101cef4d1703641c695269f6e26f8057eb806b23a2affc9cde155314ff14f46",
+     "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+     "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+     "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+     "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+     "root_ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+     "nested_ids": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+     "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+     "direct_cells": 5867,
+     "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+     "raw_sha": "610dfa1c4493d42974e60b18d2a28f83cd47e1291ea30ca8e32661d590d96148",
+     "published": 7970,
+     "verified": 7970,
+     "rejects": 0
+    },
+    "fresh": 5868,
+    "aligned": true,
+    "audit": {
+     "attempts": 5165,
+     "blocked_ns": 3480115,
+     "by_rule": {
+      "136": [
+       47,
+       6882,
+       19,
+       9,
+       24673
+      ],
+      "237": [
+       29,
+       5393,
+       3,
+       1,
+       16042
+      ],
+      "238": [
+       28,
+       5228,
+       0,
+       0,
+       17962
+      ],
+      "239": [
+       6,
+       1529,
+       16,
+       0,
+       8666
+      ],
+      "240": [
+       28,
+       5730,
+       74,
+       0,
+       36872
+      ],
+      "241": [
+       28,
+       5561,
+       283,
+       3,
+       76752
+      ],
+      "242": [
+       27,
+       5469,
+       160,
+       2,
+       58207
+      ],
+      "245": [
+       26,
+       5226,
+       14,
+       0,
+       23832
+      ],
+      "246": [
+       25,
+       5093,
+       0,
+       0,
+       51042
+      ],
+      "248": [
+       22,
+       4561,
+       2,
+       1,
+       16747
+      ],
+      "264": [
+       33,
+       6104,
+       6,
+       3,
+       51127
+      ],
+      "265": [
+       24,
+       4850,
+       10,
+       0,
+       22915
+      ],
+      "312": [
+       5,
+       615,
+       339,
+       101,
+       23000
+      ],
+      "362": [
+       8,
+       799,
+       228,
+       0,
+       14000
+      ],
+      "363": [
+       8,
+       799,
+       228,
+       0,
+       16249
+      ],
+      "373": [
+       2,
+       240,
+       16,
+       8,
+       11458
+      ],
+      "460": [
+       4,
+       461,
+       52,
+       4,
+       10333
+      ],
+      "504": [
+       30,
+       3371,
+       1457,
+       95,
+       96792
+      ],
+      "507": [
+       56,
+       5965,
+       1924,
+       200,
+       162247
+      ],
+      "538": [
+       24,
+       2492,
+       334,
+       130,
+       44211
+      ]
+     },
+     "calls": 460,
+     "column_refusals": 0,
+     "dir_keys": 0,
+     "dispatch_ns": 1272048,
+     "groups": 31121,
+     "guard_rows": 6882,
+     "merge_ns": 340010,
+     "multicore_calls": 0,
+     "peak_overlap": 1,
+     "peak_workers": 1,
+     "pool_start_ns": 52250,
+     "preparation_ns": 542212,
+     "raw": 557,
+     "roots": 76368,
+     "selected": 1015,
+     "small": 555,
+     "speculative": 0,
+     "worker_ns": 783127,
+     "worker_span_ns": 782961
+    },
+    "median_ms": 42.6405625
+   },
+   "2": {
+    "ms": [
+     47.9415,
+     44.294541,
+     47.748582999999996,
+     42.473749999999995,
+     42.407708,
+     40.02725
+    ],
+    "samples": [
+     {
+      "preparation_ns": 590170,
+      "pool_start_ns": 46250,
+      "dispatch_ns": 2286035,
+      "blocked_ns": 5072382,
+      "worker_ns": 899566,
+      "merge_ns": 227661,
+      "peak_workers": 2,
+      "peak_overlap": 2,
+      "multicore_calls": 76,
+      "worker_span_ns": 790612
+     },
+     {
+      "preparation_ns": 551448,
+      "pool_start_ns": 51792,
+      "dispatch_ns": 1535665,
+      "blocked_ns": 4248374,
+      "worker_ns": 893531,
+      "merge_ns": 198153,
+      "peak_workers": 2,
+      "peak_overlap": 2,
+      "multicore_calls": 41,
+      "worker_span_ns": 816419
+     },
+     {
+      "preparation_ns": 552297,
+      "pool_start_ns": 38959,
+      "dispatch_ns": 3931295,
+      "blocked_ns": 6830468,
+      "worker_ns": 858138,
+      "merge_ns": 214892,
+      "peak_workers": 2,
+      "peak_overlap": 2,
+      "multicore_calls": 63,
+      "worker_span_ns": 755046
+     },
+     {
+      "preparation_ns": 523514,
+      "pool_start_ns": 43375,
+      "dispatch_ns": 1642261,
+      "blocked_ns": 4563497,
+      "worker_ns": 917492,
+      "merge_ns": 208091,
+      "peak_workers": 2,
+      "peak_overlap": 2,
+      "multicore_calls": 51,
+      "worker_span_ns": 830199
+     },
+     {
+      "preparation_ns": 542291,
+      "pool_start_ns": 36583,
+      "dispatch_ns": 1253583,
+      "blocked_ns": 3768458,
+      "worker_ns": 917297,
+      "merge_ns": 193421,
+      "peak_workers": 2,
+      "peak_overlap": 2,
+      "multicore_calls": 57,
+      "worker_span_ns": 802585
+     },
+     {
+      "preparation_ns": 490708,
+      "pool_start_ns": 36042,
+      "dispatch_ns": 1314522,
+      "blocked_ns": 3945319,
+      "worker_ns": 863749,
+      "merge_ns": 186255,
+      "peak_workers": 2,
+      "peak_overlap": 2,
+      "multicore_calls": 44,
+      "worker_span_ns": 775220
+     }
+    ],
+    "identity": {
+     "rhs": 7265,
+     "raw": "17414028777030180372",
+     "multi": "610dfa1c4493d42974e60b18d2a28f83cd47e1291ea30ca8e32661d590d96148",
+     "physical": "5593e014d39131e75e0ee17e760c12376b22c833419460bbd05b2366b6ed4c26",
+     "commits": "f101cef4d1703641c695269f6e26f8057eb806b23a2affc9cde155314ff14f46",
+     "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+     "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+     "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+     "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+     "root_ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+     "nested_ids": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+     "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+     "direct_cells": 5867,
+     "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+     "raw_sha": "610dfa1c4493d42974e60b18d2a28f83cd47e1291ea30ca8e32661d590d96148",
+     "published": 7970,
+     "verified": 7970,
+     "rejects": 0
+    },
+    "fresh": 5868,
+    "aligned": true,
+    "audit": {
+     "attempts": 5165,
+     "blocked_ns": 4188077,
+     "by_rule": {
+      "136": [
+       47,
+       6882,
+       19,
+       9,
+       29794
+      ],
+      "237": [
+       29,
+       5393,
+       3,
+       1,
+       21376
+      ],
+      "238": [
+       28,
+       5228,
+       0,
+       0,
+       22372
+      ],
+      "239": [
+       6,
+       1529,
+       16,
+       0,
+       11919
+      ],
+      "240": [
+       28,
+       5730,
+       74,
+       0,
+       51922
+      ],
+      "241": [
+       28,
+       5561,
+       283,
+       3,
+       78912
+      ],
+      "242": [
+       27,
+       5469,
+       160,
+       2,
+       61129
+      ],
+      "245": [
+       26,
+       5226,
+       14,
+       0,
+       29915
+      ],
+      "246": [
+       25,
+       5093,
+       0,
+       0,
+       52499
+      ],
+      "248": [
+       22,
+       4561,
+       2,
+       1,
+       17377
+      ],
+      "264": [
+       33,
+       6104,
+       6,
+       3,
+       60627
+      ],
+      "265": [
+       24,
+       4850,
+       10,
+       0,
+       26291
+      ],
+      "312": [
+       5,
+       615,
+       339,
+       101,
+       27750
+      ],
+      "362": [
+       8,
+       799,
+       228,
+       0,
+       15749
+      ],
+      "363": [
+       8,
+       799,
+       228,
+       0,
+       18334
+      ],
+      "373": [
+       2,
+       240,
+       16,
+       8,
+       4084
+      ],
+      "460": [
+       4,
+       461,
+       52,
+       4,
+       11585
+      ],
+      "504": [
+       30,
+       3371,
+       1457,
+       95,
+       109753
+      ],
+      "507": [
+       56,
+       5965,
+       1924,
+       200,
+       182587
+      ],
+      "538": [
+       24,
+       2492,
+       334,
+       130,
+       64082
+      ]
+     },
+     "calls": 460,
+     "column_refusals": 0,
+     "dir_keys": 0,
+     "dispatch_ns": 1488332,
+     "groups": 31121,
+     "guard_rows": 6882,
+     "merge_ns": 412702,
+     "multicore_calls": 34,
+     "peak_overlap": 2,
+     "peak_workers": 2,
+     "pool_start_ns": 42250,
+     "preparation_ns": 593412,
+     "raw": 557,
+     "roots": 76368,
+     "selected": 1015,
+     "small": 555,
+     "speculative": 0,
+     "worker_ns": 898057,
+     "worker_span_ns": 817830
+    },
+    "median_ms": 43.3841455
+   },
+   "4": {
+    "ms": [
+     56.326667,
+     48.942166,
+     50.088916,
+     55.890375,
+     49.852708,
+     51.8285
+    ],
+    "samples": [
+     {
+      "preparation_ns": 661415,
+      "pool_start_ns": 47458,
+      "dispatch_ns": 3392827,
+      "blocked_ns": 8045780,
+      "worker_ns": 1191111,
+      "merge_ns": 342836,
+      "peak_workers": 4,
+      "peak_overlap": 4,
+      "multicore_calls": 172,
+      "worker_span_ns": 1031113
+     },
+     {
+      "preparation_ns": 637667,
+      "pool_start_ns": 74625,
+      "dispatch_ns": 3083668,
+      "blocked_ns": 7437551,
+      "worker_ns": 1114990,
+      "merge_ns": 318635,
+      "peak_workers": 4,
+      "peak_overlap": 4,
+      "multicore_calls": 164,
+      "worker_span_ns": 949913
+     },
+     {
+      "preparation_ns": 598708,
+      "pool_start_ns": 53292,
+      "dispatch_ns": 3368401,
+      "blocked_ns": 7914907,
+      "worker_ns": 1083195,
+      "merge_ns": 318079,
+      "peak_workers": 4,
+      "peak_overlap": 4,
+      "multicore_calls": 163,
+      "worker_span_ns": 920254
+     },
+     {
+      "preparation_ns": 660428,
+      "pool_start_ns": 61583,
+      "dispatch_ns": 4576834,
+      "blocked_ns": 9237211,
+      "worker_ns": 1177124,
+      "merge_ns": 342216,
+      "peak_workers": 4,
+      "peak_overlap": 4,
+      "multicore_calls": 172,
+      "worker_span_ns": 1019453
+     },
+     {
+      "preparation_ns": 598978,
+      "pool_start_ns": 64958,
+      "dispatch_ns": 2901154,
+      "blocked_ns": 7073212,
+      "worker_ns": 1090428,
+      "merge_ns": 299431,
+      "peak_workers": 4,
+      "peak_overlap": 4,
+      "multicore_calls": 144,
+      "worker_span_ns": 957879
+     },
+     {
+      "preparation_ns": 659249,
+      "pool_start_ns": 54334,
+      "dispatch_ns": 3108954,
+      "blocked_ns": 7524805,
+      "worker_ns": 1165063,
+      "merge_ns": 315755,
+      "peak_workers": 4,
+      "peak_overlap": 4,
+      "multicore_calls": 154,
+      "worker_span_ns": 991254
+     }
+    ],
+    "identity": {
+     "rhs": 7265,
+     "raw": "17414028777030180372",
+     "multi": "610dfa1c4493d42974e60b18d2a28f83cd47e1291ea30ca8e32661d590d96148",
+     "physical": "5593e014d39131e75e0ee17e760c12376b22c833419460bbd05b2366b6ed4c26",
+     "commits": "f101cef4d1703641c695269f6e26f8057eb806b23a2affc9cde155314ff14f46",
+     "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+     "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+     "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+     "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+     "root_ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+     "nested_ids": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+     "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+     "direct_cells": 5867,
+     "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+     "raw_sha": "610dfa1c4493d42974e60b18d2a28f83cd47e1291ea30ca8e32661d590d96148",
+     "published": 7970,
+     "verified": 7970,
+     "rejects": 0
+    },
+    "fresh": 5868,
+    "aligned": true,
+    "audit": {
+     "attempts": 5165,
+     "blocked_ns": 8258914,
+     "by_rule": {
+      "136": [
+       47,
+       6882,
+       19,
+       9,
+       42050
+      ],
+      "237": [
+       29,
+       5393,
+       3,
+       1,
+       34166
+      ],
+      "238": [
+       28,
+       5228,
+       0,
+       0,
+       31373
+      ],
+      "239": [
+       6,
+       1529,
+       16,
+       0,
+       18835
+      ],
+      "240": [
+       28,
+       5730,
+       74,
+       0,
+       51793
+      ],
+      "241": [
+       28,
+       5561,
+       283,
+       3,
+       86909
+      ],
+      "242": [
+       27,
+       5469,
+       160,
+       2,
+       66828
+      ],
+      "245": [
+       26,
+       5226,
+       14,
+       0,
+       48705
+      ],
+      "246": [
+       25,
+       5093,
+       0,
+       0,
+       56331
+      ],
+      "248": [
+       22,
+       4561,
+       2,
+       1,
+       21417
+      ],
+      "264": [
+       33,
+       6104,
+       6,
+       3,
+       66123
+      ],
+      "265": [
+       24,
+       4850,
+       10,
+       0,
+       28713
+      ],
+      "312": [
+       5,
+       615,
+       339,
+       101,
+       46832
+      ],
+      "362": [
+       8,
+       799,
+       228,
+       0,
+       21499
+      ],
+      "363": [
+       8,
+       799,
+       228,
+       0,
+       16791
+      ],
+      "373": [
+       2,
+       240,
+       16,
+       8,
+       6127
+      ],
+      "460": [
+       4,
+       461,
+       52,
+       4,
+       35667
+      ],
+      "504": [
+       30,
+       3371,
+       1457,
+       95,
+       150667
+      ],
+      "507": [
+       56,
+       5965,
+       1924,
+       200,
+       237789
+      ],
+      "538": [
+       24,
+       2492,
+       334,
+       130,
+       77373
+      ]
+     },
+     "calls": 460,
+     "column_refusals": 0,
+     "dir_keys": 0,
+     "dispatch_ns": 3292419,
+     "groups": 31121,
+     "guard_rows": 6882,
+     "merge_ns": 601961,
+     "multicore_calls": 159,
+     "peak_overlap": 4,
+     "peak_workers": 4,
+     "pool_start_ns": 63125,
+     "preparation_ns": 652156,
+     "raw": 557,
+     "roots": 76368,
+     "selected": 1015,
+     "small": 555,
+     "speculative": 0,
+     "worker_ns": 1145988,
+     "worker_span_ns": 993991
+    },
+    "median_ms": 50.958708
+   }
+  },
+  "threshold": 64,
+  "faults": {
+   "1": {
+    "error": "invalid learned worker frame generation",
+    "completed": 117
+   },
+   "2": {
+    "error": "invalid learned worker result offset",
+    "completed": 135
+   }
+  }
+ },
+ "dot-product": {
+  "arms": {
+   "vanilla": {
+    "ms": [
+     19.94875,
+     18.450542,
+     18.19875,
+     19.156042000000003,
+     20.191083,
+     18.57925
+    ],
+    "rhs": 6704,
+    "graph": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+    "median_ms": 18.867646
+   },
+   "original": {
+    "ms": [
+     31.218958,
+     32.239459,
+     30.871083000000002,
+     30.3305,
+     31.944167000000004,
+     30.184584
+    ],
+    "samples": [],
+    "identity": {
+     "rhs": 6704,
+     "raw": "13475504451835815111",
+     "multi": "bc200fa4a1b13c5dfdd2a7cda4bd6f9c2e09453559dc60b5d7215c1579bfab2e",
+     "physical": "a9e8c2e58671070fb49392415d1f197141b04612cd9c5ade5fea59a2c20aef34",
+     "commits": "ce6f1da681a32efd3f50442fdd901730d164de50536cae2613f023aceeb64d4b",
+     "children": "388cc1613f1f94ebdc99a304f1465c5117c88e34160a72f2f9d024c08cb488db",
+     "single_winners": "84672cf01e64de495bd74e2b3934558ff25e284ca8e1ffde684ede80e5b82621",
+     "multi_winners": "3352d3f4701eb1d61fd89a02c0775026f93f471b6a177a02aa81aba610dde211",
+     "root_parents": "ae003238e455d0cfc803e886e70f4d929b300f974b43f10c9495e13f29ca7dc5",
+     "root_ids": "a7656cc96d3c533814028737fa51d7d22a198ab94517fae05ad6b5e965dc4247",
+     "nested_ids": "4cfd3f4b51bf1e53f80817299294f363f381cea2a178584098d60e9f25710592",
+     "cells": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+     "direct_cells": 5666,
+     "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+     "raw_sha": "bc200fa4a1b13c5dfdd2a7cda4bd6f9c2e09453559dc60b5d7215c1579bfab2e",
+     "published": 8664,
+     "verified": 8664,
+     "rejects": 0
+    },
+    "fresh": 5682,
+    "aligned": true,
+    "audit": {
+     "attempts": 0,
+     "blocked_ns": 0,
+     "by_rule": {},
+     "calls": 0,
+     "column_refusals": 0,
+     "dir_keys": 0,
+     "dispatch_ns": 0,
+     "groups": 0,
+     "guard_rows": 0,
+     "merge_ns": 0,
+     "multicore_calls": 0,
+     "peak_overlap": 0,
+     "peak_workers": 0,
+     "pool_start_ns": 0,
+     "preparation_ns": 0,
+     "raw": 0,
+     "roots": 0,
+     "selected": 0,
+     "small": 0,
+     "speculative": 0,
+     "worker_ns": 0,
+     "worker_span_ns": 0
+    },
+    "median_ms": 31.0450205
+   },
+   "1": {
+    "ms": [
+     35.020458,
+     34.35275,
+     36.667083000000005,
+     35.370332999999995,
+     35.063833,
+     33.607042
+    ],
+    "samples": [
+     {
+      "preparation_ns": 408995,
+      "pool_start_ns": 43084,
+      "dispatch_ns": 798290,
+      "blocked_ns": 2172163,
+      "worker_ns": 600879,
+      "merge_ns": 112007,
+      "peak_workers": 1,
+      "peak_overlap": 1,
+      "multicore_calls": 0,
+      "worker_span_ns": 600879
+     },
+     {
+      "preparation_ns": 394632,
+      "pool_start_ns": 26083,
+      "dispatch_ns": 746709,
+      "blocked_ns": 2115950,
+      "worker_ns": 587458,
+      "merge_ns": 104412,
+      "peak_workers": 1,
+      "peak_overlap": 1,
+      "multicore_calls": 0,
+      "worker_span_ns": 587458
+     },
+     {
+      "preparation_ns": 444280,
+      "pool_start_ns": 37833,
+      "dispatch_ns": 871081,
+      "blocked_ns": 2401540,
+      "worker_ns": 639255,
+      "merge_ns": 133918,
+      "peak_workers": 1,
+      "peak_overlap": 1,
+      "multicore_calls": 0,
+      "worker_span_ns": 639255
+     },
+     {
+      "preparation_ns": 402789,
+      "pool_start_ns": 32208,
+      "dispatch_ns": 792630,
+      "blocked_ns": 2231124,
+      "worker_ns": 616623,
+      "merge_ns": 108009,
+      "peak_workers": 1,
+      "peak_overlap": 1,
+      "multicore_calls": 0,
+      "worker_span_ns": 616623
+     },
+     {
+      "preparation_ns": 399933,
+      "pool_start_ns": 41042,
+      "dispatch_ns": 796620,
+      "blocked_ns": 2231490,
+      "worker_ns": 621377,
+      "merge_ns": 113082,
+      "peak_workers": 1,
+      "peak_overlap": 1,
+      "multicore_calls": 0,
+      "worker_span_ns": 621377
+     },
+     {
+      "preparation_ns": 377173,
+      "pool_start_ns": 31083,
+      "dispatch_ns": 672214,
+      "blocked_ns": 1999287,
+      "worker_ns": 587660,
+      "merge_ns": 105798,
+      "peak_workers": 1,
+      "peak_overlap": 1,
+      "multicore_calls": 0,
+      "worker_span_ns": 587660
+     }
+    ],
+    "identity": {
+     "rhs": 6704,
+     "raw": "13475504451835815111",
+     "multi": "bc200fa4a1b13c5dfdd2a7cda4bd6f9c2e09453559dc60b5d7215c1579bfab2e",
+     "physical": "a9e8c2e58671070fb49392415d1f197141b04612cd9c5ade5fea59a2c20aef34",
+     "commits": "ce6f1da681a32efd3f50442fdd901730d164de50536cae2613f023aceeb64d4b",
+     "children": "388cc1613f1f94ebdc99a304f1465c5117c88e34160a72f2f9d024c08cb488db",
+     "single_winners": "84672cf01e64de495bd74e2b3934558ff25e284ca8e1ffde684ede80e5b82621",
+     "multi_winners": "3352d3f4701eb1d61fd89a02c0775026f93f471b6a177a02aa81aba610dde211",
+     "root_parents": "ae003238e455d0cfc803e886e70f4d929b300f974b43f10c9495e13f29ca7dc5",
+     "root_ids": "a7656cc96d3c533814028737fa51d7d22a198ab94517fae05ad6b5e965dc4247",
+     "nested_ids": "4cfd3f4b51bf1e53f80817299294f363f381cea2a178584098d60e9f25710592",
+     "cells": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+     "direct_cells": 5666,
+     "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+     "raw_sha": "bc200fa4a1b13c5dfdd2a7cda4bd6f9c2e09453559dc60b5d7215c1579bfab2e",
+     "published": 8664,
+     "verified": 8664,
+     "rejects": 0
+    },
+    "fresh": 5682,
+    "aligned": true,
+    "audit": {
+     "attempts": 6698,
+     "blocked_ns": 2593331,
+     "by_rule": {
+      "136": [
+       25,
+       3414,
+       0,
+       0,
+       13417
+      ],
+      "237": [
+       15,
+       2223,
+       0,
+       0,
+       13751
+      ],
+      "238": [
+       14,
+       2059,
+       0,
+       0,
+       12249
+      ],
+      "239": [
+       13,
+       2065,
+       0,
+       0,
+       22333
+      ],
+      "240": [
+       16,
+       2559,
+       340,
+       0,
+       57836
+      ],
+      "241": [
+       13,
+       2065,
+       832,
+       10,
+       52290
+      ],
+      "242": [
+       13,
+       2065,
+       382,
+       6,
+       44375
+      ],
+      "246": [
+       14,
+       2230,
+       0,
+       0,
+       23500
+      ],
+      "264": [
+       14,
+       2059,
+       20,
+       10,
+       24624
+      ],
+      "312": [
+       6,
+       770,
+       405,
+       116,
+       32458
+      ],
+      "362": [
+       7,
+       744,
+       118,
+       0,
+       12833
+      ],
+      "363": [
+       7,
+       744,
+       118,
+       0,
+       14375
+      ],
+      "460": [
+       3,
+       320,
+       116,
+       8,
+       10749
+      ],
+      "504": [
+       34,
+       3626,
+       1535,
+       86,
+       100414
+      ],
+      "507": [
+       59,
+       6573,
+       2648,
+       223,
+       173542
+      ],
+      "538": [
+       14,
+       1508,
+       184,
+       92,
+       23084
+      ]
+     },
+     "calls": 267,
+     "column_refusals": 0,
+     "dir_keys": 0,
+     "dispatch_ns": 1001588,
+     "groups": 33479,
+     "guard_rows": 3414,
+     "merge_ns": 282340,
+     "multicore_calls": 0,
+     "peak_overlap": 1,
+     "peak_workers": 1,
+     "pool_start_ns": 37334,
+     "preparation_ns": 474798,
+     "raw": 551,
+     "roots": 35024,
+     "selected": 1054,
+     "small": 787,
+     "speculative": 0,
+     "worker_ns": 631830,
+     "worker_span_ns": 631830
+    },
+    "median_ms": 35.042145500000004
+   },
+   "2": {
+    "ms": [
+     35.108833,
+     35.758167,
+     36.394000000000005,
+     35.238875,
+     35.817291000000004,
+     35.36625
+    ],
+    "samples": [
+     {
+      "preparation_ns": 398785,
+      "pool_start_ns": 44459,
+      "dispatch_ns": 862752,
+      "blocked_ns": 2478421,
+      "worker_ns": 686460,
+      "merge_ns": 139462,
+      "peak_workers": 2,
+      "peak_overlap": 2,
+      "multicore_calls": 39,
+      "worker_span_ns": 631794
+     },
+     {
+      "preparation_ns": 404292,
+      "pool_start_ns": 34084,
+      "dispatch_ns": 946534,
+      "blocked_ns": 2674579,
+      "worker_ns": 722623,
+      "merge_ns": 157999,
+      "peak_workers": 2,
+      "peak_overlap": 2,
+      "multicore_calls": 44,
+      "worker_span_ns": 659210
+     },
+     {
+      "preparation_ns": 410506,
+      "pool_start_ns": 39125,
+      "dispatch_ns": 916005,
+      "blocked_ns": 2608787,
+      "worker_ns": 729045,
+      "merge_ns": 130459,
+      "peak_workers": 2,
+      "peak_overlap": 2,
+      "multicore_calls": 45,
+      "worker_span_ns": 659337
+     },
+     {
+      "preparation_ns": 394041,
+      "pool_start_ns": 36666,
+      "dispatch_ns": 929030,
+      "blocked_ns": 2532834,
+      "worker_ns": 693924,
+      "merge_ns": 136705,
+      "peak_workers": 2,
+      "peak_overlap": 2,
+      "multicore_calls": 49,
+      "worker_span_ns": 633422
+     },
+     {
+      "preparation_ns": 413038,
+      "pool_start_ns": 48000,
+      "dispatch_ns": 1007463,
+      "blocked_ns": 2694669,
+      "worker_ns": 714291,
+      "merge_ns": 148657,
+      "peak_workers": 2,
+      "peak_overlap": 2,
+      "multicore_calls": 41,
+      "worker_span_ns": 654168
+     },
+     {
+      "preparation_ns": 399405,
+      "pool_start_ns": 41417,
+      "dispatch_ns": 896712,
+      "blocked_ns": 2516918,
+      "worker_ns": 677913,
+      "merge_ns": 129870,
+      "peak_workers": 2,
+      "peak_overlap": 2,
+      "multicore_calls": 41,
+      "worker_span_ns": 627493
+     }
+    ],
+    "identity": {
+     "rhs": 6704,
+     "raw": "13475504451835815111",
+     "multi": "bc200fa4a1b13c5dfdd2a7cda4bd6f9c2e09453559dc60b5d7215c1579bfab2e",
+     "physical": "a9e8c2e58671070fb49392415d1f197141b04612cd9c5ade5fea59a2c20aef34",
+     "commits": "ce6f1da681a32efd3f50442fdd901730d164de50536cae2613f023aceeb64d4b",
+     "children": "388cc1613f1f94ebdc99a304f1465c5117c88e34160a72f2f9d024c08cb488db",
+     "single_winners": "84672cf01e64de495bd74e2b3934558ff25e284ca8e1ffde684ede80e5b82621",
+     "multi_winners": "3352d3f4701eb1d61fd89a02c0775026f93f471b6a177a02aa81aba610dde211",
+     "root_parents": "ae003238e455d0cfc803e886e70f4d929b300f974b43f10c9495e13f29ca7dc5",
+     "root_ids": "a7656cc96d3c533814028737fa51d7d22a198ab94517fae05ad6b5e965dc4247",
+     "nested_ids": "4cfd3f4b51bf1e53f80817299294f363f381cea2a178584098d60e9f25710592",
+     "cells": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+     "direct_cells": 5666,
+     "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+     "raw_sha": "bc200fa4a1b13c5dfdd2a7cda4bd6f9c2e09453559dc60b5d7215c1579bfab2e",
+     "published": 8664,
+     "verified": 8664,
+     "rejects": 0
+    },
+    "fresh": 5682,
+    "aligned": true,
+    "audit": {
+     "attempts": 6698,
+     "blocked_ns": 2718497,
+     "by_rule": {
+      "136": [
+       25,
+       3414,
+       0,
+       0,
+       14961
+      ],
+      "237": [
+       15,
+       2223,
+       0,
+       0,
+       12754
+      ],
+      "238": [
+       14,
+       2059,
+       0,
+       0,
+       11874
+      ],
+      "239": [
+       13,
+       2065,
+       0,
+       0,
+       23460
+      ],
+      "240": [
+       16,
+       2559,
+       340,
+       0,
+       59873
+      ],
+      "241": [
+       13,
+       2065,
+       832,
+       10,
+       72458
+      ],
+      "242": [
+       13,
+       2065,
+       382,
+       6,
+       52707
+      ],
+      "246": [
+       14,
+       2230,
+       0,
+       0,
+       26039
+      ],
+      "264": [
+       14,
+       2059,
+       20,
+       10,
+       25751
+      ],
+      "312": [
+       6,
+       770,
+       405,
+       116,
+       29709
+      ],
+      "362": [
+       7,
+       744,
+       118,
+       0,
+       11413
+      ],
+      "363": [
+       7,
+       744,
+       118,
+       0,
+       15500
+      ],
+      "460": [
+       3,
+       320,
+       116,
+       8,
+       13002
+      ],
+      "504": [
+       34,
+       3626,
+       1535,
+       86,
+       109042
+      ],
+      "507": [
+       59,
+       6573,
+       2648,
+       223,
+       194456
+      ],
+      "538": [
+       14,
+       1508,
+       184,
+       92,
+       41793
+      ]
+     },
+     "calls": 267,
+     "column_refusals": 0,
+     "dir_keys": 0,
+     "dispatch_ns": 953542,
+     "groups": 33479,
+     "guard_rows": 3414,
+     "merge_ns": 347216,
+     "multicore_calls": 43,
+     "peak_overlap": 2,
+     "peak_workers": 2,
+     "pool_start_ns": 44500,
+     "preparation_ns": 439042,
+     "raw": 551,
+     "roots": 35024,
+     "selected": 1054,
+     "small": 787,
+     "speculative": 0,
+     "worker_ns": 714792,
+     "worker_span_ns": 664873
+    },
+    "median_ms": 35.5622085
+   },
+   "4": {
+    "ms": [
+     43.085583,
+     43.765417,
+     42.445417,
+     39.86775,
+     42.398041,
+     43.244583000000006
+    ],
+    "samples": [
+     {
+      "preparation_ns": 468825,
+      "pool_start_ns": 64583,
+      "dispatch_ns": 2242122,
+      "blocked_ns": 5062501,
+      "worker_ns": 806807,
+      "merge_ns": 193537,
+      "peak_workers": 4,
+      "peak_overlap": 4,
+      "multicore_calls": 180,
+      "worker_span_ns": 1005335
+     },
+     {
+      "preparation_ns": 570755,
+      "pool_start_ns": 68791,
+      "dispatch_ns": 2042635,
+      "blocked_ns": 4661712,
+      "worker_ns": 896825,
+      "merge_ns": 238632,
+      "peak_workers": 4,
+      "peak_overlap": 4,
+      "multicore_calls": 128,
+      "worker_span_ns": 781740
+     },
+     {
+      "preparation_ns": 502588,
+      "pool_start_ns": 63042,
+      "dispatch_ns": 1790128,
+      "blocked_ns": 4288343,
+      "worker_ns": 845563,
+      "merge_ns": 237543,
+      "peak_workers": 4,
+      "peak_overlap": 4,
+      "multicore_calls": 117,
+      "worker_span_ns": 722292
+     },
+     {
+      "preparation_ns": 459556,
+      "pool_start_ns": 70625,
+      "dispatch_ns": 1455874,
+      "blocked_ns": 3651293,
+      "worker_ns": 803465,
+      "merge_ns": 226097,
+      "peak_workers": 4,
+      "peak_overlap": 4,
+      "multicore_calls": 136,
+      "worker_span_ns": 698035
+     },
+     {
+      "preparation_ns": 510915,
+      "pool_start_ns": 61292,
+      "dispatch_ns": 1801471,
+      "blocked_ns": 4293227,
+      "worker_ns": 839040,
+      "merge_ns": 228502,
+      "peak_workers": 4,
+      "peak_overlap": 4,
+      "multicore_calls": 124,
+      "worker_span_ns": 744124
+     },
+     {
+      "preparation_ns": 513075,
+      "pool_start_ns": 63042,
+      "dispatch_ns": 1872544,
+      "blocked_ns": 4480465,
+      "worker_ns": 885711,
+      "merge_ns": 221290,
+      "peak_workers": 4,
+      "peak_overlap": 4,
+      "multicore_calls": 128,
+      "worker_span_ns": 759420
+     }
+    ],
+    "identity": {
+     "rhs": 6704,
+     "raw": "13475504451835815111",
+     "multi": "bc200fa4a1b13c5dfdd2a7cda4bd6f9c2e09453559dc60b5d7215c1579bfab2e",
+     "physical": "a9e8c2e58671070fb49392415d1f197141b04612cd9c5ade5fea59a2c20aef34",
+     "commits": "ce6f1da681a32efd3f50442fdd901730d164de50536cae2613f023aceeb64d4b",
+     "children": "388cc1613f1f94ebdc99a304f1465c5117c88e34160a72f2f9d024c08cb488db",
+     "single_winners": "84672cf01e64de495bd74e2b3934558ff25e284ca8e1ffde684ede80e5b82621",
+     "multi_winners": "3352d3f4701eb1d61fd89a02c0775026f93f471b6a177a02aa81aba610dde211",
+     "root_parents": "ae003238e455d0cfc803e886e70f4d929b300f974b43f10c9495e13f29ca7dc5",
+     "root_ids": "a7656cc96d3c533814028737fa51d7d22a198ab94517fae05ad6b5e965dc4247",
+     "nested_ids": "4cfd3f4b51bf1e53f80817299294f363f381cea2a178584098d60e9f25710592",
+     "cells": "4b2d2d12082876d2c1e8ed03c6865f45cf0327ca0bbe355aa3692be77dcc3aea",
+     "direct_cells": 5666,
+     "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+     "raw_sha": "bc200fa4a1b13c5dfdd2a7cda4bd6f9c2e09453559dc60b5d7215c1579bfab2e",
+     "published": 8664,
+     "verified": 8664,
+     "rejects": 0
+    },
+    "fresh": 5682,
+    "aligned": true,
+    "audit": {
+     "attempts": 6698,
+     "blocked_ns": 5350338,
+     "by_rule": {
+      "136": [
+       25,
+       3414,
+       0,
+       0,
+       22833
+      ],
+      "237": [
+       15,
+       2223,
+       0,
+       0,
+       14996
+      ],
+      "238": [
+       14,
+       2059,
+       0,
+       0,
+       16079
+      ],
+      "239": [
+       13,
+       2065,
+       0,
+       0,
+       34085
+      ],
+      "240": [
+       16,
+       2559,
+       340,
+       0,
+       64957
+      ],
+      "241": [
+       13,
+       2065,
+       832,
+       10,
+       53958
+      ],
+      "242": [
+       13,
+       2065,
+       382,
+       6,
+       62293
+      ],
+      "246": [
+       14,
+       2230,
+       0,
+       0,
+       27953
+      ],
+      "264": [
+       14,
+       2059,
+       20,
+       10,
+       28373
+      ],
+      "312": [
+       6,
+       770,
+       405,
+       116,
+       32622
+      ],
+      "362": [
+       7,
+       744,
+       118,
+       0,
+       13663
+      ],
+      "363": [
+       7,
+       744,
+       118,
+       0,
+       15586
+      ],
+      "460": [
+       3,
+       320,
+       116,
+       8,
+       16751
+      ],
+      "504": [
+       34,
+       3626,
+       1535,
+       86,
+       157422
+      ],
+      "507": [
+       59,
+       6573,
+       2648,
+       223,
+       252910
+      ],
+      "538": [
+       14,
+       1508,
+       184,
+       92,
+       40331
+      ]
+     },
+     "calls": 267,
+     "column_refusals": 0,
+     "dir_keys": 0,
+     "dispatch_ns": 2269005,
+     "groups": 33479,
+     "guard_rows": 3414,
+     "merge_ns": 512632,
+     "multicore_calls": 138,
+     "peak_overlap": 4,
+     "peak_workers": 4,
+     "pool_start_ns": 56417,
+     "preparation_ns": 516200,
+     "raw": 551,
+     "roots": 35024,
+     "selected": 1054,
+     "small": 787,
+     "speculative": 0,
+     "worker_ns": 854812,
+     "worker_span_ns": 853442
+    },
+    "median_ms": 42.7655
+   }
+  },
+  "threshold": 64,
+  "faults": {
+   "1": {
+    "error": "invalid learned worker frame generation",
+    "completed": 138
+   },
+   "2": {
+    "error": "invalid learned worker result offset",
+    "completed": 156
+   }
+  }
+ },
+ "jacobi-1d": {
+  "arms": {
+   "vanilla": {
+    "ms": [
+     120.19449999999999,
+     121.616709,
+     111.385875,
+     111.214167,
+     109.653291,
+     111.71708299999999
+    ],
+    "rhs": 41319,
+    "graph": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+    "median_ms": 111.551479
+   },
+   "original": {
+    "ms": [
+     183.88062499999998,
+     200.735792,
+     185.550875,
+     186.06604199999998,
+     194.280833,
+     183.506958
+    ],
+    "samples": [],
+    "identity": {
+     "rhs": 41319,
+     "raw": "10044579022946421875",
+     "multi": "62096e32b37385939ffb599fe19825748badb7c769c15035d69109cb7748019a",
+     "physical": "f5312044bbe63b5a4e5e747b6f4f3230aba32c5ac656e83a70fd42d98acf0fc8",
+     "commits": "243798922b4bb5fea928392f3ffcfea1e300009b306b7121cc876e125d0b76ed",
+     "children": "62ad861911789feabd72ae5deffd13e0b284bf20f6adc1cc642e0caa60dbca29",
+     "single_winners": "be25311b9d3f92bf25790cb011875d2d03e050bf8661a343b8957f43edb53093",
+     "multi_winners": "43cff60500c488ebe255281e77655c51cfb0959a4329770e15136ec8f11ceb5d",
+     "root_parents": "e8499989e6bd1f6845243e265b40cd3cdb1641aab9576152fe99ea2313974395",
+     "root_ids": "6a08fb114db746df24f16b5f90ef3265e457a38b21614a0314504924ff10fe68",
+     "nested_ids": "c261681126c334cc623b80acb84631db851eec16eca07a8f6e8103c7c52510ee",
+     "cells": "30405e59baf6fca6fb549219c3d1e333ab860840c143972163fddbb6f2264c74",
+     "direct_cells": 32721,
+     "state_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+     "raw_sha": "62096e32b37385939ffb599fe19825748badb7c769c15035d69109cb7748019a",
+     "published": 50140,
+     "verified": 50005,
+     "rejects": 135
+    },
+    "fresh": 32819,
+    "aligned": true,
+    "audit": {
+     "attempts": 0,
+     "blocked_ns": 0,
+     "by_rule": {},
+     "calls": 0,
+     "column_refusals": 0,
+     "dir_keys": 0,
+     "dispatch_ns": 0,
+     "groups": 0,
+     "guard_rows": 0,
+     "merge_ns": 0,
+     "multicore_calls": 0,
+     "peak_overlap": 0,
+     "peak_workers": 0,
+     "pool_start_ns": 0,
+     "preparation_ns": 0,
+     "raw": 0,
+     "roots": 0,
+     "selected": 0,
+     "small": 0,
+     "speculative": 0,
+     "worker_ns": 0,
+     "worker_span_ns": 0
+    },
+    "median_ms": 185.80845849999997
+   },
+   "1": {
+    "ms": [
+     202.64404199999998,
+     218.51379200000002,
+     206.338083,
+     199.2985,
+     211.244791,
+     188.46775
+    ],
+    "samples": [
+     {
+      "preparation_ns": 5306754,
+      "pool_start_ns": 35958,
+      "dispatch_ns": 2560480,
+      "blocked_ns": 11842414,
+      "worker_ns": 6798297,
+      "merge_ns": 593090,
+      "peak_workers": 1,
+      "peak_overlap": 1,
+      "multicore_calls": 0,
+      "worker_span_ns": 6798297
+     },
+     {
+      "preparation_ns": 5440390,
+      "pool_start_ns": 24708,
+      "dispatch_ns": 2866375,
+      "blocked_ns": 12293986,
+      "worker_ns": 6745693,
+      "merge_ns": 652962,
+      "peak_workers": 1,
+      "peak_overlap": 1,
+      "multicore_calls": 0,
+      "worker_span_ns": 6745693
+     },
+     {
+      "preparation_ns": 5444543,
+      "pool_start_ns": 28459,
+      "dispatch_ns": 2815843,
+      "blocked_ns": 12347805,
+      "worker_ns": 6821280,
+      "merge_ns": 629403,
+      "peak_workers": 1,
+      "peak_overlap": 1,
+      "multicore_calls": 0,
+      "worker_span_ns": 6821280
+     },
+     {
+      "preparation_ns": 5282389,
+      "pool_start_ns": 29334,
+      "dispatch_ns": 2398320,
+      "blocked_ns": 11659414,
+      "worker_ns": 6743853,
+      "merge_ns": 569693,
+      "peak_workers": 1,
+      "peak_overlap": 1,
+      "multicore_calls": 0,
+      "worker_span_ns": 6743853
+     },
+     {
+      "preparation_ns": 5317612,
+      "pool_start_ns": 31917,
+      "dispatch_ns": 2717222,
+      "blocked_ns": 12242852,
+      "worker_ns": 6810612,
+      "merge_ns": 648075,
+      "peak_workers": 1,
+      "peak_overlap": 1,
+      "multicore_calls": 0,
+      "worker_span_ns": 6810612
+     },
+     {
+      "preparation_ns": 5136405,
+      "pool_start_ns": 34542,
+      "dispatch_ns": 2281545,
+      "blocked_ns": 11525005,
+      "worker_ns": 6787193,
+      "merge_ns": 541762,
+      "peak_workers": 1,
+      "peak_overlap": 1,
+      "multicore_calls": 0,
+      "worker_span_ns": 6787193
+     }
+    ],
+    "identity": {
+     "rhs": 41319,
+     "raw": "10044579022946421875",
+     "multi": "62096e32b37385939ffb599fe19825748badb7c769c15035d69109cb7748019a",
+     "physical": "f5312044bbe63b5a4e5e747b6f4f3230aba32c5ac656e83a70fd42d98acf0fc8",
+     "commits": "243798922b4bb5fea928392f3ffcfea1e300009b306b7121cc876e125d0b76ed",
+     "children": "62ad861911789feabd72ae5deffd13e0b284bf20f6adc1cc642e0caa60dbca29",
+     "single_winners": "be25311b9d3f92bf25790cb011875d2d03e050bf8661a343b8957f43edb53093",
+     "multi_winners": "43cff60500c488ebe255281e77655c51cfb0959a4329770e15136ec8f11ceb5d",
+     "root_parents": "e8499989e6bd1f6845243e265b40cd3cdb1641aab9576152fe99ea2313974395",
+     "root_ids": "6a08fb114db746df24f16b5f90ef3265e457a38b21614a0314504924ff10fe68",
+     "nested_ids": "c261681126c334cc623b80acb84631db851eec16eca07a8f6e8103c7c52510ee",
+     "cells": "30405e59baf6fca6fb549219c3d1e333ab860840c143972163fddbb6f2264c74",
+     "direct_cells": 32721,
+     "state_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+     "raw_sha": "62096e32b37385939ffb599fe19825748badb7c769c15035d69109cb7748019a",
+     "published": 50140,
+     "verified": 50005,
+     "rejects": 135
+    },
+    "fresh": 32819,
+    "aligned": true,
+    "audit": {
+     "attempts": 67042,
+     "blocked_ns": 12460186,
+     "by_rule": {
+      "136": [
+       39,
+       32375,
+       0,
+       0,
+       61413
+      ],
+      "237": [
+       43,
+       67332,
+       98,
+       16,
+       166121
+      ],
+      "238": [
+       43,
+       67332,
+       4,
+       0,
+       143415
+      ],
+      "239": [
+       43,
+       72251,
+       215,
+       4,
+       382747
+      ],
+      "240": [
+       42,
+       70400,
+       912,
+       6,
+       499709
+      ],
+      "241": [
+       42,
+       70400,
+       3849,
+       64,
+       599667
+      ],
+      "242": [
+       42,
+       70400,
+       3444,
+       64,
+       595964
+      ],
+      "245": [
+       42,
+       70400,
+       63,
+       0,
+       328038
+      ],
+      "246": [
+       42,
+       70400,
+       27,
+       0,
+       460089
+      ],
+      "264": [
+       43,
+       67332,
+       150,
+       59,
+       345835
+      ],
+      "268": [
+       5,
+       535,
+       615,
+       99,
+       33416
+      ],
+      "269": [
+       5,
+       535,
+       605,
+       97,
+       33042
+      ],
+      "276": [
+       2,
+       144,
+       0,
+       0,
+       458
+      ],
+      "277": [
+       2,
+       144,
+       0,
+       0,
+       459
+      ],
+      "312": [
+       4,
+       1878,
+       1865,
+       506,
+       76960
+      ],
+      "352": [
+       1,
+       82,
+       164,
+       82,
+       5875
+      ],
+      "357": [
+       2,
+       144,
+       0,
+       0,
+       1375
+      ],
+      "359": [
+       2,
+       144,
+       0,
+       0,
+       458
+      ],
+      "361": [
+       2,
+       144,
+       5,
+       0,
+       2043
+      ],
+      "362": [
+       6,
+       3487,
+       1084,
+       3,
+       66000
+      ],
+      "363": [
+       6,
+       3487,
+       1084,
+       3,
+       61792
+      ],
+      "373": [
+       2,
+       1640,
+       22,
+       11,
+       13333
+      ],
+      "386": [
+       5,
+       360,
+       16,
+       4,
+       3166
+      ],
+      "387": [
+       5,
+       360,
+       16,
+       4,
+       3085
+      ],
+      "388": [
+       5,
+       360,
+       0,
+       0,
+       1666
+      ],
+      "389": [
+       5,
+       360,
+       0,
+       0,
+       1582
+      ],
+      "390": [
+       5,
+       360,
+       0,
+       0,
+       1332
+      ],
+      "391": [
+       5,
+       360,
+       0,
+       0,
+       1500
+      ],
+      "392": [
+       5,
+       360,
+       0,
+       0,
+       1042
+      ],
+      "393": [
+       5,
+       360,
+       0,
+       0,
+       1208
+      ],
+      "394": [
+       5,
+       360,
+       0,
+       0,
+       1167
+      ],
+      "395": [
+       5,
+       360,
+       0,
+       0,
+       1250
+      ],
+      "396": [
+       5,
+       360,
+       0,
+       0,
+       1209
+      ],
+      "397": [
+       5,
+       360,
+       12,
+       3,
+       3043
+      ],
+      "398": [
+       5,
+       360,
+       12,
+       3,
+       3874
+      ],
+      "41": [
+       2,
+       144,
+       0,
+       0,
+       458
+      ],
+      "42": [
+       2,
+       144,
+       0,
+       0,
+       500
+      ],
+      "43": [
+       2,
+       144,
+       10,
+       8,
+       2834
+      ],
+      "440": [
+       2,
+       144,
+       8,
+       4,
+       1249
+      ],
+      "441": [
+       2,
+       144,
+       8,
+       4,
+       959
+      ],
+      "442": [
+       2,
+       144,
+       16,
+       4,
+       3167
+      ],
+      "443": [
+       2,
+       144,
+       16,
+       4,
+       2084
+      ],
+      "444": [
+       2,
+       144,
+       8,
+       0,
+       1167
+      ],
+      "445": [
+       2,
+       144,
+       8,
+       0,
+       2458
+      ],
+      "460": [
+       4,
+       2299,
+       845,
+       50,
+       57166
+      ],
+      "498": [
+       17,
+       1224,
+       2754,
+       37,
+       100460
+      ],
+      "501": [
+       37,
+       14003,
+       16551,
+       232,
+       659581
+      ],
+      "504": [
+       37,
+       21779,
+       7466,
+       350,
+       543580
+      ],
+      "507": [
+       77,
+       29458,
+       15269,
+       1553,
+       869461
+      ],
+      "529": [
+       10,
+       720,
+       0,
+       0,
+       3083
+      ],
+      "530": [
+       10,
+       720,
+       15,
+       5,
+       6332
+      ],
+      "532": [
+       2,
+       144,
+       20,
+       10,
+       2500
+      ],
+      "534": [
+       2,
+       144,
+       4,
+       2,
+       1208
+      ],
+      "535": [
+       10,
+       720,
+       18,
+       4,
+       7748
+      ],
+      "538": [
+       72,
+       19977,
+       3547,
+       723,
+       288284
+      ],
+      "540": [
+       72,
+       14906,
+       6217,
+       494,
+       417460
+      ],
+      "8": [
+       1,
+       72,
+       0,
+       0,
+       333
+      ],
+      "9": [
+       1,
+       72,
+       0,
+       0,
+       250
+      ]
+     },
+     "calls": 895,
+     "column_refusals": 0,
+     "dir_keys": 0,
+     "dispatch_ns": 2832923,
+     "groups": 461565,
+     "guard_rows": 42095,
+     "merge_ns": 1765427,
+     "multicore_calls": 0,
+     "peak_overlap": 1,
+     "peak_workers": 1,
+     "pool_start_ns": 39584,
+     "preparation_ns": 5393995,
+     "raw": 4512,
+     "roots": 783200,
+     "selected": 1606,
+     "small": 711,
+     "speculative": 0,
+     "worker_ns": 6875655,
+     "worker_span_ns": 6875655
+    },
+    "median_ms": 204.4910625
+   },
+   "2": {
+    "ms": [
+     201.745166,
+     216.706583,
+     223.087333,
+     207.21758300000002,
+     210.209,
+     198.81758299999998
+    ],
+    "samples": [
+     {
+      "preparation_ns": 5242385,
+      "pool_start_ns": 47625,
+      "dispatch_ns": 2916100,
+      "blocked_ns": 11884967,
+      "worker_ns": 7846828,
+      "merge_ns": 711605,
+      "peak_workers": 2,
+      "peak_overlap": 2,
+      "multicore_calls": 306,
+      "worker_span_ns": 5444565
+     },
+     {
+      "preparation_ns": 5416066,
+      "pool_start_ns": 43333,
+      "dispatch_ns": 3238145,
+      "blocked_ns": 12513722,
+      "worker_ns": 7917561,
+      "merge_ns": 790032,
+      "peak_workers": 2,
+      "peak_overlap": 2,
+      "multicore_calls": 297,
+      "worker_span_ns": 5521204
+     },
+     {
+      "preparation_ns": 5639962,
+      "pool_start_ns": 40583,
+      "dispatch_ns": 3442713,
+      "blocked_ns": 12862632,
+      "worker_ns": 7847744,
+      "merge_ns": 892774,
+      "peak_workers": 2,
+      "peak_overlap": 2,
+      "multicore_calls": 289,
+      "worker_span_ns": 5514382
+     },
+     {
+      "preparation_ns": 5381562,
+      "pool_start_ns": 34292,
+      "dispatch_ns": 3208282,
+      "blocked_ns": 12540318,
+      "worker_ns": 7766764,
+      "merge_ns": 747703,
+      "peak_workers": 2,
+      "peak_overlap": 2,
+      "multicore_calls": 294,
+      "worker_span_ns": 5426671
+     },
+     {
+      "preparation_ns": 5360212,
+      "pool_start_ns": 48333,
+      "dispatch_ns": 3185441,
+      "blocked_ns": 12439758,
+      "worker_ns": 7948561,
+      "merge_ns": 745381,
+      "peak_workers": 2,
+      "peak_overlap": 2,
+      "multicore_calls": 297,
+      "worker_span_ns": 5580800
+     },
+     {
+      "preparation_ns": 5367717,
+      "pool_start_ns": 51083,
+      "dispatch_ns": 2851171,
+      "blocked_ns": 11785912,
+      "worker_ns": 7734453,
+      "merge_ns": 708969,
+      "peak_workers": 2,
+      "peak_overlap": 2,
+      "multicore_calls": 296,
+      "worker_span_ns": 5374563
+     }
+    ],
+    "identity": {
+     "rhs": 41319,
+     "raw": "10044579022946421875",
+     "multi": "62096e32b37385939ffb599fe19825748badb7c769c15035d69109cb7748019a",
+     "physical": "f5312044bbe63b5a4e5e747b6f4f3230aba32c5ac656e83a70fd42d98acf0fc8",
+     "commits": "243798922b4bb5fea928392f3ffcfea1e300009b306b7121cc876e125d0b76ed",
+     "children": "62ad861911789feabd72ae5deffd13e0b284bf20f6adc1cc642e0caa60dbca29",
+     "single_winners": "be25311b9d3f92bf25790cb011875d2d03e050bf8661a343b8957f43edb53093",
+     "multi_winners": "43cff60500c488ebe255281e77655c51cfb0959a4329770e15136ec8f11ceb5d",
+     "root_parents": "e8499989e6bd1f6845243e265b40cd3cdb1641aab9576152fe99ea2313974395",
+     "root_ids": "6a08fb114db746df24f16b5f90ef3265e457a38b21614a0314504924ff10fe68",
+     "nested_ids": "c261681126c334cc623b80acb84631db851eec16eca07a8f6e8103c7c52510ee",
+     "cells": "30405e59baf6fca6fb549219c3d1e333ab860840c143972163fddbb6f2264c74",
+     "direct_cells": 32721,
+     "state_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+     "raw_sha": "62096e32b37385939ffb599fe19825748badb7c769c15035d69109cb7748019a",
+     "published": 50140,
+     "verified": 50005,
+     "rejects": 135
+    },
+    "fresh": 32819,
+    "aligned": true,
+    "audit": {
+     "attempts": 67042,
+     "blocked_ns": 12613966,
+     "by_rule": {
+      "136": [
+       39,
+       32375,
+       0,
+       0,
+       65708
+      ],
+      "237": [
+       43,
+       67332,
+       98,
+       16,
+       179507
+      ],
+      "238": [
+       43,
+       67332,
+       4,
+       0,
+       155454
+      ],
+      "239": [
+       43,
+       72251,
+       215,
+       4,
+       443042
+      ],
+      "240": [
+       42,
+       70400,
+       912,
+       6,
+       519876
+      ],
+      "241": [
+       42,
+       70400,
+       3849,
+       64,
+       724917
+      ],
+      "242": [
+       42,
+       70400,
+       3444,
+       64,
+       676380
+      ],
+      "245": [
+       42,
+       70400,
+       63,
+       0,
+       353456
+      ],
+      "246": [
+       42,
+       70400,
+       27,
+       0,
+       495909
+      ],
+      "264": [
+       43,
+       67332,
+       150,
+       59,
+       370459
+      ],
+      "268": [
+       5,
+       535,
+       615,
+       99,
+       39833
+      ],
+      "269": [
+       5,
+       535,
+       605,
+       97,
+       39291
+      ],
+      "276": [
+       2,
+       144,
+       0,
+       0,
+       667
+      ],
+      "277": [
+       2,
+       144,
+       0,
+       0,
+       542
+      ],
+      "312": [
+       4,
+       1878,
+       1865,
+       506,
+       99625
+      ],
+      "352": [
+       1,
+       82,
+       164,
+       82,
+       16291
+      ],
+      "357": [
+       2,
+       144,
+       0,
+       0,
+       1416
+      ],
+      "359": [
+       2,
+       144,
+       0,
+       0,
+       875
+      ],
+      "361": [
+       2,
+       144,
+       5,
+       0,
+       2125
+      ],
+      "362": [
+       6,
+       3487,
+       1084,
+       3,
+       85747
+      ],
+      "363": [
+       6,
+       3487,
+       1084,
+       3,
+       71624
+      ],
+      "373": [
+       2,
+       1640,
+       22,
+       11,
+       18167
+      ],
+      "386": [
+       5,
+       360,
+       16,
+       4,
+       3582
+      ],
+      "387": [
+       5,
+       360,
+       16,
+       4,
+       3873
+      ],
+      "388": [
+       5,
+       360,
+       0,
+       0,
+       2291
+      ],
+      "389": [
+       5,
+       360,
+       0,
+       0,
+       2501
+      ],
+      "390": [
+       5,
+       360,
+       0,
+       0,
+       1585
+      ],
+      "391": [
+       5,
+       360,
+       0,
+       0,
+       2417
+      ],
+      "392": [
+       5,
+       360,
+       0,
+       0,
+       1666
+      ],
+      "393": [
+       5,
+       360,
+       0,
+       0,
+       1420
+      ],
+      "394": [
+       5,
+       360,
+       0,
+       0,
+       1541
+      ],
+      "395": [
+       5,
+       360,
+       0,
+       0,
+       3208
+      ],
+      "396": [
+       5,
+       360,
+       0,
+       0,
+       1125
+      ],
+      "397": [
+       5,
+       360,
+       12,
+       3,
+       3669
+      ],
+      "398": [
+       5,
+       360,
+       12,
+       3,
+       3292
+      ],
+      "41": [
+       2,
+       144,
+       0,
+       0,
+       584
+      ],
+      "42": [
+       2,
+       144,
+       0,
+       0,
+       666
+      ],
+      "43": [
+       2,
+       144,
+       10,
+       8,
+       2916
+      ],
+      "440": [
+       2,
+       144,
+       8,
+       4,
+       1041
+      ],
+      "441": [
+       2,
+       144,
+       8,
+       4,
+       1290
+      ],
+      "442": [
+       2,
+       144,
+       16,
+       4,
+       2458
+      ],
+      "443": [
+       2,
+       144,
+       16,
+       4,
+       2166
+      ],
+      "444": [
+       2,
+       144,
+       8,
+       0,
+       2126
+      ],
+      "445": [
+       2,
+       144,
+       8,
+       0,
+       2166
+      ],
+      "460": [
+       4,
+       2299,
+       845,
+       50,
+       70708
+      ],
+      "498": [
+       17,
+       1224,
+       2754,
+       37,
+       115043
+      ],
+      "501": [
+       37,
+       14003,
+       16551,
+       232,
+       825990
+      ],
+      "504": [
+       37,
+       21779,
+       7466,
+       350,
+       609502
+      ],
+      "507": [
+       77,
+       29458,
+       15269,
+       1553,
+       1045404
+      ],
+      "529": [
+       10,
+       720,
+       0,
+       0,
+       4707
+      ],
+      "530": [
+       10,
+       720,
+       15,
+       5,
+       6627
+      ],
+      "532": [
+       2,
+       144,
+       20,
+       10,
+       2500
+      ],
+      "534": [
+       2,
+       144,
+       4,
+       2,
+       1000
+      ],
+      "535": [
+       10,
+       720,
+       18,
+       4,
+       8705
+      ],
+      "538": [
+       72,
+       19977,
+       3547,
+       723,
+       355379
+      ],
+      "540": [
+       72,
+       14906,
+       6217,
+       494,
+       534632
+      ],
+      "8": [
+       1,
+       72,
+       0,
+       0,
+       375
+      ],
+      "9": [
+       1,
+       72,
+       0,
+       0,
+       250
+      ]
+     },
+     "calls": 895,
+     "column_refusals": 0,
+     "dir_keys": 0,
+     "dispatch_ns": 3300088,
+     "groups": 461565,
+     "guard_rows": 42095,
+     "merge_ns": 1919757,
+     "multicore_calls": 301,
+     "peak_overlap": 2,
+     "peak_workers": 2,
+     "pool_start_ns": 36875,
+     "preparation_ns": 5474996,
+     "raw": 4512,
+     "roots": 783200,
+     "selected": 1606,
+     "small": 711,
+     "speculative": 0,
+     "worker_ns": 7989316,
+     "worker_span_ns": 5573041
+    },
+    "median_ms": 208.71329150000003
+   },
+   "4": {
+    "ms": [
+     237.962292,
+     238.308583,
+     230.61754100000002,
+     224.44162500000002,
+     243.477542,
+     222.842708
+    ],
+    "samples": [
+     {
+      "preparation_ns": 6106849,
+      "pool_start_ns": 55667,
+      "dispatch_ns": 6447782,
+      "blocked_ns": 17910917,
+      "worker_ns": 8799151,
+      "merge_ns": 1131920,
+      "peak_workers": 4,
+      "peak_overlap": 4,
+      "multicore_calls": 445,
+      "worker_span_ns": 4824710
+     },
+     {
+      "preparation_ns": 5993170,
+      "pool_start_ns": 62083,
+      "dispatch_ns": 6063125,
+      "blocked_ns": 17189730,
+      "worker_ns": 8984844,
+      "merge_ns": 1126127,
+      "peak_workers": 4,
+      "peak_overlap": 4,
+      "multicore_calls": 438,
+      "worker_span_ns": 4874292
+     },
+     {
+      "preparation_ns": 5920754,
+      "pool_start_ns": 68291,
+      "dispatch_ns": 6490999,
+      "blocked_ns": 18501257,
+      "worker_ns": 8707469,
+      "merge_ns": 1182119,
+      "peak_workers": 4,
+      "peak_overlap": 4,
+      "multicore_calls": 448,
+      "worker_span_ns": 4826244
+     },
+     {
+      "preparation_ns": 5727428,
+      "pool_start_ns": 67917,
+      "dispatch_ns": 6230215,
+      "blocked_ns": 18192740,
+      "worker_ns": 8716294,
+      "merge_ns": 1333158,
+      "peak_workers": 4,
+      "peak_overlap": 4,
+      "multicore_calls": 444,
+      "worker_span_ns": 4908591
+     },
+     {
+      "preparation_ns": 5984240,
+      "pool_start_ns": 49542,
+      "dispatch_ns": 6858390,
+      "blocked_ns": 18956458,
+      "worker_ns": 8964485,
+      "merge_ns": 1104624,
+      "peak_workers": 4,
+      "peak_overlap": 4,
+      "multicore_calls": 439,
+      "worker_span_ns": 4977877
+     },
+     {
+      "preparation_ns": 5888409,
+      "pool_start_ns": 65375,
+      "dispatch_ns": 5548982,
+      "blocked_ns": 16359290,
+      "worker_ns": 8695742,
+      "merge_ns": 1015843,
+      "peak_workers": 4,
+      "peak_overlap": 4,
+      "multicore_calls": 446,
+      "worker_span_ns": 4794917
+     }
+    ],
+    "identity": {
+     "rhs": 41319,
+     "raw": "10044579022946421875",
+     "multi": "62096e32b37385939ffb599fe19825748badb7c769c15035d69109cb7748019a",
+     "physical": "f5312044bbe63b5a4e5e747b6f4f3230aba32c5ac656e83a70fd42d98acf0fc8",
+     "commits": "243798922b4bb5fea928392f3ffcfea1e300009b306b7121cc876e125d0b76ed",
+     "children": "62ad861911789feabd72ae5deffd13e0b284bf20f6adc1cc642e0caa60dbca29",
+     "single_winners": "be25311b9d3f92bf25790cb011875d2d03e050bf8661a343b8957f43edb53093",
+     "multi_winners": "43cff60500c488ebe255281e77655c51cfb0959a4329770e15136ec8f11ceb5d",
+     "root_parents": "e8499989e6bd1f6845243e265b40cd3cdb1641aab9576152fe99ea2313974395",
+     "root_ids": "6a08fb114db746df24f16b5f90ef3265e457a38b21614a0314504924ff10fe68",
+     "nested_ids": "c261681126c334cc623b80acb84631db851eec16eca07a8f6e8103c7c52510ee",
+     "cells": "30405e59baf6fca6fb549219c3d1e333ab860840c143972163fddbb6f2264c74",
+     "direct_cells": 32721,
+     "state_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+     "raw_sha": "62096e32b37385939ffb599fe19825748badb7c769c15035d69109cb7748019a",
+     "published": 50140,
+     "verified": 50005,
+     "rejects": 135
+    },
+    "fresh": 32819,
+    "aligned": true,
+    "audit": {
+     "attempts": 67042,
+     "blocked_ns": 19719032,
+     "by_rule": {
+      "136": [
+       39,
+       32375,
+       0,
+       0,
+       85164
+      ],
+      "237": [
+       43,
+       67332,
+       98,
+       16,
+       200667
+      ],
+      "238": [
+       43,
+       67332,
+       4,
+       0,
+       158754
+      ],
+      "239": [
+       43,
+       72251,
+       215,
+       4,
+       465244
+      ],
+      "240": [
+       42,
+       70400,
+       912,
+       6,
+       574578
+      ],
+      "241": [
+       42,
+       70400,
+       3849,
+       64,
+       732709
+      ],
+      "242": [
+       42,
+       70400,
+       3444,
+       64,
+       711162
+      ],
+      "245": [
+       42,
+       70400,
+       63,
+       0,
+       377264
+      ],
+      "246": [
+       42,
+       70400,
+       27,
+       0,
+       519922
+      ],
+      "264": [
+       43,
+       67332,
+       150,
+       59,
+       429157
+      ],
+      "268": [
+       5,
+       535,
+       615,
+       99,
+       47996
+      ],
+      "269": [
+       5,
+       535,
+       605,
+       97,
+       49626
+      ],
+      "276": [
+       2,
+       144,
+       0,
+       0,
+       707
+      ],
+      "277": [
+       2,
+       144,
+       0,
+       0,
+       959
+      ],
+      "312": [
+       4,
+       1878,
+       1865,
+       506,
+       109749
+      ],
+      "352": [
+       1,
+       82,
+       164,
+       82,
+       15042
+      ],
+      "357": [
+       2,
+       144,
+       0,
+       0,
+       6210
+      ],
+      "359": [
+       2,
+       144,
+       0,
+       0,
+       2081
+      ],
+      "361": [
+       2,
+       144,
+       5,
+       0,
+       5127
+      ],
+      "362": [
+       6,
+       3487,
+       1084,
+       3,
+       104039
+      ],
+      "363": [
+       6,
+       3487,
+       1084,
+       3,
+       73750
+      ],
+      "373": [
+       2,
+       1640,
+       22,
+       11,
+       21209
+      ],
+      "386": [
+       5,
+       360,
+       16,
+       4,
+       8082
+      ],
+      "387": [
+       5,
+       360,
+       16,
+       4,
+       4002
+      ],
+      "388": [
+       5,
+       360,
+       0,
+       0,
+       3250
+      ],
+      "389": [
+       5,
+       360,
+       0,
+       0,
+       3292
+      ],
+      "390": [
+       5,
+       360,
+       0,
+       0,
+       2416
+      ],
+      "391": [
+       5,
+       360,
+       0,
+       0,
+       2751
+      ],
+      "392": [
+       5,
+       360,
+       0,
+       0,
+       7961
+      ],
+      "393": [
+       5,
+       360,
+       0,
+       0,
+       2169
+      ],
+      "394": [
+       5,
+       360,
+       0,
+       0,
+       1669
+      ],
+      "395": [
+       5,
+       360,
+       0,
+       0,
+       1954
+      ],
+      "396": [
+       5,
+       360,
+       0,
+       0,
+       1958
+      ],
+      "397": [
+       5,
+       360,
+       12,
+       3,
+       5122
+      ],
+      "398": [
+       5,
+       360,
+       12,
+       3,
+       4334
+      ],
+      "41": [
+       2,
+       144,
+       0,
+       0,
+       1167
+      ],
+      "42": [
+       2,
+       144,
+       0,
+       0,
+       710
+      ],
+      "43": [
+       2,
+       144,
+       10,
+       8,
+       3166
+      ],
+      "440": [
+       2,
+       144,
+       8,
+       4,
+       1501
+      ],
+      "441": [
+       2,
+       144,
+       8,
+       4,
+       1501
+      ],
+      "442": [
+       2,
+       144,
+       16,
+       4,
+       2667
+      ],
+      "443": [
+       2,
+       144,
+       16,
+       4,
+       2752
+      ],
+      "444": [
+       2,
+       144,
+       8,
+       0,
+       2874
+      ],
+      "445": [
+       2,
+       144,
+       8,
+       0,
+       2916
+      ],
+      "460": [
+       4,
+       2299,
+       845,
+       50,
+       69792
+      ],
+      "498": [
+       17,
+       1224,
+       2754,
+       37,
+       152752
+      ],
+      "501": [
+       37,
+       14003,
+       16551,
+       232,
+       1032829
+      ],
+      "504": [
+       37,
+       21779,
+       7466,
+       350,
+       714915
+      ],
+      "507": [
+       77,
+       29458,
+       15269,
+       1553,
+       1233752
+      ],
+      "529": [
+       10,
+       720,
+       0,
+       0,
+       9502
+      ],
+      "530": [
+       10,
+       720,
+       15,
+       5,
+       12622
+      ],
+      "532": [
+       2,
+       144,
+       20,
+       10,
+       4249
+      ],
+      "534": [
+       2,
+       144,
+       4,
+       2,
+       1833
+      ],
+      "535": [
+       10,
+       720,
+       18,
+       4,
+       15669
+      ],
+      "538": [
+       72,
+       19977,
+       3547,
+       723,
+       487796
+      ],
+      "540": [
+       72,
+       14906,
+       6217,
+       494,
+       669504
+      ],
+      "8": [
+       1,
+       72,
+       0,
+       0,
+       459
+      ],
+      "9": [
+       1,
+       72,
+       0,
+       0,
+       459
+      ]
+     },
+     "calls": 895,
+     "column_refusals": 0,
+     "dir_keys": 0,
+     "dispatch_ns": 7369758,
+     "groups": 461565,
+     "guard_rows": 42095,
+     "merge_ns": 2295761,
+     "multicore_calls": 432,
+     "peak_overlap": 4,
+     "peak_workers": 4,
+     "pool_start_ns": 58708,
+     "preparation_ns": 6244489,
+     "raw": 4512,
+     "roots": 783200,
+     "selected": 1606,
+     "small": 711,
+     "speculative": 0,
+     "worker_ns": 9165463,
+     "worker_span_ns": 5093707
+    },
+    "median_ms": 234.2899165
+   }
+  },
+  "threshold": 64,
+  "faults": {}
+ },
+ "conjugate-gradient": {
+  "arms": {
+   "vanilla": {
+    "ms": [
+     343.914375,
+     376.312625,
+     360.959625,
+     353.455625,
+     368.82512499999996,
+     348.540625
+    ],
+    "rhs": 131371,
+    "graph": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+    "median_ms": 357.207625
+   },
+   "original": {
+    "ms": [
+     693.4979999999999,
+     694.055792,
+     701.164333,
+     672.810834,
+     703.810042,
+     677.3416249999999
+    ],
+    "samples": [],
+    "identity": {
+     "rhs": 131371,
+     "raw": "1288652163610483747",
+     "multi": "b0d552d5edfdc3d9ef3f528d94401939488cb503afb30e94eabaa0a1b11b1365",
+     "physical": "f8fcc722f5f58bf51d2de59a45977accf2264c6c211ed2072c59cd7812bfd0c8",
+     "commits": "735d25f0733eae7b21a7e448d0d8aa8a7925c27eaadd53aa2faa15fb6214cbc7",
+     "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+     "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+     "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+     "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+     "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+     "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+     "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+     "direct_cells": 97026,
+     "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+     "raw_sha": "b0d552d5edfdc3d9ef3f528d94401939488cb503afb30e94eabaa0a1b11b1365",
+     "published": 127051,
+     "verified": 126855,
+     "rejects": 196
+    },
+    "fresh": 97139,
+    "aligned": true,
+    "audit": {
+     "attempts": 0,
+     "blocked_ns": 0,
+     "by_rule": {},
+     "calls": 0,
+     "column_refusals": 0,
+     "dir_keys": 0,
+     "dispatch_ns": 0,
+     "groups": 0,
+     "guard_rows": 0,
+     "merge_ns": 0,
+     "multicore_calls": 0,
+     "peak_overlap": 0,
+     "peak_workers": 0,
+     "pool_start_ns": 0,
+     "preparation_ns": 0,
+     "raw": 0,
+     "roots": 0,
+     "selected": 0,
+     "small": 0,
+     "speculative": 0,
+     "worker_ns": 0,
+     "worker_span_ns": 0
+    },
+    "median_ms": 693.776896
+   },
+   "1": {
+    "ms": [
+     755.704417,
+     747.929,
+     714.448667,
+     735.408542,
+     786.363167,
+     711.42625
+    ],
+    "samples": [
+     {
+      "preparation_ns": 24891667,
+      "pool_start_ns": 33542,
+      "dispatch_ns": 5832620,
+      "blocked_ns": 44199185,
+      "worker_ns": 32659689,
+      "merge_ns": 1616702,
+      "peak_workers": 1,
+      "peak_overlap": 1,
+      "multicore_calls": 0,
+      "worker_span_ns": 32658231
+     },
+     {
+      "preparation_ns": 25750896,
+      "pool_start_ns": 35083,
+      "dispatch_ns": 7483885,
+      "blocked_ns": 46224855,
+      "worker_ns": 32720081,
+      "merge_ns": 1419019,
+      "peak_workers": 1,
+      "peak_overlap": 1,
+      "multicore_calls": 0,
+      "worker_span_ns": 32717998
+     },
+     {
+      "preparation_ns": 24273470,
+      "pool_start_ns": 37334,
+      "dispatch_ns": 5452693,
+      "blocked_ns": 43200884,
+      "worker_ns": 32358253,
+      "merge_ns": 1324534,
+      "peak_workers": 1,
+      "peak_overlap": 1,
+      "multicore_calls": 0,
+      "worker_span_ns": 32356629
+     },
+     {
+      "preparation_ns": 24367342,
+      "pool_start_ns": 35083,
+      "dispatch_ns": 5787744,
+      "blocked_ns": 43547015,
+      "worker_ns": 32263705,
+      "merge_ns": 1375429,
+      "peak_workers": 1,
+      "peak_overlap": 1,
+      "multicore_calls": 0,
+      "worker_span_ns": 32262495
+     },
+     {
+      "preparation_ns": 24834438,
+      "pool_start_ns": 37417,
+      "dispatch_ns": 6101123,
+      "blocked_ns": 44592976,
+      "worker_ns": 32624557,
+      "merge_ns": 1512448,
+      "peak_workers": 1,
+      "peak_overlap": 1,
+      "multicore_calls": 0,
+      "worker_span_ns": 32622475
+     },
+     {
+      "preparation_ns": 24019363,
+      "pool_start_ns": 29584,
+      "dispatch_ns": 5674907,
+      "blocked_ns": 43402713,
+      "worker_ns": 32263973,
+      "merge_ns": 1315901,
+      "peak_workers": 1,
+      "peak_overlap": 1,
+      "multicore_calls": 0,
+      "worker_span_ns": 32262891
+     }
+    ],
+    "identity": {
+     "rhs": 131371,
+     "raw": "1288652163610483747",
+     "multi": "b0d552d5edfdc3d9ef3f528d94401939488cb503afb30e94eabaa0a1b11b1365",
+     "physical": "f8fcc722f5f58bf51d2de59a45977accf2264c6c211ed2072c59cd7812bfd0c8",
+     "commits": "735d25f0733eae7b21a7e448d0d8aa8a7925c27eaadd53aa2faa15fb6214cbc7",
+     "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+     "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+     "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+     "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+     "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+     "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+     "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+     "direct_cells": 97026,
+     "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+     "raw_sha": "b0d552d5edfdc3d9ef3f528d94401939488cb503afb30e94eabaa0a1b11b1365",
+     "published": 127051,
+     "verified": 126855,
+     "rejects": 196
+    },
+    "fresh": 97139,
+    "aligned": true,
+    "audit": {
+     "attempts": 209969,
+     "blocked_ns": 44798956,
+     "by_rule": {
+      "136": [
+       64,
+       157455,
+       0,
+       0,
+       276627
+      ],
+      "237": [
+       61,
+       326213,
+       370,
+       21,
+       725122
+      ],
+      "238": [
+       61,
+       326213,
+       39,
+       0,
+       479790
+      ],
+      "239": [
+       61,
+       351383,
+       666,
+       14,
+       1994419
+      ],
+      "240": [
+       61,
+       351383,
+       3119,
+       14,
+       2525955
+      ],
+      "241": [
+       64,
+       371219,
+       18690,
+       127,
+       3649252
+      ],
+      "242": [
+       63,
+       364620,
+       16278,
+       63,
+       3782380
+      ],
+      "245": [
+       60,
+       344823,
+       739,
+       0,
+       1852711
+      ],
+      "246": [
+       62,
+       357971,
+       182,
+       0,
+       2430039
+      ],
+      "247": [
+       62,
+       357971,
+       52,
+       0,
+       2177205
+      ],
+      "264": [
+       65,
+       352609,
+       154,
+       64,
+       2286415
+      ],
+      "265": [
+       40,
+       258027,
+       10,
+       0,
+       849250
+      ],
+      "268": [
+       5,
+       938,
+       1181,
+       209,
+       79167
+      ],
+      "269": [
+       5,
+       938,
+       1147,
+       205,
+       83040
+      ],
+      "276": [
+       7,
+       859,
+       0,
+       0,
+       2125
+      ],
+      "277": [
+       7,
+       859,
+       2,
+       1,
+       3040
+      ],
+      "312": [
+       4,
+       2694,
+       3997,
+       857,
+       156334
+      ],
+      "352": [
+       2,
+       272,
+       284,
+       142,
+       18583
+      ],
+      "357": [
+       7,
+       836,
+       3,
+       0,
+       5333
+      ],
+      "359": [
+       7,
+       836,
+       84,
+       0,
+       11083
+      ],
+      "361": [
+       7,
+       836,
+       27,
+       0,
+       7165
+      ],
+      "362": [
+       8,
+       13546,
+       4828,
+       6,
+       245209
+      ],
+      "363": [
+       8,
+       13546,
+       4828,
+       6,
+       214832
+      ],
+      "373": [
+       2,
+       4129,
+       104,
+       52,
+       59208
+      ],
+      "386": [
+       7,
+       871,
+       0,
+       0,
+       5916
+      ],
+      "387": [
+       7,
+       871,
+       0,
+       0,
+       5876
+      ],
+      "388": [
+       7,
+       871,
+       7,
+       1,
+       3791
+      ],
+      "389": [
+       7,
+       871,
+       7,
+       1,
+       4041
+      ],
+      "390": [
+       7,
+       871,
+       0,
+       0,
+       3333
+      ],
+      "391": [
+       7,
+       871,
+       0,
+       0,
+       4167
+      ],
+      "392": [
+       7,
+       871,
+       0,
+       0,
+       2791
+      ],
+      "393": [
+       7,
+       871,
+       0,
+       0,
+       3417
+      ],
+      "394": [
+       7,
+       871,
+       0,
+       0,
+       2709
+      ],
+      "395": [
+       7,
+       871,
+       0,
+       0,
+       3501
+      ],
+      "396": [
+       7,
+       871,
+       0,
+       0,
+       2751
+      ],
+      "397": [
+       7,
+       871,
+       0,
+       0,
+       7126
+      ],
+      "398": [
+       7,
+       871,
+       0,
+       0,
+       7375
+      ],
+      "41": [
+       3,
+       387,
+       0,
+       0,
+       1082
+      ],
+      "42": [
+       3,
+       387,
+       5,
+       1,
+       3166
+      ],
+      "43": [
+       3,
+       387,
+       0,
+       0,
+       3875
+      ],
+      "440": [
+       4,
+       508,
+       0,
+       0,
+       1625
+      ],
+      "441": [
+       4,
+       508,
+       0,
+       0,
+       2415
+      ],
+      "442": [
+       4,
+       508,
+       36,
+       0,
+       5458
+      ],
+      "443": [
+       4,
+       508,
+       36,
+       0,
+       4751
+      ],
+      "444": [
+       4,
+       508,
+       36,
+       0,
+       4541
+      ],
+      "445": [
+       4,
+       508,
+       36,
+       0,
+       3626
+      ],
+      "460": [
+       4,
+       6793,
+       1742,
+       87,
+       168500
+      ],
+      "498": [
+       42,
+       4942,
+       9948,
+       206,
+       362581
+      ],
+      "501": [
+       43,
+       39616,
+       38391,
+       381,
+       1698958
+      ],
+      "504": [
+       43,
+       73233,
+       16215,
+       559,
+       1400000
+      ],
+      "507": [
+       93,
+       51451,
+       30642,
+       2298,
+       1362456
+      ],
+      "529": [
+       152,
+       17800,
+       135,
+       45,
+       149538
+      ],
+      "530": [
+       152,
+       17800,
+       33,
+       11,
+       93834
+      ],
+      "532": [
+       6,
+       730,
+       116,
+       58,
+       26999
+      ],
+      "534": [
+       6,
+       730,
+       90,
+       45,
+       6833
+      ],
+      "535": [
+       152,
+       17800,
+       184,
+       51,
+       122879
+      ],
+      "538": [
+       153,
+       101604,
+       17532,
+       2096,
+       1262045
+      ],
+      "540": [
+       154,
+       84033,
+       37994,
+       1194,
+       2071073
+      ],
+      "8": [
+       2,
+       254,
+       0,
+       0,
+       792
+      ],
+      "9": [
+       2,
+       254,
+       0,
+       0,
+       709
+      ]
+     },
+     "calls": 1921,
+     "column_refusals": 0,
+     "dir_keys": 0,
+     "dispatch_ns": 6099795,
+     "groups": 2240688,
+     "guard_rows": 233540,
+     "merge_ns": 4017497,
+     "multicore_calls": 0,
+     "peak_overlap": 1,
+     "peak_workers": 1,
+     "pool_start_ns": 37875,
+     "preparation_ns": 24426113,
+     "raw": 8815,
+     "roots": 4392748,
+     "selected": 2763,
+     "small": 842,
+     "speculative": 0,
+     "worker_ns": 32728814,
+     "worker_span_ns": 32727480
+    },
+    "median_ms": 741.668771
+   },
+   "2": {
+    "ms": [
+     763.102667,
+     725.873416,
+     771.933167,
+     754.7775,
+     764.263375,
+     782.9262500000001
+    ],
+    "samples": [
+     {
+      "preparation_ns": 24785322,
+      "pool_start_ns": 30667,
+      "dispatch_ns": 8973711,
+      "blocked_ns": 41091820,
+      "worker_ns": 36203262,
+      "merge_ns": 1799886,
+      "peak_workers": 2,
+      "peak_overlap": 2,
+      "multicore_calls": 756,
+      "worker_span_ns": 22124417
+     },
+     {
+      "preparation_ns": 24827024,
+      "pool_start_ns": 40333,
+      "dispatch_ns": 7418400,
+      "blocked_ns": 38904802,
+      "worker_ns": 35937765,
+      "merge_ns": 1651006,
+      "peak_workers": 2,
+      "peak_overlap": 2,
+      "multicore_calls": 667,
+      "worker_span_ns": 22142881
+     },
+     {
+      "preparation_ns": 25236325,
+      "pool_start_ns": 34333,
+      "dispatch_ns": 7959457,
+      "blocked_ns": 40069295,
+      "worker_ns": 36414661,
+      "merge_ns": 1858830,
+      "peak_workers": 2,
+      "peak_overlap": 2,
+      "multicore_calls": 642,
+      "worker_span_ns": 22479406
+     },
+     {
+      "preparation_ns": 24999774,
+      "pool_start_ns": 36417,
+      "dispatch_ns": 7294009,
+      "blocked_ns": 38132907,
+      "worker_ns": 35940309,
+      "merge_ns": 1901025,
+      "peak_workers": 2,
+      "peak_overlap": 2,
+      "multicore_calls": 653,
+      "worker_span_ns": 22127998
+     },
+     {
+      "preparation_ns": 24891959,
+      "pool_start_ns": 39959,
+      "dispatch_ns": 7647669,
+      "blocked_ns": 38893919,
+      "worker_ns": 35783498,
+      "merge_ns": 1865670,
+      "peak_workers": 2,
+      "peak_overlap": 2,
+      "multicore_calls": 644,
+      "worker_span_ns": 21995304
+     },
+     {
+      "preparation_ns": 25304554,
+      "pool_start_ns": 52000,
+      "dispatch_ns": 7796785,
+      "blocked_ns": 39592862,
+      "worker_ns": 36527559,
+      "merge_ns": 1904149,
+      "peak_workers": 2,
+      "peak_overlap": 2,
+      "multicore_calls": 647,
+      "worker_span_ns": 22586393
+     }
+    ],
+    "identity": {
+     "rhs": 131371,
+     "raw": "1288652163610483747",
+     "multi": "b0d552d5edfdc3d9ef3f528d94401939488cb503afb30e94eabaa0a1b11b1365",
+     "physical": "f8fcc722f5f58bf51d2de59a45977accf2264c6c211ed2072c59cd7812bfd0c8",
+     "commits": "735d25f0733eae7b21a7e448d0d8aa8a7925c27eaadd53aa2faa15fb6214cbc7",
+     "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+     "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+     "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+     "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+     "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+     "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+     "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+     "direct_cells": 97026,
+     "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+     "raw_sha": "b0d552d5edfdc3d9ef3f528d94401939488cb503afb30e94eabaa0a1b11b1365",
+     "published": 127051,
+     "verified": 126855,
+     "rejects": 196
+    },
+    "fresh": 97139,
+    "aligned": true,
+    "audit": {
+     "attempts": 209969,
+     "blocked_ns": 36484049,
+     "by_rule": {
+      "136": [
+       64,
+       157455,
+       0,
+       0,
+       294708
+      ],
+      "237": [
+       61,
+       326213,
+       370,
+       21,
+       770251
+      ],
+      "238": [
+       61,
+       326213,
+       39,
+       0,
+       548831
+      ],
+      "239": [
+       61,
+       351383,
+       666,
+       14,
+       2160369
+      ],
+      "240": [
+       61,
+       351383,
+       3119,
+       14,
+       2658003
+      ],
+      "241": [
+       64,
+       371219,
+       18690,
+       127,
+       3795081
+      ],
+      "242": [
+       63,
+       364620,
+       16278,
+       63,
+       4052415
+      ],
+      "245": [
+       60,
+       344823,
+       739,
+       0,
+       1943575
+      ],
+      "246": [
+       62,
+       357971,
+       182,
+       0,
+       2613665
+      ],
+      "247": [
+       62,
+       357971,
+       52,
+       0,
+       2293000
+      ],
+      "264": [
+       65,
+       352609,
+       154,
+       64,
+       2410797
+      ],
+      "265": [
+       40,
+       258027,
+       10,
+       0,
+       908540
+      ],
+      "268": [
+       5,
+       938,
+       1181,
+       209,
+       82918
+      ],
+      "269": [
+       5,
+       938,
+       1147,
+       205,
+       94458
+      ],
+      "276": [
+       7,
+       859,
+       0,
+       0,
+       3291
+      ],
+      "277": [
+       7,
+       859,
+       2,
+       1,
+       3459
+      ],
+      "312": [
+       4,
+       2694,
+       3997,
+       857,
+       155918
+      ],
+      "352": [
+       2,
+       272,
+       284,
+       142,
+       25666
+      ],
+      "357": [
+       7,
+       836,
+       3,
+       0,
+       6289
+      ],
+      "359": [
+       7,
+       836,
+       84,
+       0,
+       12791
+      ],
+      "361": [
+       7,
+       836,
+       27,
+       0,
+       7997
+      ],
+      "362": [
+       8,
+       13546,
+       4828,
+       6,
+       272707
+      ],
+      "363": [
+       8,
+       13546,
+       4828,
+       6,
+       260666
+      ],
+      "373": [
+       2,
+       4129,
+       104,
+       52,
+       64835
+      ],
+      "386": [
+       7,
+       871,
+       0,
+       0,
+       6459
+      ],
+      "387": [
+       7,
+       871,
+       0,
+       0,
+       6375
+      ],
+      "388": [
+       7,
+       871,
+       7,
+       1,
+       6084
+      ],
+      "389": [
+       7,
+       871,
+       7,
+       1,
+       5625
+      ],
+      "390": [
+       7,
+       871,
+       0,
+       0,
+       3707
+      ],
+      "391": [
+       7,
+       871,
+       0,
+       0,
+       5624
+      ],
+      "392": [
+       7,
+       871,
+       0,
+       0,
+       3996
+      ],
+      "393": [
+       7,
+       871,
+       0,
+       0,
+       4041
+      ],
+      "394": [
+       7,
+       871,
+       0,
+       0,
+       4624
+      ],
+      "395": [
+       7,
+       871,
+       0,
+       0,
+       3706
+      ],
+      "396": [
+       7,
+       871,
+       0,
+       0,
+       4333
+      ],
+      "397": [
+       7,
+       871,
+       0,
+       0,
+       7289
+      ],
+      "398": [
+       7,
+       871,
+       0,
+       0,
+       6583
+      ],
+      "41": [
+       3,
+       387,
+       0,
+       0,
+       1418
+      ],
+      "42": [
+       3,
+       387,
+       5,
+       1,
+       3419
+      ],
+      "43": [
+       3,
+       387,
+       0,
+       0,
+       4582
+      ],
+      "440": [
+       4,
+       508,
+       0,
+       0,
+       2667
+      ],
+      "441": [
+       4,
+       508,
+       0,
+       0,
+       3750
+      ],
+      "442": [
+       4,
+       508,
+       36,
+       0,
+       6415
+      ],
+      "443": [
+       4,
+       508,
+       36,
+       0,
+       5833
+      ],
+      "444": [
+       4,
+       508,
+       36,
+       0,
+       6040
+      ],
+      "445": [
+       4,
+       508,
+       36,
+       0,
+       4625
+      ],
+      "460": [
+       4,
+       6793,
+       1742,
+       87,
+       188334
+      ],
+      "498": [
+       42,
+       4942,
+       9948,
+       206,
+       440502
+      ],
+      "501": [
+       43,
+       39616,
+       38391,
+       381,
+       1814043
+      ],
+      "504": [
+       43,
+       73233,
+       16215,
+       559,
+       1582337
+      ],
+      "507": [
+       93,
+       51451,
+       30642,
+       2298,
+       1519453
+      ],
+      "529": [
+       152,
+       17800,
+       135,
+       45,
+       164830
+      ],
+      "530": [
+       152,
+       17800,
+       33,
+       11,
+       95997
+      ],
+      "532": [
+       6,
+       730,
+       116,
+       58,
+       29081
+      ],
+      "534": [
+       6,
+       730,
+       90,
+       45,
+       10793
+      ],
+      "535": [
+       152,
+       17800,
+       184,
+       51,
+       136743
+      ],
+      "538": [
+       153,
+       101604,
+       17532,
+       2096,
+       1459082
+      ],
+      "540": [
+       154,
+       84033,
+       37994,
+       1194,
+       2519289
+      ],
+      "8": [
+       2,
+       254,
+       0,
+       0,
+       1000
+      ],
+      "9": [
+       2,
+       254,
+       0,
+       0,
+       750
+      ]
+     },
+     "calls": 1921,
+     "column_refusals": 0,
+     "dir_keys": 0,
+     "dispatch_ns": 6630049,
+     "groups": 2240688,
+     "guard_rows": 233540,
+     "merge_ns": 3879392,
+     "multicore_calls": 662,
+     "peak_overlap": 2,
+     "peak_workers": 2,
+     "pool_start_ns": 32916,
+     "preparation_ns": 24119710,
+     "raw": 8815,
+     "roots": 4392748,
+     "selected": 2763,
+     "small": 842,
+     "speculative": 0,
+     "worker_ns": 35509659,
+     "worker_span_ns": 21791443
+    },
+    "median_ms": 763.683021
+   },
+   "4": {
+    "ms": [
+     763.224042,
+     788.976584,
+     780.1357909999999,
+     768.7339589999999,
+     738.974042,
+     791.2485409999999
+    ],
+    "samples": [
+     {
+      "preparation_ns": 25477358,
+      "pool_start_ns": 58750,
+      "dispatch_ns": 15879685,
+      "blocked_ns": 50088824,
+      "worker_ns": 38889736,
+      "merge_ns": 2565163,
+      "peak_workers": 4,
+      "peak_overlap": 4,
+      "multicore_calls": 982,
+      "worker_span_ns": 16794520
+     },
+     {
+      "preparation_ns": 26444610,
+      "pool_start_ns": 58500,
+      "dispatch_ns": 15938496,
+      "blocked_ns": 48366089,
+      "worker_ns": 39367039,
+      "merge_ns": 2408961,
+      "peak_workers": 4,
+      "peak_overlap": 4,
+      "multicore_calls": 989,
+      "worker_span_ns": 16701176
+     },
+     {
+      "preparation_ns": 25512599,
+      "pool_start_ns": 52375,
+      "dispatch_ns": 18354895,
+      "blocked_ns": 54156296,
+      "worker_ns": 39593980,
+      "merge_ns": 2788620,
+      "peak_workers": 4,
+      "peak_overlap": 4,
+      "multicore_calls": 1006,
+      "worker_span_ns": 17289646
+     },
+     {
+      "preparation_ns": 25667387,
+      "pool_start_ns": 66208,
+      "dispatch_ns": 15339726,
+      "blocked_ns": 48835420,
+      "worker_ns": 39954733,
+      "merge_ns": 2692994,
+      "peak_workers": 4,
+      "peak_overlap": 4,
+      "multicore_calls": 995,
+      "worker_span_ns": 17175455
+     },
+     {
+      "preparation_ns": 24992417,
+      "pool_start_ns": 49250,
+      "dispatch_ns": 13852126,
+      "blocked_ns": 46247661,
+      "worker_ns": 39083904,
+      "merge_ns": 2574925,
+      "peak_workers": 4,
+      "peak_overlap": 4,
+      "multicore_calls": 972,
+      "worker_span_ns": 16500955
+     },
+     {
+      "preparation_ns": 26155915,
+      "pool_start_ns": 72834,
+      "dispatch_ns": 17071688,
+      "blocked_ns": 52597414,
+      "worker_ns": 40130116,
+      "merge_ns": 2732883,
+      "peak_workers": 4,
+      "peak_overlap": 4,
+      "multicore_calls": 989,
+      "worker_span_ns": 17727225
+     }
+    ],
+    "identity": {
+     "rhs": 131371,
+     "raw": "1288652163610483747",
+     "multi": "b0d552d5edfdc3d9ef3f528d94401939488cb503afb30e94eabaa0a1b11b1365",
+     "physical": "f8fcc722f5f58bf51d2de59a45977accf2264c6c211ed2072c59cd7812bfd0c8",
+     "commits": "735d25f0733eae7b21a7e448d0d8aa8a7925c27eaadd53aa2faa15fb6214cbc7",
+     "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+     "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+     "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+     "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+     "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+     "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+     "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+     "direct_cells": 97026,
+     "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+     "raw_sha": "b0d552d5edfdc3d9ef3f528d94401939488cb503afb30e94eabaa0a1b11b1365",
+     "published": 127051,
+     "verified": 126855,
+     "rejects": 196
+    },
+    "fresh": 97139,
+    "aligned": true,
+    "audit": {
+     "attempts": 209969,
+     "blocked_ns": 40269592,
+     "by_rule": {
+      "136": [
+       64,
+       157455,
+       0,
+       0,
+       316963
+      ],
+      "237": [
+       61,
+       326213,
+       370,
+       21,
+       817037
+      ],
+      "238": [
+       61,
+       326213,
+       39,
+       0,
+       593160
+      ],
+      "239": [
+       61,
+       351383,
+       666,
+       14,
+       2250745
+      ],
+      "240": [
+       61,
+       351383,
+       3119,
+       14,
+       2818208
+      ],
+      "241": [
+       64,
+       371219,
+       18690,
+       127,
+       4218296
+      ],
+      "242": [
+       63,
+       364620,
+       16278,
+       63,
+       4445458
+      ],
+      "245": [
+       60,
+       344823,
+       739,
+       0,
+       2090538
+      ],
+      "246": [
+       62,
+       357971,
+       182,
+       0,
+       2852132
+      ],
+      "247": [
+       62,
+       357971,
+       52,
+       0,
+       2276724
+      ],
+      "264": [
+       65,
+       352609,
+       154,
+       64,
+       2626879
+      ],
+      "265": [
+       40,
+       258027,
+       10,
+       0,
+       887668
+      ],
+      "268": [
+       5,
+       938,
+       1181,
+       209,
+       100417
+      ],
+      "269": [
+       5,
+       938,
+       1147,
+       205,
+       101124
+      ],
+      "276": [
+       7,
+       859,
+       0,
+       0,
+       3788
+      ],
+      "277": [
+       7,
+       859,
+       2,
+       1,
+       4751
+      ],
+      "312": [
+       4,
+       2694,
+       3997,
+       857,
+       175331
+      ],
+      "352": [
+       2,
+       272,
+       284,
+       142,
+       30208
+      ],
+      "357": [
+       7,
+       836,
+       3,
+       0,
+       7124
+      ],
+      "359": [
+       7,
+       836,
+       84,
+       0,
+       24748
+      ],
+      "361": [
+       7,
+       836,
+       27,
+       0,
+       13754
+      ],
+      "362": [
+       8,
+       13546,
+       4828,
+       6,
+       336212
+      ],
+      "363": [
+       8,
+       13546,
+       4828,
+       6,
+       295999
+      ],
+      "373": [
+       2,
+       4129,
+       104,
+       52,
+       71290
+      ],
+      "386": [
+       7,
+       871,
+       0,
+       0,
+       7124
+      ],
+      "387": [
+       7,
+       871,
+       0,
+       0,
+       7959
+      ],
+      "388": [
+       7,
+       871,
+       7,
+       1,
+       7042
+      ],
+      "389": [
+       7,
+       871,
+       7,
+       1,
+       6748
+      ],
+      "390": [
+       7,
+       871,
+       0,
+       0,
+       4378
+      ],
+      "391": [
+       7,
+       871,
+       0,
+       0,
+       4751
+      ],
+      "392": [
+       7,
+       871,
+       0,
+       0,
+       4792
+      ],
+      "393": [
+       7,
+       871,
+       0,
+       0,
+       4206
+      ],
+      "394": [
+       7,
+       871,
+       0,
+       0,
+       4461
+      ],
+      "395": [
+       7,
+       871,
+       0,
+       0,
+       4375
+      ],
+      "396": [
+       7,
+       871,
+       0,
+       0,
+       4204
+      ],
+      "397": [
+       7,
+       871,
+       0,
+       0,
+       8000
+      ],
+      "398": [
+       7,
+       871,
+       0,
+       0,
+       8710
+      ],
+      "41": [
+       3,
+       387,
+       0,
+       0,
+       1583
+      ],
+      "42": [
+       3,
+       387,
+       5,
+       1,
+       9208
+      ],
+      "43": [
+       3,
+       387,
+       0,
+       0,
+       6502
+      ],
+      "440": [
+       4,
+       508,
+       0,
+       0,
+       2586
+      ],
+      "441": [
+       4,
+       508,
+       0,
+       0,
+       3626
+      ],
+      "442": [
+       4,
+       508,
+       36,
+       0,
+       7499
+      ],
+      "443": [
+       4,
+       508,
+       36,
+       0,
+       7040
+      ],
+      "444": [
+       4,
+       508,
+       36,
+       0,
+       5750
+      ],
+      "445": [
+       4,
+       508,
+       36,
+       0,
+       5751
+      ],
+      "460": [
+       4,
+       6793,
+       1742,
+       87,
+       207916
+      ],
+      "498": [
+       42,
+       4942,
+       9948,
+       206,
+       478544
+      ],
+      "501": [
+       43,
+       39616,
+       38391,
+       381,
+       2158041
+      ],
+      "504": [
+       43,
+       73233,
+       16215,
+       559,
+       1744463
+      ],
+      "507": [
+       93,
+       51451,
+       30642,
+       2298,
+       1673306
+      ],
+      "529": [
+       152,
+       17800,
+       135,
+       45,
+       194637
+      ],
+      "530": [
+       152,
+       17800,
+       33,
+       11,
+       140174
+      ],
+      "532": [
+       6,
+       730,
+       116,
+       58,
+       28959
+      ],
+      "534": [
+       6,
+       730,
+       90,
+       45,
+       12374
+      ],
+      "535": [
+       152,
+       17800,
+       184,
+       51,
+       196640
+      ],
+      "538": [
+       153,
+       101604,
+       17532,
+       2096,
+       1624861
+      ],
+      "540": [
+       154,
+       84033,
+       37994,
+       1194,
+       2843651
+      ],
+      "8": [
+       2,
+       254,
+       0,
+       0,
+       1084
+      ],
+      "9": [
+       2,
+       254,
+       0,
+       0,
+       1334
+      ]
+     },
+     "calls": 1921,
+     "column_refusals": 0,
+     "dir_keys": 0,
+     "dispatch_ns": 11453807,
+     "groups": 2240688,
+     "guard_rows": 233540,
+     "merge_ns": 4376722,
+     "multicore_calls": 945,
+     "peak_overlap": 4,
+     "peak_workers": 4,
+     "pool_start_ns": 55750,
+     "preparation_ns": 24399442,
+     "raw": 8815,
+     "roots": 4392748,
+     "selected": 2763,
+     "small": 842,
+     "speculative": 0,
+     "worker_ns": 38790833,
+     "worker_span_ns": 15759485
+    },
+    "median_ms": 774.4348749999999
+   }
+  },
+  "threshold": 64,
+  "faults": {}
+ }
+}
