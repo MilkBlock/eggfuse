@@ -1,0 +1,110 @@
+{
+  "sum-bits": {
+    "issue_run": 102,
+    "decision_run": 106,
+    "target": 688,
+    "sibling": 689,
+    "prior_events": [
+      {
+        "available_by_root_run": 103,
+        "issue_run": 102,
+        "parent_row": 0,
+        "verdict": 1,
+        "committed_parent_ordinal": 561
+      },
+      {
+        "available_by_root_run": 103,
+        "issue_run": 102,
+        "parent_row": 0,
+        "verdict": 2,
+        "committed_parent_ordinal": 0
+      }
+    ],
+    "target_available_at_ranks": [
+      3
+    ],
+    "identical_previous_children": true,
+    "equal_reconstructed_logits": true,
+    "feature_source": "shared source-aligned reference capture"
+  },
+  "dot-product": {
+    "issue_run": 135,
+    "decision_run": 139,
+    "target": 1272,
+    "sibling": 1273,
+    "prior_events": [
+      {
+        "available_by_root_run": 136,
+        "issue_run": 135,
+        "parent_row": 0,
+        "verdict": 1,
+        "committed_parent_ordinal": 1046
+      },
+      {
+        "available_by_root_run": 136,
+        "issue_run": 135,
+        "parent_row": 0,
+        "verdict": 2,
+        "committed_parent_ordinal": 0
+      }
+    ],
+    "target_available_at_ranks": [
+      3
+    ],
+    "identical_previous_children": true,
+    "equal_reconstructed_logits": true,
+    "feature_source": "shared source-aligned reference capture"
+  },
+  "gemm-bias-relu": {
+    "issue_run": 171,
+    "decision_run": 175,
+    "target": 2007,
+    "sibling": 2008,
+    "prior_events": [
+      {
+        "available_by_root_run": 172,
+        "issue_run": 171,
+        "parent_row": 0,
+        "verdict": 1,
+        "committed_parent_ordinal": 1629
+      },
+      {
+        "available_by_root_run": 172,
+        "issue_run": 171,
+        "parent_row": 0,
+        "verdict": 2,
+        "committed_parent_ordinal": 0
+      }
+    ],
+    "target_available_at_ranks": [],
+    "identical_previous_children": true,
+    "equal_reconstructed_logits": true,
+    "feature_source": "shared source-aligned reference capture"
+  },
+  "stable-argmax": {
+    "issue_run": 114,
+    "decision_run": 117,
+    "target": 1174,
+    "sibling": 1175,
+    "prior_events": [
+      {
+        "available_by_root_run": 115,
+        "issue_run": 114,
+        "parent_row": 0,
+        "verdict": 1,
+        "committed_parent_ordinal": 956
+      },
+      {
+        "available_by_root_run": 115,
+        "issue_run": 114,
+        "parent_row": 0,
+        "verdict": 2,
+        "committed_parent_ordinal": 0
+      }
+    ],
+    "target_available_at_ranks": [],
+    "identical_previous_children": true,
+    "equal_reconstructed_logits": true,
+    "feature_source": "shared source-aligned reference capture"
+  }
+}
