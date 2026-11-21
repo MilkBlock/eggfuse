@@ -1,8 +1,12 @@
 """Bake exact constructor-operation to consumer-slot programs from genuine named returns."""
-import argparse,hashlib,json
+import argparse,hashlib,json,sys
 from pathlib import Path
 from runpy import run_path
 HERE=Path(__file__).resolve().parent
+ripsat=run_path(str(HERE/"ripsat_bridge.py"))
+if __name__=="__main__" and sys.argv[1:2]==["ripsat"]:
+    ripsat["cli"](sys.argv[2:])
+    sys.exit(0)
 base=run_path(str(HERE.parent/'iterative-integral-certificates/bake.py'));src=base['joint']['src']
 def settings(req,opt):
     return dict(req,header_mode=3,derived_ports=dict(mode=1,cache=True),lazy_equations=4,multi_page_tuples=8192,proposal_wave=65536,strict_named=opt)

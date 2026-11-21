@@ -41,3 +41,22 @@ python "$d/bake.py" "$EXP" "$EXP/explicit-build/session" "$EXP/explicit-bake"
 python "$d/study.py" "$EXP" "$EXP/explicit-build/session" "$EXP/explicit-bake/library.json" "$EXP/explicit-study"
 python "$d/verify.py"
 ```
+
+## Importing a certified RipSat library
+
+The neural Bake entrypoint also accepts the native RipSat evidence format. Compile once per exact target program. The default provenance index authenticates the checked-in evidence; the default strong mode requires a checked local write followed by a read of that write, the matching original donor occurrence, and a re-derived strict target edge. Local endpoint equality alone does not authorize execution.
+
+```sh
+d=benchmarks/pass3-cell-gpu
+donors="$EXP/compact-holdouts-20261121-v1"
+python "$d/explicit-parent-cell-composition/bake.py" ripsat \
+  --evidence "$d/ripsat-donor-evidence/evidence.json" \
+  --donor "dot-product=$donors/dot-product-1703/program.json" \
+  --donor "jacobi-1d=$donors/jacobi-1d-1703/program.json" \
+  --target "$donors/sum-bits-1703/program.json" --out "$EXP/sum-bits-ripsat.json"
+python "$d/filtered-explicit-parent/study.py" "$EXP" "$EXP/strict-partial-named-v2/session" \
+  "$d/filtered-explicit-parent/library.json" "$EXP/new-cached-ripsat" \
+  --cases sum-bits --partial --ripsat-library "$EXP/sum-bits-ripsat.json"
+```
+
+Loading checks the file's target and revalidates the offline evidence before inference. A cache whose original inputs have moved can be rebuilt using the new paths. A separate trusted donor index and source directory may be supplied with `--trust-index` and `--source-dir` during both creation and loading. Alternatively, pass `--ripsat-evidence` and `--donor` to the study driver to link directly for each case. The `--partial` switch requires a runtime built with the sibling strict-partial-named-ports build script. Without it ordinary whole-consumer coverage rules apply. See [the full four-arm experiment](../ripsat-neural-bake/README.md) and [native evidence reproduction](../ripsat-donor-evidence/README.md).

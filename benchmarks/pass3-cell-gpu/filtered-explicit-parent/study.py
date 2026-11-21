@@ -17,6 +17,7 @@ if __name__=="__main__":
     p=argparse.ArgumentParser(description=__doc__)
     for k in ("exp","native","library","out"):
         p.add_argument(k,type=Path)
+    strict.bake.ripsat["add_study_args"](p)
     p.add_argument("--cases",nargs="+",default=["sum-bits","3mm"])
     p.add_argument("--repeats",type=int,default=3)
     strict.run(p.parse_args())
