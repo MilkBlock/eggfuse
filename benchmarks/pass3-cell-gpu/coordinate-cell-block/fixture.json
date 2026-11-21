@@ -1,0 +1,1581 @@
+{
+ "source": {
+  "graph": "758178c1f41a2288230da4358b1b62ebe91ab60944470880314f51367e5babc6",
+  "cells": "5fb4d544a72bba65fb68ecd604ba98480f4cdf29f5926e1ccfd3e619deeb01ed",
+  "source": {
+   "rhs": [
+    "7a93192137991c86b7d8b76e174872fa8e9d70dc92c045ba1d026ef5261d0578",
+    "16d56dee180b1f8af9ab3361e1a27e54f3131d9006421ad1f28ef8c6b0022b0f",
+    "9426bb68b100d27360a456571c1a6a085c8e7b3d419f8d74c22d8695f9d05b99",
+    "0267d35a3af398d52834fc43a24192d391921e75b335ab742056d3b1081f7b77",
+    "da189d94d0bae50cfa0026fb9501864e5637cfb425694fcbbb6a88d86e236d9d"
+   ],
+   "writes": [
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     1,
+     "a25be455ed3cffbac97118ef7e40cb7037f6f645d52fe5e381b13ec825b58ba8"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ]
+   ],
+   "resumes": [
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ]
+   ],
+   "unions": [
+    [],
+    [],
+    [],
+    [
+     [
+      "union",
+      3,
+      1
+     ]
+    ],
+    []
+   ],
+   "schedule": [
+    [
+     "derive",
+     1,
+     [
+      0,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     2,
+     true
+    ],
+    [
+     "fill",
+     2,
+     [
+      1,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "derive",
+     3,
+     [
+      2,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     2,
+     true
+    ],
+    [
+     "join",
+     4,
+     [
+      3,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "derive",
+     5,
+     [
+      4,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     4,
+     true
+    ]
+   ]
+  },
+  "winners": [
+   {
+    "run": 1,
+    "rule": 0,
+    "ordinal": 1,
+    "anchors": [
+     {
+      "Fact": {
+       "cell": 4,
+       "op": 0
+      }
+     },
+     {
+      "Fact": {
+       "cell": 8,
+       "op": 0
+      }
+     }
+    ],
+    "inputs": [
+     {
+      "Eq": 1
+     },
+     {
+      "Int": 4
+     },
+     {
+      "Eq": 4
+     },
+     {
+      "Int": 8
+     },
+     {
+      "Eq": 8
+     },
+     {
+      "Int": 3
+     },
+     {
+      "Int": 7
+     }
+    ]
+   },
+   {
+    "run": 1,
+    "rule": 0,
+    "ordinal": 2,
+    "anchors": [
+     {
+      "Fact": {
+       "cell": 4,
+       "op": 0
+      }
+     },
+     {
+      "Fact": {
+       "cell": 9,
+       "op": 0
+      }
+     }
+    ],
+    "inputs": [
+     {
+      "Eq": 1
+     },
+     {
+      "Int": 4
+     },
+     {
+      "Eq": 4
+     },
+     {
+      "Int": 9
+     },
+     {
+      "Eq": 9
+     },
+     {
+      "Int": 3
+     },
+     {
+      "Int": 7
+     }
+    ]
+   },
+   {
+    "run": 3,
+    "rule": 0,
+    "ordinal": 4,
+    "anchors": [
+     {
+      "Fact": {
+       "cell": 6,
+       "op": 0
+      }
+     },
+     {
+      "Fact": {
+       "cell": 11,
+       "op": 0
+      }
+     }
+    ],
+    "inputs": [
+     {
+      "Eq": 2
+     },
+     {
+      "Int": 10
+     },
+     {
+      "Eq": 6
+     },
+     {
+      "Int": 21
+     },
+     {
+      "Eq": 11
+     },
+     {
+      "Int": 20
+     },
+     {
+      "Int": 30
+     }
+    ]
+   },
+   {
+    "run": 3,
+    "rule": 0,
+    "ordinal": 5,
+    "anchors": [
+     {
+      "Fact": {
+       "cell": 6,
+       "op": 0
+      }
+     },
+     {
+      "Fact": {
+       "cell": 12,
+       "op": 0
+      }
+     }
+    ],
+    "inputs": [
+     {
+      "Eq": 2
+     },
+     {
+      "Int": 10
+     },
+     {
+      "Eq": 6
+     },
+     {
+      "Int": 22
+     },
+     {
+      "Eq": 12
+     },
+     {
+      "Int": 20
+     },
+     {
+      "Int": 30
+     }
+    ]
+   },
+   {
+    "run": 5,
+    "rule": 0,
+    "ordinal": 7,
+    "anchors": [
+     {
+      "Fact": {
+       "cell": 4,
+       "op": 0
+      }
+     },
+     {
+      "Fact": {
+       "cell": 13,
+       "op": 0
+      }
+     }
+    ],
+    "inputs": [
+     {
+      "Eq": 1
+     },
+     {
+      "Int": 4
+     },
+     {
+      "Eq": 4
+     },
+     {
+      "Int": 31
+     },
+     {
+      "Eq": 13
+     },
+     {
+      "Int": 3
+     },
+     {
+      "Int": 7
+     }
+    ]
+   },
+   {
+    "run": 5,
+    "rule": 0,
+    "ordinal": 8,
+    "anchors": [
+     {
+      "Fact": {
+       "cell": 7,
+       "op": 0
+      }
+     },
+     {
+      "Fact": {
+       "cell": 8,
+       "op": 0
+      }
+     }
+    ],
+    "inputs": [
+     {
+      "Eq": 1
+     },
+     {
+      "Int": 30
+     },
+     {
+      "Eq": 7
+     },
+     {
+      "Int": 8
+     },
+     {
+      "Eq": 8
+     },
+     {
+      "Int": 3
+     },
+     {
+      "Int": 33
+     }
+    ]
+   },
+   {
+    "run": 5,
+    "rule": 0,
+    "ordinal": 9,
+    "anchors": [
+     {
+      "Fact": {
+       "cell": 7,
+       "op": 0
+      }
+     },
+     {
+      "Fact": {
+       "cell": 9,
+       "op": 0
+      }
+     }
+    ],
+    "inputs": [
+     {
+      "Eq": 1
+     },
+     {
+      "Int": 30
+     },
+     {
+      "Eq": 7
+     },
+     {
+      "Int": 9
+     },
+     {
+      "Eq": 9
+     },
+     {
+      "Int": 3
+     },
+     {
+      "Int": 33
+     }
+    ]
+   },
+   {
+    "run": 5,
+    "rule": 0,
+    "ordinal": 10,
+    "anchors": [
+     {
+      "Fact": {
+       "cell": 7,
+       "op": 0
+      }
+     },
+     {
+      "Fact": {
+       "cell": 13,
+       "op": 0
+      }
+     }
+    ],
+    "inputs": [
+     {
+      "Eq": 1
+     },
+     {
+      "Int": 30
+     },
+     {
+      "Eq": 7
+     },
+     {
+      "Int": 31
+     },
+     {
+      "Eq": 13
+     },
+     {
+      "Int": 3
+     },
+     {
+      "Int": 33
+     }
+    ]
+   }
+  ],
+  "raw": "5619fff9ac33bd4efc5e2b863e093a7dbd351c2bc392097e07bffb63c803ea70",
+  "block": {
+   "avoided_key_fields": 0,
+   "completed": 0,
+   "guard_failures": 0,
+   "key_misses": 0,
+   "negative_ports": 0,
+   "parent_port_hits": 0,
+   "parent_port_misses": 0,
+   "peak_ports": 0,
+   "stale": 0,
+   "started": 0,
+   "value_slots": 0
+  },
+  "words": {
+   "audited": 0,
+   "cap_fallbacks": 0,
+   "lanes": 0,
+   "loaded": 0,
+   "local_checks": 0,
+   "lookups": 0,
+   "nonfirst_reuse": 0,
+   "pages": 0,
+   "port_maps": 0,
+   "word_hits": 0,
+   "words": 0
+  },
+  "page": {
+   "accepted_parent_sets": 0,
+   "audited": 0,
+   "cross_tests": 0,
+   "later_role_hits": 0,
+   "local_tests": 0,
+   "logical_parents": 0,
+   "missing_hits": 0,
+   "pages": 0,
+   "peak_points": 0,
+   "peak_rows": 0,
+   "projected_slots": 0,
+   "row_hits": 0,
+   "source_reads": 0,
+   "suffix_hits": 0,
+   "suffix_reads": 0,
+   "suffix_requests": 0,
+   "tuples": 0
+  }
+ },
+ "hashed": {
+  "graph": "758178c1f41a2288230da4358b1b62ebe91ab60944470880314f51367e5babc6",
+  "cells": "5fb4d544a72bba65fb68ecd604ba98480f4cdf29f5926e1ccfd3e619deeb01ed",
+  "source": {
+   "rhs": [
+    "7a93192137991c86b7d8b76e174872fa8e9d70dc92c045ba1d026ef5261d0578",
+    "16d56dee180b1f8af9ab3361e1a27e54f3131d9006421ad1f28ef8c6b0022b0f",
+    "9426bb68b100d27360a456571c1a6a085c8e7b3d419f8d74c22d8695f9d05b99",
+    "0267d35a3af398d52834fc43a24192d391921e75b335ab742056d3b1081f7b77",
+    "da189d94d0bae50cfa0026fb9501864e5637cfb425694fcbbb6a88d86e236d9d"
+   ],
+   "writes": [
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     1,
+     "a25be455ed3cffbac97118ef7e40cb7037f6f645d52fe5e381b13ec825b58ba8"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ]
+   ],
+   "resumes": [
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ]
+   ],
+   "unions": [
+    [],
+    [],
+    [],
+    [
+     [
+      "union",
+      3,
+      1
+     ]
+    ],
+    []
+   ],
+   "schedule": [
+    [
+     "derive",
+     1,
+     [
+      0,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     2,
+     true
+    ],
+    [
+     "fill",
+     2,
+     [
+      1,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "derive",
+     3,
+     [
+      2,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     2,
+     true
+    ],
+    [
+     "join",
+     4,
+     [
+      3,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "derive",
+     5,
+     [
+      4,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     4,
+     true
+    ]
+   ]
+  },
+  "winners": [
+   {
+    "run": 1,
+    "rule": 0,
+    "ordinal": 1,
+    "anchors": [
+     {
+      "Fact": {
+       "cell": 4,
+       "op": 0
+      }
+     },
+     {
+      "Fact": {
+       "cell": 8,
+       "op": 0
+      }
+     }
+    ],
+    "inputs": [
+     {
+      "Eq": 1
+     },
+     {
+      "Int": 4
+     },
+     {
+      "Eq": 4
+     },
+     {
+      "Int": 8
+     },
+     {
+      "Eq": 8
+     },
+     {
+      "Int": 3
+     },
+     {
+      "Int": 7
+     }
+    ]
+   },
+   {
+    "run": 1,
+    "rule": 0,
+    "ordinal": 2,
+    "anchors": [
+     {
+      "Fact": {
+       "cell": 4,
+       "op": 0
+      }
+     },
+     {
+      "Fact": {
+       "cell": 9,
+       "op": 0
+      }
+     }
+    ],
+    "inputs": [
+     {
+      "Eq": 1
+     },
+     {
+      "Int": 4
+     },
+     {
+      "Eq": 4
+     },
+     {
+      "Int": 9
+     },
+     {
+      "Eq": 9
+     },
+     {
+      "Int": 3
+     },
+     {
+      "Int": 7
+     }
+    ]
+   },
+   {
+    "run": 3,
+    "rule": 0,
+    "ordinal": 4,
+    "anchors": [
+     {
+      "Fact": {
+       "cell": 6,
+       "op": 0
+      }
+     },
+     {
+      "Fact": {
+       "cell": 11,
+       "op": 0
+      }
+     }
+    ],
+    "inputs": [
+     {
+      "Eq": 2
+     },
+     {
+      "Int": 10
+     },
+     {
+      "Eq": 6
+     },
+     {
+      "Int": 21
+     },
+     {
+      "Eq": 11
+     },
+     {
+      "Int": 20
+     },
+     {
+      "Int": 30
+     }
+    ]
+   },
+   {
+    "run": 3,
+    "rule": 0,
+    "ordinal": 5,
+    "anchors": [
+     {
+      "Fact": {
+       "cell": 6,
+       "op": 0
+      }
+     },
+     {
+      "Fact": {
+       "cell": 12,
+       "op": 0
+      }
+     }
+    ],
+    "inputs": [
+     {
+      "Eq": 2
+     },
+     {
+      "Int": 10
+     },
+     {
+      "Eq": 6
+     },
+     {
+      "Int": 22
+     },
+     {
+      "Eq": 12
+     },
+     {
+      "Int": 20
+     },
+     {
+      "Int": 30
+     }
+    ]
+   },
+   {
+    "run": 5,
+    "rule": 0,
+    "ordinal": 7,
+    "anchors": [
+     {
+      "Fact": {
+       "cell": 4,
+       "op": 0
+      }
+     },
+     {
+      "Fact": {
+       "cell": 13,
+       "op": 0
+      }
+     }
+    ],
+    "inputs": [
+     {
+      "Eq": 1
+     },
+     {
+      "Int": 4
+     },
+     {
+      "Eq": 4
+     },
+     {
+      "Int": 31
+     },
+     {
+      "Eq": 13
+     },
+     {
+      "Int": 3
+     },
+     {
+      "Int": 7
+     }
+    ]
+   },
+   {
+    "run": 5,
+    "rule": 0,
+    "ordinal": 8,
+    "anchors": [
+     {
+      "Fact": {
+       "cell": 7,
+       "op": 0
+      }
+     },
+     {
+      "Fact": {
+       "cell": 8,
+       "op": 0
+      }
+     }
+    ],
+    "inputs": [
+     {
+      "Eq": 1
+     },
+     {
+      "Int": 30
+     },
+     {
+      "Eq": 7
+     },
+     {
+      "Int": 8
+     },
+     {
+      "Eq": 8
+     },
+     {
+      "Int": 3
+     },
+     {
+      "Int": 33
+     }
+    ]
+   },
+   {
+    "run": 5,
+    "rule": 0,
+    "ordinal": 9,
+    "anchors": [
+     {
+      "Fact": {
+       "cell": 7,
+       "op": 0
+      }
+     },
+     {
+      "Fact": {
+       "cell": 9,
+       "op": 0
+      }
+     }
+    ],
+    "inputs": [
+     {
+      "Eq": 1
+     },
+     {
+      "Int": 30
+     },
+     {
+      "Eq": 7
+     },
+     {
+      "Int": 9
+     },
+     {
+      "Eq": 9
+     },
+     {
+      "Int": 3
+     },
+     {
+      "Int": 33
+     }
+    ]
+   },
+   {
+    "run": 5,
+    "rule": 0,
+    "ordinal": 10,
+    "anchors": [
+     {
+      "Fact": {
+       "cell": 7,
+       "op": 0
+      }
+     },
+     {
+      "Fact": {
+       "cell": 13,
+       "op": 0
+      }
+     }
+    ],
+    "inputs": [
+     {
+      "Eq": 1
+     },
+     {
+      "Int": 30
+     },
+     {
+      "Eq": 7
+     },
+     {
+      "Int": 31
+     },
+     {
+      "Eq": 13
+     },
+     {
+      "Int": 3
+     },
+     {
+      "Int": 33
+     }
+    ]
+   }
+  ],
+  "raw": "5619fff9ac33bd4efc5e2b863e093a7dbd351c2bc392097e07bffb63c803ea70",
+  "block": {
+   "avoided_key_fields": 5,
+   "completed": 8,
+   "guard_failures": 0,
+   "key_misses": 3,
+   "negative_ports": 1,
+   "parent_port_hits": 5,
+   "parent_port_misses": 6,
+   "peak_ports": 3,
+   "stale": 0,
+   "started": 11,
+   "value_slots": 56
+  },
+  "words": {
+   "audited": 0,
+   "cap_fallbacks": 0,
+   "lanes": 0,
+   "loaded": 0,
+   "local_checks": 0,
+   "lookups": 0,
+   "nonfirst_reuse": 0,
+   "pages": 0,
+   "port_maps": 0,
+   "word_hits": 0,
+   "words": 0
+  },
+  "page": {
+   "accepted_parent_sets": 11,
+   "audited": 17,
+   "cross_tests": 11,
+   "later_role_hits": 1,
+   "local_tests": 20,
+   "logical_parents": 30,
+   "missing_hits": 0,
+   "pages": 3,
+   "peak_points": 0,
+   "peak_rows": 10,
+   "projected_slots": 55,
+   "row_hits": 10,
+   "source_reads": 20,
+   "suffix_hits": 0,
+   "suffix_reads": 0,
+   "suffix_requests": 0,
+   "tuples": 17
+  }
+ },
+ "direct": {
+  "graph": "758178c1f41a2288230da4358b1b62ebe91ab60944470880314f51367e5babc6",
+  "cells": "5fb4d544a72bba65fb68ecd604ba98480f4cdf29f5926e1ccfd3e619deeb01ed",
+  "source": {
+   "rhs": [
+    "7a93192137991c86b7d8b76e174872fa8e9d70dc92c045ba1d026ef5261d0578",
+    "16d56dee180b1f8af9ab3361e1a27e54f3131d9006421ad1f28ef8c6b0022b0f",
+    "9426bb68b100d27360a456571c1a6a085c8e7b3d419f8d74c22d8695f9d05b99",
+    "0267d35a3af398d52834fc43a24192d391921e75b335ab742056d3b1081f7b77",
+    "da189d94d0bae50cfa0026fb9501864e5637cfb425694fcbbb6a88d86e236d9d"
+   ],
+   "writes": [
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     1,
+     "a25be455ed3cffbac97118ef7e40cb7037f6f645d52fe5e381b13ec825b58ba8"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ]
+   ],
+   "resumes": [
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ]
+   ],
+   "unions": [
+    [],
+    [],
+    [],
+    [
+     [
+      "union",
+      3,
+      1
+     ]
+    ],
+    []
+   ],
+   "schedule": [
+    [
+     "derive",
+     1,
+     [
+      0,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     2,
+     true
+    ],
+    [
+     "fill",
+     2,
+     [
+      1,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "derive",
+     3,
+     [
+      2,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     2,
+     true
+    ],
+    [
+     "join",
+     4,
+     [
+      3,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "derive",
+     5,
+     [
+      4,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     4,
+     true
+    ]
+   ]
+  },
+  "winners": [
+   {
+    "run": 1,
+    "rule": 0,
+    "ordinal": 1,
+    "anchors": [
+     {
+      "Fact": {
+       "cell": 4,
+       "op": 0
+      }
+     },
+     {
+      "Fact": {
+       "cell": 8,
+       "op": 0
+      }
+     }
+    ],
+    "inputs": [
+     {
+      "Eq": 1
+     },
+     {
+      "Int": 4
+     },
+     {
+      "Eq": 4
+     },
+     {
+      "Int": 8
+     },
+     {
+      "Eq": 8
+     },
+     {
+      "Int": 3
+     },
+     {
+      "Int": 7
+     }
+    ]
+   },
+   {
+    "run": 1,
+    "rule": 0,
+    "ordinal": 2,
+    "anchors": [
+     {
+      "Fact": {
+       "cell": 4,
+       "op": 0
+      }
+     },
+     {
+      "Fact": {
+       "cell": 9,
+       "op": 0
+      }
+     }
+    ],
+    "inputs": [
+     {
+      "Eq": 1
+     },
+     {
+      "Int": 4
+     },
+     {
+      "Eq": 4
+     },
+     {
+      "Int": 9
+     },
+     {
+      "Eq": 9
+     },
+     {
+      "Int": 3
+     },
+     {
+      "Int": 7
+     }
+    ]
+   },
+   {
+    "run": 3,
+    "rule": 0,
+    "ordinal": 4,
+    "anchors": [
+     {
+      "Fact": {
+       "cell": 6,
+       "op": 0
+      }
+     },
+     {
+      "Fact": {
+       "cell": 11,
+       "op": 0
+      }
+     }
+    ],
+    "inputs": [
+     {
+      "Eq": 2
+     },
+     {
+      "Int": 10
+     },
+     {
+      "Eq": 6
+     },
+     {
+      "Int": 21
+     },
+     {
+      "Eq": 11
+     },
+     {
+      "Int": 20
+     },
+     {
+      "Int": 30
+     }
+    ]
+   },
+   {
+    "run": 3,
+    "rule": 0,
+    "ordinal": 5,
+    "anchors": [
+     {
+      "Fact": {
+       "cell": 6,
+       "op": 0
+      }
+     },
+     {
+      "Fact": {
+       "cell": 12,
+       "op": 0
+      }
+     }
+    ],
+    "inputs": [
+     {
+      "Eq": 2
+     },
+     {
+      "Int": 10
+     },
+     {
+      "Eq": 6
+     },
+     {
+      "Int": 22
+     },
+     {
+      "Eq": 12
+     },
+     {
+      "Int": 20
+     },
+     {
+      "Int": 30
+     }
+    ]
+   },
+   {
+    "run": 5,
+    "rule": 0,
+    "ordinal": 7,
+    "anchors": [
+     {
+      "Fact": {
+       "cell": 4,
+       "op": 0
+      }
+     },
+     {
+      "Fact": {
+       "cell": 13,
+       "op": 0
+      }
+     }
+    ],
+    "inputs": [
+     {
+      "Eq": 1
+     },
+     {
+      "Int": 4
+     },
+     {
+      "Eq": 4
+     },
+     {
+      "Int": 31
+     },
+     {
+      "Eq": 13
+     },
+     {
+      "Int": 3
+     },
+     {
+      "Int": 7
+     }
+    ]
+   },
+   {
+    "run": 5,
+    "rule": 0,
+    "ordinal": 8,
+    "anchors": [
+     {
+      "Fact": {
+       "cell": 7,
+       "op": 0
+      }
+     },
+     {
+      "Fact": {
+       "cell": 8,
+       "op": 0
+      }
+     }
+    ],
+    "inputs": [
+     {
+      "Eq": 1
+     },
+     {
+      "Int": 30
+     },
+     {
+      "Eq": 7
+     },
+     {
+      "Int": 8
+     },
+     {
+      "Eq": 8
+     },
+     {
+      "Int": 3
+     },
+     {
+      "Int": 33
+     }
+    ]
+   },
+   {
+    "run": 5,
+    "rule": 0,
+    "ordinal": 9,
+    "anchors": [
+     {
+      "Fact": {
+       "cell": 7,
+       "op": 0
+      }
+     },
+     {
+      "Fact": {
+       "cell": 9,
+       "op": 0
+      }
+     }
+    ],
+    "inputs": [
+     {
+      "Eq": 1
+     },
+     {
+      "Int": 30
+     },
+     {
+      "Eq": 7
+     },
+     {
+      "Int": 9
+     },
+     {
+      "Eq": 9
+     },
+     {
+      "Int": 3
+     },
+     {
+      "Int": 33
+     }
+    ]
+   },
+   {
+    "run": 5,
+    "rule": 0,
+    "ordinal": 10,
+    "anchors": [
+     {
+      "Fact": {
+       "cell": 7,
+       "op": 0
+      }
+     },
+     {
+      "Fact": {
+       "cell": 13,
+       "op": 0
+      }
+     }
+    ],
+    "inputs": [
+     {
+      "Eq": 1
+     },
+     {
+      "Int": 30
+     },
+     {
+      "Eq": 7
+     },
+     {
+      "Int": 31
+     },
+     {
+      "Eq": 13
+     },
+     {
+      "Int": 3
+     },
+     {
+      "Int": 33
+     }
+    ]
+   }
+  ],
+  "raw": "5619fff9ac33bd4efc5e2b863e093a7dbd351c2bc392097e07bffb63c803ea70",
+  "block": {
+   "avoided_key_fields": 5,
+   "completed": 8,
+   "guard_failures": 0,
+   "key_misses": 3,
+   "negative_ports": 1,
+   "parent_port_hits": 5,
+   "parent_port_misses": 6,
+   "peak_ports": 3,
+   "stale": 0,
+   "started": 11,
+   "value_slots": 56
+  },
+  "words": {
+   "audited": 17,
+   "cap_fallbacks": 0,
+   "lanes": 34,
+   "loaded": 20,
+   "local_checks": 20,
+   "lookups": 30,
+   "nonfirst_reuse": 1,
+   "pages": 3,
+   "port_maps": 3,
+   "word_hits": 10,
+   "words": 20
+  },
+  "page": {
+   "accepted_parent_sets": 0,
+   "audited": 0,
+   "cross_tests": 0,
+   "later_role_hits": 0,
+   "local_tests": 0,
+   "logical_parents": 0,
+   "missing_hits": 0,
+   "pages": 0,
+   "peak_points": 0,
+   "peak_rows": 0,
+   "projected_slots": 0,
+   "row_hits": 0,
+   "source_reads": 0,
+   "suffix_hits": 0,
+   "suffix_reads": 0,
+   "suffix_requests": 0,
+   "tuples": 0
+  },
+  "fault": "invalid encoded parent coordinate"
+ }
+}
