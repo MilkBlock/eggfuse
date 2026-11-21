@@ -123,7 +123,9 @@ Consult the existing evidence before proposing these mechanisms as new:
 
 Prioritize two outcomes on equivalent source executions. Measure time from
 inference entry to a common, independently calibrated process RSS threshold,
-and measure effective constructor nodes per externally issued token. Record
+and measure **FEPT**, final-visible new constructor origins per externally issued token.
+For generative actions, separately charge feedback, failed model/prototype choices
+and verifier expansion, so transport FEPT cannot be mistaken for neural work efficiency. Record
 entry RSS, absolute and incremental crossings (including already reached and
 unreached thresholds), peak RSS, and how many speculative members were later
 redeemed or retired. Keep full inference latency as a secondary metric.

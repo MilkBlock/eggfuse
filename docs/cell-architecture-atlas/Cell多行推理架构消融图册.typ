@@ -40,7 +40,7 @@
   card([现有边界],[图 71 的选择性模型覆盖 99.83%–99.97% 的源 RHS，图 75 的根／子配方直接构造超过 99% 的新 Cell。整轮仍慢于精确 Rust。]))
 #v(1fr)
 #linebar()
-#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–37 涵盖真实负载与块级上限。图 38–155 含后续实验。图 70–75 比较不同的全源覆盖分母、模板分配和代价。]
+#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–37 涵盖真实负载与块级上限。图 38–165 含后续实验。图 70–75 比较不同的全源覆盖分母、模板分配和代价。]
 
 #pagebreak()
 #kicker[阅读指南   /   如何比较两种架构]
@@ -352,6 +352,20 @@ card([从训练监督看],[字段投影让合法绑定的字段读出正确。�
 #src("S138","integral 根凭证跨 Run 验证","benchmarks/pass3-cell-gpu/integral-root-certificates/README.md")
 #src("S139","有效节点与签名、行策略的消融","benchmarks/pass3-cell-gpu/token-yield-policy/README.md")
 #src("S140","整组 integral 消费者外部包免发","benchmarks/pass3-cell-gpu/integral-packet-suppression/README.md")
+#src("S141","标量负证据与部分 integral 免发","benchmarks/pass3-cell-gpu/integral-filter-joint/README.md")
+#src("S142","免发与相同内存水位","benchmarks/pass3-cell-gpu/integral-yield-rss/README.md")
+#src("S143","已付费的生产者权限","benchmarks/pass3-cell-gpu/paid-producer-families/README.md")
+#src("S144","两次跨 Run 的迭代式证明库","benchmarks/pass3-cell-gpu/iterative-integral-certificates/README.md")
+#src("S145","枚举前的单父类别动作","benchmarks/pass3-cell-gpu/causal-single-class/README.md")
+#src("S146","按 FEPT 回报训练门控","benchmarks/pass3-cell-gpu/fept-policy/README.md")
+#src("S147","独立展开的二父桶动作","benchmarks/pass3-cell-gpu/generative-pair-buckets/README.md")
+#src("S148","单父与二父动作联合消融","benchmarks/pass3-cell-gpu/joint-fept-actors/README.md")
+#src("S149","公共根跨度与学习键集","benchmarks/pass3-cell-gpu/generative-pair-families/README.md")
+#src("S150","宽二父与学习单父联合执行","benchmarks/pass3-cell-gpu/wide-fept-composition/README.md")
+#src("S151","相关算术端口的生成","benchmarks/pass3-cell-gpu/compound-family-ports/README.md")
+#src("S152","非空复合区域的稀疏目录","benchmarks/pass3-cell-gpu/sparse-family-regions/README.md")
+#src("S153","三父及以上根窗口的机会界","benchmarks/pass3-cell-gpu/baked-prefix-window/README.md")
+#src("S154","FEPT 完整组合路径与内存水位","benchmarks/pass3-cell-gpu/compound-fept-model/README.md")
 #v(2mm)
 #label[两篇用于构造对照的原始文献]
 #v(1.5mm)
