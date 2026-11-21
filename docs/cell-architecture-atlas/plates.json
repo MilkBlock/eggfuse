@@ -9210,5 +9210,452 @@
       "title": "五个真实 Pass 3 的完整推理，相对各自默认 CPU",
       "caption": "每条线对应一次原生配对矩阵中的一个程序。纵轴是耗时比，1 为持平，0.5 为达到两倍速度。每种配置完整计入其额外工作。"
     }
+  },
+  {
+    "id": "148-ordered-node-yield",
+    "section": "构造节点的实际产出",
+    "title": "一个神经 token 究竟生成几个有效 e-node？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "分别记下根提案、单独签发的子包、构造事实的首次发布，以及原来源在最终图的可见性。用未运行神经模型的源引擎独立核对。",
+    "arms": "a　按所有已签发根提案计。b　只按已提交根计。c　连同独立子包一起计费，并检查最终可见的原始构造事实。",
+    "fix": "相同的五个完整 Pass 3。每个构造事实按唯一 FactRef 只记一次。初始注入、函数写入、内联复用、repair 重访和关系行另外计量。",
+    "measure": "3mm 发 555,566 个根和 2,508 个子包。119,503 个新构造节点归属根的执行，其中 92,658 个以原来源留在终图，每份已发包为 0.166 个。",
+    "note": "若只看已提交的 294,917 个根，每根新增 0.405 个、最终原来源可见 0.314 个。Spine 后继还有外部根凭证，归给祖先的节点不能再加一次。",
+    "src": "S133",
+    "diagram": [
+      {
+        "title": "Issued",
+        "layers": [
+          [
+            [
+              "n",
+              "root + child packets"
+            ]
+          ],
+          [
+            [
+              "s",
+              "all decisions cost tokens"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Committed",
+        "layers": [
+          [
+            [
+              "v",
+              "actual ordered RHS"
+            ]
+          ],
+          [
+            [
+              "s",
+              "first typed fact birth"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Endpoint",
+        "layers": [
+          [
+            [
+              "v",
+              "visible original identity"
+            ]
+          ],
+          [
+            [
+              "s",
+              "distinct final constructor facts"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "149-rss-threshold",
+    "section": "内存增长曲线",
+    "title": "同一 RSS 水位真的更早到达了吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "从原推理入口到出口采样常驻内存，另存同一时刻已领取的预建 Cell 数。根据独立 CPU 校准预先确定固定的绝对和增量水位。",
+    "arms": "a　独立精确 CPU。b　神经端口路径。c　在同一端口路径上由比例头预建私有 Cell。另测高分位头、未采样推理和进程起点。",
+    "fix": "每个程序三次独立校准，每个实测臂四次全新进程配对。在推理入口就超过的绝对水位记为左删失。达到水位后仍核对整轮源结果。",
+    "measure": "3mm 达到 +264.11 MiB 的时间从 1,497.23 降至 1,314.86 ms。四次都提前，该水位已采用约 13.1 万个预建 Cell。最终 28,149 个配额过期。",
+    "note": "sum-bits 达到 +9.27 MiB 的时间从 27.29 延至 35.41 ms。神经进程在入口已经占用更多内存。峰值、到达时间和真实新增构造事实各自独立。",
+    "src": "S134",
+    "diagram": [
+      {
+        "title": "Calibrate",
+        "layers": [
+          [
+            [
+              "s",
+              "three fresh CPU runs"
+            ]
+          ],
+          [
+            [
+              "t",
+              "freeze RSS thresholds"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Observe",
+        "layers": [
+          [
+            [
+              "v",
+              "inference markers"
+            ]
+          ],
+          [
+            [
+              "t",
+              "sample resident bytes"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Attribute",
+        "layers": [
+          [
+            [
+              "s",
+              "granted and redeemed"
+            ]
+          ],
+          [
+            [
+              "t",
+              "first crossing + expiry"
+            ]
+          ]
+        ]
+      }
+    ],
+    "observation": {
+      "figure": "149-real-rss.svg",
+      "source": "benchmarks/pass3-cell-gpu/verified-wave-rss/3mm-rss.svg",
+      "title": "3mm 的真实进程 RSS 与同一时间轴的物理领取",
+      "caption": "曲线采用独立进程采样。提前占用的头部只能在原 Run 的实际获胜者领取后计为采用。物理领取次数和逻辑节点数分别统计。"
+    }
+  },
+  {
+    "id": "150-reuse-scalar-frontier",
+    "section": "跨 Run 局部上下文",
+    "title": "上轮检查过的父端口和函数键能否批量复用？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "保留 pivot 到函数键的槽映射、观测版本与来源。处理实际变更通知，重新验证受影响的地址，union 后按约定失效再建。",
+    "arms": "a　逐候选查精确函数键。b　用跨 Run 保留的槽生成完整批次掩码。模型仍处理原始父候选，过滤前后每个源绑定独立复查。",
+    "fix": "选择旧 pivot 但后缀变新的情况也要保留。未覆盖的属性和未知代次走原检查，所有接续按原调度执行。",
+    "measure": "3mm 的键查找 888,666→70,935，父行读取 604,303→86,927。84,551 个旧父因新后缀保留。实际省略的候选与逐候选检查相同。",
+    "note": "CG 推理 642.53→624.27 ms，3mm 为 1,815.21→1,822.78 ms。3mm 构建掩码花 35.97 ms，处理变更通知花 0.71 ms。",
+    "src": "S135",
+    "diagram": [
+      {
+        "title": "Rowwise",
+        "layers": [
+          [
+            [
+              "n",
+              "parent candidates"
+            ]
+          ],
+          [
+            [
+              "v",
+              "lookup exact unary key"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Across Runs",
+        "layers": [
+          [
+            [
+              "s",
+              "retain exact port slots"
+            ]
+          ],
+          [
+            [
+              "v",
+              "refresh changed references"
+            ]
+          ],
+          [
+            [
+              "n",
+              "same accepted lanes"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "151-reverse-role-frontier",
+    "section": "多父根枚举",
+    "title": "能由较小的后继关系先确定哪些根值得访问吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "对至少三父的规则，编译器从必要的后继端口反查可能兼容的根，恢复原顺序。多个规则可以复用相同表和列组合的结果。",
+    "arms": "a　从所有根枚举。b　用小关系的必要端口做反向半连接。c　按相同端口角色共享根列表。",
+    "fix": "保留所有真实的神经打分与父元组。使用空表检测作为单独对照，核对原始完整发行顺序和物理分配。",
+    "measure": "3mm 的根检查从 14,942,662 降到 4,763,725，多父提案阶段 631.74→588.15 ms。220,972 个多父提案保持原序。",
+    "note": "CG 与 3mm 的根访问分别减少 71.8% 和 68.1%，全程延迟收益未稳定。候选遍历成本与每个模型包的节点产出是不同指标。",
+    "src": "S136",
+    "diagram": [
+      {
+        "title": "Scan roots",
+        "layers": [
+          [
+            [
+              "s",
+              "all root positions"
+            ]
+          ],
+          [
+            [
+              "n",
+              "walk joined roles"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Reverse roles",
+        "layers": [
+          [
+            [
+              "s",
+              "smaller required role"
+            ]
+          ],
+          [
+            [
+              "v",
+              "gather possible roots"
+            ]
+          ],
+          [
+            [
+              "n",
+              "preserve source order"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "152-instance-root-handoff",
+    "section": "凭证生命周期",
+    "title": "已通过匹配的根证书能直接随实例提交吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "让原实例携带已验证的根，一起交给原 RHS。模型根序号继续用于动态子操作与来源核对。",
+    "arms": "a　以凭证目录按索引取根。b　直接移动被验证的根到待提交实例。另测篡改序号和新进程峰值 RSS。",
+    "fix": "比较完全相同的提案、获胜绑定、真实物理地址和嵌套操作。使用过滤加紧凑队列的同一引擎，保留原始 union、Spine、Run 及终图。",
+    "measure": "CG 与 3mm 分别免去 57,695 与 146,965 个目录项。新进程峰值 RSS 各降 14.63／53.95 MiB。实际所有已通过的多父绑定最终都提交。",
+    "note": "CG 整轮 636.42→640.68 ms，3mm 1,731.99→1,777.55 ms。此修改测到生命周期缩短，实际节点数与外部凭证数保持相同。",
+    "src": "S137",
+    "diagram": [
+      {
+        "title": "Ticket directory",
+        "layers": [
+          [
+            [
+              "v",
+              "verify roots"
+            ]
+          ],
+          [
+            [
+              "s",
+              "store pass-wide tickets"
+            ]
+          ],
+          [
+            [
+              "v",
+              "look up at commit"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Root on instance",
+        "layers": [
+          [
+            [
+              "v",
+              "verify root"
+            ]
+          ],
+          [
+            [
+              "s",
+              "carry with instance"
+            ]
+          ],
+          [
+            [
+              "v",
+              "consume once"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "153-integral-first-hop",
+    "section": "可验证 integral 规则集",
+    "title": "早先的一个根能在后续 Run 验证哪些消费者？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "在已接受的生产者上登记公开端口和 owner。到消费者的原 Run，独立从锚点及完整键恢复绑定，然后核验可见性、出处与有序提交。",
+    "arms": "a　沿用原模型包及 Spine 仲裁。b　并行验证一跳义务。c　在验证通过时把恢复的真实参数交给原 RHS。",
+    "fix": "所有补全从已公开图和模板出发。错误 owner 必须拒绝，未覆盖入口由原路径处理。原仲裁仍读取普通消费包。",
+    "measure": "3mm 的 40,128 次一跳接续中有 36,855 次由这份证明实际提供 RHS 参数，对应 11,345 个新构造事实。sum-bits 一跳采用 1,223 次。",
+    "note": "独立恢复不等于免发外部包。若只免掉这批 3mm 成功消费者且无新增凭证，每份已发包的终图节点可能由 0.1660 增到 0.1778。",
+    "src": "S138",
+    "diagram": [
+      {
+        "title": "Existing Spine",
+        "layers": [
+          [
+            [
+              "n",
+              "external consumer packet"
+            ]
+          ],
+          [
+            [
+              "v",
+              "source arbitration"
+            ]
+          ],
+          [
+            [
+              "s",
+              "continue binding"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "One-hop verifier",
+        "layers": [
+          [
+            [
+              "s",
+              "published producer slot"
+            ]
+          ],
+          [
+            [
+              "v",
+              "check owner and complete keys"
+            ]
+          ],
+          [
+            [
+              "s",
+              "supply actual RHS"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "154-effective-token-yield",
+    "section": "产出率与模型宽度",
+    "title": "哪些架构动作真的会改变每份 token 的节点产出？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "用相同五负载基线定义计分，再在 sum-bits 与 3mm 分别调整多父签名的视图数量、逻辑行数和行调度头。节点按终图原始可见身份计算。",
+    "arms": "a　一个、两个或三个共享权重的学习视图。b　固定一个或四个逻辑行。c　部署 36／456 参数的冻结策略梯度行调度头。",
+    "fix": "核对构造事实出生顺序、终图留存及全部原始 RHS、Spine、union、物理身份。签发未命中和单独子包也计入分母。",
+    "measure": "3mm 从一个视图到两个视图，多父包 7,047,798→220,972，每包有效节点 0.0125→0.1660。第三视图只省 704 个包。",
+    "note": "在相同签名配置下固定四个 row，单父页增加到 18,654，外部绑定总数和产出率相同。两个冻结调度头都在所有调用上选择了单 row。",
+    "src": "S139",
+    "diagram": [
+      {
+        "title": "Port views",
+        "layers": [
+          [
+            [
+              "n",
+              "shared Q/K on each view"
+            ]
+          ],
+          [
+            [
+              "v",
+              "require matching codes"
+            ]
+          ],
+          [
+            [
+              "s",
+              "external proposals"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Token rows",
+        "layers": [
+          [
+            [
+              "n",
+              "split the same addresses"
+            ]
+          ],
+          [
+            [
+              "s",
+              "pages per logical row"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "RL controller",
+        "layers": [
+          [
+            [
+              "t",
+              "36 or 456 parameters"
+            ]
+          ],
+          [
+            [
+              "n",
+              "choose width"
+            ]
+          ],
+          [
+            [
+              "v",
+              "charge actual packets"
+            ]
+          ]
+        ]
+      }
+    ],
+    "observation": {
+      "figure": "154-node-yield-rss.svg",
+      "source": "benchmarks/pass3-cell-gpu/token-yield-policy/scorecard.svg",
+      "title": "同一程序的节点产出与常驻内存增长",
+      "caption": "横轴为达到共同 RSS 增量的时间，越小越早；纵轴为原来源仍在终图的新增构造节点数除以签发包数。两个图的字节水位不同。"
+    }
   }
 ]

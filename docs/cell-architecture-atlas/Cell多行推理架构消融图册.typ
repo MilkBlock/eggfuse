@@ -40,7 +40,7 @@
   card([现有边界],[图 71 的选择性模型覆盖 99.83%–99.97% 的源 RHS，图 75 的根／子配方直接构造超过 99% 的新 Cell。整轮仍慢于精确 Rust。]))
 #v(1fr)
 #linebar()
-#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–37 涵盖真实负载与块级上限。图 38–147 含后续实验。图 70–75 比较不同的全源覆盖分母、模板分配和代价。]
+#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–37 涵盖真实负载与块级上限。图 38–154 含后续实验。图 70–75 比较不同的全源覆盖分母、模板分配和代价。]
 
 #pagebreak()
 #kicker[阅读指南   /   如何比较两种架构]
@@ -344,6 +344,13 @@ card([从训练监督看],[字段投影让合法绑定的字段读出正确。�
 #src("S130","等待批量验证的紧凑提案页","benchmarks/pass3-cell-gpu/packed-single-waves/README.md")
 #src("S131","成功函数行的正见证直传","benchmarks/pass3-cell-gpu/single-scalar-handoff/README.md")
 #src("S132","五负载组合执行验收","benchmarks/pass3-cell-gpu/verified-wave-execution/README.md")
+#src("S133","构造节点的首次发布与终图留存","benchmarks/pass3-cell-gpu/token-constructor-births/README.md")
+#src("S134","真实进程 RSS 的共同水位与兑现时刻","benchmarks/pass3-cell-gpu/verified-wave-rss/README.md")
+#src("S135","跨 Run 精确父端口与版本复用","benchmarks/pass3-cell-gpu/single-delta-frontier/README.md")
+#src("S136","从后继角色反查候选根","benchmarks/pass3-cell-gpu/reverse-role-frontier/README.md")
+#src("S137","多父凭证随实例移交","benchmarks/pass3-cell-gpu/instance-root-handoff/README.md")
+#src("S138","integral 根凭证跨 Run 验证","benchmarks/pass3-cell-gpu/integral-root-certificates/README.md")
+#src("S139","有效节点与签名、行策略的消融","benchmarks/pass3-cell-gpu/token-yield-policy/README.md")
 #v(2mm)
 #label[两篇用于构造对照的原始文献]
 #v(1.5mm)
