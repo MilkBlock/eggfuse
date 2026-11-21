@@ -1,0 +1,142 @@
+{
+ "conjugate-gradient": {
+  "static": [
+   {
+    "issue_ns": 7.563284,
+    "verify_ns": 2.007635,
+    "dispatch_patch_ns": 0.778962
+   },
+   {
+    "issue_ns": 7.41666,
+    "verify_ns": 1.971421,
+    "dispatch_patch_ns": 0.748592
+   },
+   {
+    "issue_ns": 7.436059,
+    "verify_ns": 2.033232,
+    "dispatch_patch_ns": 0.771227
+   }
+  ],
+  "strict": [
+   {
+    "issue_ns": 10.391908,
+    "verify_ns": 1.679367,
+    "dispatch_patch_ns": 0.744348
+   },
+   {
+    "issue_ns": 10.580725,
+    "verify_ns": 1.453723,
+    "dispatch_patch_ns": 0.718337
+   },
+   {
+    "issue_ns": 10.34743,
+    "verify_ns": 1.477585,
+    "dispatch_patch_ns": 0.72372
+   }
+  ],
+  "combined": [
+   {
+    "issue_ns": 10.67521,
+    "verify_ns": 2.063413,
+    "dispatch_patch_ns": 0.771791
+   },
+   {
+    "issue_ns": 10.872554,
+    "verify_ns": 2.133083,
+    "dispatch_patch_ns": 0.786084
+   },
+   {
+    "issue_ns": 10.461372,
+    "verify_ns": 1.649711,
+    "dispatch_patch_ns": 0.75672
+   }
+  ],
+  "baked": [
+   {
+    "issue_ns": 10.366451,
+    "verify_ns": 1.953873,
+    "dispatch_patch_ns": 0.754128
+   },
+   {
+    "issue_ns": 10.856747,
+    "verify_ns": 2.040952,
+    "dispatch_patch_ns": 0.801319
+   },
+   {
+    "issue_ns": 10.437591,
+    "verify_ns": 2.18729,
+    "dispatch_patch_ns": 0.827961
+   }
+  ]
+ },
+ "3mm": {
+  "static": [
+   {
+    "issue_ns": 17.2733,
+    "verify_ns": 4.06759,
+    "dispatch_patch_ns": 1.555123
+   },
+   {
+    "issue_ns": 17.870685,
+    "verify_ns": 4.715257,
+    "dispatch_patch_ns": 1.632538
+   },
+   {
+    "issue_ns": 18.427465,
+    "verify_ns": 5.103456,
+    "dispatch_patch_ns": 1.705986
+   }
+  ],
+  "strict": [
+   {
+    "issue_ns": 26.275784,
+    "verify_ns": 4.21313,
+    "dispatch_patch_ns": 1.608245
+   },
+   {
+    "issue_ns": 25.810007,
+    "verify_ns": 3.711427,
+    "dispatch_patch_ns": 1.570386
+   },
+   {
+    "issue_ns": 25.659962,
+    "verify_ns": 3.763519,
+    "dispatch_patch_ns": 1.537485
+   }
+  ],
+  "combined": [
+   {
+    "issue_ns": 26.4117,
+    "verify_ns": 4.588619,
+    "dispatch_patch_ns": 1.648075
+   },
+   {
+    "issue_ns": 25.333017,
+    "verify_ns": 4.601625,
+    "dispatch_patch_ns": 1.613417
+   },
+   {
+    "issue_ns": 26.070473,
+    "verify_ns": 4.717199,
+    "dispatch_patch_ns": 1.649247
+   }
+  ],
+  "baked": [
+   {
+    "issue_ns": 24.915377,
+    "verify_ns": 4.343974,
+    "dispatch_patch_ns": 1.605318
+   },
+   {
+    "issue_ns": 25.945424,
+    "verify_ns": 5.191251,
+    "dispatch_patch_ns": 1.667179
+   },
+   {
+    "issue_ns": 25.327738,
+    "verify_ns": 4.657043,
+    "dispatch_patch_ns": 1.653795
+   }
+  ]
+ }
+}
