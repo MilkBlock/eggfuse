@@ -79,3 +79,28 @@ python "$d/filtered-explicit-parent/study.py" "$EXP" "$EXP/ripsat-set-receipt-pi
 ```
 
 The two RipSat arms (`ripsat`, `ripsat_set`) both use partial named inputs. Existing legacy arms retain their own settings unless `--partial` is also requested. Native inference requires the [Set-publication runtime](../ripsat-set-receipt/README.md), which binds both request hashes to the loaded program bytes and verifies actual fresh operation receipts. The driver checks the dedicated runtime capability, tags and first-/second-hop counters in the audit, and checks the same publication counts during the normal execution. Older runtimes cannot silently treat the optional arm as a Let-only run. The entry test exercises the public CLIs on sum-bits and rejects a stale target, a changed cached Set operation, a cache without publication authority, and an older native executable.
+
+
+### Higher Cell request program
+
+`bake.py ripsat --higher-cell` includes the checked Set authorization and adds a typed request program. It uses the same independently named source parents as the Set path. In the current certificate the middle rule reads its named `Single` row, then issues `resolve-constructor-set` for the target `Get` operation. The compiled request draws its key and assigned result from the authorized row projection: source column 1, literal `0 : i64`, then source column 0. A fresh reply carries the actual published fact and version for the terminal's original Run. The `no-new-fact` and `stale` branches confer no internal terminal. The artifact contains the exact target-file SHA-256, original Set path, executable ABI, typed operand projections and reply branches.
+
+```sh
+d=benchmarks/pass3-cell-gpu
+python "$d/explicit-parent-cell-composition/bake.py" ripsat --higher-cell \
+  --evidence "$d/ripsat-donor-evidence/evidence.json" \
+  --donor "dot-product=$EXP/compact-holdouts-20261121-v1/dot-product-1703/program.json" \
+  --donor "jacobi-1d=$EXP/compact-holdouts-20261121-v1/jacobi-1d-1703/program.json" \
+  --target "$EXP/compact-holdouts-20261121-v1/sum-bits-1703/program.json" \
+  --out "$EXP/sum-bits-higher.json"
+python "$d/filtered-explicit-parent/study.py" "$EXP" "$HIGHER_NATIVE" \
+  "$d/filtered-explicit-parent/library.json" "$EXP/cached-higher-study" \
+  --cases sum-bits --ripsat-library "$EXP/sum-bits-higher.json" --higher-cell
+```
+
+Cached execution rederives the complete program from the donor evidence and target. The study checks `$HIGHER_NATIVE --higher-cell-capabilities` before it starts inference, then checks the native request, reply and terminal counters against audited source commits. The persistent native session also validates authorization against the digest of the actually loaded target. A cache containing higher-Cell authorization only enables this path when the caller supplies `--higher-cell`; `--set-publication` selects direct publication on the same cache. Neither option is enabled by default.
+
+
+In the normal cached sum-bits smoke, the queued native engine enqueued 194 requests in 25 request batches. It read 35 prepared requests and recorded 194 replies. At close, 26 owners had transferred to a fresh result and then retired, 159 had retired without a result, and 9 had retired stale. All 26 fresh internal terminals committed on their original Run. The direct Set and higher arms each produced 2,691 final-visible original constructor facts using 12,601 external root and selected-child packets. The physical root/child identities, effective writes, unions, Spine, schedule and final graph agreed. These small acceptance runs establish execution of the request/return protocol; they are not a performance benchmark.
+
+The cached-load controls include a Let-only cache, a direct-Set-only cache, reordered branch semantics, a changed operand, a removed grant, a different target, and an older direct-Set executable. Native controls corrupt the target in all request fields simultaneously or change the typed request to one asking for independent-parent selection. Both reject. [Normal CLI receipt](higher-cli-receipt.json) · [Reproduction and fault checks](check_higher_entry.py)

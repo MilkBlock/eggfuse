@@ -1,0 +1,126 @@
+{
+  "schema": "eggfuse-higher-cell-cli-checks/v1",
+  "case": "sum-bits",
+  "target_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+  "native_sha256": "792b4335405a03bbfedb4ec308a92c670eaea009fe306672ca6cc584ff62c150",
+  "native_capability": {
+    "schema": "eggfuse-ripsat-higher-cell/v1",
+    "request": "resolve-constructor-set",
+    "branches": [
+      "fresh",
+      "no-new-fact",
+      "stale"
+    ],
+    "batch": "post-run"
+  },
+  "higher": {
+    "requests": 194,
+    "transferred": 26,
+    "retired_no_result": 159,
+    "stale_replies": 0,
+    "duplicate_replies": 0,
+    "terminal_commits": 26,
+    "queued_requests": 194,
+    "request_reads": 35,
+    "request_batches": 25,
+    "named_inputs": 194,
+    "replies": 194,
+    "retired_stale": 9,
+    "retired_fresh": 26
+  },
+  "direct_confirmed": 26,
+  "physical_root_digest": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+  "final_graph_sha256": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+  "default_arm_enabled": false,
+  "direct_set_unchanged": true,
+  "ports": {
+    "path": [
+      [
+        143,
+        1,
+        55
+      ],
+      [
+        55,
+        1,
+        143
+      ]
+    ],
+    "kinds": [
+      "fresh_constructor_let",
+      "fresh_constructor_set"
+    ],
+    "table": "Get",
+    "sorts": [
+      "Expr",
+      "i64",
+      "Expr"
+    ],
+    "columns": [
+      [
+        "column",
+        1
+      ],
+      [
+        "literal",
+        0,
+        "i64"
+      ],
+      [
+        "column",
+        0
+      ]
+    ],
+    "terminal_slots": [
+      0,
+      1,
+      2
+    ],
+    "middle_return_alias": {
+      "rule": 55,
+      "operation": 0,
+      "dst": 2,
+      "value": {
+        "slot": 1
+      }
+    }
+  },
+  "branches": {
+    "fresh": {
+      "value": "published_factref_and_version",
+      "table": "Get",
+      "consumer_rule": 143,
+      "release": "original_run"
+    },
+    "no-new-fact": {
+      "value": null,
+      "internal_terminal": false
+    },
+    "stale": {
+      "value": null,
+      "internal_terminal": false
+    }
+  },
+  "refusals": {
+    "old-native": "requires the native resolve-constructor-set capability",
+    "no-higher-let": "cache has no higher Cell program",
+    "no-higher-direct": "cache has no higher Cell program",
+    "tamper-branch": "disagrees with its checked build evidence",
+    "tamper-input": "disagrees with its checked build evidence",
+    "tamper-grant": "inconsistent cached higher Cell authorization",
+    "tamper-target": "different target",
+    "coordinated-native-target": "rejected by actual loaded program digest",
+    "native-unprovided-request": "request kind rejected by the higher Cell ABI"
+  },
+  "source_checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+  },
+  "signed_roots_and_children": 12601,
+  "final_visible_origins": 2691
+}

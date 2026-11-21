@@ -8,12 +8,16 @@ sp=importlib.util.spec_from_file_location('strict_bake',HERE/'bake.py');bake=imp
 def run(a):
     a.out.mkdir(parents=True,exist_ok=True);res={};lib=json.loads(a.library.read_bytes())
     prov={"trust_index":getattr(a,"trust_index",None),"source_dir":getattr(a,"source_dir",None)}
-    publication=getattr(a,"set_publication",False)
+    higher=getattr(a,"higher_cell",False)
+    publication=getattr(a,"set_publication",False) or higher
     stored=getattr(a,"ripsat_library",None)
     if publication and stored is None and not getattr(a,"ripsat_evidence",None):
-        raise ValueError("--set-publication requires --ripsat-library or --ripsat-evidence")
+        raise ValueError(("--higher-cell" if higher else "--set-publication")+" requires --ripsat-library or --ripsat-evidence")
     if publication:
         prov["set_publication"]=True
+    if higher:
+        prov["higher_cell"]=True
+        bake.ripsat["require_higher_capability"](a.native)
     if stored is not None and len(a.cases)!=1:
         raise ValueError("a precompiled RipSat library requires exactly one --cases target")
     if getattr(a,"donor",None) and not getattr(a,"ripsat_evidence",None):
@@ -34,6 +38,9 @@ def run(a):
         if publication:
             cfg["ripsat"]=bake.settings(req,dict(artifact["strict_named"],partial=True))
             cfg["ripsat_set"]=bake.settings(req,artifact["set_publication_authorization"]["strict_named"])
+            if higher:
+                cfg["ripsat_higher"]=bake.settings(dict(req,source_sha256=artifact["target_sha256"]),
+                                                   artifact["higher_cell_program"]["strict_named"])
         if getattr(a,"partial",False):
             cfg={key:dict(value,strict_named=dict(value["strict_named"],partial=True)) for key,value in cfg.items()}
         vd=a.exp/'compact-vanilla-20261121';arms={}
@@ -64,6 +71,11 @@ def run(a):
                     counters["active_middles"]!=q["by_depth"][0][2] or
                     counters["encoded"]!=q["stats"]["counts"]["tagged"]):
                     raise ValueError("Set publication report disagrees with the authenticated second hop")
+            if n=="ripsat_higher":
+                work=bake.ripsat["require_runtime_higher"](v)
+                if work["terminal_commits"]!=q["by_depth"][1][2]:
+                    raise ValueError("higher Cell terminal count disagrees with the signed original-Run releases")
+                q["higher_work"]=work
             arms[n]=q
             print(case,n,q['emitted'],q.get('by_depth'),q['yield_per_packet'],flush=True)
             del v
@@ -79,6 +91,8 @@ def run(a):
                     v=get(cfg[n]);assert v['state_sha']==gold['state_sha'] and v['runs']==gold['runs'] and v['root_recipe']['emitted']==arms[n]['emitted']
                     if n=="ripsat_set" and bake.ripsat["require_runtime_publication"](v)!=arms[n]["stats"]["set_publication"]:
                         raise ValueError("production Set publication differs from the audited program")
+                    if n=="ripsat_higher" and bake.ripsat["require_runtime_higher"](v)!=arms[n]["higher_work"]:
+                        raise ValueError("production higher Cell requests or branches differ from the audited run")
                     if n!='leaf':arms[n]['production']=(v['strict_named'] or {}).get('counts',{});assert arms[n]['production'].get('source_commits',0)==(arms[n]['stats'] or {}).get('counts',{}).get('source_commits',0)
                     if lap:arms[n]['ms'].append(v['ms'])
         for q in arms.values():q['median_ms']=median(q['ms'])
