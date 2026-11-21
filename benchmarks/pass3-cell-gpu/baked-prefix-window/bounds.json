@@ -1,0 +1,114 @@
+{
+  "conjugate-gradient/16": {
+    "windows": 272333,
+    "paying": 1421,
+    "nonempty": 2555,
+    "high_arity_packets": 13787,
+    "measured_forward": 89729,
+    "visible": 34595,
+    "estimates": {
+      "all": {
+        "actions": 272333,
+        "saved": -258546,
+        "projected_forward": 348275,
+        "projected_fept": 0.09933242409015863
+      },
+      "donor": {
+        "actions": 3347,
+        "saved": 1745,
+        "projected_forward": 87984,
+        "projected_fept": 0.3931964902709584
+      },
+      "oracle": {
+        "actions": 1421,
+        "saved": 11232,
+        "projected_forward": 78497,
+        "projected_fept": 0.4407174796489038
+      }
+    }
+  },
+  "3mm/16": {
+    "windows": 935300,
+    "paying": 3729,
+    "nonempty": 6333,
+    "high_arity_packets": 44805,
+    "measured_forward": 230239,
+    "visible": 92658,
+    "estimates": {
+      "all": {
+        "actions": 935300,
+        "saved": -890495,
+        "projected_forward": 1120734,
+        "projected_fept": 0.0826761747212095
+      },
+      "donor": {
+        "actions": 15459,
+        "saved": -8415,
+        "projected_forward": 238654,
+        "projected_fept": 0.3882524491523293
+      },
+      "oracle": {
+        "actions": 3729,
+        "saved": 38472,
+        "projected_forward": 191767,
+        "projected_fept": 0.4831801091950127
+      }
+    }
+  },
+  "conjugate-gradient/64": {
+    "windows": 69234,
+    "paying": 1087,
+    "nonempty": 1679,
+    "high_arity_packets": 13787,
+    "measured_forward": 89729,
+    "visible": 34595,
+    "estimates": {
+      "all": {
+        "actions": 69234,
+        "saved": -55447,
+        "projected_forward": 145176,
+        "projected_fept": 0.23829696368545766
+      },
+      "donor": {
+        "actions": 3012,
+        "saved": 4835,
+        "projected_forward": 84894,
+        "projected_fept": 0.4075081866798596
+      },
+      "oracle": {
+        "actions": 1087,
+        "saved": 12108,
+        "projected_forward": 77621,
+        "projected_fept": 0.44569124334909366
+      }
+    }
+  },
+  "3mm/64": {
+    "windows": 235438,
+    "paying": 2568,
+    "nonempty": 3837,
+    "high_arity_packets": 44805,
+    "measured_forward": 230239,
+    "visible": 92658,
+    "estimates": {
+      "all": {
+        "actions": 235438,
+        "saved": -190633,
+        "projected_forward": 420872,
+        "projected_fept": 0.22015719743770076
+      },
+      "donor": {
+        "actions": 61396,
+        "saved": -33127,
+        "projected_forward": 263366,
+        "projected_fept": 0.35182217902083035
+      },
+      "oracle": {
+        "actions": 2568,
+        "saved": 40968,
+        "projected_forward": 189271,
+        "projected_fept": 0.489552018005928
+      }
+    }
+  }
+}
