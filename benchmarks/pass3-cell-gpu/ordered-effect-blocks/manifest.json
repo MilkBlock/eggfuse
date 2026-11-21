@@ -1,0 +1,28 @@
+{
+ "positions": {
+  "pinned_source": "31bf7e41",
+  "binary_sha256": "81fd540de2cbbbac98a9cb3f225f1f0f5997bb04a6d5096f717c11ee8ac6fc85",
+  "compiled": {
+   "src/graph.rs": "b24c343fb210dd378fd4515e71ba8aaaea370a4a4bb20304d4e272957be7d42c",
+   "src/runtime.rs": "aa2086a288eee4563872d93202acc5f4495ed8275486f6a5a11d169059fb8c3b",
+   "src/cell_prefix.rs": "c9d2f37b48b859aaf7b83c3ba4373eacacd24d7d053b7095e7c419064ea65c7f",
+   "src/ordered_effect_blocks.rs": "d8d32d0b2bf823f9dfb7b54c9d41f6f2603444a4140abf5f0b112738eb9b541f",
+   "src/ordered_effect_audit.rs": "81ba4d2b8b696eebb2ac49fc05b98ef04c37ec0fcf4383acef15a709fed8fffd",
+   "examples/joint_witness_session.rs": "78b6bc4edb14c329f03ff5bc539ffd870aad1c459fe2671a5eef250a9651525d"
+  }
+ },
+ "writers": {
+  "pinned_source": "31bf7e41",
+  "binary_sha256": "773e1d9f89d7bb3096d35bc72bbc79f9388a572f693fd66e15fac470495b7cf0",
+  "compiled": {
+   "src/graph.rs": "f2a5d4b7ffe4e02bf79c359b563e556770333b280510895786e7a0f6f77289d1",
+   "src/runtime.rs": "588fda7f583f5badd0e998e8ef650167131962db24454987e0a5b523c4880009",
+   "src/cell_prefix.rs": "c9d2f37b48b859aaf7b83c3ba4373eacacd24d7d053b7095e7c419064ea65c7f",
+   "src/ordered_effect_blocks.rs": "238c8576bd2b641ffd710aeed14d5ea6feb86875e6d328f5505149779539eded",
+   "src/ordered_effect_audit.rs": "81ba4d2b8b696eebb2ac49fc05b98ef04c37ec0fcf4383acef15a709fed8fffd",
+   "examples/joint_witness_session.rs": "78b6bc4edb14c329f03ff5bc539ffd870aad1c459fe2671a5eef250a9651525d",
+   "src/ordered_write_plan.rs": "d94153df52b78780f5b703175dbaf6a2c3e0b2a2401675cb5c4fc07447aecc43"
+  },
+  "writer_overlay_sha256": "1b73a4435fc6dda667cfde6a7dcd9ea78efd70d784227b62df616d069c8cd413"
+ }
+}
