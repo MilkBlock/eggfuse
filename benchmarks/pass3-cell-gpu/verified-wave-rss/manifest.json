@@ -1,0 +1,31 @@
+{
+ "os_metric": "Darwin proc_pidinfo PROC_PIDTASKINFO.pti_resident_size",
+ "clock": "CLOCK_UPTIME_RAW",
+ "sample_sleep_s": 0.001,
+ "seed": 1703,
+ "native_git_base": "31bf7e41",
+ "default_cpu_driver": "benchmarks/pass3-cell-gpu/compact-recipes/native",
+ "program_sha256": {
+  "sum-bits": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+  "3mm": "8d81462db16dcee0689b2e8dc11ac3e068c9dc976a2e69f5005a8acad06905af"
+ },
+ "build_sha256": {
+  "session": "f70e871f6fe858b3caa322b1a8afd4768cef051a50f5873a28e804e7fe2cd928",
+  "vanilla": "40b63a04d17e6fe2d1e8be3f121a96f3081e8fef82a9b28eed9d4251a444b3c1",
+  "build.json": "6d6b4ab90c74959ff55c3bf8e83ffdd27786bd141b78b1b7570edd92635dd1e3"
+ },
+ "policy_sha256": {
+  "speculative-allocation-policy": "702e0c2e3892195c337006b5145989a121491cb7941d635e160ae1ee50c12a19",
+  "wave-demand-policy": "558870de18e73219d393ff79d96692060d18013c772a18b012c5b79317a22866"
+ },
+ "jobs": {
+  "build": 2633,
+  "source_audit": 2636,
+  "timing": 2637
+ },
+ "raw_experiment_dirs": [
+  "verified-wave-rss-native-v1",
+  "verified-wave-rss-audit-v1",
+  "verified-wave-rss-curves-v1"
+ ]
+}
