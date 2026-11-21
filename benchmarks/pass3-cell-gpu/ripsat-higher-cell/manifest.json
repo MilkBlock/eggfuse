@@ -1,0 +1,14 @@
+{
+ "base": "31bf7e41",
+ "exe": "3dde87a3830fb62f28e0c4b6c31f131e9e8c406ea17a4f15c8f2dadbdbdd833a",
+ "sources": {
+  "ripsat-set-receipt/publication.rs": "ab1d5e529aaa610908c9bb3123ac38168d56f05c4e286bfdbd0c953f128aaa15",
+  "ripsat-set-receipt/overlay.py": "7556c57af17b5055ab411fcf4cee7333c8c50013cd93195ed9690a486bfa15bd",
+  "ripsat-higher-cell/higher.rs": "1e8b89d1d06b216a974d03501382601cacda37ee18b6645c9ab9b274844cec64",
+  "ripsat-higher-cell/overlay.py": "05a8dc7ebb691c25fdaf9fe453011443d77fc62af533082cf12d8e6e806059bd"
+ },
+ "authorization": {
+  "sum-bits": "88875d59b74724b191551c6e6be8030b4863f27aae08e12dd728ea1656fbe27f",
+  "3mm": "3f786e346950106aca07fdc80a652b45c27aece4a95c48dff29abbb6d67eb194"
+ }
+}

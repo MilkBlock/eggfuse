@@ -1,0 +1,20 @@
+{
+ "sum-bits": {
+  "direct": "0d75fa8c7c7dc8716f41cb564070a012c59a25bc6cd1a6babde4533e1f56384b",
+  "let": "4601b5479404ccd3eb50445581fdd23e2d3122a812c8533c7ba046a0921d6da0",
+  "stale-generation": "0d75fa8c7c7dc8716f41cb564070a012c59a25bc6cd1a6babde4533e1f56384b",
+  "stale-epoch": "0d75fa8c7c7dc8716f41cb564070a012c59a25bc6cd1a6babde4533e1f56384b",
+  "duplicate": "0d75fa8c7c7dc8716f41cb564070a012c59a25bc6cd1a6babde4533e1f56384b",
+  "only-stale": "4601b5479404ccd3eb50445581fdd23e2d3122a812c8533c7ba046a0921d6da0",
+  "alias-mismatch": "4601b5479404ccd3eb50445581fdd23e2d3122a812c8533c7ba046a0921d6da0"
+ },
+ "3mm": {
+  "direct": "8bbcef547bfb79340e9ca8537d85ed8018942de5841674d005c0de68b546981f",
+  "let": "0ea1a6abe2d8eb13ad6abe9247791a4f4ef4c27fd598feaf6bed63ac904038fb",
+  "stale-generation": "8bbcef547bfb79340e9ca8537d85ed8018942de5841674d005c0de68b546981f",
+  "stale-epoch": "8bbcef547bfb79340e9ca8537d85ed8018942de5841674d005c0de68b546981f",
+  "duplicate": "8bbcef547bfb79340e9ca8537d85ed8018942de5841674d005c0de68b546981f",
+  "only-stale": "0ea1a6abe2d8eb13ad6abe9247791a4f4ef4c27fd598feaf6bed63ac904038fb",
+  "alias-mismatch": "0ea1a6abe2d8eb13ad6abe9247791a4f4ef4c27fd598feaf6bed63ac904038fb"
+ }
+}

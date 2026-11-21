@@ -1,0 +1,1014 @@
+{
+ "sum-bits": {
+  "direct": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "fresh": 5868,
+   "direct_cells": 5867,
+   "source_pass_rhs": 7265,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "wire_bytes": 237552,
+   "root_row_decodes": 0,
+   "root_header_checks": 50745,
+   "owned_slot_transfers": 7265,
+   "raw": "15141895921427656231",
+   "emitted": [
+    6498,
+    5912
+   ],
+   "wire_hash": "16016830997759646979",
+   "commits": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+   "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+   "multi": "7e7931cbbf8116f938c44b9c7ec1cb50cbe1296f0bfc003812172aa29afb96ff",
+   "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+   "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "rejected": 0,
+   "root_allocated": 5764,
+   "applied": 7265,
+   "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+   "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+   "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "root_ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+   "nested_ids": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+   "ms": [
+    36.783917,
+    34.395792,
+    35.27475,
+    38.144709
+   ],
+   "set": {
+    "active_middles": 35,
+    "cleared_on_error": 0,
+    "confirmed": 26,
+    "encoded": 194,
+    "excluded_generation": 0,
+    "existing_key": 0,
+    "fresh_activations": 35,
+    "invalidated": 0,
+    "opened": 190,
+    "published": 35,
+    "set_attempts": 35,
+    "withheld": 0
+   },
+   "higher": {
+    "audit_examples": [],
+    "counts": {
+     "aborted": 0,
+     "batches": 0,
+     "capture_ns": 0,
+     "direct_operand_ns": 0,
+     "direct_publication_ns": 0,
+     "duplicate_replies": 0,
+     "encoded": 0,
+     "existing_replies": 0,
+     "expired": 0,
+     "fresh_replies": 0,
+     "lookup_checks": 0,
+     "middles": 0,
+     "named_inputs": 0,
+     "no_first_replies": 0,
+     "no_set_replies": 0,
+     "operand_fallbacks": 0,
+     "operand_fields": 0,
+     "operand_guard_reads": 0,
+     "operand_transfers": 0,
+     "peak_batch": 0,
+     "peak_capacity_bytes": 0,
+     "peak_pending": 0,
+     "peak_requests": 0,
+     "peak_specialized": 0,
+     "prepared": 0,
+     "queued_requests": 0,
+     "replies": 0,
+     "request_batches": 0,
+     "request_ns": 0,
+     "request_reads": 0,
+     "requests": 0,
+     "response_ns": 0,
+     "retired_fresh": 0,
+     "retired_no_result": 0,
+     "retired_stale": 0,
+     "setup_ns": 0,
+     "stable_address": 0,
+     "stale_replies": 0,
+     "teardown_ns": 0,
+     "terminal_commits": 0,
+     "transferred": 0,
+     "validation_ns": 0
+    },
+    "duplicate_replies": 0,
+    "enabled": false,
+    "pending": 0,
+    "requests": 0,
+    "retired_no_result": 0,
+    "specialized": 0,
+    "stale_replies": 0,
+    "terminal_commits": 0,
+    "transferred": 0
+   },
+   "child_decisions": 305,
+   "selected": 191,
+   "packets": 12601,
+   "new": 3610,
+   "visible": 2691,
+   "fept": 0.21355447980319023,
+   "birth_ids": "e0897bc6614cfa2b5725a3d92fbd9c02c5e04ebe8a7ec326564cb331c9e3b7c5",
+   "endpoint_ids": "cc411875294ca05a458e8c66917fb6390f1498c621d92cd61d8496448ef2c9fa",
+   "terminal_effects": {
+    "typed": [
+     26,
+     6
+    ],
+    "dynamic": [
+     0,
+     0
+    ],
+    "paid": [
+     0,
+     0
+    ]
+   },
+   "terminal_links": 26,
+   "link_sha": "a86840d7eedb2defcc56e4e6eb24b69a22a9b9279de5a61fc602c34086d3e63b",
+   "single_hash": "fd21a15451948bcdf9cbbe5ccddec22892b572d45d53c2de6d1039c2c48f85be",
+   "score": "15576378264816477716",
+   "wall": [
+    74.55254206433892,
+    72.2764580277726,
+    73.1141670839861,
+    77.2615420864895
+   ],
+   "phase_ms": {
+    "setup_ns": 0.0,
+    "request_ns": 0.0,
+    "capture_ns": 0.007164,
+    "direct_operand_ns": 0.003711,
+    "direct_publication_ns": 0.006871,
+    "response_ns": 0.0,
+    "validation_ns": 0.009343,
+    "teardown_ns": 0.0
+   },
+   "phase_samples_ms": [
+    [
+     0.0,
+     0.0,
+     0.006251,
+     0.003038,
+     0.005541,
+     0.0,
+     0.006629,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.007164,
+     0.003711,
+     0.006871,
+     0.0,
+     0.009343,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.007672,
+     0.003872,
+     0.007663,
+     0.0,
+     0.010785,
+     0.0
+    ]
+   ],
+   "median_ms": 36.0293335,
+   "median_wall_ms": 73.83335457416251,
+   "profiled_protocol_samples_ms": [
+    0.021459,
+    0.027089,
+    0.029992
+   ],
+   "median_profiled_protocol_ms": 0.027089
+  },
+  "higher": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "fresh": 5868,
+   "direct_cells": 5867,
+   "source_pass_rhs": 7265,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "wire_bytes": 237552,
+   "root_row_decodes": 0,
+   "root_header_checks": 50745,
+   "owned_slot_transfers": 7265,
+   "raw": "15141895921427656231",
+   "emitted": [
+    6498,
+    5912
+   ],
+   "wire_hash": "11405144979332259075",
+   "commits": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+   "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+   "multi": "7e7931cbbf8116f938c44b9c7ec1cb50cbe1296f0bfc003812172aa29afb96ff",
+   "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+   "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "rejected": 0,
+   "root_allocated": 5764,
+   "applied": 7265,
+   "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+   "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+   "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "root_ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+   "nested_ids": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+   "ms": [
+    34.991541,
+    33.941832999999995,
+    39.271584,
+    36.535583
+   ],
+   "set": {
+    "active_middles": 35,
+    "cleared_on_error": 0,
+    "confirmed": 26,
+    "encoded": 194,
+    "excluded_generation": 0,
+    "existing_key": 0,
+    "fresh_activations": 35,
+    "invalidated": 0,
+    "opened": 190,
+    "published": 26,
+    "set_attempts": 35,
+    "withheld": 0
+   },
+   "higher": {
+    "audit_examples": [
+     [
+      757,
+      8,
+      102,
+      "fresh"
+     ],
+     [
+      758,
+      9,
+      102,
+      "fresh"
+     ],
+     [
+      761,
+      4,
+      102,
+      "fresh"
+     ],
+     [
+      762,
+      11,
+      102,
+      "fresh"
+     ],
+     [
+      763,
+      15,
+      102,
+      "fresh"
+     ],
+     [
+      764,
+      14,
+      102,
+      "fresh"
+     ],
+     [
+      765,
+      16,
+      102,
+      "fresh"
+     ],
+     [
+      766,
+      17,
+      102,
+      "fresh"
+     ]
+    ],
+    "counts": {
+     "aborted": 0,
+     "batches": 24,
+     "capture_ns": 0,
+     "direct_operand_ns": 0,
+     "direct_publication_ns": 0,
+     "duplicate_replies": 0,
+     "encoded": 194,
+     "existing_replies": 0,
+     "expired": 0,
+     "fresh_replies": 35,
+     "lookup_checks": 190,
+     "middles": 35,
+     "named_inputs": 194,
+     "no_first_replies": 159,
+     "no_set_replies": 0,
+     "operand_fallbacks": 0,
+     "operand_fields": 105,
+     "operand_guard_reads": 35,
+     "operand_transfers": 35,
+     "peak_batch": 49,
+     "peak_capacity_bytes": 20160,
+     "peak_pending": 49,
+     "peak_requests": 49,
+     "peak_specialized": 26,
+     "prepared": 35,
+     "queued_requests": 194,
+     "replies": 194,
+     "request_batches": 25,
+     "request_ns": 0,
+     "request_reads": 35,
+     "requests": 194,
+     "response_ns": 0,
+     "retired_fresh": 26,
+     "retired_no_result": 159,
+     "retired_stale": 9,
+     "setup_ns": 0,
+     "stable_address": 26,
+     "stale_replies": 0,
+     "teardown_ns": 0,
+     "terminal_commits": 26,
+     "transferred": 26,
+     "validation_ns": 0
+    },
+    "duplicate_replies": 0,
+    "enabled": true,
+    "pending": 0,
+    "requests": 194,
+    "retired_no_result": 159,
+    "specialized": 0,
+    "stale_replies": 0,
+    "terminal_commits": 26,
+    "transferred": 26
+   },
+   "child_decisions": 305,
+   "selected": 191,
+   "packets": 12601,
+   "new": 3610,
+   "visible": 2691,
+   "fept": 0.21355447980319023,
+   "birth_ids": "e0897bc6614cfa2b5725a3d92fbd9c02c5e04ebe8a7ec326564cb331c9e3b7c5",
+   "endpoint_ids": "cc411875294ca05a458e8c66917fb6390f1498c621d92cd61d8496448ef2c9fa",
+   "terminal_effects": {
+    "typed": [
+     26,
+     6
+    ],
+    "dynamic": [
+     0,
+     0
+    ],
+    "paid": [
+     0,
+     0
+    ]
+   },
+   "terminal_links": 26,
+   "link_sha": "a86840d7eedb2defcc56e4e6eb24b69a22a9b9279de5a61fc602c34086d3e63b",
+   "single_hash": "fd21a15451948bcdf9cbbe5ccddec22892b572d45d53c2de6d1039c2c48f85be",
+   "score": "15576378264816477716",
+   "wall": [
+    72.27200001943856,
+    71.26987492665648,
+    81.20483392849565,
+    75.08295797742903
+   ],
+   "phase_ms": {
+    "setup_ns": 0.037037,
+    "request_ns": 0.015292,
+    "capture_ns": 0.003545,
+    "direct_operand_ns": 0.0,
+    "direct_publication_ns": 0.0,
+    "response_ns": 0.042833,
+    "validation_ns": 0.016168,
+    "teardown_ns": 0.00875
+   },
+   "phase_samples_ms": [
+    [
+     0.039751,
+     0.016753,
+     0.003793,
+     0.0,
+     0.0,
+     0.042959,
+     0.016168,
+     0.00875
+    ],
+    [
+     0.037037,
+     0.015292,
+     0.003545,
+     0.0,
+     0.0,
+     0.042833,
+     0.020682,
+     0.00725
+    ],
+    [
+     0.028372,
+     0.015085,
+     0.003462,
+     0.0,
+     0.0,
+     0.040043,
+     0.015905,
+     0.014375
+    ]
+   ],
+   "median_ms": 35.763562,
+   "median_wall_ms": 73.6774789984338,
+   "profiled_protocol_samples_ms": [
+    0.12817399999999998,
+    0.126639,
+    0.11724200000000001
+   ],
+   "median_profiled_protocol_ms": 0.126639
+  },
+  "faults": {
+   "stale-generation": {
+    "operand_fallback": 0,
+    "duplicate": 0,
+    "stale": 194,
+    "transfer": 26,
+    "confirmed": 26,
+    "emitted": [
+     6498,
+     5912
+    ]
+   },
+   "stale-epoch": {
+    "operand_fallback": 0,
+    "duplicate": 0,
+    "stale": 194,
+    "transfer": 26,
+    "confirmed": 26,
+    "emitted": [
+     6498,
+     5912
+    ]
+   },
+   "duplicate": {
+    "operand_fallback": 0,
+    "duplicate": 194,
+    "stale": 0,
+    "transfer": 26,
+    "confirmed": 26,
+    "emitted": [
+     6498,
+     5912
+    ]
+   },
+   "only-stale": {
+    "operand_fallback": 0,
+    "duplicate": 0,
+    "stale": 220,
+    "transfer": 0,
+    "confirmed": 0,
+    "emitted": [
+     6524,
+     5912
+    ]
+   },
+   "alias-mismatch": {
+    "operand_fallback": 35,
+    "duplicate": 0,
+    "stale": 0,
+    "transfer": 0,
+    "confirmed": 0,
+    "emitted": [
+     6524,
+     5912
+    ]
+   }
+  }
+ },
+ "3mm": {
+  "direct": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "neural_rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 8386968,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "12039188962503507842",
+   "emitted": [
+    332433,
+    220972
+   ],
+   "wire_hash": "4187371275981859402",
+   "commits": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+   "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+   "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    1824.471417,
+    1968.3320410000001,
+    1785.273167,
+    1925.5587090000001
+   ],
+   "set": {
+    "active_middles": 1229,
+    "cleared_on_error": 0,
+    "confirmed": 932,
+    "encoded": 5413,
+    "excluded_generation": 0,
+    "existing_key": 0,
+    "fresh_activations": 1229,
+    "invalidated": 0,
+    "opened": 7418,
+    "published": 1229,
+    "set_attempts": 1229,
+    "withheld": 0
+   },
+   "higher": {
+    "audit_examples": [],
+    "counts": {
+     "aborted": 0,
+     "batches": 0,
+     "capture_ns": 0,
+     "direct_operand_ns": 0,
+     "direct_publication_ns": 0,
+     "duplicate_replies": 0,
+     "encoded": 0,
+     "existing_replies": 0,
+     "expired": 0,
+     "fresh_replies": 0,
+     "lookup_checks": 0,
+     "middles": 0,
+     "named_inputs": 0,
+     "no_first_replies": 0,
+     "no_set_replies": 0,
+     "operand_fallbacks": 0,
+     "operand_fields": 0,
+     "operand_guard_reads": 0,
+     "operand_transfers": 0,
+     "peak_batch": 0,
+     "peak_capacity_bytes": 0,
+     "peak_pending": 0,
+     "peak_requests": 0,
+     "peak_specialized": 0,
+     "prepared": 0,
+     "queued_requests": 0,
+     "replies": 0,
+     "request_batches": 0,
+     "request_ns": 0,
+     "request_reads": 0,
+     "requests": 0,
+     "response_ns": 0,
+     "retired_fresh": 0,
+     "retired_no_result": 0,
+     "retired_stale": 0,
+     "setup_ns": 0,
+     "stable_address": 0,
+     "stale_replies": 0,
+     "teardown_ns": 0,
+     "terminal_commits": 0,
+     "transferred": 0,
+     "validation_ns": 0
+    },
+    "duplicate_replies": 0,
+    "enabled": false,
+    "pending": 0,
+    "requests": 0,
+    "retired_no_result": 0,
+    "specialized": 0,
+    "stale_replies": 0,
+    "terminal_commits": 0,
+    "transferred": 0
+   },
+   "child_decisions": 7120,
+   "selected": 2508,
+   "packets": 555913,
+   "new": 119503,
+   "visible": 92658,
+   "fept": 0.16667715991531049,
+   "birth_ids": "cc354ef914437ce23010246bc3e7a433b683b8f4ce4a585a70d85e2c94a3979c",
+   "endpoint_ids": "0f5fc7e44add1467558ff78c72933b612a835b732a0bfe234580a03d631b6320",
+   "terminal_effects": {
+    "typed": [
+     932,
+     139
+    ],
+    "dynamic": [
+     0,
+     0
+    ],
+    "paid": [
+     0,
+     0
+    ]
+   },
+   "terminal_links": 932,
+   "link_sha": "6728d13b66ee7dd9d7b210738c490c6f661d59141bd10e398ffbb785f146367a",
+   "single_hash": "f6289eead2e7d3877a98d6996d6edc7630a40ca322c54296932e322101f9f91c",
+   "score": "16767102213097954485",
+   "wall": [
+    2078.923707944341,
+    2233.4664169466123,
+    2041.7698749806732,
+    2197.22199998796
+   ],
+   "phase_ms": {
+    "setup_ns": 0.0,
+    "request_ns": 0.0,
+    "capture_ns": 0.210559,
+    "direct_operand_ns": 0.132543,
+    "direct_publication_ns": 0.235414,
+    "response_ns": 0.0,
+    "validation_ns": 0.702615,
+    "teardown_ns": 0.0
+   },
+   "phase_samples_ms": [
+    [
+     0.0,
+     0.0,
+     0.186301,
+     0.12208,
+     0.240537,
+     0.0,
+     0.702615,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.210559,
+     0.132543,
+     0.235414,
+     0.0,
+     0.837024,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.212107,
+     0.145168,
+     0.219037,
+     0.0,
+     0.617276,
+     0.0
+    ]
+   ],
+   "median_ms": 1875.015063,
+   "median_wall_ms": 2138.0728539661504,
+   "profiled_protocol_samples_ms": [
+    1.251533,
+    1.41554,
+    1.193588
+   ],
+   "median_profiled_protocol_ms": 1.251533
+  },
+  "higher": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "neural_rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 8386968,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "12039188962503507842",
+   "emitted": [
+    332433,
+    220972
+   ],
+   "wire_hash": "4187371275981859402",
+   "commits": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+   "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+   "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    1732.598,
+    2443.14475,
+    2155.379708,
+    1951.976959
+   ],
+   "set": {
+    "active_middles": 1229,
+    "cleared_on_error": 0,
+    "confirmed": 932,
+    "encoded": 5413,
+    "excluded_generation": 0,
+    "existing_key": 0,
+    "fresh_activations": 1229,
+    "invalidated": 0,
+    "opened": 7418,
+    "published": 932,
+    "set_attempts": 1229,
+    "withheld": 0
+   },
+   "higher": {
+    "audit_examples": [
+     [
+      43986,
+      1,
+      826,
+      "fresh"
+     ],
+     [
+      43987,
+      2,
+      826,
+      "fresh"
+     ],
+     [
+      43988,
+      3,
+      826,
+      "fresh"
+     ],
+     [
+      43991,
+      6,
+      826,
+      "fresh"
+     ],
+     [
+      43992,
+      7,
+      826,
+      "fresh"
+     ],
+     [
+      43993,
+      8,
+      826,
+      "fresh"
+     ],
+     [
+      43996,
+      11,
+      826,
+      "fresh"
+     ],
+     [
+      43997,
+      12,
+      826,
+      "fresh"
+     ]
+    ],
+    "counts": {
+     "aborted": 0,
+     "batches": 34,
+     "capture_ns": 0,
+     "direct_operand_ns": 0,
+     "direct_publication_ns": 0,
+     "duplicate_replies": 0,
+     "encoded": 5413,
+     "existing_replies": 0,
+     "expired": 0,
+     "fresh_replies": 1229,
+     "lookup_checks": 7418,
+     "middles": 1229,
+     "named_inputs": 5413,
+     "no_first_replies": 4171,
+     "no_set_replies": 0,
+     "operand_fallbacks": 0,
+     "operand_fields": 3687,
+     "operand_guard_reads": 1229,
+     "operand_transfers": 1229,
+     "peak_batch": 1075,
+     "peak_capacity_bytes": 309680,
+     "peak_pending": 1075,
+     "peak_requests": 923,
+     "peak_specialized": 932,
+     "prepared": 1229,
+     "queued_requests": 5413,
+     "replies": 5413,
+     "request_batches": 34,
+     "request_ns": 0,
+     "request_reads": 1242,
+     "requests": 5413,
+     "response_ns": 0,
+     "retired_fresh": 932,
+     "retired_no_result": 4171,
+     "retired_stale": 310,
+     "setup_ns": 0,
+     "stable_address": 932,
+     "stale_replies": 0,
+     "teardown_ns": 0,
+     "terminal_commits": 932,
+     "transferred": 932,
+     "validation_ns": 0
+    },
+    "duplicate_replies": 0,
+    "enabled": true,
+    "pending": 0,
+    "requests": 5413,
+    "retired_no_result": 4171,
+    "specialized": 0,
+    "stale_replies": 0,
+    "terminal_commits": 932,
+    "transferred": 932
+   },
+   "child_decisions": 7120,
+   "selected": 2508,
+   "packets": 555913,
+   "new": 119503,
+   "visible": 92658,
+   "fept": 0.16667715991531049,
+   "birth_ids": "cc354ef914437ce23010246bc3e7a433b683b8f4ce4a585a70d85e2c94a3979c",
+   "endpoint_ids": "0f5fc7e44add1467558ff78c72933b612a835b732a0bfe234580a03d631b6320",
+   "terminal_effects": {
+    "typed": [
+     932,
+     139
+    ],
+    "dynamic": [
+     0,
+     0
+    ],
+    "paid": [
+     0,
+     0
+    ]
+   },
+   "terminal_links": 932,
+   "link_sha": "6728d13b66ee7dd9d7b210738c490c6f661d59141bd10e398ffbb785f146367a",
+   "single_hash": "f6289eead2e7d3877a98d6996d6edc7630a40ca322c54296932e322101f9f91c",
+   "score": "16767102213097954485",
+   "wall": [
+    2000.535124912858,
+    2721.5259169461206,
+    2424.6532920515165,
+    2224.489749991335
+   ],
+   "phase_ms": {
+    "setup_ns": 0.79294,
+    "request_ns": 0.531335,
+    "capture_ns": 0.092392,
+    "direct_operand_ns": 0.0,
+    "direct_publication_ns": 0.0,
+    "response_ns": 1.150875,
+    "validation_ns": 1.118675,
+    "teardown_ns": 0.2275
+   },
+   "phase_samples_ms": [
+    [
+     0.709898,
+     0.555666,
+     0.084602,
+     0.0,
+     0.0,
+     1.150875,
+     1.061323,
+     0.2275
+    ],
+    [
+     0.825259,
+     0.494581,
+     0.092746,
+     0.0,
+     0.0,
+     1.112708,
+     1.118675,
+     0.383208
+    ],
+    [
+     0.79294,
+     0.531335,
+     0.092392,
+     0.0,
+     0.0,
+     1.182749,
+     1.16231,
+     0.209959
+    ]
+   ],
+   "median_ms": 2053.6783335,
+   "median_wall_ms": 2324.5715210214257,
+   "profiled_protocol_samples_ms": [
+    3.7898639999999997,
+    4.027177,
+    3.9716850000000004
+   ],
+   "median_profiled_protocol_ms": 3.9716850000000004
+  },
+  "faults": {
+   "stale-generation": {
+    "operand_fallback": 0,
+    "duplicate": 0,
+    "stale": 5413,
+    "transfer": 932,
+    "confirmed": 932,
+    "emitted": [
+     332433,
+     220972
+    ]
+   },
+   "stale-epoch": {
+    "operand_fallback": 0,
+    "duplicate": 0,
+    "stale": 5413,
+    "transfer": 932,
+    "confirmed": 932,
+    "emitted": [
+     332433,
+     220972
+    ]
+   },
+   "duplicate": {
+    "operand_fallback": 0,
+    "duplicate": 5413,
+    "stale": 0,
+    "transfer": 932,
+    "confirmed": 932,
+    "emitted": [
+     332433,
+     220972
+    ]
+   },
+   "only-stale": {
+    "operand_fallback": 0,
+    "duplicate": 0,
+    "stale": 6345,
+    "transfer": 0,
+    "confirmed": 0,
+    "emitted": [
+     333365,
+     220972
+    ]
+   },
+   "alias-mismatch": {
+    "operand_fallback": 1229,
+    "duplicate": 0,
+    "stale": 0,
+    "transfer": 0,
+    "confirmed": 0,
+    "emitted": [
+     333365,
+     220972
+    ]
+   }
+  }
+ }
+}
