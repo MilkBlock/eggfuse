@@ -1,0 +1,26 @@
+{
+ "base": "31bf7e41",
+ "exe": "64f6bb288b4976a9b3cb38c0f8af2c870690c8b41c98556e2842308f62b36e5b",
+ "sources": {
+  "integral-root-certificates/integral.rs": "e5b403cea44c81bcb9044dd2592657dae87a6496dbd67d7e4dcab74683a29dfd",
+  "integral-root-certificates/overlay.py": "4558a5c9286f5a31a13ea57a230e9ddcf3ff220a36f27624fd4b10337ea67319"
+ },
+ "seed": 1703,
+ "waves": 65536,
+ "programs": {
+  "sum-bits": {
+   "program.json": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+   "plans.json": "50083314582aa90fe7ba33210b2c6fc334d7df4714fd58329154e99dc175c3fc",
+   "single.json": "cf12b0abebf3c6c9d862bee5dba1b5c16f8682f0faf4f08526ba29c2567ea9e8",
+   "merge.json": "ef75bfab0baf698392460224d88a02be3760a0305136bd762bda1ad72fed195b",
+   "request.json": "37d53c19806527149219b5ce274cc64ada7d69d5c01085cc16744488271a387b"
+  },
+  "3mm": {
+   "program.json": "8d81462db16dcee0689b2e8dc11ac3e068c9dc976a2e69f5005a8acad06905af",
+   "plans.json": "50083314582aa90fe7ba33210b2c6fc334d7df4714fd58329154e99dc175c3fc",
+   "single.json": "cf12b0abebf3c6c9d862bee5dba1b5c16f8682f0faf4f08526ba29c2567ea9e8",
+   "merge.json": "d4261a765c6a70a53e79fcb9f3068b8a9f42ce0ca9d22d8a5e6847e02a88e8fb",
+   "request.json": "df6137cb5ba033ac91dae00465273afafda8722ba8f9110acacd2f589f300947"
+  }
+ }
+}
