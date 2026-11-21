@@ -1,0 +1,554 @@
+{
+ "sum-bits": {
+  "arms": {
+   "leaf": {
+    "runs": 1428,
+    "rhs_count": 7265,
+    "emitted_roots": [
+     6559,
+     5912
+    ],
+    "selected_children": 191,
+    "child_candidates": 305,
+    "external_child_fresh": 103,
+    "packets": 12662,
+    "owned_births": 3610,
+    "effective_births": 2691,
+    "fept": 0.21252566735112938,
+    "strict": {
+     "activated": 0,
+     "armed": 0,
+     "candidate_direct_reads": 0,
+     "changed_old_value": 0,
+     "entered": 0,
+     "fresh": 0,
+     "interned": 0,
+     "missing_named": 0,
+     "no_return": 0,
+     "noop": 0,
+     "old_direct_reads": 0,
+     "returned": 0,
+     "scope_candidates": 0,
+     "stale_old": 0,
+     "tag_bytes": 0,
+     "tagged": 0
+    },
+    "plans": [
+     [
+      507,
+      {
+       "candidate_table": 334,
+       "child_template": 906,
+       "constructor": 324,
+       "effect": 3,
+       "factory": 2,
+       "old_atom": 1,
+       "old_result_slot": 2,
+       "old_table": 205,
+       "required": [
+        0,
+        1,
+        3
+       ]
+      }
+     ]
+    ],
+    "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "digests": {
+     "rhs": "87cfc653e389f335aeb84c3fde781e9bd8c64c088bc7b68240eee2e4bd98fda9",
+     "writes": "7a50d4e675bd63fcaf59bff0c83a3ad78a3ff5dd77d32e62b9d25ee7c693407f",
+     "resumes": "ed315f27445e29df0b3903f22ef4133322bb17665f55342cf45e7907d7f4043f",
+     "cell_ids": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+     "allocations": "fc7c9138216ee1e307c684012328e73d806ec6b83616b90da9f91ebc72706ed3"
+    },
+    "root_commits_sha": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+    "root_fresh_sha": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+    "unions_sha": "f7e58131bcc18e3074d10866ed69c89673633db04cc312d911ce10b683f70259",
+    "events_sha": "73e771e511cf7906df4d8c04e9fda65915427b74cf6ce5bc8aa8c935ae3184db",
+    "birth_sha": "e0897bc6614cfa2b5725a3d92fbd9c02c5e04ebe8a7ec326564cb331c9e3b7c5",
+    "export_original_sha": "cc411875294ca05a458e8c66917fb6390f1498c621d92cd61d8496448ef2c9fa",
+    "coalesced_sha": "eff2ec22c851efecd4d6ce2e7189f9aa3f46b294e4588a2b582d0094c3e32e1c",
+    "compiled_rules": 1,
+    "ms": [
+     35.527833,
+     34.815167,
+     41.188875,
+     38.889667
+    ],
+    "wall_ms": [
+     72.33200001064688,
+     73.46145797055215,
+     82.43625005707145,
+     78.56179203372449
+    ],
+    "median_ms": 37.20875,
+    "median_wall_ms": 76.01162500213832
+   },
+   "composed": {
+    "runs": 1428,
+    "rhs_count": 7265,
+    "emitted_roots": [
+     6559,
+     5912
+    ],
+    "selected_children": 92,
+    "child_candidates": 206,
+    "external_child_fresh": 28,
+    "packets": 12563,
+    "owned_births": 3610,
+    "effective_births": 2691,
+    "fept": 0.21420042983363846,
+    "strict": {
+     "activated": 102,
+     "armed": 99,
+     "candidate_direct_reads": 99,
+     "changed_old_value": 0,
+     "entered": 99,
+     "fresh": 75,
+     "interned": 24,
+     "missing_named": 0,
+     "no_return": 0,
+     "noop": 0,
+     "old_direct_reads": 102,
+     "returned": 102,
+     "scope_candidates": 355,
+     "stale_old": 3,
+     "tag_bytes": 79,
+     "tagged": 355
+    },
+    "plans": [
+     [
+      507,
+      {
+       "candidate_table": 334,
+       "child_template": 906,
+       "constructor": 324,
+       "effect": 3,
+       "factory": 2,
+       "old_atom": 1,
+       "old_result_slot": 2,
+       "old_table": 205,
+       "required": [
+        0,
+        1,
+        3
+       ]
+      }
+     ]
+    ],
+    "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "digests": {
+     "rhs": "87cfc653e389f335aeb84c3fde781e9bd8c64c088bc7b68240eee2e4bd98fda9",
+     "writes": "7a50d4e675bd63fcaf59bff0c83a3ad78a3ff5dd77d32e62b9d25ee7c693407f",
+     "resumes": "ed315f27445e29df0b3903f22ef4133322bb17665f55342cf45e7907d7f4043f",
+     "cell_ids": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+     "allocations": "fc7c9138216ee1e307c684012328e73d806ec6b83616b90da9f91ebc72706ed3"
+    },
+    "root_commits_sha": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+    "root_fresh_sha": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+    "unions_sha": "f7e58131bcc18e3074d10866ed69c89673633db04cc312d911ce10b683f70259",
+    "events_sha": "73e771e511cf7906df4d8c04e9fda65915427b74cf6ce5bc8aa8c935ae3184db",
+    "birth_sha": "e0897bc6614cfa2b5725a3d92fbd9c02c5e04ebe8a7ec326564cb331c9e3b7c5",
+    "export_original_sha": "cc411875294ca05a458e8c66917fb6390f1498c621d92cd61d8496448ef2c9fa",
+    "coalesced_sha": "eff2ec22c851efecd4d6ce2e7189f9aa3f46b294e4588a2b582d0094c3e32e1c",
+    "compiled_rules": 1,
+    "ms": [
+     35.960583,
+     36.688582999999994,
+     35.235541000000005,
+     35.051417
+    ],
+    "wall_ms": [
+     75.22008300293237,
+     74.77320800535381,
+     75.25533309672028,
+     72.74258299730718
+    ],
+    "internal": {
+     "suppressed_child_scores": 99,
+     "suppressed_child_proposals": 99,
+     "internal_fresh": 75,
+     "internal_interned": 24,
+     "internal_visible": 75,
+     "verified_leaf_physical_returns": 99,
+     "examples": [
+      {
+       "ordinal": 2519,
+       "root": 4471,
+       "old_fact": {
+        "Function": 531
+       },
+       "old_version": 330,
+       "factory_actual_return": {
+        "Fact": {
+         "cell": 2624,
+         "op": 6
+        }
+       },
+       "nested_actual_return": {
+        "Fact": {
+         "cell": 2687,
+         "op": 0
+        }
+       },
+       "new_nested_constructor": true
+      },
+      {
+       "ordinal": 4108,
+       "root": 7164,
+       "old_fact": {
+        "Function": 812
+       },
+       "old_version": 670,
+       "factory_actual_return": {
+        "Fact": {
+         "cell": 2256,
+         "op": 3
+        }
+       },
+       "nested_actual_return": {
+        "Fact": {
+         "cell": 2299,
+         "op": 0
+        }
+       },
+       "new_nested_constructor": false
+      },
+      {
+       "ordinal": 4240,
+       "root": 7368,
+       "old_fact": {
+        "Function": 902
+       },
+       "old_version": 722,
+       "factory_actual_return": {
+        "Fact": {
+         "cell": 4413,
+         "op": 3
+        }
+       },
+       "nested_actual_return": {
+        "Fact": {
+         "cell": 4441,
+         "op": 0
+        }
+       },
+       "new_nested_constructor": true
+      },
+      {
+       "ordinal": 4187,
+       "root": 7287,
+       "old_fact": {
+        "Function": 865
+       },
+       "old_version": 703,
+       "factory_actual_return": {
+        "Fact": {
+         "cell": 4349,
+         "op": 5
+        }
+       },
+       "nested_actual_return": {
+        "Fact": {
+         "cell": 4379,
+         "op": 0
+        }
+       },
+       "new_nested_constructor": true
+      }
+     ],
+     "factory_fresh_on_root": 0,
+     "factory_returned_existing": 99
+    },
+    "median_ms": 35.598062,
+    "median_wall_ms": 74.99664550414309
+   }
+  },
+  "faults": {
+   "2": [
+    260,
+    "strict merge old reference differs from issued root"
+   ],
+   "3": [
+    260,
+    "strict merge old reference differs from issued root"
+   ]
+  }
+ },
+ "3mm": {
+  "arms": {
+   "leaf": {
+    "runs": 4260,
+    "rhs_count": 294917,
+    "emitted_roots": [
+     334594,
+     220972
+    ],
+    "selected_children": 2508,
+    "child_candidates": 7120,
+    "external_child_fresh": 1216,
+    "packets": 558074,
+    "owned_births": 119503,
+    "effective_births": 92658,
+    "fept": 0.16603174489404632,
+    "strict": {
+     "activated": 0,
+     "armed": 0,
+     "candidate_direct_reads": 0,
+     "changed_old_value": 0,
+     "entered": 0,
+     "fresh": 0,
+     "interned": 0,
+     "missing_named": 0,
+     "no_return": 0,
+     "noop": 0,
+     "old_direct_reads": 0,
+     "returned": 0,
+     "scope_candidates": 0,
+     "stale_old": 0,
+     "tag_bytes": 0,
+     "tagged": 0
+    },
+    "plans": [
+     [
+      507,
+      {
+       "candidate_table": 334,
+       "child_template": 906,
+       "constructor": 324,
+       "effect": 3,
+       "factory": 2,
+       "old_atom": 1,
+       "old_result_slot": 2,
+       "old_table": 205,
+       "required": [
+        0,
+        1,
+        3
+       ]
+      }
+     ]
+    ],
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "digests": {
+     "rhs": "2d16193b97ca6d068719c67b150dd1dcc0096ad4df16cac3ca19d10a97e730b4",
+     "writes": "726065121ee3fbfb8bf474ecf5ee9451a9dac0998183421f157a07392d004267",
+     "resumes": "c7e4934585dcc4073f8b84b5c8af9647a03064dfabcac033fa1844006a045e20",
+     "cell_ids": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+     "allocations": "ca59cd58570600f4dfc6f1fd5f35282fa867c9e604f8db5238630bdb0812402e"
+    },
+    "root_commits_sha": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+    "root_fresh_sha": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+    "unions_sha": "8e78f00c1a7e9a67486984606b2318a03434cf54aba90e4f7c8774924a5de2d2",
+    "events_sha": "29fc893e6ad9cccb9c305f285ae300baf403435b1c83fe7e41bb2467fd2607fa",
+    "birth_sha": "cc354ef914437ce23010246bc3e7a433b683b8f4ce4a585a70d85e2c94a3979c",
+    "export_original_sha": "0f5fc7e44add1467558ff78c72933b612a835b732a0bfe234580a03d631b6320",
+    "coalesced_sha": "5ceb174bb6c2aa9134628550a55e275935268c1a97dda59ef490971da35c61e5",
+    "compiled_rules": 1,
+    "ms": [
+     1858.061042,
+     1882.023542,
+     1923.225875,
+     1782.705834
+    ],
+    "wall_ms": [
+     2128.5859170602635,
+     2159.827791969292,
+     2188.5642500128597,
+     2048.9194579422474
+    ],
+    "median_ms": 1870.042292,
+    "median_wall_ms": 2144.2068545147777
+   },
+   "composed": {
+    "runs": 4260,
+    "rhs_count": 294917,
+    "emitted_roots": [
+     334594,
+     220972
+    ],
+    "selected_children": 258,
+    "child_candidates": 4870,
+    "external_child_fresh": 237,
+    "packets": 555824,
+    "owned_births": 119503,
+    "effective_births": 92658,
+    "fept": 0.16670384870030802,
+    "strict": {
+     "activated": 2480,
+     "armed": 2250,
+     "candidate_direct_reads": 2250,
+     "changed_old_value": 0,
+     "entered": 2250,
+     "fresh": 979,
+     "interned": 1271,
+     "missing_named": 0,
+     "no_return": 0,
+     "noop": 0,
+     "old_direct_reads": 2480,
+     "returned": 2480,
+     "scope_candidates": 8384,
+     "stale_old": 230,
+     "tag_bytes": 1105,
+     "tagged": 8384
+    },
+    "plans": [
+     [
+      507,
+      {
+       "candidate_table": 334,
+       "child_template": 906,
+       "constructor": 324,
+       "effect": 3,
+       "factory": 2,
+       "old_atom": 1,
+       "old_result_slot": 2,
+       "old_table": 205,
+       "required": [
+        0,
+        1,
+        3
+       ]
+      }
+     ]
+    ],
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "digests": {
+     "rhs": "2d16193b97ca6d068719c67b150dd1dcc0096ad4df16cac3ca19d10a97e730b4",
+     "writes": "726065121ee3fbfb8bf474ecf5ee9451a9dac0998183421f157a07392d004267",
+     "resumes": "c7e4934585dcc4073f8b84b5c8af9647a03064dfabcac033fa1844006a045e20",
+     "cell_ids": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+     "allocations": "ca59cd58570600f4dfc6f1fd5f35282fa867c9e604f8db5238630bdb0812402e"
+    },
+    "root_commits_sha": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+    "root_fresh_sha": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+    "unions_sha": "8e78f00c1a7e9a67486984606b2318a03434cf54aba90e4f7c8774924a5de2d2",
+    "events_sha": "29fc893e6ad9cccb9c305f285ae300baf403435b1c83fe7e41bb2467fd2607fa",
+    "birth_sha": "cc354ef914437ce23010246bc3e7a433b683b8f4ce4a585a70d85e2c94a3979c",
+    "export_original_sha": "0f5fc7e44add1467558ff78c72933b612a835b732a0bfe234580a03d631b6320",
+    "coalesced_sha": "5ceb174bb6c2aa9134628550a55e275935268c1a97dda59ef490971da35c61e5",
+    "compiled_rules": 1,
+    "ms": [
+     1947.960958,
+     1943.500791,
+     1877.843583,
+     1890.826667
+    ],
+    "wall_ms": [
+     2219.1478749737144,
+     2212.040208047256,
+     2138.7182499747723,
+     2153.043583035469
+    ],
+    "internal": {
+     "suppressed_child_scores": 2250,
+     "suppressed_child_proposals": 2250,
+     "internal_fresh": 979,
+     "internal_interned": 1271,
+     "internal_visible": 979,
+     "verified_leaf_physical_returns": 2250,
+     "examples": [
+      {
+       "ordinal": 159509,
+       "root": 352450,
+       "old_fact": {
+        "Function": 23604
+       },
+       "old_version": 1845,
+       "factory_actual_return": {
+        "Fact": {
+         "cell": 160652,
+         "op": 5
+        }
+       },
+       "nested_actual_return": {
+        "Fact": {
+         "cell": 160855,
+         "op": 0
+        }
+       },
+       "new_nested_constructor": true
+      },
+      {
+       "ordinal": 150569,
+       "root": 338042,
+       "old_fact": {
+        "Function": 17364
+       },
+       "old_version": 1641,
+       "factory_actual_return": {
+        "Fact": {
+         "cell": 149855,
+         "op": 5
+        }
+       },
+       "nested_actual_return": {
+        "Fact": {
+         "cell": 150994,
+         "op": 0
+        }
+       },
+       "new_nested_constructor": false
+      },
+      {
+       "ordinal": 144402,
+       "root": 327475,
+       "old_fact": {
+        "Function": 13365
+       },
+       "old_version": 1584,
+       "factory_actual_return": {
+        "Fact": {
+         "cell": 143199,
+         "op": 3
+        }
+       },
+       "nested_actual_return": {
+        "Fact": {
+         "cell": 144439,
+         "op": 0
+        }
+       },
+       "new_nested_constructor": false
+      },
+      {
+       "ordinal": 155554,
+       "root": 346051,
+       "old_fact": {
+        "Function": 20793
+       },
+       "old_version": 1713,
+       "factory_actual_return": {
+        "Fact": {
+         "cell": 155582,
+         "op": 5
+        }
+       },
+       "nested_actual_return": {
+        "Fact": {
+         "cell": 156520,
+         "op": 0
+        }
+       },
+       "new_nested_constructor": true
+      }
+     ],
+     "factory_fresh_on_root": 0,
+     "factory_returned_existing": 2250
+    },
+    "median_ms": 1917.1637289999999,
+    "median_wall_ms": 2182.5418955413625
+   }
+  },
+  "faults": {
+   "2": [
+    1570,
+    "strict merge old reference differs from issued root"
+   ],
+   "3": [
+    1570,
+    "strict merge old reference differs from issued root"
+   ]
+  }
+ }
+}

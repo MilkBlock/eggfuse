@@ -1,0 +1,17 @@
+{
+  "base": "31bf7e41",
+  "binary_sha256": "79253136ba59505baac9f89ae249927d38276ab5cc1d237262a45794f02254b2",
+  "files": {
+    "../filtered-explicit-parent/overlay.py": "d93101d53ae559f2ab1c85cd313668cc9dd9fa472be164f71e291652d0544f53",
+    "../filtered-explicit-parent/study.py": "658cf0ab9a32828478636349fad935b1a98b91040e9ddf59c7b6e9931ef910b3",
+    "../joint-merge/child.rs": "d680d60fd721cb1ebbd87fabbb6029d365c240e350f22933dd3269f899ad9002",
+    "build.py": "03d7da04efe38767382e4ff7e8afc63becd1196e99059c6cf90ac112bf424f74",
+    "measure.py": "7f43ec151b23762b29b6bac9b36918ea04bb9f590b084499b759e0387ae36f14",
+    "opportunities.json": "afbcde2bd85dacdaf10f5efd1f110dbec69d73b8c9fd71e0c154d843ec40001f",
+    "overlay.py": "99f8c18f8dc9c7bd271813563dc799cb6691941e233361a974d23dce35288850",
+    "results.json": "ffd8ee7f3f196f9b2923eb7f202a3f17837dc0b0d7cff87ab35f0025470a6869",
+    "strict.rs": "271084a3f99fc8503ebe77c3a13b5cf23487ea32856b0c1de64f4a0d0ccf8dd3",
+    "study.py": "7167f6074b9ba8c4f2868c06363af456407aedc73471f2a4c4e229f8186c472d",
+    "verify.py": "2214dd87588b583f90b9003e580da01d9b021fac4a2f4f098d09447fccc77641"
+  }
+}
