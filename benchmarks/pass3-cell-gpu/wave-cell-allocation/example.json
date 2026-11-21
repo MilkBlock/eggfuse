@@ -1,0 +1,98 @@
+{
+ "epoch": 847,
+ "active_rules": 222,
+ "granted": 7159,
+ "source_offers": 15968,
+ "wins": 9902,
+ "fresh": 9082,
+ "nonempty_grants": 47,
+ "preissued_wave": {
+  "mixed_waves": 862,
+  "multi_sets": 11689,
+  "multiple_rules": 1812,
+  "peak_rules": 222,
+  "peak_tuples": 15968,
+  "sealed_multi": 220972,
+  "sealed_single": 845168,
+  "single_sets": 12404,
+  "validated_multi_sets": 11689,
+  "verified_single_sets": 12404,
+  "waves": 4259
+ },
+ "top_by_requested": [
+  {
+   "rule": 249,
+   "template": 249,
+   "requested": 2559,
+   "granted": 2559,
+   "offers": 4205,
+   "wins": 4205,
+   "fresh": 4205
+  },
+  {
+   "rule": 122,
+   "template": 122,
+   "requested": 590,
+   "granted": 590,
+   "offers": 438,
+   "wins": 438,
+   "fresh": 438
+  },
+  {
+   "rule": 137,
+   "template": 137,
+   "requested": 311,
+   "granted": 311,
+   "offers": 415,
+   "wins": 309,
+   "fresh": 309
+  },
+  {
+   "rule": 58,
+   "template": 58,
+   "requested": 283,
+   "granted": 283,
+   "offers": 364,
+   "wins": 364,
+   "fresh": 364
+  },
+  {
+   "rule": 143,
+   "template": 143,
+   "requested": 283,
+   "granted": 283,
+   "offers": 364,
+   "wins": 364,
+   "fresh": 364
+  },
+  {
+   "rule": 91,
+   "template": 91,
+   "requested": 278,
+   "granted": 278,
+   "offers": 459,
+   "wins": 459,
+   "fresh": 341
+  },
+  {
+   "rule": 59,
+   "template": 59,
+   "requested": 267,
+   "granted": 267,
+   "offers": 315,
+   "wins": 278,
+   "fresh": 278
+  },
+  {
+   "rule": 60,
+   "template": 60,
+   "requested": 259,
+   "granted": 259,
+   "offers": 225,
+   "wins": 224,
+   "fresh": 224
+  }
+ ],
+ "checked_vectors": 4259,
+ "checked_rules": 205073
+}
