@@ -1,0 +1,16 @@
+{
+  "base": "31bf7e41",
+  "binary_sha256": "5a0009e4430bf2e7d271ddaafb8aaf42045a82f577e4ddb555b2786abc78d157",
+  "local_sources": {
+    "resident.rs": "6ea2ec07647b6777d9db97d7f0c7d658c89324e0366f5fdb7b4839d3fc85fb6a",
+    "conformance.rs": "9cfe66f8bdfa7a520e84e52993ecb7cf00f18448644c7f5bce0e57366f2deec0",
+    "faults.py": "27aea963b839d9e33c150a7f0f784ab0151675a1af7733e4eeef9acff6c96d4b",
+    "overlay.py": "58fc6b582b82d80229a6bc8d663f094d2f0afd2fcdbcad12d07abbd6cd2cbd3a",
+    "build.py": "01471e17382e0fad7ccb9d862136e55a8346beb181a3d3ae93cbf4ad8e1038af",
+    "probe.py": "108b345fb56e590b4bebc16ec5480449dd757d0b003176bcccff6b0abcf94042",
+    "faults.json": "c91def6d71006def5b62bab6ea6fbcf2e63141fb2b47184fd00f194aa236ceb9",
+    "test.txt": "437645871f06a6a3850421282e9ce3908db1c0f17dd0e1402ba7e2109c9b2ab9",
+    "../speculative-allocation-policy/policy.json": "702e0c2e3892195c337006b5145989a121491cb7941d635e160ae1ee50c12a19",
+    "../group-named-cells/group.rs": "43e59e1946ddffeab74f587d402a5c18edb672836e2e479eefc6128f69bd49c2"
+  }
+}
