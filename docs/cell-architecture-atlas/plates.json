@@ -9657,5 +9657,59 @@
       "title": "同一程序的节点产出与常驻内存增长",
       "caption": "横轴为达到共同 RSS 增量的时间，越小越早；纵轴为原来源仍在终图的新增构造节点数除以签发包数。两个图的字节水位不同。"
     }
+  },
+  {
+    "id": "155-integral-packet-suppression",
+    "section": "真实外部 token 省略",
+    "title": "一组消费者的外部包能真正免发吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "原 Run 读取先前生产者留下的锚点与精确端口。只有它们覆盖整组源父地址、版本、分数门限和顺序，才能用内部绑定直接履行消费者。",
+    "arms": "a　独立签发每个消费者包。b　证明整组已由 integral 根覆盖，保留序号与计算，省去获证组的外部根包。其余组沿用原发行。",
+    "fix": "两臂使用同一个未开启标量负证据过滤的引擎，获胜父和源顺序相同。比较实际线上的单父、多父、子包和终图原始节点。",
+    "measure": "sum-bits 有 140 组实际少发 714 个根包，3mm 有 253 组少发 8,947 个。每个免发的源绑定都实际提交，免发组没有追加外部凭证。",
+    "note": "这个实现仍检查源候选与模型分数。整组覆盖限制了准入机会。此图的单父流大于图 148 的过滤配置；两项收益需在同一构建验证后才能合计。",
+    "src": "S140",
+    "diagram": [
+      {
+        "title": "External roots",
+        "layers": [
+          [
+            [
+              "n",
+              "issue each consumer"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verify original binding"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Closed bank",
+        "layers": [
+          [
+            [
+              "s",
+              "previous root ports"
+            ]
+          ],
+          [
+            [
+              "v",
+              "prove identical full bank"
+            ]
+          ],
+          [
+            [
+              "s",
+              "supply internal bindings"
+            ]
+          ]
+        ]
+      }
+    ]
   }
 ]
