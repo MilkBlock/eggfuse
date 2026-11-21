@@ -36,6 +36,8 @@ On 3mm the writer program handled 102,108 source updates, including 13,030 multi
 
 The [independent multi-key fixture](multi-key.egg) computes Score(k, group) from (x + 1) − 3 under the native min merge, then unions two formerly distinct keys and reruns the rule. Seven ordered writes executed fourteen arithmetic steps, two changed the graph, four reused an actual previous function address, and five were proved absorbed. Every intermediate, key, value, change, source Run and Cell ID agreed across all five modes. [Fixture evidence](fixture.json)
 
+In the [overflow control](overflow.json) a new source row overflows the first integer addition. The compiler receives the valid fixture as its Bake environment and lowers the held-out failing program with the same typed rule template. Every tested path stops at the same source primitive and partial RHS count.
+
 ## Reproduction
 
 ```sh
@@ -45,6 +47,7 @@ python "$d/study.py" "$EXP" "$EXP/block-base/session" "$EXP/block-study"
 python "$d/build.py" "$EXP/block-writes" --writers
 python "$d/study.py" "$EXP" "$EXP/block-writes/session" "$EXP/write-study" --cases sum-bits 3mm --writers
 python "$d/fixture.py" "$EXP" "$EXP/block-writes/session" "$EXP/multi-key-fixture"
+python "$d/fixture.py" "$EXP" "$EXP/block-writes/session" "$EXP/multi-key-fixture" --overflow-only
 python "$d/archive.py" "$EXP/block-base" "$EXP/block-writes" "$EXP/block-study" "$EXP/write-study" "$EXP/multi-key-fixture" "$EXP/block-archive"
 python "$d/verify.py" "$EXP/block-archive"
 ```
