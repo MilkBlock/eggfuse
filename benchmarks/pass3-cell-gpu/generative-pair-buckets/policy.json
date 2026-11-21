@@ -1,0 +1,21 @@
+{
+ "donors": [
+  "dot-product",
+  "sum-bits"
+ ],
+ "raw_sha256": "6af48c444d0fe0480aca7afd1b1c4b4c5de578b5e4dec14b7772f7bb96242119",
+ "weights": [
+  -0.15155120721018053,
+  -0.3441132962326126,
+  0.9761712418941043
+ ],
+ "features": [
+  "one",
+  "log learned bucket cardinality",
+  "log1p receiver table length / 8"
+ ],
+ "positive": 103,
+ "negative": 38,
+ "classes": "at least one original source-committed lane",
+ "admit_threshold": 0
+}
