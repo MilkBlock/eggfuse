@@ -1,0 +1,84 @@
+{
+ "conjugate-gradient": {
+  "observed_shapes": 153,
+  "positive_opportunity_ms": 2.451123999999995,
+  "policies": {
+   "first": {
+    "active_shapes": 8,
+    "positive_ms": 0.6925030000000002,
+    "harm_ms": -0.0,
+    "net_ms": 0.6925030000000002,
+    "work_weighted_coverage": 0.28252467031451756
+   },
+   "one-pass": {
+    "active_shapes": 14,
+    "positive_ms": 0.9525040000000002,
+    "harm_ms": 0.07321100000000008,
+    "net_ms": 0.8792930000000001,
+    "work_weighted_coverage": 0.3885988632154073
+   },
+   "iterated": {
+    "active_shapes": 16,
+    "positive_ms": 1.0985170000000009,
+    "harm_ms": 0.6422050000000006,
+    "net_ms": 0.4563120000000003,
+    "work_weighted_coverage": 0.44816867690088424
+   },
+   "return-0-1703": {
+    "active_shapes": 9,
+    "positive_ms": 0.09662199999999985,
+    "harm_ms": 0.02041599999999999,
+    "net_ms": 0.07620599999999986,
+    "work_weighted_coverage": 0.03941946633462853
+   },
+   "return-8-1703": {
+    "active_shapes": 28,
+    "positive_ms": 0.681673000000002,
+    "harm_ms": 0.08420600000000002,
+    "net_ms": 0.597467000000002,
+    "work_weighted_coverage": 0.27810628919630476
+   }
+  }
+ },
+ "3mm": {
+  "observed_shapes": 145,
+  "positive_opportunity_ms": 6.767083999999992,
+  "policies": {
+   "first": {
+    "active_shapes": 8,
+    "positive_ms": 1.975254000000006,
+    "harm_ms": 0.11267199999999992,
+    "net_ms": 1.8625820000000062,
+    "work_weighted_coverage": 0.2918914557584934
+   },
+   "one-pass": {
+    "active_shapes": 14,
+    "positive_ms": 2.1795750000000065,
+    "harm_ms": 0.14824899999999958,
+    "net_ms": 2.031326000000007,
+    "work_weighted_coverage": 0.3220848152616414
+   },
+   "iterated": {
+    "active_shapes": 16,
+    "positive_ms": 2.5475859999999932,
+    "harm_ms": 3.7382039999999943,
+    "net_ms": -1.190618000000001,
+    "work_weighted_coverage": 0.3764673232961193
+   },
+   "return-0-1703": {
+    "active_shapes": 9,
+    "positive_ms": 0.35775600000000024,
+    "harm_ms": 0.05586699999999961,
+    "net_ms": 0.30188900000000063,
+    "work_weighted_coverage": 0.0528670842566755
+   },
+   "return-8-1703": {
+    "active_shapes": 23,
+    "positive_ms": 1.3448710000000006,
+    "harm_ms": 0.19037999999999772,
+    "net_ms": 1.1544910000000028,
+    "work_weighted_coverage": 0.19873715177763454
+   }
+  }
+ }
+}
