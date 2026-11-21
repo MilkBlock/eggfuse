@@ -1,0 +1,49 @@
+# Native RipSat evidence from actual eggcc Pass 3 donors
+
+The evidence package joins three things that use separate identifiers: a committed producer and consumer from the donor schedule, the finite native RipSat graph for an explicitly stated local rule environment, and the native application records that produced or read its rows. A completed local graph alone does not prove that a particular source consumer ran or read a particular producer. The package contains useful examples of all three: completed graphs without that causal edge, actual local write→read edges, and declined scopes.
+
+| Actual donor | Original Runs / committed RHS | Fresh cross-Run physical witness uses | Distinct producer-rule / op / consumer routes | Native scopes attempted | Graphs accepted | Nominated directed edges in two-rule scopes |
+|---|---:|---:|---:|---:|---:|---:|
+| dot-product | 1,535 / 6,704 | 8,989 | 1,699 | 45 | 28 | 2 |
+| jacobi-1d | 1,990 / 41,319 | 53,574 | 5,460 | 34 | 22 | 3 |
+
+Across the two donors there are 34 full producer+consumer scopes (one rule when the two identities coincide), 15 static-environment extensions, 15 producer-only and 15 consumer-only. Nine scopes contain a recorded native producer-write/consumer-read witness for the nominated fresh operation, including the repeated measurements in augmented environments. The ordinary native Cell CPU traces independently align original Run counts, ordered RHS inputs, effective writes, union, Spine and final graph. Native RipSat uses actual egglog on the isolated source region, saturating its selected rule sets. The source Run schedule and local saturation are separate executions. No accelerator or speed measurement is claimed.
+
+## Selection and grounding
+
+1. Capture the ordinary filtered/packed named-root execution on each donor with the pinned native constructor ledger. For a possible directed edge, the consumer must name the exact original physical constructor fact and version. Its first birth must belong to an earlier committed producer's own typed operation (rather than a nested dynamic allocation). Record original serial, ordinal, source epoch, table/atom and op index, and check the event against original compiler rule definitions and the native row birth. A source rule with other table atoms does not get credit for a complete composite merely from this single edge.
+2. The generic sampler starts from **all observed fresh edges**, deduplicates identities and groups by producer/op/consumer. It ranks by observed support with structural source fingerprints as tie-breakers, takes one per pair of original rule sets when possible, then fills the remaining 12 slots per donor. It keeps separate categories for missing original .egg forms and missing finite ground representatives. Additional targeted terms, NoAlias and union cases exercise edge conditions; `selection` distinguishes targeted-only from general sampling. The manifest retains counts before selection. This is a bounded sample and not a census of possible closed Cells.
+3. The native graph is seeded from actual donor rows. The grounding dictionary starts from the same typed identities and first-seen numbering as the Rust program import. It follows strictly prior source birth and union events, retaining a finite ground representative (up to 120 nodes); no learned output or target graph supplies a missing term. Original constructor/function declarations, rule texts and rule sets are copied from the donor's actual joined .egg program. Each seeded root and argument becomes a named port. Same-donor aliases are made explicit; literal values, sorts, complete root rows, visibility and equality partition are checked against the native initial graph. Mutable roots require their observed value and the original merge declaration.
+4. A full or producer-only scope seeds the **producer inputs**. A desired output cannot be called newly derived when the same effect already resolves in the initial graph. A consumer-only scope explicitly seeds the observed child input and never certifies its producer→consumer edge. An augmented scope adds at most one original unary rule chosen by static table reachability, rule set and effect shape without reading the eventual child applications. Native limits are four steps per sweep with 300-fact and 900 ms observation thresholds and an outer eight-second process watchdog. Incomplete and observation-only results remain recorded as such.
+
+## What the native evidence says
+
+On dot-product, root 1,737 ran rule 143 on an actual Get. Its typed `let` op 1 produced a new Single with physical fact ID 3,835,405,795,329 at version 131. The rule 55 consumer named this exact fact four original Runs later at serial 1,822. In the independent full local native graph the op result is row 5. The native history recorded its inserted row token and a later read of that same token by rule 55. Jacobi similarly records producer 5,314 and consumer 5,598, native final row 4. Rule 55's reverse route can also have a native causal witness, but its source operation 1 is a `set`; consumers requiring a returned `let` must decline it. Jacobi's rule 92→90 edge leaves another consumer table atom uncovered.
+
+A dot-product source chain 440→446→446 is physically connected at serials 12,211→12,360→12,376. The first pair's full native scope fails because lo-bound has an unsupported merge. The NoAlias symmetry rule alone reaches a genuine fixed point with 25 typed values and 21 rows. Its swapped row is new; the reverse application would reproduce an existing row. Only one effectful application was recorded, so this sample is not a two-record local write/read proof. Likewise the real ExtractedExpr declaration uses `(Smaller old new)`. This constructor-valued merge is outside the native exporter's supported min/max lattice contract. The terms full scope is declined rather than silently replacing its source merge with another one.
+
+**Additional members need independent evidence.** In the dot-product region nominated for rule 24/op5→151, the statically augmented closure actually records rule 24/op4 creating a different Bop row and rule 65 consuming its exact write token. Its complete key and result in the local graph are [0, 11, 11]→14. The actual donor also has ten 24/op4→65 instances, but its corroborating producer serial 9,080 differs from the seed producer 12,496. The archive labels this an `other_producer` receipt. It is a reusable candidate, not an extra historical child of serial 12,496. In both donors the separately augmented 143/op2→137 region discovers 143/op1→55 using the **same** donor producer. The raw records include source sites and output/consumer wiring. [Manifest](evidence.json)
+
+## Schema and provenance checks
+
+- `donors[donor].samples[]` gives scope mode, source fingerprints, source rules, chosen op/atom, original epochs/serials, discovery category, visible source fact identity and the explicit consumer atoms still uncovered.
+- `native/saturated-rule-composition.json` is the native graph with typed value/e-class vertices, original operator rows, optional subsumed rows and named input ports. `history.json` carries native rule/site definitions, ordered application records, round boundaries and typed token→final-class mappings where the native token is a graph value. Fact-write token IDs and local class IDs are different namespaces. A source FactRef is never directly interpreted as either.
+- `port_binding.eligible_full_edge` requires a newly derived local producer row and a later native consumer record with that actual write token in its required reads, the producer in its referenced earlier records, the correct local table and the same final result class. `mapped_native_edges` records recovered source-op/consumer-atom candidates, and exposes executable wiring only when the position is unique. The native source-op type, other independent LHS requirements, source provenance and compiler's own eligibility checks still apply.
+- `native/acceptance.json` is emitted by the Cargo driver. Acceptance requires graph validation and `RipSatEgraph::from_native_export`, including saturated/unchanged final sweep, checks passed, supported export, matching state sizes, and no native stop or observation-only scope. The driver pins the exact raw bytes of the graph, reports, entry and history. The repository's [trust index](trust.json) separately pins each native receipt, original donor occurrence and canonical sample, plus corpus and manifest hashes. A copied sample or a self-rehashed unknown trust index is not a trusted source.
+- [The byte-exact text archive](native-text.json) deduplicates generated UTF-8 files by SHA-256. Wrappers can restore the entire directory with `bundle.py unpack`; hashes in this archive identify the recorded run. Fresh runs at a different path or time can produce different span labels and timing reports, for which a newly reviewed trust index is needed.
+
+## Reproduce
+
+```sh
+d=benchmarks/pass3-cell-gpu/ripsat-donor-evidence
+cargo build --release --locked --offline -p eggfuse-cell-compiler --example ripsat_donor_graph
+python "$d/capture.py" "$EXP" "$EXP/token-constructor-build-v2/session" "$EXP/new-ripsat-origins"
+python "$d/produce.py" "$EXP" "$EXP/new-ripsat-origins" "$PWD/target/release/examples/ripsat_donor_graph" "$EXP/new-ripsat-export"
+python "$d/verify.py"
+python "$d/bundle.py" unpack "$EXP/unpacked-ripsat-evidence"
+# Replay just one of the real isolated entries:
+cargo run --release --locked --offline -p eggfuse-cell-compiler --example ripsat_donor_graph -- \
+  "$EXP/unpacked-ripsat-evidence/samples/dot-product-p446-o0-c446-full/entry.egg" "$EXP/replayed-noalias"
+```
+
+The stored source donor captures and graphs are independent of the neural scorer. Their delivery is an evidence frontend; a downstream compiler and runtime decide whether a proposed program can execute under the explicit-parent contract.

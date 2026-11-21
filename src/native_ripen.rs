@@ -91,18 +91,18 @@ impl Session {
         crate::pipeline::write_json(&self.out.join("ripen.json"), &Report(self))
     }
     pub fn new(source: &Path, out: &Path) -> Result<Self> {
-        Self::new_impl(source, out, None, None, None)
+        Self::new_impl(source, out, None, None, None, false)
     }
     pub(super) fn new_cached(source: &Path, out: &Path, cache: &PreparationCache) -> Result<Self> {
         if std::fs::read_to_string(source)?.starts_with("; ripsat-symbolic-size/v1") {
-            return Self::new_impl(source, out, None, Some(&cache.prepared_commands), None);
+            return Self::new_impl(source, out, None, Some(&cache.prepared_commands), None, false);
         }
         Self::new_impl(
             source,
             out,
             cache.environment.as_ref(),
             Some(&cache.prepared_commands),
-            None,
+            None, false,
         )
     }
     pub(super) fn graft_cached(
@@ -132,7 +132,7 @@ impl Session {
             out,
             cache.environment.as_ref(),
             Some(&cache.prepared_commands),
-            Some((eg, plan.delta, replay, info)),
+            Some((eg, plan.delta, replay, info)), false,
         )
     }
     fn new_impl(
@@ -141,6 +141,7 @@ impl Session {
         environment: Option<&entry::Environment>,
         prepared: Option<&std::collections::HashMap<String, Vec<Command>>>,
         fork: Option<(EGraph, Vec<Command>, Vec<Command>, Json)>,
+        force_history: bool,
     ) -> Result<Self> {
         let source = source.canonicalize()?;
         let text = std::fs::read_to_string(&source)?;
@@ -233,7 +234,7 @@ impl Session {
                 port_values.push((name.clone(), sort, value));
             }
         }
-        let record_history = std::env::var("EGG_LAYOUT_RIPEN_HISTORY").as_deref() == Ok("1");
+        let record_history = force_history || std::env::var("EGG_LAYOUT_RIPEN_HISTORY").as_deref() == Ok("1");
         let trace = if record_history {
             TraceSession::with_dependencies()
         } else {
@@ -501,11 +502,21 @@ impl Session {
     }
 }
 pub fn run(source: &Path, out: &Path) -> Result<Json> {
+    run_task(source, out, false)
+}
+
+/// Export native, ordered action dependencies together with the scoped graph.
+/// An unfinished or observation-only export keeps its diagnostic status.
+pub fn run_with_evidence(source: &Path, out: &Path) -> Result<Json> {
+    run_task(source, out, true)
+}
+
+fn run_task(source: &Path, out: &Path, evidence: bool) -> Result<Json> {
     if out.exists() {
         return Err("ripen output already exists".into());
     }
 
-    let mut task = Session::new(source, out)?;
+    let mut task = Session::new_impl(source, out, None, None, None, evidence)?;
     let limits = crate::ripen_observation::Limits::from_env()?;
     let started = std::time::Instant::now();
     while !task.done {
@@ -519,6 +530,34 @@ pub fn run(source: &Path, out: &Path) -> Result<Json> {
         }
     }
 
+    if evidence {
+        let ids: BTreeMap<_, _> = task.final_state.iter().flat_map(|g|g.local_ids.iter().enumerate().map(|(i,id)|(id.as_str(),i))).collect();
+        let history = json!({
+            "schema": "eggfuse-ripsat-native-history/v1",
+            "rules": task.c.rules.iter().map(|info| json!({"name":info.rule.name, "ruleset":info.rule.ruleset,
+                "text":info.rule.to_string(),
+                "sites":info.calls.iter().map(|(span,(path,e))|json!({"span":span,"path":path,"expression":e.to_string()})).collect::<Vec<_>>() })).collect::<Vec<_>>(),
+            "boundaries": task.c.boundaries,
+            "records": task.c.records,
+            "changes": task.c.changes,
+            "tokens": task.c.pool.values.iter().enumerate().map(|(id,t)| json!({"sort":t.sort,
+                "literal":task.c.pool.literals.get(&id),
+                "final_class":match t.key {Key::Value(_,v)=>task.eg.get_sort_by_name(&t.sort).and_then(|sort|{
+                    let canonical=task.eg.get_canonical_value(v,sort);
+                    ids.get(task.eg.value_to_class_id(sort,canonical).to_string().as_str()).copied()
+                }),_=>None},
+                "external":matches!(t.key,Key::External(..)|Key::Replay(_,true))})).collect::<Vec<_>>()
+        });
+        crate::pipeline::write_json(&out.join("history.json"), &history)?;
+        let acceptance=match task.final_state.as_ref(){
+            Some(g)=>crate::bake_recipe::RipSatEgraph::from_native_export(g.clone(),&task.report).map(|_|()),
+            None=>Err("no exported native graph for this scope".into())
+        };
+        let receipt=json!({"schema":"eggfuse-ripsat-native-acceptance/v1","accepted":acceptance.is_ok(),
+            "reason":acceptance.err().map(|e|e.to_string()),"records":task.c.records.len(),
+            "ripen_state":task.report["ripen"]["state"],"export_status":task.report["saturated_rule_composition"]["status"]});
+        crate::pipeline::write_json(&out.join("acceptance.json"),&receipt)?;
+    }
     Ok(task.report)
 }
 fn table_counts(eg: &EGraph, names: &[String]) -> BTreeMap<String, usize> {
