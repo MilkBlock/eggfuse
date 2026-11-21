@@ -1,0 +1,162 @@
+{
+ "pairs": {
+  "seen": {
+   "shapes": 1100,
+   "donor_occurrences": 5738,
+   "heldout": {
+    "sum-bits": {
+     "children": {
+      "unary": 375,
+      "multi_aliased_single_ref": 65,
+      "multi_distinct_refs": 85
+     },
+     "matched_shapes": {
+      "unary": 17,
+      "multi_aliased_single_ref": 5,
+      "multi_distinct_refs": 7
+     }
+    },
+    "3mm": {
+     "children": {
+      "unary": 12611,
+      "multi_aliased_single_ref": 1241,
+      "multi_distinct_refs": 1701
+     },
+     "matched_shapes": {
+      "unary": 20,
+      "multi_aliased_single_ref": 4,
+      "multi_distinct_refs": 7
+     }
+    }
+   }
+  },
+  "repeated": {
+   "shapes": 60,
+   "donor_occurrences": 4698,
+   "heldout": {
+    "sum-bits": {
+     "children": {
+      "unary": 375,
+      "multi_aliased_single_ref": 64,
+      "multi_distinct_refs": 83
+     },
+     "matched_shapes": {
+      "unary": 17,
+      "multi_aliased_single_ref": 4,
+      "multi_distinct_refs": 5
+     }
+    },
+    "3mm": {
+     "children": {
+      "unary": 12611,
+      "multi_aliased_single_ref": 1241,
+      "multi_distinct_refs": 1685
+     },
+     "matched_shapes": {
+      "unary": 20,
+      "multi_aliased_single_ref": 4,
+      "multi_distinct_refs": 6
+     }
+    }
+   }
+  },
+  "both_donors": {
+   "shapes": 18,
+   "donor_occurrences": 3137,
+   "heldout": {
+    "sum-bits": {
+     "children": {
+      "unary": 342,
+      "multi_aliased_single_ref": 56,
+      "multi_distinct_refs": 55
+     },
+     "matched_shapes": {
+      "unary": 8,
+      "multi_aliased_single_ref": 3,
+      "multi_distinct_refs": 2
+     }
+    },
+    "3mm": {
+     "children": {
+      "unary": 11803,
+      "multi_aliased_single_ref": 1122,
+      "multi_distinct_refs": 1451
+     },
+     "matched_shapes": {
+      "unary": 11,
+      "multi_aliased_single_ref": 3,
+      "multi_distinct_refs": 3
+     }
+    }
+   }
+  }
+ },
+ "triples": {
+  "seen": {
+   "shapes": 619,
+   "donor_occurrences": 1642,
+   "heldout": {
+    "sum-bits": {
+     "children": {
+      "unary": 102
+     },
+     "matched_shapes": {
+      "unary": 17
+     }
+    },
+    "3mm": {
+     "children": {
+      "unary": 4227
+     },
+     "matched_shapes": {
+      "unary": 15
+     }
+    }
+   }
+  },
+  "repeated": {
+   "shapes": 28,
+   "donor_occurrences": 1051,
+   "heldout": {
+    "sum-bits": {
+     "children": {
+      "unary": 102
+     },
+     "matched_shapes": {
+      "unary": 17
+     }
+    },
+    "3mm": {
+     "children": {
+      "unary": 4227
+     },
+     "matched_shapes": {
+      "unary": 15
+     }
+    }
+   }
+  },
+  "both_donors": {
+   "shapes": 5,
+   "donor_occurrences": 756,
+   "heldout": {
+    "sum-bits": {
+     "children": {
+      "unary": 78
+     },
+     "matched_shapes": {
+      "unary": 5
+     }
+    },
+    "3mm": {
+     "children": {
+      "unary": 2843
+     },
+     "matched_shapes": {
+      "unary": 5
+     }
+    }
+   }
+  }
+ }
+}

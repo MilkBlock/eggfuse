@@ -1,0 +1,1911 @@
+{
+ "pairs": {
+  "011b20cd192cdb6a3cd7b726d27a1b39a95778a462bd39e54e3f6c21321ed5a3": {
+   "shape": [
+    249,
+    502,
+    298,
+    [
+     [
+      0,
+      "op",
+      2
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    0,
+    48
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "0c4cdbb1ddb981242ad7ed5ccf4615bfafdbe465bb9eb342631edc23cb378715": {
+   "shape": [
+    504,
+    306,
+    1,
+    [
+     [
+      0,
+      "op",
+      3
+     ],
+     [
+      1,
+      "op",
+      3
+     ]
+    ],
+    2
+   ],
+   "donor_counts": [
+    63,
+    0
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "107b416ec0d7c3c8f96a77e7992187be7c2d656c0b72c7c7e6279c0d698849da": {
+   "shape": [
+    502,
+    506,
+    2,
+    [
+     [
+      0,
+      "op",
+      3
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    24,
+    0
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "10c9a01fbf9217040d3d4a135dfdd82d9f6141d81d93bf7d077d490f87625f62": {
+   "shape": [
+    55,
+    143,
+    4,
+    [
+     [
+      0,
+      "op",
+      1
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    61,
+    323
+   ],
+   "heldout_counts": {
+    "sum-bits": 44,
+    "3mm": 1968
+   }
+  },
+  "1247919d13aa59b9e44e51e6adebbfbe413ef9e5e0f3edbbeead8aae5d9e2aef": {
+   "shape": [
+    498,
+    306,
+    1,
+    [
+     [
+      0,
+      "op",
+      6
+     ],
+     [
+      1,
+      "op",
+      6
+     ]
+    ],
+    2
+   ],
+   "donor_counts": [
+    31,
+    68
+   ],
+   "heldout_counts": {
+    "sum-bits": 26,
+    "3mm": 193
+   }
+  },
+  "1d2a3262b2839f5ca0a3901b0b1bbf872cada1679901858ac2b40f8d91264385": {
+   "shape": [
+    60,
+    143,
+    4,
+    [
+     [
+      0,
+      "op",
+      0
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    0,
+    12
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 106
+   }
+  },
+  "1f058fdc97bf5e25acc80b695233edf3e7902c2dd32f1defaf4a2025ca50522f": {
+   "shape": [
+    249,
+    420,
+    68,
+    [
+     [
+      0,
+      "op",
+      2
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    2,
+    0
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "20328381139e8b7c9659d18978e962447c5c751b22f9864b2b99e832b0060a2a": {
+   "shape": [
+    143,
+    137,
+    4,
+    [
+     [
+      0,
+      "op",
+      2
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    93,
+    590
+   ],
+   "heldout_counts": {
+    "sum-bits": 74,
+    "3mm": 3252
+   }
+  },
+  "39e6db7b8406c07248377e41d4833811733effbce6ecca39ca0bb1ba3af4c940": {
+   "shape": [
+    502,
+    306,
+    1,
+    [
+     [
+      0,
+      "op",
+      2
+     ],
+     [
+      1,
+      "op",
+      2
+     ]
+    ],
+    2
+   ],
+   "donor_counts": [
+    0,
+    11
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "3be888dbe051b1e66ffdf10440a06cf332c2f5b10c2c10b064cee0e45647ee4d": {
+   "shape": [
+    249,
+    114,
+    4,
+    [
+     [
+      0,
+      "op",
+      2
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    12,
+    62
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 330
+   }
+  },
+  "41e380e7c0850a023686c287e2334aa3cefcdfde81fee64ed6640f6b7c4f9dfb": {
+   "shape": [
+    498,
+    286,
+    1,
+    [
+     [
+      0,
+      "op",
+      7
+     ],
+     [
+      1,
+      "op",
+      6
+     ]
+    ],
+    2
+   ],
+   "donor_counts": [
+    31,
+    68
+   ],
+   "heldout_counts": {
+    "sum-bits": 26,
+    "3mm": 193
+   }
+  },
+  "4a32fa29bf7a85a1a51d59e016a257239301b65fc6db22260d95371e34ea79dd": {
+   "shape": [
+    249,
+    502,
+    302,
+    [
+     [
+      0,
+      "op",
+      2
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    0,
+    14
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "4abc5157b1ffa681aa89ab77cf146b9f6185e6f8ee783a55b6e845c4bf4d8738": {
+   "shape": [
+    502,
+    286,
+    1,
+    [
+     [
+      0,
+      "op",
+      3
+     ],
+     [
+      1,
+      "op",
+      2
+     ]
+    ],
+    2
+   ],
+   "donor_counts": [
+    0,
+    11
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "4b122e6c968775120271672603b966d9f208778d5b174c40a56afdc8164ac28d": {
+   "shape": [
+    504,
+    506,
+    3,
+    [
+     [
+      0,
+      "op",
+      4
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    0,
+    299
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "4c78b9d90ae50eb31bc8f9bfadf6b3c428b3ede28bca033d0eaa5ffc62f82917": {
+   "shape": [
+    503,
+    506,
+    2,
+    [
+     [
+      0,
+      "op",
+      3
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    0,
+    10
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "4eee6e06a6cfffb0ac3874ac4e7d62a1e1edbed8bd63cfa95c24f1f636a702fb": {
+   "shape": [
+    498,
+    506,
+    3,
+    [
+     [
+      0,
+      "op",
+      7
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    31,
+    76
+   ],
+   "heldout_counts": {
+    "sum-bits": 26,
+    "3mm": 231
+   }
+  },
+  "50d2c6072253cd240767172fa2e2f4ba11cecb8f8b2d8f39090d7dbda14c1584": {
+   "shape": [
+    249,
+    502,
+    94,
+    [
+     [
+      0,
+      "op",
+      2
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    2,
+    0
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "50ff16b7b9e25b967765cb42ad1a38ff18d8937065bfc5a6b7c0e27f4af5da08": {
+   "shape": [
+    60,
+    58,
+    4,
+    [
+     [
+      0,
+      "op",
+      0
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    0,
+    12
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 106
+   }
+  },
+  "55411b058ecd1cebac1aa4f7a8f818b279b480ed3afd8cc07978d619e247d0da": {
+   "shape": [
+    501,
+    306,
+    1,
+    [
+     [
+      0,
+      "op",
+      5
+     ],
+     [
+      1,
+      "op",
+      5
+     ]
+    ],
+    2
+   ],
+   "donor_counts": [
+    26,
+    174
+   ],
+   "heldout_counts": {
+    "sum-bits": 29,
+    "3mm": 928
+   }
+  },
+  "56a902e24c8de03b2885d6127d591504942231daf9558d5c201dc006cae41c6c": {
+   "shape": [
+    506,
+    306,
+    1,
+    [
+     [
+      0,
+      "op",
+      1
+     ],
+     [
+      1,
+      "op",
+      1
+     ]
+    ],
+    2
+   ],
+   "donor_counts": [
+    1,
+    1
+   ],
+   "heldout_counts": {
+    "sum-bits": 1,
+    "3mm": 1
+   }
+  },
+  "56c840719254d8004b8f9567653f9383a90d4cd837aeb6513e86c29efa21952a": {
+   "shape": [
+    138,
+    138,
+    3,
+    [
+     [
+      0,
+      "op",
+      5
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    9,
+    0
+   ],
+   "heldout_counts": {
+    "sum-bits": 2,
+    "3mm": 0
+   }
+  },
+  "59379ebd422b1ed858bd315721b6f48dae9d8057e343aba46891c775874d3b9c": {
+   "shape": [
+    249,
+    249,
+    4,
+    [
+     [
+      0,
+      "input",
+      0
+     ],
+     [
+      1,
+      "input",
+      1
+     ],
+     [
+      2,
+      "input",
+      2
+     ],
+     [
+      3,
+      "op",
+      2
+     ],
+     [
+      4,
+      "input",
+      4
+     ]
+    ],
+    5
+   ],
+   "donor_counts": [
+    12,
+    62
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 330
+   }
+  },
+  "59d2db039495c06f8c91429b1799d93283a5b19205f0b249044cf0709019f344": {
+   "shape": [
+    546,
+    58,
+    207,
+    [
+     [
+      0,
+      "op",
+      1
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    0,
+    7
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "5f4ea90baac60e97ead9351829dde92b41c235fdc620d4efeea86fa7acf55a14": {
+   "shape": [
+    143,
+    55,
+    4,
+    [
+     [
+      0,
+      "op",
+      1
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    34,
+    192
+   ],
+   "heldout_counts": {
+    "sum-bits": 30,
+    "3mm": 1228
+   }
+  },
+  "622a5f5b3ce5689799e1625ef3f5ea2e5cb695a2545cbe56eea006601f60da55": {
+   "shape": [
+    499,
+    306,
+    1,
+    [
+     [
+      0,
+      "op",
+      8
+     ],
+     [
+      1,
+      "op",
+      8
+     ]
+    ],
+    2
+   ],
+   "donor_counts": [
+    0,
+    22
+   ],
+   "heldout_counts": {
+    "sum-bits": 8,
+    "3mm": 119
+   }
+  },
+  "624ad9393345abfa9d95cd74abd77963a06b45f2355db23fbaba10bf56031863": {
+   "shape": [
+    502,
+    506,
+    3,
+    [
+     [
+      0,
+      "op",
+      3
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    4,
+    0
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "659577a9b0dfc5594e1a0f4bb66d7edc9cb226c033321a5afaca34f26baeafd8": {
+   "shape": [
+    55,
+    58,
+    3,
+    [
+     [
+      0,
+      "op",
+      1
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    4,
+    0
+   ],
+   "heldout_counts": {
+    "sum-bits": 4,
+    "3mm": 5
+   }
+  },
+  "673d4a5ced765cf06b5db00046b2f763665e4bde9fa9b3e20ddaeeb9b99734d7": {
+   "shape": [
+    324,
+    324,
+    1,
+    [
+     [
+      0,
+      "op",
+      2
+     ],
+     [
+      1,
+      "input",
+      1
+     ]
+    ],
+    2
+   ],
+   "donor_counts": [
+    0,
+    33
+   ],
+   "heldout_counts": {
+    "sum-bits": 16,
+    "3mm": 101
+   }
+  },
+  "67862d2e9934b12804742d47658b8a5f156682567851987c952257899fa19827": {
+   "shape": [
+    138,
+    138,
+    4,
+    [
+     [
+      0,
+      "op",
+      5
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    6,
+    120
+   ],
+   "heldout_counts": {
+    "sum-bits": 11,
+    "3mm": 940
+   }
+  },
+  "6ebfb24786d2e404b1938388788fca74013cac139507a5a3e5b8da05bd759d00": {
+   "shape": [
+    249,
+    420,
+    226,
+    [
+     [
+      0,
+      "op",
+      2
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    0,
+    14
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "733c69343b3e0106cf9175ea28f7ac0e8d9c17f81c3348271f7d9f0745f46274": {
+   "shape": [
+    446,
+    446,
+    2,
+    [
+     [
+      0,
+      "op",
+      0
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    28,
+    6
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "768e404898cb756ef6f0fb387aa58fc32bf970d75f60b88d204336cff9a60de9": {
+   "shape": [
+    502,
+    306,
+    1,
+    [
+     [
+      0,
+      "op",
+      2
+     ],
+     [
+      1,
+      "op",
+      2
+     ]
+    ],
+    2
+   ],
+   "donor_counts": [
+    14,
+    0
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "808790a69f928eb79e4e8c049d16fc4312214d9cada30450e4f996317807c924": {
+   "shape": [
+    249,
+    502,
+    172,
+    [
+     [
+      0,
+      "op",
+      2
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    10,
+    0
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "8090ab265b58d495f5e3e20f409377b6116f5354b68b03591185f6eff5a38998": {
+   "shape": [
+    55,
+    58,
+    4,
+    [
+     [
+      0,
+      "op",
+      1
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    61,
+    323
+   ],
+   "heldout_counts": {
+    "sum-bits": 44,
+    "3mm": 1968
+   }
+  },
+  "80ec5c061bcc4083687d920c481ab56cdaeac42335e00d4707e6018e1f75bc5d": {
+   "shape": [
+    249,
+    100,
+    4,
+    [
+     [
+      0,
+      "op",
+      2
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    12,
+    62
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 330
+   }
+  },
+  "852242557e5cf8973459b05b2b72160fa054a9db1d16184f7fe695c3d527b27c": {
+   "shape": [
+    504,
+    506,
+    2,
+    [
+     [
+      0,
+      "op",
+      4
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    37,
+    0
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "86603c4e22b40aa8315acbccbafbdaca2f61a8245f70346c99f0d725f6328cd1": {
+   "shape": [
+    503,
+    506,
+    2,
+    [
+     [
+      0,
+      "op",
+      3
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    3,
+    0
+   ],
+   "heldout_counts": {
+    "sum-bits": 3,
+    "3mm": 0
+   }
+  },
+  "8723d522bd4feb46b676336539d21192ef2c328ce82cd94719b8db82c479c05a": {
+   "shape": [
+    499,
+    286,
+    1,
+    [
+     [
+      0,
+      "op",
+      9
+     ],
+     [
+      1,
+      "op",
+      8
+     ]
+    ],
+    2
+   ],
+   "donor_counts": [
+    0,
+    22
+   ],
+   "heldout_counts": {
+    "sum-bits": 8,
+    "3mm": 119
+   }
+  },
+  "948c04920e6ee8f2c93beb8c62744617a010ac71f39f7427f0b25f1413d45340": {
+   "shape": [
+    143,
+    55,
+    3,
+    [
+     [
+      0,
+      "op",
+      1
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    10,
+    0
+   ],
+   "heldout_counts": {
+    "sum-bits": 5,
+    "3mm": 1
+   }
+  },
+  "965fa811486f53f176e74db4daa63ce0d06603ac55530a55fde3bd2566a734f4": {
+   "shape": [
+    328,
+    328,
+    1,
+    [
+     [
+      0,
+      "op",
+      3
+     ],
+     [
+      1,
+      "input",
+      1
+     ]
+    ],
+    2
+   ],
+   "donor_counts": [
+    0,
+    13
+   ],
+   "heldout_counts": {
+    "sum-bits": 4,
+    "3mm": 14
+   }
+  },
+  "b2c1cdde9ee1355e982c0257013bf2b163d1e83920c27409a4d0f871c9eacb58": {
+   "shape": [
+    249,
+    420,
+    222,
+    [
+     [
+      0,
+      "op",
+      2
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    0,
+    48
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "b3bf0969de9e5ff899e59f26f5a3e279174e9fadc237ce8016673bdaa5071b1e": {
+   "shape": [
+    501,
+    506,
+    3,
+    [
+     [
+      0,
+      "op",
+      6
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    26,
+    199
+   ],
+   "heldout_counts": {
+    "sum-bits": 29,
+    "3mm": 1215
+   }
+  },
+  "b8fd7735552352ba32e46d6167a40c2b4b7c8494d181aed7da6a32e36391534f": {
+   "shape": [
+    501,
+    286,
+    1,
+    [
+     [
+      0,
+      "op",
+      6
+     ],
+     [
+      1,
+      "op",
+      5
+     ]
+    ],
+    2
+   ],
+   "donor_counts": [
+    26,
+    174
+   ],
+   "heldout_counts": {
+    "sum-bits": 29,
+    "3mm": 928
+   }
+  },
+  "c052dae0049b952a11b8196b1adc9cc3f92cb305a6573acb476db95ee6053e49": {
+   "shape": [
+    249,
+    149,
+    4,
+    [
+     [
+      0,
+      "op",
+      2
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    12,
+    62
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 330
+   }
+  },
+  "c860f20f887e8e8519f24749619bb6870908fd71a8c39479940606192be4cdcf": {
+   "shape": [
+    504,
+    306,
+    1,
+    [
+     [
+      0,
+      "op",
+      3
+     ],
+     [
+      1,
+      "op",
+      3
+     ]
+    ],
+    2
+   ],
+   "donor_counts": [
+    0,
+    227
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "ca1e5f419d5e4b781924a5885a32dc49b32dd25e49ef849d7573b44862c4c6cb": {
+   "shape": [
+    138,
+    137,
+    4,
+    [
+     [
+      0,
+      "op",
+      5
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    0,
+    11
+   ],
+   "heldout_counts": {
+    "sum-bits": 2,
+    "3mm": 30
+   }
+  },
+  "d1642b790e90543543c51330a7fb8af866a1a04c7786396b7db9e1d12b28052e": {
+   "shape": [
+    138,
+    55,
+    4,
+    [
+     [
+      0,
+      "op",
+      2
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    0,
+    46
+   ],
+   "heldout_counts": {
+    "sum-bits": 4,
+    "3mm": 400
+   }
+  },
+  "d542af86fe6c088e96323877cf1f71ae553c4545d4c3f46cd8dca5bdebced670": {
+   "shape": [
+    504,
+    286,
+    1,
+    [
+     [
+      0,
+      "op",
+      4
+     ],
+     [
+      1,
+      "op",
+      3
+     ]
+    ],
+    2
+   ],
+   "donor_counts": [
+    0,
+    227
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "d881055b1ef7941daf22f1fd236f54d3668c7cf5a9304005a52012bf17886139": {
+   "shape": [
+    504,
+    506,
+    2,
+    [
+     [
+      0,
+      "op",
+      4
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    0,
+    36
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "db605a3e00f3c9759a476557fe90ca7b2b8d2042601a8489969f5869171b2328": {
+   "shape": [
+    504,
+    506,
+    3,
+    [
+     [
+      0,
+      "op",
+      4
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    42,
+    0
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "e5064786fcd8c47b5ab6498920e3ca8456d0b232462d8f27048d3281857917b0": {
+   "shape": [
+    504,
+    286,
+    1,
+    [
+     [
+      0,
+      "op",
+      4
+     ],
+     [
+      1,
+      "op",
+      3
+     ]
+    ],
+    2
+   ],
+   "donor_counts": [
+    63,
+    0
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "e899eeb497957a0790299e5be04410860841adf1be7b762d0ec7dfc942e83fb0": {
+   "shape": [
+    143,
+    137,
+    3,
+    [
+     [
+      0,
+      "op",
+      2
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    21,
+    51
+   ],
+   "heldout_counts": {
+    "sum-bits": 84,
+    "3mm": 11
+   }
+  },
+  "e9cbef71ac89bffd299df307c247ac7d4c42778107f880f0ad88f34517fdc0ea": {
+   "shape": [
+    499,
+    506,
+    3,
+    [
+     [
+      0,
+      "op",
+      9
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    0,
+    23
+   ],
+   "heldout_counts": {
+    "sum-bits": 8,
+    "3mm": 128
+   }
+  },
+  "e9ef6298ac989ef3cd3df484ad78aca425b3e43d76202fe300c8ca836d55e7c0": {
+   "shape": [
+    502,
+    286,
+    1,
+    [
+     [
+      0,
+      "op",
+      3
+     ],
+     [
+      1,
+      "op",
+      2
+     ]
+    ],
+    2
+   ],
+   "donor_counts": [
+    14,
+    0
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "eab2b03fe57434c5125839474d425fa54b4c9ca9cdbacab14faf3d53df6d4a2b": {
+   "shape": [
+    469,
+    267,
+    15,
+    [
+     [
+      0,
+      "op",
+      3
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    0,
+    4
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "f4abb57f26c49f61570f562cd1d25eb4157f33e98371ae563419ab8a6968211d": {
+   "shape": [
+    55,
+    143,
+    3,
+    [
+     [
+      0,
+      "op",
+      1
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    4,
+    0
+   ],
+   "heldout_counts": {
+    "sum-bits": 4,
+    "3mm": 5
+   }
+  },
+  "fa404860d19c301c2ff6e836cc0c76af098af1096905306a9ab827bc60f58a9d": {
+   "shape": [
+    137,
+    55,
+    4,
+    [
+     [
+      0,
+      "op",
+      2
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    0,
+    7
+   ],
+   "heldout_counts": {
+    "sum-bits": 1,
+    "3mm": 27
+   }
+  },
+  "ff36dfe6c1cc8d963c8e902ab3c731fa0b90f0c630a2f0aa11202ee3dcb8a220": {
+   "shape": [
+    249,
+    420,
+    119,
+    [
+     [
+      0,
+      "op",
+      2
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    10,
+    0
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "ff96fcfd6fa16a27918350367675f621a15dedfcdfd0649aa64d5d9f618b93af": {
+   "shape": [
+    546,
+    143,
+    207,
+    [
+     [
+      0,
+      "op",
+      1
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    0,
+    7
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "ffa7222c5ec652deb9dafa4e476c848325b8930af730006f0bdd3aa73bd44fbe": {
+   "shape": [
+    502,
+    506,
+    2,
+    [
+     [
+      0,
+      "op",
+      3
+     ]
+    ],
+    1
+   ],
+   "donor_counts": [
+    0,
+    82
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  }
+ },
+ "triples": {
+  "070297c5dedbb025bb5765e00d61014eae213577442677b64eb55d00d12c9019": {
+   "shape": [
+    "ca1e5f419d5e4b781924a5885a32dc49b32dd25e49ef849d7573b44862c4c6cb",
+    "fa404860d19c301c2ff6e836cc0c76af098af1096905306a9ab827bc60f58a9d",
+    1
+   ],
+   "donor_counts": [
+    0,
+    7
+   ],
+   "heldout_counts": {
+    "sum-bits": 1,
+    "3mm": 26
+   }
+  },
+  "09ed5860cf7123e67c0798a22b015f93d016e35ae687082b3b007e395c175907": {
+   "shape": [
+    "f4abb57f26c49f61570f562cd1d25eb4157f33e98371ae563419ab8a6968211d",
+    "20328381139e8b7c9659d18978e962447c5c751b22f9864b2b99e832b0060a2a",
+    1
+   ],
+   "donor_counts": [
+    2,
+    0
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "0c2d98dd512859fdbd54ef1a873a142fb8500714f73dd25aa6788eb0c5cc2ab1": {
+   "shape": [
+    "4a32fa29bf7a85a1a51d59e016a257239301b65fc6db22260d95371e34ea79dd",
+    "4abc5157b1ffa681aa89ab77cf146b9f6185e6f8ee783a55b6e845c4bf4d8738",
+    2
+   ],
+   "donor_counts": [
+    0,
+    4
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "0ee773a8cd46f52c6d89c244cc4771acfdbb04c1fc466612bcc61621f5fcba83": {
+   "shape": [
+    "5f4ea90baac60e97ead9351829dde92b41c235fdc620d4efeea86fa7acf55a14",
+    "10c9a01fbf9217040d3d4a135dfdd82d9f6141d81d93bf7d077d490f87625f62",
+    1
+   ],
+   "donor_counts": [
+    28,
+    153
+   ],
+   "heldout_counts": {
+    "sum-bits": 21,
+    "3mm": 700
+   }
+  },
+  "1bd6554b2f6c7f42f4d637cefacdc4be4fdf634faf43c9cf968243536380685e": {
+   "shape": [
+    "ff96fcfd6fa16a27918350367675f621a15dedfcdfd0649aa64d5d9f618b93af",
+    "5f4ea90baac60e97ead9351829dde92b41c235fdc620d4efeea86fa7acf55a14",
+    1
+   ],
+   "donor_counts": [
+    0,
+    7
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "20009f862331986c305452c5f074a77aa60acf1779b2b083f3383f39d4bd7844": {
+   "shape": [
+    "fa404860d19c301c2ff6e836cc0c76af098af1096905306a9ab827bc60f58a9d",
+    "10c9a01fbf9217040d3d4a135dfdd82d9f6141d81d93bf7d077d490f87625f62",
+    1
+   ],
+   "donor_counts": [
+    0,
+    7
+   ],
+   "heldout_counts": {
+    "sum-bits": 1,
+    "3mm": 26
+   }
+  },
+  "3226bae1d567e9ecf2a0f2c5ac70e4227f931f2e9baa9dc0756a61629f445217": {
+   "shape": [
+    "4a32fa29bf7a85a1a51d59e016a257239301b65fc6db22260d95371e34ea79dd",
+    "ffa7222c5ec652deb9dafa4e476c848325b8930af730006f0bdd3aa73bd44fbe",
+    1
+   ],
+   "donor_counts": [
+    0,
+    14
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "4de1b28320bb6fa8f854424363b89707b952ac8ae66482ae40c57b3644f0042f": {
+   "shape": [
+    "67862d2e9934b12804742d47658b8a5f156682567851987c952257899fa19827",
+    "d1642b790e90543543c51330a7fb8af866a1a04c7786396b7db9e1d12b28052e",
+    1
+   ],
+   "donor_counts": [
+    0,
+    39
+   ],
+   "heldout_counts": {
+    "sum-bits": 3,
+    "3mm": 372
+   }
+  },
+  "51feb1574edebad608c928d1da4a689dc536e1cf7573048b02b5e39ed2243991": {
+   "shape": [
+    "56c840719254d8004b8f9567653f9383a90d4cd837aeb6513e86c29efa21952a",
+    "56c840719254d8004b8f9567653f9383a90d4cd837aeb6513e86c29efa21952a",
+    1
+   ],
+   "donor_counts": [
+    4,
+    0
+   ],
+   "heldout_counts": {
+    "sum-bits": 1,
+    "3mm": 0
+   }
+  },
+  "5cc2c84221ff7061ee633d4aef5768967717d04c9da4bad9262a84d905d0b208": {
+   "shape": [
+    "d1642b790e90543543c51330a7fb8af866a1a04c7786396b7db9e1d12b28052e",
+    "8090ab265b58d495f5e3e20f409377b6116f5354b68b03591185f6eff5a38998",
+    1
+   ],
+   "donor_counts": [
+    0,
+    46
+   ],
+   "heldout_counts": {
+    "sum-bits": 4,
+    "3mm": 398
+   }
+  },
+  "667c1a20a7b15268050370548ea1e9578bdb5d3c20d83ac2346d84bd45401aef": {
+   "shape": [
+    "d1642b790e90543543c51330a7fb8af866a1a04c7786396b7db9e1d12b28052e",
+    "10c9a01fbf9217040d3d4a135dfdd82d9f6141d81d93bf7d077d490f87625f62",
+    1
+   ],
+   "donor_counts": [
+    0,
+    46
+   ],
+   "heldout_counts": {
+    "sum-bits": 4,
+    "3mm": 398
+   }
+  },
+  "6c48f403d8164ac6578a73ef9771f4458ac94c9898abd27ff1d8631ccf3c00a1": {
+   "shape": [
+    "808790a69f928eb79e4e8c049d16fc4312214d9cada30450e4f996317807c924",
+    "107b416ec0d7c3c8f96a77e7992187be7c2d656c0b72c7c7e6279c0d698849da",
+    1
+   ],
+   "donor_counts": [
+    10,
+    0
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "816ac532ba4441522707309e20764d89907542b729093e7022b69b0bce3fe6e7": {
+   "shape": [
+    "ff96fcfd6fa16a27918350367675f621a15dedfcdfd0649aa64d5d9f618b93af",
+    "20328381139e8b7c9659d18978e962447c5c751b22f9864b2b99e832b0060a2a",
+    1
+   ],
+   "donor_counts": [
+    0,
+    7
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "8814f42939a662cf248d2c0c01d150e4f9b0d7d5c3b61ee7c9de8b56709f7f11": {
+   "shape": [
+    "948c04920e6ee8f2c93beb8c62744617a010ac71f39f7427f0b25f1413d45340",
+    "f4abb57f26c49f61570f562cd1d25eb4157f33e98371ae563419ab8a6968211d",
+    1
+   ],
+   "donor_counts": [
+    4,
+    0
+   ],
+   "heldout_counts": {
+    "sum-bits": 3,
+    "3mm": 1
+   }
+  },
+  "8c906de3226bb3958275022355c6258e51f5826b122676fb3867607f325598ae": {
+   "shape": [
+    "948c04920e6ee8f2c93beb8c62744617a010ac71f39f7427f0b25f1413d45340",
+    "10c9a01fbf9217040d3d4a135dfdd82d9f6141d81d93bf7d077d490f87625f62",
+    1
+   ],
+   "donor_counts": [
+    4,
+    0
+   ],
+   "heldout_counts": {
+    "sum-bits": 1,
+    "3mm": 0
+   }
+  },
+  "95bac7d89f4bda6854c44a88944a553b3b9148d6f08b25396d2205d82159edf0": {
+   "shape": [
+    "10c9a01fbf9217040d3d4a135dfdd82d9f6141d81d93bf7d077d490f87625f62",
+    "e899eeb497957a0790299e5be04410860841adf1be7b762d0ec7dfc942e83fb0",
+    1
+   ],
+   "donor_counts": [
+    11,
+    1
+   ],
+   "heldout_counts": {
+    "sum-bits": 1,
+    "3mm": 4
+   }
+  },
+  "9886fb9ddc28921037017a8df1676da6e600846dddfd97ed5c416f30addae9fd": {
+   "shape": [
+    "56c840719254d8004b8f9567653f9383a90d4cd837aeb6513e86c29efa21952a",
+    "67862d2e9934b12804742d47658b8a5f156682567851987c952257899fa19827",
+    1
+   ],
+   "donor_counts": [
+    2,
+    0
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "a106e987a2e7a184d2bb508968b8d737b25d74459caea878c8b6f10204c8f3bf": {
+   "shape": [
+    "67862d2e9934b12804742d47658b8a5f156682567851987c952257899fa19827",
+    "ca1e5f419d5e4b781924a5885a32dc49b32dd25e49ef849d7573b44862c4c6cb",
+    1
+   ],
+   "donor_counts": [
+    0,
+    11
+   ],
+   "heldout_counts": {
+    "sum-bits": 1,
+    "3mm": 30
+   }
+  },
+  "aa8e112e1ea8c8b201759400bc42fe7ad53660dc904f84e39d9bc004e90cb125": {
+   "shape": [
+    "948c04920e6ee8f2c93beb8c62744617a010ac71f39f7427f0b25f1413d45340",
+    "8090ab265b58d495f5e3e20f409377b6116f5354b68b03591185f6eff5a38998",
+    1
+   ],
+   "donor_counts": [
+    4,
+    0
+   ],
+   "heldout_counts": {
+    "sum-bits": 1,
+    "3mm": 0
+   }
+  },
+  "b33e68c6cba380262f00b3285b86da9da18ce58737cb2bfd2510b94e17390697": {
+   "shape": [
+    "4a32fa29bf7a85a1a51d59e016a257239301b65fc6db22260d95371e34ea79dd",
+    "39e6db7b8406c07248377e41d4833811733effbce6ecca39ca0bb1ba3af4c940",
+    2
+   ],
+   "donor_counts": [
+    0,
+    4
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "c18b6e14f77f57a4dc92f9215482681a147712d7316afe3eed7c165aa31a04c5": {
+   "shape": [
+    "011b20cd192cdb6a3cd7b726d27a1b39a95778a462bd39e54e3f6c21321ed5a3",
+    "ffa7222c5ec652deb9dafa4e476c848325b8930af730006f0bdd3aa73bd44fbe",
+    1
+   ],
+   "donor_counts": [
+    0,
+    48
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  },
+  "c8660d6d2ebc84c4d8a28440c5828507c4b636d2019642b4de8ba7ac947b1659": {
+   "shape": [
+    "10c9a01fbf9217040d3d4a135dfdd82d9f6141d81d93bf7d077d490f87625f62",
+    "20328381139e8b7c9659d18978e962447c5c751b22f9864b2b99e832b0060a2a",
+    1
+   ],
+   "donor_counts": [
+    37,
+    247
+   ],
+   "heldout_counts": {
+    "sum-bits": 30,
+    "3mm": 591
+   }
+  },
+  "cdf22c326db56acee0688234d8b52754c139b19368bd398aef42bb847f9bcadc": {
+   "shape": [
+    "948c04920e6ee8f2c93beb8c62744617a010ac71f39f7427f0b25f1413d45340",
+    "659577a9b0dfc5594e1a0f4bb66d7edc9cb226c033321a5afaca34f26baeafd8",
+    1
+   ],
+   "donor_counts": [
+    4,
+    0
+   ],
+   "heldout_counts": {
+    "sum-bits": 3,
+    "3mm": 1
+   }
+  },
+  "d8cf11fdca619e33fe29290a55cedb2024fb73ed7c1597afc6592cc3dd326a7c": {
+   "shape": [
+    "67862d2e9934b12804742d47658b8a5f156682567851987c952257899fa19827",
+    "67862d2e9934b12804742d47658b8a5f156682567851987c952257899fa19827",
+    1
+   ],
+   "donor_counts": [
+    4,
+    94
+   ],
+   "heldout_counts": {
+    "sum-bits": 5,
+    "3mm": 848
+   }
+  },
+  "e2477b6f9abfb035e805e2f21c7f85eb1b45e0d4e16f876b00065741339c4109": {
+   "shape": [
+    "fa404860d19c301c2ff6e836cc0c76af098af1096905306a9ab827bc60f58a9d",
+    "8090ab265b58d495f5e3e20f409377b6116f5354b68b03591185f6eff5a38998",
+    1
+   ],
+   "donor_counts": [
+    0,
+    7
+   ],
+   "heldout_counts": {
+    "sum-bits": 1,
+    "3mm": 26
+   }
+  },
+  "e4e57b3755d43b510be8dcc614c81e4f0c7d9596c5c77e23a003d758c9adddbc": {
+   "shape": [
+    "5f4ea90baac60e97ead9351829dde92b41c235fdc620d4efeea86fa7acf55a14",
+    "8090ab265b58d495f5e3e20f409377b6116f5354b68b03591185f6eff5a38998",
+    1
+   ],
+   "donor_counts": [
+    28,
+    153
+   ],
+   "heldout_counts": {
+    "sum-bits": 21,
+    "3mm": 700
+   }
+  },
+  "e87987a5db96aa160ea2914217f9a43944dac66b589d05bbef94edd17c9156d3": {
+   "shape": [
+    "1d2a3262b2839f5ca0a3901b0b1bbf872cada1679901858ac2b40f8d91264385",
+    "20328381139e8b7c9659d18978e962447c5c751b22f9864b2b99e832b0060a2a",
+    1
+   ],
+   "donor_counts": [
+    0,
+    12
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 106
+   }
+  },
+  "fea259a13f25a5beae18715efbf387ec8e9e0a2fbd4fa38267f261887bb4628c": {
+   "shape": [
+    "50d2c6072253cd240767172fa2e2f4ba11cecb8f8b2d8f39090d7dbda14c1584",
+    "624ad9393345abfa9d95cd74abd77963a06b45f2355db23fbaba10bf56031863",
+    1
+   ],
+   "donor_counts": [
+    2,
+    0
+   ],
+   "heldout_counts": {
+    "sum-bits": 0,
+    "3mm": 0
+   }
+  }
+ }
+}

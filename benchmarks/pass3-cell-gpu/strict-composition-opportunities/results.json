@@ -1,0 +1,1650 @@
+{
+ "dot-product": {
+  "counts": {
+   "root_commits": 6704,
+   "all_table_atoms_named": 4288,
+   "with_unprovided_table_atoms": 2416,
+   "dynamic_or_child_births_excluded": 136,
+   "eligible_typed_new_constructor_births": 2899,
+   "pair_children": 1107,
+   "chain_terminal_children": 295,
+   "strictly_new_typed_child_births_finally_visible": 418
+  },
+  "parts": {
+   "edge_multiple_distinct_physical_parents": 179,
+   "edge_multiple_distinct_table_names": 179,
+   "edge_has_named_external_input": 12,
+   "edge_child_final_visible_constructors_including_nested": 448,
+   "edge_strictly_new_child_births": 505
+  },
+  "census": {
+   "ground": {
+    "no_table_parent": 2
+   },
+   "multi": {
+    "missing_named_child_table_atom": 2415,
+    "unique_complete_direct_composition": 315,
+    "uncovered_other_table_parent": 2544,
+    "producer_has_unnamed_table_atom": 186,
+    "only_stale_birth": 37,
+    "uncovered_or_stale_version": 19
+   },
+   "unary": {
+    "unique_complete_direct_composition": 792,
+    "missing_named_child_table_atom": 1,
+    "no_named_typed_birth": 56,
+    "producer_has_unnamed_table_atom": 204,
+    "only_stale_birth": 133
+   }
+  },
+  "examples": {
+   "multi_only_ops": {
+    "producer": {
+     "serial": 1,
+     "ordinal": 1,
+     "run": 1,
+     "epoch": 1,
+     "rule": 375,
+     "provider": "single",
+     "source": "(rule ()\n      ((let __tmp0 (IntT ))\n       (let __tmp1 (StateT ))\n       (let __tmp2 (TNil ))\n       (let __tmp3 (TCons __tmp1 __tmp2))\n       (let __tmp4 (TCons __tmp0 __tmp3))\n ",
+     "named": []
+    },
+    "child": {
+     "serial": 15,
+     "ordinal": 15,
+     "run": 11,
+     "epoch": 11,
+     "rule": 279,
+     "provider": "multi",
+     "source": "complete-CellSpineView1",
+     "named": [
+      [
+       0,
+       "Const",
+       "Fact",
+       554050781208,
+       1
+      ],
+      [
+       1,
+       "Int",
+       "Fact",
+       554050781204,
+       1
+      ]
+     ]
+    },
+    "wiring": [
+     [
+      0,
+      "op",
+      24
+     ],
+     [
+      1,
+      "op",
+      20
+     ]
+    ],
+    "newly_born_evidence": [
+     [
+      "birth",
+      177,
+      [
+       {
+        "Eq": 554050781205
+       },
+       {
+        "Eq": 554050781197
+       },
+       {
+        "Eq": 554050781207
+       }
+      ],
+      {
+       "Eq": 554050781209
+      },
+      554050781208,
+      [
+       0,
+       375
+      ]
+     ],
+     [
+      "birth",
+      244,
+      [
+       {
+        "Int": 5
+       }
+      ],
+      {
+       "Eq": 554050781205
+      },
+      554050781204,
+      [
+       0,
+       375
+      ]
+     ]
+    ]
+   },
+   "unary_only_ops": {
+    "producer": {
+     "serial": 1,
+     "ordinal": 1,
+     "run": 1,
+     "epoch": 1,
+     "rule": 375,
+     "provider": "single",
+     "source": "(rule ()\n      ((let __tmp0 (IntT ))\n       (let __tmp1 (StateT ))\n       (let __tmp2 (TNil ))\n       (let __tmp3 (TCons __tmp1 __tmp2))\n       (let __tmp4 (TCons __tmp0 __tmp3))\n ",
+     "named": []
+    },
+    "child": {
+     "serial": 124,
+     "ordinal": 77,
+     "run": 14,
+     "epoch": 14,
+     "rule": 536,
+     "provider": "single",
+     "source": "(rule ((= lhs (Alloc _id amt state ty)))\n      ((ExpectType amt (Base (IntT )) '(Alloc)'))\n        :ruleset type-analysis )",
+     "named": [
+      [
+       0,
+       "Alloc",
+       "Fact",
+       554050781216,
+       1
+      ]
+     ]
+    },
+    "wiring": [
+     [
+      0,
+      "op",
+      32
+     ]
+    ],
+    "newly_born_evidence": [
+     [
+      "birth",
+      12,
+      [
+       {
+        "Int": 0
+       },
+       {
+        "Eq": 554050781209
+       },
+       {
+        "Eq": 554050781213
+       },
+       {
+        "Eq": 554050781215
+       }
+      ],
+      {
+       "Eq": 554050781217
+      },
+      554050781216,
+      [
+       0,
+       375
+      ]
+     ]
+    ]
+   },
+   "multi_input_and_op": {
+    "producer": {
+     "serial": 3665,
+     "ordinal": 1896,
+     "run": 149,
+     "epoch": 149,
+     "rule": 249,
+     "provider": "multi",
+     "source": "(rule ((= loop (DoWhile inputs pred-and-body))\n       (ContextOf inputs loop-input-ctx)\n       (ContextOf pred-and-body loop-output-ctx)\n       (= constant (Const c out-type loop-o",
+     "named": [
+      [
+       0,
+       "DoWhile",
+       "Fact",
+       554050781534,
+       1
+      ],
+      [
+       1,
+       "ContextOf",
+       "Fact",
+       6816113098753,
+       142
+      ],
+      [
+       2,
+       "ContextOf",
+       "Fact",
+       7580617277441,
+       145
+      ],
+      [
+       3,
+       "Const",
+       "Fact",
+       554050781208,
+       1
+      ],
+      [
+       4,
+       "HasArgType",
+       "Fact",
+       2040109465601,
+       31
+      ]
+     ]
+    },
+    "child": {
+     "serial": 4016,
+     "ordinal": 2103,
+     "run": 153,
+     "epoch": 153,
+     "rule": 249,
+     "provider": "multi",
+     "source": "(rule ((= loop (DoWhile inputs pred-and-body))\n       (ContextOf inputs loop-input-ctx)\n       (ContextOf pred-and-body loop-output-ctx)\n       (= constant (Const c out-type loop-o",
+     "named": [
+      [
+       0,
+       "DoWhile",
+       "Fact",
+       554050781534,
+       1
+      ],
+      [
+       1,
+       "ContextOf",
+       "Fact",
+       6816113098753,
+       142
+      ],
+      [
+       2,
+       "ContextOf",
+       "Fact",
+       7580617277441,
+       145
+      ],
+      [
+       3,
+       "Const",
+       "Fact",
+       8693013807106,
+       149
+      ],
+      [
+       4,
+       "HasArgType",
+       "Fact",
+       2040109465601,
+       31
+      ]
+     ]
+    },
+    "wiring": [
+     [
+      0,
+      "input",
+      0
+     ],
+     [
+      1,
+      "input",
+      1
+     ],
+     [
+      2,
+      "input",
+      2
+     ],
+     [
+      3,
+      "op",
+      2
+     ],
+     [
+      4,
+      "input",
+      4
+     ]
+    ],
+    "newly_born_evidence": [
+     [
+      "birth",
+      177,
+      [
+       {
+        "Eq": 554050781205
+       },
+       {
+        "Eq": 554050781493
+       },
+       {
+        "Eq": 554050781207
+       }
+      ],
+      {
+       "Eq": 8693013807119
+      },
+      8693013807106,
+      [
+       189,
+       249
+      ]
+     ]
+    ]
+   },
+   "three_member_chain": {
+    "serials": [
+     1,
+     129,
+     1664
+    ],
+    "runs": [
+     1,
+     14,
+     131
+    ],
+    "rules": [
+     375,
+     546,
+     58
+    ],
+    "edge_maps": [
+     [
+      375,
+      546,
+      13,
+      [
+       [
+        0,
+        "op",
+        272
+       ]
+      ],
+      1
+     ],
+     [
+      546,
+      58,
+      117,
+      [
+       [
+        0,
+        "op",
+        1
+       ]
+      ],
+      1
+     ]
+    ]
+   }
+  },
+  "reference": {
+   "runs": 1535,
+   "rhs": 6704,
+   "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "commits": "2e85ad92a526f54bc9603e081cd3b7ec654261dae09071c97ebf380d0df8fbc4",
+   "physical": "cc8f1bf52f1c7edc3d6146c990ba59f5a33b26e6d4cae551f407e5632c4f0254",
+   "ordered_source_birth_events": "74335203962333cf41ef05fa9c29f227a23de907d01866d5a113e11c154a5b48"
+  },
+  "pair_children_sha": "25c094816f283c2c7b05510939685da5a7d80105b50c7e7359ee3256ed8307c8",
+  "chain_children_sha": "15c118bda35e520abb2c462ee08ec799332630abd85f68b8447787da41cd7880",
+  "pair_categories": {
+   "multi_distinct_refs": 179,
+   "unary": 792,
+   "multi_aliased_single_ref": 136
+  },
+  "triple_terminal_categories": {
+   "unary": 268,
+   "multi_distinct_refs": 13,
+   "multi_aliased_single_ref": 14
+  },
+  "pair_ground_producer": {
+   "multi_distinct_refs": 32,
+   "unary": 232
+  },
+  "pair_view_completion_consumers": {
+   "multi_distinct_refs": 163,
+   "multi_aliased_single_ref": 136
+  },
+  "pair_shapes": 303,
+  "triple_shapes": 165
+ },
+ "jacobi-1d": {
+  "counts": {
+   "root_commits": 41319,
+   "all_table_atoms_named": 25581,
+   "with_unprovided_table_atoms": 15738,
+   "dynamic_or_child_births_excluded": 485,
+   "eligible_typed_new_constructor_births": 18830,
+   "pair_children": 4631,
+   "chain_terminal_children": 1347,
+   "strictly_new_typed_child_births_finally_visible": 1700
+  },
+  "parts": {
+   "edge_multiple_distinct_physical_parents": 716,
+   "edge_multiple_distinct_table_names": 701,
+   "edge_has_named_external_input": 109,
+   "edge_child_final_visible_constructors_including_nested": 1811,
+   "edge_strictly_new_child_births": 2268
+  },
+  "census": {
+   "ground": {
+    "no_table_parent": 2
+   },
+   "multi": {
+    "missing_named_child_table_atom": 15737,
+    "unique_complete_direct_composition": 1220,
+    "uncovered_other_table_parent": 16491,
+    "producer_has_unnamed_table_atom": 945,
+    "only_stale_birth": 802,
+    "uncovered_or_stale_version": 269
+   },
+   "unary": {
+    "unique_complete_direct_composition": 3411,
+    "missing_named_child_table_atom": 1,
+    "no_named_typed_birth": 108,
+    "only_stale_birth": 1013,
+    "producer_has_unnamed_table_atom": 1320
+   }
+  },
+  "examples": {
+   "multi_only_ops": {
+    "producer": {
+     "serial": 1,
+     "ordinal": 1,
+     "run": 1,
+     "epoch": 1,
+     "rule": 375,
+     "provider": "single",
+     "source": "(rule ()\n      ((let __tmp0 (StateT ))\n       (let __tmp1 (TNil ))\n       (let __tmp2 (TCons __tmp0 __tmp1))\n       (let __tmp3 (TupleT __tmp2))\n       (let __tmp4 (Print ))\n      ",
+     "named": []
+    },
+    "child": {
+     "serial": 40,
+     "ordinal": 40,
+     "run": 15,
+     "epoch": 15,
+     "rule": 279,
+     "provider": "multi",
+     "source": "complete-CellSpineView1",
+     "named": [
+      [
+       0,
+       "Const",
+       "Fact",
+       554050781200,
+       1
+      ],
+      [
+       1,
+       "Int",
+       "Fact",
+       554050781196,
+       1
+      ]
+     ]
+    },
+    "wiring": [
+     [
+      0,
+      "op",
+      16
+     ],
+     [
+      1,
+      "op",
+      12
+     ]
+    ],
+    "newly_born_evidence": [
+     [
+      "birth",
+      177,
+      [
+       {
+        "Eq": 554050781197
+       },
+       {
+        "Eq": 554050781191
+       },
+       {
+        "Eq": 554050781199
+       }
+      ],
+      {
+       "Eq": 554050781201
+      },
+      554050781200,
+      [
+       0,
+       375
+      ]
+     ],
+     [
+      "birth",
+      244,
+      [
+       {
+        "Int": 0
+       }
+      ],
+      {
+       "Eq": 554050781197
+      },
+      554050781196,
+      [
+       0,
+       375
+      ]
+     ]
+    ]
+   },
+   "unary_only_ops": {
+    "producer": {
+     "serial": 1,
+     "ordinal": 1,
+     "run": 1,
+     "epoch": 1,
+     "rule": 375,
+     "provider": "single",
+     "source": "(rule ()\n      ((let __tmp0 (StateT ))\n       (let __tmp1 (TNil ))\n       (let __tmp2 (TCons __tmp0 __tmp1))\n       (let __tmp3 (TupleT __tmp2))\n       (let __tmp4 (Print ))\n      ",
+     "named": []
+    },
+    "child": {
+     "serial": 324,
+     "ordinal": 228,
+     "run": 18,
+     "epoch": 18,
+     "rule": 536,
+     "provider": "single",
+     "source": "(rule ((= lhs (Alloc _id amt state ty)))\n      ((ExpectType amt (Base (IntT )) '(Alloc)'))\n        :ruleset type-analysis )",
+     "named": [
+      [
+       0,
+       "Alloc",
+       "Fact",
+       554050781220,
+       1
+      ]
+     ]
+    },
+    "wiring": [
+     [
+      0,
+      "op",
+      36
+     ]
+    ],
+    "newly_born_evidence": [
+     [
+      "birth",
+      12,
+      [
+       {
+        "Int": 0
+       },
+       {
+        "Eq": 554050781205
+       },
+       {
+        "Eq": 554050781215
+       },
+       {
+        "Eq": 554050781219
+       }
+      ],
+      {
+       "Eq": 554050781221
+      },
+      554050781220,
+      [
+       0,
+       375
+      ]
+     ]
+    ]
+   },
+   "multi_input_and_op": {
+    "producer": {
+     "serial": 12986,
+     "ordinal": 7317,
+     "run": 241,
+     "epoch": 241,
+     "rule": 249,
+     "provider": "multi",
+     "source": "(rule ((= loop (DoWhile inputs pred-and-body))\n       (ContextOf inputs loop-input-ctx)\n       (ContextOf pred-and-body loop-output-ctx)\n       (= constant (Const c out-type loop-o",
+     "named": [
+      [
+       0,
+       "DoWhile",
+       "Fact",
+       554050781982,
+       1
+      ],
+      [
+       1,
+       "ContextOf",
+       "Fact",
+       25129853648897,
+       237
+      ],
+      [
+       2,
+       "ContextOf",
+       "Fact",
+       19589345837057,
+       233
+      ],
+      [
+       3,
+       "Const",
+       "Fact",
+       554050781604,
+       1
+      ],
+      [
+       4,
+       "HasArgType",
+       "Fact",
+       5789615915009,
+       38
+      ]
+     ]
+    },
+    "child": {
+     "serial": 15174,
+     "ordinal": 8647,
+     "run": 245,
+     "epoch": 245,
+     "rule": 249,
+     "provider": "multi",
+     "source": "(rule ((= loop (DoWhile inputs pred-and-body))\n       (ContextOf inputs loop-input-ctx)\n       (ContextOf pred-and-body loop-output-ctx)\n       (= constant (Const c out-type loop-o",
+     "named": [
+      [
+       0,
+       "DoWhile",
+       "Fact",
+       554050781982,
+       1
+      ],
+      [
+       1,
+       "ContextOf",
+       "Fact",
+       25129853648897,
+       237
+      ],
+      [
+       2,
+       "ContextOf",
+       "Fact",
+       19589345837057,
+       233
+      ],
+      [
+       3,
+       "Const",
+       "Fact",
+       31976031518722,
+       241
+      ],
+      [
+       4,
+       "HasArgType",
+       "Fact",
+       5789615915009,
+       38
+      ]
+     ]
+    },
+    "wiring": [
+     [
+      0,
+      "input",
+      0
+     ],
+     [
+      1,
+      "input",
+      1
+     ],
+     [
+      2,
+      "input",
+      2
+     ],
+     [
+      3,
+      "op",
+      2
+     ],
+     [
+      4,
+      "input",
+      4
+     ]
+    ],
+    "newly_born_evidence": [
+     [
+      "birth",
+      177,
+      [
+       {
+        "Eq": 554050781603
+       },
+       {
+        "Eq": 554050781191
+       },
+       {
+        "Eq": 554050781199
+       }
+      ],
+      {
+       "Eq": 31976031518735
+      },
+      31976031518722,
+      [
+       1170,
+       249
+      ]
+     ]
+    ]
+   },
+   "three_member_chain": {
+    "serials": [
+     1,
+     345,
+     5135
+    ],
+    "runs": [
+     1,
+     18,
+     225
+    ],
+    "rules": [
+     375,
+     546,
+     58
+    ],
+    "edge_maps": [
+     [
+      375,
+      546,
+      17,
+      [
+       [
+        0,
+        "op",
+        192
+       ]
+      ],
+      1
+     ],
+     [
+      546,
+      58,
+      207,
+      [
+       [
+        0,
+        "op",
+        1
+       ]
+      ],
+      1
+     ]
+    ]
+   }
+  },
+  "reference": {
+   "runs": 1990,
+   "rhs": 41319,
+   "state_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "commits": "91bb59fa3f7b37786b754c789d1ec94dd1254fbcaf7a88447b3da9cec7d6d7fb",
+   "physical": "e92e1826ceb532460001bbc3ec28e31be10736cdba00c0072e484a2516448bae",
+   "ordered_source_birth_events": "51588e2237c6112956ab95ef10d02b6a1b603ec3c3ca1fc379959813e8d6f3d8"
+  },
+  "pair_children_sha": "34dbfd99aaf22c074a20bb709c7d0af468081db5bf284b7b3e31bdcfa60a4168",
+  "chain_children_sha": "903c65c30da7f141498176dadd478f614056289d86a9ec48ac96c596e78803fc",
+  "pair_categories": {
+   "multi_distinct_refs": 716,
+   "unary": 3411,
+   "multi_aliased_single_ref": 504
+  },
+  "triple_terminal_categories": {
+   "unary": 1322,
+   "multi_distinct_refs": 12,
+   "multi_aliased_single_ref": 13
+  },
+  "pair_ground_producer": {
+   "multi_distinct_refs": 104,
+   "unary": 660
+  },
+  "pair_view_completion_consumers": {
+   "multi_distinct_refs": 575,
+   "multi_aliased_single_ref": 504
+  },
+  "pair_shapes": 815,
+  "triple_shapes": 459
+ },
+ "sum-bits": {
+  "counts": {
+   "root_commits": 7265,
+   "all_table_atoms_named": 5228,
+   "with_unprovided_table_atoms": 2037,
+   "dynamic_or_child_births_excluded": 103,
+   "eligible_typed_new_constructor_births": 3507,
+   "pair_children": 973,
+   "chain_terminal_children": 207,
+   "strictly_new_typed_child_births_finally_visible": 227
+  },
+  "parts": {
+   "edge_multiple_distinct_physical_parents": 181,
+   "edge_multiple_distinct_table_names": 181,
+   "edge_has_named_external_input": 27,
+   "edge_child_final_visible_constructors_including_nested": 251,
+   "edge_strictly_new_child_births": 364
+  },
+  "census": {
+   "ground": {
+    "no_table_parent": 2
+   },
+   "multi": {
+    "missing_named_child_table_atom": 2036,
+    "unique_complete_direct_composition": 321,
+    "uncovered_other_table_parent": 2934,
+    "only_stale_birth": 279,
+    "producer_has_unnamed_table_atom": 301,
+    "uncovered_or_stale_version": 84
+   },
+   "unary": {
+    "unique_complete_direct_composition": 652,
+    "missing_named_child_table_atom": 1,
+    "no_named_typed_birth": 28,
+    "producer_has_unnamed_table_atom": 283,
+    "only_stale_birth": 344
+   }
+  },
+  "examples": {
+   "multi_only_ops": {
+    "producer": {
+     "serial": 1,
+     "ordinal": 1,
+     "run": 1,
+     "epoch": 1,
+     "rule": 375,
+     "provider": "single",
+     "source": "(rule ()\n      ((let __tmp0 (IntT ))\n       (let __tmp1 (StateT ))\n       (let __tmp2 (TNil ))\n       (let __tmp3 (TCons __tmp1 __tmp2))\n       (let __tmp4 (TCons __tmp0 __tmp3))\n ",
+     "named": []
+    },
+    "child": {
+     "serial": 11,
+     "ordinal": 11,
+     "run": 9,
+     "epoch": 9,
+     "rule": 279,
+     "provider": "multi",
+     "source": "complete-CellSpineView1",
+     "named": [
+      [
+       0,
+       "Const",
+       "Fact",
+       554050781210,
+       1
+      ],
+      [
+       1,
+       "Int",
+       "Fact",
+       554050781208,
+       1
+      ]
+     ]
+    },
+    "wiring": [
+     [
+      0,
+      "op",
+      26
+     ],
+     [
+      1,
+      "op",
+      24
+     ]
+    ],
+    "newly_born_evidence": [
+     [
+      "birth",
+      177,
+      [
+       {
+        "Eq": 554050781209
+       },
+       {
+        "Eq": 554050781195
+       },
+       {
+        "Eq": 554050781201
+       }
+      ],
+      {
+       "Eq": 554050781211
+      },
+      554050781210,
+      [
+       0,
+       375
+      ]
+     ],
+     [
+      "birth",
+      244,
+      [
+       {
+        "Int": 0
+       }
+      ],
+      {
+       "Eq": 554050781209
+      },
+      554050781208,
+      [
+       0,
+       375
+      ]
+     ]
+    ]
+   },
+   "unary_only_ops": {
+    "producer": {
+     "serial": 1,
+     "ordinal": 1,
+     "run": 1,
+     "epoch": 1,
+     "rule": 375,
+     "provider": "single",
+     "source": "(rule ()\n      ((let __tmp0 (IntT ))\n       (let __tmp1 (StateT ))\n       (let __tmp2 (TNil ))\n       (let __tmp3 (TCons __tmp1 __tmp2))\n       (let __tmp4 (TCons __tmp0 __tmp3))\n ",
+     "named": []
+    },
+    "child": {
+     "serial": 60,
+     "ordinal": 50,
+     "run": 12,
+     "epoch": 12,
+     "rule": 541,
+     "provider": "single",
+     "source": "(rule ((= lhs (If pred inputs then else)))\n      ((ExpectType pred (Base (BoolT )) 'If predicate must be boolean'))\n        :ruleset type-analysis )",
+     "named": [
+      [
+       0,
+       "If",
+       "Fact",
+       554050781328,
+       1
+      ]
+     ]
+    },
+    "wiring": [
+     [
+      0,
+      "op",
+      144
+     ]
+    ],
+    "newly_born_evidence": [
+     [
+      "birth",
+      235,
+      [
+       {
+        "Eq": 554050781255
+       },
+       {
+        "Eq": 554050781249
+       },
+       {
+        "Eq": 554050781249
+       },
+       {
+        "Eq": 554050781327
+       }
+      ],
+      {
+       "Eq": 554050781329
+      },
+      554050781328,
+      [
+       0,
+       375
+      ]
+     ]
+    ]
+   },
+   "multi_input_and_op": {
+    "producer": {
+     "serial": 6351,
+     "ordinal": 3665,
+     "run": 589,
+     "epoch": 589,
+     "rule": 522,
+     "provider": "multi",
+     "source": "(rule ((= lhs (Concat e1 e2))\n       (HasArgType e1 ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+     "named": [
+      [
+       0,
+       "Concat",
+       "Fact",
+       15311558410244,
+       580
+      ],
+      [
+       1,
+       "HasArgType",
+       "Fact",
+       16449724743684,
+       586
+      ]
+     ]
+    },
+    "child": {
+     "serial": 6391,
+     "ordinal": 3694,
+     "run": 592,
+     "epoch": 592,
+     "rule": 523,
+     "provider": "multi",
+     "source": "(rule ((= lhs (Concat e1 e2))\n       (HasArgType e2 ty))\n      ((HasArgType lhs ty))\n        :ruleset type-analysis )",
+     "named": [
+      [
+       0,
+       "Concat",
+       "Fact",
+       15311558410244,
+       580
+      ],
+      [
+       1,
+       "HasArgType",
+       "Fact",
+       16535624089601,
+       589
+      ]
+     ]
+    },
+    "wiring": [
+     [
+      0,
+      "input",
+      0
+     ],
+     [
+      1,
+      "op",
+      1
+     ]
+    ],
+    "newly_born_evidence": [
+     [
+      "birth",
+      227,
+      [
+       {
+        "Eq": 12936441495588
+       },
+       {
+        "Eq": 1494648619020
+       }
+      ],
+      {
+       "Eq": 16535624089607
+      },
+      16535624089601,
+      [
+       6,
+       522
+      ]
+     ]
+    ]
+   },
+   "three_member_chain": {
+    "serials": [
+     1,
+     64,
+     719
+    ],
+    "runs": [
+     1,
+     12,
+     98
+    ],
+    "rules": [
+     375,
+     546,
+     58
+    ],
+    "edge_maps": [
+     [
+      375,
+      546,
+      11,
+      [
+       [
+        0,
+        "op",
+        148
+       ]
+      ],
+      1
+     ],
+     [
+      546,
+      58,
+      86,
+      [
+       [
+        0,
+        "op",
+        1
+       ]
+      ],
+      1
+     ]
+    ]
+   }
+  },
+  "reference": {
+   "runs": 1428,
+   "rhs": 7265,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "commits": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+   "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+   "ordered_source_birth_events": "781e472dc80d81bb6dd2c4ccd249bcfeb0599269bc11779c68eabe69bcb36d9c"
+  },
+  "pair_children_sha": "72471e41201d1b6b3ddf82dd089077e1cce18fda25c0f72013c17ca361a40150",
+  "chain_children_sha": "b54724b6fa6780eb1b591ca3fdbcc8f36e3baaafceb875f91b00285b150719fd",
+  "pair_categories": {
+   "multi_distinct_refs": 181,
+   "unary": 652,
+   "multi_aliased_single_ref": 140
+  },
+  "triple_terminal_categories": {
+   "unary": 200,
+   "multi_distinct_refs": 3,
+   "multi_aliased_single_ref": 4
+  },
+  "pair_ground_producer": {
+   "multi_distinct_refs": 14,
+   "unary": 116
+  },
+  "pair_view_completion_consumers": {
+   "multi_distinct_refs": 154,
+   "multi_aliased_single_ref": 140
+  },
+  "pair_shapes": 199,
+  "triple_shapes": 103
+ },
+ "3mm": {
+  "counts": {
+   "root_commits": 294917,
+   "all_table_atoms_named": 160694,
+   "with_unprovided_table_atoms": 134223,
+   "dynamic_or_child_births_excluded": 1757,
+   "eligible_typed_new_constructor_births": 117746,
+   "pair_children": 25487,
+   "chain_terminal_children": 9028,
+   "strictly_new_typed_child_births_finally_visible": 9500
+  },
+  "parts": {
+   "edge_multiple_distinct_physical_parents": 3145,
+   "edge_multiple_distinct_table_names": 3072,
+   "edge_has_named_external_input": 461,
+   "edge_child_final_visible_constructors_including_nested": 9887,
+   "edge_strictly_new_child_births": 13760
+  },
+  "census": {
+   "ground": {
+    "no_table_parent": 2
+   },
+   "multi": {
+    "missing_named_child_table_atom": 134222,
+    "unique_complete_direct_composition": 5303,
+    "uncovered_other_table_parent": 113765,
+    "producer_has_unnamed_table_atom": 3354,
+    "only_stale_birth": 3881,
+    "uncovered_or_stale_version": 2527
+   },
+   "unary": {
+    "unique_complete_direct_composition": 20184,
+    "missing_named_child_table_atom": 1,
+    "no_named_typed_birth": 685,
+    "producer_has_unnamed_table_atom": 5808,
+    "only_stale_birth": 5185
+   }
+  },
+  "examples": {
+   "multi_only_ops": {
+    "producer": {
+     "serial": 1,
+     "ordinal": 1,
+     "run": 1,
+     "epoch": 1,
+     "rule": 375,
+     "provider": "single",
+     "source": "(rule ()\n      ((let __tmp0 (StateT ))\n       (let __tmp1 (TNil ))\n       (let __tmp2 (TCons __tmp0 __tmp1))\n       (let __tmp3 (TupleT __tmp2))\n       (let __tmp4 (Print ))\n      ",
+     "named": []
+    },
+    "child": {
+     "serial": 205,
+     "ordinal": 205,
+     "run": 27,
+     "epoch": 27,
+     "rule": 279,
+     "provider": "multi",
+     "source": "complete-CellSpineView1",
+     "named": [
+      [
+       0,
+       "Const",
+       "Fact",
+       554050781200,
+       1
+      ],
+      [
+       1,
+       "Int",
+       "Fact",
+       554050781196,
+       1
+      ]
+     ]
+    },
+    "wiring": [
+     [
+      0,
+      "op",
+      16
+     ],
+     [
+      1,
+      "op",
+      12
+     ]
+    ],
+    "newly_born_evidence": [
+     [
+      "birth",
+      177,
+      [
+       {
+        "Eq": 554050781197
+       },
+       {
+        "Eq": 554050781191
+       },
+       {
+        "Eq": 554050781199
+       }
+      ],
+      {
+       "Eq": 554050781201
+      },
+      554050781200,
+      [
+       0,
+       375
+      ]
+     ],
+     [
+      "birth",
+      244,
+      [
+       {
+        "Int": 0
+       }
+      ],
+      {
+       "Eq": 554050781197
+      },
+      554050781196,
+      [
+       0,
+       375
+      ]
+     ]
+    ]
+   },
+   "unary_only_ops": {
+    "producer": {
+     "serial": 1,
+     "ordinal": 1,
+     "run": 1,
+     "epoch": 1,
+     "rule": 375,
+     "provider": "single",
+     "source": "(rule ()\n      ((let __tmp0 (StateT ))\n       (let __tmp1 (TNil ))\n       (let __tmp2 (TCons __tmp0 __tmp1))\n       (let __tmp3 (TupleT __tmp2))\n       (let __tmp4 (Print ))\n      ",
+     "named": []
+    },
+    "child": {
+     "serial": 1228,
+     "ordinal": 1074,
+     "run": 30,
+     "epoch": 30,
+     "rule": 536,
+     "provider": "single",
+     "source": "(rule ((= lhs (Alloc _id amt state ty)))\n      ((ExpectType amt (Base (IntT )) '(Alloc)'))\n        :ruleset type-analysis )",
+     "named": [
+      [
+       0,
+       "Alloc",
+       "Fact",
+       554050781240,
+       1
+      ]
+     ]
+    },
+    "wiring": [
+     [
+      0,
+      "op",
+      56
+     ]
+    ],
+    "newly_born_evidence": [
+     [
+      "birth",
+      12,
+      [
+       {
+        "Int": 0
+       },
+       {
+        "Eq": 554050781233
+       },
+       {
+        "Eq": 554050781235
+       },
+       {
+        "Eq": 554050781239
+       }
+      ],
+      {
+       "Eq": 554050781241
+      },
+      554050781240,
+      [
+       0,
+       375
+      ]
+     ]
+    ]
+   },
+   "multi_input_and_op": {
+    "producer": {
+     "serial": 87125,
+     "ordinal": 42043,
+     "run": 839,
+     "epoch": 839,
+     "rule": 249,
+     "provider": "multi",
+     "source": "(rule ((= loop (DoWhile inputs pred-and-body))\n       (ContextOf inputs loop-input-ctx)\n       (ContextOf pred-and-body loop-output-ctx)\n       (= constant (Const c out-type loop-o",
+     "named": [
+      [
+       0,
+       "DoWhile",
+       "Fact",
+       554050784568,
+       1
+      ],
+      [
+       1,
+       "ContextOf",
+       "Fact",
+       147935853543425,
+       835
+      ],
+      [
+       2,
+       "ContextOf",
+       "Fact",
+       121423020425217,
+       831
+      ],
+      [
+       3,
+       "Const",
+       "Fact",
+       554050781206,
+       1
+      ],
+      [
+       4,
+       "HasArgType",
+       "Fact",
+       34153579937793,
+       57
+      ]
+     ]
+    },
+    "child": {
+     "serial": 98777,
+     "ordinal": 49883,
+     "run": 843,
+     "epoch": 843,
+     "rule": 249,
+     "provider": "multi",
+     "source": "(rule ((= loop (DoWhile inputs pred-and-body))\n       (ContextOf inputs loop-input-ctx)\n       (ContextOf pred-and-body loop-output-ctx)\n       (= constant (Const c out-type loop-o",
+     "named": [
+      [
+       0,
+       "DoWhile",
+       "Fact",
+       554050784568,
+       1
+      ],
+      [
+       1,
+       "ContextOf",
+       "Fact",
+       147935853543425,
+       835
+      ],
+      [
+       2,
+       "ContextOf",
+       "Fact",
+       121423020425217,
+       831
+      ],
+      [
+       3,
+       "Const",
+       "Fact",
+       181123065839618,
+       839
+      ],
+      [
+       4,
+       "HasArgType",
+       "Fact",
+       34153579937793,
+       57
+      ]
+     ]
+    },
+    "wiring": [
+     [
+      0,
+      "input",
+      0
+     ],
+     [
+      1,
+      "input",
+      1
+     ],
+     [
+      2,
+      "input",
+      2
+     ],
+     [
+      3,
+      "op",
+      2
+     ],
+     [
+      4,
+      "input",
+      4
+     ]
+    ],
+    "newly_born_evidence": [
+     [
+      "birth",
+      177,
+      [
+       {
+        "Eq": 554050781205
+       },
+       {
+        "Eq": 554050783925
+       },
+       {
+        "Eq": 554050781199
+       }
+      ],
+      {
+       "Eq": 181123065839631
+      },
+      181123065839618,
+      [
+       5393,
+       249
+      ]
+     ]
+    ]
+   },
+   "three_member_chain": {
+    "serials": [
+     1,
+     1292,
+     43406
+    ],
+    "runs": [
+     1,
+     30,
+     822
+    ],
+    "rules": [
+     375,
+     546,
+     58
+    ],
+    "edge_maps": [
+     [
+      375,
+      546,
+      29,
+      [
+       [
+        0,
+        "op",
+        736
+       ]
+      ],
+      1
+     ],
+     [
+      546,
+      58,
+      792,
+      [
+       [
+        0,
+        "op",
+        1
+       ]
+      ],
+      1
+     ]
+    ]
+   }
+  },
+  "reference": {
+   "runs": 4260,
+   "rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "commits": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+   "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+   "ordered_source_birth_events": "db22a1ba2d72d8b45b0f037d110b0eb264da924a3c9bcd7488152796a304f8ea"
+  },
+  "pair_children_sha": "3a96ae4cb6dcf0a040545ccc6df189c60da4da9b6cc767230d67b0b4a0beb916",
+  "chain_children_sha": "b3e6be31dd6356e9590aa2d75bb06450fc624ed9c74272c22fbd8e2aee7748c7",
+  "pair_categories": {
+   "multi_distinct_refs": 3145,
+   "unary": 20184,
+   "multi_aliased_single_ref": 2158
+  },
+  "triple_terminal_categories": {
+   "unary": 8991,
+   "multi_distinct_refs": 18,
+   "multi_aliased_single_ref": 19
+  },
+  "pair_ground_producer": {
+   "multi_distinct_refs": 525,
+   "unary": 3575
+  },
+  "pair_view_completion_consumers": {
+   "multi_distinct_refs": 2503,
+   "multi_aliased_single_ref": 2158
+  },
+  "pair_shapes": 4157,
+  "triple_shapes": 2988
+ }
+}
