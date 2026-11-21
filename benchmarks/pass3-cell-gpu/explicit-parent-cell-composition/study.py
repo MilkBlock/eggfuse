@@ -8,7 +8,12 @@ sp=importlib.util.spec_from_file_location('strict_bake',HERE/'bake.py');bake=imp
 def run(a):
     a.out.mkdir(parents=True,exist_ok=True);res={};lib=json.loads(a.library.read_bytes())
     prov={"trust_index":getattr(a,"trust_index",None),"source_dir":getattr(a,"source_dir",None)}
+    publication=getattr(a,"set_publication",False)
     stored=getattr(a,"ripsat_library",None)
+    if publication and stored is None and not getattr(a,"ripsat_evidence",None):
+        raise ValueError("--set-publication requires --ripsat-library or --ripsat-evidence")
+    if publication:
+        prov["set_publication"]=True
     if stored is not None and len(a.cases)!=1:
         raise ValueError("a precompiled RipSat library requires exactly one --cases target")
     if getattr(a,"donor",None) and not getattr(a,"ripsat_evidence",None):
@@ -24,7 +29,11 @@ def run(a):
             cfg["ripsat"]=bake.settings(req,artifact["strict_named"])
         elif stored is not None:
             verified=bake.ripsat["load_checked"](stored,p,**prov)
-            cfg["ripsat"]=bake.settings(req,verified["strict_named"])
+            artifact=verified
+            cfg["ripsat"]=bake.settings(req,artifact["strict_named"])
+        if publication:
+            cfg["ripsat"]=bake.settings(req,dict(artifact["strict_named"],partial=True))
+            cfg["ripsat_set"]=bake.settings(req,artifact["set_publication_authorization"]["strict_named"])
         if getattr(a,"partial",False):
             cfg={key:dict(value,strict_named=dict(value["strict_named"],partial=True)) for key,value in cfg.items()}
         vd=a.exp/'compact-vanilla-20261121';arms={}
@@ -32,6 +41,8 @@ def run(a):
         for n,req in cfg.items():
             with src.base.session(a.native,p,plan)as get:v=get(dict(req,audit=True,birth_ledger=True))
             assert 'source_error' not in v,(case,n,v.get('source_error'))
+            if publication and n!='leaf':
+                bake.ripsat["require_runtime_publication"](v)
             q=src.base.summarize(v,gold);del q['work'],q['rows']
             births=v['constructor_births'];owned={x[0]:x[4] for x in births['rows'] if x[3] and x[7]&1 and x[4]};end={x[0] for x in births['endpoint'] if x[2]==0}
             children=v['merge_child']['issued'];issued=sum(int(x['selected'])for x in children);packets=sum(q['emitted'])+issued
@@ -47,6 +58,12 @@ def run(a):
                 assert c.get('released',0)==c.get('actual_internal',0)==c.get('source_commits',0)+stats.get('uncommitted',0)==base['emitted'][0]-q['emitted'][0]
                 q['by_depth']=[[sum(cnt[i] for path,cnt in q['stats']['routes'] if len(path)==depth) for i in range(3)]for depth in (1,2)]
                 assert q['by_depth'][1][2]==c['two_with_internal_parent']
+            if n=="ripsat_set":
+                counters=bake.ripsat["require_runtime_publication"](v)
+                if (counters["confirmed"]!=q["by_depth"][1][2] or
+                    counters["active_middles"]!=q["by_depth"][0][2] or
+                    counters["encoded"]!=q["stats"]["counts"]["tagged"]):
+                    raise ValueError("Set publication report disagrees with the authenticated second hop")
             arms[n]=q
             print(case,n,q['emitted'],q.get('by_depth'),q['yield_per_packet'],flush=True)
             del v
@@ -60,6 +77,8 @@ def run(a):
                 seq=names[lap%len(names):]+names[:lap%len(names)]
                 for n in seq if lap%2 else reversed(seq):
                     v=get(cfg[n]);assert v['state_sha']==gold['state_sha'] and v['runs']==gold['runs'] and v['root_recipe']['emitted']==arms[n]['emitted']
+                    if n=="ripsat_set" and bake.ripsat["require_runtime_publication"](v)!=arms[n]["stats"]["set_publication"]:
+                        raise ValueError("production Set publication differs from the audited program")
                     if n!='leaf':arms[n]['production']=(v['strict_named'] or {}).get('counts',{});assert arms[n]['production'].get('source_commits',0)==(arms[n]['stats'] or {}).get('counts',{}).get('source_commits',0)
                     if lap:arms[n]['ms'].append(v['ms'])
         for q in arms.values():q['median_ms']=median(q['ms'])

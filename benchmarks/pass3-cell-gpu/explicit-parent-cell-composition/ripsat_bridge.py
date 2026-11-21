@@ -5,6 +5,7 @@ import importlib.util
 import json
 import os
 from pathlib import Path
+from runpy import run_path
 import tempfile
 
 HERE = Path(__file__).resolve().parent
@@ -24,7 +25,7 @@ def donor_paths(items):
     return donors
 
 
-def build(evidence, donors, target, *, trust_index=None, source_dir=None):
+def build(evidence, donors, target, *, trust_index=None, source_dir=None, set_publication=False):
     """The adapter rechecks the evidence and relinks the static edges to this target."""
     path = HERE.parent / "ripsat-strict-programs/compile.py"
     spec = importlib.util.spec_from_file_location("eggfuse_ripsat_programs", path)
@@ -44,10 +45,27 @@ def build(evidence, donors, target, *, trust_index=None, source_dir=None):
         "evidence": str(Path(evidence).resolve()),
         "donors": {name: str(Path(p).resolve()) for name, p in sorted(donors.items())},
     }
+    if set_publication:
+        # The publication authorizer pins its own donor/history and companion
+        # receipts. The ordinary Let compiler cannot grant this capability.
+        authorize = run_path(str(HERE.parent / "ripsat-publication-chain/authorize.py"))["authorize"]
+        kwargs = {"source_dir": Path(source_dir)} if source_dir is not None else {}
+        certificate = authorize(Path(evidence), donors, Path(target), **kwargs)
+        named = certificate.get("strict_named", {})
+        publication = named.get("set_publication", {})
+        if (certificate.get("schema") != "eggfuse-ripsat-publication-chain/v1"
+                or certificate.get("target_sha256") != artifact["target_sha256"]
+                or publication.get("target_sha256") != artifact["target_sha256"]
+                or not certificate.get("support") or named.get("depth") != 2
+                or named.get("partial") is not True
+                or not all(prefix in artifact["strict_named"]["library"] for prefix in named["library"])):
+            raise ValueError("publication authorizer did not grant an applicable Set program")
+        artifact["set_publication_authorization"] = certificate
+        artifact["bake_inputs"]["set_publication"] = True
     return artifact
 
 
-def load_checked(library, target, *, trust_index=None, source_dir=None):
+def load_checked(library, target, *, trust_index=None, source_dir=None, set_publication=False):
     """Revalidate a previously published library once, before the native session."""
     artifact = json.loads(Path(library).read_bytes())
     if not isinstance(artifact, dict) or artifact.get("target_sha256") != hashlib.sha256(Path(target).read_bytes()).hexdigest():
@@ -55,8 +73,13 @@ def load_checked(library, target, *, trust_index=None, source_dir=None):
     inputs = artifact.get("bake_inputs", {})
     if not isinstance(inputs, dict) or not inputs.get("evidence") or not isinstance(inputs.get("donors"), dict):
         raise ValueError("missing offline build inputs; recompile with bake.py ripsat")
+    cached_publication = inputs.get("set_publication", False)
+    if type(cached_publication) is not bool or cached_publication != ("set_publication_authorization" in artifact):
+        raise ValueError("inconsistent cached Set publication authorization")
+    if set_publication and not cached_publication:
+        raise ValueError("cache has no Set publication authorization; rebuild with bake.py ripsat --set-publication")
     checked = build(Path(inputs["evidence"]), {k: Path(v) for k, v in inputs["donors"].items()}, target,
-                    trust_index=trust_index, source_dir=source_dir)
+                    trust_index=trust_index, source_dir=source_dir, set_publication=cached_publication)
     if checked != artifact:
         raise ValueError("compiled RipSat library disagrees with its checked build evidence")
     return checked
@@ -79,7 +102,21 @@ def write_artifact(output, artifact):
             os.unlink(temp)
 
 
+def require_runtime_publication(result):
+    # Older native readers accept unknown JSON options. They cannot expose
+    # this dedicated verifier's counters or its audited typed release list.
+    report = result.get("strict_named")
+    counters = report.get("set_publication") if isinstance(report, dict) else None
+    if (not isinstance(counters, dict) or not isinstance(report.get("set_commits"), list)
+            or any(type(counters.get(k)) is not int for k in
+                   ("encoded", "active_middles", "fresh_activations", "published", "confirmed", "excluded_generation"))):
+        raise ValueError("--set-publication requires the ripsat-set-receipt native runtime")
+    return counters
+
+
 def add_provenance_args(p):
+    p.add_argument("--set-publication", action="store_true",
+                   help="authorize the separate typed fresh constructor-Set program for the exact target")
     p.add_argument("--trust-index", type=Path, help="independently generated donor and native receipt index")
     p.add_argument("--source-dir", type=Path, help="directory containing the original egg source parts")
 
@@ -109,9 +146,11 @@ def cli(argv):
             inputs.append(a.trust_index)
         if a.out.resolve() in {p.resolve() for p in inputs}:
             raise ValueError("output would overwrite an input")
-        artifact = build(a.evidence, donors, a.target, trust_index=a.trust_index, source_dir=a.source_dir)
+        artifact = build(a.evidence, donors, a.target, trust_index=a.trust_index, source_dir=a.source_dir,
+                         set_publication=a.set_publication)
         write_artifact(a.out, artifact)
     except (OSError, ValueError) as err:
         p.exit(1, f"{p.prog}: {err}\n")
     spec = artifact["strict_named"]
-    print(f"{a.out}  ({len(spec['library'])} statically linked programs, depth {spec['depth']})")
+    extra = ", checked Set publication available" if a.set_publication else ""
+    print(f"{a.out}  ({len(spec['library'])} statically linked programs, depth {spec['depth']}{extra})")

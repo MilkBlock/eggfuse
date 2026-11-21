@@ -60,3 +60,22 @@ python "$d/filtered-explicit-parent/study.py" "$EXP" "$EXP/strict-partial-named-
 ```
 
 Loading checks the file's target and revalidates the offline evidence before inference. A cache whose original inputs have moved can be rebuilt using the new paths. A separate trusted donor index and source directory may be supplied with `--trust-index` and `--source-dir` during both creation and loading. Alternatively, pass `--ripsat-evidence` and `--donor` to the study driver to link directly for each case. The `--partial` switch requires a runtime built with the sibling strict-partial-named-ports build script. Without it ordinary whole-consumer coverage rules apply. See [the full four-arm experiment](../ripsat-neural-bake/README.md) and [native evidence reproduction](../ripsat-donor-evidence/README.md).
+
+### Opt in to a fresh constructor-Set publication
+
+Add `--set-publication` when baking and again when running the study to compare the ordinary signed Let with its connected two-step variant. The bridge invokes the [publication authorizer](../ripsat-publication-chain/README.md) against the original evidence, a separately pinned physical donor companion and the exact target. It stores the complete certificate in `set_publication_authorization` alongside the one-hop `strict_named` program. On cache load the bridge independently rebuilds the proofs before requesting native execution. A cache baked without the option must be rebuilt for this experiment. Omitting the study option uses the ordinary one-hop spec even if the cache also holds the extra certificate.
+
+```sh
+d=benchmarks/pass3-cell-gpu
+donors="$EXP/compact-holdouts-20261121-v1"
+python "$d/explicit-parent-cell-composition/bake.py" ripsat --set-publication \
+  --evidence "$d/ripsat-donor-evidence/evidence.json" \
+  --donor "dot-product=$donors/dot-product-1703/program.json" \
+  --donor "jacobi-1d=$donors/jacobi-1d-1703/program.json" \
+  --target "$donors/sum-bits-1703/program.json" --out "$EXP/sum-bits-set.json"
+python "$d/filtered-explicit-parent/study.py" "$EXP" "$EXP/ripsat-set-receipt-pinned/session" \
+  "$d/filtered-explicit-parent/library.json" "$EXP/new-cached-set" \
+  --cases sum-bits --ripsat-library "$EXP/sum-bits-set.json" --set-publication
+```
+
+The two RipSat arms (`ripsat`, `ripsat_set`) both use partial named inputs. Existing legacy arms retain their own settings unless `--partial` is also requested. Native inference requires the [Set-publication runtime](../ripsat-set-receipt/README.md), which binds both request hashes to the loaded program bytes and verifies actual fresh operation receipts. The driver checks the dedicated runtime capability, tags and first-/second-hop counters in the audit, and checks the same publication counts during the normal execution. Older runtimes cannot silently treat the optional arm as a Let-only run. The entry test exercises the public CLIs on sum-bits and rejects a stale target, a changed cached Set operation, a cache without publication authority, and an older native executable.
