@@ -1,0 +1,17 @@
+{
+  "base": "31bf7e41",
+  "binary_sha256": "c75f299b1a852733776a39402a97b1350f34f99794fda3e9a2ea5befec594dfc",
+  "files": {
+    "../speculative-allocation-policy/policy.json": "702e0c2e3892195c337006b5145989a121491cb7941d635e160ae1ee50c12a19",
+    "../wave-demand-policy/demand.rs": "1e19c128621c7dd96f0ef090661c27772cf4642ffa5eaf1990aa65a530cadfe3",
+    "../wave-demand-policy/overlay.py": "312f38978112d85a6da5b5b885ffc2cd4312af6327f0f76d5a896ce101e8ff8d",
+    "../wave-demand-policy/policy.json": "558870de18e73219d393ff79d96692060d18013c772a18b012c5b79317a22866",
+    "build.py": "070a4655ab9474567b3f304fc75cc9946ed44a64ddc3883e7fdbb7d918cf3e78",
+    "faults.json": "94074d3bf0657085534dade8cf18b8e5b8b577eab3eb9adf50eb74a493651e72",
+    "overlay.py": "3eef6f9ff5e241813ddb102bd3b4dd329ad29ec82d6c25f5e298e7fb1e55909c",
+    "results.json": "0f29fb35faf308955324bda55ca288be60b6e04a375c6886523bc5bbcff5e939",
+    "route.rs": "c9cf7342904f752c56fd80435dca6c33574f34ccb5e74fe5ef9a6fa21af85edd",
+    "study.py": "c64289dd0657345680224f71d5bbe0e9c97d910ae75ef48a589588a824a09eb3",
+    "verify.py": "3bb09893203f9b240422f257ad25f452ed91b183c53342de0e779e4c2bc9e853"
+  }
+}
