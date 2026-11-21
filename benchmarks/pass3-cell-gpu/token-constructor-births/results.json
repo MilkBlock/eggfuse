@@ -1,0 +1,2449 @@
+{
+ "sum-bits": {
+  "exact": {
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 7265,
+   "neural_rhs": 7265,
+   "direct_cells": 5867,
+   "root_allocated": 5764,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "root_ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+   "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+   "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+   "wire_hash": "2424299231358045525",
+   "commits": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+   "multi": "7e7931cbbf8116f938c44b9c7ec1cb50cbe1296f0bfc003812172aa29afb96ff"
+  },
+  "runs": 1428,
+  "issued_roots": {
+   "single": 6559,
+   "multi": 5912
+  },
+  "activations": {
+   "initial_constructors": 128,
+   "run_constructors": 3611,
+   "nested_dynamic": 103,
+   "unowned_runtime": 1,
+   "typed_rhs": 3507,
+   "runtime_dynamic": 103
+  },
+  "all_activations": 3739,
+  "source_birth_digest": "deca6215c4abe4f5d478496eddc5fdd7e6d75f929f74f324174375040dc733eb",
+  "per_committed_root": {
+   "counts": {
+    "0": 4709,
+    "1": 1860,
+    "2": 434,
+    "3": 253,
+    "4": 7,
+    "7": 1,
+    "88": 1
+   },
+   "denominator": 7265,
+   "births": 3610,
+   "zero": 4709,
+   "one": 1860,
+   "two_plus": 696,
+   "max": 88,
+   "mean": 0.4969029593943565
+  },
+  "per_issued_root": {
+   "counts": {
+    "0": 9915,
+    "1": 1860,
+    "2": 434,
+    "3": 253,
+    "4": 7,
+    "7": 1,
+    "88": 1
+   },
+   "denominator": 12471,
+   "births": 3610,
+   "zero": 9915,
+   "one": 1860,
+   "two_plus": 696,
+   "max": 88,
+   "mean": 0.2894715740518002
+  },
+  "per_committed_provider": {
+   "single": {
+    "counts": {
+     "0": 1752,
+     "1": 843,
+     "2": 67,
+     "3": 13,
+     "4": 1,
+     "88": 1
+    },
+    "denominator": 2677,
+    "births": 1108,
+    "zero": 1752,
+    "one": 843,
+    "two_plus": 82,
+    "max": 88,
+    "mean": 0.4138961524094135
+   },
+   "multi": {
+    "counts": {
+     "0": 2957,
+     "1": 1017,
+     "2": 367,
+     "3": 240,
+     "4": 6,
+     "7": 1
+    },
+    "denominator": 4588,
+    "births": 2502,
+    "zero": 2957,
+    "one": 1017,
+    "two_plus": 614,
+    "max": 7,
+    "mean": 0.5453356582388841
+   }
+  },
+  "per_original_spine_root": {
+   "counts": {
+    "0": 5382,
+    "1": 1079,
+    "2": 509,
+    "3": 224,
+    "4": 44,
+    "5": 6,
+    "6": 4,
+    "7": 6,
+    "8": 3,
+    "11": 1,
+    "12": 1,
+    "14": 1,
+    "18": 1,
+    "23": 1,
+    "30": 1,
+    "64": 1,
+    "373": 1
+   },
+   "denominator": 7265,
+   "births": 3610,
+   "zero": 5382,
+   "one": 1079,
+   "two_plus": 804,
+   "max": 373,
+   "mean": 0.4969029593943565
+  },
+  "spine_live_steps": 2098,
+  "cross_run_resumes": 2098,
+  "cross_run_constructor_births": 883,
+  "producers_with_cross_run_births": 318,
+  "retention": {
+   "original_visible_per_committed_root": {
+    "counts": {
+     "0": 5222,
+     "1": 1657,
+     "2": 208,
+     "3": 175,
+     "4": 1,
+     "5": 1,
+     "84": 1
+    },
+    "denominator": 7265,
+    "births": 2691,
+    "zero": 5222,
+    "one": 1657,
+    "two_plus": 386,
+    "max": 84,
+    "mean": 0.37040605643496216,
+    "per_issued_root": 0.21578061101756074,
+    "per_root_and_selected_child": 0.21252566735112938,
+    "per_root_and_all_child_decisions": 0.2106293049467752
+   },
+   "original_visible_spine_reattribution": {
+    "counts": {
+     "0": 5741,
+     "1": 1026,
+     "2": 296,
+     "3": 139,
+     "4": 40,
+     "5": 6,
+     "6": 3,
+     "7": 6,
+     "8": 2,
+     "9": 1,
+     "10": 2,
+     "14": 1,
+     "40": 1,
+     "307": 1
+    },
+    "denominator": 7265,
+    "births": 2691,
+    "zero": 5741,
+    "one": 1026,
+    "two_plus": 498,
+    "max": 307,
+    "mean": 0.37040605643496216
+   },
+   "by_origin": {
+    "initial": {
+     "visible": 128
+    },
+    "owned": {
+     "visible": 2691,
+     "coalesced_to_visible": 794,
+     "hidden": 75,
+     "coalesced_to_hidden": 50
+    },
+    "unowned": {
+     "visible": 1
+    }
+   },
+   "owned_visible_paths": {
+    "typed_rhs": 2589,
+    "runtime_dynamic": 102
+   },
+   "selected_child_original_visible": 102,
+   "endpoint_sha": "cc411875294ca05a458e8c66917fb6390f1498c621d92cd61d8496448ef2c9fa",
+   "displacements_sha": "eff2ec22c851efecd4d6ce2e7189f9aa3f46b294e4588a2b582d0094c3e32e1c",
+   "extremes": {
+    "immediate": {
+     "serial": 1,
+     "rule": 375,
+     "provider": "single",
+     "epoch": 1,
+     "ruleset": "initialization",
+     "source_name_prefix": "(rule ()\n      ((let __tmp0 (IntT ))\n       (let __tmp1 (StateT ))\n       (let __tmp2 (TNil ))\n       (let __tmp3 (TCons __tmp1 __tmp2))\n       (let _",
+     "credited_visible": 84
+    },
+    "spine_attribution": {
+     "serial": 1,
+     "rule": 375,
+     "provider": "single",
+     "epoch": 1,
+     "ruleset": "initialization",
+     "source_name_prefix": "(rule ()\n      ((let __tmp0 (IntT ))\n       (let __tmp1 (StateT ))\n       (let __tmp2 (TNil ))\n       (let __tmp3 (TCons __tmp1 __tmp2))\n       (let _",
+     "credited_visible": 307
+    }
+   }
+  },
+  "exclusive_issued_packet_distributions": {
+   "constructor_births": {
+    "counts": {
+     "0": 10106,
+     "1": 1860,
+     "2": 434,
+     "3": 253,
+     "4": 7,
+     "7": 1,
+     "88": 1
+    },
+    "zero": 10106,
+    "one": 1860,
+    "two_plus": 696,
+    "denominator": 12662,
+    "births": 3610,
+    "max": 88
+   },
+   "original_visible": {
+    "counts": {
+     "0": 10619,
+     "1": 1657,
+     "2": 208,
+     "3": 175,
+     "4": 1,
+     "5": 1,
+     "84": 1
+    },
+    "zero": 10619,
+    "one": 1657,
+    "two_plus": 386,
+    "denominator": 12662,
+    "births": 2691,
+    "max": 84
+   }
+  },
+  "per_committed_provider_visible": {
+   "single": {
+    "counts": {
+     "0": 1906,
+     "1": 729,
+     "2": 32,
+     "3": 8,
+     "4": 1,
+     "84": 1
+    },
+    "denominator": 2677,
+    "births": 905,
+    "zero": 1906,
+    "one": 729,
+    "two_plus": 42,
+    "max": 84,
+    "mean": 0.33806499813223756
+   },
+   "multi": {
+    "counts": {
+     "0": 3316,
+     "1": 928,
+     "2": 176,
+     "3": 167,
+     "5": 1
+    },
+    "denominator": 4588,
+    "births": 1786,
+    "zero": 3316,
+    "one": 928,
+    "two_plus": 344,
+    "max": 5,
+    "mean": 0.38927637314734087
+   }
+  },
+  "without_initialization": {
+   "committed_roots": 7264,
+   "initialization_roots": 1,
+   "all_born": {
+    "counts": {
+     "0": 4709,
+     "1": 1860,
+     "2": 434,
+     "3": 253,
+     "4": 7,
+     "7": 1
+    },
+    "denominator": 7264,
+    "births": 3522,
+    "zero": 4709,
+    "one": 1860,
+    "two_plus": 695,
+    "max": 7,
+    "mean": 0.4848568281938326
+   },
+   "original_visible": {
+    "counts": {
+     "0": 5222,
+     "1": 1657,
+     "2": 208,
+     "3": 175,
+     "4": 1,
+     "5": 1
+    },
+    "denominator": 7264,
+    "births": 2607,
+    "zero": 5222,
+    "one": 1657,
+    "two_plus": 385,
+    "max": 5,
+    "mean": 0.3588931718061674
+   }
+  },
+  "extremes": {
+   "immediate": {
+    "serial": 1,
+    "provider": "single",
+    "epoch": 1,
+    "rule": 375,
+    "ruleset": "initialization",
+    "name_prefix": "(rule ()\n      ((let __tmp0 (IntT ))\n       (let __tmp1 (StateT ))\n       (let __tmp2 (TNil ))\n       (let __tmp3 (TCons __tmp1 __tmp2))\n       (let __tmp4 (TCons __tmp0 __tmp3))\n       (let __tmp5 (T",
+    "template": 375,
+    "static_rhs_instructions": 220,
+    "immediate_paths": {
+     "typed_rhs": 88
+    },
+    "credited_births": 88,
+    "descendant_tokens_with_births": 0,
+    "distinct_runs_with_births": 1,
+    "descendant_typed_rhs": 0,
+    "descendant_dynamic": 0
+   },
+   "spine_attribution": {
+    "serial": 1,
+    "provider": "single",
+    "epoch": 1,
+    "rule": 375,
+    "ruleset": "initialization",
+    "name_prefix": "(rule ()\n      ((let __tmp0 (IntT ))\n       (let __tmp1 (StateT ))\n       (let __tmp2 (TNil ))\n       (let __tmp3 (TCons __tmp1 __tmp2))\n       (let __tmp4 (TCons __tmp0 __tmp3))\n       (let __tmp5 (T",
+    "template": 375,
+    "static_rhs_instructions": 220,
+    "immediate_paths": {
+     "typed_rhs": 88
+    },
+    "credited_births": 373,
+    "descendant_tokens_with_births": 252,
+    "distinct_runs_with_births": 14,
+    "descendant_typed_rhs": 285,
+    "descendant_dynamic": 0
+   }
+  },
+  "unowned_tables": [
+   [
+    "Smaller",
+    "None",
+    true,
+    1
+   ]
+  ],
+  "table_constructor_counts": {
+   "327": 1,
+   "337": 1,
+   "335": 16,
+   "358": 15,
+   "238": 1,
+   "15": 4,
+   "223": 294,
+   "323": 117,
+   "244": 2,
+   "177": 5,
+   "170": 132,
+   "27": 71,
+   "372": 2,
+   "235": 7,
+   "189": 1,
+   "221": 2,
+   "222": 2,
+   "196": 43,
+   "228": 149,
+   "227": 173,
+   "307": 8,
+   "308": 6,
+   "359": 28,
+   "18": 17,
+   "336": 14,
+   "391": 18,
+   "4": 252,
+   "288": 37,
+   "22": 313,
+   "198": 90,
+   "178": 195,
+   "329": 271,
+   "3": 83,
+   "394": 4,
+   "388": 10,
+   "199": 126,
+   "344": 2,
+   "334": 160,
+   "301": 192,
+   "339": 1,
+   "286": 1,
+   "324": 104,
+   "346": 71,
+   "348": 20,
+   "340": 26,
+   "342": 29,
+   "351": 2,
+   "245": 2,
+   "206": 98,
+   "357": 5,
+   "191": 2,
+   "354": 2,
+   "194": 2,
+   "361": 1,
+   "192": 40,
+   "182": 90,
+   "349": 20,
+   "355": 24,
+   "5": 199,
+   "350": 8
+  },
+  "child_packets": {
+   "candidates": 305,
+   "selected": 191,
+   "entered": 191,
+   "rejected": 0,
+   "reused": 88,
+   "fresh": 103
+  },
+  "mean_per_issued_root_and_selected_child": 0.28510503869846787,
+  "mean_per_issued_root_and_all_child_decisions": 0.28256105197244835,
+  "mean_per_committed_root_and_fresh_child": 0.48995656894679696
+ },
+ "3mm": {
+  "exact": {
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "neural_rhs": 294917,
+   "direct_cells": 229311,
+   "root_allocated": 228095,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "wire_hash": "3666051417264130189",
+   "commits": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+   "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2"
+  },
+  "runs": 4260,
+  "issued_roots": {
+   "single": 334594,
+   "multi": 220972
+  },
+  "activations": {
+   "initial_constructors": 128,
+   "run_constructors": 119531,
+   "nested_dynamic": 1757,
+   "unowned_runtime": 28,
+   "typed_rhs": 117746,
+   "runtime_dynamic": 1757
+  },
+  "all_activations": 119659,
+  "source_birth_digest": "876b4b76dc6d39df4a61021cfa0f9c91b4f27b10c3f98f1357b2f280d0dfb579",
+  "per_committed_root": {
+   "counts": {
+    "0": 203267,
+    "1": 72458,
+    "2": 13777,
+    "3": 5414,
+    "3249": 1
+   },
+   "denominator": 294917,
+   "births": 119503,
+   "zero": 203267,
+   "one": 72458,
+   "two_plus": 19192,
+   "max": 3249,
+   "mean": 0.4052089231885581
+  },
+  "per_issued_root": {
+   "counts": {
+    "0": 463916,
+    "1": 72458,
+    "2": 13777,
+    "3": 5414,
+    "3249": 1
+   },
+   "denominator": 555566,
+   "births": 119503,
+   "zero": 463916,
+   "one": 72458,
+   "two_plus": 19192,
+   "max": 3249,
+   "mean": 0.21510135609450542
+  },
+  "per_committed_provider": {
+   "single": {
+    "counts": {
+     "0": 120716,
+     "1": 24630,
+     "2": 2144,
+     "3": 461,
+     "3249": 1
+    },
+    "denominator": 147952,
+    "births": 33550,
+    "zero": 120716,
+    "one": 24630,
+    "two_plus": 2606,
+    "max": 3249,
+    "mean": 0.22676273385963014
+   },
+   "multi": {
+    "counts": {
+     "0": 82551,
+     "1": 47828,
+     "2": 11633,
+     "3": 4953
+    },
+    "denominator": 146965,
+    "births": 85953,
+    "zero": 82551,
+    "one": 47828,
+    "two_plus": 16586,
+    "max": 3,
+    "mean": 0.5848535365563229
+   }
+  },
+  "per_original_spine_root": {
+   "counts": {
+    "0": 225016,
+    "1": 47012,
+    "2": 16830,
+    "3": 5199,
+    "4": 620,
+    "5": 17,
+    "6": 67,
+    "7": 2,
+    "8": 8,
+    "10": 3,
+    "11": 2,
+    "12": 1,
+    "14": 4,
+    "15": 5,
+    "16": 8,
+    "17": 6,
+    "18": 15,
+    "21": 7,
+    "22": 2,
+    "23": 2,
+    "24": 19,
+    "25": 3,
+    "26": 4,
+    "27": 2,
+    "28": 3,
+    "29": 1,
+    "30": 4,
+    "32": 4,
+    "34": 2,
+    "38": 4,
+    "40": 2,
+    "41": 3,
+    "42": 3,
+    "44": 7,
+    "47": 3,
+    "50": 2,
+    "53": 2,
+    "59": 4,
+    "62": 2,
+    "66": 2,
+    "68": 2,
+    "84": 3,
+    "90": 5,
+    "108": 2,
+    "126": 2,
+    "15205": 1
+   },
+   "denominator": 294917,
+   "births": 119503,
+   "zero": 225016,
+   "one": 47012,
+   "two_plus": 22889,
+   "max": 15205,
+   "mean": 0.4052089231885581
+  },
+  "spine_live_steps": 62506,
+  "cross_run_resumes": 62506,
+  "cross_run_constructor_births": 25595,
+  "producers_with_cross_run_births": 7497,
+  "retention": {
+   "original_visible_per_committed_root": {
+    "counts": {
+     "0": 219883,
+     "1": 63376,
+     "2": 8774,
+     "3": 2883,
+     "3085": 1
+    },
+    "denominator": 294917,
+    "births": 92658,
+    "zero": 219883,
+    "one": 63376,
+    "two_plus": 11658,
+    "max": 3085,
+    "mean": 0.31418331259303467,
+    "per_issued_root": 0.16678126451222716,
+    "per_root_and_selected_child": 0.16603174489404632,
+    "per_root_and_all_child_decisions": 0.1646708821616319
+   },
+   "original_visible_spine_reattribution": {
+    "counts": {
+     "0": 236299,
+     "1": 43700,
+     "2": 11321,
+     "3": 2840,
+     "4": 565,
+     "5": 1,
+     "6": 36,
+     "7": 2,
+     "8": 8,
+     "9": 8,
+     "10": 4,
+     "11": 4,
+     "12": 2,
+     "13": 1,
+     "14": 9,
+     "15": 5,
+     "16": 11,
+     "17": 4,
+     "18": 13,
+     "19": 2,
+     "20": 3,
+     "21": 5,
+     "22": 1,
+     "23": 4,
+     "24": 3,
+     "25": 4,
+     "26": 5,
+     "27": 3,
+     "28": 5,
+     "29": 5,
+     "34": 5,
+     "36": 3,
+     "37": 1,
+     "38": 3,
+     "39": 2,
+     "40": 4,
+     "41": 1,
+     "44": 1,
+     "45": 2,
+     "46": 2,
+     "47": 3,
+     "48": 3,
+     "50": 2,
+     "52": 1,
+     "53": 2,
+     "55": 1,
+     "56": 1,
+     "60": 1,
+     "61": 2,
+     "62": 1,
+     "70": 1,
+     "72": 1,
+     "11406": 1
+    },
+    "denominator": 294917,
+    "births": 92658,
+    "zero": 236299,
+    "one": 43700,
+    "two_plus": 14918,
+    "max": 11406,
+    "mean": 0.31418331259303467
+   },
+   "by_origin": {
+    "initial": {
+     "visible": 128
+    },
+    "owned": {
+     "visible": 92658,
+     "coalesced_to_visible": 26845
+    },
+    "unowned": {
+     "visible": 28
+    }
+   },
+   "owned_visible_paths": {
+    "typed_rhs": 91039,
+    "runtime_dynamic": 1619
+   },
+   "selected_child_original_visible": 1202,
+   "endpoint_sha": "0f5fc7e44add1467558ff78c72933b612a835b732a0bfe234580a03d631b6320",
+   "displacements_sha": "5ceb174bb6c2aa9134628550a55e275935268c1a97dda59ef490971da35c61e5",
+   "extremes": {
+    "immediate": {
+     "serial": 1,
+     "rule": 375,
+     "provider": "single",
+     "epoch": 1,
+     "ruleset": "initialization",
+     "source_name_prefix": "(rule ()\n      ((let __tmp0 (StateT ))\n       (let __tmp1 (TNil ))\n       (let __tmp2 (TCons __tmp0 __tmp1))\n       (let __tmp3 (TupleT __tmp2))\n     ",
+     "credited_visible": 3085
+    },
+    "spine_attribution": {
+     "serial": 1,
+     "rule": 375,
+     "provider": "single",
+     "epoch": 1,
+     "ruleset": "initialization",
+     "source_name_prefix": "(rule ()\n      ((let __tmp0 (StateT ))\n       (let __tmp1 (TNil ))\n       (let __tmp2 (TCons __tmp0 __tmp1))\n       (let __tmp3 (TupleT __tmp2))\n     ",
+     "credited_visible": 11406
+    }
+   }
+  },
+  "exclusive_issued_packet_distributions": {
+   "constructor_births": {
+    "counts": {
+     "0": 466424,
+     "1": 72458,
+     "2": 13777,
+     "3": 5414,
+     "3249": 1
+    },
+    "zero": 466424,
+    "one": 72458,
+    "two_plus": 19192,
+    "denominator": 558074,
+    "births": 119503,
+    "max": 3249
+   },
+   "original_visible": {
+    "counts": {
+     "0": 483040,
+     "1": 63376,
+     "2": 8774,
+     "3": 2883,
+     "3085": 1
+    },
+    "zero": 483040,
+    "one": 63376,
+    "two_plus": 11658,
+    "denominator": 558074,
+    "births": 92658,
+    "max": 3085
+   }
+  },
+  "per_committed_provider_visible": {
+   "single": {
+    "counts": {
+     "0": 126523,
+     "1": 20027,
+     "2": 1057,
+     "3": 344,
+     "3085": 1
+    },
+    "denominator": 147952,
+    "births": 26258,
+    "zero": 126523,
+    "one": 20027,
+    "two_plus": 1402,
+    "max": 3085,
+    "mean": 0.177476478858008
+   },
+   "multi": {
+    "counts": {
+     "0": 93360,
+     "1": 43349,
+     "2": 7717,
+     "3": 2539
+    },
+    "denominator": 146965,
+    "births": 66400,
+    "zero": 93360,
+    "one": 43349,
+    "two_plus": 10256,
+    "max": 3,
+    "mean": 0.4518082536658388
+   }
+  },
+  "without_initialization": {
+   "committed_roots": 294916,
+   "initialization_roots": 1,
+   "all_born": {
+    "counts": {
+     "0": 203267,
+     "1": 72458,
+     "2": 13777,
+     "3": 5414
+    },
+    "denominator": 294916,
+    "births": 116254,
+    "zero": 203267,
+    "one": 72458,
+    "two_plus": 19191,
+    "max": 3,
+    "mean": 0.39419360088974487
+   },
+   "original_visible": {
+    "counts": {
+     "0": 219883,
+     "1": 63376,
+     "2": 8774,
+     "3": 2883
+    },
+    "denominator": 294916,
+    "births": 89573,
+    "zero": 219883,
+    "one": 63376,
+    "two_plus": 11657,
+    "max": 3,
+    "mean": 0.30372377219276
+   }
+  },
+  "extremes": {
+   "immediate": {
+    "serial": 1,
+    "provider": "single",
+    "epoch": 1,
+    "rule": 375,
+    "ruleset": "initialization",
+    "name_prefix": "(rule ()\n      ((let __tmp0 (StateT ))\n       (let __tmp1 (TNil ))\n       (let __tmp2 (TCons __tmp0 __tmp1))\n       (let __tmp3 (TupleT __tmp2))\n       (let __tmp4 (Print ))\n       (let __tmp5 (LessTh",
+    "template": 375,
+    "static_rhs_instructions": 6709,
+    "immediate_paths": {
+     "typed_rhs": 3249
+    },
+    "credited_births": 3249,
+    "descendant_tokens_with_births": 0,
+    "distinct_runs_with_births": 1,
+    "descendant_typed_rhs": 0,
+    "descendant_dynamic": 0
+   },
+   "spine_attribution": {
+    "serial": 1,
+    "provider": "single",
+    "epoch": 1,
+    "rule": 375,
+    "ruleset": "initialization",
+    "name_prefix": "(rule ()\n      ((let __tmp0 (StateT ))\n       (let __tmp1 (TNil ))\n       (let __tmp2 (TCons __tmp0 __tmp1))\n       (let __tmp3 (TupleT __tmp2))\n       (let __tmp4 (Print ))\n       (let __tmp5 (LessTh",
+    "template": 375,
+    "static_rhs_instructions": 6709,
+    "immediate_paths": {
+     "typed_rhs": 3249
+    },
+    "credited_births": 15205,
+    "descendant_tokens_with_births": 10989,
+    "distinct_runs_with_births": 32,
+    "descendant_typed_rhs": 11956,
+    "descendant_dynamic": 0
+   }
+  },
+  "unowned_tables": [
+   [
+    "Smaller",
+    "None",
+    true,
+    28
+   ]
+  ],
+  "table_constructor_counts": {
+   "327": 1,
+   "337": 1,
+   "335": 629,
+   "358": 437,
+   "244": 14,
+   "238": 1,
+   "177": 389,
+   "323": 3872,
+   "15": 27,
+   "170": 6701,
+   "223": 7171,
+   "27": 355,
+   "291": 1,
+   "12": 28,
+   "216": 10,
+   "373": 1,
+   "189": 42,
+   "235": 80,
+   "28": 4,
+   "355": 290,
+   "221": 9,
+   "222": 9,
+   "228": 6540,
+   "227": 5945,
+   "196": 369,
+   "307": 8,
+   "308": 7,
+   "359": 2342,
+   "18": 640,
+   "336": 739,
+   "391": 160,
+   "4": 7569,
+   "288": 353,
+   "22": 17441,
+   "198": 1905,
+   "178": 7021,
+   "329": 7730,
+   "292": 208,
+   "293": 207,
+   "3": 1584,
+   "394": 12448,
+   "388": 875,
+   "199": 5449,
+   "344": 25,
+   "334": 2318,
+   "301": 4058,
+   "339": 1,
+   "286": 1,
+   "324": 1757,
+   "340": 193,
+   "346": 891,
+   "348": 160,
+   "342": 928,
+   "350": 119,
+   "245": 14,
+   "384": 28,
+   "206": 2318,
+   "349": 137,
+   "5": 6969,
+   "25": 1,
+   "24": 1
+  },
+  "child_packets": {
+   "candidates": 7120,
+   "selected": 2508,
+   "entered": 2508,
+   "rejected": 0,
+   "reused": 1292,
+   "fresh": 1216
+  },
+  "mean_per_issued_root_and_selected_child": 0.2141346846475557,
+  "mean_per_issued_root_and_all_child_decisions": 0.21237955093960043,
+  "mean_per_committed_root_and_fresh_child": 0.403545028753972
+ },
+ "dot-product": {
+  "exact": {
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 6704,
+   "neural_rhs": 6704,
+   "direct_cells": 5666,
+   "root_allocated": 5538,
+   "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "root_ids": "a7656cc96d3c533814028737fa51d7d22a198ab94517fae05ad6b5e965dc4247",
+   "physical": "cc8f1bf52f1c7edc3d6146c990ba59f5a33b26e6d4cae551f407e5632c4f0254",
+   "root_parents": "ae003238e455d0cfc803e886e70f4d929b300f974b43f10c9495e13f29ca7dc5",
+   "children": "388cc1613f1f94ebdc99a304f1465c5117c88e34160a72f2f9d024c08cb488db",
+   "wire_hash": "7654951493758596722",
+   "commits": "2e85ad92a526f54bc9603e081cd3b7ec654261dae09071c97ebf380d0df8fbc4",
+   "multi": "ffd79c94bc624a38ac970d7a4190e4c2f28f84ee5eddbba1225dcd50faac052d"
+  },
+  "runs": 1535,
+  "issued_roots": {
+   "single": 6796,
+   "multi": 7207
+  },
+  "activations": {
+   "initial_constructors": 128,
+   "run_constructors": 3043,
+   "nested_dynamic": 136,
+   "unowned_runtime": 8,
+   "typed_rhs": 2899,
+   "runtime_dynamic": 136
+  },
+  "all_activations": 3171,
+  "source_birth_digest": "3f9a56c4651e9579fc5d7f4e1cc514c92781371c7eabf1e7e62d9ac411cb80de",
+  "per_committed_root": {
+   "counts": {
+    "0": 4466,
+    "1": 1819,
+    "2": 214,
+    "3": 204,
+    "176": 1
+   },
+   "denominator": 6704,
+   "births": 3035,
+   "zero": 4466,
+   "one": 1819,
+   "two_plus": 419,
+   "max": 176,
+   "mean": 0.4527147971360382
+  },
+  "per_issued_root": {
+   "counts": {
+    "0": 11765,
+    "1": 1819,
+    "2": 214,
+    "3": 204,
+    "176": 1
+   },
+   "denominator": 14003,
+   "births": 3035,
+   "zero": 11765,
+   "one": 1819,
+   "two_plus": 419,
+   "max": 176,
+   "mean": 0.21673927015639505
+  },
+  "per_committed_provider": {
+   "single": {
+    "counts": {
+     "0": 1887,
+     "1": 900,
+     "2": 94,
+     "3": 17,
+     "176": 1
+    },
+    "denominator": 2899,
+    "births": 1315,
+    "zero": 1887,
+    "one": 900,
+    "two_plus": 112,
+    "max": 176,
+    "mean": 0.4536046912728527
+   },
+   "multi": {
+    "counts": {
+     "0": 2579,
+     "1": 919,
+     "2": 120,
+     "3": 187
+    },
+    "denominator": 3805,
+    "births": 1720,
+    "zero": 2579,
+    "one": 919,
+    "two_plus": 307,
+    "max": 3,
+    "mean": 0.4520367936925099
+   }
+  },
+  "per_original_spine_root": {
+   "counts": {
+    "0": 5273,
+    "1": 871,
+    "2": 302,
+    "3": 185,
+    "4": 48,
+    "5": 14,
+    "6": 3,
+    "7": 1,
+    "8": 1,
+    "12": 2,
+    "27": 1,
+    "30": 2,
+    "599": 1
+   },
+   "denominator": 6704,
+   "births": 3035,
+   "zero": 5273,
+   "one": 871,
+   "two_plus": 560,
+   "max": 599,
+   "mean": 0.4527147971360382
+  },
+  "spine_live_steps": 1835,
+  "cross_run_resumes": 1835,
+  "cross_run_constructor_births": 981,
+  "producers_with_cross_run_births": 317,
+  "retention": {
+   "original_visible_per_committed_root": {
+    "counts": {
+     "0": 4718,
+     "1": 1628,
+     "2": 181,
+     "3": 176,
+     "171": 1
+    },
+    "denominator": 6704,
+    "births": 2689,
+    "zero": 4718,
+    "one": 1628,
+    "two_plus": 358,
+    "max": 171,
+    "mean": 0.4011038186157518,
+    "per_issued_root": 0.19203027922588017,
+    "per_root_and_selected_child": 0.18919299233096462,
+    "per_root_and_all_child_decisions": 0.1864900478535266
+   },
+   "original_visible_spine_reattribution": {
+    "counts": {
+     "0": 5391,
+     "1": 826,
+     "2": 261,
+     "3": 155,
+     "4": 50,
+     "5": 10,
+     "6": 3,
+     "7": 1,
+     "8": 1,
+     "12": 2,
+     "14": 1,
+     "22": 2,
+     "511": 1
+    },
+    "denominator": 6704,
+    "births": 2689,
+    "zero": 5391,
+    "one": 826,
+    "two_plus": 487,
+    "max": 511,
+    "mean": 0.4011038186157518
+   },
+   "by_origin": {
+    "initial": {
+     "visible": 128
+    },
+    "owned": {
+     "visible": 2689,
+     "coalesced_to_visible": 346
+    },
+    "unowned": {
+     "visible": 8
+    }
+   },
+   "owned_visible_paths": {
+    "typed_rhs": 2564,
+    "runtime_dynamic": 125
+   },
+   "selected_child_original_visible": 121,
+   "endpoint_sha": "c2dedc0ec85fb797d14b65a86b78140203f1f225f0104e9e074708eb788d4dcc",
+   "displacements_sha": "fa8418d48e24d4808da72d8289eb1995692d9a42c8f81a528dc8857c46e128c9",
+   "extremes": {
+    "immediate": {
+     "serial": 1,
+     "rule": 375,
+     "provider": "single",
+     "epoch": 1,
+     "ruleset": "initialization",
+     "source_name_prefix": "(rule ()\n      ((let __tmp0 (IntT ))\n       (let __tmp1 (StateT ))\n       (let __tmp2 (TNil ))\n       (let __tmp3 (TCons __tmp1 __tmp2))\n       (let _",
+     "credited_visible": 171
+    },
+    "spine_attribution": {
+     "serial": 1,
+     "rule": 375,
+     "provider": "single",
+     "epoch": 1,
+     "ruleset": "initialization",
+     "source_name_prefix": "(rule ()\n      ((let __tmp0 (IntT ))\n       (let __tmp1 (StateT ))\n       (let __tmp2 (TNil ))\n       (let __tmp3 (TCons __tmp1 __tmp2))\n       (let _",
+     "credited_visible": 511
+    }
+   }
+  },
+  "exclusive_issued_packet_distributions": {
+   "constructor_births": {
+    "counts": {
+     "0": 11975,
+     "1": 1819,
+     "2": 214,
+     "3": 204,
+     "176": 1
+    },
+    "zero": 11975,
+    "one": 1819,
+    "two_plus": 419,
+    "denominator": 14213,
+    "births": 3035,
+    "max": 176
+   },
+   "original_visible": {
+    "counts": {
+     "0": 12227,
+     "1": 1628,
+     "2": 181,
+     "3": 176,
+     "171": 1
+    },
+    "zero": 12227,
+    "one": 1628,
+    "two_plus": 358,
+    "denominator": 14213,
+    "births": 2689,
+    "max": 171
+   }
+  },
+  "per_committed_provider_visible": {
+   "single": {
+    "counts": {
+     "0": 2034,
+     "1": 782,
+     "2": 65,
+     "3": 17,
+     "171": 1
+    },
+    "denominator": 2899,
+    "births": 1134,
+    "zero": 2034,
+    "one": 782,
+    "two_plus": 83,
+    "max": 171,
+    "mean": 0.3911693687478441
+   },
+   "multi": {
+    "counts": {
+     "0": 2684,
+     "1": 846,
+     "2": 116,
+     "3": 159
+    },
+    "denominator": 3805,
+    "births": 1555,
+    "zero": 2684,
+    "one": 846,
+    "two_plus": 275,
+    "max": 3,
+    "mean": 0.40867279894875164
+   }
+  },
+  "without_initialization": {
+   "committed_roots": 6703,
+   "initialization_roots": 1,
+   "all_born": {
+    "counts": {
+     "0": 4466,
+     "1": 1819,
+     "2": 214,
+     "3": 204
+    },
+    "denominator": 6703,
+    "births": 2859,
+    "zero": 4466,
+    "one": 1819,
+    "two_plus": 418,
+    "max": 3,
+    "mean": 0.4265254363717738
+   },
+   "original_visible": {
+    "counts": {
+     "0": 4718,
+     "1": 1628,
+     "2": 181,
+     "3": 176
+    },
+    "denominator": 6703,
+    "births": 2518,
+    "zero": 4718,
+    "one": 1628,
+    "two_plus": 357,
+    "max": 3,
+    "mean": 0.3756526928241086
+   }
+  },
+  "extremes": {
+   "immediate": {
+    "serial": 1,
+    "provider": "single",
+    "epoch": 1,
+    "rule": 375,
+    "ruleset": "initialization",
+    "name_prefix": "(rule ()\n      ((let __tmp0 (IntT ))\n       (let __tmp1 (StateT ))\n       (let __tmp2 (TNil ))\n       (let __tmp3 (TCons __tmp1 __tmp2))\n       (let __tmp4 (TCons __tmp0 __tmp3))\n       (let __tmp5 (T",
+    "template": 375,
+    "static_rhs_instructions": 411,
+    "immediate_paths": {
+     "typed_rhs": 176
+    },
+    "credited_births": 176,
+    "descendant_tokens_with_births": 0,
+    "distinct_runs_with_births": 1,
+    "descendant_typed_rhs": 0,
+    "descendant_dynamic": 0
+   },
+   "spine_attribution": {
+    "serial": 1,
+    "provider": "single",
+    "epoch": 1,
+    "rule": 375,
+    "ruleset": "initialization",
+    "name_prefix": "(rule ()\n      ((let __tmp0 (IntT ))\n       (let __tmp1 (StateT ))\n       (let __tmp2 (TNil ))\n       (let __tmp3 (TCons __tmp1 __tmp2))\n       (let __tmp4 (TCons __tmp0 __tmp3))\n       (let __tmp5 (T",
+    "template": 375,
+    "static_rhs_instructions": 411,
+    "immediate_paths": {
+     "typed_rhs": 176
+    },
+    "credited_births": 599,
+    "descendant_tokens_with_births": 384,
+    "distinct_runs_with_births": 14,
+    "descendant_typed_rhs": 423,
+    "descendant_dynamic": 0
+   }
+  },
+  "unowned_tables": [
+   [
+    "Smaller",
+    "None",
+    true,
+    8
+   ]
+  ],
+  "table_constructor_counts": {
+   "327": 1,
+   "337": 1,
+   "335": 25,
+   "358": 20,
+   "244": 14,
+   "238": 1,
+   "177": 28,
+   "15": 3,
+   "223": 137,
+   "291": 1,
+   "12": 2,
+   "323": 74,
+   "373": 1,
+   "27": 78,
+   "355": 10,
+   "170": 44,
+   "189": 2,
+   "221": 2,
+   "222": 2,
+   "196": 29,
+   "228": 224,
+   "227": 203,
+   "307": 4,
+   "308": 3,
+   "359": 53,
+   "18": 26,
+   "336": 21,
+   "391": 8,
+   "4": 171,
+   "288": 43,
+   "22": 180,
+   "198": 76,
+   "178": 226,
+   "329": 175,
+   "292": 12,
+   "293": 11,
+   "3": 39,
+   "394": 56,
+   "388": 13,
+   "199": 194,
+   "344": 14,
+   "334": 155,
+   "301": 195,
+   "339": 1,
+   "286": 1,
+   "324": 144,
+   "346": 63,
+   "348": 19,
+   "340": 31,
+   "342": 26,
+   "245": 14,
+   "285": 56,
+   "206": 111
+  },
+  "child_packets": {
+   "candidates": 416,
+   "selected": 210,
+   "entered": 210,
+   "rejected": 0,
+   "reused": 82,
+   "fresh": 128
+  },
+  "mean_per_issued_root_and_selected_child": 0.21353690283543236,
+  "mean_per_issued_root_and_all_child_decisions": 0.21048616408904916,
+  "mean_per_committed_root_and_fresh_child": 0.44423302107728335
+ },
+ "conjugate-gradient": {
+  "exact": {
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 131371,
+   "neural_rhs": 131371,
+   "direct_cells": 97026,
+   "root_allocated": 96535,
+   "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+   "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+   "physical": "aee548a2a013cffebe71e61f2d052a96a7564bb6e5916393e5793e063cd25f6d",
+   "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+   "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+   "wire_hash": "1993356065541734829",
+   "commits": "a1e33e0aaa982aa58bfb3f89f1e30552d8298b4b5d4776251fd52da0c3f3c1ba",
+   "multi": "cc1f53cfe0ac95a4f39d82de5595e7de19be4c96e42907893311b5cfdda75887"
+  },
+  "runs": 2896,
+  "issued_roots": {
+   "single": 133565,
+   "multi": 83313
+  },
+  "activations": {
+   "initial_constructors": 128,
+   "run_constructors": 48723,
+   "nested_dynamic": 592,
+   "unowned_runtime": 12,
+   "typed_rhs": 48119,
+   "runtime_dynamic": 592
+  },
+  "all_activations": 48851,
+  "source_birth_digest": "aae524107fc35a9f538a336dda4686379f7b9c5fe15776596eee6cc192752ac7",
+  "per_committed_root": {
+   "counts": {
+    "0": 94712,
+    "1": 28288,
+    "2": 6392,
+    "3": 1972,
+    "4": 5,
+    "6": 1,
+    "1697": 1
+   },
+   "denominator": 131371,
+   "births": 48711,
+   "zero": 94712,
+   "one": 28288,
+   "two_plus": 8371,
+   "max": 1697,
+   "mean": 0.3707895958773245
+  },
+  "per_issued_root": {
+   "counts": {
+    "0": 180219,
+    "1": 28288,
+    "2": 6392,
+    "3": 1972,
+    "4": 5,
+    "6": 1,
+    "1697": 1
+   },
+   "denominator": 216878,
+   "births": 48711,
+   "zero": 180219,
+   "one": 28288,
+   "two_plus": 8371,
+   "max": 1697,
+   "mean": 0.22460092771051005
+  },
+  "per_committed_provider": {
+   "single": {
+    "counts": {
+     "0": 61459,
+     "1": 11015,
+     "2": 1082,
+     "3": 118,
+     "4": 1,
+     "1697": 1
+    },
+    "denominator": 73676,
+    "births": 15234,
+    "zero": 61459,
+    "one": 11015,
+    "two_plus": 1202,
+    "max": 1697,
+    "mean": 0.20677018296324448
+   },
+   "multi": {
+    "counts": {
+     "0": 33253,
+     "1": 17273,
+     "2": 5310,
+     "3": 1854,
+     "4": 4,
+     "6": 1
+    },
+    "denominator": 57695,
+    "births": 33477,
+    "zero": 33253,
+    "one": 17273,
+    "two_plus": 7169,
+    "max": 6,
+    "mean": 0.5802409220903024
+   }
+  },
+  "per_original_spine_root": {
+   "counts": {
+    "0": 104703,
+    "1": 16734,
+    "2": 7644,
+    "3": 1953,
+    "4": 202,
+    "5": 8,
+    "6": 13,
+    "7": 5,
+    "8": 2,
+    "9": 1,
+    "10": 3,
+    "11": 2,
+    "12": 26,
+    "13": 1,
+    "14": 2,
+    "16": 4,
+    "17": 4,
+    "18": 1,
+    "19": 1,
+    "20": 5,
+    "21": 1,
+    "22": 2,
+    "23": 3,
+    "24": 8,
+    "26": 4,
+    "30": 25,
+    "31": 2,
+    "35": 1,
+    "36": 1,
+    "38": 2,
+    "39": 2,
+    "42": 3,
+    "47": 2,
+    "7483": 1
+   },
+   "denominator": 131371,
+   "births": 48711,
+   "zero": 104703,
+   "one": 16734,
+   "two_plus": 9934,
+   "max": 7483,
+   "mean": 0.3707895958773245
+  },
+  "spine_live_steps": 28113,
+  "cross_run_resumes": 28113,
+  "cross_run_constructor_births": 11527,
+  "producers_with_cross_run_births": 3087,
+  "retention": {
+   "original_visible_per_committed_root": {
+    "counts": {
+     "0": 103694,
+     "1": 23249,
+     "2": 3469,
+     "3": 954,
+     "4": 3,
+     "6": 1,
+     "1528": 1
+    },
+    "denominator": 131371,
+    "births": 34595,
+    "zero": 103694,
+    "one": 23249,
+    "two_plus": 4428,
+    "max": 1528,
+    "mean": 0.2633381796591333,
+    "per_issued_root": 0.15951364361530446,
+    "per_root_and_selected_child": 0.15871741464265068,
+    "per_root_and_all_child_decisions": 0.15772101229581068
+   },
+   "original_visible_spine_reattribution": {
+    "counts": {
+     "0": 110906,
+     "1": 14763,
+     "2": 4404,
+     "3": 978,
+     "4": 194,
+     "5": 5,
+     "6": 8,
+     "7": 5,
+     "8": 5,
+     "9": 4,
+     "10": 4,
+     "11": 9,
+     "12": 24,
+     "13": 4,
+     "14": 2,
+     "15": 1,
+     "16": 3,
+     "17": 2,
+     "18": 6,
+     "19": 1,
+     "20": 1,
+     "22": 27,
+     "23": 2,
+     "24": 7,
+     "27": 2,
+     "30": 2,
+     "35": 1,
+     "5422": 1
+    },
+    "denominator": 131371,
+    "births": 34595,
+    "zero": 110906,
+    "one": 14763,
+    "two_plus": 5702,
+    "max": 5422,
+    "mean": 0.2633381796591333
+   },
+   "by_origin": {
+    "initial": {
+     "visible": 128
+    },
+    "owned": {
+     "visible": 34595,
+     "coalesced_to_visible": 14114,
+     "hidden": 2
+    },
+    "unowned": {
+     "visible": 11,
+     "coalesced_to_visible": 1
+    }
+   },
+   "owned_visible_paths": {
+    "typed_rhs": 34035,
+    "runtime_dynamic": 560
+   },
+   "selected_child_original_visible": 489,
+   "endpoint_sha": "1cddd36b7b85984bf7d51198262fe1021366e8500ba7258ea3a5d02d61a7cd28",
+   "displacements_sha": "f8a101b95f715fc00d9155c0d8b3c6acc9c3848b9299f95c2ec1a58bfd2cdccb",
+   "extremes": {
+    "immediate": {
+     "serial": 1,
+     "rule": 375,
+     "provider": "single",
+     "epoch": 1,
+     "ruleset": "initialization",
+     "source_name_prefix": "(rule ()\n      ((let __tmp0 (IntT ))\n       (let __tmp1 (StateT ))\n       (let __tmp2 (TNil ))\n       (let __tmp3 (TCons __tmp1 __tmp2))\n       (let _",
+     "credited_visible": 1528
+    },
+    "spine_attribution": {
+     "serial": 1,
+     "rule": 375,
+     "provider": "single",
+     "epoch": 1,
+     "ruleset": "initialization",
+     "source_name_prefix": "(rule ()\n      ((let __tmp0 (IntT ))\n       (let __tmp1 (StateT ))\n       (let __tmp2 (TNil ))\n       (let __tmp3 (TCons __tmp1 __tmp2))\n       (let _",
+     "credited_visible": 5422
+    }
+   }
+  },
+  "exclusive_issued_packet_distributions": {
+   "constructor_births": {
+    "counts": {
+     "0": 181307,
+     "1": 28288,
+     "2": 6392,
+     "3": 1972,
+     "4": 5,
+     "6": 1,
+     "1697": 1
+    },
+    "zero": 181307,
+    "one": 28288,
+    "two_plus": 8371,
+    "denominator": 217966,
+    "births": 48711,
+    "max": 1697
+   },
+   "original_visible": {
+    "counts": {
+     "0": 190289,
+     "1": 23249,
+     "2": 3469,
+     "3": 954,
+     "4": 3,
+     "6": 1,
+     "1528": 1
+    },
+    "zero": 190289,
+    "one": 23249,
+    "two_plus": 4428,
+    "denominator": 217966,
+    "births": 34595,
+    "max": 1528
+   }
+  },
+  "per_committed_provider_visible": {
+   "single": {
+    "counts": {
+     "0": 64361,
+     "1": 8663,
+     "2": 568,
+     "3": 82,
+     "4": 1,
+     "1528": 1
+    },
+    "denominator": 73676,
+    "births": 11577,
+    "zero": 64361,
+    "one": 8663,
+    "two_plus": 652,
+    "max": 1528,
+    "mean": 0.15713393778163853
+   },
+   "multi": {
+    "counts": {
+     "0": 39333,
+     "1": 14586,
+     "2": 2901,
+     "3": 872,
+     "4": 2,
+     "6": 1
+    },
+    "denominator": 57695,
+    "births": 23018,
+    "zero": 39333,
+    "one": 14586,
+    "two_plus": 3776,
+    "max": 6,
+    "mean": 0.39896004853106853
+   }
+  },
+  "without_initialization": {
+   "committed_roots": 131370,
+   "initialization_roots": 1,
+   "all_born": {
+    "counts": {
+     "0": 94712,
+     "1": 28288,
+     "2": 6392,
+     "3": 1972,
+     "4": 5,
+     "6": 1
+    },
+    "denominator": 131370,
+    "births": 47014,
+    "zero": 94712,
+    "one": 28288,
+    "two_plus": 8370,
+    "max": 6,
+    "mean": 0.3578747050315902
+   },
+   "original_visible": {
+    "counts": {
+     "0": 103694,
+     "1": 23249,
+     "2": 3469,
+     "3": 954,
+     "4": 3,
+     "6": 1
+    },
+    "denominator": 131370,
+    "births": 33067,
+    "zero": 103694,
+    "one": 23249,
+    "two_plus": 4427,
+    "max": 6,
+    "mean": 0.251708913755043
+   }
+  },
+  "extremes": {
+   "immediate": {
+    "serial": 1,
+    "provider": "single",
+    "epoch": 1,
+    "rule": 375,
+    "ruleset": "initialization",
+    "name_prefix": "(rule ()\n      ((let __tmp0 (IntT ))\n       (let __tmp1 (StateT ))\n       (let __tmp2 (TNil ))\n       (let __tmp3 (TCons __tmp1 __tmp2))\n       (let __tmp4 (TCons __tmp0 __tmp3))\n       (let __tmp5 (T",
+    "template": 375,
+    "static_rhs_instructions": 3640,
+    "immediate_paths": {
+     "typed_rhs": 1697
+    },
+    "credited_births": 1697,
+    "descendant_tokens_with_births": 0,
+    "distinct_runs_with_births": 1,
+    "descendant_typed_rhs": 0,
+    "descendant_dynamic": 0
+   },
+   "spine_attribution": {
+    "serial": 1,
+    "provider": "single",
+    "epoch": 1,
+    "rule": 375,
+    "ruleset": "initialization",
+    "name_prefix": "(rule ()\n      ((let __tmp0 (IntT ))\n       (let __tmp1 (StateT ))\n       (let __tmp2 (TNil ))\n       (let __tmp3 (TCons __tmp1 __tmp2))\n       (let __tmp4 (TCons __tmp0 __tmp3))\n       (let __tmp5 (T",
+    "template": 375,
+    "static_rhs_instructions": 3640,
+    "immediate_paths": {
+     "typed_rhs": 1697
+    },
+    "credited_births": 7483,
+    "descendant_tokens_with_births": 5276,
+    "distinct_runs_with_births": 22,
+    "descendant_typed_rhs": 5786,
+    "descendant_dynamic": 0
+   }
+  },
+  "unowned_tables": [
+   [
+    "Smaller",
+    "None",
+    true,
+    12
+   ]
+  ],
+  "table_constructor_counts": {
+   "327": 1,
+   "337": 1,
+   "335": 179,
+   "358": 153,
+   "244": 4,
+   "238": 1,
+   "177": 142,
+   "15": 15,
+   "223": 4107,
+   "323": 1890,
+   "27": 238,
+   "291": 1,
+   "12": 40,
+   "216": 5,
+   "170": 2862,
+   "373": 1,
+   "355": 207,
+   "189": 26,
+   "235": 85,
+   "28": 29,
+   "24": 2,
+   "221": 12,
+   "222": 12,
+   "228": 2952,
+   "227": 2781,
+   "196": 227,
+   "307": 5,
+   "308": 4,
+   "359": 544,
+   "18": 204,
+   "336": 215,
+   "391": 112,
+   "4": 3206,
+   "288": 234,
+   "22": 7626,
+   "198": 639,
+   "178": 3028,
+   "329": 3256,
+   "292": 82,
+   "293": 81,
+   "3": 607,
+   "394": 1988,
+   "388": 195,
+   "199": 2335,
+   "344": 11,
+   "334": 790,
+   "301": 1390,
+   "339": 1,
+   "286": 1,
+   "324": 604,
+   "340": 79,
+   "346": 308,
+   "348": 64,
+   "342": 293,
+   "350": 33,
+   "245": 4,
+   "25": 2,
+   "385": 2,
+   "384": 2,
+   "206": 837,
+   "357": 4,
+   "372": 3,
+   "354": 2,
+   "349": 119,
+   "5": 3840
+  },
+  "child_packets": {
+   "candidates": 2465,
+   "selected": 1088,
+   "entered": 1088,
+   "rejected": 0,
+   "reused": 597,
+   "fresh": 491
+  },
+  "mean_per_issued_root_and_selected_child": 0.22347980877751575,
+  "mean_per_issued_root_and_all_child_decisions": 0.22207683855878693,
+  "mean_per_committed_root_and_fresh_child": 0.36940892751512944
+ },
+ "deriche": {
+  "exact": {
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 635818,
+   "neural_rhs": 635818,
+   "direct_cells": 450414,
+   "root_allocated": 447949,
+   "state_sha": "f9181c677ec837e878719ee601dddf7a0700ed236f8eac364d3ecfb40712b7b8",
+   "root_ids": "4f7c3302156f1e94964e614c6236341e732b864f274600da6fca8893e5ceaf8b",
+   "physical": "694057f7b97aaef25832620f6ff6d886df3aa8a8ed95bf06b140b57970b80751",
+   "root_parents": "375fd17ace78384b65e6eea4753025eea3d630fec633912a48a1f9309c914f75",
+   "children": "32c44f7126d83c16dec3a5ef8ff809ff9dba136b5994d1cb2216d19504417247",
+   "wire_hash": "4565026733861235641",
+   "commits": "c84c1f5872bb30ea5899f58e55d35d79b8406b0821db10b5b56c9a37781e39d4",
+   "multi": "208f23744aa875711e3da4b3ba921a0787a44139088512d8f125580a15655f1f"
+  },
+  "runs": 5687,
+  "issued_roots": {
+   "single": 667034,
+   "multi": 309277
+  },
+  "activations": {
+   "initial_constructors": 128,
+   "run_constructors": 165217,
+   "nested_dynamic": 4894,
+   "unowned_runtime": 70,
+   "typed_rhs": 160253,
+   "runtime_dynamic": 4894
+  },
+  "all_activations": 165345,
+  "source_birth_digest": "8a3ce364224a0b2ddd9509550a391883b31d3f66e92a956956a09b135b3864c2",
+  "per_committed_root": {
+   "counts": {
+    "0": 512758,
+    "1": 95442,
+    "2": 16918,
+    "3": 10202,
+    "4": 496,
+    "7": 1,
+    "3272": 1
+   },
+   "denominator": 635818,
+   "births": 165147,
+   "zero": 512758,
+   "one": 95442,
+   "two_plus": 27618,
+   "max": 3272,
+   "mean": 0.25973942228750996
+  },
+  "per_issued_root": {
+   "counts": {
+    "0": 853251,
+    "1": 95442,
+    "2": 16918,
+    "3": 10202,
+    "4": 496,
+    "7": 1,
+    "3272": 1
+   },
+   "denominator": 976311,
+   "births": 165147,
+   "zero": 853251,
+   "one": 95442,
+   "two_plus": 27618,
+   "max": 3272,
+   "mean": 0.1691540912680488
+  },
+  "per_committed_provider": {
+   "single": {
+    "counts": {
+     "0": 403956,
+     "1": 28251,
+     "2": 2354,
+     "3": 358,
+     "4": 1,
+     "3272": 1
+    },
+    "denominator": 434921,
+    "births": 37309,
+    "zero": 403956,
+    "one": 28251,
+    "two_plus": 2714,
+    "max": 3272,
+    "mean": 0.08578339514532524
+   },
+   "multi": {
+    "counts": {
+     "0": 108802,
+     "1": 67191,
+     "2": 14564,
+     "3": 9844,
+     "4": 495,
+     "7": 1
+    },
+    "denominator": 200897,
+    "births": 127838,
+    "zero": 108802,
+    "one": 67191,
+    "two_plus": 24904,
+    "max": 7,
+    "mean": 0.6363360328924772
+   }
+  },
+  "per_original_spine_root": {
+   "counts": {
+    "0": 537244,
+    "1": 66850,
+    "2": 20047,
+    "3": 8484,
+    "4": 2887,
+    "5": 57,
+    "6": 30,
+    "7": 5,
+    "8": 5,
+    "9": 4,
+    "10": 19,
+    "11": 9,
+    "12": 26,
+    "13": 2,
+    "14": 3,
+    "15": 4,
+    "16": 5,
+    "17": 6,
+    "18": 16,
+    "19": 7,
+    "20": 2,
+    "21": 2,
+    "22": 3,
+    "23": 7,
+    "24": 28,
+    "25": 2,
+    "26": 4,
+    "27": 1,
+    "28": 3,
+    "29": 6,
+    "30": 9,
+    "32": 2,
+    "33": 2,
+    "34": 2,
+    "35": 2,
+    "36": 3,
+    "37": 1,
+    "38": 3,
+    "41": 3,
+    "42": 2,
+    "43": 1,
+    "44": 2,
+    "45": 1,
+    "47": 2,
+    "48": 2,
+    "50": 1,
+    "53": 2,
+    "59": 1,
+    "60": 1,
+    "68": 1,
+    "71": 1,
+    "72": 1,
+    "84": 1,
+    "90": 1,
+    "108": 1,
+    "120": 1,
+    "15617": 1
+   },
+   "denominator": 635818,
+   "births": 165147,
+   "zero": 537244,
+   "one": 66850,
+   "two_plus": 31724,
+   "max": 15617,
+   "mean": 0.25973942228750996
+  },
+  "spine_live_steps": 112378,
+  "cross_run_resumes": 112378,
+  "cross_run_constructor_births": 28487,
+  "producers_with_cross_run_births": 10004,
+  "retention": {
+   "original_visible_per_committed_root": {
+    "counts": {
+     "0": 539906,
+     "1": 80687,
+     "2": 8932,
+     "3": 6290,
+     "4": 1,
+     "5": 1,
+     "3006": 1
+    },
+    "denominator": 635818,
+    "births": 120436,
+    "zero": 539906,
+    "one": 80687,
+    "two_plus": 15225,
+    "max": 3006,
+    "mean": 0.18941898467800533,
+    "per_issued_root": 0.12335823318594177,
+    "per_root_and_selected_child": 0.12286328709994654,
+    "per_root_and_all_child_decisions": 0.12183108778624023
+   },
+   "original_visible_spine_reattribution": {
+    "counts": {
+     "0": 558171,
+     "1": 58651,
+     "2": 11839,
+     "3": 5362,
+     "4": 1558,
+     "5": 22,
+     "6": 37,
+     "7": 4,
+     "8": 13,
+     "9": 11,
+     "10": 12,
+     "11": 10,
+     "12": 8,
+     "13": 4,
+     "14": 6,
+     "15": 2,
+     "16": 8,
+     "17": 6,
+     "18": 8,
+     "19": 3,
+     "20": 4,
+     "21": 4,
+     "22": 9,
+     "23": 2,
+     "24": 10,
+     "25": 4,
+     "26": 3,
+     "27": 2,
+     "28": 5,
+     "29": 1,
+     "30": 5,
+     "31": 1,
+     "32": 1,
+     "33": 5,
+     "34": 3,
+     "36": 1,
+     "37": 1,
+     "38": 2,
+     "39": 1,
+     "42": 3,
+     "43": 1,
+     "44": 3,
+     "45": 1,
+     "47": 1,
+     "50": 1,
+     "51": 1,
+     "52": 1,
+     "56": 1,
+     "57": 1,
+     "65": 1,
+     "68": 2,
+     "76": 1,
+     "11650": 1
+    },
+    "denominator": 635818,
+    "births": 120436,
+    "zero": 558171,
+    "one": 58651,
+    "two_plus": 18996,
+    "max": 11650,
+    "mean": 0.18941898467800533
+   },
+   "by_origin": {
+    "initial": {
+     "visible": 128
+    },
+    "owned": {
+     "visible": 120436,
+     "coalesced_to_visible": 42684,
+     "hidden": 1445,
+     "coalesced_to_hidden": 582
+    },
+    "unowned": {
+     "visible": 69,
+     "coalesced_to_visible": 1
+    }
+   },
+   "owned_visible_paths": {
+    "typed_rhs": 116478,
+    "runtime_dynamic": 3958
+   },
+   "selected_child_original_visible": 2465,
+   "endpoint_sha": "c8367e24172ee8ec57b81270af1c28b965232877507a9edf9578483dbc5d0cd8",
+   "displacements_sha": "ed5fdd6a2ee75241f838c100d0451b940818291650bf4c77d4ac54ff733d5984",
+   "extremes": {
+    "immediate": {
+     "serial": 1,
+     "rule": 375,
+     "provider": "single",
+     "epoch": 1,
+     "ruleset": "initialization",
+     "source_name_prefix": "(rule ()\n      ((let __tmp0 (StateT ))\n       (let __tmp1 (TNil ))\n       (let __tmp2 (TCons __tmp0 __tmp1))\n       (let __tmp3 (TupleT __tmp2))\n     ",
+     "credited_visible": 3006
+    },
+    "spine_attribution": {
+     "serial": 1,
+     "rule": 375,
+     "provider": "single",
+     "epoch": 1,
+     "ruleset": "initialization",
+     "source_name_prefix": "(rule ()\n      ((let __tmp0 (StateT ))\n       (let __tmp1 (TNil ))\n       (let __tmp2 (TCons __tmp0 __tmp1))\n       (let __tmp3 (TupleT __tmp2))\n     ",
+     "credited_visible": 11650
+    }
+   }
+  },
+  "exclusive_issued_packet_distributions": {
+   "constructor_births": {
+    "counts": {
+     "0": 857184,
+     "1": 95442,
+     "2": 16918,
+     "3": 10202,
+     "4": 496,
+     "7": 1,
+     "3272": 1
+    },
+    "zero": 857184,
+    "one": 95442,
+    "two_plus": 27618,
+    "denominator": 980244,
+    "births": 165147,
+    "max": 3272
+   },
+   "original_visible": {
+    "counts": {
+     "0": 884332,
+     "1": 80687,
+     "2": 8932,
+     "3": 6290,
+     "4": 1,
+     "5": 1,
+     "3006": 1
+    },
+    "zero": 884332,
+    "one": 80687,
+    "two_plus": 15225,
+    "denominator": 980244,
+    "births": 120436,
+    "max": 3006
+   }
+  },
+  "per_committed_provider_visible": {
+   "single": {
+    "counts": {
+     "0": 410726,
+     "1": 22642,
+     "2": 1256,
+     "3": 295,
+     "4": 1,
+     "3006": 1
+    },
+    "denominator": 434921,
+    "births": 29049,
+    "zero": 410726,
+    "one": 22642,
+    "two_plus": 1553,
+    "max": 3006,
+    "mean": 0.06679144028455743
+   },
+   "multi": {
+    "counts": {
+     "0": 129180,
+     "1": 58045,
+     "2": 7676,
+     "3": 5995,
+     "5": 1
+    },
+    "denominator": 200897,
+    "births": 91387,
+    "zero": 129180,
+    "one": 58045,
+    "two_plus": 13672,
+    "max": 5,
+    "mean": 0.45489479683618966
+   }
+  },
+  "without_initialization": {
+   "committed_roots": 635817,
+   "initialization_roots": 1,
+   "all_born": {
+    "counts": {
+     "0": 512758,
+     "1": 95442,
+     "2": 16918,
+     "3": 10202,
+     "4": 496,
+     "7": 1
+    },
+    "denominator": 635817,
+    "births": 161875,
+    "zero": 512758,
+    "one": 95442,
+    "two_plus": 27617,
+    "max": 7,
+    "mean": 0.254593695984851
+   },
+   "original_visible": {
+    "counts": {
+     "0": 539906,
+     "1": 80687,
+     "2": 8932,
+     "3": 6290,
+     "4": 1,
+     "5": 1
+    },
+    "denominator": 635817,
+    "births": 117430,
+    "zero": 539906,
+    "one": 80687,
+    "two_plus": 15224,
+    "max": 5,
+    "mean": 0.18469150714749685
+   }
+  },
+  "extremes": {
+   "immediate": {
+    "serial": 1,
+    "provider": "single",
+    "epoch": 1,
+    "rule": 375,
+    "ruleset": "initialization",
+    "name_prefix": "(rule ()\n      ((let __tmp0 (StateT ))\n       (let __tmp1 (TNil ))\n       (let __tmp2 (TCons __tmp0 __tmp1))\n       (let __tmp3 (TupleT __tmp2))\n       (let __tmp4 (Print ))\n       (let __tmp5 (Bool t",
+    "template": 375,
+    "static_rhs_instructions": 6715,
+    "immediate_paths": {
+     "typed_rhs": 3272
+    },
+    "credited_births": 3272,
+    "descendant_tokens_with_births": 0,
+    "distinct_runs_with_births": 1,
+    "descendant_typed_rhs": 0,
+    "descendant_dynamic": 0
+   },
+   "spine_attribution": {
+    "serial": 1,
+    "provider": "single",
+    "epoch": 1,
+    "rule": 375,
+    "ruleset": "initialization",
+    "name_prefix": "(rule ()\n      ((let __tmp0 (StateT ))\n       (let __tmp1 (TNil ))\n       (let __tmp2 (TCons __tmp0 __tmp1))\n       (let __tmp3 (TupleT __tmp2))\n       (let __tmp4 (Print ))\n       (let __tmp5 (Bool t",
+    "template": 375,
+    "static_rhs_instructions": 6715,
+    "immediate_paths": {
+     "typed_rhs": 3272
+    },
+    "credited_births": 15617,
+    "descendant_tokens_with_births": 11270,
+    "distinct_runs_with_births": 33,
+    "descendant_typed_rhs": 12345,
+    "descendant_dynamic": 0
+   }
+  },
+  "unowned_tables": [
+   [
+    "Smaller",
+    "None",
+    true,
+    70
+   ]
+  ],
+  "table_constructor_counts": {
+   "327": 1,
+   "337": 1,
+   "335": 729,
+   "358": 538,
+   "24": 1,
+   "238": 1,
+   "177": 436,
+   "244": 7,
+   "15": 32,
+   "223": 8683,
+   "291": 2,
+   "12": 18,
+   "323": 4691,
+   "216": 10,
+   "170": 10520,
+   "27": 698,
+   "373": 1,
+   "355": 257,
+   "189": 116,
+   "235": 112,
+   "221": 6,
+   "222": 6,
+   "228": 7137,
+   "227": 8039,
+   "196": 433,
+   "307": 6,
+   "308": 4,
+   "359": 2382,
+   "18": 680,
+   "336": 867,
+   "391": 216,
+   "4": 7897,
+   "288": 499,
+   "22": 14024,
+   "198": 2108,
+   "178": 7797,
+   "329": 8474,
+   "292": 262,
+   "293": 260,
+   "3": 1632,
+   "388": 647,
+   "394": 26740,
+   "199": 6217,
+   "344": 18,
+   "334": 5747,
+   "301": 7703,
+   "339": 1,
+   "286": 1,
+   "324": 4964,
+   "340": 372,
+   "346": 2318,
+   "348": 339,
+   "350": 70,
+   "342": 2628,
+   "245": 7,
+   "25": 1,
+   "206": 2874,
+   "357": 5,
+   "191": 2,
+   "354": 2,
+   "194": 2,
+   "361": 1,
+   "192": 28,
+   "182": 60,
+   "349": 147,
+   "330": 1943,
+   "5": 9500,
+   "183": 3262,
+   "285": 18,
+   "271": 17
+  },
+  "child_packets": {
+   "candidates": 12238,
+   "selected": 3933,
+   "entered": 3933,
+   "rejected": 0,
+   "reused": 1468,
+   "fresh": 2465
+  },
+  "mean_per_issued_root_and_selected_child": 0.16847540000244837,
+  "mean_per_issued_root_and_all_child_decisions": 0.1670600041070296,
+  "mean_per_committed_root_and_fresh_child": 0.25873632855645534
+ }
+}
