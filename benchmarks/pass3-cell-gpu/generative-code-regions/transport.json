@@ -1,0 +1,148 @@
+{
+  "classification": "transport diagnostic only; these descriptors do not explicitly identify each parent; no explicit-parent FEPT result",
+  "status": "stopped by user; no further region optimization",
+  "jobs": {
+    "2721": "cancelled",
+    "2722": "cancelled"
+  },
+  "sum_bits_faults": {
+    "bad_region_keys": [
+      8,
+      "region public learned-key coverage mismatch"
+    ],
+    "fault": [
+      8,
+      "region public pair extent mismatch"
+    ]
+  },
+  "cases": {
+    "sum-bits": {
+      "compound": {
+        "regional_or_explicit_descriptors": 1542,
+        "candidate_pairs_visited": 14818,
+        "descriptor_wire_bytes": 131716,
+        "visible_source_origins": 2691,
+        "all_transport_records": 4249,
+        "native_ms": [
+          45.217958,
+          43.238875,
+          45.099334,
+          45.622334
+        ],
+        "wall_ms": [
+          89.05479195527732,
+          81.26004203222692,
+          84.15091701317579,
+          86.37720893602818
+        ],
+        "diagnostic_ms": {
+          "source_pair_ms": 0.0,
+          "issue_ms": 4.628034000000002,
+          "receiver_ms": 7.831298000000012
+        }
+      },
+      "large_explicit": {
+        "regional_or_explicit_descriptors": 1348,
+        "candidate_pairs_visited": 15436,
+        "descriptor_wire_bytes": 117076,
+        "visible_source_origins": 2691,
+        "all_transport_records": 4055,
+        "native_ms": [
+          45.401833,
+          43.995458,
+          48.325832999999996,
+          45.45183299999999
+        ],
+        "wall_ms": [
+          82.61941594537348,
+          81.47762494627386,
+          88.13558309338987,
+          89.28491699043661
+        ],
+        "diagnostic_ms": {
+          "source_pair_ms": 0.0,
+          "issue_ms": 4.699791999999986,
+          "receiver_ms": 7.597859999999999
+        }
+      },
+      "region": {
+        "regional_or_explicit_descriptors": 1662,
+        "candidate_pairs_visited": 15436,
+        "descriptor_wire_bytes": 212736,
+        "visible_source_origins": 2691,
+        "all_transport_records": 4369,
+        "native_ms": [
+          49.479167,
+          50.532959000000005,
+          52.007791,
+          49.76075
+        ],
+        "wall_ms": [
+          87.43729197885841,
+          90.61808395199478,
+          90.59124998748302,
+          91.46687504835427
+        ],
+        "diagnostic_ms": {
+          "source_pair_ms": 0.0,
+          "issue_ms": 5.135799000000007,
+          "receiver_ms": 12.60506700000001
+        }
+      },
+      "learned": {
+        "regional_or_explicit_descriptors": 2142,
+        "candidate_pairs_visited": 15436,
+        "descriptor_wire_bytes": 274176,
+        "visible_source_origins": 2691,
+        "all_transport_records": 4849,
+        "native_ms": [
+          50.256207999999994,
+          51.416917,
+          49.685041999999996,
+          49.937333
+        ],
+        "wall_ms": [
+          87.94454205781221,
+          90.803875005804,
+          88.59170798677951,
+          89.10337497945875
+        ],
+        "diagnostic_ms": {
+          "source_pair_ms": 0.0,
+          "issue_ms": 5.130117999999999,
+          "receiver_ms": 12.614021999999995
+        }
+      }
+    },
+    "3mm": {
+      "compound": {
+        "regional_or_explicit_descriptors": 40264,
+        "candidate_pairs_visited": 683319,
+        "descriptor_wire_bytes": 3973660,
+        "visible_source_origins": 92658,
+        "all_transport_records": 95202
+      },
+      "large_explicit": {
+        "regional_or_explicit_descriptors": 27801,
+        "candidate_pairs_visited": 688209,
+        "descriptor_wire_bytes": 3026600,
+        "visible_source_origins": 92658,
+        "all_transport_records": 82739
+      },
+      "region": {
+        "regional_or_explicit_descriptors": 12242,
+        "candidate_pairs_visited": 688209,
+        "descriptor_wire_bytes": 1566976,
+        "visible_source_origins": 92658,
+        "all_transport_records": 67180
+      },
+      "learned": {
+        "regional_or_explicit_descriptors": 17634,
+        "candidate_pairs_visited": 688209,
+        "descriptor_wire_bytes": 2257152,
+        "visible_source_origins": 92658,
+        "all_transport_records": 72572
+      }
+    }
+  }
+}
