@@ -1,0 +1,116 @@
+{
+ "sum-bits": {
+  "raw": {
+   "effective_per_packet": 0.19232418524871356,
+   "delta_kib": 9490,
+   "time_ms": 28.519,
+   "crossings": {
+    "reached": 4
+   },
+   "peak_mib": 270.171875,
+   "redeemed_at_threshold": 0.0,
+   "plain_inference_ms": 34.7701875
+  },
+  "filter": {
+   "effective_per_packet": 0.21252566735112938,
+   "delta_kib": 9490,
+   "time_ms": 27.9175,
+   "crossings": {
+    "reached": 4
+   },
+   "peak_mib": 270.6953125,
+   "redeemed_at_threshold": 0.0,
+   "plain_inference_ms": 36.696708
+  },
+  "packed": {
+   "effective_per_packet": 0.21252566735112938,
+   "delta_kib": 9490,
+   "time_ms": 27.898,
+   "crossings": {
+    "reached": 4
+   },
+   "peak_mib": 270.625,
+   "redeemed_at_threshold": 0.0,
+   "plain_inference_ms": 36.149187000000005
+  },
+  "ports": {
+   "effective_per_packet": 0.21252566735112938,
+   "delta_kib": 9490,
+   "time_ms": 27.286499999999997,
+   "crossings": {
+    "reached": 4
+   },
+   "peak_mib": 270.7265625,
+   "redeemed_at_threshold": 0.0,
+   "plain_inference_ms": 36.3097915
+  },
+  "fraction": {
+   "effective_per_packet": 0.21252566735112938,
+   "delta_kib": 9490,
+   "time_ms": 35.4055,
+   "crossings": {
+    "reached": 4
+   },
+   "peak_mib": 270.6484375,
+   "redeemed_at_threshold": 3481.0,
+   "plain_inference_ms": 47.0403125
+  }
+ },
+ "3mm": {
+  "raw": {
+   "effective_per_packet": 0.0867058189413165,
+   "delta_kib": 270446,
+   "time_ms": 1499.25,
+   "crossings": {
+    "reached": 4
+   },
+   "peak_mib": 698.4296875,
+   "redeemed_at_threshold": 0.0,
+   "plain_inference_ms": 2033.195271
+  },
+  "filter": {
+   "effective_per_packet": 0.16603174489404632,
+   "delta_kib": 270446,
+   "time_ms": 1440.0459999999998,
+   "crossings": {
+    "reached": 4
+   },
+   "peak_mib": 698.1640625,
+   "redeemed_at_threshold": 0.0,
+   "plain_inference_ms": 1923.2717710000002
+  },
+  "packed": {
+   "effective_per_packet": 0.16603174489404632,
+   "delta_kib": 270446,
+   "time_ms": 1371.5835000000002,
+   "crossings": {
+    "reached": 4
+   },
+   "peak_mib": 697.8828125,
+   "redeemed_at_threshold": 0.0,
+   "plain_inference_ms": 1956.899396
+  },
+  "ports": {
+   "effective_per_packet": 0.16603174489404632,
+   "delta_kib": 270446,
+   "time_ms": 1497.225,
+   "crossings": {
+    "reached": 4
+   },
+   "peak_mib": 696.609375,
+   "redeemed_at_threshold": 0.0,
+   "plain_inference_ms": 1879.7979794999999
+  },
+  "fraction": {
+   "effective_per_packet": 0.16603174489404632,
+   "delta_kib": 270446,
+   "time_ms": 1314.856,
+   "crossings": {
+    "reached": 4
+   },
+   "peak_mib": 712.875,
+   "redeemed_at_threshold": 130660.5,
+   "plain_inference_ms": 1998.2765835
+  }
+ }
+}
