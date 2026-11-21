@@ -1,0 +1,60 @@
+{
+  "conjugate-gradient": {
+    "capture_sha256": "8d91fae0742157e8a68d51d6067914dab157300a55b8af48f89243e820c856fe",
+    "selected": 72960,
+    "first": 36907,
+    "local_oracle": 59752,
+    "per_run_oracle": 68637,
+    "bounds": {
+      "bce-0-1703": {
+        "lower": 36187,
+        "upper": 37844,
+        "random_tie_mean": 37129.914177459585
+      },
+      "quota-0-1703": {
+        "lower": 36135,
+        "upper": 37927,
+        "random_tie_mean": 37098.47158655837
+      },
+      "bce-8-1703": {
+        "lower": 38982,
+        "upper": 41312,
+        "random_tie_mean": 40203.84331348837
+      },
+      "quota-8-1703": {
+        "lower": 40034,
+        "upper": 42340,
+        "random_tie_mean": 41269.404954582664
+      }
+    }
+  },
+  "3mm": {
+    "capture_sha256": "c94536fe4adaf6e7e8d1c33ee0b4e1700669ffe475da025962ea9610cdc0f607",
+    "selected": 172547,
+    "first": 78955,
+    "local_oracle": 137864,
+    "per_run_oracle": 158785,
+    "bounds": {
+      "bce-0-1703": {
+        "lower": 78838,
+        "upper": 83655,
+        "random_tie_mean": 81143.10551408534
+      },
+      "quota-0-1703": {
+        "lower": 76948,
+        "upper": 82990,
+        "random_tie_mean": 79623.63541877847
+      },
+      "bce-8-1703": {
+        "lower": 79820,
+        "upper": 86680,
+        "random_tie_mean": 83034.28980592858
+      },
+      "quota-8-1703": {
+        "lower": 80509,
+        "upper": 87119,
+        "random_tie_mean": 83509.32919524549
+      }
+    }
+  }
+}
