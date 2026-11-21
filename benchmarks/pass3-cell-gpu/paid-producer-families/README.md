@@ -1,5 +1,7 @@
 # Learn which externally issued producers carry a consumer-family right
 
+> **Metric clarification.** The flag on an explicit producer grants a consumer family a future right. The subsequent bindings and their parent addresses can be recovered by the runtime. Ratios pooling those consumer births against fewer emitted packets are external transport yields and do not establish explicit-parent FEPT. [Explicit-parent FEPT accounting](../../../docs/EXPLICIT_PARENT_FEPT.zh.md)
+
 The existing mixed integral path can replace an external consumer packet with an exact activation released from a previously accepted Spine root. A producer inside that lineage may itself have arrived via a real, independent model packet. This experiment lets the issuer give such a producer a one-hop family right. The right covers compiler-proven consumers of its actual future published ports on the original Run schedule. An internally synthesized result cannot create a new paid right. This makes the origin of the authority checkable when there are siblings or several consecutive opportunities.
 
 The issuer sets one bit in the existing template word of an external singleton page or typed multi-parent header **before verification**. Individual candidates retain their source identity and count as individual emitted packets. Decoding separates the bit and template ID. The original verifier must accept the actual root before the issued serial, producer rule, original root owner and source Run can be attached to that live producer cursor. On the later Run the child checker validates that exact predecessor, current visible source row, ordered compiler-proven complete keys and computed slots. The local eligible consumer then competes in the existing mixed ordered arbitration. A wrong predecessor is an error. Internal fallback records use an unmarked template; an internal delivery can neither authorize itself nor recursively manufacture a paid grant.
@@ -10,7 +12,7 @@ Two source-separated donor programs, dot-product and jacobi-1d, execute the same
 
 The donors supply 224 and 1,237 actual additional committed children. Eight producer schemas pass the threshold and seven are present in each held-out compiled program. Keys hash the query, effects, slots and interface of a compiled rule. At deployment the compiler maps the eight learnt schemas to the target rule directory. The per-packet option is a policy lookup, not a new large neural model or an additional neural inference over every live graph node. The original actor weights, logits and recurrence remain frozen. [Donor counts, coefficients and frozen decisions](policy.json) · [Pinned source and executable](manifest.json)
 
-## True externally emitted packets and endpoint births
+## External transport counts and endpoint births
 
 | Workload / policy | Emitted singleton | Emitted multi | Selected child | Total external | New / final-visible constructor births per packet | Full inference ms |
 |---|---:|---:|---:|---:|---:|---:|

@@ -1,5 +1,7 @@
 # Generate the two-parent candidate family before the directional join
 
+> **Metric clarification.** Each family describes a span and prototype bounds. The receiver discovers its concrete parent pairs from public indexes. Charging the family once measures external transport yield, including when the expanded lane stream matches the source exactly. [Explicit-parent FEPT accounting](../../../docs/EXPLICIT_PARENT_FEPT.zh.md)
+
 The sender scans each table marginally. For a bounded interval of the public left frame, the trained tied projection produces the occupied query prototype IDs. The sender asks the right-table histogram how many rows have each corresponding key prototype and their maximum epoch. It can certify an absent prototype or a fully stale interval without visiting a single pair. It packs the remaining dynamic prototype IDs into a byte stream before the first candidate tuple in that occurrence is enumerated. This route enters before the ordinary issuer chooses forward, reverse-delta or guarded pair traversal. Higher-arity rule entries retain the original explicit issuer.
 
 Each packet encodes nine little-endian 64-bit words (source epoch, original rule, left/right public generations, begin/end of the left interval, offset/limit inside each matched right posting and the predicted pair count), followed by bounded 32-bit learned prototypes. It contains no row IDs or candidate pairs. A small packet covers at most 8 left positions, 2 prototypes and 64 possible pairs. A wide packet covers at most 32 positions, 8 prototypes and 256 pairs. A heavy single prototype is split at a bounded posting offset. Neither the choices nor the packet budget depend on later winners. The query/key network is the frozen donor model common to the other verified-wave studies; the packetizer and its sizes are deterministic algorithm choices.
@@ -10,7 +12,7 @@ The audit compares the *complete* regenerated raw multi-parent stream, ordered s
 
 ## Source-aligned Pass 3 results
 
-| Workload | Scope | Group packets | External pair proposals replaced | Receiver pairs visited | Final-visible births on generated lanes | FEPT, emitted | FEPT, including absent/stale | Matched optimistic FEPT ceiling | Native median, ms |
+| Workload | Scope | Group packets | External pair proposals replaced | Receiver pairs visited | Final-visible births on generated lanes | External transport yield | Yield including absent/stale | Matched optimistic transport-yield ceiling | Native median, ms |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | 3mm | off | 0 | 0 | 0 | 0 | 0.166032 | 0.166032 | 0.166032 | 1,725.01 |
 | 3mm | small | 199,223 | 176,167 | 4,632,190 | 37,286 | 0.159445 | 0.023214 | 0.163443 | 2,313.52 |

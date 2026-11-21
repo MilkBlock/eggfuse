@@ -1,5 +1,7 @@
 # Remove actual singleton wire packets from fully certified Run occurrences
 
+> **Metric clarification.** A released fact certificate lets the runtime reconstruct a consumer whose external proposal was suppressed. A birth rate using only transmitted packets measures external transport yield. The suppressed consumer contributes no separately demonstrated model choice of its concrete parents. [Explicit-parent FEPT accounting](../../../docs/EXPLICIT_PARENT_FEPT.zh.md)
+
 A previously accepted producer root already supplies a fact and ownership certificate to a future consumer. At its original Run release, the independent integral verifier reads the published source address/version, checks the key program and computes a potential exact binding. The outer model still scores its ordinary source bank, including each rejected candidate, using its actual prior recurrent state.
 
 A rule occurrence is eligible for suppression when its singleton plan has a compiler-proved deterministic pivot. Every proposed source address and version must appear exactly once in the independently released bank for that very pivot, in the same order. Every learned decision must send, and the certified model must have a common exact score for each occupied old/fresh group. Sizes, source order, aliases, watermark and parent/root identities have to agree. Missing, colliding or differently ordered banks use the ordinary external issuer. Suppression does not read eventual accepted tickets.

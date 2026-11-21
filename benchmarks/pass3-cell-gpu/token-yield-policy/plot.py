@@ -28,7 +28,7 @@ def plot(out):
             ax.grid(alpha=.23)
             ax.spines["top"].set_visible(False)
             ax.spines["right"].set_visible(False)
-        axes[0].set_ylabel("Visible new constructor origins / issued packet")
+        axes[0].set_ylabel("Visible origins / emitted explicit proposal")
         fig.legend(*axes[0].get_legend_handles_labels(),loc="lower center",frameon=False,ncol=5)
         fig.tight_layout(rect=(0,.11,1,1))
         fig.savefig(out,metadata={"Date":None});plt.close(fig)

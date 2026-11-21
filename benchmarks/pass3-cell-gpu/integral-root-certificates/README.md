@@ -1,5 +1,7 @@
 # One issued root and independently verified consumer activations at later Run releases
 
+> **Metric clarification.** The supplemental seed and its later child have different responsibilities. Births credited across a released lineage per paid seed describe lineage influence and transport cost. A seed gets explicit-parent credit for its own named binding only under the linked accounting contract. [Explicit-parent FEPT accounting](../../../docs/EXPLICIT_PARENT_FEPT.zh.md)
+
 The existing CPU path first verifies the model's individual candidate. Spine then takes the already verified bindings, joins their original fact addresses to scheduled entries with a published cursor, chooses its ordinary owner and continues at the recorded ordering point. A Spine resume alone cannot establish that an external consumer token was unnecessary.
 
 The experiment implements a second, causal certificate verifier inside the live Rust EggFuse Cell CPU engine. Each newly accepted Spine root contributes one genuine original model root serial, producer rule, source Run and unique Spine owner ID. All such roots are charged, including roots that never lead to an accepted consumer. A page, batch or future observed chain introduces no token.

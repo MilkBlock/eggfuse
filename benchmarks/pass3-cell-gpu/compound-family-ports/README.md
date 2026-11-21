@@ -1,5 +1,7 @@
 # Use a compiler-proved arithmetic port in the family packet
 
+> **Metric clarification.** The compiled arithmetic port reduces the combinations inspected by the receiver. The receiver still supplies individual parent addresses. Counts per emitted family describe external transport yield; they cannot establish an explicit-parent FEPT improvement. [Explicit-parent FEPT accounting](../../../docs/EXPLICIT_PARENT_FEPT.zh.md)
+
 The primary-only family study generated millions of possible combinations for one frequent shape. Its producer knew the relation between the two scalar columns, but its packet described only the learned signature of the common Expr. This experiment tests whether exposing both learned port codes before expansion lets the receiver avoid those combinations. It uses the same frozen model, original source program and 32-left / 8-key / 256-pair bounds as the [primary-key wide study](../generative-pair-families/README.md).
 
 A compiler Equation is admitted if a two-parent plan computes the output of a recognized checked integer operation from one parent's columns or literals, and that output occupies a known column on the other parent. In rule 144 the second SubTuple must begin at the first SubTuple's start plus its length. No rule ID or workload name appears in the extraction or packetizer. The typed compiler still governs the arithmetic, including undefined results. The frozen neural projection maps the resulting integer to its query or key code. The compound packet stores the original primary code and the scalar code as a full pair of 32-bit words. Distinct pairs of codes cannot alias in the encoding. Unequal source values can still share a learned signature; the original verifier checks the source rule. An unknown projected value on either side keeps the whole original one-key route for that occurrence.
@@ -8,7 +10,7 @@ The sender materializes an additional projected column for each proved side, cac
 
 ## Held-out 3mm results
 
-| Native configuration | Family actions | Pairs expanded by receiver | Total external root / family / selected-child packets | Final-visible nodes per emitted packet | Including failed prototypes | Complete inference median |
+| Native configuration | Family actions | Pairs expanded by receiver | Total external root / family / selected-child packets | External transport yield (visible origins per emitted packet) | Including failed prototypes | Complete inference median |
 |---|---:|---:|---:|---:|---:|---:|
 | Original directional issuer | 0 | — | 558,074 | 0.166032 | 0.166032 | 1,843.05 ms |
 | Primary-key wide families | 58,264 | 4,633,068 | 440,171 | 0.210505 | 0.024703 | 2,691.90 ms |

@@ -1,10 +1,12 @@
 # What could a higher-arity root window save?
 
+> **Metric clarification.** The window identifies an interval of source rows. The receiver would still have to identify the individual parents in that interval. The projected packet savings and hindsight ceilings concern external transport only; this opportunity scan measured no explicit-parent FEPT. [Explicit-parent FEPT accounting](../../../docs/EXPLICIT_PARENT_FEPT.zh.md)
+
 The complete live interpreter counts how many actual external tuples descend from disjoint blocks of 16 or 64 publicly ordered root rows for each query with three or more independent parents. It registers each lease candidate and its features before exploring any rows in that block. It records the number of sealed descendants at the block boundary. This **measures the opportunity** for a future fixed-size verifier action. No grouped high-arity packets are issued in this study; the native path still issues every ordinary tuple. The simultaneous singleton and two-parent bucket controls are the measured joint-fept-actors configurations.
 
 Each training example has independent parent count, actual window extent, fresh root count, three table size bins, and presence of a fresh remaining role. The causal features do not include the eventual subtree size. The donor table learns the mean possible return (descendants minus the cost of one new packet) for each condition using real dot-product and jacobi-1d. Conditions with insufficient examples back off to a more general shape. The rule ID is available only for audit. CG and 3mm are held out. The ideal per-window upper bound can choose the best action after observing all descendants and charges one packet for each selected window. For nonsuppressed windows it pays the normal literal tuple count. A real packet would also need usable public membership, learned port constraints and cheap exact expansion, which this study has not established.
 
-| Held-out program | Width | Windows offered | Windows saving at least one packet | Actual high-arity tuples | Donor-selected packet savings (projected) | Hindsight upper bound on savings |
+| Held-out program | Width | Windows offered | Windows with a projected transport saving | Actual high-arity tuples | Donor-selected packet savings (projected) | Hindsight upper bound on savings |
 |---|---:|---:|---:|---:|---:|---:|
 | CG | 16 | 272,333 | 1,421 | 13,787 | +1,745 | 11,232 |
 | CG | 64 | 69,234 | 1,087 | 13,787 | +4,835 | 12,108 |

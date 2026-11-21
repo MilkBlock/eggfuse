@@ -1,6 +1,6 @@
 # Stopped experiment: transport of learned-key regions
 
-**These results do not qualify as explicit-parent FEPT.** A region packet specifies a prefix predicate, a source interval and a posting window. The receiver reads public graph rows to discover which individual parents it denotes. Sending fewer descriptors changes transport traffic; it does not establish that a model independently proposed those parents or generated more final-visible nodes per explicit-parent token. The user stopped region optimization. The active timing job and queued RSS job were cancelled.
+**These results do not qualify as explicit-parent FEPT.** A region packet specifies a prefix predicate, a source interval and a posting window. The receiver reads public graph rows to discover which individual parents it denotes. Sending fewer descriptors changes transport traffic; it does not establish that a model independently proposed those parents or generated more final-visible nodes per explicit-parent token. The user stopped region optimization. The active timing job and queued RSS job were cancelled. [Explicit-parent FEPT accounting](../../../docs/EXPLICIT_PARENT_FEPT.zh.md)
 
 ## Observations before the stop
 

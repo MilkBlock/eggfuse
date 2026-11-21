@@ -1,5 +1,7 @@
 # Emit a singleton policy action before reading the table
 
+> **Metric clarification.** The classifier emits a rule, table and freshness mask. The receiver enumerates the matching parent addresses. The ratios below measure external transport yield (final-visible original constructor facts per emitted packet); the class actions provide no explicit-parent FEPT evidence. [Explicit-parent FEPT accounting](../../../docs/EXPLICIT_PARENT_FEPT.zh.md)
+
 The deployed frozen singleton head has a useful restricted input map. For a rule with a physical pivot and a certified-model flag, the varying feature after compilation is a single bit: is this pivot at least as recent as the rule watermark? Rule features, rule ID and the current four-coordinate recurrent state are fixed at the action boundary. A stale and a fresh score therefore suffice to reconstruct the checkpoint's decision for every address in that rule's current source class.
 
 For an eligible nonempty source call, the actor evaluates the existing head twice on those two feature vectors, thresholds the outputs and emits one **64-byte action**. This happens before acquiring or reading the pivot member list. The empty-table fast path consults public table counts and emits zero actions. The action includes a format, scheduled rule, table and pivot, source epoch, table generation, watermark, starting neural serial, the two exact float logits, a two-bit acceptance mask and a transport checksum. No fields scale with membership. A nullary or otherwise unsupported call stays on the original per-singleton path.
@@ -8,7 +10,7 @@ The receiver validates the context and reconstructs source membership in determi
 
 A native request enables the treatment with numeric `class_actor=1` on the existing packed + scalar-negative path. The selector accepts the certified frozen feature basis, fixed memoized row action 4, learned mode without residual repair, native public header mode 3, and a typed pivot. Controls corrupt the action checksum, table generation or starting serial. All must reject explicitly.
 
-**Metrics.** FEPT is final-visible original constructor e-node identities per external proposal packet. Count one actual class action, every residual singleton root, every multi-parent root, and every selected nested child. The effective numerator excludes initialization already present before inference, unrelated births, retired originals and originals hidden at final export. It includes visible constructors born by the explicit initialization RHS. Fresh nested children receive their own credit. The bidirectional variant additionally charges each feedback record as one packet. Internal per-lane receipt materialization, verification and filtering are separately counted and timed.
+**Metrics.** External transport yield is final-visible original constructor e-node identities per external proposal packet. Count one actual class action, every residual singleton root, every multi-parent root, and every selected nested child. The effective numerator excludes initialization already present before inference, unrelated births, retired originals and originals hidden at final export. It includes visible constructors born by the explicit initialization RHS. Fresh nested children receive their own credit. The bidirectional variant additionally charges each feedback record as one packet. Internal per-lane receipt materialization, verification and filtering are separately counted and timed.
 
 **Wire size.** The actor and recurrent feedback use real fixed-size byte layouts in the native process. To compare different unchanged native object types, the audit also declares a common framing: eight u64 fields per singleton page and 37 bytes per literal (three source words plus u64 neural serial, f32 score and one initial-source flag); six u64 fields per multi-parent page and four u64 fields per raw parent reference; each selected child uses the measured compact JSON representation of its issue-time fields plus an eight-byte length. Forward and bidirectional size totals cover all branches under this declared framing. These figures do not measure network I/O.
 
@@ -16,7 +18,7 @@ A native request enables the treatment with numeric `class_actor=1` on the exist
 
 ## Results
 
-| Workload | Visible original nodes | External proposals, packed → class | FEPT, packed → class | FEPT including feedback | Model evaluations, packed → class | Inference ms, packed → class | Caller wall ms, packed → class |
+| Workload | Visible original nodes | External proposals, packed → class | Transport yield, packed → class | Yield including feedback | Model evaluations, packed → class | Inference ms, packed → class | Caller wall ms, packed → class |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | sum-bits | 2,691 | 12,662 → 7,770 | 0.2125 → 0.3463 | 0.2852 | 1,620 → 3,331 | 31.95 → 33.21 | 68.32 → 70.31 |
 | conjugate-gradient | 34,595 | 217,966 → 90,478 | 0.1587 → 0.3824 | 0.3583 | 5,531 → 12,151 | 633.59 → 666.55 | 752.96 → 784.34 |
@@ -30,7 +32,7 @@ A native request enables the treatment with numeric `class_actor=1` on the exist
 
 Every header reaching class selection after the structural source prefilters received a positive threshold decision in these runs. The frozen actor sometimes excluded the stale class, but public source constraints had already removed all such would-be negative members. The gain is in carrying many positive proposals in a causal fixed-size action. The number of actual neural evaluations rises: the control memoizes only classes it encounters, while the prospective actor pays for both logits before knowing whether either class has members. Reconstruction also reads the complete public bank on each eligible call; it does not reuse the issuer's cached membership list.
 
-The exact source RHS, writes, union, Spine, final graph, physical root/child ledgers, complete singleton decision digest, per-call recurrence digest and endpoint-origin yield all agree. Four paired prepared-process samples per arm followed a warmup; the public decoding and exact lookup work is included. Three native transport fault controls failed as expected in each workload. The higher FEPT did not accelerate whole inference in this experiment. [All samples, denominators and verifier counters](results.json)
+The exact source RHS, writes, union, Spine, final graph, physical root/child ledgers, complete singleton decision digest, per-call recurrence digest and endpoint-origin yield all agree. Four paired prepared-process samples per arm followed a warmup; the public decoding and exact lookup work is included. Three native transport fault controls failed as expected in each workload. The higher transport yield did not accelerate whole inference in this experiment. [All samples, denominators and verifier counters](results.json)
 
 ## Reproduction
 
