@@ -33,6 +33,13 @@ def check():
     md=(HERE/'README.md').read_text()
     evidence=dict(re.findall(r'^- (S\d+)　\[.*?\]\(([^)]+)\)',md,re.M))
     assert len(plates)==165
+    # These archives measure receiver-generated parent identities. Keep their
+    # transport yields outside the explicit-parent FEPT results after regeneration.
+    diagnostics={153, *range(155,166)}
+    assert all(plates[i-1]["status"]=="已测 · 外部传输诊断" for i in diagnostics)
+    assert "0.97328" in plates[164]["note"] and "不参加显式父 FEPT" in plates[164]["note"]
+    assert (HERE.parent/"EXPLICIT_PARENT_FEPT.zh.md").is_file()
+
     for i,p in enumerate(plates,1):
         assert p['id'].startswith(f'{i:02}-') and all(p[k] for k in ('q','arms','fix','measure','note','src'))
         if i<=37:

@@ -121,23 +121,23 @@ Consult the existing evidence before proposing these mechanisms as new:
 
 ## Neural and Bake optimization metrics
 
-Prioritize two outcomes on equivalent source executions. Measure time from
-inference entry to a common, independently calibrated process RSS threshold,
-and measure **FEPT**, final-visible new constructor origins per externally issued token.
-For generative actions, separately charge feedback, failed model/prototype choices
-and verifier expansion, so transport FEPT cannot be mistaken for neural work efficiency. Record
-entry RSS, absolute and incremental crossings (including already reached and
-unreached thresholds), peak RSS, and how many speculative members were later
-redeemed or retired. Keep full inference latency as a secondary metric.
+**FEPT requires explicit independent parents.** A qualifying token selects a static
+Cell template and names each independent external source fact and its version.
+Within a composed template, consume the prior instruction's actual returned
+reference. Check original visibility, guards, keys and release order. A determined
+primitive or scalar projection may be verified; a verifier that discovers an
+unnamed independent parent by enumerating a table, class, bucket, span or
+candidate bank invalidates the treatment for this metric.
 
-Report both first constructor publications and the subset whose original source
-identity remains visible at final export. Count unique original fact references,
-excluding the input graph, duplicate constructor requests and function writes.
-Charge rejected root packets and separately issued child packets in the external
-denominator. Report committed-root yield separately. Cross-Run attribution to
-an ancestor is useful lineage evidence. Credit a composed token with eliminating
-external packets only when the executor really suppresses them while the
-verifier preserves the original release and visibility semantics.
+Use distinct new constructor identities visible in the final export as the
+numerator. Charge failed external proposals, separately issued children, and
+any additional independent choices. For a larger Cell to earn credit, bake its
+ordered wiring before the proposed instance executes, and actually eliminate
+its internally determined proposals on the normal execution path. Establish
+equivalent ordered source execution independently. Report receiver probes,
+full inference and sampled time to common process RSS separately. Class and
+family descriptor studies retain their transport-yield results in a separate
+series. See the [explicit-parent protocol](docs/EXPLICIT_PARENT_FEPT.zh.md).
 
 The Python-package milestone remains parity with the default vanilla EggFuse
 CPU runtime. The matched references and metric definitions are in the

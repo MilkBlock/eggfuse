@@ -248,7 +248,7 @@ L 359.25 31.245934
      </g>
     </g>
     <g id="text_15">
-     <text style="font: 9px 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="17.329219" y="111.008" transform="rotate(-90 17.329219 111.008)">Visible new constructor origins / issued packet</text>
+     <text style="font: 9px 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle" x="17.329219" y="111.008" transform="rotate(-90 17.329219 111.008)">Visible origins / emitted explicit proposal</text>
     </g>
    </g>
    <g id="patch_3">
