@@ -1,0 +1,138 @@
+{
+ "sum-bits": {
+  "off": {
+   "tree": 746888,
+   "masks": 0,
+   "inline": 0,
+   "total": 746888,
+   "remainder": 3860242,
+   "graph": 4607130,
+   "peak_rss": 284999680,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "root_allocated": 5764
+  },
+  "small": {
+   "tree": 745928,
+   "masks": 0,
+   "inline": 0,
+   "total": 745928,
+   "remainder": 3860242,
+   "graph": 4606170,
+   "peak_rss": 284999680,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "root_allocated": 5764
+  },
+  "empty": {
+   "tree": 745928,
+   "masks": 0,
+   "inline": 0,
+   "total": 745928,
+   "remainder": 3860242,
+   "graph": 4606170,
+   "peak_rss": 285016064,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "root_allocated": 5764
+  },
+  "owner": {
+   "tree": 379592,
+   "masks": 51952,
+   "inline": 0,
+   "total": 431544,
+   "remainder": 3860242,
+   "graph": 4291786,
+   "peak_rss": 284606464,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "root_allocated": 5764
+  },
+  "inline": {
+   "tree": 360776,
+   "masks": 0,
+   "inline": 51208,
+   "total": 411984,
+   "remainder": 3860242,
+   "graph": 4272226,
+   "peak_rss": 284540928,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "root_allocated": 5764
+  },
+  "hybrid": {
+   "tree": 360776,
+   "masks": 51952,
+   "inline": 6408,
+   "total": 419136,
+   "remainder": 3860242,
+   "graph": 4279378,
+   "peak_rss": 284590080,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "root_allocated": 5764
+  }
+ },
+ "3mm": {
+  "off": {
+   "tree": 25958216,
+   "masks": 0,
+   "inline": 0,
+   "total": 25958216,
+   "remainder": 114438590,
+   "graph": 140396806,
+   "peak_rss": 783400960,
+   "state": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "root_allocated": 228095
+  },
+  "small": {
+   "tree": 25837256,
+   "masks": 0,
+   "inline": 0,
+   "total": 25837256,
+   "remainder": 114438590,
+   "graph": 140275846,
+   "peak_rss": 783499264,
+   "state": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "root_allocated": 228095
+  },
+  "empty": {
+   "tree": 25837256,
+   "masks": 0,
+   "inline": 0,
+   "total": 25837256,
+   "remainder": 114438590,
+   "graph": 140275846,
+   "peak_rss": 783892480,
+   "state": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "root_allocated": 228095
+  },
+  "owner": {
+   "tree": 10861640,
+   "masks": 1068032,
+   "inline": 0,
+   "total": 11929672,
+   "remainder": 114438590,
+   "graph": 126368262,
+   "peak_rss": 755875840,
+   "state": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "root_allocated": 228095
+  },
+  "inline": {
+   "tree": 10812488,
+   "masks": 0,
+   "inline": 3276808,
+   "total": 14089296,
+   "remainder": 114438590,
+   "graph": 128527886,
+   "peak_rss": 760020992,
+   "state": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "root_allocated": 228095
+  },
+  "hybrid": {
+   "tree": 10812488,
+   "masks": 1068032,
+   "inline": 12808,
+   "total": 11893328,
+   "remainder": 114438590,
+   "graph": 126331918,
+   "peak_rss": 759201792,
+   "state": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "root_allocated": 228095
+  }
+ }
+}

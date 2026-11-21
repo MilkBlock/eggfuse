@@ -1,0 +1,94 @@
+{
+ "sum-bits": {
+  "off": {
+   "tree": 746888,
+   "masks": 0,
+   "inline": 0,
+   "total": 746888,
+   "remainder": 3860242,
+   "graph": 4607130,
+   "peak_rss": 284983296,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "root_allocated": 5764
+  },
+  "empty": {
+   "tree": 745928,
+   "masks": 0,
+   "inline": 0,
+   "total": 745928,
+   "remainder": 3860242,
+   "graph": 4606170,
+   "peak_rss": 285016064,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "root_allocated": 5764
+  },
+  "diff": {
+   "tree": 745928,
+   "masks": 0,
+   "inline": 0,
+   "total": 745928,
+   "remainder": 3860242,
+   "graph": 4606170,
+   "peak_rss": 285016064,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "root_allocated": 5764
+  },
+  "derived": {
+   "tree": 375080,
+   "masks": 0,
+   "inline": 0,
+   "total": 375080,
+   "remainder": 3860242,
+   "graph": 4235322,
+   "peak_rss": 284524544,
+   "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "root_allocated": 5764
+  }
+ },
+ "3mm": {
+  "off": {
+   "tree": 25958216,
+   "masks": 0,
+   "inline": 0,
+   "total": 25958216,
+   "remainder": 114438590,
+   "graph": 140396806,
+   "peak_rss": 783450112,
+   "state": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "root_allocated": 228095
+  },
+  "empty": {
+   "tree": 25837256,
+   "masks": 0,
+   "inline": 0,
+   "total": 25837256,
+   "remainder": 114438590,
+   "graph": 140275846,
+   "peak_rss": 783646720,
+   "state": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "root_allocated": 228095
+  },
+  "diff": {
+   "tree": 25837256,
+   "masks": 0,
+   "inline": 0,
+   "total": 25837256,
+   "remainder": 114438590,
+   "graph": 140275846,
+   "peak_rss": 783499264,
+   "state": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "root_allocated": 228095
+  },
+  "derived": {
+   "tree": 10784840,
+   "masks": 0,
+   "inline": 0,
+   "total": 10784840,
+   "remainder": 114438590,
+   "graph": 125223430,
+   "peak_rss": 767803392,
+   "state": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "root_allocated": 228095
+  }
+ }
+}
