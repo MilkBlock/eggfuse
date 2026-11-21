@@ -1,0 +1,1552 @@
+{
+ "conjugate-gradient": {
+  "vanilla": {
+   "rhs": 131371,
+   "runs": 2896,
+   "ms": [
+    339.749333,
+    362.809084,
+    312.271458,
+    329.426292,
+    311.752417,
+    322.87920799999995
+   ],
+   "wall_ms": [
+    445.64779195934534,
+    469.57070904318243,
+    413.3974160067737,
+    431.9560829317197,
+    412.7370830392465,
+    433.00337507389486
+   ],
+   "median_ms": 326.15274999999997,
+   "median_wall_ms": 432.4797290028073
+  },
+  "off": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 131371,
+   "neural_rhs": 131371,
+   "fresh": 97139,
+   "direct_cells": 97026,
+   "source_pass_rhs": 131371,
+   "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+   "wire_bytes": 6182696,
+   "root_row_decodes": 0,
+   "root_header_checks": 853372,
+   "owned_slot_transfers": 131371,
+   "raw": "10431860128350219007",
+   "emitted": 243383,
+   "wire_hash": "6168948855503912532",
+   "commits": "ef8d551cdc8dc317259602b5552be49fdf83e415e69f8a16f6d58018e00cbb32",
+   "physical": "704047e92ded5214ed806cbfed9eeb7ca4aa1911d3cab455e005ec1df78893e8",
+   "multi": "cc1f53cfe0ac95a4f39d82de5595e7de19be4c96e42907893311b5cfdda75887",
+   "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+   "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+   "rejected": 0,
+   "root_allocated": 96535,
+   "applied": 131371,
+   "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+   "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+   "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+   "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+   "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+   "ms": [
+    619.563583,
+    675.5547079999999,
+    589.040083,
+    596.7263750000001,
+    594.385167,
+    579.237958
+   ],
+   "module": {},
+   "eligible": 0,
+   "audited": 0,
+   "omitted": 0,
+   "verified": 243383,
+   "complete_scores": [
+    243383,
+    243383
+   ],
+   "full_single": "45eeaa96a59054d3c5369c40989744cefcea012aaa8edb47f67c61259664cb30",
+   "decisions": "7920110403220796580",
+   "point_transfers": [
+    0,
+    0
+   ],
+   "logical_table_reads": 317345,
+   "wall_ms": [
+    713.8146660290658,
+    781.489749904722,
+    682.8049160540104,
+    711.3812919706106,
+    695.1035410165787,
+    679.4890000019222
+   ],
+   "phases": [
+    [
+     438.75985700000456,
+     108.51160399999718,
+     37.72030100000068,
+     30.511488000000398,
+     3.1039950000000114
+    ],
+    [
+     472.27487400000405,
+     123.86663499999648,
+     40.94920800000073,
+     33.54992599999997,
+     3.648231000000013
+    ],
+    [
+     418.2671140000041,
+     101.72880499999826,
+     36.46889800000082,
+     28.963501000000267,
+     2.786140000000009
+    ],
+    [
+     420.9457140000028,
+     104.31852499999813,
+     38.16346700000069,
+     29.622543000000274,
+     2.84414900000001
+    ],
+    [
+     422.8497620000038,
+     102.2896299999979,
+     36.117286000000824,
+     29.163064000000325,
+     2.9085190000000094
+    ],
+    [
+     411.98688800000417,
+     99.40298299999826,
+     35.44649500000083,
+     28.63857300000029,
+     2.807393000000011
+    ]
+   ],
+   "median_ms": 595.555771,
+   "median_wall_ms": 703.2424164935946
+  },
+  "filter": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 131371,
+   "neural_rhs": 131371,
+   "fresh": 97139,
+   "direct_cells": 97026,
+   "source_pass_rhs": 131371,
+   "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+   "wire_bytes": 3454136,
+   "root_row_decodes": 0,
+   "root_header_checks": 853372,
+   "owned_slot_transfers": 131371,
+   "raw": "2589875146572254001",
+   "emitted": 133565,
+   "wire_hash": "1993356065541734829",
+   "commits": "a1e33e0aaa982aa58bfb3f89f1e30552d8298b4b5d4776251fd52da0c3f3c1ba",
+   "physical": "aee548a2a013cffebe71e61f2d052a96a7564bb6e5916393e5793e063cd25f6d",
+   "multi": "cc1f53cfe0ac95a4f39d82de5595e7de19be4c96e42907893311b5cfdda75887",
+   "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+   "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+   "rejected": 0,
+   "root_allocated": 96535,
+   "applied": 131371,
+   "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+   "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+   "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+   "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+   "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+   "ms": [
+    591.5245,
+    589.032208,
+    581.356333,
+    557.609958,
+    569.1362089999999,
+    576.16475
+   ],
+   "module": {
+    "139": {
+     "attached": 0,
+     "audited": 28,
+     "examined": 42,
+     "missing": 0,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 42,
+     "sealed_points": 0,
+     "stale": 28
+    },
+    "140": {
+     "attached": 0,
+     "audited": 16,
+     "examined": 64,
+     "missing": 2,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 64,
+     "sealed_points": 0,
+     "stale": 14
+    },
+    "142": {
+     "attached": 0,
+     "audited": 30,
+     "examined": 45,
+     "missing": 0,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 45,
+     "sealed_points": 0,
+     "stale": 30
+    },
+    "145": {
+     "attached": 0,
+     "audited": 1434,
+     "examined": 5102,
+     "missing": 337,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 5102,
+     "sealed_points": 0,
+     "stale": 1097
+    },
+    "146": {
+     "attached": 0,
+     "audited": 4,
+     "examined": 8,
+     "missing": 0,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 8,
+     "sealed_points": 0,
+     "stale": 4
+    },
+    "148": {
+     "attached": 0,
+     "audited": 3381,
+     "examined": 3588,
+     "missing": 405,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 3588,
+     "sealed_points": 0,
+     "stale": 2976
+    },
+    "150": {
+     "attached": 0,
+     "audited": 4338,
+     "examined": 5428,
+     "missing": 213,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 15872,
+     "sealed_points": 0,
+     "stale": 4125
+    },
+    "151": {
+     "attached": 0,
+     "audited": 11729,
+     "examined": 13297,
+     "missing": 670,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 26008,
+     "sealed_points": 0,
+     "stale": 11059
+    },
+    "152": {
+     "attached": 0,
+     "audited": 275,
+     "examined": 378,
+     "missing": 0,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 378,
+     "sealed_points": 0,
+     "stale": 275
+    },
+    "153": {
+     "attached": 0,
+     "audited": 33769,
+     "examined": 55155,
+     "missing": 3838,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 55155,
+     "sealed_points": 0,
+     "stale": 29931
+    },
+    "154": {
+     "attached": 0,
+     "audited": 34268,
+     "examined": 49327,
+     "missing": 2976,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 95843,
+     "sealed_points": 0,
+     "stale": 31292
+    },
+    "155": {
+     "attached": 0,
+     "audited": 11599,
+     "examined": 16808,
+     "missing": 1292,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 16808,
+     "sealed_points": 0,
+     "stale": 10307
+    },
+    "157": {
+     "attached": 0,
+     "audited": 1674,
+     "examined": 2213,
+     "missing": 248,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 8179,
+     "sealed_points": 0,
+     "stale": 1426
+    },
+    "158": {
+     "attached": 0,
+     "audited": 4017,
+     "examined": 4186,
+     "missing": 391,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 7990,
+     "sealed_points": 0,
+     "stale": 3626
+    },
+    "160": {
+     "attached": 0,
+     "audited": 2227,
+     "examined": 2392,
+     "missing": 403,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 2392,
+     "sealed_points": 0,
+     "stale": 1824
+    },
+    "164": {
+     "attached": 0,
+     "audited": 722,
+     "examined": 757,
+     "missing": 5,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 757,
+     "sealed_points": 0,
+     "stale": 717
+    },
+    "399": {
+     "attached": 0,
+     "audited": 159,
+     "examined": 159,
+     "missing": 159,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 159,
+     "sealed_points": 0,
+     "stale": 0
+    },
+    "400": {
+     "attached": 0,
+     "audited": 33,
+     "examined": 33,
+     "missing": 33,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 33,
+     "sealed_points": 0,
+     "stale": 0
+    },
+    "575": {
+     "attached": 0,
+     "audited": 115,
+     "examined": 214,
+     "missing": 103,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 214,
+     "sealed_points": 0,
+     "stale": 12
+    }
+   },
+   "eligible": 19,
+   "audited": 109818,
+   "omitted": 109818,
+   "verified": 133565,
+   "complete_scores": [
+    243383,
+    243383
+   ],
+   "full_single": "45eeaa96a59054d3c5369c40989744cefcea012aaa8edb47f67c61259664cb30",
+   "decisions": "7920110403220796580",
+   "point_transfers": [
+    0,
+    0
+   ],
+   "logical_table_reads": 149463,
+   "wall_ms": [
+    709.3355000251904,
+    706.7485840525478,
+    699.5871670078486,
+    671.5384159469977,
+    683.4117079852149,
+    690.6040830072016
+   ],
+   "phases": [
+    [
+     412.58742600000363,
+     107.08799499999732,
+     37.74762400000073,
+     30.190440000000297,
+     3.081260000000014
+    ],
+    [
+     411.24839900000416,
+     107.29452899999751,
+     36.78383500000075,
+     29.72397000000027,
+     2.9328540000000123
+    ],
+    [
+     406.3152130000039,
+     103.70403799999808,
+     37.543765000000654,
+     29.839644000000266,
+     3.0706490000000075
+    ],
+    [
+     390.75659600000466,
+     99.16919299999834,
+     35.65950500000066,
+     28.484037000000267,
+     2.727209000000006
+    ],
+    [
+     398.0979050000043,
+     102.18504099999781,
+     36.233537000000844,
+     28.976296000000332,
+     2.784304000000007
+    ],
+    [
+     401.91445400000333,
+     103.79660299999766,
+     37.31719300000079,
+     29.40857300000034,
+     2.85757600000001
+    ]
+   ],
+   "median_ms": 578.7605415,
+   "median_wall_ms": 695.0956250075251
+  },
+  "ports": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 131371,
+   "neural_rhs": 131371,
+   "fresh": 97139,
+   "direct_cells": 97026,
+   "source_pass_rhs": 131371,
+   "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+   "wire_bytes": 3454136,
+   "root_row_decodes": 0,
+   "root_header_checks": 853372,
+   "owned_slot_transfers": 131371,
+   "raw": "2589875146572254001",
+   "emitted": 133565,
+   "wire_hash": "1993356065541734829",
+   "commits": "a1e33e0aaa982aa58bfb3f89f1e30552d8298b4b5d4776251fd52da0c3f3c1ba",
+   "physical": "aee548a2a013cffebe71e61f2d052a96a7564bb6e5916393e5793e063cd25f6d",
+   "multi": "cc1f53cfe0ac95a4f39d82de5595e7de19be4c96e42907893311b5cfdda75887",
+   "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+   "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+   "rejected": 0,
+   "root_allocated": 96535,
+   "applied": 131371,
+   "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+   "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+   "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+   "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+   "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+   "ms": [
+    606.356083,
+    607.644125,
+    559.575709,
+    575.4120419999999,
+    557.916417,
+    565.285416
+   ],
+   "module": {
+    "139": {
+     "attached": 14,
+     "audited": 28,
+     "examined": 42,
+     "missing": 0,
+     "passthrough": 0,
+     "peak_capacity_bytes": 512,
+     "reads": 42,
+     "sealed_points": 14,
+     "stale": 28
+    },
+    "140": {
+     "attached": 48,
+     "audited": 16,
+     "examined": 64,
+     "missing": 2,
+     "passthrough": 0,
+     "peak_capacity_bytes": 1024,
+     "reads": 64,
+     "sealed_points": 48,
+     "stale": 14
+    },
+    "142": {
+     "attached": 15,
+     "audited": 30,
+     "examined": 45,
+     "missing": 0,
+     "passthrough": 0,
+     "peak_capacity_bytes": 512,
+     "reads": 45,
+     "sealed_points": 15,
+     "stale": 30
+    },
+    "145": {
+     "attached": 3668,
+     "audited": 1434,
+     "examined": 5102,
+     "missing": 337,
+     "passthrough": 0,
+     "peak_capacity_bytes": 32768,
+     "reads": 5102,
+     "sealed_points": 3668,
+     "stale": 1097
+    },
+    "146": {
+     "attached": 4,
+     "audited": 4,
+     "examined": 8,
+     "missing": 0,
+     "passthrough": 0,
+     "peak_capacity_bytes": 128,
+     "reads": 8,
+     "sealed_points": 4,
+     "stale": 4
+    },
+    "148": {
+     "attached": 207,
+     "audited": 3381,
+     "examined": 3588,
+     "missing": 405,
+     "passthrough": 0,
+     "peak_capacity_bytes": 256,
+     "reads": 3588,
+     "sealed_points": 207,
+     "stale": 2976
+    },
+    "150": {
+     "attached": 1090,
+     "audited": 4338,
+     "examined": 5428,
+     "missing": 213,
+     "passthrough": 0,
+     "peak_capacity_bytes": 6656,
+     "reads": 15872,
+     "sealed_points": 3270,
+     "stale": 4125
+    },
+    "151": {
+     "attached": 1568,
+     "audited": 11729,
+     "examined": 13297,
+     "missing": 670,
+     "passthrough": 0,
+     "peak_capacity_bytes": 3584,
+     "reads": 26008,
+     "sealed_points": 3136,
+     "stale": 11059
+    },
+    "152": {
+     "attached": 103,
+     "audited": 275,
+     "examined": 378,
+     "missing": 0,
+     "passthrough": 0,
+     "peak_capacity_bytes": 128,
+     "reads": 378,
+     "sealed_points": 103,
+     "stale": 275
+    },
+    "153": {
+     "attached": 21386,
+     "audited": 33769,
+     "examined": 55155,
+     "missing": 3838,
+     "passthrough": 0,
+     "peak_capacity_bytes": 16384,
+     "reads": 55155,
+     "sealed_points": 21386,
+     "stale": 29931
+    },
+    "154": {
+     "attached": 15059,
+     "audited": 34268,
+     "examined": 49327,
+     "missing": 2976,
+     "passthrough": 0,
+     "peak_capacity_bytes": 28672,
+     "reads": 95843,
+     "sealed_points": 30118,
+     "stale": 31292
+    },
+    "155": {
+     "attached": 5209,
+     "audited": 11599,
+     "examined": 16808,
+     "missing": 1292,
+     "passthrough": 0,
+     "peak_capacity_bytes": 4096,
+     "reads": 16808,
+     "sealed_points": 5209,
+     "stale": 10307
+    },
+    "157": {
+     "attached": 539,
+     "audited": 1674,
+     "examined": 2213,
+     "missing": 248,
+     "passthrough": 0,
+     "peak_capacity_bytes": 1664,
+     "reads": 8179,
+     "sealed_points": 2156,
+     "stale": 1426
+    },
+    "158": {
+     "attached": 169,
+     "audited": 4017,
+     "examined": 4186,
+     "missing": 391,
+     "passthrough": 0,
+     "peak_capacity_bytes": 448,
+     "reads": 7990,
+     "sealed_points": 338,
+     "stale": 3626
+    },
+    "160": {
+     "attached": 165,
+     "audited": 2227,
+     "examined": 2392,
+     "missing": 403,
+     "passthrough": 0,
+     "peak_capacity_bytes": 256,
+     "reads": 2392,
+     "sealed_points": 165,
+     "stale": 1824
+    },
+    "164": {
+     "attached": 35,
+     "audited": 722,
+     "examined": 757,
+     "missing": 5,
+     "passthrough": 0,
+     "peak_capacity_bytes": 1024,
+     "reads": 757,
+     "sealed_points": 35,
+     "stale": 717
+    },
+    "399": {
+     "attached": 0,
+     "audited": 159,
+     "examined": 159,
+     "missing": 159,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 159,
+     "sealed_points": 0,
+     "stale": 0
+    },
+    "400": {
+     "attached": 0,
+     "audited": 33,
+     "examined": 33,
+     "missing": 33,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 33,
+     "sealed_points": 0,
+     "stale": 0
+    },
+    "575": {
+     "attached": 99,
+     "audited": 115,
+     "examined": 214,
+     "missing": 103,
+     "passthrough": 0,
+     "peak_capacity_bytes": 512,
+     "reads": 214,
+     "sealed_points": 99,
+     "stale": 12
+    }
+   },
+   "eligible": 19,
+   "audited": 109818,
+   "omitted": 109818,
+   "verified": 133565,
+   "complete_scores": [
+    243383,
+    243383
+   ],
+   "full_single": "45eeaa96a59054d3c5369c40989744cefcea012aaa8edb47f67c61259664cb30",
+   "decisions": "7920110403220796580",
+   "point_transfers": [
+    67562,
+    67562
+   ],
+   "logical_table_reads": 149463,
+   "wall_ms": [
+    723.1442920165136,
+    714.4962080055848,
+    673.5871249111369,
+    692.2019580379128,
+    671.8556249979883,
+    660.3377080755308
+   ],
+   "phases": [
+    [
+     418.69130700000244,
+     113.52363599999677,
+     38.785085000000805,
+     31.46866700000038,
+     2.989363000000008
+    ],
+    [
+     422.21836200000206,
+     111.19125899999698,
+     38.6842830000007,
+     31.336357000000387,
+     3.162096000000009
+    ],
+    [
+     392.1592790000045,
+     99.82091099999816,
+     35.209857000000795,
+     28.840949000000247,
+     2.7386400000000117
+    ],
+    [
+     403.8304540000044,
+     103.37306899999747,
+     35.6793670000008,
+     28.890145000000345,
+     2.6775790000000095
+    ],
+    [
+     391.4090060000036,
+     99.2184579999985,
+     35.31633700000074,
+     28.361533000000286,
+     2.7893860000000146
+    ],
+    [
+     396.82669700000463,
+     100.963446999998,
+     35.40996700000073,
+     28.468244000000254,
+     2.71646000000001
+    ]
+   ],
+   "median_ms": 570.348729,
+   "median_wall_ms": 682.8945414745249
+  },
+  "fault": {
+   "explicit_rejection": true,
+   "runs": 2,
+   "source_error": "invalid scalar point witness"
+  }
+ },
+ "3mm": {
+  "vanilla": {
+   "rhs": 294917,
+   "runs": 4260,
+   "ms": [
+    874.273666,
+    885.099792,
+    896.907708,
+    809.151375,
+    798.754958,
+    814.82575
+   ],
+   "wall_ms": [
+    1108.1156670115888,
+    1113.1172080058604,
+    1133.0471250694245,
+    1035.7366249663755,
+    1028.0481659574434,
+    1036.6909590084106
+   ],
+   "median_ms": 844.549708,
+   "median_wall_ms": 1072.4033130099997
+  },
+  "off": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "neural_rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 20817600,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "7377151213120924531",
+   "emitted": 845168,
+   "wire_hash": "15785836946056912275",
+   "commits": "efb7993f5a2133149ca81ae9aa479a8b8de7111be99d2fb0e1c7945d357c1fc8",
+   "physical": "78498066eae00dba42a33f18c2d215abfbe3b493e9e002e51087b4e74b283376",
+   "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    2000.84225,
+    1879.1215000000002,
+    1874.460833,
+    1754.387708,
+    1815.116917,
+    1775.975542
+   ],
+   "module": {},
+   "eligible": 0,
+   "audited": 0,
+   "omitted": 0,
+   "verified": 845168,
+   "complete_scores": [
+    845168,
+    845168
+   ],
+   "full_single": "f6289eead2e7d3877a98d6996d6edc7630a40ca322c54296932e322101f9f91c",
+   "decisions": "16767102213097954485",
+   "point_transfers": [
+    0,
+    0
+   ],
+   "logical_table_reads": 1125727,
+   "wall_ms": [
+    2231.614249991253,
+    2112.073333002627,
+    2101.75904200878,
+    2004.636958008632,
+    2037.5389999244362,
+    2001.959417015314
+   ],
+   "phases": [
+    [
+     1471.6898880000022,
+     319.53313100001026,
+     111.77162499999469,
+     87.5668249999996,
+     8.59307700000009
+    ],
+    [
+     1388.1438280000068,
+     296.34662100000855,
+     105.11913899999446,
+     80.14250299999911,
+     7.881664999999946
+    ],
+    [
+     1384.1968110000003,
+     297.19728300000844,
+     103.6129649999945,
+     80.4826089999994,
+     7.483726999999953
+    ],
+    [
+     1303.2887800000078,
+     270.7487400000084,
+     96.90651499999639,
+     75.59549699999958,
+     6.531454999999976
+    ],
+    [
+     1339.3715360000008,
+     288.0725510000081,
+     100.39833199999583,
+     79.06645099999933,
+     6.831842999999922
+    ],
+    [
+     1317.3744310000036,
+     276.3903760000076,
+     98.42993699999616,
+     75.55866199999949,
+     6.894438999999959
+    ]
+   ],
+   "median_ms": 1844.7888750000002,
+   "median_wall_ms": 2069.649020966608
+  },
+  "filter": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "neural_rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 8415216,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "11154018460456003428",
+   "emitted": 334594,
+   "wire_hash": "3666051417264130189",
+   "commits": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+   "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+   "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    1768.1965420000001,
+    1770.830792,
+    1741.08875,
+    1796.456541,
+    1611.5925,
+    1638.122708
+   ],
+   "module": {
+    "139": {
+     "attached": 0,
+     "audited": 25,
+     "examined": 57,
+     "missing": 0,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 57,
+     "sealed_points": 0,
+     "stale": 25
+    },
+    "140": {
+     "attached": 0,
+     "audited": 26,
+     "examined": 55,
+     "missing": 0,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 55,
+     "sealed_points": 0,
+     "stale": 26
+    },
+    "142": {
+     "attached": 0,
+     "audited": 25,
+     "examined": 52,
+     "missing": 0,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 52,
+     "sealed_points": 0,
+     "stale": 25
+    },
+    "145": {
+     "attached": 0,
+     "audited": 5962,
+     "examined": 14666,
+     "missing": 737,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 14666,
+     "sealed_points": 0,
+     "stale": 5225
+    },
+    "148": {
+     "attached": 0,
+     "audited": 4087,
+     "examined": 4383,
+     "missing": 281,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 4383,
+     "sealed_points": 0,
+     "stale": 3806
+    },
+    "150": {
+     "attached": 0,
+     "audited": 8239,
+     "examined": 8501,
+     "missing": 380,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 24769,
+     "sealed_points": 0,
+     "stale": 7859
+    },
+    "151": {
+     "attached": 0,
+     "audited": 27194,
+     "examined": 29877,
+     "missing": 1248,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 58652,
+     "sealed_points": 0,
+     "stale": 25946
+    },
+    "153": {
+     "attached": 0,
+     "audited": 187244,
+     "examined": 227262,
+     "missing": 12086,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 227262,
+     "sealed_points": 0,
+     "stale": 175158
+    },
+    "154": {
+     "attached": 0,
+     "audited": 205629,
+     "examined": 234483,
+     "missing": 12334,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 457019,
+     "sealed_points": 0,
+     "stale": 193295
+    },
+    "155": {
+     "attached": 0,
+     "audited": 58311,
+     "examined": 69742,
+     "missing": 4398,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 69742,
+     "sealed_points": 0,
+     "stale": 53913
+    },
+    "157": {
+     "attached": 0,
+     "audited": 4224,
+     "examined": 4577,
+     "missing": 304,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 17794,
+     "sealed_points": 0,
+     "stale": 3920
+    },
+    "158": {
+     "attached": 0,
+     "audited": 3114,
+     "examined": 3747,
+     "missing": 203,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 7314,
+     "sealed_points": 0,
+     "stale": 2911
+    },
+    "160": {
+     "attached": 0,
+     "audited": 1944,
+     "examined": 1948,
+     "missing": 96,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 1948,
+     "sealed_points": 0,
+     "stale": 1848
+    },
+    "164": {
+     "attached": 0,
+     "audited": 3763,
+     "examined": 3896,
+     "missing": 156,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 3896,
+     "sealed_points": 0,
+     "stale": 3607
+    },
+    "399": {
+     "attached": 0,
+     "audited": 232,
+     "examined": 232,
+     "missing": 232,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 232,
+     "sealed_points": 0,
+     "stale": 0
+    },
+    "400": {
+     "attached": 0,
+     "audited": 120,
+     "examined": 120,
+     "missing": 120,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 120,
+     "sealed_points": 0,
+     "stale": 0
+    },
+    "575": {
+     "attached": 0,
+     "audited": 435,
+     "examined": 705,
+     "missing": 403,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 705,
+     "sealed_points": 0,
+     "stale": 32
+    }
+   },
+   "eligible": 17,
+   "audited": 510574,
+   "omitted": 510574,
+   "verified": 334594,
+   "complete_scores": [
+    845168,
+    845168
+   ],
+   "full_single": "f6289eead2e7d3877a98d6996d6edc7630a40ca322c54296932e322101f9f91c",
+   "decisions": "16767102213097954485",
+   "point_transfers": [
+    0,
+    0
+   ],
+   "logical_table_reads": 368757,
+   "wall_ms": [
+    2028.5097919404507,
+    2035.176125005819,
+    1999.7132079442963,
+    2054.009833955206,
+    1864.0279589453712,
+    1894.979750039056
+   ],
+   "phases": [
+    [
+     1271.1321930000042,
+     300.91198800000774,
+     106.30500599999438,
+     80.74403499999889,
+     7.547299999999975
+    ],
+    [
+     1271.3740290000048,
+     306.15437300001037,
+     103.70746299999425,
+     80.95571299999932,
+     7.133407999999942
+    ],
+    [
+     1263.4123940000068,
+     287.5133090000078,
+     102.82397999999452,
+     78.15492799999915,
+     7.722271999999953
+    ],
+    [
+     1300.2811580000036,
+     303.09446700000905,
+     102.99270299999453,
+     80.55404199999927,
+     7.947440999999951
+    ],
+    [
+     1173.864969000012,
+     263.02971900000733,
+     94.01815799999623,
+     72.97532899999919,
+     6.41605399999997
+    ],
+    [
+     1190.3116100000127,
+     271.4836620000086,
+     95.3114659999963,
+     73.20827499999952,
+     6.481980999999986
+    ]
+   ],
+   "median_ms": 1754.642646,
+   "median_wall_ms": 2014.1114999423735
+  },
+  "ports": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "neural_rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 8415216,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "11154018460456003428",
+   "emitted": 334594,
+   "wire_hash": "3666051417264130189",
+   "commits": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+   "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+   "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    1801.270375,
+    1734.553083,
+    1730.9100420000002,
+    1755.905,
+    1651.69425,
+    1631.86125
+   ],
+   "module": {
+    "139": {
+     "attached": 32,
+     "audited": 25,
+     "examined": 57,
+     "missing": 0,
+     "passthrough": 0,
+     "peak_capacity_bytes": 1024,
+     "reads": 57,
+     "sealed_points": 32,
+     "stale": 25
+    },
+    "140": {
+     "attached": 29,
+     "audited": 26,
+     "examined": 55,
+     "missing": 0,
+     "passthrough": 0,
+     "peak_capacity_bytes": 1024,
+     "reads": 55,
+     "sealed_points": 29,
+     "stale": 26
+    },
+    "142": {
+     "attached": 27,
+     "audited": 25,
+     "examined": 52,
+     "missing": 0,
+     "passthrough": 0,
+     "peak_capacity_bytes": 1024,
+     "reads": 52,
+     "sealed_points": 27,
+     "stale": 25
+    },
+    "145": {
+     "attached": 8704,
+     "audited": 5962,
+     "examined": 14666,
+     "missing": 737,
+     "passthrough": 0,
+     "peak_capacity_bytes": 32768,
+     "reads": 14666,
+     "sealed_points": 8704,
+     "stale": 5225
+    },
+    "148": {
+     "attached": 296,
+     "audited": 4087,
+     "examined": 4383,
+     "missing": 281,
+     "passthrough": 0,
+     "peak_capacity_bytes": 128,
+     "reads": 4383,
+     "sealed_points": 296,
+     "stale": 3806
+    },
+    "150": {
+     "attached": 262,
+     "audited": 8239,
+     "examined": 8501,
+     "missing": 380,
+     "passthrough": 0,
+     "peak_capacity_bytes": 13312,
+     "reads": 24769,
+     "sealed_points": 786,
+     "stale": 7859
+    },
+    "151": {
+     "attached": 2683,
+     "audited": 27194,
+     "examined": 29877,
+     "missing": 1248,
+     "passthrough": 0,
+     "peak_capacity_bytes": 3584,
+     "reads": 58652,
+     "sealed_points": 5366,
+     "stale": 25946
+    },
+    "153": {
+     "attached": 40018,
+     "audited": 187244,
+     "examined": 227262,
+     "missing": 12086,
+     "passthrough": 0,
+     "peak_capacity_bytes": 16384,
+     "reads": 227262,
+     "sealed_points": 40018,
+     "stale": 175158
+    },
+    "154": {
+     "attached": 28854,
+     "audited": 205629,
+     "examined": 234483,
+     "missing": 12334,
+     "passthrough": 0,
+     "peak_capacity_bytes": 28672,
+     "reads": 457019,
+     "sealed_points": 57708,
+     "stale": 193295
+    },
+    "155": {
+     "attached": 11431,
+     "audited": 58311,
+     "examined": 69742,
+     "missing": 4398,
+     "passthrough": 0,
+     "peak_capacity_bytes": 16384,
+     "reads": 69742,
+     "sealed_points": 11431,
+     "stale": 53913
+    },
+    "157": {
+     "attached": 353,
+     "audited": 4224,
+     "examined": 4577,
+     "missing": 304,
+     "passthrough": 0,
+     "peak_capacity_bytes": 832,
+     "reads": 17794,
+     "sealed_points": 1412,
+     "stale": 3920
+    },
+    "158": {
+     "attached": 633,
+     "audited": 3114,
+     "examined": 3747,
+     "missing": 203,
+     "passthrough": 0,
+     "peak_capacity_bytes": 448,
+     "reads": 7314,
+     "sealed_points": 1266,
+     "stale": 2911
+    },
+    "160": {
+     "attached": 4,
+     "audited": 1944,
+     "examined": 1948,
+     "missing": 96,
+     "passthrough": 0,
+     "peak_capacity_bytes": 128,
+     "reads": 1948,
+     "sealed_points": 4,
+     "stale": 1848
+    },
+    "164": {
+     "attached": 133,
+     "audited": 3763,
+     "examined": 3896,
+     "missing": 156,
+     "passthrough": 0,
+     "peak_capacity_bytes": 256,
+     "reads": 3896,
+     "sealed_points": 133,
+     "stale": 3607
+    },
+    "399": {
+     "attached": 0,
+     "audited": 232,
+     "examined": 232,
+     "missing": 232,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 232,
+     "sealed_points": 0,
+     "stale": 0
+    },
+    "400": {
+     "attached": 0,
+     "audited": 120,
+     "examined": 120,
+     "missing": 120,
+     "passthrough": 0,
+     "peak_capacity_bytes": 0,
+     "reads": 120,
+     "sealed_points": 0,
+     "stale": 0
+    },
+    "575": {
+     "attached": 270,
+     "audited": 435,
+     "examined": 705,
+     "missing": 403,
+     "passthrough": 0,
+     "peak_capacity_bytes": 512,
+     "reads": 705,
+     "sealed_points": 270,
+     "stale": 32
+    }
+   },
+   "eligible": 17,
+   "audited": 510574,
+   "omitted": 510574,
+   "verified": 334594,
+   "complete_scores": [
+    845168,
+    845168
+   ],
+   "full_single": "f6289eead2e7d3877a98d6996d6edc7630a40ca322c54296932e322101f9f91c",
+   "decisions": "16767102213097954485",
+   "point_transfers": [
+    120889,
+    120889
+   ],
+   "logical_table_reads": 368757,
+   "wall_ms": [
+    2061.888917000033,
+    1970.3066250076517,
+    1994.8844580212608,
+    2010.8568749856204,
+    1901.2502090772614,
+    1854.287291993387
+   ],
+   "phases": [
+    [
+     1296.7972890000094,
+     309.77524800000975,
+     105.00387399999467,
+     80.45118299999912,
+     7.706359999999959
+    ],
+    [
+     1246.2802140000058,
+     292.60007500000904,
+     106.87374699999623,
+     79.97471599999923,
+     7.394678999999939
+    ],
+    [
+     1253.5938690000048,
+     289.674495000009,
+     101.64747699999435,
+     77.61986299999931,
+     7.03866699999994
+    ],
+    [
+     1269.865306999999,
+     294.93958300000804,
+     102.8494859999943,
+     79.65477899999918,
+     7.092089999999936
+    ],
+    [
+     1197.8756000000067,
+     276.9934130000083,
+     95.56049799999643,
+     73.48025499999935,
+     6.383323999999949
+    ],
+    [
+     1187.2488740000058,
+     268.2245730000077,
+     95.43721499999612,
+     73.07800299999937,
+     6.559093999999964
+    ]
+   ],
+   "median_ms": 1732.7315625,
+   "median_wall_ms": 1982.5955415144563
+  },
+  "fault": {
+   "explicit_rejection": true,
+   "runs": 2,
+   "source_error": "invalid scalar point witness"
+  }
+ }
+}
