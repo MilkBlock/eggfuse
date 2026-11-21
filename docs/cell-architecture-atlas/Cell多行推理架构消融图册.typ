@@ -366,6 +366,10 @@ card([从训练监督看],[字段投影让合法绑定的字段读出正确。�
 #src("S152","非空复合区域的稀疏目录","benchmarks/pass3-cell-gpu/sparse-family-regions/README.md")
 #src("S153","三父及以上根窗口的机会界","benchmarks/pass3-cell-gpu/baked-prefix-window/README.md")
 #src("S154","FEPT 完整组合路径与内存水位","benchmarks/pass3-cell-gpu/compound-fept-model/README.md")
+#src("S155","纯具名的静态组合与迭代训练","benchmarks/pass3-cell-gpu/explicit-parent-cell-composition/README.md")
+#src("S156","显式多输入接线的离线核对","benchmarks/pass3-cell-gpu/strict-composition-opportunities/README.md")
+#src("S157","两个实际返回供给一个真实后继","benchmarks/pass3-cell-gpu/strict-dual-return/README.md")
+#src("S158","过滤叶模板与显式父静态组合","benchmarks/pass3-cell-gpu/filtered-explicit-parent/README.md")
 #v(2mm)
 #label[两篇用于构造对照的原始文献]
 #v(1.5mm)
