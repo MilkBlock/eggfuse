@@ -1,0 +1,16 @@
+{
+  "base": "31bf7e41",
+  "binary_sha256": "8b9c7fccb18c1247ea2651c4d6eec853452fc04f07871f5fa2a55f5b97f3f8f9",
+  "files": {
+    "../token-constructor-births/overlay.py": "086fdf3e0a64358c9992f6d90c311f527eb8dca0b64ceb55375aaf846b87b46a",
+    "../token-constructor-births/results.json": "357510f35fc853ebcd260ee3d3a10ccee4860b68ab0202cc01934407987c22ff",
+    "../verified-wave-execution/build.py": "567624a837b770db8e3c630ad7d2ccb4d551c11aef40afb74f780a603cd71857",
+    "../verified-wave-execution/study.py": "d05350a947bf70e77f8c8159860061a7cd2c009b912580ef5e2a2f1dac26b6dd",
+    "actor.rs": "d8f777e9791f6b673caf38d2ff2fbff2c02b34ee10b896c9b6b0d1ddceacadb9",
+    "build.py": "ec78759f67721790e72bb1cf35835c588ec547d029b4f54b088a76aa3ca975f3",
+    "overlay.py": "8fe7f91bab61e121fd21d175744ae9739e1bd51939a22c01b43b272952f5f2fb",
+    "results.json": "f418f0bf8f906d9e015732f34a97ed1e3a9367c5f27fdceee3addce9be9be4b5",
+    "study.py": "386b152fdf73e29574382f49c3c447a5799a7356916e22faa83e0a467793684d",
+    "verify.py": "470588e2622b7d512217bc901416d79e7aeea0e23d454f8136ed0f47f942f4a7"
+  }
+}

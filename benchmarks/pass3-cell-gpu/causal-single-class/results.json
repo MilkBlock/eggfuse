@@ -1,0 +1,986 @@
+{
+ "sum-bits": {
+  "arms": {
+   "packed": {
+    "rhs": 7265,
+    "raw": "9387899919173550868",
+    "multi": "7e7931cbbf8116f938c44b9c7ec1cb50cbe1296f0bfc003812172aa29afb96ff",
+    "wire_hash": "2424299231358045525",
+    "commits": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+    "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+    "source_pass_rhs": 7265,
+    "root_ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+    "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+    "nested_ids": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+    "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+    "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+    "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+    "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+    "direct_cells": 5867,
+    "root_allocated": 5764,
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "public_call_sha": "9783aa588f00486e5c2d114159f7a83d128f41e70f8456539fd030c431614f3d",
+    "logged_calls": 2569,
+    "external_single_pages": 1274,
+    "canonical_wire": {
+     "single_literals": 324219,
+     "unchanged_multi": 483696,
+     "unchanged_selected_child": 102764,
+     "descriptors": 0,
+     "forward": 910679,
+     "feedback": 0,
+     "both": 910679
+    },
+    "groups": {
+     "class": {
+      "packets": 0,
+      "visible": 0,
+      "born": 0,
+      "zero": 0,
+      "one": 0,
+      "two_plus": 0,
+      "max": 0
+     },
+     "single": {
+      "packets": 6559,
+      "visible": 881,
+      "born": 1083,
+      "zero": 5812,
+      "one": 705,
+      "two_plus": 42,
+      "max": 84
+     },
+     "multi": {
+      "packets": 5912,
+      "visible": 1708,
+      "born": 2424,
+      "zero": 4718,
+      "one": 850,
+      "two_plus": 344,
+      "max": 5
+     },
+     "child": {
+      "packets": 191,
+      "visible": 102,
+      "born": 103,
+      "zero": 89,
+      "one": 102,
+      "two_plus": 0,
+      "max": 1
+     }
+    },
+    "packets": 12662,
+    "visible": 2691,
+    "born": 3610,
+    "unowned_births": 1,
+    "fept": 0.21252566735112938,
+    "fept_including_feedback": 0.21252566735112938,
+    "actor": {
+     "accepted_by_action": 0,
+     "eligible_after_prefilters": 0,
+     "empty": 0,
+     "empty_table_skips": 0,
+     "feedback_bytes": 0,
+     "internal_receipts": 0,
+     "issued": 0,
+     "logit_evaluations": 0,
+     "masks": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "public_headers": 0,
+     "recurrence_digest": 4766893502033532934,
+     "residual_calls": 0,
+     "residual_receipts": 0,
+     "scalar_rejected": 0
+    },
+    "action_bytes": 0,
+    "fixed_feedback_bytes": 0,
+    "original_issued_single": 6559,
+    "original_issued_multi": 5912,
+    "selected_children": 191,
+    "model_evaluations": 1620,
+    "source_headers": 7889,
+    "verifier_activity": [
+     7889,
+     7889,
+     6559,
+     6293,
+     1045,
+     2677,
+     0,
+     0
+    ],
+    "queue": {
+     "banks": 1274,
+     "lanes": 6559,
+     "pages": 1274,
+     "peak_pending_bytes": 19488,
+     "pending_bytes": 0,
+     "total_queue_capacity_bytes": 580672,
+     "verified": 2677
+    },
+    "recurrent_final": [
+     1064923477,
+     3212395348,
+     1055497444,
+     1064563309
+    ],
+    "source_final_serial": 7889,
+    "decisions": "15576378264816477716",
+    "cell_export_sha": "cc411875294ca05a458e8c66917fb6390f1498c621d92cd61d8496448ef2c9fa",
+    "coalescing_sha": "eff2ec22c851efecd4d6ce2e7189f9aa3f46b294e4588a2b582d0094c3e32e1c",
+    "ms": [
+     32.724166,
+     31.576374999999995,
+     31.421833000000003,
+     32.320959
+    ],
+    "wall_ms": [
+     69.08445793669671,
+     67.9582079173997,
+     67.96575000043958,
+     68.66754195652902
+    ],
+    "median_ms": 31.948667,
+    "median_wall_ms": 68.3166459784843
+   },
+   "class": {
+    "rhs": 7265,
+    "raw": "9387899919173550868",
+    "multi": "7e7931cbbf8116f938c44b9c7ec1cb50cbe1296f0bfc003812172aa29afb96ff",
+    "wire_hash": "2424299231358045525",
+    "commits": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+    "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+    "source_pass_rhs": 7265,
+    "root_ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+    "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+    "nested_ids": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+    "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+    "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+    "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+    "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+    "direct_cells": 5867,
+    "root_allocated": 5764,
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "public_call_sha": "9783aa588f00486e5c2d114159f7a83d128f41e70f8456539fd030c431614f3d",
+    "logged_calls": 2569,
+    "external_single_pages": 3,
+    "canonical_wire": {
+     "single_literals": 303,
+     "unchanged_multi": 483696,
+     "unchanged_selected_child": 102764,
+     "descriptors": 106496,
+     "forward": 693259,
+     "feedback": 33280,
+     "both": 726539
+    },
+    "groups": {
+     "class": {
+      "packets": 1664,
+      "visible": 796,
+      "born": 994,
+      "zero": 1390,
+      "one": 130,
+      "two_plus": 144,
+      "max": 45
+     },
+     "single": {
+      "packets": 3,
+      "visible": 85,
+      "born": 89,
+      "zero": 1,
+      "one": 1,
+      "two_plus": 1,
+      "max": 84
+     },
+     "multi": {
+      "packets": 5912,
+      "visible": 1708,
+      "born": 2424,
+      "zero": 4718,
+      "one": 850,
+      "two_plus": 344,
+      "max": 5
+     },
+     "child": {
+      "packets": 191,
+      "visible": 102,
+      "born": 103,
+      "zero": 89,
+      "one": 102,
+      "two_plus": 0,
+      "max": 1
+     }
+    },
+    "packets": 7770,
+    "visible": 2691,
+    "born": 3610,
+    "unowned_births": 1,
+    "fept": 0.34633204633204634,
+    "fept_including_feedback": 0.2852448590205639,
+    "actor": {
+     "accepted_by_action": 7886,
+     "eligible_after_prefilters": 7886,
+     "empty": 393,
+     "empty_table_skips": 902,
+     "feedback_bytes": 33280,
+     "internal_receipts": 6556,
+     "issued": 1664,
+     "logit_evaluations": 3328,
+     "masks": [
+      0,
+      0,
+      305,
+      1359
+     ],
+     "public_headers": 66500,
+     "recurrence_digest": 4766893502033532934,
+     "residual_calls": 3,
+     "residual_receipts": 3,
+     "scalar_rejected": 1330
+    },
+    "action_bytes": 106496,
+    "fixed_feedback_bytes": 33280,
+    "original_issued_single": 6559,
+    "original_issued_multi": 5912,
+    "selected_children": 191,
+    "model_evaluations": 3331,
+    "source_headers": 7889,
+    "verifier_activity": [
+     7889,
+     7889,
+     6559,
+     6293,
+     1045,
+     2677,
+     0,
+     0
+    ],
+    "queue": {
+     "banks": 1274,
+     "lanes": 6559,
+     "pages": 1274,
+     "peak_pending_bytes": 19488,
+     "pending_bytes": 0,
+     "total_queue_capacity_bytes": 580672,
+     "verified": 2677
+    },
+    "recurrent_final": [
+     1064923477,
+     3212395348,
+     1055497444,
+     1064563309
+    ],
+    "source_final_serial": 7889,
+    "decisions": "15576378264816477716",
+    "cell_export_sha": "cc411875294ca05a458e8c66917fb6390f1498c621d92cd61d8496448ef2c9fa",
+    "coalescing_sha": "eff2ec22c851efecd4d6ce2e7189f9aa3f46b294e4588a2b582d0094c3e32e1c",
+    "ms": [
+     34.523292,
+     32.265583,
+     33.02525,
+     33.385084
+    ],
+    "wall_ms": [
+     71.24670897610486,
+     70.99649996962398,
+     69.24737500958145,
+     69.63095802348107
+    ],
+    "median_ms": 33.205167,
+    "median_wall_ms": 70.31372899655253
+   }
+  },
+  "faults": {
+   "2": {
+    "reason": "class-action checksum mismatch",
+    "runs": 2
+   },
+   "3": {
+    "reason": "class-action generation mismatch",
+    "runs": 2
+   },
+   "4": {
+    "reason": "class-action source serial mismatch",
+    "runs": 2
+   }
+  }
+ },
+ "conjugate-gradient": {
+  "arms": {
+   "packed": {
+    "rhs": 131371,
+    "raw": "2589875146572254001",
+    "multi": "cc1f53cfe0ac95a4f39d82de5595e7de19be4c96e42907893311b5cfdda75887",
+    "wire_hash": "1993356065541734829",
+    "commits": "a1e33e0aaa982aa58bfb3f89f1e30552d8298b4b5d4776251fd52da0c3f3c1ba",
+    "physical": "aee548a2a013cffebe71e61f2d052a96a7564bb6e5916393e5793e063cd25f6d",
+    "source_pass_rhs": 131371,
+    "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+    "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+    "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+    "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+    "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+    "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+    "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+    "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+    "direct_cells": 97026,
+    "root_allocated": 96535,
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "public_call_sha": "557b42656912ddadd8bc5f4d3006bba187aa7d322e0eda77c807146eee296113",
+    "logged_calls": 8088,
+    "external_single_pages": 3884,
+    "canonical_wire": {
+     "single_literals": 5190481,
+     "unchanged_multi": 6199552,
+     "unchanged_selected_child": 593489,
+     "descriptors": 0,
+     "forward": 11983522,
+     "feedback": 0,
+     "both": 11983522
+    },
+    "groups": {
+     "class": {
+      "packets": 0,
+      "visible": 0,
+      "born": 0,
+      "zero": 0,
+      "one": 0,
+      "two_plus": 0,
+      "max": 0
+     },
+     "single": {
+      "packets": 133565,
+      "visible": 11521,
+      "born": 15176,
+      "zero": 124306,
+      "one": 8607,
+      "two_plus": 652,
+      "max": 1528
+     },
+     "multi": {
+      "packets": 83313,
+      "visible": 22585,
+      "born": 33044,
+      "zero": 65384,
+      "one": 14153,
+      "two_plus": 3776,
+      "max": 6
+     },
+     "child": {
+      "packets": 1088,
+      "visible": 489,
+      "born": 491,
+      "zero": 599,
+      "one": 489,
+      "two_plus": 0,
+      "max": 1
+     }
+    },
+    "packets": 217966,
+    "visible": 34595,
+    "born": 48711,
+    "unowned_births": 12,
+    "fept": 0.15871741464265068,
+    "fept_including_feedback": 0.15871741464265068,
+    "actor": {
+     "accepted_by_action": 0,
+     "eligible_after_prefilters": 0,
+     "empty": 0,
+     "empty_table_skips": 0,
+     "feedback_bytes": 0,
+     "internal_receipts": 0,
+     "issued": 0,
+     "logit_evaluations": 0,
+     "masks": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "public_headers": 0,
+     "recurrence_digest": 18266443202661302375,
+     "residual_calls": 0,
+     "residual_receipts": 0,
+     "scalar_rejected": 0
+    },
+    "action_bytes": 0,
+    "fixed_feedback_bytes": 0,
+    "original_issued_single": 133565,
+    "original_issued_multi": 83313,
+    "selected_children": 1088,
+    "model_evaluations": 5531,
+    "source_headers": 243383,
+    "verifier_activity": [
+     243383,
+     243383,
+     133565,
+     149463,
+     31831,
+     73676,
+     0,
+     0
+    ],
+    "queue": {
+     "banks": 3884,
+     "lanes": 133565,
+     "pages": 3884,
+     "peak_pending_bytes": 279552,
+     "pending_bytes": 0,
+     "total_queue_capacity_bytes": 8144192,
+     "verified": 73676
+    },
+    "recurrent_final": [
+     1064947728,
+     3211733087,
+     1058859908,
+     1062802973
+    ],
+    "source_final_serial": 243383,
+    "decisions": "7920110403220796580",
+    "cell_export_sha": "1cddd36b7b85984bf7d51198262fe1021366e8500ba7258ea3a5d02d61a7cd28",
+    "coalescing_sha": "f8a101b95f715fc00d9155c0d8b3c6acc9c3848b9299f95c2ec1a58bfd2cdccb",
+    "ms": [
+     646.204083,
+     662.669542,
+     620.973875,
+     610.983125
+    ],
+    "wall_ms": [
+     768.9574580872431,
+     781.8980000447482,
+     736.9660419644788,
+     730.1154170418158
+    ],
+    "median_ms": 633.588979,
+    "median_wall_ms": 752.961750025861
+   },
+   "class": {
+    "rhs": 131371,
+    "raw": "2589875146572254001",
+    "multi": "cc1f53cfe0ac95a4f39d82de5595e7de19be4c96e42907893311b5cfdda75887",
+    "wire_hash": "1993356065541734829",
+    "commits": "a1e33e0aaa982aa58bfb3f89f1e30552d8298b4b5d4776251fd52da0c3f3c1ba",
+    "physical": "aee548a2a013cffebe71e61f2d052a96a7564bb6e5916393e5793e063cd25f6d",
+    "source_pass_rhs": 131371,
+    "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+    "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+    "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+    "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+    "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+    "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+    "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+    "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+    "direct_cells": 97026,
+    "root_allocated": 96535,
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "public_call_sha": "557b42656912ddadd8bc5f4d3006bba187aa7d322e0eda77c807146eee296113",
+    "logged_calls": 8088,
+    "external_single_pages": 3,
+    "canonical_wire": {
+     "single_literals": 303,
+     "unchanged_multi": 6199552,
+     "unchanged_selected_child": 593489,
+     "descriptors": 388736,
+     "forward": 7182080,
+     "feedback": 121480,
+     "both": 7303560
+    },
+    "groups": {
+     "class": {
+      "packets": 6074,
+      "visible": 9992,
+      "born": 13478,
+      "zero": 5440,
+      "one": 150,
+      "two_plus": 484,
+      "max": 485
+     },
+     "single": {
+      "packets": 3,
+      "visible": 1529,
+      "born": 1698,
+      "zero": 1,
+      "one": 1,
+      "two_plus": 1,
+      "max": 1528
+     },
+     "multi": {
+      "packets": 83313,
+      "visible": 22585,
+      "born": 33044,
+      "zero": 65384,
+      "one": 14153,
+      "two_plus": 3776,
+      "max": 6
+     },
+     "child": {
+      "packets": 1088,
+      "visible": 489,
+      "born": 491,
+      "zero": 599,
+      "one": 489,
+      "two_plus": 0,
+      "max": 1
+     }
+    },
+    "packets": 90478,
+    "visible": 34595,
+    "born": 48711,
+    "unowned_births": 12,
+    "fept": 0.382358142310838,
+    "fept_including_feedback": 0.3583043334161902,
+    "actor": {
+     "accepted_by_action": 243380,
+     "eligible_after_prefilters": 243380,
+     "empty": 2193,
+     "empty_table_skips": 2011,
+     "feedback_bytes": 121480,
+     "internal_receipts": 133562,
+     "issued": 6074,
+     "logit_evaluations": 12148,
+     "masks": [
+      0,
+      0,
+      364,
+      5710
+     ],
+     "public_headers": 2593759,
+     "recurrence_digest": 18266443202661302375,
+     "residual_calls": 3,
+     "residual_receipts": 3,
+     "scalar_rejected": 109818
+    },
+    "action_bytes": 388736,
+    "fixed_feedback_bytes": 121480,
+    "original_issued_single": 133565,
+    "original_issued_multi": 83313,
+    "selected_children": 1088,
+    "model_evaluations": 12151,
+    "source_headers": 243383,
+    "verifier_activity": [
+     243383,
+     243383,
+     133565,
+     149463,
+     31831,
+     73676,
+     0,
+     0
+    ],
+    "queue": {
+     "banks": 3884,
+     "lanes": 133565,
+     "pages": 3884,
+     "peak_pending_bytes": 279552,
+     "pending_bytes": 0,
+     "total_queue_capacity_bytes": 8144192,
+     "verified": 73676
+    },
+    "recurrent_final": [
+     1064947728,
+     3211733087,
+     1058859908,
+     1062802973
+    ],
+    "source_final_serial": 243383,
+    "decisions": "7920110403220796580",
+    "cell_export_sha": "1cddd36b7b85984bf7d51198262fe1021366e8500ba7258ea3a5d02d61a7cd28",
+    "coalescing_sha": "f8a101b95f715fc00d9155c0d8b3c6acc9c3848b9299f95c2ec1a58bfd2cdccb",
+    "ms": [
+     661.920959,
+     671.1785,
+     654.9652500000001,
+     678.172291
+    ],
+    "wall_ms": [
+     780.3831669734791,
+     788.2933330256492,
+     774.7759589692578,
+     799.3856249377131
+    ],
+    "median_ms": 666.5497295,
+    "median_wall_ms": 784.3382499995641
+   }
+  },
+  "faults": {
+   "2": {
+    "reason": "class-action checksum mismatch",
+    "runs": 2
+   },
+   "3": {
+    "reason": "class-action generation mismatch",
+    "runs": 2
+   },
+   "4": {
+    "reason": "class-action source serial mismatch",
+    "runs": 2
+   }
+  }
+ },
+ "3mm": {
+  "arms": {
+   "packed": {
+    "rhs": 294917,
+    "raw": "11154018460456003428",
+    "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+    "wire_hash": "3666051417264130189",
+    "commits": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+    "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+    "source_pass_rhs": 294917,
+    "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+    "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+    "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+    "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+    "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+    "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+    "direct_cells": 229311,
+    "root_allocated": 228095,
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "public_call_sha": "a4270083ff1dff816c0d0bd97f61bbf61da899e1f2cd95c56e7bc9cfd88c0883",
+    "logged_calls": 12404,
+    "external_single_pages": 6015,
+    "canonical_wire": {
+     "single_literals": 12764938,
+     "unchanged_multi": 17018384,
+     "unchanged_selected_child": 1368404,
+     "descriptors": 0,
+     "forward": 31151726,
+     "feedback": 0,
+     "both": 31151726
+    },
+    "groups": {
+     "class": {
+      "packets": 0,
+      "visible": 0,
+      "born": 0,
+      "zero": 0,
+      "one": 0,
+      "two_plus": 0,
+      "max": 0
+     },
+     "single": {
+      "packets": 334594,
+      "visible": 26258,
+      "born": 33550,
+      "zero": 313165,
+      "one": 20027,
+      "two_plus": 1402,
+      "max": 3085
+     },
+     "multi": {
+      "packets": 220972,
+      "visible": 65198,
+      "born": 84737,
+      "zero": 168569,
+      "one": 42147,
+      "two_plus": 10256,
+      "max": 3
+     },
+     "child": {
+      "packets": 2508,
+      "visible": 1202,
+      "born": 1216,
+      "zero": 1306,
+      "one": 1202,
+      "two_plus": 0,
+      "max": 1
+     }
+    },
+    "packets": 558074,
+    "visible": 92658,
+    "born": 119503,
+    "unowned_births": 28,
+    "fept": 0.16603174489404632,
+    "fept_including_feedback": 0.16603174489404632,
+    "actor": {
+     "accepted_by_action": 0,
+     "eligible_after_prefilters": 0,
+     "empty": 0,
+     "empty_table_skips": 0,
+     "feedback_bytes": 0,
+     "internal_receipts": 0,
+     "issued": 0,
+     "logit_evaluations": 0,
+     "masks": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "public_headers": 0,
+     "recurrence_digest": 4887471755355662293,
+     "residual_calls": 0,
+     "residual_receipts": 0,
+     "scalar_rejected": 0
+    },
+    "action_bytes": 0,
+    "fixed_feedback_bytes": 0,
+    "original_issued_single": 334594,
+    "original_issued_multi": 220972,
+    "selected_children": 2508,
+    "model_evaluations": 8611,
+    "source_headers": 845168,
+    "verifier_activity": [
+     845168,
+     845168,
+     334594,
+     368757,
+     66363,
+     147952,
+     0,
+     0
+    ],
+    "queue": {
+     "banks": 6015,
+     "lanes": 334594,
+     "pages": 6015,
+     "peak_pending_bytes": 535680,
+     "pending_bytes": 0,
+     "total_queue_capacity_bytes": 19826400,
+     "verified": 147952
+    },
+    "recurrent_final": [
+     1063587107,
+     3201946431,
+     1063719528,
+     1056881546
+    ],
+    "source_final_serial": 845168,
+    "decisions": "16767102213097954485",
+    "cell_export_sha": "0f5fc7e44add1467558ff78c72933b612a835b732a0bfe234580a03d631b6320",
+    "coalescing_sha": "5ceb174bb6c2aa9134628550a55e275935268c1a97dda59ef490971da35c61e5",
+    "ms": [
+     1803.896333,
+     1795.55825,
+     1798.5226249999998,
+     1805.742625
+    ],
+    "wall_ms": [
+     2061.4682079758495,
+     2057.9655829351395,
+     2055.9319589519873,
+     2068.5833749594167
+    ],
+    "median_ms": 1801.2094789999999,
+    "median_wall_ms": 2059.7168954554945
+   },
+   "class": {
+    "rhs": 294917,
+    "raw": "11154018460456003428",
+    "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+    "wire_hash": "3666051417264130189",
+    "commits": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+    "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+    "source_pass_rhs": 294917,
+    "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+    "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+    "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+    "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+    "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+    "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+    "direct_cells": 229311,
+    "root_allocated": 228095,
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "public_call_sha": "a4270083ff1dff816c0d0bd97f61bbf61da899e1f2cd95c56e7bc9cfd88c0883",
+    "logged_calls": 12404,
+    "external_single_pages": 3,
+    "canonical_wire": {
+     "single_literals": 303,
+     "unchanged_multi": 17018384,
+     "unchanged_selected_child": 1368404,
+     "descriptors": 582208,
+     "forward": 18969299,
+     "feedback": 181940,
+     "both": 19151239
+    },
+    "groups": {
+     "class": {
+      "packets": 9097,
+      "visible": 23172,
+      "born": 30300,
+      "zero": 8382,
+      "one": 120,
+      "two_plus": 595,
+      "max": 977
+     },
+     "single": {
+      "packets": 3,
+      "visible": 3086,
+      "born": 3250,
+      "zero": 1,
+      "one": 1,
+      "two_plus": 1,
+      "max": 3085
+     },
+     "multi": {
+      "packets": 220972,
+      "visible": 65198,
+      "born": 84737,
+      "zero": 168569,
+      "one": 42147,
+      "two_plus": 10256,
+      "max": 3
+     },
+     "child": {
+      "packets": 2508,
+      "visible": 1202,
+      "born": 1216,
+      "zero": 1306,
+      "one": 1202,
+      "two_plus": 0,
+      "max": 1
+     }
+    },
+    "packets": 232580,
+    "visible": 92658,
+    "born": 119503,
+    "unowned_births": 28,
+    "fept": 0.39839195115659126,
+    "fept_including_feedback": 0.38339602030809716,
+    "actor": {
+     "accepted_by_action": 845165,
+     "eligible_after_prefilters": 845165,
+     "empty": 3085,
+     "empty_table_skips": 3304,
+     "feedback_bytes": 181940,
+     "internal_receipts": 334591,
+     "issued": 9097,
+     "logit_evaluations": 18194,
+     "masks": [
+      0,
+      0,
+      432,
+      8665
+     ],
+     "public_headers": 8790167,
+     "recurrence_digest": 4887471755355662293,
+     "residual_calls": 3,
+     "residual_receipts": 3,
+     "scalar_rejected": 510574
+    },
+    "action_bytes": 582208,
+    "fixed_feedback_bytes": 181940,
+    "original_issued_single": 334594,
+    "original_issued_multi": 220972,
+    "selected_children": 2508,
+    "model_evaluations": 18197,
+    "source_headers": 845168,
+    "verifier_activity": [
+     845168,
+     845168,
+     334594,
+     368757,
+     66363,
+     147952,
+     0,
+     0
+    ],
+    "queue": {
+     "banks": 6015,
+     "lanes": 334594,
+     "pages": 6015,
+     "peak_pending_bytes": 535680,
+     "pending_bytes": 0,
+     "total_queue_capacity_bytes": 19826400,
+     "verified": 147952
+    },
+    "recurrent_final": [
+     1063587107,
+     3201946431,
+     1063719528,
+     1056881546
+    ],
+    "source_final_serial": 845168,
+    "decisions": "16767102213097954485",
+    "cell_export_sha": "0f5fc7e44add1467558ff78c72933b612a835b732a0bfe234580a03d631b6320",
+    "coalescing_sha": "5ceb174bb6c2aa9134628550a55e275935268c1a97dda59ef490971da35c61e5",
+    "ms": [
+     1974.050167,
+     1930.8602079999998,
+     1935.082583,
+     1946.316084
+    ],
+    "wall_ms": [
+     2232.2867079637945,
+     2190.021750051528,
+     2193.678667070344,
+     2212.4578750226647
+    ],
+    "median_ms": 1940.6993335000002,
+    "median_wall_ms": 2203.0682710465044
+   }
+  },
+  "faults": {
+   "2": {
+    "reason": "class-action checksum mismatch",
+    "runs": 2
+   },
+   "3": {
+    "reason": "class-action generation mismatch",
+    "runs": 2
+   },
+   "4": {
+    "reason": "class-action source serial mismatch",
+    "runs": 2
+   }
+  }
+ }
+}
