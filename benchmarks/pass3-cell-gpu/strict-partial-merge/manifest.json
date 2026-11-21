@@ -1,0 +1,20 @@
+{
+  "base": "31bf7e41",
+  "binary_sha256": "36f3a652a307a028a0a06f89703cc11a4b413349869aa4cf895ac2e1e8d19d6a",
+  "files": {
+    "../strict-merge-return/overlay.py": "99f8c18f8dc9c7bd271813563dc799cb6691941e233361a974d23dce35288850",
+    "../strict-merge-return/strict.rs": "271084a3f99fc8503ebe77c3a13b5cf23487ea32856b0c1de64f4a0d0ccf8dd3",
+    "../strict-merge-return/study.py": "7167f6074b9ba8c4f2868c06363af456407aedc73471f2a4c4e229f8186c472d",
+    "../strict-partial-named-ports/overlay.py": "d3ef5f7b509e4b0af34b3d68d49aff9bb8c3c7f8020f71afaf212d48e7757e4b",
+    "../strict-partial-named-ports/partial.rs": "11c7535e9dff32ec166ab864db67f6951ea0d3ad4389be9c9217eb8e4fa9efe5",
+    "../strict-partial-named-ports/study.py": "d023ebd6fa2ec0e7150fc0254a8c17b3aff25d5f91209402646931242478c0bf",
+    "build.py": "78768475b0f561f3f5ac0d911158c6a1cebb175322d17379a420adac640211f7",
+    "check_header.py": "cd37c34e78757b8bc3bac74ab7180e5f52cfae905949c2103517f609a9a08e83",
+    "header-test.txt": "04500467bf798fcc010fccbb6528267cf2d10a338c085aa55b1a93c873b3ddc5",
+    "overlay.py": "bdf8147c57c5d4d30b4a6983aa1d1f9f5729ae6c753fba31439dc719c87148b7",
+    "results.json": "b9161aebd869a23d839098e549e4f914b1926ba14f8f047cdd7af8c9bc889c36",
+    "study.py": "19f554550dcf6587b24a4232095328a349ae01f9c3a0a491ea717ef576ee8d10",
+    "verify.py": "1f6502c01f32ef3895c2059ccd83c0812edb5c98351090bbc6b0bfab0bac6db2",
+    "wire.rs": "dc3e0e0502205b4a84ff183a24d1c92d86666f0f2e34f8aaaf64e1dc79f7d48b"
+  }
+}

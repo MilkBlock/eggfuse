@@ -1,0 +1,1 @@
+Native header codec retained source template and Spine code with the merge bit set and clear, including the maximum 31-bit Spine code.
