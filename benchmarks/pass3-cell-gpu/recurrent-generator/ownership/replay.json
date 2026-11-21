@@ -1,0 +1,136 @@
+{
+  "dot-product": {
+    "stream": {
+      "active_children": 26,
+      "same_run_parent": 26,
+      "later_retired_or_overwritten": 4,
+      "verifier_duplicate": 0,
+      "post_transfer_rate": null
+    },
+    "intervention": {
+      "run": 19,
+      "member": 297,
+      "old_owner": 144,
+      "new_owner": 127,
+      "parent_tensors": 26,
+      "arms": {
+        "old-first": {
+          "aware": {
+            "active": 26,
+            "retired": 0,
+            "unknown": 0,
+            "duplicate": 0,
+            "novel": 26,
+            "current_requested": 16,
+            "current_requested_covered": 16
+          },
+          "blind": {
+            "active": 47,
+            "retired": 26,
+            "unknown": 0,
+            "duplicate": 0,
+            "novel": 21,
+            "current_requested": 1,
+            "current_requested_covered": 1
+          }
+        },
+        "new-first": {
+          "aware": {
+            "active": 26,
+            "retired": 0,
+            "unknown": 0,
+            "duplicate": 0,
+            "novel": 26,
+            "current_requested": 16,
+            "current_requested_covered": 16
+          },
+          "blind": {
+            "active": 47,
+            "retired": 1,
+            "unknown": 0,
+            "duplicate": 0,
+            "novel": 46,
+            "current_requested": 26,
+            "current_requested_covered": 26
+          }
+        }
+      }
+    }
+  },
+  "stable-argmax": {
+    "stream": {
+      "active_children": 33,
+      "same_run_parent": 33,
+      "later_retired_or_overwritten": 5,
+      "verifier_duplicate": 0,
+      "post_transfer_rate": null
+    },
+    "intervention": {
+      "run": 15,
+      "member": 210,
+      "old_owner": 103,
+      "new_owner": 3,
+      "parent_tensors": 33,
+      "arms": {
+        "old-first": {
+          "aware": {
+            "active": 33,
+            "retired": 0,
+            "unknown": 0,
+            "duplicate": 0,
+            "novel": 33,
+            "current_requested": 17,
+            "current_requested_covered": 17
+          },
+          "blind": {
+            "active": 59,
+            "retired": 30,
+            "unknown": 0,
+            "duplicate": 0,
+            "novel": 29,
+            "current_requested": 0,
+            "current_requested_covered": 0
+          }
+        },
+        "new-first": {
+          "aware": {
+            "active": 33,
+            "retired": 0,
+            "unknown": 0,
+            "duplicate": 0,
+            "novel": 33,
+            "current_requested": 17,
+            "current_requested_covered": 17
+          },
+          "blind": {
+            "active": 59,
+            "retired": 0,
+            "unknown": 0,
+            "duplicate": 0,
+            "novel": 59,
+            "current_requested": 30,
+            "current_requested_covered": 30
+          }
+        }
+      }
+    }
+  },
+  "sum-bits": {
+    "stream": {
+      "active_children": 71,
+      "same_run_parent": 71,
+      "later_retired_or_overwritten": 19,
+      "verifier_duplicate": 0,
+      "post_transfer_rate": null
+    }
+  },
+  "gemm-bias-relu": {
+    "stream": {
+      "active_children": 37,
+      "same_run_parent": 37,
+      "later_retired_or_overwritten": 5,
+      "verifier_duplicate": 0,
+      "post_transfer_rate": null
+    }
+  }
+}

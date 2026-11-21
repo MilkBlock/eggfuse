@@ -1,0 +1,187 @@
+{
+  "device": "cpu",
+  "seed": 341,
+  "updates": 480,
+  "arms": {
+    "25/move/aware": {
+      "active": 384,
+      "retired": 0,
+      "unknown": 0,
+      "duplicate": 0,
+      "novel": 384,
+      "episodes": 384,
+      "required": 384,
+      "exact": 384
+    },
+    "25/move/blind": {
+      "active": 768,
+      "retired": 384,
+      "unknown": 0,
+      "duplicate": 0,
+      "novel": 384,
+      "episodes": 384,
+      "required": 384,
+      "exact": 0
+    },
+    "25/keep/aware": {
+      "active": 768,
+      "retired": 0,
+      "unknown": 0,
+      "duplicate": 0,
+      "novel": 768,
+      "episodes": 384,
+      "required": 768,
+      "exact": 384
+    },
+    "25/keep/blind": {
+      "active": 768,
+      "retired": 0,
+      "unknown": 0,
+      "duplicate": 0,
+      "novel": 768,
+      "episodes": 384,
+      "required": 768,
+      "exact": 384
+    },
+    "25/other-port/aware": {
+      "active": 768,
+      "retired": 0,
+      "unknown": 0,
+      "duplicate": 0,
+      "novel": 768,
+      "episodes": 384,
+      "required": 768,
+      "exact": 384
+    },
+    "25/other-port/blind": {
+      "active": 768,
+      "retired": 0,
+      "unknown": 0,
+      "duplicate": 0,
+      "novel": 768,
+      "episodes": 384,
+      "required": 768,
+      "exact": 384
+    },
+    "2/move/aware": {
+      "active": 384,
+      "retired": 0,
+      "unknown": 0,
+      "duplicate": 0,
+      "novel": 384,
+      "episodes": 384,
+      "required": 384,
+      "exact": 384
+    },
+    "2/move/blind": {
+      "active": 768,
+      "retired": 384,
+      "unknown": 0,
+      "duplicate": 0,
+      "novel": 384,
+      "episodes": 384,
+      "required": 384,
+      "exact": 0
+    },
+    "2/keep/aware": {
+      "active": 768,
+      "retired": 0,
+      "unknown": 0,
+      "duplicate": 0,
+      "novel": 768,
+      "episodes": 384,
+      "required": 768,
+      "exact": 384
+    },
+    "2/keep/blind": {
+      "active": 768,
+      "retired": 0,
+      "unknown": 0,
+      "duplicate": 0,
+      "novel": 768,
+      "episodes": 384,
+      "required": 768,
+      "exact": 384
+    },
+    "2/other-port/aware": {
+      "active": 768,
+      "retired": 0,
+      "unknown": 0,
+      "duplicate": 0,
+      "novel": 768,
+      "episodes": 384,
+      "required": 768,
+      "exact": 384
+    },
+    "2/other-port/blind": {
+      "active": 768,
+      "retired": 0,
+      "unknown": 0,
+      "duplicate": 0,
+      "novel": 768,
+      "episodes": 384,
+      "required": 768,
+      "exact": 384
+    },
+    "8/move/aware": {
+      "active": 384,
+      "retired": 0,
+      "unknown": 0,
+      "duplicate": 0,
+      "novel": 384,
+      "episodes": 384,
+      "required": 384,
+      "exact": 384
+    },
+    "8/move/blind": {
+      "active": 384,
+      "retired": 171,
+      "unknown": 0,
+      "duplicate": 0,
+      "novel": 213,
+      "episodes": 384,
+      "required": 384,
+      "exact": 213
+    },
+    "8/keep/aware": {
+      "active": 384,
+      "retired": 0,
+      "unknown": 0,
+      "duplicate": 0,
+      "novel": 384,
+      "episodes": 384,
+      "required": 768,
+      "exact": 0
+    },
+    "8/keep/blind": {
+      "active": 384,
+      "retired": 0,
+      "unknown": 0,
+      "duplicate": 0,
+      "novel": 384,
+      "episodes": 384,
+      "required": 768,
+      "exact": 0
+    },
+    "8/other-port/aware": {
+      "active": 384,
+      "retired": 0,
+      "unknown": 0,
+      "duplicate": 0,
+      "novel": 384,
+      "episodes": 384,
+      "required": 768,
+      "exact": 0
+    },
+    "8/other-port/blind": {
+      "active": 384,
+      "retired": 0,
+      "unknown": 0,
+      "duplicate": 0,
+      "novel": 384,
+      "episodes": 384,
+      "required": 768,
+      "exact": 0
+    }
+  }
+}
