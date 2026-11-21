@@ -10874,5 +10874,153 @@
         ]
       }
     ]
+  },
+  {
+    "id": "173-higher-cell-owner",
+    "section": "带请求的实例专门化",
+    "title": "返回结果尚未知时，Cell 能先承担后续推导义务吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "签发根时固定可用分支和请求类型。CPU 在源边界读取具名端口，计算中间 Set 的键和值。只有真实发布成功且版本仍有效，终端才取得私有上下文。",
+    "arms": "a　原中间 Set 直接发布凭证。b　先建立待决 owner，批量请求后按新事实、无结果或过期处理。c　注入重复回复、错误版本或错误 Run。",
+    "fix": "同一逻辑句柄、代际及私有内存地址可核验。源事实的归属独立；查询和提交仍在原 Run。临时请求、返回和实际转移分别计数。",
+    "measure": "3mm 的 5,413 个待决实例中，4,171 个无结果，310 个失效，932 个完成原址转移并实际提交终端。直接与高阶路径 FEPT 相同。",
+    "note": "3mm 校验协议时间 1.252→3.972 ms。sum-bits 194 个请求、26 次移交。高阶路径验证了排队和所有权，尚未从这部分获得提速。",
+    "src": "S166",
+    "diagram": [
+      {
+        "title": "Direct publication",
+        "layers": [
+          [
+            [
+              "s",
+              "actual Set fact"
+            ]
+          ],
+          [
+            [
+              "v",
+              "release at original Run"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Conservative root",
+        "layers": [
+          [
+            [
+              "n",
+              "signed request and branches"
+            ]
+          ],
+          [
+            [
+              "s",
+              "pending private owner"
+            ]
+          ],
+          [
+            [
+              "v",
+              "batch of named operands"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Specialized owner",
+        "layers": [
+          [
+            [
+              "v",
+              "check reply and commit"
+            ]
+          ],
+          [
+            [
+              "s",
+              "move the same Box"
+            ]
+          ],
+          [
+            [
+              "v",
+              "release once"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "174-version-local-receipts",
+    "section": "验证器局部性",
+    "title": "更大的 Cell 怎样让验证器少读图？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "签名收据必须同时匹配原版本和消费水位。按发布版本索引已经具名的收据，只打开还可能满足两项条件的地址。",
+    "arms": "a　扫描所有保留端口。b　及早检查版本。c　直接定位有效版本范围。再在同一二进制与直接发布和高阶 owner 交叉测试。",
+    "fix": "源父、发行顺序与实际转移固定。过期、错误或重放的凭证不能获得额外结果。另计索引维护和全部查询时钟。",
+    "measure": "3mm 高阶实例的事实读行 14,817→2,161，收据验证加索引维护 6.777→1.593 ms。两组均在原 Run 提交 932 次终端接续。",
+    "note": "四组配对里，高阶路径完整推理 1,886.61→1,912.37 ms。局部节省与整个运行时的内存、时间各自测量。",
+    "src": "S167",
+    "diagram": [
+      {
+        "title": "Full history",
+        "layers": [
+          [
+            [
+              "s",
+              "all named receipts"
+            ]
+          ],
+          [
+            [
+              "v",
+              "check each source row"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Version directory",
+        "layers": [
+          [
+            [
+              "s",
+              "receipt by generation"
+            ]
+          ],
+          [
+            [
+              "v",
+              "apply watermark"
+            ]
+          ],
+          [
+            [
+              "v",
+              "validate live fields"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Higher + directory",
+        "layers": [
+          [
+            [
+              "s",
+              "resolve private owner"
+            ]
+          ],
+          [
+            [
+              "v",
+              "only active named ports"
+            ]
+          ]
+        ]
+      }
+    ]
   }
 ]

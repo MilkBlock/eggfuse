@@ -377,6 +377,8 @@ card([从训练监督看],[字段投影让合法绑定的字段读出正确。�
 #src("S163","相同供体中间实例的两步授权","benchmarks/pass3-cell-gpu/ripsat-publication-chain/README.md")
 #src("S164","按原 Run 消费明确的 Set 发布","benchmarks/pass3-cell-gpu/ripsat-set-receipt/README.md")
 #src("S165","两步发布凭证的联合矩阵","benchmarks/pass3-cell-gpu/ripsat-publication-matrix/README.md")
+#src("S166","CPU 计算请求与真实私有所有权转移","benchmarks/pass3-cell-gpu/ripsat-higher-cell/README.md")
+#src("S167","直接与高阶验证的活跃版本索引","benchmarks/pass3-cell-gpu/ripsat-receipt-locality/README.md")
 #v(2mm)
 #label[两篇用于构造对照的原始文献]
 #v(1.5mm)
