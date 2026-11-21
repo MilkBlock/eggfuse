@@ -45,7 +45,7 @@ class Terms:
             if key not in self.terms or (size,text)<self.terms[key]:self.terms[key]=(size,text)
 
 
-def collect(v,gold,program):
+def collect(v,gold,program,route_limit=12,route_filter=None):
     q=src.base.summarize(v,gold);assert all(q['checks'].values())
     rules=program['recipe']['rules'];tables=program['recipe']['tables'];tids={t['name']:i for i,t in enumerate(tables)}
     roots={r[2]:r for r in v['root_recipe']['commits']};cells={x[0]:x[5] for x in v['root_recipe']['fresh']}
@@ -70,11 +70,12 @@ def collect(v,gold,program):
     generic=[];seen_sets=set()
     eligible=[k for k in ranked if any('table' in q['call'] for q in rules[k[0]]['query'])
         and rules[k[0]]['metadata']['name'].startswith(('(rule','(rewrite')) and rules[k[2]]['metadata']['name'].startswith(('(rule','(rewrite'))]
-    for k in eligible:
+    candidates = eligible if route_filter is None else [route for route in eligible if route_filter(route)]
+    for k in candidates:
         key=(rules[k[0]]['metadata']['source_set'],rules[k[2]]['metadata']['source_set'])
-        if key not in seen_sets and len(generic)<12:generic.append(k);seen_sets.add(key)
-    for k in eligible:
-        if len(generic)==12:break
+        if key not in seen_sets and (route_limit is None or len(generic)<route_limit):generic.append(k);seen_sets.add(key)
+    for k in candidates:
+        if len(generic)==route_limit:break
         if k not in generic:generic.append(k)
     selected=set(generic)|set(FOCUS)
     for k in selected&events_by_route.keys():
@@ -157,19 +158,30 @@ def collect(v,gold,program):
             if par[2] in nominated_serials:real_neighbors[str(par[2])].append(receipt)
     return dict(route_receipts=declared_receipts,neighbor_evidence=real_neighbors,reference=dict(runs=v['runs'],rhs=q['rhs'],state_sha=v['state_sha'],source_checks=q['checks']),samples=[
         dict(**sample,support=total[route],selection=("generic_and_requested" if route in generic and route in FOCUS else "generic" if route in generic else "requested")) for route,(_,sample) in sorted(saved.items())],
-        discovery=dict(observed_routes=len(total),observed_edges=sum(total.values()),eligible_original_rules=len(eligible),generic_cap=12,generic=generic,requested=FOCUS,
+        discovery=dict(observed_routes=len(total),observed_edges=sum(total.values()),eligible_original_rules=len(eligible),generic_cap=route_limit,generic=generic,requested=FOCUS,
                        no_grounded_sample=sorted((selected&total.keys())-saved.keys())),
         counts={','.join(map(str,route)):n for route,n in sorted(total.items())},unresolved={','.join(map(str,k)):v for k,v in failures.items()})
 def main():
     p=ArgumentParser()
     for k in ('exp','native','out'):p.add_argument(k,type=Path)
+    p.add_argument("--all-certifiable", action="store_true", help="ground every observed route admitted by the named Let-return grammar")
     a=p.parse_args();a.out.mkdir(parents=True,exist_ok=False);a.seed=1703;a.cap=8192
     a.policy=json.loads((HERE.parent/'speculative-allocation-policy/policy.json').read_bytes());a.fraction=json.loads((HERE.parent/'wave-demand-policy/policy.json').read_bytes())['models']['fraction']
     for donor in ('dot-product','jacobi-1d'):
         prog,plans,req=src.common.config(a,donor);pr=json.loads(prog.read_bytes())
         with src.base.session(a.exp/'compact-vanilla-20261121/vanilla-audit',prog) as ref:gold=ref({'audit':True})
         with src.base.session(a.native,prog,plans) as run:v=run(dict(wave['settings'](req,a)['packed'],audit=True,birth_ledger=True))
-        out=collect(v,gold,pr);out['program_sha256']=sha256(prog.read_bytes()).hexdigest();out['recipe_sha256']=pr['recipe']['sha256']
+        route_filter = None
+        if a.all_certifiable:
+            proof = run_path(str(HERE.parent / "ripsat-strict-programs/source_proof.py"))
+            recipe = proof["Recipe"](prog)
+            def route_filter(route):
+                try:
+                    recipe.certify(*route, 0)
+                except proof["Refusal"]:
+                    return False
+                return True
+        out=collect(v,gold,pr,None if a.all_certifiable else 12,route_filter);out['program_sha256']=sha256(prog.read_bytes()).hexdigest();out['recipe_sha256']=pr['recipe']['sha256']
         (a.out/(donor+'.json')).write_text(json.dumps(out,indent=1)+'\n')
         print(donor,out['counts'],[(s['producer']['rule'],s['producer_op'],s['consumer']['rule']) for s in out['samples']],flush=True)
 if __name__=='__main__':main()

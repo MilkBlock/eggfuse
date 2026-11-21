@@ -119,7 +119,7 @@ def run(a):
     for case in a.cases:
         pp, plans, req = driver["src"].config(a,case)
         path = a.study.parent / (case+"-ripsat.json")
-        artifact = driver["bake"].ripsat["load_checked"](path,pp)
+        artifact = driver["bake"].ripsat["load_checked"](path,pp,trust_index=getattr(a,"trust_index",None))
         specs, counts = driver["options"](driver["candidates"](trace_lib,pp),artifact["strict_named"])
         assert all(archive[case]["library"][k]==v for k,v in counts.items())
         cfgs = {}
@@ -155,5 +155,6 @@ if __name__=="__main__":
     p=argparse.ArgumentParser(description=__doc__)
     for k in ("exp","native","trace_library","study","out"):
         p.add_argument(k,type=Path)
+    p.add_argument("--trust-index", type=Path)
     p.add_argument("--cases",nargs="+",default=["sum-bits","3mm"])
     run(p.parse_args())

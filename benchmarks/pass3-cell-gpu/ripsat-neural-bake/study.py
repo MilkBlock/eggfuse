@@ -40,8 +40,9 @@ def execute(a):
         program,plans,req=src.config(a,case)
         # Compile independently for this exact target. No trace-derived routes
         # are passed into the RipSat compiler.
-        artifact=bridge["build"](a.evidence,donors,program)
+        artifact=bridge["build"](a.evidence,donors,program,trust_index=getattr(a,"trust_index",None))
         bridge["write_artifact"](a.out/(case+"-ripsat.json"),artifact)
+        artifact=bridge["load_checked"](a.out/(case+"-ripsat.json"),program,trust_index=getattr(a,"trust_index",None))
         specs,counts=options(candidates(trace,program),artifact["strict_named"])
         if "strict_named_static_consumer" in artifact:
             specs["local_return"]=artifact["strict_named_static_consumer"]
@@ -117,6 +118,7 @@ if __name__=="__main__":
     p=argparse.ArgumentParser(description=__doc__)
     for k in ("exp","native","evidence","trace_library","out"):
         p.add_argument(k,type=Path)
+    p.add_argument("--trust-index", type=Path, help="reviewed index for the supplied evidence")
     p.add_argument("--donor",action="append",required=True,metavar="NAME=PROGRAM.json")
     p.add_argument("--cases",nargs="+",default=["dot-product","sum-bits","3mm"])
     p.add_argument("--repeats",type=int,default=3)
