@@ -18,7 +18,7 @@ def pair_joins(program):
 
 
 class CompoundActor(nn.Module):
-    def __init__(self,joins,*,ownership_feedback=False):
+    def __init__(self,joins):
         super().__init__()
         self.root=Actor()
         self.register_buffer('joins',torch.tensor(joins),persistent=False)
@@ -28,21 +28,7 @@ class CompoundActor(nn.Module):
         self.null=nn.Parameter(torch.zeros(ROWS))
         self.row_latent=nn.Parameter(torch.randn(ROWS,HIDDEN)*.05)
 
-        if ownership_feedback:
-            self.port_gain=nn.Parameter(torch.zeros(ROWS,2))
-            self.null_gain=nn.Parameter(torch.zeros(ROWS))
-
-    def score_ownership(self,scores,null,ownership):
-        if not hasattr(self,"port_gain"):
-            raise ValueError("the checkpoint needs a trained ownership input")
-        # Inputs describe verified ownership at issuance for each parent/port.
-        # Keep both the current and former owner available to the neural selector.
-        features=torch.stack([(ownership<0).float(),(ownership>0).float()],-1)
-        scores=scores+torch.einsum("bpje,re->brpj",features,self.port_gain)
-        changed=features.any(dim=(1,2,3)).float()
-        return scores,null+changed[:,None,None]*self.null_gain[None,:,None]
-
-    def propose_children(self,parents,verdict,visible,run, *, ownership=None, parent_addresses=None, sample=False):
+    def propose_children(self,parents,verdict,visible,run):
         batch=len(parents);device=parents.device
         lanes=torch.arange(ROWS,device=device)
         hidden=parents[...,:HIDDEN]
@@ -52,21 +38,16 @@ class CompoundActor(nn.Module):
                            parents[...,HIDDEN+2:HIDDEN+3]/RANKS],-1)
         scores=context@self.score[:,:13].T
         scores=scores[:,None,:,:]+self.row_score[None,:,None,:]+torch.eye(ROWS,device=device)[None,:,:,None]*self.score[:,13]
-        null=self.null[None,:,None].expand(batch,-1,-1)
-        if ownership is not None:
-            scores,null=self.score_ownership(scores,null,ownership)
         legal=(parents[:,:,HIDDEN,None].long()==self.joins[:,1]+1)
         scores=scores.masked_fill(~legal[:,None],-1e4).reshape(batch,ROWS,-1)
-        logits=torch.cat([null,scores],-1)
-        action=torch.distributions.Categorical(logits=logits).sample() if sample else logits.argmax(-1)
+        logits=torch.cat([self.null[None,:,None].expand(batch,-1,-1),scores],-1)
+        action=logits.argmax(-1)
         idx=(action-1).clamp_min(0);parent=idx//len(self.joins);join=idx%len(self.joins)
         active=action!=0
         parent=torch.where(active,parent,lanes)
         latent=hidden.gather(1,parent[:,:,None].expand(-1,-1,HIDDEN))
         latent=(latent+self.row_latent+active[:,:,None]*self.embedding[join]).tanh()
         address=(run[:,None]-1)*ROWS+parent+1
-        if parent_addresses is not None:
-            address=parent_addresses.gather(1,parent)
         fields=torch.stack([self.joins[join,3]+1,address,self.joins[join,2]+1,active],-1)*active[:,:,None]
         return logits,torch.cat([latent,fields.float()],-1),action
 
