@@ -1,0 +1,215 @@
+{
+ "3mm": {
+  "vanilla": {
+   "main": 5148,
+   "categories": {
+    "execute": {
+     "other_matching": 1220,
+     "spine": 571,
+     "entry_schedule": 358,
+     "run_self": 139,
+     "publication": 457,
+     "graph_write": 701,
+     "ordered_rhs": 91,
+     "source_repair": 458,
+     "outer_schedule": 5
+    },
+    "outside_execute": {
+     "graph_export": 512,
+     "other_load_report_drop_or_io": 577,
+     "report": 50,
+     "initial_graph": 8,
+     "response_io": 1
+    }
+   },
+   "multi": {},
+   "sample_sha256": "3be079f2062373b3bfce5970e8a822d5f0d8b86a6f07f5a55cb31ea5e73ede4e",
+   "request": {
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "runs": 4260,
+    "samples_ms": [
+     964.005667,
+     985.803208,
+     1073.98225,
+     947.762292,
+     958.839834,
+     905.395458
+    ],
+    "phases": null
+   }
+  },
+  "packed": {
+   "main": 5176,
+   "categories": {
+    "execute": {
+     "multi_witness": 2130,
+     "root_recipe": 158,
+     "single_verification": 310,
+     "single_generation": 289,
+     "entry_schedule": 169,
+     "spine": 324,
+     "binding_dedup": 92,
+     "run_self": 226,
+     "single_score": 2,
+     "graph_write": 413,
+     "publication": 78,
+     "audit_hook": 4,
+     "ordered_rhs": 50,
+     "source_repair": 258,
+     "single_commit": 9,
+     "outer_schedule": 6
+    },
+    "outside_execute": {
+     "graph_export": 306,
+     "other_load_report_drop_or_io": 327,
+     "model_setup": 19,
+     "initial_graph": 4,
+     "report": 2
+    }
+   },
+   "multi": {
+    "index": 355,
+    "code": 251,
+    "emit_two": 226,
+    "projected_column": 18,
+    "epoch_order": 102,
+    "seal_raw": 23,
+    "local_codes_permit": 49,
+    "shortlist": 22,
+    "lazy_equation_value": 4,
+    "other_multi": 400,
+    "frame": 110,
+    "emit_stack": 363,
+    "tier_column": 24,
+    "prepare_tiers": 1,
+    "prepare_forward": 97,
+    "prepare_atom_checks": 6,
+    "descend": 70,
+    "publish_ports": 3,
+    "publish_epoch_bounds": 6
+   },
+   "sample_sha256": "4858c7f6b235d363bd0355e53f30c29f483222054d638485edc9b437e43511d6",
+   "request": {
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "runs": 4260,
+    "samples_ms": [
+     1973.4055,
+     1986.8985420000001,
+     1990.153375,
+     1791.789042
+    ],
+    "phases": [
+     1336.3060500000072,
+     322.86565000000917,
+     108.73137699999472,
+     85.5974959999994,
+     8.36931900000001
+    ]
+   }
+  }
+ },
+ "deriche": {
+  "vanilla": {
+   "main": 5149,
+   "categories": {
+    "execute": {
+     "other_matching": 1229,
+     "entry_schedule": 422,
+     "spine": 592,
+     "run_self": 143,
+     "publication": 571,
+     "graph_write": 683,
+     "ordered_rhs": 126,
+     "source_repair": 427,
+     "outer_schedule": 1
+    },
+    "outside_execute": {
+     "graph_export": 432,
+     "other_load_report_drop_or_io": 477,
+     "report": 39,
+     "initial_graph": 7
+    }
+   },
+   "multi": {},
+   "sample_sha256": "d68155c1c5990d65bfe154e52d03a1af724e00f512a00753430d97920c9df087",
+   "request": {
+    "state_sha": "f9181c677ec837e878719ee601dddf7a0700ed236f8eac364d3ecfb40712b7b8",
+    "runs": 5687,
+    "samples_ms": [
+     1657.1845,
+     1705.121416,
+     1631.938458,
+     1578.7105829999998
+    ],
+    "phases": null
+   }
+  },
+  "packed": {
+   "main": 5590,
+   "categories": {
+    "execute": {
+     "multi_witness": 2022,
+     "root_recipe": 213,
+     "single_verification": 387,
+     "single_generation": 542,
+     "entry_schedule": 288,
+     "spine": 455,
+     "binding_dedup": 141,
+     "run_self": 250,
+     "single_score": 4,
+     "graph_write": 453,
+     "audit_hook": 6,
+     "publication": 114,
+     "ordered_rhs": 86,
+     "source_repair": 283,
+     "single_commit": 20,
+     "outer_schedule": 3
+    },
+    "outside_execute": {
+     "graph_export": 161,
+     "other_load_report_drop_or_io": 146,
+     "model_setup": 13,
+     "initial_graph": 2,
+     "report": 1
+    }
+   },
+   "multi": {
+    "index": 342,
+    "code": 201,
+    "emit_two": 215,
+    "projected_column": 15,
+    "epoch_order": 92,
+    "seal_raw": 27,
+    "local_codes_permit": 33,
+    "shortlist": 22,
+    "other_multi": 517,
+    "lazy_equation_value": 1,
+    "emit_stack": 280,
+    "tier_column": 13,
+    "prepare_forward": 101,
+    "frame": 68,
+    "compile_stack": 1,
+    "prepare_atom_checks": 2,
+    "publish_epoch_bounds": 2,
+    "descend": 81,
+    "publish_ports": 9
+   },
+   "sample_sha256": "e6a3ee68c20c519993b6b8198b867832d8c411cc77e0c0f1769049243521b4f7",
+   "request": {
+    "state_sha": "f9181c677ec837e878719ee601dddf7a0700ed236f8eac364d3ecfb40712b7b8",
+    "runs": 5687,
+    "samples_ms": [
+     3532.9392080000002,
+     3814.376084
+    ],
+    "phases": [
+     1972.9442700000134,
+     500.92244000001,
+     152.1656600000028,
+     138.6957269999947,
+     22.96650300000012
+    ]
+   }
+  }
+ }
+}
