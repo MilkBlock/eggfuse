@@ -1,0 +1,5827 @@
+{
+ "3mm": {
+  "arms": {
+   "packed": {
+    "rhs": 294917,
+    "raw": "11154018460456003428",
+    "commits": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+    "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+    "source_pass_rhs": 294917,
+    "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+    "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+    "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+    "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+    "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+    "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+    "direct_cells": 229311,
+    "root_allocated": 228095,
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "raw_parent_sha": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+    "recurrent": 4887471755355662293,
+    "decisions": "16767102213097954485",
+    "rule_call_sha": "a4270083ff1dff816c0d0bd97f61bbf61da899e1f2cd95c56e7bc9cfd88c0883",
+    "root_commit_sha": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+    "visible_sha": "0f5fc7e44add1467558ff78c72933b612a835b732a0bfe234580a03d631b6320",
+    "retired_sha": "5ceb174bb6c2aa9134628550a55e275935268c1a97dda59ef490971da35c61e5",
+    "birth_sha": "b892700aa64cfbbdb0fdf4f99807ee03d16df3c795af03ab04bebc03a09472ec",
+    "born": 119503,
+    "visible": 92658,
+    "expanded_single": 334594,
+    "expanded_multi": 220972,
+    "child_candidates": 7120,
+    "selected_children": 2508,
+    "source_work": [
+     334594,
+     220268
+    ],
+    "single_dispatches": 0,
+    "single_residual_decisions": 845168,
+    "single_logits": 8611,
+    "multi_approx_visits": 1327608,
+    "arity": {
+     "8": 180,
+     "2": 176167,
+     "3": 23801,
+     "5": 17472,
+     "4": 3180,
+     "6": 32,
+     "7": 140
+    },
+    "residual_query_width": {
+     "14": 180,
+     "4": 49268,
+     "2": 92290,
+     "3": 46350,
+     "6": 4189,
+     "5": 26386,
+     "7": 2069,
+     "8": 240
+    },
+    "top_rules": [
+     [
+      243,
+      "always-run",
+      18823,
+      4,
+      [
+       "BodyContainsExpr",
+       "DoWhile",
+       "Single",
+       "is-inv-Expr"
+      ]
+     ],
+     [
+      90,
+      "always-run",
+      14606,
+      2,
+      [
+       "Get",
+       "BodyContainsExpr"
+      ]
+     ],
+     [
+      249,
+      "always-run",
+      12448,
+      5,
+      [
+       "DoWhile",
+       "ContextOf",
+       "ContextOf",
+       "Const",
+       "HasArgType"
+      ]
+     ],
+     [
+      144,
+      "always-run",
+      10285,
+      4,
+      [
+       "SubTuple",
+       "+",
+       "SubTuple",
+       "Concat"
+      ]
+     ],
+     [
+      91,
+      "always-run",
+      9961,
+      2,
+      [
+       "Concat",
+       "BodyContainsExpr"
+      ]
+     ],
+     [
+      507,
+      "terms-helpers",
+      8384,
+      4,
+      [
+       "TCPair",
+       "ExtractedExpr",
+       "<",
+       "CellSpineView8"
+      ]
+     ],
+     [
+      328,
+      "context",
+      7149,
+      2,
+      [
+       "Concat",
+       "AddContext"
+      ]
+     ],
+     [
+      324,
+      "context",
+      6300,
+      2,
+      [
+       "Get",
+       "AddContext"
+      ]
+     ],
+     [
+      59,
+      "always-run",
+      6131,
+      3,
+      [
+       "Concat",
+       "Add-Gets",
+       "tuple-length"
+      ]
+     ],
+     [
+      122,
+      "always-run",
+      5696,
+      2,
+      [
+       "Get",
+       "ContextOf"
+      ]
+     ],
+     [
+      371,
+      "error-checking",
+      5475,
+      3,
+      [
+       "ContextOf",
+       "ContextOf",
+       "!="
+      ]
+     ],
+     [
+      577,
+      "type-helpers",
+      5226,
+      3,
+      [
+       "TCons",
+       "TypeList-ith",
+       ">"
+      ]
+     ]
+    ],
+    "rulesets": {
+     "select_opt": {
+      "multi_literal": 180
+     },
+     "always-run": {
+      "multi_literal": 102743,
+      "single_action": 0,
+      "single_literal": 192109
+     },
+     "peepholes": {
+      "multi_literal": 4510,
+      "single_action": 0,
+      "single_literal": 128
+     },
+     "boundary-analysis": {
+      "multi_literal": 980
+     },
+     "boundary-analysis-prep": {
+      "multi_literal": 973
+     },
+     "cell-spine-complete": {
+      "multi_literal": 12415,
+      "single_action": 0,
+      "single_literal": 1789
+     },
+     "cicm-index": {
+      "multi_literal": 2386
+     },
+     "context": {
+      "multi_literal": 16468,
+      "single_action": 0,
+      "single_literal": 23336
+     },
+     "error-checking": {
+      "multi_literal": 10175,
+      "single_action": 0,
+      "single_literal": 880
+     },
+     "interval-analysis": {
+      "multi_literal": 12278,
+      "selected_child": 28,
+      "single_action": 0,
+      "single_literal": 288
+     },
+     "non-weakly-linear": {
+      "multi_literal": 276,
+      "single_action": 0,
+      "single_literal": 239
+     },
+     "passthrough": {
+      "multi_literal": 581
+     },
+     "state-edge-passthrough": {
+      "multi_literal": 155
+     },
+     "term-subst": {
+      "multi_literal": 512,
+      "single_action": 0,
+      "single_literal": 275
+     },
+     "terms": {
+      "multi_literal": 6712,
+      "single_action": 0,
+      "single_literal": 416
+     },
+     "terms-helpers": {
+      "multi_literal": 8384,
+      "selected_child": 2480,
+      "single_action": 0,
+      "single_literal": 8228
+     },
+     "terms-helpers-helpers": {
+      "multi_literal": 6718
+     },
+     "type-analysis": {
+      "multi_literal": 28346,
+      "single_action": 0,
+      "single_literal": 9673
+     },
+     "type-helpers": {
+      "multi_literal": 6180,
+      "single_action": 0,
+      "single_literal": 22340
+     },
+     "initialization": {
+      "single_action": 0,
+      "single_literal": 1
+     },
+     "is-resolved": {
+      "single_action": 0,
+      "single_literal": 73036
+     },
+     "apply-subst-unions": {
+      "single_action": 0,
+      "single_literal": 0
+     },
+     "apply-drop-unions": {
+      "single_action": 0,
+      "single_literal": 0
+     },
+     "cleanup-drop": {
+      "single_action": 0,
+      "single_literal": 0
+     },
+     "canon": {
+      "single_action": 0,
+      "single_literal": 1536
+     },
+     "mem-simple": {
+      "single_action": 0,
+      "single_literal": 288
+     },
+     "subsume-after-helpers": {
+      "single_action": 0,
+      "single_literal": 0
+     },
+     "loop-iters-analysis": {
+      "single_action": 0,
+      "single_literal": 32
+     }
+    },
+    "categories": {
+     "single_action": {
+      "packets": 0,
+      "visible": 0,
+      "born": 0,
+      "zero": 0,
+      "one": 0,
+      "two_plus": 0,
+      "max": 0
+     },
+     "single_literal": {
+      "packets": 334594,
+      "visible": 26258,
+      "born": 33550,
+      "zero": 313165,
+      "one": 20027,
+      "two_plus": 1402,
+      "max": 3085
+     },
+     "wide_action": {
+      "packets": 0,
+      "visible": 0,
+      "born": 0,
+      "zero": 0,
+      "one": 0,
+      "two_plus": 0,
+      "max": 0
+     },
+     "multi_literal": {
+      "packets": 220972,
+      "visible": 65198,
+      "born": 84737,
+      "zero": 168569,
+      "one": 42147,
+      "two_plus": 10256,
+      "max": 3
+     },
+     "selected_child": {
+      "packets": 2508,
+      "visible": 1202,
+      "born": 1216,
+      "zero": 1306,
+      "one": 1202,
+      "two_plus": 0,
+      "max": 1
+     }
+    },
+    "denominators": {
+     "forward": 558074,
+     "bidirectional": 558074,
+     "paid_groups": 558074,
+     "paid_plus_return": 558074,
+     "all_prototype_decisions": 1073260,
+     "decisions_plus_return": 1073260
+    },
+    "per_packet": {
+     "forward": 0.16603174489404632,
+     "bidirectional": 0.16603174489404632,
+     "paid_groups": 0.16603174489404632,
+     "paid_plus_return": 0.16603174489404632,
+     "all_prototype_decisions": 0.0863332277360565,
+     "decisions_plus_return": 0.0863332277360565
+    },
+    "max_total_for_fept_two": 46329,
+    "budget_remaining_after_forward": -511745,
+    "strict_remaining_after_decisions": -1026931,
+    "wide_actions_affordable_at_fept_two": -511745,
+    "optimistic_matched_packets": 558074,
+    "optimistic_matched_fept": 0.16603174489404632,
+    "class_counts": {
+     "accepted_by_action": 0,
+     "eligible_after_prefilters": 0,
+     "empty": 0,
+     "empty_table_skips": 0,
+     "feedback_bytes": 0,
+     "internal_receipts": 0,
+     "issued": 0,
+     "logit_evaluations": 0,
+     "masks": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "public_headers": 0,
+     "recurrence_digest": 4887471755355662293,
+     "residual_calls": 0,
+     "residual_receipts": 0,
+     "scalar_rejected": 0
+    },
+    "family_counts": {
+     "absent": 0,
+     "actions": 0,
+     "calls": 0,
+     "candidate_bound": 0,
+     "empty_actions": 0,
+     "inspected_left": 0,
+     "issue_ms": 0.0,
+     "keys_issued": 0,
+     "matched_min_packets": 0,
+     "private_rows": 0,
+     "prototypes": 0,
+     "receiver_cache_hits": 0,
+     "receiver_ms": 0.0,
+     "receiver_pairs": 0,
+     "receiver_public_decodes": 0,
+     "sender_marginal_rows": 0,
+     "skipped_clean": 0,
+     "source_pair_ms": 0.0,
+     "spans": 0,
+     "stale": 0,
+     "upper_min_packets": 0,
+     "wire_bytes": 0
+    },
+    "wire": {
+     "single_actions": 0,
+     "single_literals": 12764938,
+     "wide_actions": 0,
+     "multi_literals": 17018384,
+     "selected_children": 1368404,
+     "feedback": 0
+    },
+    "bi_bytes": 31151726,
+    "ms": [
+     1747.95425,
+     1853.6203329999998,
+     1886.4658749999999,
+     1849.4122499999999
+    ],
+    "wall_ms": [
+     2012.140708975494,
+     2121.9399160472676,
+     2154.2437500320375,
+     2115.4244169592857
+    ],
+    "median_ms": 1851.5162914999999,
+    "median_wall_ms": 2118.6821665032767
+   },
+   "singleton": {
+    "rhs": 294917,
+    "raw": "11154018460456003428",
+    "commits": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+    "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+    "source_pass_rhs": 294917,
+    "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+    "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+    "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+    "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+    "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+    "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+    "direct_cells": 229311,
+    "root_allocated": 228095,
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "raw_parent_sha": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+    "recurrent": 4887471755355662293,
+    "decisions": "16767102213097954485",
+    "rule_call_sha": "a4270083ff1dff816c0d0bd97f61bbf61da899e1f2cd95c56e7bc9cfd88c0883",
+    "root_commit_sha": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+    "visible_sha": "0f5fc7e44add1467558ff78c72933b612a835b732a0bfe234580a03d631b6320",
+    "retired_sha": "5ceb174bb6c2aa9134628550a55e275935268c1a97dda59ef490971da35c61e5",
+    "birth_sha": "b892700aa64cfbbdb0fdf4f99807ee03d16df3c795af03ab04bebc03a09472ec",
+    "born": 119503,
+    "visible": 92658,
+    "expanded_single": 334594,
+    "expanded_multi": 220972,
+    "child_candidates": 7120,
+    "selected_children": 2508,
+    "source_work": [
+     334594,
+     220268
+    ],
+    "single_dispatches": 9097,
+    "single_residual_decisions": 16577,
+    "single_logits": 15923,
+    "multi_approx_visits": 1327608,
+    "arity": {
+     "8": 180,
+     "2": 176167,
+     "3": 23801,
+     "5": 17472,
+     "4": 3180,
+     "6": 32,
+     "7": 140
+    },
+    "residual_query_width": {
+     "14": 180,
+     "4": 49268,
+     "2": 92290,
+     "3": 46350,
+     "6": 4189,
+     "5": 26386,
+     "7": 2069,
+     "8": 240
+    },
+    "top_rules": [
+     [
+      243,
+      "always-run",
+      18823,
+      4,
+      [
+       "BodyContainsExpr",
+       "DoWhile",
+       "Single",
+       "is-inv-Expr"
+      ]
+     ],
+     [
+      90,
+      "always-run",
+      14606,
+      2,
+      [
+       "Get",
+       "BodyContainsExpr"
+      ]
+     ],
+     [
+      249,
+      "always-run",
+      12448,
+      5,
+      [
+       "DoWhile",
+       "ContextOf",
+       "ContextOf",
+       "Const",
+       "HasArgType"
+      ]
+     ],
+     [
+      144,
+      "always-run",
+      10285,
+      4,
+      [
+       "SubTuple",
+       "+",
+       "SubTuple",
+       "Concat"
+      ]
+     ],
+     [
+      91,
+      "always-run",
+      9961,
+      2,
+      [
+       "Concat",
+       "BodyContainsExpr"
+      ]
+     ],
+     [
+      507,
+      "terms-helpers",
+      8384,
+      4,
+      [
+       "TCPair",
+       "ExtractedExpr",
+       "<",
+       "CellSpineView8"
+      ]
+     ],
+     [
+      328,
+      "context",
+      7149,
+      2,
+      [
+       "Concat",
+       "AddContext"
+      ]
+     ],
+     [
+      324,
+      "context",
+      6300,
+      2,
+      [
+       "Get",
+       "AddContext"
+      ]
+     ],
+     [
+      59,
+      "always-run",
+      6131,
+      3,
+      [
+       "Concat",
+       "Add-Gets",
+       "tuple-length"
+      ]
+     ],
+     [
+      122,
+      "always-run",
+      5696,
+      2,
+      [
+       "Get",
+       "ContextOf"
+      ]
+     ],
+     [
+      371,
+      "error-checking",
+      5475,
+      3,
+      [
+       "ContextOf",
+       "ContextOf",
+       "!="
+      ]
+     ],
+     [
+      577,
+      "type-helpers",
+      5226,
+      3,
+      [
+       "TCons",
+       "TypeList-ith",
+       ">"
+      ]
+     ]
+    ],
+    "rulesets": {
+     "select_opt": {
+      "multi_literal": 180
+     },
+     "always-run": {
+      "multi_literal": 102743,
+      "single_action": 3667,
+      "single_literal": 671
+     },
+     "peepholes": {
+      "multi_literal": 4510,
+      "single_action": 3,
+      "single_literal": 0
+     },
+     "boundary-analysis": {
+      "multi_literal": 980
+     },
+     "boundary-analysis-prep": {
+      "multi_literal": 973
+     },
+     "cell-spine-complete": {
+      "multi_literal": 12415,
+      "single_action": 44,
+      "single_literal": 0
+     },
+     "cicm-index": {
+      "multi_literal": 2386
+     },
+     "context": {
+      "multi_literal": 16468,
+      "single_action": 30,
+      "single_literal": 0
+     },
+     "error-checking": {
+      "multi_literal": 10175,
+      "single_action": 20,
+      "single_literal": 0
+     },
+     "interval-analysis": {
+      "multi_literal": 12278,
+      "selected_child": 28,
+      "single_action": 17,
+      "single_literal": 1
+     },
+     "non-weakly-linear": {
+      "multi_literal": 276,
+      "single_action": 1,
+      "single_literal": 0
+     },
+     "passthrough": {
+      "multi_literal": 581
+     },
+     "state-edge-passthrough": {
+      "multi_literal": 155
+     },
+     "term-subst": {
+      "multi_literal": 512,
+      "single_action": 4,
+      "single_literal": 0
+     },
+     "terms": {
+      "multi_literal": 6712,
+      "single_action": 4,
+      "single_literal": 0
+     },
+     "terms-helpers": {
+      "multi_literal": 8384,
+      "selected_child": 2480,
+      "single_action": 96,
+      "single_literal": 0
+     },
+     "terms-helpers-helpers": {
+      "multi_literal": 6718
+     },
+     "type-analysis": {
+      "multi_literal": 28346,
+      "single_action": 442,
+      "single_literal": 1
+     },
+     "type-helpers": {
+      "multi_literal": 6180,
+      "single_action": 832,
+      "single_literal": 1
+     },
+     "initialization": {
+      "single_action": 0,
+      "single_literal": 1
+     },
+     "is-resolved": {
+      "single_action": 1742,
+      "single_literal": 0
+     },
+     "apply-subst-unions": {
+      "single_action": 0,
+      "single_literal": 0
+     },
+     "apply-drop-unions": {
+      "single_action": 0,
+      "single_literal": 0
+     },
+     "cleanup-drop": {
+      "single_action": 0,
+      "single_literal": 0
+     },
+     "canon": {
+      "single_action": 36,
+      "single_literal": 0
+     },
+     "mem-simple": {
+      "single_action": 10,
+      "single_literal": 0
+     },
+     "subsume-after-helpers": {
+      "single_action": 0,
+      "single_literal": 0
+     },
+     "loop-iters-analysis": {
+      "single_action": 2,
+      "single_literal": 0
+     }
+    },
+    "categories": {
+     "single_action": {
+      "packets": 6950,
+      "visible": 23172,
+      "born": 30300,
+      "zero": 6235,
+      "one": 120,
+      "two_plus": 595,
+      "max": 977
+     },
+     "single_literal": {
+      "packets": 675,
+      "visible": 3086,
+      "born": 3250,
+      "zero": 673,
+      "one": 1,
+      "two_plus": 1,
+      "max": 3085
+     },
+     "wide_action": {
+      "packets": 0,
+      "visible": 0,
+      "born": 0,
+      "zero": 0,
+      "one": 0,
+      "two_plus": 0,
+      "max": 0
+     },
+     "multi_literal": {
+      "packets": 220972,
+      "visible": 65198,
+      "born": 84737,
+      "zero": 168569,
+      "one": 42147,
+      "two_plus": 10256,
+      "max": 3
+     },
+     "selected_child": {
+      "packets": 2508,
+      "visible": 1202,
+      "born": 1216,
+      "zero": 1306,
+      "one": 1202,
+      "two_plus": 0,
+      "max": 1
+     }
+    },
+    "denominators": {
+     "forward": 231105,
+     "bidirectional": 238055,
+     "paid_groups": 231105,
+     "paid_plus_return": 238055,
+     "all_prototype_decisions": 260716,
+     "decisions_plus_return": 267666
+    },
+    "per_packet": {
+     "forward": 0.4009346400986565,
+     "bidirectional": 0.3892293797651803,
+     "paid_groups": 0.4009346400986565,
+     "paid_plus_return": 0.3892293797651803,
+     "all_prototype_decisions": 0.35539821108025593,
+     "decisions_plus_return": 0.34617022707404005
+    },
+    "max_total_for_fept_two": 46329,
+    "budget_remaining_after_forward": -184776,
+    "strict_remaining_after_decisions": -214387,
+    "wide_actions_affordable_at_fept_two": -184776,
+    "optimistic_matched_packets": 231105,
+    "optimistic_matched_fept": 0.4009346400986565,
+    "class_counts": {
+     "accepted_by_action": 828591,
+     "eligible_after_prefilters": 828591,
+     "empty": 1458,
+     "empty_table_skips": 3304,
+     "feedback_bytes": 139000,
+     "internal_receipts": 333919,
+     "issued": 6950,
+     "logit_evaluations": 13900,
+     "masks": [
+      0,
+      0,
+      431,
+      6519
+     ],
+     "public_headers": 8760540,
+     "recurrence_digest": 4887471755355662293,
+     "residual_calls": 2150,
+     "residual_receipts": 675,
+     "scalar_rejected": 494672
+    },
+    "family_counts": {
+     "absent": 0,
+     "actions": 0,
+     "calls": 0,
+     "candidate_bound": 0,
+     "empty_actions": 0,
+     "inspected_left": 0,
+     "issue_ms": 0.0,
+     "keys_issued": 0,
+     "matched_min_packets": 0,
+     "private_rows": 0,
+     "prototypes": 0,
+     "receiver_cache_hits": 0,
+     "receiver_ms": 0.0,
+     "receiver_pairs": 0,
+     "receiver_public_decodes": 0,
+     "sender_marginal_rows": 0,
+     "skipped_clean": 0,
+     "source_pair_ms": 0.0,
+     "spans": 0,
+     "stale": 0,
+     "upper_min_packets": 0,
+     "wire_bytes": 0
+    },
+    "wire": {
+     "single_actions": 444800,
+     "single_literals": 58447,
+     "wide_actions": 0,
+     "multi_literals": 17018384,
+     "selected_children": 1368404,
+     "feedback": 139000
+    },
+    "bi_bytes": 19029035,
+    "ms": [
+     1944.024916,
+     2016.047458,
+     2045.929792,
+     1997.957834
+    ],
+    "wall_ms": [
+     2210.7382090762258,
+     2286.887167021632,
+     2311.3534579752013,
+     2260.4297919897363
+    ],
+    "median_ms": 2007.002646,
+    "median_wall_ms": 2273.658479505684
+   },
+   "wide": {
+    "rhs": 294917,
+    "raw": "4275457079080453952",
+    "commits": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+    "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+    "source_pass_rhs": 294917,
+    "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+    "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+    "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+    "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+    "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+    "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+    "direct_cells": 229311,
+    "root_allocated": 228095,
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "raw_parent_sha": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+    "recurrent": 4887471755355662293,
+    "decisions": "16767102213097954485",
+    "rule_call_sha": "a4270083ff1dff816c0d0bd97f61bbf61da899e1f2cd95c56e7bc9cfd88c0883",
+    "root_commit_sha": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+    "visible_sha": "0f5fc7e44add1467558ff78c72933b612a835b732a0bfe234580a03d631b6320",
+    "retired_sha": "5ceb174bb6c2aa9134628550a55e275935268c1a97dda59ef490971da35c61e5",
+    "birth_sha": "b892700aa64cfbbdb0fdf4f99807ee03d16df3c795af03ab04bebc03a09472ec",
+    "born": 119503,
+    "visible": 92658,
+    "expanded_single": 334594,
+    "expanded_multi": 220972,
+    "child_candidates": 7120,
+    "selected_children": 2508,
+    "source_work": [
+     334594,
+     220268
+    ],
+    "single_dispatches": 0,
+    "single_residual_decisions": 845168,
+    "single_logits": 8611,
+    "multi_approx_visits": 1151441,
+    "arity": {
+     "8": 180,
+     "3": 23801,
+     "5": 17472,
+     "4": 3180,
+     "6": 32,
+     "7": 140
+    },
+    "residual_query_width": {
+     "14": 180,
+     "3": 9169,
+     "6": 4073,
+     "4": 9420,
+     "5": 19654,
+     "7": 2069,
+     "8": 240
+    },
+    "top_rules": [
+     [
+      249,
+      "always-run",
+      12448,
+      5,
+      [
+       "DoWhile",
+       "ContextOf",
+       "ContextOf",
+       "Const",
+       "HasArgType"
+      ]
+     ],
+     [
+      507,
+      "terms-helpers",
+      8384,
+      4,
+      [
+       "TCPair",
+       "ExtractedExpr",
+       "<",
+       "CellSpineView8"
+      ]
+     ],
+     [
+      538,
+      "type-analysis",
+      4676,
+      3,
+      [
+       "Get",
+       "TupleT",
+       "HasType"
+      ]
+     ],
+     [
+      540,
+      "type-analysis",
+      3015,
+      5,
+      [
+       "Concat",
+       "TupleT",
+       "HasType",
+       "TupleT",
+       "HasType"
+      ]
+     ],
+     [
+      567,
+      "type-analysis",
+      2831,
+      6,
+      [
+       "PointerT",
+       "Base",
+       "HasType",
+       "Base",
+       "HasType",
+       "CellSpineView7"
+      ]
+     ],
+     [
+      312,
+      "cicm-index",
+      2386,
+      3,
+      [
+       "TCPair",
+       "ExtractedExpr",
+       "ContextOf"
+      ]
+     ],
+     [
+      504,
+      "terms",
+      1605,
+      3,
+      [
+       "Get",
+       "TCPair",
+       "ExtractedExpr"
+      ]
+     ],
+     [
+      501,
+      "terms",
+      1456,
+      5,
+      [
+       "Concat",
+       "TCPair",
+       "ExtractedExpr",
+       "TCPair",
+       "ExtractedExpr"
+      ]
+     ],
+     [
+      547,
+      "type-analysis",
+      1133,
+      7,
+      [
+       "DoWhile",
+       "TupleT",
+       "HasType",
+       "BoolT",
+       "TCons",
+       "TupleT",
+       "HasType"
+      ]
+     ],
+     [
+      268,
+      "boundary-analysis",
+      980,
+      6,
+      [
+       "is-inv-Expr",
+       "DoWhile",
+       "HasType",
+       "Base",
+       "Expr-size",
+       "to-hoist-size"
+      ]
+     ],
+     [
+      269,
+      "boundary-analysis-prep",
+      973,
+      5,
+      [
+       "is-inv-Expr",
+       "DoWhile",
+       "HasType",
+       "Base",
+       "Expr-size"
+      ]
+     ],
+     [
+      242,
+      "always-run",
+      520,
+      5,
+      [
+       "BodyContainsExpr",
+       "DoWhile",
+       "Concat",
+       "is-inv-Expr",
+       "is-inv-Expr"
+      ]
+     ]
+    ],
+    "rulesets": {
+     "select_opt": {
+      "multi_literal": 180
+     },
+     "always-run": {
+      "multi_literal": 13826,
+      "single_action": 0,
+      "single_literal": 192109,
+      "wide_action": 38723
+     },
+     "boundary-analysis": {
+      "multi_literal": 980
+     },
+     "boundary-analysis-prep": {
+      "multi_literal": 973
+     },
+     "cicm-index": {
+      "multi_literal": 2386
+     },
+     "error-checking": {
+      "multi_literal": 689,
+      "single_action": 0,
+      "single_literal": 880,
+      "wide_action": 896
+     },
+     "interval-analysis": {
+      "multi_literal": 591,
+      "selected_child": 28,
+      "single_action": 0,
+      "single_literal": 288,
+      "wide_action": 3670
+     },
+     "non-weakly-linear": {
+      "multi_literal": 276,
+      "single_action": 0,
+      "single_literal": 239
+     },
+     "passthrough": {
+      "multi_literal": 581
+     },
+     "state-edge-passthrough": {
+      "multi_literal": 155
+     },
+     "terms": {
+      "multi_literal": 3654,
+      "single_action": 0,
+      "single_literal": 416,
+      "wide_action": 541
+     },
+     "terms-helpers": {
+      "multi_literal": 8384,
+      "selected_child": 2480,
+      "single_action": 0,
+      "single_literal": 8228
+     },
+     "type-analysis": {
+      "multi_literal": 12130,
+      "single_action": 0,
+      "single_literal": 9673,
+      "wide_action": 5910
+     },
+     "initialization": {
+      "single_action": 0,
+      "single_literal": 1
+     },
+     "type-helpers": {
+      "single_action": 0,
+      "single_literal": 22340,
+      "wide_action": 680
+     },
+     "cell-spine-complete": {
+      "single_action": 0,
+      "single_literal": 1789,
+      "wide_action": 1680
+     },
+     "is-resolved": {
+      "single_action": 0,
+      "single_literal": 73036
+     },
+     "term-subst": {
+      "single_action": 0,
+      "single_literal": 275,
+      "wide_action": 29
+     },
+     "apply-subst-unions": {
+      "single_action": 0,
+      "single_literal": 0
+     },
+     "context": {
+      "single_action": 0,
+      "single_literal": 23336,
+      "wide_action": 4197
+     },
+     "apply-drop-unions": {
+      "single_action": 0,
+      "single_literal": 0
+     },
+     "cleanup-drop": {
+      "single_action": 0,
+      "single_literal": 0
+     },
+     "canon": {
+      "single_action": 0,
+      "single_literal": 1536
+     },
+     "mem-simple": {
+      "single_action": 0,
+      "single_literal": 288,
+      "wide_action": 4
+     },
+     "subsume-after-helpers": {
+      "single_action": 0,
+      "single_literal": 0
+     },
+     "loop-iters-analysis": {
+      "single_action": 0,
+      "single_literal": 32
+     },
+     "peepholes": {
+      "single_action": 0,
+      "single_literal": 128,
+      "wide_action": 149
+     },
+     "terms-helpers-helpers": {
+      "wide_action": 1785
+     }
+    },
+    "categories": {
+     "single_action": {
+      "packets": 0,
+      "visible": 0,
+      "born": 0,
+      "zero": 0,
+      "one": 0,
+      "two_plus": 0,
+      "max": 0
+     },
+     "single_literal": {
+      "packets": 334594,
+      "visible": 26258,
+      "born": 33550,
+      "zero": 313165,
+      "one": 20027,
+      "two_plus": 1402,
+      "max": 3085
+     },
+     "wide_action": {
+      "packets": 58264,
+      "visible": 37286,
+      "born": 54601,
+      "zero": 49874,
+      "one": 2702,
+      "two_plus": 5688,
+      "max": 196
+     },
+     "multi_literal": {
+      "packets": 44805,
+      "visible": 27912,
+      "born": 30136,
+      "zero": 22570,
+      "one": 18911,
+      "two_plus": 3324,
+      "max": 3
+     },
+     "selected_child": {
+      "packets": 2508,
+      "visible": 1202,
+      "born": 1216,
+      "zero": 1306,
+      "one": 1202,
+      "two_plus": 0,
+      "max": 1
+     }
+    },
+    "denominators": {
+     "forward": 440171,
+     "bidirectional": 440171,
+     "paid_groups": 3750910,
+     "paid_plus_return": 3750910,
+     "all_prototype_decisions": 4526262,
+     "decisions_plus_return": 4526262
+    },
+    "per_packet": {
+     "forward": 0.21050455391200237,
+     "bidirectional": 0.21050455391200237,
+     "paid_groups": 0.024702805452543518,
+     "paid_plus_return": 0.024702805452543518,
+     "all_prototype_decisions": 0.020471196762361525,
+     "decisions_plus_return": 0.020471196762361525
+    },
+    "max_total_for_fept_two": 46329,
+    "budget_remaining_after_forward": -393842,
+    "strict_remaining_after_decisions": -4479933,
+    "wide_actions_affordable_at_fept_two": -335578,
+    "optimistic_matched_packets": 436383,
+    "optimistic_matched_fept": 0.21233182777514248,
+    "class_counts": {
+     "accepted_by_action": 0,
+     "eligible_after_prefilters": 0,
+     "empty": 0,
+     "empty_table_skips": 0,
+     "feedback_bytes": 0,
+     "internal_receipts": 0,
+     "issued": 0,
+     "logit_evaluations": 0,
+     "masks": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "public_headers": 0,
+     "recurrence_digest": 4887471755355662293,
+     "residual_calls": 0,
+     "residual_receipts": 0,
+     "scalar_rejected": 0
+    },
+    "family_counts": {
+     "absent": 1127568,
+     "actions": 58264,
+     "calls": 5384,
+     "candidate_bound": 4633068,
+     "empty_actions": 31247,
+     "inspected_left": 3997135,
+     "issue_ms": 0.0,
+     "keys_issued": 263674,
+     "matched_min_packets": 54476,
+     "private_rows": 176167,
+     "prototypes": 3570905,
+     "receiver_cache_hits": 3437,
+     "receiver_ms": 0.0,
+     "receiver_pairs": 4633068,
+     "receiver_public_decodes": 5346832,
+     "sender_marginal_rows": 4507187,
+     "skipped_clean": 54,
+     "source_pair_ms": 0.0,
+     "spans": 127486,
+     "stale": 2183171,
+     "upper_min_packets": 2857,
+     "wire_bytes": 5249704
+    },
+    "wire": {
+     "single_actions": 0,
+     "single_literals": 12764938,
+     "wide_actions": 5249704,
+     "multi_literals": 5622592,
+     "selected_children": 1368404,
+     "feedback": 0
+    },
+    "bi_bytes": 25005638,
+    "ms": [
+     2595.7439170000002,
+     2427.428625,
+     2409.42275,
+     2590.1504590000004
+    ],
+    "wall_ms": [
+     2864.265957963653,
+     2687.527332920581,
+     2672.824207926169,
+     2855.303000076674
+    ],
+    "median_ms": 2508.7895420000004,
+    "median_wall_ms": 2771.4151664986275
+   },
+   "joint": {
+    "rhs": 294917,
+    "raw": "4275457079080453952",
+    "commits": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+    "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+    "source_pass_rhs": 294917,
+    "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+    "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+    "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+    "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+    "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+    "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+    "direct_cells": 229311,
+    "root_allocated": 228095,
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "raw_parent_sha": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+    "recurrent": 4887471755355662293,
+    "decisions": "16767102213097954485",
+    "rule_call_sha": "a4270083ff1dff816c0d0bd97f61bbf61da899e1f2cd95c56e7bc9cfd88c0883",
+    "root_commit_sha": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+    "visible_sha": "0f5fc7e44add1467558ff78c72933b612a835b732a0bfe234580a03d631b6320",
+    "retired_sha": "5ceb174bb6c2aa9134628550a55e275935268c1a97dda59ef490971da35c61e5",
+    "birth_sha": "b892700aa64cfbbdb0fdf4f99807ee03d16df3c795af03ab04bebc03a09472ec",
+    "born": 119503,
+    "visible": 92658,
+    "expanded_single": 334594,
+    "expanded_multi": 220972,
+    "child_candidates": 7120,
+    "selected_children": 2508,
+    "source_work": [
+     334594,
+     220268
+    ],
+    "single_dispatches": 9097,
+    "single_residual_decisions": 16577,
+    "single_logits": 15923,
+    "multi_approx_visits": 1151441,
+    "arity": {
+     "8": 180,
+     "3": 23801,
+     "5": 17472,
+     "4": 3180,
+     "6": 32,
+     "7": 140
+    },
+    "residual_query_width": {
+     "14": 180,
+     "3": 9169,
+     "6": 4073,
+     "4": 9420,
+     "5": 19654,
+     "7": 2069,
+     "8": 240
+    },
+    "top_rules": [
+     [
+      249,
+      "always-run",
+      12448,
+      5,
+      [
+       "DoWhile",
+       "ContextOf",
+       "ContextOf",
+       "Const",
+       "HasArgType"
+      ]
+     ],
+     [
+      507,
+      "terms-helpers",
+      8384,
+      4,
+      [
+       "TCPair",
+       "ExtractedExpr",
+       "<",
+       "CellSpineView8"
+      ]
+     ],
+     [
+      538,
+      "type-analysis",
+      4676,
+      3,
+      [
+       "Get",
+       "TupleT",
+       "HasType"
+      ]
+     ],
+     [
+      540,
+      "type-analysis",
+      3015,
+      5,
+      [
+       "Concat",
+       "TupleT",
+       "HasType",
+       "TupleT",
+       "HasType"
+      ]
+     ],
+     [
+      567,
+      "type-analysis",
+      2831,
+      6,
+      [
+       "PointerT",
+       "Base",
+       "HasType",
+       "Base",
+       "HasType",
+       "CellSpineView7"
+      ]
+     ],
+     [
+      312,
+      "cicm-index",
+      2386,
+      3,
+      [
+       "TCPair",
+       "ExtractedExpr",
+       "ContextOf"
+      ]
+     ],
+     [
+      504,
+      "terms",
+      1605,
+      3,
+      [
+       "Get",
+       "TCPair",
+       "ExtractedExpr"
+      ]
+     ],
+     [
+      501,
+      "terms",
+      1456,
+      5,
+      [
+       "Concat",
+       "TCPair",
+       "ExtractedExpr",
+       "TCPair",
+       "ExtractedExpr"
+      ]
+     ],
+     [
+      547,
+      "type-analysis",
+      1133,
+      7,
+      [
+       "DoWhile",
+       "TupleT",
+       "HasType",
+       "BoolT",
+       "TCons",
+       "TupleT",
+       "HasType"
+      ]
+     ],
+     [
+      268,
+      "boundary-analysis",
+      980,
+      6,
+      [
+       "is-inv-Expr",
+       "DoWhile",
+       "HasType",
+       "Base",
+       "Expr-size",
+       "to-hoist-size"
+      ]
+     ],
+     [
+      269,
+      "boundary-analysis-prep",
+      973,
+      5,
+      [
+       "is-inv-Expr",
+       "DoWhile",
+       "HasType",
+       "Base",
+       "Expr-size"
+      ]
+     ],
+     [
+      242,
+      "always-run",
+      520,
+      5,
+      [
+       "BodyContainsExpr",
+       "DoWhile",
+       "Concat",
+       "is-inv-Expr",
+       "is-inv-Expr"
+      ]
+     ]
+    ],
+    "rulesets": {
+     "select_opt": {
+      "multi_literal": 180
+     },
+     "always-run": {
+      "multi_literal": 13826,
+      "single_action": 3667,
+      "single_literal": 671,
+      "wide_action": 38723
+     },
+     "boundary-analysis": {
+      "multi_literal": 980
+     },
+     "boundary-analysis-prep": {
+      "multi_literal": 973
+     },
+     "cicm-index": {
+      "multi_literal": 2386
+     },
+     "error-checking": {
+      "multi_literal": 689,
+      "single_action": 20,
+      "single_literal": 0,
+      "wide_action": 896
+     },
+     "interval-analysis": {
+      "multi_literal": 591,
+      "selected_child": 28,
+      "single_action": 17,
+      "single_literal": 1,
+      "wide_action": 3670
+     },
+     "non-weakly-linear": {
+      "multi_literal": 276,
+      "single_action": 1,
+      "single_literal": 0
+     },
+     "passthrough": {
+      "multi_literal": 581
+     },
+     "state-edge-passthrough": {
+      "multi_literal": 155
+     },
+     "terms": {
+      "multi_literal": 3654,
+      "single_action": 4,
+      "single_literal": 0,
+      "wide_action": 541
+     },
+     "terms-helpers": {
+      "multi_literal": 8384,
+      "selected_child": 2480,
+      "single_action": 96,
+      "single_literal": 0
+     },
+     "type-analysis": {
+      "multi_literal": 12130,
+      "single_action": 442,
+      "single_literal": 1,
+      "wide_action": 5910
+     },
+     "initialization": {
+      "single_action": 0,
+      "single_literal": 1
+     },
+     "type-helpers": {
+      "single_action": 832,
+      "single_literal": 1,
+      "wide_action": 680
+     },
+     "cell-spine-complete": {
+      "single_action": 44,
+      "single_literal": 0,
+      "wide_action": 1680
+     },
+     "is-resolved": {
+      "single_action": 1742,
+      "single_literal": 0
+     },
+     "term-subst": {
+      "single_action": 4,
+      "single_literal": 0,
+      "wide_action": 29
+     },
+     "apply-subst-unions": {
+      "single_action": 0,
+      "single_literal": 0
+     },
+     "context": {
+      "single_action": 30,
+      "single_literal": 0,
+      "wide_action": 4197
+     },
+     "apply-drop-unions": {
+      "single_action": 0,
+      "single_literal": 0
+     },
+     "cleanup-drop": {
+      "single_action": 0,
+      "single_literal": 0
+     },
+     "canon": {
+      "single_action": 36,
+      "single_literal": 0
+     },
+     "mem-simple": {
+      "single_action": 10,
+      "single_literal": 0,
+      "wide_action": 4
+     },
+     "subsume-after-helpers": {
+      "single_action": 0,
+      "single_literal": 0
+     },
+     "loop-iters-analysis": {
+      "single_action": 2,
+      "single_literal": 0
+     },
+     "peepholes": {
+      "single_action": 3,
+      "single_literal": 0,
+      "wide_action": 149
+     },
+     "terms-helpers-helpers": {
+      "wide_action": 1785
+     }
+    },
+    "categories": {
+     "single_action": {
+      "packets": 6950,
+      "visible": 23172,
+      "born": 30300,
+      "zero": 6235,
+      "one": 120,
+      "two_plus": 595,
+      "max": 977
+     },
+     "single_literal": {
+      "packets": 675,
+      "visible": 3086,
+      "born": 3250,
+      "zero": 673,
+      "one": 1,
+      "two_plus": 1,
+      "max": 3085
+     },
+     "wide_action": {
+      "packets": 58264,
+      "visible": 37286,
+      "born": 54601,
+      "zero": 49874,
+      "one": 2702,
+      "two_plus": 5688,
+      "max": 196
+     },
+     "multi_literal": {
+      "packets": 44805,
+      "visible": 27912,
+      "born": 30136,
+      "zero": 22570,
+      "one": 18911,
+      "two_plus": 3324,
+      "max": 3
+     },
+     "selected_child": {
+      "packets": 2508,
+      "visible": 1202,
+      "born": 1216,
+      "zero": 1306,
+      "one": 1202,
+      "two_plus": 0,
+      "max": 1
+     }
+    },
+    "denominators": {
+     "forward": 113202,
+     "bidirectional": 120152,
+     "paid_groups": 3423941,
+     "paid_plus_return": 3430891,
+     "all_prototype_decisions": 3713718,
+     "decisions_plus_return": 3720668
+    },
+    "per_packet": {
+     "forward": 0.8185191074362643,
+     "bidirectional": 0.7711731806378587,
+     "paid_groups": 0.027061798085889915,
+     "paid_plus_return": 0.027006978653650027,
+     "all_prototype_decisions": 0.024950198157210644,
+     "decisions_plus_return": 0.024903592580687126
+    },
+    "max_total_for_fept_two": 46329,
+    "budget_remaining_after_forward": -66873,
+    "strict_remaining_after_decisions": -3667389,
+    "wide_actions_affordable_at_fept_two": -8609,
+    "optimistic_matched_packets": 109414,
+    "optimistic_matched_fept": 0.8468568921710201,
+    "class_counts": {
+     "accepted_by_action": 828591,
+     "eligible_after_prefilters": 828591,
+     "empty": 1458,
+     "empty_table_skips": 3304,
+     "feedback_bytes": 139000,
+     "internal_receipts": 333919,
+     "issued": 6950,
+     "logit_evaluations": 13900,
+     "masks": [
+      0,
+      0,
+      431,
+      6519
+     ],
+     "public_headers": 8760540,
+     "recurrence_digest": 4887471755355662293,
+     "residual_calls": 2150,
+     "residual_receipts": 675,
+     "scalar_rejected": 494672
+    },
+    "family_counts": {
+     "absent": 1127568,
+     "actions": 58264,
+     "calls": 5384,
+     "candidate_bound": 4633068,
+     "empty_actions": 31247,
+     "inspected_left": 3997135,
+     "issue_ms": 0.0,
+     "keys_issued": 263674,
+     "matched_min_packets": 54476,
+     "private_rows": 176167,
+     "prototypes": 3570905,
+     "receiver_cache_hits": 3437,
+     "receiver_ms": 0.0,
+     "receiver_pairs": 4633068,
+     "receiver_public_decodes": 5346832,
+     "sender_marginal_rows": 4507187,
+     "skipped_clean": 54,
+     "source_pair_ms": 0.0,
+     "spans": 127486,
+     "stale": 2183171,
+     "upper_min_packets": 2857,
+     "wire_bytes": 5249704
+    },
+    "wire": {
+     "single_actions": 444800,
+     "single_literals": 58447,
+     "wide_actions": 5249704,
+     "multi_literals": 5622592,
+     "selected_children": 1368404,
+     "feedback": 139000
+    },
+    "bi_bytes": 12882947,
+    "ms": [
+     2730.630667,
+     2749.175792,
+     2557.717083,
+     2642.221959
+    ],
+    "wall_ms": [
+     2993.8130419468507,
+     3020.6922499928623,
+     2817.9447499569505,
+     2904.579917085357
+    ],
+    "median_ms": 2686.426313,
+    "median_wall_ms": 2949.196479516104
+   }
+  },
+  "runs": 4260,
+  "faults": {
+   "single": [
+    2,
+    "class-action generation mismatch"
+   ],
+   "wide": [
+    26,
+    "regenerated family extent differs"
+   ]
+  }
+ },
+ "deriche": {
+  "arms": {
+   "packed": {
+    "rhs": 635818,
+    "raw": "11461864606300860886",
+    "commits": "c84c1f5872bb30ea5899f58e55d35d79b8406b0821db10b5b56c9a37781e39d4",
+    "physical": "694057f7b97aaef25832620f6ff6d886df3aa8a8ed95bf06b140b57970b80751",
+    "source_pass_rhs": 635818,
+    "root_ids": "4f7c3302156f1e94964e614c6236341e732b864f274600da6fca8893e5ceaf8b",
+    "root_parents": "375fd17ace78384b65e6eea4753025eea3d630fec633912a48a1f9309c914f75",
+    "nested_ids": "3f73c67aa3738b99c7476b1332f8e54f2252de8c33451058abdc61fd5b64425e",
+    "children": "32c44f7126d83c16dec3a5ef8ff809ff9dba136b5994d1cb2216d19504417247",
+    "state_sha": "f9181c677ec837e878719ee601dddf7a0700ed236f8eac364d3ecfb40712b7b8",
+    "single_winners": "585aea4e130e9b16b330a40ba69a793e5102783bdc88ded8430d5f894833d072",
+    "multi_winners": "5f4ab7a463be10099a2b99e47e0322ae8f7d423cf32244692dc156886a9af93a",
+    "cells": "3ec51a71df9100ee6e331e0c646d203b6a2e2ebcd9f0ed9b87a98d43ec00ebdd",
+    "direct_cells": 450414,
+    "root_allocated": 447949,
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "raw_parent_sha": "208f23744aa875711e3da4b3ba921a0787a44139088512d8f125580a15655f1f",
+    "recurrent": 14954688950648119174,
+    "decisions": "10089675923749134543",
+    "rule_call_sha": "a47f850a441fb9f7a6ace8bd6df487276fef66927f48d24a0758c57618d61853",
+    "root_commit_sha": "c84c1f5872bb30ea5899f58e55d35d79b8406b0821db10b5b56c9a37781e39d4",
+    "visible_sha": "c8367e24172ee8ec57b81270af1c28b965232877507a9edf9578483dbc5d0cd8",
+    "retired_sha": "ed5fdd6a2ee75241f838c100d0451b940818291650bf4c77d4ac54ff733d5984",
+    "birth_sha": "b5c2d5665d3185cbd8e9798516e9718923a4f68e33529945b3e09957134c8095",
+    "born": 165147,
+    "visible": 120436,
+    "expanded_single": 667034,
+    "expanded_multi": 309277,
+    "child_candidates": 12238,
+    "selected_children": 3933,
+    "source_work": [
+     667034,
+     304837
+    ],
+    "single_dispatches": 0,
+    "single_residual_decisions": 2319092,
+    "single_logits": 11165,
+    "multi_approx_visits": 1881054,
+    "arity": {
+     "8": 238,
+     "7": 283,
+     "2": 217988,
+     "3": 48213,
+     "5": 37828,
+     "4": 4664,
+     "6": 63
+    },
+    "residual_query_width": {
+     "14": 204,
+     "19": 17,
+     "15": 193,
+     "2": 114852,
+     "7": 1761,
+     "3": 64059,
+     "4": 76286,
+     "6": 5741,
+     "5": 45658,
+     "8": 506
+    },
+    "top_rules": [
+     [
+      507,
+      "terms-helpers",
+      29315,
+      4,
+      [
+       "TCPair",
+       "ExtractedExpr",
+       "<",
+       "CellSpineView8"
+      ]
+     ],
+     [
+      249,
+      "always-run",
+      29281,
+      5,
+      [
+       "DoWhile",
+       "ContextOf",
+       "ContextOf",
+       "Const",
+       "HasArgType"
+      ]
+     ],
+     [
+      243,
+      "always-run",
+      18193,
+      4,
+      [
+       "BodyContainsExpr",
+       "DoWhile",
+       "Single",
+       "is-inv-Expr"
+      ]
+     ],
+     [
+      144,
+      "always-run",
+      12246,
+      4,
+      [
+       "SubTuple",
+       "+",
+       "SubTuple",
+       "Concat"
+      ]
+     ],
+     [
+      328,
+      "context",
+      11218,
+      2,
+      [
+       "Concat",
+       "AddContext"
+      ]
+     ],
+     [
+      90,
+      "always-run",
+      10529,
+      2,
+      [
+       "Get",
+       "BodyContainsExpr"
+      ]
+     ],
+     [
+      287,
+      "cell-spine-complete",
+      10057,
+      2,
+      [
+       "Smaller",
+       "TCPair"
+      ]
+     ],
+     [
+      91,
+      "always-run",
+      9047,
+      2,
+      [
+       "Concat",
+       "BodyContainsExpr"
+      ]
+     ],
+     [
+      324,
+      "context",
+      8571,
+      2,
+      [
+       "Get",
+       "AddContext"
+      ]
+     ],
+     [
+      509,
+      "terms-helpers-helpers",
+      8101,
+      3,
+      [
+       "TCPair",
+       "<",
+       "CellSpineView9"
+      ]
+     ],
+     [
+      510,
+      "terms-helpers-helpers",
+      8101,
+      3,
+      [
+       "TCPair",
+       ">",
+       "CellSpineView9"
+      ]
+     ],
+     [
+      286,
+      "cell-spine-complete",
+      7950,
+      2,
+      [
+       "PotentialExtractedExpr",
+       "TCPair"
+      ]
+     ]
+    ],
+    "rulesets": {
+     "select_opt": {
+      "multi_literal": 204
+     },
+     "loop-unroll": {
+      "multi_literal": 17
+     },
+     "loop-strength-reduction": {
+      "multi_literal": 176
+     },
+     "always-run": {
+      "multi_literal": 119843,
+      "single_action": 0,
+      "single_literal": 479883
+     },
+     "hacker": {
+      "multi_literal": 1
+     },
+     "interval-rewrite": {
+      "multi_literal": 104
+     },
+     "peepholes": {
+      "multi_literal": 2875,
+      "single_action": 0,
+      "single_literal": 96
+     },
+     "boundary-analysis": {
+      "multi_literal": 1418
+     },
+     "boundary-analysis-prep": {
+      "multi_literal": 1374
+     },
+     "cell-spine-complete": {
+      "multi_literal": 25935,
+      "single_action": 0,
+      "single_literal": 2577
+     },
+     "cicm-index": {
+      "multi_literal": 2946
+     },
+     "context": {
+      "multi_literal": 23922,
+      "single_action": 0,
+      "single_literal": 36255
+     },
+     "drop": {
+      "multi_literal": 137
+     },
+     "error-checking": {
+      "multi_literal": 11982,
+      "single_action": 0,
+      "single_literal": 2418
+     },
+     "interval-analysis": {
+      "multi_literal": 13554,
+      "single_action": 0,
+      "single_literal": 415
+     },
+     "loop-iters-analysis": {
+      "multi_literal": 17,
+      "single_action": 0,
+      "single_literal": 62
+     },
+     "mem-simple": {
+      "multi_literal": 109,
+      "single_action": 0,
+      "single_literal": 421
+     },
+     "non-weakly-linear": {
+      "multi_literal": 260,
+      "single_action": 0,
+      "single_literal": 331
+     },
+     "passthrough": {
+      "multi_literal": 454
+     },
+     "state-edge-passthrough": {
+      "multi_literal": 132
+     },
+     "subst": {
+      "multi_literal": 5330
+     },
+     "term-subst": {
+      "multi_literal": 562,
+      "single_action": 0,
+      "single_literal": 294
+     },
+     "terms": {
+      "multi_literal": 12959,
+      "single_action": 0,
+      "single_literal": 469
+     },
+     "terms-helpers": {
+      "multi_literal": 29315,
+      "selected_child": 3933,
+      "single_action": 0,
+      "single_literal": 15702
+     },
+     "terms-helpers-helpers": {
+      "multi_literal": 16494
+     },
+     "type-analysis": {
+      "multi_literal": 33066,
+      "single_action": 0,
+      "single_literal": 11279
+     },
+     "type-helpers": {
+      "multi_literal": 6091,
+      "single_action": 0,
+      "single_literal": 21998
+     },
+     "initialization": {
+      "single_action": 0,
+      "single_literal": 1
+     },
+     "is-resolved": {
+      "single_action": 0,
+      "single_literal": 87796
+     },
+     "apply-subst-unions": {
+      "single_action": 0,
+      "single_literal": 4569
+     },
+     "apply-drop-unions": {
+      "single_action": 0,
+      "single_literal": 60
+     },
+     "cleanup-drop": {
+      "single_action": 0,
+      "single_literal": 120
+     },
+     "canon": {
+      "single_action": 0,
+      "single_literal": 2286
+     },
+     "subsume-after-helpers": {
+      "single_action": 0,
+      "single_literal": 2
+     }
+    },
+    "categories": {
+     "single_action": {
+      "packets": 0,
+      "visible": 0,
+      "born": 0,
+      "zero": 0,
+      "one": 0,
+      "two_plus": 0,
+      "max": 0
+     },
+     "single_literal": {
+      "packets": 667034,
+      "visible": 29049,
+      "born": 37309,
+      "zero": 642839,
+      "one": 22642,
+      "two_plus": 1553,
+      "max": 3006
+     },
+     "wide_action": {
+      "packets": 0,
+      "visible": 0,
+      "born": 0,
+      "zero": 0,
+      "one": 0,
+      "two_plus": 0,
+      "max": 0
+     },
+     "multi_literal": {
+      "packets": 309277,
+      "visible": 88922,
+      "born": 125373,
+      "zero": 240025,
+      "one": 55580,
+      "two_plus": 13672,
+      "max": 5
+     },
+     "selected_child": {
+      "packets": 3933,
+      "visible": 2465,
+      "born": 2465,
+      "zero": 1468,
+      "one": 2465,
+      "two_plus": 0,
+      "max": 1
+     }
+    },
+    "denominators": {
+     "forward": 980244,
+     "bidirectional": 980244,
+     "paid_groups": 980244,
+     "paid_plus_return": 980244,
+     "all_prototype_decisions": 2640607,
+     "decisions_plus_return": 2640607
+    },
+    "per_packet": {
+     "forward": 0.12286328709994654,
+     "bidirectional": 0.12286328709994654,
+     "paid_groups": 0.12286328709994654,
+     "paid_plus_return": 0.12286328709994654,
+     "all_prototype_decisions": 0.04560921030656966,
+     "decisions_plus_return": 0.04560921030656966
+    },
+    "max_total_for_fept_two": 60218,
+    "budget_remaining_after_forward": -920026,
+    "strict_remaining_after_decisions": -2580389,
+    "wide_actions_affordable_at_fept_two": -920026,
+    "optimistic_matched_packets": 980244,
+    "optimistic_matched_fept": 0.12286328709994654,
+    "class_counts": {
+     "accepted_by_action": 0,
+     "eligible_after_prefilters": 0,
+     "empty": 0,
+     "empty_table_skips": 0,
+     "feedback_bytes": 0,
+     "internal_receipts": 0,
+     "issued": 0,
+     "logit_evaluations": 0,
+     "masks": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "public_headers": 0,
+     "recurrence_digest": 14954688950648119174,
+     "residual_calls": 0,
+     "residual_receipts": 0,
+     "scalar_rejected": 0
+    },
+    "family_counts": {
+     "absent": 0,
+     "actions": 0,
+     "calls": 0,
+     "candidate_bound": 0,
+     "empty_actions": 0,
+     "inspected_left": 0,
+     "issue_ms": 0.0,
+     "keys_issued": 0,
+     "matched_min_packets": 0,
+     "private_rows": 0,
+     "prototypes": 0,
+     "receiver_cache_hits": 0,
+     "receiver_ms": 0.0,
+     "receiver_pairs": 0,
+     "receiver_public_decodes": 0,
+     "sender_marginal_rows": 0,
+     "skipped_clean": 0,
+     "source_pair_ms": 0.0,
+     "spans": 0,
+     "stale": 0,
+     "upper_min_packets": 0,
+     "wire_bytes": 0
+    },
+    "wire": {
+     "single_actions": 0,
+     "single_literals": 25198018,
+     "wide_actions": 0,
+     "multi_literals": 25574224,
+     "selected_children": 2154705,
+     "feedback": 0
+    },
+    "bi_bytes": 52926947,
+    "ms": [
+     3145.0734580000003,
+     3011.3217090000003,
+     2982.542,
+     2974.246167
+    ],
+    "wall_ms": [
+     3509.165875031613,
+     3367.8643339080736,
+     3330.1178329857066,
+     3322.374791954644
+    ],
+    "median_ms": 2996.9318545,
+    "median_wall_ms": 3348.99108344689
+   },
+   "singleton": {
+    "rhs": 635818,
+    "raw": "11461864606300860886",
+    "commits": "c84c1f5872bb30ea5899f58e55d35d79b8406b0821db10b5b56c9a37781e39d4",
+    "physical": "694057f7b97aaef25832620f6ff6d886df3aa8a8ed95bf06b140b57970b80751",
+    "source_pass_rhs": 635818,
+    "root_ids": "4f7c3302156f1e94964e614c6236341e732b864f274600da6fca8893e5ceaf8b",
+    "root_parents": "375fd17ace78384b65e6eea4753025eea3d630fec633912a48a1f9309c914f75",
+    "nested_ids": "3f73c67aa3738b99c7476b1332f8e54f2252de8c33451058abdc61fd5b64425e",
+    "children": "32c44f7126d83c16dec3a5ef8ff809ff9dba136b5994d1cb2216d19504417247",
+    "state_sha": "f9181c677ec837e878719ee601dddf7a0700ed236f8eac364d3ecfb40712b7b8",
+    "single_winners": "585aea4e130e9b16b330a40ba69a793e5102783bdc88ded8430d5f894833d072",
+    "multi_winners": "5f4ab7a463be10099a2b99e47e0322ae8f7d423cf32244692dc156886a9af93a",
+    "cells": "3ec51a71df9100ee6e331e0c646d203b6a2e2ebcd9f0ed9b87a98d43ec00ebdd",
+    "direct_cells": 450414,
+    "root_allocated": 447949,
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "raw_parent_sha": "208f23744aa875711e3da4b3ba921a0787a44139088512d8f125580a15655f1f",
+    "recurrent": 14954688950648119174,
+    "decisions": "10089675923749134543",
+    "rule_call_sha": "a47f850a441fb9f7a6ace8bd6df487276fef66927f48d24a0758c57618d61853",
+    "root_commit_sha": "c84c1f5872bb30ea5899f58e55d35d79b8406b0821db10b5b56c9a37781e39d4",
+    "visible_sha": "c8367e24172ee8ec57b81270af1c28b965232877507a9edf9578483dbc5d0cd8",
+    "retired_sha": "ed5fdd6a2ee75241f838c100d0451b940818291650bf4c77d4ac54ff733d5984",
+    "birth_sha": "b5c2d5665d3185cbd8e9798516e9718923a4f68e33529945b3e09957134c8095",
+    "born": 165147,
+    "visible": 120436,
+    "expanded_single": 667034,
+    "expanded_multi": 309277,
+    "child_candidates": 12238,
+    "selected_children": 3933,
+    "source_work": [
+     667034,
+     304837
+    ],
+    "single_dispatches": 12005,
+    "single_residual_decisions": 39483,
+    "single_logits": 21182,
+    "multi_approx_visits": 1881054,
+    "arity": {
+     "8": 238,
+     "7": 283,
+     "2": 217988,
+     "3": 48213,
+     "5": 37828,
+     "4": 4664,
+     "6": 63
+    },
+    "residual_query_width": {
+     "14": 204,
+     "19": 17,
+     "15": 193,
+     "2": 114852,
+     "7": 1761,
+     "3": 64059,
+     "4": 76286,
+     "6": 5741,
+     "5": 45658,
+     "8": 506
+    },
+    "top_rules": [
+     [
+      507,
+      "terms-helpers",
+      29315,
+      4,
+      [
+       "TCPair",
+       "ExtractedExpr",
+       "<",
+       "CellSpineView8"
+      ]
+     ],
+     [
+      249,
+      "always-run",
+      29281,
+      5,
+      [
+       "DoWhile",
+       "ContextOf",
+       "ContextOf",
+       "Const",
+       "HasArgType"
+      ]
+     ],
+     [
+      243,
+      "always-run",
+      18193,
+      4,
+      [
+       "BodyContainsExpr",
+       "DoWhile",
+       "Single",
+       "is-inv-Expr"
+      ]
+     ],
+     [
+      144,
+      "always-run",
+      12246,
+      4,
+      [
+       "SubTuple",
+       "+",
+       "SubTuple",
+       "Concat"
+      ]
+     ],
+     [
+      328,
+      "context",
+      11218,
+      2,
+      [
+       "Concat",
+       "AddContext"
+      ]
+     ],
+     [
+      90,
+      "always-run",
+      10529,
+      2,
+      [
+       "Get",
+       "BodyContainsExpr"
+      ]
+     ],
+     [
+      287,
+      "cell-spine-complete",
+      10057,
+      2,
+      [
+       "Smaller",
+       "TCPair"
+      ]
+     ],
+     [
+      91,
+      "always-run",
+      9047,
+      2,
+      [
+       "Concat",
+       "BodyContainsExpr"
+      ]
+     ],
+     [
+      324,
+      "context",
+      8571,
+      2,
+      [
+       "Get",
+       "AddContext"
+      ]
+     ],
+     [
+      509,
+      "terms-helpers-helpers",
+      8101,
+      3,
+      [
+       "TCPair",
+       "<",
+       "CellSpineView9"
+      ]
+     ],
+     [
+      510,
+      "terms-helpers-helpers",
+      8101,
+      3,
+      [
+       "TCPair",
+       ">",
+       "CellSpineView9"
+      ]
+     ],
+     [
+      286,
+      "cell-spine-complete",
+      7950,
+      2,
+      [
+       "PotentialExtractedExpr",
+       "TCPair"
+      ]
+     ]
+    ],
+    "rulesets": {
+     "select_opt": {
+      "multi_literal": 204
+     },
+     "loop-unroll": {
+      "multi_literal": 17
+     },
+     "loop-strength-reduction": {
+      "multi_literal": 176
+     },
+     "always-run": {
+      "multi_literal": 119843,
+      "single_action": 5481,
+      "single_literal": 840
+     },
+     "hacker": {
+      "multi_literal": 1
+     },
+     "interval-rewrite": {
+      "multi_literal": 104
+     },
+     "peepholes": {
+      "multi_literal": 2875,
+      "single_action": 3,
+      "single_literal": 0
+     },
+     "boundary-analysis": {
+      "multi_literal": 1418
+     },
+     "boundary-analysis-prep": {
+      "multi_literal": 1374
+     },
+     "cell-spine-complete": {
+      "multi_literal": 25935,
+      "single_action": 55,
+      "single_literal": 0
+     },
+     "cicm-index": {
+      "multi_literal": 2946
+     },
+     "context": {
+      "multi_literal": 23922,
+      "single_action": 38,
+      "single_literal": 0
+     },
+     "drop": {
+      "multi_literal": 137
+     },
+     "error-checking": {
+      "multi_literal": 11982,
+      "single_action": 22,
+      "single_literal": 0
+     },
+     "interval-analysis": {
+      "multi_literal": 13554,
+      "single_action": 23,
+      "single_literal": 0
+     },
+     "loop-iters-analysis": {
+      "multi_literal": 17,
+      "single_action": 2,
+      "single_literal": 0
+     },
+     "mem-simple": {
+      "multi_literal": 109,
+      "single_action": 10,
+      "single_literal": 0
+     },
+     "non-weakly-linear": {
+      "multi_literal": 260,
+      "single_action": 1,
+      "single_literal": 0
+     },
+     "passthrough": {
+      "multi_literal": 454
+     },
+     "state-edge-passthrough": {
+      "multi_literal": 132
+     },
+     "subst": {
+      "multi_literal": 5330
+     },
+     "term-subst": {
+      "multi_literal": 562,
+      "single_action": 4,
+      "single_literal": 0
+     },
+     "terms": {
+      "multi_literal": 12959,
+      "single_action": 7,
+      "single_literal": 0
+     },
+     "terms-helpers": {
+      "multi_literal": 29315,
+      "selected_child": 3933,
+      "single_action": 148,
+      "single_literal": 0
+     },
+     "terms-helpers-helpers": {
+      "multi_literal": 16494
+     },
+     "type-analysis": {
+      "multi_literal": 33066,
+      "single_action": 413,
+      "single_literal": 1
+     },
+     "type-helpers": {
+      "multi_literal": 6091,
+      "single_action": 710,
+      "single_literal": 2
+     },
+     "initialization": {
+      "single_action": 0,
+      "single_literal": 1
+     },
+     "is-resolved": {
+      "single_action": 2453,
+      "single_literal": 0
+     },
+     "apply-subst-unions": {
+      "single_action": 3,
+      "single_literal": 0
+     },
+     "apply-drop-unions": {
+      "single_action": 2,
+      "single_literal": 0
+     },
+     "cleanup-drop": {
+      "single_action": 16,
+      "single_literal": 0
+     },
+     "canon": {
+      "single_action": 36,
+      "single_literal": 0
+     },
+     "subsume-after-helpers": {
+      "single_action": 4,
+      "single_literal": 0
+     }
+    },
+    "categories": {
+     "single_action": {
+      "packets": 9431,
+      "visible": 26040,
+      "born": 34034,
+      "zero": 8407,
+      "one": 206,
+      "two_plus": 818,
+      "max": 927
+     },
+     "single_literal": {
+      "packets": 844,
+      "visible": 3009,
+      "born": 3275,
+      "zero": 840,
+      "one": 3,
+      "two_plus": 1,
+      "max": 3006
+     },
+     "wide_action": {
+      "packets": 0,
+      "visible": 0,
+      "born": 0,
+      "zero": 0,
+      "one": 0,
+      "two_plus": 0,
+      "max": 0
+     },
+     "multi_literal": {
+      "packets": 309277,
+      "visible": 88922,
+      "born": 125373,
+      "zero": 240025,
+      "one": 55580,
+      "two_plus": 13672,
+      "max": 5
+     },
+     "selected_child": {
+      "packets": 3933,
+      "visible": 2465,
+      "born": 2465,
+      "zero": 1468,
+      "one": 2465,
+      "two_plus": 0,
+      "max": 1
+     }
+    },
+    "denominators": {
+     "forward": 323485,
+     "bidirectional": 332916,
+     "paid_groups": 323485,
+     "paid_plus_return": 332916,
+     "all_prototype_decisions": 382434,
+     "decisions_plus_return": 391865
+    },
+    "per_packet": {
+     "forward": 0.3723078349846206,
+     "bidirectional": 0.3617609246776965,
+     "paid_groups": 0.3723078349846206,
+     "paid_plus_return": 0.3617609246776965,
+     "all_prototype_decisions": 0.3149196985623663,
+     "decisions_plus_return": 0.307340538195552
+    },
+    "max_total_for_fept_two": 60218,
+    "budget_remaining_after_forward": -263267,
+    "strict_remaining_after_decisions": -322216,
+    "wide_actions_affordable_at_fept_two": -263267,
+    "optimistic_matched_packets": 323485,
+    "optimistic_matched_fept": 0.3723078349846206,
+    "class_counts": {
+     "accepted_by_action": 2279609,
+     "eligible_after_prefilters": 2279609,
+     "empty": 1714,
+     "empty_table_skips": 5516,
+     "feedback_bytes": 188620,
+     "internal_receipts": 666190,
+     "issued": 9431,
+     "logit_evaluations": 18862,
+     "masks": [
+      0,
+      0,
+      575,
+      8856
+     ],
+     "public_headers": 13561219,
+     "recurrence_digest": 14954688950648119174,
+     "residual_calls": 2577,
+     "residual_receipts": 844,
+     "scalar_rejected": 1613419
+    },
+    "family_counts": {
+     "absent": 0,
+     "actions": 0,
+     "calls": 0,
+     "candidate_bound": 0,
+     "empty_actions": 0,
+     "inspected_left": 0,
+     "issue_ms": 0.0,
+     "keys_issued": 0,
+     "matched_min_packets": 0,
+     "private_rows": 0,
+     "prototypes": 0,
+     "receiver_cache_hits": 0,
+     "receiver_ms": 0.0,
+     "receiver_pairs": 0,
+     "receiver_public_decodes": 0,
+     "sender_marginal_rows": 0,
+     "skipped_clean": 0,
+     "source_pair_ms": 0.0,
+     "spans": 0,
+     "stale": 0,
+     "upper_min_packets": 0,
+     "wire_bytes": 0
+    },
+    "wire": {
+     "single_actions": 603584,
+     "single_literals": 55100,
+     "wide_actions": 0,
+     "multi_literals": 25574224,
+     "selected_children": 2154705,
+     "feedback": 188620
+    },
+    "bi_bytes": 28576233,
+    "ms": [
+     3244.774,
+     3288.997584,
+     3189.5565,
+     3148.931083
+    ],
+    "wall_ms": [
+     3598.885374958627,
+     3634.566792054102,
+     3530.502500012517,
+     3488.4354169480503
+    ],
+    "median_ms": 3217.16525,
+    "median_wall_ms": 3564.693937485572
+   },
+   "wide": {
+    "rhs": 635818,
+    "raw": "15340212113871405873",
+    "commits": "c84c1f5872bb30ea5899f58e55d35d79b8406b0821db10b5b56c9a37781e39d4",
+    "physical": "694057f7b97aaef25832620f6ff6d886df3aa8a8ed95bf06b140b57970b80751",
+    "source_pass_rhs": 635818,
+    "root_ids": "4f7c3302156f1e94964e614c6236341e732b864f274600da6fca8893e5ceaf8b",
+    "root_parents": "375fd17ace78384b65e6eea4753025eea3d630fec633912a48a1f9309c914f75",
+    "nested_ids": "3f73c67aa3738b99c7476b1332f8e54f2252de8c33451058abdc61fd5b64425e",
+    "children": "32c44f7126d83c16dec3a5ef8ff809ff9dba136b5994d1cb2216d19504417247",
+    "state_sha": "f9181c677ec837e878719ee601dddf7a0700ed236f8eac364d3ecfb40712b7b8",
+    "single_winners": "585aea4e130e9b16b330a40ba69a793e5102783bdc88ded8430d5f894833d072",
+    "multi_winners": "5f4ab7a463be10099a2b99e47e0322ae8f7d423cf32244692dc156886a9af93a",
+    "cells": "3ec51a71df9100ee6e331e0c646d203b6a2e2ebcd9f0ed9b87a98d43ec00ebdd",
+    "direct_cells": 450414,
+    "root_allocated": 447949,
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "raw_parent_sha": "208f23744aa875711e3da4b3ba921a0787a44139088512d8f125580a15655f1f",
+    "recurrent": 14954688950648119174,
+    "decisions": "10089675923749134543",
+    "rule_call_sha": "a47f850a441fb9f7a6ace8bd6df487276fef66927f48d24a0758c57618d61853",
+    "root_commit_sha": "c84c1f5872bb30ea5899f58e55d35d79b8406b0821db10b5b56c9a37781e39d4",
+    "visible_sha": "c8367e24172ee8ec57b81270af1c28b965232877507a9edf9578483dbc5d0cd8",
+    "retired_sha": "ed5fdd6a2ee75241f838c100d0451b940818291650bf4c77d4ac54ff733d5984",
+    "birth_sha": "b5c2d5665d3185cbd8e9798516e9718923a4f68e33529945b3e09957134c8095",
+    "born": 165147,
+    "visible": 120436,
+    "expanded_single": 667034,
+    "expanded_multi": 309277,
+    "child_candidates": 12238,
+    "selected_children": 3933,
+    "source_work": [
+     667034,
+     304837
+    ],
+    "single_dispatches": 0,
+    "single_residual_decisions": 2319092,
+    "single_logits": 11165,
+    "multi_approx_visits": 1663066,
+    "arity": {
+     "8": 238,
+     "7": 283,
+     "3": 48213,
+     "5": 37828,
+     "4": 4664,
+     "6": 63
+    },
+    "residual_query_width": {
+     "14": 204,
+     "19": 17,
+     "15": 193,
+     "3": 11574,
+     "6": 5489,
+     "4": 30338,
+     "5": 41208,
+     "7": 1760,
+     "8": 506
+    },
+    "top_rules": [
+     [
+      507,
+      "terms-helpers",
+      29315,
+      4,
+      [
+       "TCPair",
+       "ExtractedExpr",
+       "<",
+       "CellSpineView8"
+      ]
+     ],
+     [
+      249,
+      "always-run",
+      29281,
+      5,
+      [
+       "DoWhile",
+       "ContextOf",
+       "ContextOf",
+       "Const",
+       "HasArgType"
+      ]
+     ],
+     [
+      538,
+      "type-analysis",
+      4773,
+      3,
+      [
+       "Get",
+       "TupleT",
+       "HasType"
+      ]
+     ],
+     [
+      540,
+      "type-analysis",
+      3904,
+      5,
+      [
+       "Concat",
+       "TupleT",
+       "HasType",
+       "TupleT",
+       "HasType"
+      ]
+     ],
+     [
+      567,
+      "type-analysis",
+      3844,
+      6,
+      [
+       "PointerT",
+       "Base",
+       "HasType",
+       "Base",
+       "HasType",
+       "CellSpineView7"
+      ]
+     ],
+     [
+      501,
+      "terms",
+      3788,
+      5,
+      [
+       "Concat",
+       "TCPair",
+       "ExtractedExpr",
+       "TCPair",
+       "ExtractedExpr"
+      ]
+     ],
+     [
+      504,
+      "terms",
+      3214,
+      3,
+      [
+       "Get",
+       "TCPair",
+       "ExtractedExpr"
+      ]
+     ],
+     [
+      312,
+      "cicm-index",
+      2946,
+      3,
+      [
+       "TCPair",
+       "ExtractedExpr",
+       "ContextOf"
+      ]
+     ],
+     [
+      268,
+      "boundary-analysis",
+      1418,
+      6,
+      [
+       "is-inv-Expr",
+       "DoWhile",
+       "HasType",
+       "Base",
+       "Expr-size",
+       "to-hoist-size"
+      ]
+     ],
+     [
+      269,
+      "boundary-analysis-prep",
+      1374,
+      5,
+      [
+       "is-inv-Expr",
+       "DoWhile",
+       "HasType",
+       "Base",
+       "Expr-size"
+      ]
+     ],
+     [
+      547,
+      "type-analysis",
+      951,
+      7,
+      [
+       "DoWhile",
+       "TupleT",
+       "HasType",
+       "BoolT",
+       "TCons",
+       "TupleT",
+       "HasType"
+      ]
+     ],
+     [
+      498,
+      "terms",
+      799,
+      5,
+      [
+       "Bop",
+       "TCPair",
+       "ExtractedExpr",
+       "TCPair",
+       "ExtractedExpr"
+      ]
+     ]
+    ],
+    "rulesets": {
+     "select_opt": {
+      "multi_literal": 204
+     },
+     "loop-unroll": {
+      "multi_literal": 17
+     },
+     "loop-strength-reduction": {
+      "multi_literal": 176
+     },
+     "always-run": {
+      "multi_literal": 30832,
+      "single_action": 0,
+      "single_literal": 479883,
+      "wide_action": 45410
+     },
+     "boundary-analysis": {
+      "multi_literal": 1418
+     },
+     "boundary-analysis-prep": {
+      "multi_literal": 1374
+     },
+     "cicm-index": {
+      "multi_literal": 2946
+     },
+     "drop": {
+      "multi_literal": 2,
+      "wide_action": 107
+     },
+     "error-checking": {
+      "multi_literal": 845,
+      "single_action": 0,
+      "single_literal": 2418,
+      "wide_action": 1080
+     },
+     "interval-analysis": {
+      "multi_literal": 973,
+      "single_action": 0,
+      "single_literal": 415,
+      "wide_action": 5966
+     },
+     "peepholes": {
+      "multi_literal": 50,
+      "single_action": 0,
+      "single_literal": 96,
+      "wide_action": 348
+     },
+     "loop-iters-analysis": {
+      "multi_literal": 17,
+      "single_action": 0,
+      "single_literal": 62
+     },
+     "mem-simple": {
+      "multi_literal": 100,
+      "single_action": 0,
+      "single_literal": 421,
+      "wide_action": 20
+     },
+     "non-weakly-linear": {
+      "multi_literal": 234,
+      "single_action": 0,
+      "single_literal": 331,
+      "wide_action": 2
+     },
+     "passthrough": {
+      "multi_literal": 454
+     },
+     "state-edge-passthrough": {
+      "multi_literal": 132
+     },
+     "subst": {
+      "multi_literal": 57,
+      "wide_action": 541
+     },
+     "term-subst": {
+      "multi_literal": 18,
+      "single_action": 0,
+      "single_literal": 294,
+      "wide_action": 33
+     },
+     "terms": {
+      "multi_literal": 7908,
+      "single_action": 0,
+      "single_literal": 469,
+      "wide_action": 1091
+     },
+     "terms-helpers": {
+      "multi_literal": 29315,
+      "selected_child": 3933,
+      "single_action": 0,
+      "single_literal": 15702
+     },
+     "type-analysis": {
+      "multi_literal": 14217,
+      "single_action": 0,
+      "single_literal": 11279,
+      "wide_action": 7614
+     },
+     "initialization": {
+      "single_action": 0,
+      "single_literal": 1
+     },
+     "type-helpers": {
+      "single_action": 0,
+      "single_literal": 21998,
+      "wide_action": 699
+     },
+     "cell-spine-complete": {
+      "single_action": 0,
+      "single_literal": 2577,
+      "wide_action": 3285
+     },
+     "is-resolved": {
+      "single_action": 0,
+      "single_literal": 87796
+     },
+     "apply-subst-unions": {
+      "single_action": 0,
+      "single_literal": 4569
+     },
+     "context": {
+      "single_action": 0,
+      "single_literal": 36255,
+      "wide_action": 5271
+     },
+     "apply-drop-unions": {
+      "single_action": 0,
+      "single_literal": 60
+     },
+     "cleanup-drop": {
+      "single_action": 0,
+      "single_literal": 120
+     },
+     "canon": {
+      "single_action": 0,
+      "single_literal": 2286
+     },
+     "subsume-after-helpers": {
+      "single_action": 0,
+      "single_literal": 2
+     },
+     "hacker": {
+      "wide_action": 1
+     },
+     "interval-rewrite": {
+      "wide_action": 34
+     },
+     "terms-helpers-helpers": {
+      "wide_action": 5319
+     }
+    },
+    "categories": {
+     "single_action": {
+      "packets": 0,
+      "visible": 0,
+      "born": 0,
+      "zero": 0,
+      "one": 0,
+      "two_plus": 0,
+      "max": 0
+     },
+     "single_literal": {
+      "packets": 667034,
+      "visible": 29049,
+      "born": 37309,
+      "zero": 642839,
+      "one": 22642,
+      "two_plus": 1553,
+      "max": 3006
+     },
+     "wide_action": {
+      "packets": 76821,
+      "visible": 39790,
+      "born": 69848,
+      "zero": 67741,
+      "one": 2831,
+      "two_plus": 6249,
+      "max": 298
+     },
+     "multi_literal": {
+      "packets": 91289,
+      "visible": 49132,
+      "born": 55525,
+      "zero": 54432,
+      "one": 30214,
+      "two_plus": 6643,
+      "max": 5
+     },
+     "selected_child": {
+      "packets": 3933,
+      "visible": 2465,
+      "born": 2465,
+      "zero": 1468,
+      "one": 2465,
+      "two_plus": 0,
+      "max": 1
+     }
+    },
+    "denominators": {
+     "forward": 839077,
+     "bidirectional": 839077,
+     "paid_groups": 6777463,
+     "paid_plus_return": 6777463,
+     "all_prototype_decisions": 8800666,
+     "decisions_plus_return": 8800666
+    },
+    "per_packet": {
+     "forward": 0.1435339069000819,
+     "bidirectional": 0.1435339069000819,
+     "paid_groups": 0.01777007119035545,
+     "paid_plus_return": 0.01777007119035545,
+     "all_prototype_decisions": 0.013684873394808984,
+     "decisions_plus_return": 0.013684873394808984
+    },
+    "max_total_for_fept_two": 60218,
+    "budget_remaining_after_forward": -778859,
+    "strict_remaining_after_decisions": -8740448,
+    "wide_actions_affordable_at_fept_two": -702038,
+    "optimistic_matched_packets": 834897,
+    "optimistic_matched_fept": 0.14425252456291016,
+    "class_counts": {
+     "accepted_by_action": 0,
+     "eligible_after_prefilters": 0,
+     "empty": 0,
+     "empty_table_skips": 0,
+     "feedback_bytes": 0,
+     "internal_receipts": 0,
+     "issued": 0,
+     "logit_evaluations": 0,
+     "masks": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "public_headers": 0,
+     "recurrence_digest": 14954688950648119174,
+     "residual_calls": 0,
+     "residual_receipts": 0,
+     "scalar_rejected": 0
+    },
+    "family_counts": {
+     "absent": 2496490,
+     "actions": 76821,
+     "calls": 6195,
+     "candidate_bound": 5514532,
+     "empty_actions": 41438,
+     "inspected_left": 7019969,
+     "issue_ms": 0.0,
+     "keys_issued": 367513,
+     "matched_min_packets": 72641,
+     "private_rows": 217988,
+     "prototypes": 6301226,
+     "receiver_cache_hits": 4144,
+     "receiver_ms": 0.0,
+     "receiver_pairs": 5514532,
+     "receiver_public_decodes": 7408763,
+     "sender_marginal_rows": 5551694,
+     "skipped_clean": 71,
+     "source_pair_ms": 0.0,
+     "spans": 222882,
+     "stale": 3441896,
+     "upper_min_packets": 3441,
+     "wire_bytes": 7001164
+    },
+    "wire": {
+     "single_actions": 0,
+     "single_literals": 25198018,
+     "wide_actions": 7001164,
+     "multi_literals": 11476064,
+     "selected_children": 2154705,
+     "feedback": 0
+    },
+    "bi_bytes": 45829951,
+    "ms": [
+     4129.285041,
+     4087.8957500000006,
+     3764.260416,
+     3766.72925
+    ],
+    "wall_ms": [
+     4490.804916014895,
+     4441.1590829258785,
+     4104.293709038757,
+     4116.057457984425
+    ],
+    "median_ms": 3927.3125,
+    "median_wall_ms": 4278.608270455152
+   },
+   "joint": {
+    "rhs": 635818,
+    "raw": "15340212113871405873",
+    "commits": "c84c1f5872bb30ea5899f58e55d35d79b8406b0821db10b5b56c9a37781e39d4",
+    "physical": "694057f7b97aaef25832620f6ff6d886df3aa8a8ed95bf06b140b57970b80751",
+    "source_pass_rhs": 635818,
+    "root_ids": "4f7c3302156f1e94964e614c6236341e732b864f274600da6fca8893e5ceaf8b",
+    "root_parents": "375fd17ace78384b65e6eea4753025eea3d630fec633912a48a1f9309c914f75",
+    "nested_ids": "3f73c67aa3738b99c7476b1332f8e54f2252de8c33451058abdc61fd5b64425e",
+    "children": "32c44f7126d83c16dec3a5ef8ff809ff9dba136b5994d1cb2216d19504417247",
+    "state_sha": "f9181c677ec837e878719ee601dddf7a0700ed236f8eac364d3ecfb40712b7b8",
+    "single_winners": "585aea4e130e9b16b330a40ba69a793e5102783bdc88ded8430d5f894833d072",
+    "multi_winners": "5f4ab7a463be10099a2b99e47e0322ae8f7d423cf32244692dc156886a9af93a",
+    "cells": "3ec51a71df9100ee6e331e0c646d203b6a2e2ebcd9f0ed9b87a98d43ec00ebdd",
+    "direct_cells": 450414,
+    "root_allocated": 447949,
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "raw_parent_sha": "208f23744aa875711e3da4b3ba921a0787a44139088512d8f125580a15655f1f",
+    "recurrent": 14954688950648119174,
+    "decisions": "10089675923749134543",
+    "rule_call_sha": "a47f850a441fb9f7a6ace8bd6df487276fef66927f48d24a0758c57618d61853",
+    "root_commit_sha": "c84c1f5872bb30ea5899f58e55d35d79b8406b0821db10b5b56c9a37781e39d4",
+    "visible_sha": "c8367e24172ee8ec57b81270af1c28b965232877507a9edf9578483dbc5d0cd8",
+    "retired_sha": "ed5fdd6a2ee75241f838c100d0451b940818291650bf4c77d4ac54ff733d5984",
+    "birth_sha": "b5c2d5665d3185cbd8e9798516e9718923a4f68e33529945b3e09957134c8095",
+    "born": 165147,
+    "visible": 120436,
+    "expanded_single": 667034,
+    "expanded_multi": 309277,
+    "child_candidates": 12238,
+    "selected_children": 3933,
+    "source_work": [
+     667034,
+     304837
+    ],
+    "single_dispatches": 12005,
+    "single_residual_decisions": 39483,
+    "single_logits": 21182,
+    "multi_approx_visits": 1663066,
+    "arity": {
+     "8": 238,
+     "7": 283,
+     "3": 48213,
+     "5": 37828,
+     "4": 4664,
+     "6": 63
+    },
+    "residual_query_width": {
+     "14": 204,
+     "19": 17,
+     "15": 193,
+     "3": 11574,
+     "6": 5489,
+     "4": 30338,
+     "5": 41208,
+     "7": 1760,
+     "8": 506
+    },
+    "top_rules": [
+     [
+      507,
+      "terms-helpers",
+      29315,
+      4,
+      [
+       "TCPair",
+       "ExtractedExpr",
+       "<",
+       "CellSpineView8"
+      ]
+     ],
+     [
+      249,
+      "always-run",
+      29281,
+      5,
+      [
+       "DoWhile",
+       "ContextOf",
+       "ContextOf",
+       "Const",
+       "HasArgType"
+      ]
+     ],
+     [
+      538,
+      "type-analysis",
+      4773,
+      3,
+      [
+       "Get",
+       "TupleT",
+       "HasType"
+      ]
+     ],
+     [
+      540,
+      "type-analysis",
+      3904,
+      5,
+      [
+       "Concat",
+       "TupleT",
+       "HasType",
+       "TupleT",
+       "HasType"
+      ]
+     ],
+     [
+      567,
+      "type-analysis",
+      3844,
+      6,
+      [
+       "PointerT",
+       "Base",
+       "HasType",
+       "Base",
+       "HasType",
+       "CellSpineView7"
+      ]
+     ],
+     [
+      501,
+      "terms",
+      3788,
+      5,
+      [
+       "Concat",
+       "TCPair",
+       "ExtractedExpr",
+       "TCPair",
+       "ExtractedExpr"
+      ]
+     ],
+     [
+      504,
+      "terms",
+      3214,
+      3,
+      [
+       "Get",
+       "TCPair",
+       "ExtractedExpr"
+      ]
+     ],
+     [
+      312,
+      "cicm-index",
+      2946,
+      3,
+      [
+       "TCPair",
+       "ExtractedExpr",
+       "ContextOf"
+      ]
+     ],
+     [
+      268,
+      "boundary-analysis",
+      1418,
+      6,
+      [
+       "is-inv-Expr",
+       "DoWhile",
+       "HasType",
+       "Base",
+       "Expr-size",
+       "to-hoist-size"
+      ]
+     ],
+     [
+      269,
+      "boundary-analysis-prep",
+      1374,
+      5,
+      [
+       "is-inv-Expr",
+       "DoWhile",
+       "HasType",
+       "Base",
+       "Expr-size"
+      ]
+     ],
+     [
+      547,
+      "type-analysis",
+      951,
+      7,
+      [
+       "DoWhile",
+       "TupleT",
+       "HasType",
+       "BoolT",
+       "TCons",
+       "TupleT",
+       "HasType"
+      ]
+     ],
+     [
+      498,
+      "terms",
+      799,
+      5,
+      [
+       "Bop",
+       "TCPair",
+       "ExtractedExpr",
+       "TCPair",
+       "ExtractedExpr"
+      ]
+     ]
+    ],
+    "rulesets": {
+     "select_opt": {
+      "multi_literal": 204
+     },
+     "loop-unroll": {
+      "multi_literal": 17
+     },
+     "loop-strength-reduction": {
+      "multi_literal": 176
+     },
+     "always-run": {
+      "multi_literal": 30832,
+      "single_action": 5481,
+      "single_literal": 840,
+      "wide_action": 45410
+     },
+     "boundary-analysis": {
+      "multi_literal": 1418
+     },
+     "boundary-analysis-prep": {
+      "multi_literal": 1374
+     },
+     "cicm-index": {
+      "multi_literal": 2946
+     },
+     "drop": {
+      "multi_literal": 2,
+      "wide_action": 107
+     },
+     "error-checking": {
+      "multi_literal": 845,
+      "single_action": 22,
+      "single_literal": 0,
+      "wide_action": 1080
+     },
+     "interval-analysis": {
+      "multi_literal": 973,
+      "single_action": 23,
+      "single_literal": 0,
+      "wide_action": 5966
+     },
+     "peepholes": {
+      "multi_literal": 50,
+      "single_action": 3,
+      "single_literal": 0,
+      "wide_action": 348
+     },
+     "loop-iters-analysis": {
+      "multi_literal": 17,
+      "single_action": 2,
+      "single_literal": 0
+     },
+     "mem-simple": {
+      "multi_literal": 100,
+      "single_action": 10,
+      "single_literal": 0,
+      "wide_action": 20
+     },
+     "non-weakly-linear": {
+      "multi_literal": 234,
+      "single_action": 1,
+      "single_literal": 0,
+      "wide_action": 2
+     },
+     "passthrough": {
+      "multi_literal": 454
+     },
+     "state-edge-passthrough": {
+      "multi_literal": 132
+     },
+     "subst": {
+      "multi_literal": 57,
+      "wide_action": 541
+     },
+     "term-subst": {
+      "multi_literal": 18,
+      "single_action": 4,
+      "single_literal": 0,
+      "wide_action": 33
+     },
+     "terms": {
+      "multi_literal": 7908,
+      "single_action": 7,
+      "single_literal": 0,
+      "wide_action": 1091
+     },
+     "terms-helpers": {
+      "multi_literal": 29315,
+      "selected_child": 3933,
+      "single_action": 148,
+      "single_literal": 0
+     },
+     "type-analysis": {
+      "multi_literal": 14217,
+      "single_action": 413,
+      "single_literal": 1,
+      "wide_action": 7614
+     },
+     "initialization": {
+      "single_action": 0,
+      "single_literal": 1
+     },
+     "type-helpers": {
+      "single_action": 710,
+      "single_literal": 2,
+      "wide_action": 699
+     },
+     "cell-spine-complete": {
+      "single_action": 55,
+      "single_literal": 0,
+      "wide_action": 3285
+     },
+     "is-resolved": {
+      "single_action": 2453,
+      "single_literal": 0
+     },
+     "apply-subst-unions": {
+      "single_action": 3,
+      "single_literal": 0
+     },
+     "context": {
+      "single_action": 38,
+      "single_literal": 0,
+      "wide_action": 5271
+     },
+     "apply-drop-unions": {
+      "single_action": 2,
+      "single_literal": 0
+     },
+     "cleanup-drop": {
+      "single_action": 16,
+      "single_literal": 0
+     },
+     "canon": {
+      "single_action": 36,
+      "single_literal": 0
+     },
+     "subsume-after-helpers": {
+      "single_action": 4,
+      "single_literal": 0
+     },
+     "hacker": {
+      "wide_action": 1
+     },
+     "interval-rewrite": {
+      "wide_action": 34
+     },
+     "terms-helpers-helpers": {
+      "wide_action": 5319
+     }
+    },
+    "categories": {
+     "single_action": {
+      "packets": 9431,
+      "visible": 26040,
+      "born": 34034,
+      "zero": 8407,
+      "one": 206,
+      "two_plus": 818,
+      "max": 927
+     },
+     "single_literal": {
+      "packets": 844,
+      "visible": 3009,
+      "born": 3275,
+      "zero": 840,
+      "one": 3,
+      "two_plus": 1,
+      "max": 3006
+     },
+     "wide_action": {
+      "packets": 76821,
+      "visible": 39790,
+      "born": 69848,
+      "zero": 67741,
+      "one": 2831,
+      "two_plus": 6249,
+      "max": 298
+     },
+     "multi_literal": {
+      "packets": 91289,
+      "visible": 49132,
+      "born": 55525,
+      "zero": 54432,
+      "one": 30214,
+      "two_plus": 6643,
+      "max": 5
+     },
+     "selected_child": {
+      "packets": 3933,
+      "visible": 2465,
+      "born": 2465,
+      "zero": 1468,
+      "one": 2465,
+      "two_plus": 0,
+      "max": 1
+     }
+    },
+    "denominators": {
+     "forward": 182318,
+     "bidirectional": 191749,
+     "paid_groups": 6120704,
+     "paid_plus_return": 6130135,
+     "all_prototype_decisions": 6542493,
+     "decisions_plus_return": 6551924
+    },
+    "per_packet": {
+     "forward": 0.6605820599172874,
+     "bidirectional": 0.6280919326828301,
+     "paid_groups": 0.01967682148981555,
+     "paid_plus_return": 0.019646549382680806,
+     "all_prototype_decisions": 0.018408273421156127,
+     "decisions_plus_return": 0.018381776101187988
+    },
+    "max_total_for_fept_two": 60218,
+    "budget_remaining_after_forward": -122100,
+    "strict_remaining_after_decisions": -6482275,
+    "wide_actions_affordable_at_fept_two": -45279,
+    "optimistic_matched_packets": 178138,
+    "optimistic_matched_fept": 0.6760825876567604,
+    "class_counts": {
+     "accepted_by_action": 2279609,
+     "eligible_after_prefilters": 2279609,
+     "empty": 1714,
+     "empty_table_skips": 5516,
+     "feedback_bytes": 188620,
+     "internal_receipts": 666190,
+     "issued": 9431,
+     "logit_evaluations": 18862,
+     "masks": [
+      0,
+      0,
+      575,
+      8856
+     ],
+     "public_headers": 13561219,
+     "recurrence_digest": 14954688950648119174,
+     "residual_calls": 2577,
+     "residual_receipts": 844,
+     "scalar_rejected": 1613419
+    },
+    "family_counts": {
+     "absent": 2496490,
+     "actions": 76821,
+     "calls": 6195,
+     "candidate_bound": 5514532,
+     "empty_actions": 41438,
+     "inspected_left": 7019969,
+     "issue_ms": 0.0,
+     "keys_issued": 367513,
+     "matched_min_packets": 72641,
+     "private_rows": 217988,
+     "prototypes": 6301226,
+     "receiver_cache_hits": 4144,
+     "receiver_ms": 0.0,
+     "receiver_pairs": 5514532,
+     "receiver_public_decodes": 7408763,
+     "sender_marginal_rows": 5551694,
+     "skipped_clean": 71,
+     "source_pair_ms": 0.0,
+     "spans": 222882,
+     "stale": 3441896,
+     "upper_min_packets": 3441,
+     "wire_bytes": 7001164
+    },
+    "wire": {
+     "single_actions": 603584,
+     "single_literals": 55100,
+     "wide_actions": 7001164,
+     "multi_literals": 11476064,
+     "selected_children": 2154705,
+     "feedback": 188620
+    },
+    "bi_bytes": 21479237,
+    "ms": [
+     4272.053,
+     4258.086332999999,
+     4336.149958,
+     4031.1583750000004
+    ],
+    "wall_ms": [
+     4631.551124970429,
+     4603.215500013903,
+     4694.206750020385,
+     4370.751374983229
+    ],
+    "median_ms": 4265.0696665,
+    "median_wall_ms": 4617.383312492166
+   }
+  },
+  "runs": 5687,
+  "faults": {
+   "single": [
+    2,
+    "class-action generation mismatch"
+   ],
+   "wide": [
+    27,
+    "regenerated family extent differs"
+   ]
+  }
+ },
+ "sum-bits": {
+  "arms": {
+   "packed": {
+    "rhs": 7265,
+    "raw": "9387899919173550868",
+    "commits": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+    "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+    "source_pass_rhs": 7265,
+    "root_ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+    "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+    "nested_ids": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+    "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+    "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+    "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+    "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+    "direct_cells": 5867,
+    "root_allocated": 5764,
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "raw_parent_sha": "7e7931cbbf8116f938c44b9c7ec1cb50cbe1296f0bfc003812172aa29afb96ff",
+    "recurrent": 4766893502033532934,
+    "decisions": "15576378264816477716",
+    "rule_call_sha": "9783aa588f00486e5c2d114159f7a83d128f41e70f8456539fd030c431614f3d",
+    "root_commit_sha": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+    "visible_sha": "cc411875294ca05a458e8c66917fb6390f1498c621d92cd61d8496448ef2c9fa",
+    "retired_sha": "eff2ec22c851efecd4d6ce2e7189f9aa3f46b294e4588a2b582d0094c3e32e1c",
+    "birth_sha": "197ce7e5d676ae1d119e9a34528c24ac41cab4e0495d1dd3ff2f062ffc721e0d",
+    "born": 3610,
+    "visible": 2691,
+    "expanded_single": 6559,
+    "expanded_multi": 5912,
+    "child_candidates": 305,
+    "selected_children": 191,
+    "source_work": [
+     6559,
+     5912
+    ],
+    "single_dispatches": 0,
+    "single_residual_decisions": 7889,
+    "single_logits": 1620,
+    "multi_approx_visits": 16879,
+    "arity": {
+     "8": 16,
+     "2": 4877,
+     "3": 848,
+     "5": 124,
+     "4": 38,
+     "6": 1,
+     "7": 8
+    },
+    "residual_query_width": {
+     "14": 16,
+     "2": 3041,
+     "7": 84,
+     "3": 1766,
+     "4": 743,
+     "5": 238,
+     "6": 23,
+     "8": 1
+    },
+    "top_rules": [
+     [
+      507,
+      "terms-helpers",
+      355,
+      4,
+      [
+       "TCPair",
+       "ExtractedExpr",
+       "<",
+       "CellSpineView8"
+      ]
+     ],
+     [
+      90,
+      "always-run",
+      333,
+      2,
+      [
+       "Get",
+       "BodyContainsExpr"
+      ]
+     ],
+     [
+      324,
+      "context",
+      274,
+      2,
+      [
+       "Get",
+       "AddContext"
+      ]
+     ],
+     [
+      144,
+      "always-run",
+      232,
+      4,
+      [
+       "SubTuple",
+       "+",
+       "SubTuple",
+       "Concat"
+      ]
+     ],
+     [
+      287,
+      "cell-spine-complete",
+      210,
+      2,
+      [
+       "Smaller",
+       "TCPair"
+      ]
+     ],
+     [
+      509,
+      "terms-helpers-helpers",
+      206,
+      3,
+      [
+       "TCPair",
+       "<",
+       "CellSpineView9"
+      ]
+     ],
+     [
+      510,
+      "terms-helpers-helpers",
+      206,
+      3,
+      [
+       "TCPair",
+       ">",
+       "CellSpineView9"
+      ]
+     ],
+     [
+      122,
+      "always-run",
+      204,
+      2,
+      [
+       "Get",
+       "ContextOf"
+      ]
+     ],
+     [
+      286,
+      "cell-spine-complete",
+      193,
+      2,
+      [
+       "PotentialExtractedExpr",
+       "TCPair"
+      ]
+     ],
+     [
+      518,
+      "type-analysis",
+      175,
+      2,
+      [
+       "Get",
+       "HasArgType"
+      ]
+     ],
+     [
+      306,
+      "cell-spine-complete",
+      160,
+      2,
+      [
+       "TCPair",
+       "TCPair"
+      ]
+     ],
+     [
+      538,
+      "type-analysis",
+      148,
+      3,
+      [
+       "Get",
+       "TupleT",
+       "HasType"
+      ]
+     ]
+    ],
+    "rulesets": {
+     "select_opt": {
+      "multi_literal": 16
+     },
+     "always-run": {
+      "multi_literal": 1773,
+      "single_action": 0,
+      "single_literal": 3672
+     },
+     "hacker": {
+      "multi_literal": 3
+     },
+     "peepholes": {
+      "multi_literal": 28,
+      "single_action": 0,
+      "single_literal": 8
+     },
+     "boundary-analysis": {
+      "multi_literal": 5
+     },
+     "boundary-analysis-prep": {
+      "multi_literal": 5
+     },
+     "cell-spine-complete": {
+      "multi_literal": 705,
+      "single_action": 0,
+      "single_literal": 46
+     },
+     "cicm-index": {
+      "multi_literal": 101
+     },
+     "context": {
+      "multi_literal": 597,
+      "single_action": 0,
+      "single_literal": 349
+     },
+     "drop": {
+      "multi_literal": 194
+     },
+     "error-checking": {
+      "multi_literal": 302,
+      "single_action": 0,
+      "single_literal": 124
+     },
+     "interval-analysis": {
+      "multi_literal": 86,
+      "single_action": 0,
+      "single_literal": 5
+     },
+     "non-weakly-linear": {
+      "multi_literal": 8,
+      "single_action": 0,
+      "single_literal": 27
+     },
+     "passthrough": {
+      "multi_literal": 14
+     },
+     "state-edge-passthrough": {
+      "multi_literal": 14
+     },
+     "term-subst": {
+      "multi_literal": 76,
+      "single_action": 0,
+      "single_literal": 40
+     },
+     "terms": {
+      "multi_literal": 302,
+      "single_action": 0,
+      "single_literal": 10
+     },
+     "terms-helpers": {
+      "multi_literal": 355,
+      "selected_child": 191,
+      "single_action": 0,
+      "single_literal": 386
+     },
+     "terms-helpers-helpers": {
+      "multi_literal": 418
+     },
+     "type-analysis": {
+      "multi_literal": 838,
+      "single_action": 0,
+      "single_literal": 353
+     },
+     "type-helpers": {
+      "multi_literal": 72,
+      "single_action": 0,
+      "single_literal": 214
+     },
+     "initialization": {
+      "single_action": 0,
+      "single_literal": 1
+     },
+     "is-resolved": {
+      "single_action": 0,
+      "single_literal": 887
+     },
+     "apply-subst-unions": {
+      "single_action": 0,
+      "single_literal": 0
+     },
+     "apply-drop-unions": {
+      "single_action": 0,
+      "single_literal": 90
+     },
+     "cleanup-drop": {
+      "single_action": 0,
+      "single_literal": 142
+     },
+     "canon": {
+      "single_action": 0,
+      "single_literal": 162
+     },
+     "mem-simple": {
+      "single_action": 0,
+      "single_literal": 40
+     },
+     "subsume-after-helpers": {
+      "single_action": 0,
+      "single_literal": 2
+     },
+     "loop-iters-analysis": {
+      "single_action": 0,
+      "single_literal": 1
+     }
+    },
+    "categories": {
+     "single_action": {
+      "packets": 0,
+      "visible": 0,
+      "born": 0,
+      "zero": 0,
+      "one": 0,
+      "two_plus": 0,
+      "max": 0
+     },
+     "single_literal": {
+      "packets": 6559,
+      "visible": 881,
+      "born": 1083,
+      "zero": 5812,
+      "one": 705,
+      "two_plus": 42,
+      "max": 84
+     },
+     "wide_action": {
+      "packets": 0,
+      "visible": 0,
+      "born": 0,
+      "zero": 0,
+      "one": 0,
+      "two_plus": 0,
+      "max": 0
+     },
+     "multi_literal": {
+      "packets": 5912,
+      "visible": 1708,
+      "born": 2424,
+      "zero": 4718,
+      "one": 850,
+      "two_plus": 344,
+      "max": 5
+     },
+     "selected_child": {
+      "packets": 191,
+      "visible": 102,
+      "born": 103,
+      "zero": 89,
+      "one": 102,
+      "two_plus": 0,
+      "max": 1
+     }
+    },
+    "denominators": {
+     "forward": 12662,
+     "bidirectional": 12662,
+     "paid_groups": 12662,
+     "paid_plus_return": 12662,
+     "all_prototype_decisions": 14106,
+     "decisions_plus_return": 14106
+    },
+    "per_packet": {
+     "forward": 0.21252566735112938,
+     "bidirectional": 0.21252566735112938,
+     "paid_groups": 0.21252566735112938,
+     "paid_plus_return": 0.21252566735112938,
+     "all_prototype_decisions": 0.1907698851552531,
+     "decisions_plus_return": 0.1907698851552531
+    },
+    "max_total_for_fept_two": 1345,
+    "budget_remaining_after_forward": -11317,
+    "strict_remaining_after_decisions": -12761,
+    "wide_actions_affordable_at_fept_two": -11317,
+    "optimistic_matched_packets": 12662,
+    "optimistic_matched_fept": 0.21252566735112938,
+    "class_counts": {
+     "accepted_by_action": 0,
+     "eligible_after_prefilters": 0,
+     "empty": 0,
+     "empty_table_skips": 0,
+     "feedback_bytes": 0,
+     "internal_receipts": 0,
+     "issued": 0,
+     "logit_evaluations": 0,
+     "masks": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "public_headers": 0,
+     "recurrence_digest": 4766893502033532934,
+     "residual_calls": 0,
+     "residual_receipts": 0,
+     "scalar_rejected": 0
+    },
+    "family_counts": {
+     "absent": 0,
+     "actions": 0,
+     "calls": 0,
+     "candidate_bound": 0,
+     "empty_actions": 0,
+     "inspected_left": 0,
+     "issue_ms": 0.0,
+     "keys_issued": 0,
+     "matched_min_packets": 0,
+     "private_rows": 0,
+     "prototypes": 0,
+     "receiver_cache_hits": 0,
+     "receiver_ms": 0.0,
+     "receiver_pairs": 0,
+     "receiver_public_decodes": 0,
+     "sender_marginal_rows": 0,
+     "skipped_clean": 0,
+     "source_pair_ms": 0.0,
+     "spans": 0,
+     "stale": 0,
+     "upper_min_packets": 0,
+     "wire_bytes": 0
+    },
+    "wire": {
+     "single_actions": 0,
+     "single_literals": 324219,
+     "wide_actions": 0,
+     "multi_literals": 483696,
+     "selected_children": 102764,
+     "feedback": 0
+    },
+    "bi_bytes": 910679,
+    "ms": [
+     35.053708,
+     36.275291,
+     36.365375,
+     35.661667
+    ],
+    "wall_ms": [
+     74.40429099369794,
+     78.41883308719844,
+     75.34650003071874,
+     75.7632500026375
+    ],
+    "median_ms": 35.968479,
+    "median_wall_ms": 75.55487501667812
+   },
+   "singleton": {
+    "rhs": 7265,
+    "raw": "9387899919173550868",
+    "commits": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+    "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+    "source_pass_rhs": 7265,
+    "root_ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+    "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+    "nested_ids": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+    "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+    "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+    "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+    "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+    "direct_cells": 5867,
+    "root_allocated": 5764,
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "raw_parent_sha": "7e7931cbbf8116f938c44b9c7ec1cb50cbe1296f0bfc003812172aa29afb96ff",
+    "recurrent": 4766893502033532934,
+    "decisions": "15576378264816477716",
+    "rule_call_sha": "9783aa588f00486e5c2d114159f7a83d128f41e70f8456539fd030c431614f3d",
+    "root_commit_sha": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+    "visible_sha": "cc411875294ca05a458e8c66917fb6390f1498c621d92cd61d8496448ef2c9fa",
+    "retired_sha": "eff2ec22c851efecd4d6ce2e7189f9aa3f46b294e4588a2b582d0094c3e32e1c",
+    "birth_sha": "197ce7e5d676ae1d119e9a34528c24ac41cab4e0495d1dd3ff2f062ffc721e0d",
+    "born": 3610,
+    "visible": 2691,
+    "expanded_single": 6559,
+    "expanded_multi": 5912,
+    "child_candidates": 305,
+    "selected_children": 191,
+    "source_work": [
+     6559,
+     5912
+    ],
+    "single_dispatches": 1664,
+    "single_residual_decisions": 692,
+    "single_logits": 3094,
+    "multi_approx_visits": 16879,
+    "arity": {
+     "8": 16,
+     "2": 4877,
+     "3": 848,
+     "5": 124,
+     "4": 38,
+     "6": 1,
+     "7": 8
+    },
+    "residual_query_width": {
+     "14": 16,
+     "2": 3041,
+     "7": 84,
+     "3": 1766,
+     "4": 743,
+     "5": 238,
+     "6": 23,
+     "8": 1
+    },
+    "top_rules": [
+     [
+      507,
+      "terms-helpers",
+      355,
+      4,
+      [
+       "TCPair",
+       "ExtractedExpr",
+       "<",
+       "CellSpineView8"
+      ]
+     ],
+     [
+      90,
+      "always-run",
+      333,
+      2,
+      [
+       "Get",
+       "BodyContainsExpr"
+      ]
+     ],
+     [
+      324,
+      "context",
+      274,
+      2,
+      [
+       "Get",
+       "AddContext"
+      ]
+     ],
+     [
+      144,
+      "always-run",
+      232,
+      4,
+      [
+       "SubTuple",
+       "+",
+       "SubTuple",
+       "Concat"
+      ]
+     ],
+     [
+      287,
+      "cell-spine-complete",
+      210,
+      2,
+      [
+       "Smaller",
+       "TCPair"
+      ]
+     ],
+     [
+      509,
+      "terms-helpers-helpers",
+      206,
+      3,
+      [
+       "TCPair",
+       "<",
+       "CellSpineView9"
+      ]
+     ],
+     [
+      510,
+      "terms-helpers-helpers",
+      206,
+      3,
+      [
+       "TCPair",
+       ">",
+       "CellSpineView9"
+      ]
+     ],
+     [
+      122,
+      "always-run",
+      204,
+      2,
+      [
+       "Get",
+       "ContextOf"
+      ]
+     ],
+     [
+      286,
+      "cell-spine-complete",
+      193,
+      2,
+      [
+       "PotentialExtractedExpr",
+       "TCPair"
+      ]
+     ],
+     [
+      518,
+      "type-analysis",
+      175,
+      2,
+      [
+       "Get",
+       "HasArgType"
+      ]
+     ],
+     [
+      306,
+      "cell-spine-complete",
+      160,
+      2,
+      [
+       "TCPair",
+       "TCPair"
+      ]
+     ],
+     [
+      538,
+      "type-analysis",
+      148,
+      3,
+      [
+       "Get",
+       "TupleT",
+       "HasType"
+      ]
+     ]
+    ],
+    "rulesets": {
+     "select_opt": {
+      "multi_literal": 16
+     },
+     "always-run": {
+      "multi_literal": 1773,
+      "single_action": 808,
+      "single_literal": 39
+     },
+     "hacker": {
+      "multi_literal": 3
+     },
+     "peepholes": {
+      "multi_literal": 28,
+      "single_action": 1,
+      "single_literal": 0
+     },
+     "boundary-analysis": {
+      "multi_literal": 5
+     },
+     "boundary-analysis-prep": {
+      "multi_literal": 5
+     },
+     "cell-spine-complete": {
+      "multi_literal": 705,
+      "single_action": 23,
+      "single_literal": 0
+     },
+     "cicm-index": {
+      "multi_literal": 101
+     },
+     "context": {
+      "multi_literal": 597,
+      "single_action": 12,
+      "single_literal": 0
+     },
+     "drop": {
+      "multi_literal": 194
+     },
+     "error-checking": {
+      "multi_literal": 302,
+      "single_action": 18,
+      "single_literal": 0
+     },
+     "interval-analysis": {
+      "multi_literal": 86,
+      "single_action": 8,
+      "single_literal": 0
+     },
+     "non-weakly-linear": {
+      "multi_literal": 8,
+      "single_action": 1,
+      "single_literal": 0
+     },
+     "passthrough": {
+      "multi_literal": 14
+     },
+     "state-edge-passthrough": {
+      "multi_literal": 14
+     },
+     "term-subst": {
+      "multi_literal": 76,
+      "single_action": 6,
+      "single_literal": 0
+     },
+     "terms": {
+      "multi_literal": 302,
+      "single_action": 5,
+      "single_literal": 0
+     },
+     "terms-helpers": {
+      "multi_literal": 355,
+      "selected_child": 191,
+      "single_action": 54,
+      "single_literal": 0
+     },
+     "terms-helpers-helpers": {
+      "multi_literal": 418
+     },
+     "type-analysis": {
+      "multi_literal": 838,
+      "single_action": 104,
+      "single_literal": 5
+     },
+     "type-helpers": {
+      "multi_literal": 72,
+      "single_action": 57,
+      "single_literal": 3
+     },
+     "initialization": {
+      "single_action": 0,
+      "single_literal": 1
+     },
+     "is-resolved": {
+      "single_action": 280,
+      "single_literal": 5
+     },
+     "apply-subst-unions": {
+      "single_action": 0,
+      "single_literal": 0
+     },
+     "apply-drop-unions": {
+      "single_action": 2,
+      "single_literal": 0
+     },
+     "cleanup-drop": {
+      "single_action": 12,
+      "single_literal": 0
+     },
+     "canon": {
+      "single_action": 30,
+      "single_literal": 0
+     },
+     "mem-simple": {
+      "single_action": 3,
+      "single_literal": 0
+     },
+     "subsume-after-helpers": {
+      "single_action": 3,
+      "single_literal": 0
+     },
+     "loop-iters-analysis": {
+      "single_action": 1,
+      "single_literal": 0
+     }
+    },
+    "categories": {
+     "single_action": {
+      "packets": 1428,
+      "visible": 781,
+      "born": 978,
+      "zero": 1164,
+      "one": 123,
+      "two_plus": 141,
+      "max": 45
+     },
+     "single_literal": {
+      "packets": 53,
+      "visible": 100,
+      "born": 105,
+      "zero": 37,
+      "one": 14,
+      "two_plus": 2,
+      "max": 84
+     },
+     "wide_action": {
+      "packets": 0,
+      "visible": 0,
+      "born": 0,
+      "zero": 0,
+      "one": 0,
+      "two_plus": 0,
+      "max": 0
+     },
+     "multi_literal": {
+      "packets": 5912,
+      "visible": 1708,
+      "born": 2424,
+      "zero": 4718,
+      "one": 850,
+      "two_plus": 344,
+      "max": 5
+     },
+     "selected_child": {
+      "packets": 191,
+      "visible": 102,
+      "born": 103,
+      "zero": 89,
+      "one": 102,
+      "two_plus": 0,
+      "max": 1
+     }
+    },
+    "denominators": {
+     "forward": 7584,
+     "bidirectional": 9012,
+     "paid_groups": 7584,
+     "paid_plus_return": 9012,
+     "all_prototype_decisions": 10001,
+     "decisions_plus_return": 11429
+    },
+    "per_packet": {
+     "forward": 0.3548259493670886,
+     "bidirectional": 0.29860186418109186,
+     "paid_groups": 0.3548259493670886,
+     "paid_plus_return": 0.29860186418109186,
+     "all_prototype_decisions": 0.26907309269073093,
+     "decisions_plus_return": 0.23545367048735671
+    },
+    "max_total_for_fept_two": 1345,
+    "budget_remaining_after_forward": -6239,
+    "strict_remaining_after_decisions": -8656,
+    "wide_actions_affordable_at_fept_two": -6239,
+    "optimistic_matched_packets": 7584,
+    "optimistic_matched_fept": 0.3548259493670886,
+    "class_counts": {
+     "accepted_by_action": 7197,
+     "eligible_after_prefilters": 7197,
+     "empty": 193,
+     "empty_table_skips": 902,
+     "feedback_bytes": 28560,
+     "internal_receipts": 6506,
+     "issued": 1428,
+     "logit_evaluations": 2856,
+     "masks": [
+      0,
+      0,
+      299,
+      1129
+     ],
+     "public_headers": 65723,
+     "recurrence_digest": 4766893502033532934,
+     "residual_calls": 239,
+     "residual_receipts": 53,
+     "scalar_rejected": 691
+    },
+    "family_counts": {
+     "absent": 0,
+     "actions": 0,
+     "calls": 0,
+     "candidate_bound": 0,
+     "empty_actions": 0,
+     "inspected_left": 0,
+     "issue_ms": 0.0,
+     "keys_issued": 0,
+     "matched_min_packets": 0,
+     "private_rows": 0,
+     "prototypes": 0,
+     "receiver_cache_hits": 0,
+     "receiver_ms": 0.0,
+     "receiver_pairs": 0,
+     "receiver_public_decodes": 0,
+     "sender_marginal_rows": 0,
+     "skipped_clean": 0,
+     "source_pair_ms": 0.0,
+     "spans": 0,
+     "stale": 0,
+     "upper_min_packets": 0,
+     "wire_bytes": 0
+    },
+    "wire": {
+     "single_actions": 91392,
+     "single_literals": 4457,
+     "wide_actions": 0,
+     "multi_literals": 483696,
+     "selected_children": 102764,
+     "feedback": 28560
+    },
+    "bi_bytes": 710869,
+    "ms": [
+     35.247542,
+     38.708833999999996,
+     37.6,
+     39.832041
+    ],
+    "wall_ms": [
+     71.75137498416007,
+     78.03700002841651,
+     76.60300005227327,
+     80.53283300250769
+    ],
+    "median_ms": 38.154416999999995,
+    "median_wall_ms": 77.3200000403449
+   },
+   "wide": {
+    "rhs": 7265,
+    "raw": "4283824537228909191",
+    "commits": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+    "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+    "source_pass_rhs": 7265,
+    "root_ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+    "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+    "nested_ids": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+    "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+    "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+    "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+    "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+    "direct_cells": 5867,
+    "root_allocated": 5764,
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "raw_parent_sha": "7e7931cbbf8116f938c44b9c7ec1cb50cbe1296f0bfc003812172aa29afb96ff",
+    "recurrent": 4766893502033532934,
+    "decisions": "15576378264816477716",
+    "rule_call_sha": "9783aa588f00486e5c2d114159f7a83d128f41e70f8456539fd030c431614f3d",
+    "root_commit_sha": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+    "visible_sha": "cc411875294ca05a458e8c66917fb6390f1498c621d92cd61d8496448ef2c9fa",
+    "retired_sha": "eff2ec22c851efecd4d6ce2e7189f9aa3f46b294e4588a2b582d0094c3e32e1c",
+    "birth_sha": "197ce7e5d676ae1d119e9a34528c24ac41cab4e0495d1dd3ff2f062ffc721e0d",
+    "born": 3610,
+    "visible": 2691,
+    "expanded_single": 6559,
+    "expanded_multi": 5912,
+    "child_candidates": 305,
+    "selected_children": 191,
+    "source_work": [
+     6559,
+     5912
+    ],
+    "single_dispatches": 0,
+    "single_residual_decisions": 7889,
+    "single_logits": 1620,
+    "multi_approx_visits": 12002,
+    "arity": {
+     "8": 16,
+     "3": 848,
+     "5": 124,
+     "4": 38,
+     "6": 1,
+     "7": 8
+    },
+    "residual_query_width": {
+     "14": 16,
+     "3": 399,
+     "4": 381,
+     "5": 148,
+     "6": 9,
+     "7": 81,
+     "8": 1
+    },
+    "top_rules": [
+     [
+      507,
+      "terms-helpers",
+      355,
+      4,
+      [
+       "TCPair",
+       "ExtractedExpr",
+       "<",
+       "CellSpineView8"
+      ]
+     ],
+     [
+      538,
+      "type-analysis",
+      148,
+      3,
+      [
+       "Get",
+       "TupleT",
+       "HasType"
+      ]
+     ],
+     [
+      312,
+      "cicm-index",
+      101,
+      3,
+      [
+       "TCPair",
+       "ExtractedExpr",
+       "ContextOf"
+      ]
+     ],
+     [
+      504,
+      "terms",
+      95,
+      3,
+      [
+       "Get",
+       "TCPair",
+       "ExtractedExpr"
+      ]
+     ],
+     [
+      540,
+      "type-analysis",
+      54,
+      5,
+      [
+       "Concat",
+       "TupleT",
+       "HasType",
+       "TupleT",
+       "HasType"
+      ]
+     ],
+     [
+      498,
+      "terms",
+      37,
+      5,
+      [
+       "Bop",
+       "TCPair",
+       "ExtractedExpr",
+       "TCPair",
+       "ExtractedExpr"
+      ]
+     ],
+     [
+      547,
+      "type-analysis",
+      36,
+      7,
+      [
+       "DoWhile",
+       "TupleT",
+       "HasType",
+       "BoolT",
+       "TCons",
+       "TupleT",
+       "HasType"
+      ]
+     ],
+     [
+      501,
+      "terms",
+      29,
+      5,
+      [
+       "Concat",
+       "TCPair",
+       "ExtractedExpr",
+       "TCPair",
+       "ExtractedExpr"
+      ]
+     ],
+     [
+      532,
+      "type-analysis",
+      26,
+      3,
+      [
+       "Bop",
+       "bop-of-type",
+       "bop->string"
+      ]
+     ],
+     [
+      0,
+      "select_opt",
+      16,
+      14,
+      [
+       "If",
+       "Get",
+       "ExprIsPure",
+       "Get",
+       "ExprIsPure",
+       "Expr-size",
+       ">",
+       "Expr-size",
+       ">",
+       "TCPair",
+       "ExtractedExpr",
+       "TCPair",
+       "ExtractedExpr",
+       "ContextOf"
+      ]
+     ],
+     [
+      466,
+      "state-edge-passthrough",
+      14,
+      7,
+      [
+       "If",
+       "StateT",
+       "Base",
+       "HasType",
+       "DUMMYCTX",
+       "CellSpineView16",
+       "CellSpineView16"
+      ]
+     ],
+     [
+      463,
+      "passthrough",
+      10,
+      7,
+      [
+       "If",
+       "HasType",
+       "StateT",
+       "Base",
+       "!=",
+       "CellSpineView16",
+       "CellSpineView16"
+      ]
+     ]
+    ],
+    "rulesets": {
+     "select_opt": {
+      "multi_literal": 16
+     },
+     "always-run": {
+      "multi_literal": 23,
+      "single_action": 0,
+      "single_literal": 3672,
+      "wide_action": 591
+     },
+     "boundary-analysis": {
+      "multi_literal": 5
+     },
+     "boundary-analysis-prep": {
+      "multi_literal": 5
+     },
+     "cicm-index": {
+      "multi_literal": 101
+     },
+     "drop": {
+      "multi_literal": 2,
+      "wide_action": 68
+     },
+     "error-checking": {
+      "multi_literal": 33,
+      "single_action": 0,
+      "single_literal": 124,
+      "wide_action": 39
+     },
+     "interval-analysis": {
+      "multi_literal": 14,
+      "single_action": 0,
+      "single_literal": 5,
+      "wide_action": 10
+     },
+     "non-weakly-linear": {
+      "multi_literal": 8,
+      "single_action": 0,
+      "single_literal": 27
+     },
+     "passthrough": {
+      "multi_literal": 14
+     },
+     "state-edge-passthrough": {
+      "multi_literal": 14
+     },
+     "term-subst": {
+      "multi_literal": 4,
+      "single_action": 0,
+      "single_literal": 40,
+      "wide_action": 12
+     },
+     "terms": {
+      "multi_literal": 172,
+      "single_action": 0,
+      "single_literal": 10,
+      "wide_action": 52
+     },
+     "terms-helpers": {
+      "multi_literal": 355,
+      "selected_child": 191,
+      "single_action": 0,
+      "single_literal": 386
+     },
+     "type-analysis": {
+      "multi_literal": 269,
+      "single_action": 0,
+      "single_literal": 353,
+      "wide_action": 278
+     },
+     "initialization": {
+      "single_action": 0,
+      "single_literal": 1
+     },
+     "type-helpers": {
+      "single_action": 0,
+      "single_literal": 214,
+      "wide_action": 21
+     },
+     "cell-spine-complete": {
+      "single_action": 0,
+      "single_literal": 46,
+      "wide_action": 190
+     },
+     "is-resolved": {
+      "single_action": 0,
+      "single_literal": 887
+     },
+     "apply-subst-unions": {
+      "single_action": 0,
+      "single_literal": 0
+     },
+     "context": {
+      "single_action": 0,
+      "single_literal": 349,
+      "wide_action": 122
+     },
+     "apply-drop-unions": {
+      "single_action": 0,
+      "single_literal": 90
+     },
+     "cleanup-drop": {
+      "single_action": 0,
+      "single_literal": 142
+     },
+     "canon": {
+      "single_action": 0,
+      "single_literal": 162
+     },
+     "mem-simple": {
+      "single_action": 0,
+      "single_literal": 40
+     },
+     "subsume-after-helpers": {
+      "single_action": 0,
+      "single_literal": 2
+     },
+     "loop-iters-analysis": {
+      "single_action": 0,
+      "single_literal": 1
+     },
+     "peepholes": {
+      "single_action": 0,
+      "single_literal": 8,
+      "wide_action": 10
+     },
+     "hacker": {
+      "wide_action": 2
+     },
+     "terms-helpers-helpers": {
+      "wide_action": 222
+     }
+    },
+    "categories": {
+     "single_action": {
+      "packets": 0,
+      "visible": 0,
+      "born": 0,
+      "zero": 0,
+      "one": 0,
+      "two_plus": 0,
+      "max": 0
+     },
+     "single_literal": {
+      "packets": 6559,
+      "visible": 881,
+      "born": 1083,
+      "zero": 5812,
+      "one": 705,
+      "two_plus": 42,
+      "max": 84
+     },
+     "wide_action": {
+      "packets": 1617,
+      "visible": 1026,
+      "born": 1696,
+      "zero": 1259,
+      "one": 125,
+      "two_plus": 233,
+      "max": 20
+     },
+     "multi_literal": {
+      "packets": 1035,
+      "visible": 682,
+      "born": 728,
+      "zero": 680,
+      "one": 177,
+      "two_plus": 178,
+      "max": 5
+     },
+     "selected_child": {
+      "packets": 191,
+      "visible": 102,
+      "born": 103,
+      "zero": 89,
+      "one": 102,
+      "two_plus": 0,
+      "max": 1
+     }
+    },
+    "denominators": {
+     "forward": 9402,
+     "bidirectional": 9402,
+     "paid_groups": 67801,
+     "paid_plus_return": 67801,
+     "all_prototype_decisions": 73959,
+     "decisions_plus_return": 73959
+    },
+    "per_packet": {
+     "forward": 0.28621569878749203,
+     "bidirectional": 0.28621569878749203,
+     "paid_groups": 0.03968968009321396,
+     "paid_plus_return": 0.03968968009321396,
+     "all_prototype_decisions": 0.03638502413499371,
+     "decisions_plus_return": 0.03638502413499371
+    },
+    "max_total_for_fept_two": 1345,
+    "budget_remaining_after_forward": -8057,
+    "strict_remaining_after_decisions": -72614,
+    "wide_actions_affordable_at_fept_two": -6440,
+    "optimistic_matched_packets": 9402,
+    "optimistic_matched_fept": 0.28621569878749203,
+    "class_counts": {
+     "accepted_by_action": 0,
+     "eligible_after_prefilters": 0,
+     "empty": 0,
+     "empty_table_skips": 0,
+     "feedback_bytes": 0,
+     "internal_receipts": 0,
+     "issued": 0,
+     "logit_evaluations": 0,
+     "masks": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "public_headers": 0,
+     "recurrence_digest": 4766893502033532934,
+     "residual_calls": 0,
+     "residual_receipts": 0,
+     "scalar_rejected": 0
+    },
+    "family_counts": {
+     "absent": 26499,
+     "actions": 1617,
+     "calls": 2165,
+     "candidate_bound": 29621,
+     "empty_actions": 389,
+     "inspected_left": 77106,
+     "issue_ms": 0.0,
+     "keys_issued": 4714,
+     "matched_min_packets": 1617,
+     "private_rows": 4877,
+     "prototypes": 63113,
+     "receiver_cache_hits": 1199,
+     "receiver_ms": 0.0,
+     "receiver_pairs": 29621,
+     "receiver_public_decodes": 67831,
+     "sender_marginal_rows": 46934,
+     "skipped_clean": 40,
+     "source_pair_ms": 0.0,
+     "spans": 3767,
+     "stale": 31900,
+     "upper_min_packets": 973,
+     "wire_bytes": 135280
+    },
+    "wire": {
+     "single_actions": 0,
+     "single_literals": 324219,
+     "wide_actions": 135280,
+     "multi_literals": 124864,
+     "selected_children": 102764,
+     "feedback": 0
+    },
+    "bi_bytes": 687127,
+    "ms": [
+     40.000333,
+     39.949667,
+     42.060208,
+     42.18775
+    ],
+    "wall_ms": [
+     78.65833293180913,
+     79.70533310435712,
+     83.8483750121668,
+     82.6182080199942
+    ],
+    "median_ms": 41.0302705,
+    "median_wall_ms": 81.16177056217566
+   },
+   "joint": {
+    "rhs": 7265,
+    "raw": "4283824537228909191",
+    "commits": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+    "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+    "source_pass_rhs": 7265,
+    "root_ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+    "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+    "nested_ids": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+    "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+    "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+    "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+    "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+    "direct_cells": 5867,
+    "root_allocated": 5764,
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "raw_parent_sha": "7e7931cbbf8116f938c44b9c7ec1cb50cbe1296f0bfc003812172aa29afb96ff",
+    "recurrent": 4766893502033532934,
+    "decisions": "15576378264816477716",
+    "rule_call_sha": "9783aa588f00486e5c2d114159f7a83d128f41e70f8456539fd030c431614f3d",
+    "root_commit_sha": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+    "visible_sha": "cc411875294ca05a458e8c66917fb6390f1498c621d92cd61d8496448ef2c9fa",
+    "retired_sha": "eff2ec22c851efecd4d6ce2e7189f9aa3f46b294e4588a2b582d0094c3e32e1c",
+    "birth_sha": "197ce7e5d676ae1d119e9a34528c24ac41cab4e0495d1dd3ff2f062ffc721e0d",
+    "born": 3610,
+    "visible": 2691,
+    "expanded_single": 6559,
+    "expanded_multi": 5912,
+    "child_candidates": 305,
+    "selected_children": 191,
+    "source_work": [
+     6559,
+     5912
+    ],
+    "single_dispatches": 1664,
+    "single_residual_decisions": 692,
+    "single_logits": 3094,
+    "multi_approx_visits": 12002,
+    "arity": {
+     "8": 16,
+     "3": 848,
+     "5": 124,
+     "4": 38,
+     "6": 1,
+     "7": 8
+    },
+    "residual_query_width": {
+     "14": 16,
+     "3": 399,
+     "4": 381,
+     "5": 148,
+     "6": 9,
+     "7": 81,
+     "8": 1
+    },
+    "top_rules": [
+     [
+      507,
+      "terms-helpers",
+      355,
+      4,
+      [
+       "TCPair",
+       "ExtractedExpr",
+       "<",
+       "CellSpineView8"
+      ]
+     ],
+     [
+      538,
+      "type-analysis",
+      148,
+      3,
+      [
+       "Get",
+       "TupleT",
+       "HasType"
+      ]
+     ],
+     [
+      312,
+      "cicm-index",
+      101,
+      3,
+      [
+       "TCPair",
+       "ExtractedExpr",
+       "ContextOf"
+      ]
+     ],
+     [
+      504,
+      "terms",
+      95,
+      3,
+      [
+       "Get",
+       "TCPair",
+       "ExtractedExpr"
+      ]
+     ],
+     [
+      540,
+      "type-analysis",
+      54,
+      5,
+      [
+       "Concat",
+       "TupleT",
+       "HasType",
+       "TupleT",
+       "HasType"
+      ]
+     ],
+     [
+      498,
+      "terms",
+      37,
+      5,
+      [
+       "Bop",
+       "TCPair",
+       "ExtractedExpr",
+       "TCPair",
+       "ExtractedExpr"
+      ]
+     ],
+     [
+      547,
+      "type-analysis",
+      36,
+      7,
+      [
+       "DoWhile",
+       "TupleT",
+       "HasType",
+       "BoolT",
+       "TCons",
+       "TupleT",
+       "HasType"
+      ]
+     ],
+     [
+      501,
+      "terms",
+      29,
+      5,
+      [
+       "Concat",
+       "TCPair",
+       "ExtractedExpr",
+       "TCPair",
+       "ExtractedExpr"
+      ]
+     ],
+     [
+      532,
+      "type-analysis",
+      26,
+      3,
+      [
+       "Bop",
+       "bop-of-type",
+       "bop->string"
+      ]
+     ],
+     [
+      0,
+      "select_opt",
+      16,
+      14,
+      [
+       "If",
+       "Get",
+       "ExprIsPure",
+       "Get",
+       "ExprIsPure",
+       "Expr-size",
+       ">",
+       "Expr-size",
+       ">",
+       "TCPair",
+       "ExtractedExpr",
+       "TCPair",
+       "ExtractedExpr",
+       "ContextOf"
+      ]
+     ],
+     [
+      466,
+      "state-edge-passthrough",
+      14,
+      7,
+      [
+       "If",
+       "StateT",
+       "Base",
+       "HasType",
+       "DUMMYCTX",
+       "CellSpineView16",
+       "CellSpineView16"
+      ]
+     ],
+     [
+      463,
+      "passthrough",
+      10,
+      7,
+      [
+       "If",
+       "HasType",
+       "StateT",
+       "Base",
+       "!=",
+       "CellSpineView16",
+       "CellSpineView16"
+      ]
+     ]
+    ],
+    "rulesets": {
+     "select_opt": {
+      "multi_literal": 16
+     },
+     "always-run": {
+      "multi_literal": 23,
+      "single_action": 808,
+      "single_literal": 39,
+      "wide_action": 591
+     },
+     "boundary-analysis": {
+      "multi_literal": 5
+     },
+     "boundary-analysis-prep": {
+      "multi_literal": 5
+     },
+     "cicm-index": {
+      "multi_literal": 101
+     },
+     "drop": {
+      "multi_literal": 2,
+      "wide_action": 68
+     },
+     "error-checking": {
+      "multi_literal": 33,
+      "single_action": 18,
+      "single_literal": 0,
+      "wide_action": 39
+     },
+     "interval-analysis": {
+      "multi_literal": 14,
+      "single_action": 8,
+      "single_literal": 0,
+      "wide_action": 10
+     },
+     "non-weakly-linear": {
+      "multi_literal": 8,
+      "single_action": 1,
+      "single_literal": 0
+     },
+     "passthrough": {
+      "multi_literal": 14
+     },
+     "state-edge-passthrough": {
+      "multi_literal": 14
+     },
+     "term-subst": {
+      "multi_literal": 4,
+      "single_action": 6,
+      "single_literal": 0,
+      "wide_action": 12
+     },
+     "terms": {
+      "multi_literal": 172,
+      "single_action": 5,
+      "single_literal": 0,
+      "wide_action": 52
+     },
+     "terms-helpers": {
+      "multi_literal": 355,
+      "selected_child": 191,
+      "single_action": 54,
+      "single_literal": 0
+     },
+     "type-analysis": {
+      "multi_literal": 269,
+      "single_action": 104,
+      "single_literal": 5,
+      "wide_action": 278
+     },
+     "initialization": {
+      "single_action": 0,
+      "single_literal": 1
+     },
+     "type-helpers": {
+      "single_action": 57,
+      "single_literal": 3,
+      "wide_action": 21
+     },
+     "cell-spine-complete": {
+      "single_action": 23,
+      "single_literal": 0,
+      "wide_action": 190
+     },
+     "is-resolved": {
+      "single_action": 280,
+      "single_literal": 5
+     },
+     "apply-subst-unions": {
+      "single_action": 0,
+      "single_literal": 0
+     },
+     "context": {
+      "single_action": 12,
+      "single_literal": 0,
+      "wide_action": 122
+     },
+     "apply-drop-unions": {
+      "single_action": 2,
+      "single_literal": 0
+     },
+     "cleanup-drop": {
+      "single_action": 12,
+      "single_literal": 0
+     },
+     "canon": {
+      "single_action": 30,
+      "single_literal": 0
+     },
+     "mem-simple": {
+      "single_action": 3,
+      "single_literal": 0
+     },
+     "subsume-after-helpers": {
+      "single_action": 3,
+      "single_literal": 0
+     },
+     "loop-iters-analysis": {
+      "single_action": 1,
+      "single_literal": 0
+     },
+     "peepholes": {
+      "single_action": 1,
+      "single_literal": 0,
+      "wide_action": 10
+     },
+     "hacker": {
+      "wide_action": 2
+     },
+     "terms-helpers-helpers": {
+      "wide_action": 222
+     }
+    },
+    "categories": {
+     "single_action": {
+      "packets": 1428,
+      "visible": 781,
+      "born": 978,
+      "zero": 1164,
+      "one": 123,
+      "two_plus": 141,
+      "max": 45
+     },
+     "single_literal": {
+      "packets": 53,
+      "visible": 100,
+      "born": 105,
+      "zero": 37,
+      "one": 14,
+      "two_plus": 2,
+      "max": 84
+     },
+     "wide_action": {
+      "packets": 1617,
+      "visible": 1026,
+      "born": 1696,
+      "zero": 1259,
+      "one": 125,
+      "two_plus": 233,
+      "max": 20
+     },
+     "multi_literal": {
+      "packets": 1035,
+      "visible": 682,
+      "born": 728,
+      "zero": 680,
+      "one": 177,
+      "two_plus": 178,
+      "max": 5
+     },
+     "selected_child": {
+      "packets": 191,
+      "visible": 102,
+      "born": 103,
+      "zero": 89,
+      "one": 102,
+      "two_plus": 0,
+      "max": 1
+     }
+    },
+    "denominators": {
+     "forward": 4324,
+     "bidirectional": 5752,
+     "paid_groups": 62723,
+     "paid_plus_return": 64151,
+     "all_prototype_decisions": 69854,
+     "decisions_plus_return": 71282
+    },
+    "per_packet": {
+     "forward": 0.6223404255319149,
+     "bidirectional": 0.4678372739916551,
+     "paid_groups": 0.04290292237297323,
+     "paid_plus_return": 0.04194790416361397,
+     "all_prototype_decisions": 0.038523205542989665,
+     "decisions_plus_return": 0.03775146600824893
+    },
+    "max_total_for_fept_two": 1345,
+    "budget_remaining_after_forward": -2979,
+    "strict_remaining_after_decisions": -68509,
+    "wide_actions_affordable_at_fept_two": -1362,
+    "optimistic_matched_packets": 4324,
+    "optimistic_matched_fept": 0.6223404255319149,
+    "class_counts": {
+     "accepted_by_action": 7197,
+     "eligible_after_prefilters": 7197,
+     "empty": 193,
+     "empty_table_skips": 902,
+     "feedback_bytes": 28560,
+     "internal_receipts": 6506,
+     "issued": 1428,
+     "logit_evaluations": 2856,
+     "masks": [
+      0,
+      0,
+      299,
+      1129
+     ],
+     "public_headers": 65723,
+     "recurrence_digest": 4766893502033532934,
+     "residual_calls": 239,
+     "residual_receipts": 53,
+     "scalar_rejected": 691
+    },
+    "family_counts": {
+     "absent": 26499,
+     "actions": 1617,
+     "calls": 2165,
+     "candidate_bound": 29621,
+     "empty_actions": 389,
+     "inspected_left": 77106,
+     "issue_ms": 0.0,
+     "keys_issued": 4714,
+     "matched_min_packets": 1617,
+     "private_rows": 4877,
+     "prototypes": 63113,
+     "receiver_cache_hits": 1199,
+     "receiver_ms": 0.0,
+     "receiver_pairs": 29621,
+     "receiver_public_decodes": 67831,
+     "sender_marginal_rows": 46934,
+     "skipped_clean": 40,
+     "source_pair_ms": 0.0,
+     "spans": 3767,
+     "stale": 31900,
+     "upper_min_packets": 973,
+     "wire_bytes": 135280
+    },
+    "wire": {
+     "single_actions": 91392,
+     "single_literals": 4457,
+     "wide_actions": 135280,
+     "multi_literals": 124864,
+     "selected_children": 102764,
+     "feedback": 28560
+    },
+    "bi_bytes": 487317,
+    "ms": [
+     40.479167000000004,
+     43.332,
+     41.808125000000004,
+     44.477542
+    ],
+    "wall_ms": [
+     77.2030419902876,
+     84.15408397559077,
+     81.03883394505829,
+     84.3055829172954
+    ],
+    "median_ms": 42.570062500000006,
+    "median_wall_ms": 82.59645896032453
+   }
+  },
+  "runs": 1428,
+  "faults": {
+   "single": [
+    2,
+    "class-action generation mismatch"
+   ],
+   "wide": [
+    8,
+    "regenerated family extent differs"
+   ]
+  }
+ }
+}

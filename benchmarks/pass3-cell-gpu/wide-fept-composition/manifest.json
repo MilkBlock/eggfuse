@@ -1,0 +1,18 @@
+{
+  "base": "31bf7e41",
+  "binary_sha256": "e1f5b50f9fe8cfaed3b32718d8f963133185222b8f3694970520c88b1db1ba28",
+  "files": {
+    "../causal-single-class/actor.rs": "d8f777e9791f6b673caf38d2ff2fbff2c02b34ee10b896c9b6b0d1ddceacadb9",
+    "../fept-policy/gate.rs": "3d340e7d88e4c3eb1413203aadb963fe2333f6aff4d60c565dae0606c6721c5a",
+    "../generative-pair-families/family.rs": "0c0d46072918fba995c9dd007c6685bf1ddacb09d34da9337f8b2ed71fc55856",
+    "../generative-pair-families/overlay.py": "d978a0185f116693b92fde48ec115dab72f3796e74a1d7b20c595fa560e6fe7b",
+    "../generative-pair-families/page.rs": "790469e87051ee0c98abfd3fe612051ffaea466ade1644df5fb5717e6ee76318",
+    "../joint-fept-actors/single-policy.json": "e1d1ac479865c8d63d1ff2e72af9e2fbc1cab0a453bac43c01022b513a423b33",
+    "../joint-fept-actors/study.py": "8f1f2e7bb8c412a16479480621d0ea7c06f9fe4d8f7b2656bbe23cce9e485543",
+    "build.py": "1efadfbbe088b81a03eae0fb83ba681536295cf1d52a3443b2938111a833c36b",
+    "overlay.py": "24d50fd53e6af8aaa8b419b9b88e767449412e18d3db51dec5ba8e7ed235abc4",
+    "results.json": "5cce3570d4efbfb9f1aa8b01d7cdd6983d1c01ccc8c69117ca3243d3208c2a67",
+    "study.py": "76f3e4e34596e4fd1fcfebc8db2895de190e753aafd4e63599d8bbb8346f54b9",
+    "verify.py": "3a4f20d73305474d7f5c8c055632f8d2b753cc18ed2e9a4b7986ee88e6b82532"
+  }
+}
