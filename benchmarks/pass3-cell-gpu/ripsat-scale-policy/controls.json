@@ -1,0 +1,206 @@
+{
+  "sum-bits": {
+    "arms": {
+      "previous": {
+        "trials": [
+          {
+            "growth": [
+              "reached",
+              25343,
+              1256
+            ],
+            "plain_ms": 32.903583
+          },
+          {
+            "growth": [
+              "reached",
+              25216,
+              1256
+            ],
+            "plain_ms": 32.261583
+          },
+          {
+            "growth": [
+              "reached",
+              24638,
+              1261
+            ],
+            "plain_ms": 31.712875
+          },
+          {
+            "growth": [
+              "reached",
+              25837,
+              1263
+            ],
+            "plain_ms": 33.0205
+          }
+        ],
+        "want": {
+          "runs": 1428,
+          "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+          "emitted": [
+            6498,
+            5912
+          ],
+          "internal": 61,
+          "set_internal": 26
+        },
+        "header_checks": 50536,
+        "receipt_reads": 61
+      },
+      "greedy": {
+        "trials": [
+          {
+            "growth": [
+              "reached",
+              24621,
+              1256
+            ],
+            "plain_ms": 33.459500000000006
+          },
+          {
+            "growth": [
+              "reached",
+              25289,
+              1257
+            ],
+            "plain_ms": 32.19875
+          },
+          {
+            "growth": [
+              "reached",
+              24272,
+              1256
+            ],
+            "plain_ms": 32.105916
+          },
+          {
+            "growth": [
+              "reached",
+              25098,
+              1257
+            ],
+            "plain_ms": 31.759458
+          }
+        ],
+        "want": {
+          "runs": 1428,
+          "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+          "emitted": [
+            6500,
+            5912
+          ],
+          "internal": 59,
+          "set_internal": 25
+        },
+        "header_checks": 50543,
+        "receipt_reads": 59
+      }
+    },
+    "growth_kib": 9490,
+    "stale_packet_delta": 25
+  },
+  "3mm": {
+    "arms": {
+      "previous": {
+        "trials": [
+          {
+            "growth": [
+              "reached",
+              1013739,
+              1257
+            ],
+            "plain_ms": 1695.6327500000002
+          },
+          {
+            "growth": [
+              "reached",
+              1019759,
+              1257
+            ],
+            "plain_ms": 1808.555958
+          },
+          {
+            "growth": [
+              "reached",
+              1008782,
+              1256
+            ],
+            "plain_ms": 1672.994167
+          },
+          {
+            "growth": [
+              "reached",
+              1053163,
+              1258
+            ],
+            "plain_ms": 1684.650375
+          }
+        ],
+        "want": {
+          "runs": 4260,
+          "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+          "emitted": [
+            332433,
+            220972
+          ],
+          "internal": 2161,
+          "set_internal": 932
+        },
+        "header_checks": 2023730,
+        "receipt_reads": 2161
+      },
+      "greedy": {
+        "trials": [
+          {
+            "growth": [
+              "reached",
+              1026970,
+              1256
+            ],
+            "plain_ms": 1660.2339590000001
+          },
+          {
+            "growth": [
+              "reached",
+              1024064,
+              1259
+            ],
+            "plain_ms": 1712.871917
+          },
+          {
+            "growth": [
+              "reached",
+              1022971,
+              1258
+            ],
+            "plain_ms": 1721.9543339999998
+          },
+          {
+            "growth": [
+              "reached",
+              1005583,
+              1257
+            ],
+            "plain_ms": 1691.516
+          }
+        ],
+        "want": {
+          "runs": 4260,
+          "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+          "emitted": [
+            332491,
+            220972
+          ],
+          "internal": 2103,
+          "set_internal": 903
+        },
+        "header_checks": 2023933,
+        "receipt_reads": 2103
+      }
+    },
+    "growth_kib": 270446,
+    "stale_packet_delta": 903
+  }
+}
