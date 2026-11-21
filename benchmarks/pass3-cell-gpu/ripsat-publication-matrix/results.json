@@ -1,0 +1,1077 @@
+{
+ "sum-bits": {
+  "library": {
+   "target_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+   "certificate_sha256": "88875d59b74724b191551c6e6be8030b4863f27aae08e12dd728ea1656fbe27f",
+   "program_sha256": "a66ac54be405543646e101bd38a5d10e9187559e0e3bc086e9d0eed9799dec53",
+   "trace_sha256": "3e5a31e0951bb9485ae7d49e5721d8c09bc261a316c2558515cbd9143c733d76",
+   "let_trace": 19,
+   "let_ripsat": 1,
+   "let_shared": 0,
+   "let_union": 20,
+   "typed_set": [
+    [
+     143,
+     1,
+     55
+    ],
+    [
+     55,
+     1,
+     143
+    ]
+   ]
+  },
+  "native_sha256": "7a66f2282029e23fe08476e7eaa61d2f09cbe12a981a4d2af5ff494feedbad8b",
+  "arms": {
+   "leaf": {
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "rhs": 7265,
+    "runs": 1428,
+    "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+    "roots": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+    "nested": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+    "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+    "commits": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+    "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+    "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+    "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+    "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+    "score": "15576378264816477716",
+    "births_sha": "172cde88b1e4bb2c0bd48e61ea6c7da69a684cbd50894c30289bf5730deae1b5",
+    "end_sha": "cc411875294ca05a458e8c66917fb6390f1498c621d92cd61d8496448ef2c9fa",
+    "new": 3610,
+    "visible": 2691,
+    "child_candidates": 305,
+    "emitted": [
+     6559,
+     5912
+    ],
+    "child": 191,
+    "packets": 12662,
+    "fept": 0.21252566735112938,
+    "internal": 0,
+    "set_internal": 0,
+    "ordinary_let_internal": 0,
+    "set_counts": {},
+    "set_origins": {
+     "typed": [
+      0,
+      0
+     ],
+     "dynamic": [
+      0,
+      0
+     ],
+     "paid": [
+      0,
+      0
+     ]
+    },
+    "paths": {},
+    "signed_ordinals_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "terminal_ordinals_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "examples": [],
+    "ms": [
+     32.970667,
+     33.082333,
+     33.017875000000004,
+     32.518083000000004
+    ],
+    "median_ms": 32.994271
+   },
+   "trace": {
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "rhs": 7265,
+    "runs": 1428,
+    "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+    "roots": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+    "nested": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+    "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+    "commits": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+    "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+    "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+    "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+    "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+    "score": "15576378264816477716",
+    "births_sha": "172cde88b1e4bb2c0bd48e61ea6c7da69a684cbd50894c30289bf5730deae1b5",
+    "end_sha": "cc411875294ca05a458e8c66917fb6390f1498c621d92cd61d8496448ef2c9fa",
+    "new": 3610,
+    "visible": 2691,
+    "child_candidates": 305,
+    "emitted": [
+     6492,
+     5912
+    ],
+    "child": 191,
+    "packets": 12595,
+    "fept": 0.21365621278285032,
+    "internal": 67,
+    "set_internal": 0,
+    "ordinary_let_internal": 67,
+    "set_counts": {
+     "active_middles": 0,
+     "cleared_on_error": 0,
+     "confirmed": 0,
+     "encoded": 0,
+     "excluded_generation": 0,
+     "existing_key": 0,
+     "fresh_activations": 0,
+     "invalidated": 0,
+     "opened": 0,
+     "published": 0,
+     "set_attempts": 0,
+     "withheld": 0
+    },
+    "set_origins": {
+     "typed": [
+      0,
+      0
+     ],
+     "dynamic": [
+      0,
+      0
+     ],
+     "paid": [
+      0,
+      0
+     ]
+    },
+    "paths": {
+     "[[503,3,506]]": 4,
+     "[[501,6,506]]": 29,
+     "[[498,7,506]]": 26,
+     "[[499,9,506]]": 8
+    },
+    "signed_ordinals_sha": "22c98cf2b97fceb8e3c53382b78f07a28542a8ef62332010f6d2d854f9e38b94",
+    "terminal_ordinals_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "examples": [],
+    "ms": [
+     32.458,
+     33.298666,
+     35.376833000000005,
+     31.865292000000004
+    ],
+    "median_ms": 32.878333
+   },
+   "ripsat": {
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "rhs": 7265,
+    "runs": 1428,
+    "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+    "roots": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+    "nested": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+    "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+    "commits": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+    "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+    "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+    "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+    "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+    "score": "15576378264816477716",
+    "births_sha": "172cde88b1e4bb2c0bd48e61ea6c7da69a684cbd50894c30289bf5730deae1b5",
+    "end_sha": "cc411875294ca05a458e8c66917fb6390f1498c621d92cd61d8496448ef2c9fa",
+    "new": 3610,
+    "visible": 2691,
+    "child_candidates": 305,
+    "emitted": [
+     6498,
+     5912
+    ],
+    "child": 191,
+    "packets": 12601,
+    "fept": 0.21355447980319023,
+    "internal": 61,
+    "set_internal": 26,
+    "ordinary_let_internal": 35,
+    "set_counts": {
+     "active_middles": 35,
+     "cleared_on_error": 0,
+     "confirmed": 26,
+     "encoded": 194,
+     "excluded_generation": 0,
+     "existing_key": 0,
+     "fresh_activations": 35,
+     "invalidated": 0,
+     "opened": 190,
+     "published": 35,
+     "set_attempts": 35,
+     "withheld": 0
+    },
+    "set_origins": {
+     "typed": [
+      26,
+      6
+     ],
+     "dynamic": [
+      0,
+      0
+     ],
+     "paid": [
+      0,
+      0
+     ]
+    },
+    "paths": {
+     "[[143,1,55]]": 35,
+     "[[143,1,55],[55,1,143]]": 26
+    },
+    "signed_ordinals_sha": "8f606b88d75ed6bc48d7d1ee23b063c6741b0c66e79e21097d38901221cc232e",
+    "terminal_ordinals_sha": "e990b219ad26b7ad5c5b5c5db0f43fd51d272f7bc2d443da8aa88bc2b0ee32b5",
+    "examples": [
+     {
+      "consumer": 1274,
+      "consumer_rule": 143,
+      "consumer_run": 106,
+      "fact": [
+       572,
+       1
+      ],
+      "fields": [
+       {
+        "Eq": 2284922601477
+       },
+       {
+        "Int": 0
+       },
+       {
+        "Eq": 554050781307
+       }
+      ],
+      "middle": 795,
+      "middle_run": 102,
+      "path": [
+       [
+        143,
+        1,
+        55
+       ],
+       [
+        55,
+        1,
+        143
+       ]
+      ],
+      "ports": [
+       [
+        532,
+        1,
+        98,
+        98
+       ],
+       [
+        572,
+        1,
+        102,
+        102
+       ]
+      ],
+      "root": 761,
+      "table": 223,
+      "version": 102
+     }
+    ],
+    "ms": [
+     32.639291,
+     32.560792,
+     36.284875,
+     34.458833
+    ],
+    "median_ms": 33.549062
+   },
+   "union": {
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "rhs": 7265,
+    "runs": 1428,
+    "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+    "roots": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+    "nested": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+    "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+    "commits": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+    "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+    "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+    "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+    "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+    "score": "15576378264816477716",
+    "births_sha": "172cde88b1e4bb2c0bd48e61ea6c7da69a684cbd50894c30289bf5730deae1b5",
+    "end_sha": "cc411875294ca05a458e8c66917fb6390f1498c621d92cd61d8496448ef2c9fa",
+    "new": 3610,
+    "visible": 2691,
+    "child_candidates": 305,
+    "emitted": [
+     6431,
+     5912
+    ],
+    "child": 191,
+    "packets": 12534,
+    "fept": 0.21469602680708472,
+    "internal": 128,
+    "set_internal": 26,
+    "ordinary_let_internal": 102,
+    "set_counts": {
+     "active_middles": 35,
+     "cleared_on_error": 0,
+     "confirmed": 26,
+     "encoded": 194,
+     "excluded_generation": 0,
+     "existing_key": 0,
+     "fresh_activations": 35,
+     "invalidated": 0,
+     "opened": 190,
+     "published": 35,
+     "set_attempts": 35,
+     "withheld": 0
+    },
+    "set_origins": {
+     "typed": [
+      26,
+      6
+     ],
+     "dynamic": [
+      0,
+      0
+     ],
+     "paid": [
+      0,
+      0
+     ]
+    },
+    "paths": {
+     "[[143,1,55]]": 35,
+     "[[143,1,55],[55,1,143]]": 26,
+     "[[503,3,506]]": 4,
+     "[[501,6,506]]": 29,
+     "[[498,7,506]]": 26,
+     "[[499,9,506]]": 8
+    },
+    "signed_ordinals_sha": "75eb65e3aaf407cfc1253dc85adba8157f24e9dda7dc8002202d6220f1b1165e",
+    "terminal_ordinals_sha": "e990b219ad26b7ad5c5b5c5db0f43fd51d272f7bc2d443da8aa88bc2b0ee32b5",
+    "examples": [
+     {
+      "consumer": 1274,
+      "consumer_rule": 143,
+      "consumer_run": 106,
+      "fact": [
+       572,
+       1
+      ],
+      "fields": [
+       {
+        "Eq": 2284922601477
+       },
+       {
+        "Int": 0
+       },
+       {
+        "Eq": 554050781307
+       }
+      ],
+      "middle": 795,
+      "middle_run": 102,
+      "path": [
+       [
+        143,
+        1,
+        55
+       ],
+       [
+        55,
+        1,
+        143
+       ]
+      ],
+      "ports": [
+       [
+        532,
+        1,
+        98,
+        98
+       ],
+       [
+        572,
+        1,
+        102,
+        102
+       ]
+      ],
+      "root": 761,
+      "table": 223,
+      "version": 102
+     }
+    ],
+    "ms": [
+     35.5,
+     32.952042,
+     35.96025,
+     32.922582999999996
+    ],
+    "median_ms": 34.226021
+   },
+   "union_let_only": {
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "rhs": 7265,
+    "runs": 1428,
+    "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+    "roots": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+    "nested": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+    "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+    "commits": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+    "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+    "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+    "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+    "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+    "score": "15576378264816477716",
+    "births_sha": "172cde88b1e4bb2c0bd48e61ea6c7da69a684cbd50894c30289bf5730deae1b5",
+    "end_sha": "cc411875294ca05a458e8c66917fb6390f1498c621d92cd61d8496448ef2c9fa",
+    "new": 3610,
+    "visible": 2691,
+    "child_candidates": 305,
+    "emitted": [
+     6457,
+     5912
+    ],
+    "child": 191,
+    "packets": 12560,
+    "fept": 0.2142515923566879,
+    "internal": 102,
+    "set_internal": 0,
+    "ordinary_let_internal": 102,
+    "set_counts": {
+     "active_middles": 0,
+     "cleared_on_error": 0,
+     "confirmed": 0,
+     "encoded": 0,
+     "excluded_generation": 0,
+     "existing_key": 0,
+     "fresh_activations": 0,
+     "invalidated": 0,
+     "opened": 0,
+     "published": 0,
+     "set_attempts": 0,
+     "withheld": 0
+    },
+    "set_origins": {
+     "typed": [
+      0,
+      0
+     ],
+     "dynamic": [
+      0,
+      0
+     ],
+     "paid": [
+      0,
+      0
+     ]
+    },
+    "paths": {
+     "[[143,1,55]]": 35,
+     "[[503,3,506]]": 4,
+     "[[501,6,506]]": 29,
+     "[[498,7,506]]": 26,
+     "[[499,9,506]]": 8
+    },
+    "signed_ordinals_sha": "921d1ba5e53066b5689836fe4587ac33b5b34c32547eb257011095b60a74e3ef",
+    "terminal_ordinals_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "examples": []
+   }
+  },
+  "comparison": {
+   "from_trace_packets": 61,
+   "from_same_union_without_set": 26,
+   "retained_trace_winners": 67,
+   "gained_vs_trace": 61,
+   "lost_vs_trace": 0,
+   "union_terminal_in_trace": 0,
+   "union_terminal_not_in_trace": 26,
+   "union_terminal_in_union_let_only": 0,
+   "union_terminal_not_in_union_let_only": 26,
+   "ripsat_terminal_retained": 26,
+   "ripsat_terminal_lost": 0,
+   "union_only_terminal": 0,
+   "union_let_gains": 26,
+   "union_let_losses": 0,
+   "same_terminal_middle_ordinals": 26
+  }
+ },
+ "3mm": {
+  "library": {
+   "target_sha256": "8d81462db16dcee0689b2e8dc11ac3e068c9dc976a2e69f5005a8acad06905af",
+   "certificate_sha256": "3f786e346950106aca07fdc80a652b45c27aece4a95c48dff29abbb6d67eb194",
+   "program_sha256": "9ab539e3edcd71fd2dd7f2463984f32dbae3df2b8cd2f7f98b3f7676e74c3181",
+   "trace_sha256": "3e5a31e0951bb9485ae7d49e5721d8c09bc261a316c2558515cbd9143c733d76",
+   "let_trace": 18,
+   "let_ripsat": 1,
+   "let_shared": 0,
+   "let_union": 19,
+   "typed_set": [
+    [
+     143,
+     1,
+     55
+    ],
+    [
+     55,
+     1,
+     143
+    ]
+   ]
+  },
+  "native_sha256": "7a66f2282029e23fe08476e7eaa61d2f09cbe12a981a4d2af5ff494feedbad8b",
+  "arms": {
+   "leaf": {
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "rhs": 294917,
+    "runs": 4260,
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+    "roots": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+    "nested": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+    "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+    "commits": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+    "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+    "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+    "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+    "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+    "score": "16767102213097954485",
+    "births_sha": "6240f921820dea0b4e7b7728982c53a3486df083f451c897e92484edcc776796",
+    "end_sha": "0f5fc7e44add1467558ff78c72933b612a835b732a0bfe234580a03d631b6320",
+    "new": 119503,
+    "visible": 92658,
+    "child_candidates": 7120,
+    "emitted": [
+     334594,
+     220972
+    ],
+    "child": 2508,
+    "packets": 558074,
+    "fept": 0.16603174489404632,
+    "internal": 0,
+    "set_internal": 0,
+    "ordinary_let_internal": 0,
+    "set_counts": {},
+    "set_origins": {
+     "typed": [
+      0,
+      0
+     ],
+     "dynamic": [
+      0,
+      0
+     ],
+     "paid": [
+      0,
+      0
+     ]
+    },
+    "paths": {},
+    "signed_ordinals_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "terminal_ordinals_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "examples": [],
+    "ms": [
+     1763.7808750000002,
+     1808.199667,
+     1752.115416,
+     1745.69675
+    ],
+    "median_ms": 1757.9481455
+   },
+   "trace": {
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "rhs": 294917,
+    "runs": 4260,
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+    "roots": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+    "nested": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+    "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+    "commits": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+    "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+    "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+    "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+    "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+    "score": "16767102213097954485",
+    "births_sha": "6240f921820dea0b4e7b7728982c53a3486df083f451c897e92484edcc776796",
+    "end_sha": "0f5fc7e44add1467558ff78c72933b612a835b732a0bfe234580a03d631b6320",
+    "new": 119503,
+    "visible": 92658,
+    "child_candidates": 7120,
+    "emitted": [
+     333020,
+     220972
+    ],
+    "child": 2508,
+    "packets": 556500,
+    "fept": 0.16650134770889488,
+    "internal": 1574,
+    "set_internal": 0,
+    "ordinary_let_internal": 1574,
+    "set_counts": {
+     "active_middles": 0,
+     "cleared_on_error": 0,
+     "confirmed": 0,
+     "encoded": 0,
+     "excluded_generation": 0,
+     "existing_key": 0,
+     "fresh_activations": 0,
+     "invalidated": 0,
+     "opened": 0,
+     "published": 0,
+     "set_attempts": 0,
+     "withheld": 0
+    },
+    "set_origins": {
+     "typed": [
+      0,
+      0
+     ],
+     "dynamic": [
+      0,
+      0
+     ],
+     "paid": [
+      0,
+      0
+     ]
+    },
+    "paths": {
+     "[[498,7,506]]": 231,
+     "[[501,6,506]]": 1215,
+     "[[499,9,506]]": 128
+    },
+    "signed_ordinals_sha": "42129408643095f5e4b04929176635e252ab97e0badd96bac7d6ec98c5989d95",
+    "terminal_ordinals_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "examples": [],
+    "ms": [
+     1739.750417,
+     1765.7870839999998,
+     1791.4461660000002,
+     1795.433791
+    ],
+    "median_ms": 1778.616625
+   },
+   "ripsat": {
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "rhs": 294917,
+    "runs": 4260,
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+    "roots": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+    "nested": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+    "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+    "commits": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+    "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+    "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+    "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+    "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+    "score": "16767102213097954485",
+    "births_sha": "6240f921820dea0b4e7b7728982c53a3486df083f451c897e92484edcc776796",
+    "end_sha": "0f5fc7e44add1467558ff78c72933b612a835b732a0bfe234580a03d631b6320",
+    "new": 119503,
+    "visible": 92658,
+    "child_candidates": 7120,
+    "emitted": [
+     332433,
+     220972
+    ],
+    "child": 2508,
+    "packets": 555913,
+    "fept": 0.16667715991531049,
+    "internal": 2161,
+    "set_internal": 932,
+    "ordinary_let_internal": 1229,
+    "set_counts": {
+     "active_middles": 1229,
+     "cleared_on_error": 0,
+     "confirmed": 932,
+     "encoded": 5413,
+     "excluded_generation": 0,
+     "existing_key": 0,
+     "fresh_activations": 1229,
+     "invalidated": 0,
+     "opened": 7418,
+     "published": 1229,
+     "set_attempts": 1229,
+     "withheld": 0
+    },
+    "set_origins": {
+     "typed": [
+      932,
+      139
+     ],
+     "dynamic": [
+      0,
+      0
+     ],
+     "paid": [
+      0,
+      0
+     ]
+    },
+    "paths": {
+     "[[143,1,55]]": 1229,
+     "[[143,1,55],[55,1,143]]": 932
+    },
+    "signed_ordinals_sha": "e47c6a6150e6137e2938fdab19a36c2d6d00a73c0d43087f5e41ba05b7849814",
+    "terminal_ordinals_sha": "79fc8412cef56fe3673237ca94f98cc39a4534b904d35dcbf64bfd110e980b7f",
+    "examples": [
+     {
+      "consumer": 66237,
+      "consumer_rule": 143,
+      "consumer_run": 831,
+      "fact": [
+       20198,
+       1
+      ],
+      "fields": [
+       {
+        "Eq": 79190607003653
+       },
+       {
+        "Int": 0
+       },
+       {
+        "Eq": 554050781229
+       }
+      ],
+      "middle": 45772,
+      "middle_run": 826,
+      "path": [
+       [
+        143,
+        1,
+        55
+       ],
+       [
+        55,
+        1,
+        143
+       ]
+      ],
+      "ports": [
+       [
+        18438,
+        1,
+        822,
+        822
+       ],
+       [
+        20198,
+        1,
+        826,
+        826
+       ]
+      ],
+      "root": 43986,
+      "table": 223,
+      "version": 826
+     }
+    ],
+    "ms": [
+     1791.946791,
+     1820.092875,
+     1796.510917,
+     1806.842208
+    ],
+    "median_ms": 1801.6765625
+   },
+   "union": {
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "rhs": 294917,
+    "runs": 4260,
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+    "roots": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+    "nested": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+    "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+    "commits": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+    "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+    "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+    "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+    "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+    "score": "16767102213097954485",
+    "births_sha": "6240f921820dea0b4e7b7728982c53a3486df083f451c897e92484edcc776796",
+    "end_sha": "0f5fc7e44add1467558ff78c72933b612a835b732a0bfe234580a03d631b6320",
+    "new": 119503,
+    "visible": 92658,
+    "child_candidates": 7120,
+    "emitted": [
+     330859,
+     220972
+    ],
+    "child": 2508,
+    "packets": 554339,
+    "fept": 0.16715042600286106,
+    "internal": 3735,
+    "set_internal": 932,
+    "ordinary_let_internal": 2803,
+    "set_counts": {
+     "active_middles": 1229,
+     "cleared_on_error": 0,
+     "confirmed": 932,
+     "encoded": 5413,
+     "excluded_generation": 0,
+     "existing_key": 0,
+     "fresh_activations": 1229,
+     "invalidated": 0,
+     "opened": 7418,
+     "published": 1229,
+     "set_attempts": 1229,
+     "withheld": 0
+    },
+    "set_origins": {
+     "typed": [
+      932,
+      139
+     ],
+     "dynamic": [
+      0,
+      0
+     ],
+     "paid": [
+      0,
+      0
+     ]
+    },
+    "paths": {
+     "[[143,1,55]]": 1229,
+     "[[143,1,55],[55,1,143]]": 932,
+     "[[498,7,506]]": 231,
+     "[[501,6,506]]": 1215,
+     "[[499,9,506]]": 128
+    },
+    "signed_ordinals_sha": "44c13cee207426dc1a50b5013365425f7759cc0c8e0939caf401f1cdd5e2afbb",
+    "terminal_ordinals_sha": "79fc8412cef56fe3673237ca94f98cc39a4534b904d35dcbf64bfd110e980b7f",
+    "examples": [
+     {
+      "consumer": 66237,
+      "consumer_rule": 143,
+      "consumer_run": 831,
+      "fact": [
+       20198,
+       1
+      ],
+      "fields": [
+       {
+        "Eq": 79190607003653
+       },
+       {
+        "Int": 0
+       },
+       {
+        "Eq": 554050781229
+       }
+      ],
+      "middle": 45772,
+      "middle_run": 826,
+      "path": [
+       [
+        143,
+        1,
+        55
+       ],
+       [
+        55,
+        1,
+        143
+       ]
+      ],
+      "ports": [
+       [
+        18438,
+        1,
+        822,
+        822
+       ],
+       [
+        20198,
+        1,
+        826,
+        826
+       ]
+      ],
+      "root": 43986,
+      "table": 223,
+      "version": 826
+     }
+    ],
+    "ms": [
+     1757.805375,
+     1745.775292,
+     1784.477834,
+     1784.929292
+    ],
+    "median_ms": 1771.1416045
+   },
+   "union_let_only": {
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "rhs": 294917,
+    "runs": 4260,
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+    "roots": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+    "nested": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+    "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+    "commits": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+    "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+    "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+    "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+    "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+    "score": "16767102213097954485",
+    "births_sha": "6240f921820dea0b4e7b7728982c53a3486df083f451c897e92484edcc776796",
+    "end_sha": "0f5fc7e44add1467558ff78c72933b612a835b732a0bfe234580a03d631b6320",
+    "new": 119503,
+    "visible": 92658,
+    "child_candidates": 7120,
+    "emitted": [
+     331791,
+     220972
+    ],
+    "child": 2508,
+    "packets": 555271,
+    "fept": 0.16686987074779702,
+    "internal": 2803,
+    "set_internal": 0,
+    "ordinary_let_internal": 2803,
+    "set_counts": {
+     "active_middles": 0,
+     "cleared_on_error": 0,
+     "confirmed": 0,
+     "encoded": 0,
+     "excluded_generation": 0,
+     "existing_key": 0,
+     "fresh_activations": 0,
+     "invalidated": 0,
+     "opened": 0,
+     "published": 0,
+     "set_attempts": 0,
+     "withheld": 0
+    },
+    "set_origins": {
+     "typed": [
+      0,
+      0
+     ],
+     "dynamic": [
+      0,
+      0
+     ],
+     "paid": [
+      0,
+      0
+     ]
+    },
+    "paths": {
+     "[[143,1,55]]": 1229,
+     "[[498,7,506]]": 231,
+     "[[501,6,506]]": 1215,
+     "[[499,9,506]]": 128
+    },
+    "signed_ordinals_sha": "8d8a86ae3835443986e97e4a3f21f005e1e243ea695febd2f0cf4cffce12f85d",
+    "terminal_ordinals_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "examples": []
+   }
+  },
+  "comparison": {
+   "from_trace_packets": 2161,
+   "from_same_union_without_set": 932,
+   "retained_trace_winners": 1574,
+   "gained_vs_trace": 2161,
+   "lost_vs_trace": 0,
+   "union_terminal_in_trace": 0,
+   "union_terminal_not_in_trace": 932,
+   "union_terminal_in_union_let_only": 0,
+   "union_terminal_not_in_union_let_only": 932,
+   "ripsat_terminal_retained": 932,
+   "ripsat_terminal_lost": 0,
+   "union_only_terminal": 0,
+   "union_let_gains": 932,
+   "union_let_losses": 0,
+   "same_terminal_middle_ordinals": 932
+  }
+ }
+}
