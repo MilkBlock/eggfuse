@@ -8218,5 +8218,415 @@
         ]
       }
     ]
+  },
+  {
+    "id": "134-learned-physical-placement",
+    "section": "批量签发",
+    "title": "网络能提前挑出哪些提案真的会需要 Cell 吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "签发完整页后，原 Run 的第一个验证尚未开始。固定规则的物理预算，比较源顺序、线性头和八隐藏单元头选择预建位置的能力。",
+    "arms": "a　取最早的 K 个候选。b　按每个候选的真实物理出生训练。c　按每组固定 K 的期望出生总数训练。三个模型输入都是发行时可见的父及页特征。",
+    "fix": "训练使用 sum-bits、dot-product 和 jacobi-1d。冻结后在 CG 和 3mm 直接驱动 Rust 分配器。完整模型提案、预算和原提交顺序相同。",
+    "measure": "3mm 的 232,796 个物理配额中有 172,547 个能绑定到不同候选。首 K 命中 78,955 个，八隐藏单元的配额头命中 83,573 个。",
+    "note": "3mm 对 872,592 个处于竞争组的候选打分。单纯为命中更多独立槽位而增加打分，有可量的执行成本。",
+    "src": "S120",
+    "diagram": [
+      {
+        "title": "Source order",
+        "layers": [
+          [
+            [
+              "n",
+              "issue all typed lanes"
+            ]
+          ],
+          [
+            [
+              "s",
+              "first K per rule"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Birth labels",
+        "layers": [
+          [
+            [
+              "t",
+              "all donor lane outcomes"
+            ]
+          ],
+          [
+            [
+              "n",
+              "score sealed lanes"
+            ]
+          ],
+          [
+            [
+              "s",
+              "reserve top K"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Quota return",
+        "layers": [
+          [
+            [
+              "t",
+              "expected births at K"
+            ]
+          ],
+          [
+            [
+              "n",
+              "score sealed lanes"
+            ]
+          ],
+          [
+            [
+              "v",
+              "publish checked winners"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "135-placement-reward-ceiling",
+    "section": "物理动作的奖励",
+    "title": "值得预测每个槽位，还是只预测这一组需要多少空间？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "已知某条规则有 K 个位置。事后统计其中多少位置可以分给实际获胜者，再与按组发放、实际验真后领取的位置数对照。",
+    "arms": "a　网络固定每个位置的唯一候选。b　允许同组已授权候选在验真后领取。c　用全部真实出生结果计算同配额的命中上界。",
+    "fix": "只对齐预算与产生的实际 Cell 来比较命中数。比较耗时时固定同一套二进制、源程序、权重和计时窗口。",
+    "measure": "在 3mm 上，按组领取实际命中 137,864，达到同规则预算的上界。具名配额头达到上界的 60.6%，其整轮时间为 2,105.21 ms，首 K 为 2,001.02 ms。",
+    "note": "CG 第二个种子中，BCE 头命中 41,307，配额头命中 36,703，首 K 命中 36,608。训练目标的收益随种子变化。",
+    "src": "S119 S120",
+    "diagram": [
+      {
+        "title": "One-to-one",
+        "layers": [
+          [
+            [
+              "n",
+              "candidate ranking"
+            ]
+          ],
+          [
+            [
+              "s",
+              "named private slots"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Group voucher",
+        "layers": [
+          [
+            [
+              "n",
+              "scope and capacity"
+            ]
+          ],
+          [
+            [
+              "v",
+              "authenticate a winner"
+            ]
+          ],
+          [
+            [
+              "s",
+              "redeem one slot"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Hindsight bound",
+        "layers": [
+          [
+            [
+              "t",
+              "birth labels per rule"
+            ]
+          ],
+          [
+            [
+              "t",
+              "sum min(K, births)"
+            ]
+          ]
+        ]
+      }
+    ],
+    "observation": {
+      "figure": "observed-allocation-ranking.svg",
+      "source": "benchmarks/pass3-cell-gpu/batch-allocation-ranking/latency.svg",
+      "title": "同一配额下的物理命中与完整推理时间",
+      "caption": "左图按每个程序固定规则预算的理想命中数归一化。右图显示四次完整推理和中位数。精确 CPU 和仅签发两行没有具名分配。"
+    }
+  },
+  {
+    "id": "136-resident-cell-headers",
+    "section": "跨 Run 存储",
+    "title": "提前建好的 Cell 能直接留在原地址吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "把验证后的逻辑 ID 发布到固定页的真实槽位。后续 Run 直接通过 ID 找到上一 Run 保留的 Cell，整页无存活记录时回收。",
+    "arms": "a　提交时移动 Cell 头。b　固定页容纳最多 16 个头。c　增大到 64 或 256 个，比较存活记录钉住的空槽和完整进程 RSS。",
+    "fix": "在原生研究执行器上核对每次发布的 header 和 fact 缓冲区地址、所有源效果及物理父。四次推理计时，另起进程采三次峰值。",
+    "measure": "3mm 有 137,864 次原址发布和 43,542 个终点存活对象。页宽 16／64／256 分别保留 40,325／74,367／113,503 个空槽。",
+    "note": "3mm 的移动头、16 槽页和默认 CPU 分别为 1,991.49、1,848.77 和 856.56 ms。移动头与小页的峰值 RSS 分别为 746.12 和 748.22 MiB。",
+    "src": "S121",
+    "diagram": [
+      {
+        "title": "Move header",
+        "layers": [
+          [
+            [
+              "s",
+              "private batch"
+            ]
+          ],
+          [
+            [
+              "v",
+              "ordered publish"
+            ]
+          ],
+          [
+            [
+              "s",
+              "ordinary store"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Stable address",
+        "layers": [
+          [
+            [
+              "s",
+              "private header page"
+            ]
+          ],
+          [
+            [
+              "v",
+              "publish ID mapping"
+            ]
+          ],
+          [
+            [
+              "s",
+              "later Run reads"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Page width",
+        "layers": [
+          [
+            [
+              "s",
+              "live header pins a page"
+            ]
+          ],
+          [
+            [
+              "t",
+              "charge held holes"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "137-reuse-retained-holes",
+    "section": "跨 Run 批量分配",
+    "title": "下一 Run 可以直接填满上一批留下的空位吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "保持存活 Cell 的地址和逻辑 ID。只给新出生分配新的 ID，为下一批私人槽从有空位的旧页中优先挑选较满的页。",
+    "arms": "a　新批次都申请新页。b　让同一批次先占旧页的空位，再向新页溢出。两条路径都发布到原地址。",
+    "fix": "固定页宽 64，保持逐 Run 的提案、预算、验真、实际出生、写入、接续和最终图。空槽跨一个 Run 留存记作一个空槽·Run。",
+    "measure": "3mm 的 232,796 个配额中，148,101 个复用了旧槽。终点空槽 74,367→1,346，累计空槽·Run 从 188,695,004 降至 3,157,905。",
+    "note": "CG 整轮 678.49→654.97 ms。3mm 整轮 1,825.58→1,869.58 ms，分配器累计检查 1,184,039 项页目录和 1,918,868 个槽。",
+    "src": "S122",
+    "diagram": [
+      {
+        "title": "Fresh pages",
+        "layers": [
+          [
+            [
+              "n",
+              "new batch demand"
+            ]
+          ],
+          [
+            [
+              "s",
+              "allocate new pages"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Refill holes",
+        "layers": [
+          [
+            [
+              "n",
+              "same batch demand"
+            ]
+          ],
+          [
+            [
+              "s",
+              "rank existing pages"
+            ]
+          ],
+          [
+            [
+              "v",
+              "publish with new IDs"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "138-inline-private-facts",
+    "section": "Cell 物理表示",
+    "title": "首个 fact 能随整批 Cell 一次分配吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "将第一个或前两个 fact 槽嵌入 Cell 头部。超过容量时才分配堆缓冲区。比较推测分配时的缓冲区与真实终点所有存活对象的布局。",
+    "arms": "a　单独分配 Vec；加入延迟分配对照。b　内联一个槽。c　内联两个槽。分别测试关闭预建、移动头和固定页。",
+    "fix": "保留实际父引用及源执行顺序。分别验证槽内容、溢出、退休、固定页发布前后地址和后续 Run 的存活读取。",
+    "measure": "3mm 内联首槽消除了 232,796 次预建 fact 缓冲区。原址发布 137,864 次。整轮固定页 1,942.36→1,895.90 ms，峰值 RSS 753.38→749.81 MiB。",
+    "note": "相同首槽布局关闭预建时为 1,885.21 ms。第二槽把头宽从 144 增至 208 B，3mm 固定页的 RSS 升到 765.70 MiB。",
+    "src": "S123",
+    "diagram": [
+      {
+        "title": "Separate buffer",
+        "layers": [
+          [
+            [
+              "s",
+              "Cell header"
+            ]
+          ],
+          [
+            [
+              "s",
+              "per-Cell allocation"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "One inline",
+        "layers": [
+          [
+            [
+              "s",
+              "header and first fact"
+            ]
+          ],
+          [
+            [
+              "v",
+              "spill on overflow"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Two inline",
+        "layers": [
+          [
+            [
+              "s",
+              "wider header"
+            ]
+          ],
+          [
+            [
+              "t",
+              "measure empty lanes"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "139-redeem-sealed-lanes",
+    "section": "批量验证",
+    "title": "验过的父引用能靠一个页内身份直接领取 Cell 吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "Rust 为不可变提案页签发进程内身份。验证过的绑定保留页身份与槽号；按组领取时可以直接核对这两个值。",
+    "arms": "a　重新解码父地址和版本，与已经通过的父逐字段比较。b　核对发行时的页身份及槽号，并保留原有 Run、规则和单次领取检查。",
+    "fix": "初次验证仍检验真实类型、父与条件。审计模式独立执行完整内容比较，另测内容相同的重发页、去掉身份、错槽、重放、过期和扣留。",
+    "measure": "3mm 有 137,864 次领取绕过第二次父解码，完整推理 1,906.91→1,888.07 ms；CG 有 59,752 次，676.50→673.29 ms。",
+    "note": "同内容重发的页在 sum-bits 上被拒绝 2,828 次。未经授权的私有 Cell 不发布。3mm 中关闭预建的同一签发器为 1,851.52 ms。",
+    "src": "S124",
+    "diagram": [
+      {
+        "title": "Compare all fields",
+        "layers": [
+          [
+            [
+              "n",
+              "immutable candidate page"
+            ]
+          ],
+          [
+            [
+              "v",
+              "read typed parents again"
+            ]
+          ],
+          [
+            [
+              "s",
+              "redeem slot"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Page identity",
+        "layers": [
+          [
+            [
+              "v",
+              "verify original parents"
+            ]
+          ],
+          [
+            [
+              "s",
+              "remember seal and lane"
+            ]
+          ],
+          [
+            [
+              "v",
+              "compare on redemption"
+            ]
+          ]
+        ]
+      }
+    ]
   }
 ]
