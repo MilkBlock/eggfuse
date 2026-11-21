@@ -1,0 +1,14 @@
+{
+ "different_same_schema_middle": "middle_occurrence_mismatch",
+ "first_step_stale_physical_port": "wrong_signed_first_step",
+ "stale_terminal_physical_parent": "terminal_did_not_read_fresh_set_fact",
+ "changed_set_key_same_fact_id": "set_keys_or_value_not_causal",
+ "already_internal_terminal": "terminal_not_a_real_separate_external_proposal",
+ "no_second_raw_dependency": "missing_or_ambiguous_same_history_terminal",
+ "different_output_on_same_middle_record": "wrong_same_record_terminal_port",
+ "middle_only_reused_row": "history_did_not_emit_exact_typed_row",
+ "ordinary_let_adapter_receives_set": "not_a_returning_constructor",
+ "target_lacks_elided_return_certificate": "missing_source_alias_proof",
+ "edited_independent_donor_file": "foreign_independent_source_receipt",
+ "cached_set_retyped_as_let": "cached_publication_certificate_differs_from_proof"
+}

@@ -1,0 +1,257 @@
+{
+ "schema": "eggfuse-ripsat-publication-chain/v1",
+ "target_sha256": "8d81462db16dcee0689b2e8dc11ac3e068c9dc976a2e69f5005a8acad06905af",
+ "strict_named": {
+  "depth": 2,
+  "partial": true,
+  "library": [
+   [
+    [
+     143,
+     1,
+     55
+    ]
+   ]
+  ],
+  "set_publication": {
+   "schema": "eggfuse-set-publication-program/v1",
+   "target_sha256": "8d81462db16dcee0689b2e8dc11ac3e068c9dc976a2e69f5005a8acad06905af",
+   "path": [
+    [
+     143,
+     1,
+     55
+    ],
+    [
+     55,
+     1,
+     143
+    ]
+   ],
+   "kinds": [
+    "fresh_constructor_let",
+    "fresh_constructor_set"
+   ],
+   "table": "Get",
+   "pivot": 0
+  }
+ },
+ "program_sha256": "9ab539e3edcd71fd2dd7f2463984f32dbae3df2b8cd2f7f98b3f7676e74c3181",
+ "support": [
+  {
+   "donor": "dot-product",
+   "sample_id": "dot-product-p143-o1-c55-full",
+   "companion_sha256": "53e8634c0c82ab98664027445e0e7e4963a12108145d2b9edaa78e3ebffcc0c9",
+   "native_history_sha256": "dacc4736fc723fde2549085da512f33286ef86429e421c6e3df428f469b6c9b4",
+   "origin_sha256": "610d9dfad2501a5b5854d510ac108bfaaa43956d7a8eb140a147ebaf7f91a026",
+   "source": {
+    "serials": [
+     1737,
+     1822,
+     2625
+    ],
+    "ordinals": [
+     765,
+     843,
+     1288
+    ],
+    "runs": [
+     131,
+     135,
+     139
+    ],
+    "named_root_inputs": [
+     {
+      "atom": 0,
+      "row": {
+       "Fact": {
+        "cell": 129,
+        "op": 28
+       }
+      },
+      "version": 1
+     }
+    ],
+    "first_port": [
+     3835405795329,
+     131
+    ],
+    "second_port": [
+     4170413244417,
+     135
+    ],
+    "set_columns": [
+     {
+      "Eq": 3835405795333
+     },
+     {
+      "Int": 0
+     },
+     {
+      "Eq": 554050781213
+     }
+    ],
+    "first_root": {
+     "result_fact": 3835405795329,
+     "version": 131,
+     "producer_named": [
+      {
+       "atom": 0,
+       "row": {
+        "Fact": {
+         "cell": 129,
+         "op": 28
+        }
+       },
+       "version": 1
+      }
+     ],
+     "producer_serial": 1737,
+     "consumer_serial": 1822,
+     "producer_ordinal": 765,
+     "consumer_ordinal": 843,
+     "producer_run": 131,
+     "consumer_run": 135
+    },
+    "source_state_sha256": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+   },
+   "native": {
+    "local_record_ids": [
+     0,
+     8,
+     12
+    ],
+    "local_indices": [
+     0,
+     1,
+     2
+    ],
+    "tokens": [
+     6,
+     10
+    ],
+    "first_edge": {
+     "producer_record": 0,
+     "consumer_record": 8,
+     "producer_index": 0,
+     "consumer_index": 1,
+     "write_read_token": 6,
+     "read_site": "Some(\"/Volumes/EggFuseWorkspace/experiments/ripsat-donor-evidence-v2/samples/dot-product-p143-o1-c55-full/entry.egg\"):432:445",
+     "source_parent_port": [
+      0,
+      8
+     ]
+    },
+    "second_output": {
+     "path": "head/0/expr/0",
+     "span": "Some(\"/Volumes/EggFuseWorkspace/experiments/ripsat-donor-evidence-v2/samples/dot-product-p143-o1-c55-full/entry.egg\"):461:482",
+     "token": 10,
+     "columns": [
+      5,
+      6,
+      4
+     ]
+    },
+    "terminal_read": {
+     "token": 10,
+     "operator": "Get",
+     "coordinates": [
+      5,
+      6,
+      4
+     ],
+     "position": 2,
+     "span": "Some(\"/Volumes/EggFuseWorkspace/experiments/ripsat-donor-evidence-v2/samples/dot-product-p143-o1-c55-full/entry.egg\"):687:699"
+    },
+    "terminal_parent_port": [
+     0,
+     4
+    ],
+    "first_classes": [
+     4,
+     5
+    ],
+    "second_classes": [
+     5,
+     6,
+     4
+    ]
+   },
+   "portable_path": [
+    [
+     "0957912358ce9f5a96dee402bdfcea29acda7c77e84fd6d57344d2403b04bbff",
+     1,
+     "519fde6cfce4abbe3c095b7ef7b9fc8636802e44ed6c09bec2a4d3cc90e69dda"
+    ],
+    [
+     "519fde6cfce4abbe3c095b7ef7b9fc8636802e44ed6c09bec2a4d3cc90e69dda",
+     1,
+     "0957912358ce9f5a96dee402bdfcea29acda7c77e84fd6d57344d2403b04bbff"
+    ]
+   ],
+   "path": [
+    [
+     143,
+     1,
+     55
+    ],
+    [
+     55,
+     1,
+     143
+    ]
+   ],
+   "target_static": {
+    "table": "Get",
+    "pivot": 0,
+    "sorts": [
+     "Expr",
+     "i64",
+     "Expr"
+    ],
+    "columns": [
+     [
+      "column",
+      1
+     ],
+     [
+      "literal",
+      0,
+      "i64"
+     ],
+     [
+      "column",
+      0
+     ]
+    ],
+    "terminal_slots": [
+     0,
+     1,
+     2
+    ],
+    "middle_return_alias": {
+     "rule": 55,
+     "operation": 0,
+     "dst": 2,
+     "value": {
+      "slot": 1
+     }
+    },
+    "portable_middle": "519fde6cfce4abbe3c095b7ef7b9fc8636802e44ed6c09bec2a4d3cc90e69dda",
+    "portable_terminal": "0957912358ce9f5a96dee402bdfcea29acda7c77e84fd6d57344d2403b04bbff"
+   }
+  }
+ ],
+ "excluded": [
+  {
+   "donor": "jacobi-1d",
+   "reason": "no_observed_paid_terminal_consuming_this_middle",
+   "middle": 5598
+  }
+ ],
+ "pins": {
+  "evidence_manifest": "23e63daa7aa6441e9f83f44aafd475480558259e01c2f2964066b517899aa70e",
+  "native_trust": "7d25bac5b8256fb7ddf45d0a25ba464e3370ddb0d3c832585a4631eae0b71f3a",
+  "source_companions": "62e76a4e02e03b2eedb018e11c9c111be184e2176ce758677f85331cbe34f2fb"
+ }
+}
