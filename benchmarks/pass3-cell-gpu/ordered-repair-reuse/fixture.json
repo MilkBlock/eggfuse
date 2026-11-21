@@ -1,0 +1,2130 @@
+{
+ "off": {
+  "size": [
+   [
+    [
+     null,
+     {
+      "Int": 3
+     }
+    ]
+   ],
+   [],
+   [
+    [
+     {
+      "Int": 3
+     },
+     {
+      "Int": 1
+     }
+    ]
+   ],
+   [],
+   [],
+   []
+  ],
+  "source": {
+   "rhs": [
+    "3997e6d818456261e6ce2913eca632ee8ce96d69aaaaa15b01c5ace0d2b88f64",
+    "b502e80734524f0e4dc55710c78a1a1736bf4bbde3651a6a965d673258ee45e0",
+    "f01c419bef86ef591c0c36e98d09429c9989e5dad325b52cb63068f33d78c65e",
+    "9668f3df3e016d1b719019d1b853e5b3c61971e758345ae05141f9076edaf8f3",
+    "d805e3e00556d9b257d521604ec8b3a95b8d4dfc7c86f4426dad2bd81e0a2576",
+    "6f0a902ac6608b8398d2c629802ea723384585993f56e5276f59917c7c80f5da"
+   ],
+   "writes": [
+    [
+     1,
+     "e292a97bfd6309ed96aa29a91e01e09fee843a91ac21478ff869b793f6e72cf2"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     1,
+     "f677e1ba68378c26de580ae0770cae08f2e77af3e243349e411842655551471f"
+    ],
+    [
+     1,
+     "3431a65301e341f01078e272eeec95143707151c276ff8ccf3775bac8d5b1cf7"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ]
+   ],
+   "resumes": [
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     1,
+     "7de919affa1a58f10e1e15c38041f8493525691f49bfaa083df5e7930654c5d1"
+    ]
+   ],
+   "schedule": [
+    [
+     "observe",
+     1,
+     [
+      0,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "connect",
+     2,
+     [
+      1,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "observe",
+     3,
+     [
+      2,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "repoint",
+     4,
+     [
+      3,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "second",
+     5,
+     [
+      4,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "finish",
+     6,
+     [
+      5,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ]
+   ],
+   "state_sha": "c526d5fc51c50ea054135a60cf68bce100b5c462f922fb9d693844deccac24a0",
+   "cell_ids": [
+    [
+     1,
+     11,
+     2,
+     2,
+     false
+    ],
+    [
+     3,
+     13,
+     2,
+     2,
+     false
+    ],
+    [
+     4,
+     14,
+     3,
+     3,
+     false
+    ],
+    [
+     6,
+     16,
+     1,
+     1,
+     false
+    ]
+   ]
+  },
+  "unions": [
+   [],
+   [
+    [
+     "union",
+     4,
+     3
+    ],
+    [
+     "union",
+     5,
+     3
+    ],
+    [
+     "union",
+     7,
+     6
+    ],
+    [
+     "union",
+     8,
+     6
+    ]
+   ],
+   [],
+   [],
+   [
+    [
+     "union",
+     2,
+     1
+    ]
+   ],
+   []
+  ],
+  "repair": {
+   "forward_headers": 13,
+   "native": {
+    "dependency_headers": 13,
+    "reverse_headers": 6,
+    "stats": {
+     "live_reverse_edges": 15,
+     "peak_reverse_edges": 20,
+     "repair_candidate_checks": 2,
+     "repair_key_probes": 7,
+     "reverse_edges_coalesced": 3,
+     "reverse_edges_created": 23,
+     "reverse_edges_removed": 5,
+     "reverse_insert_attempts": 32,
+     "reverse_merge_inserts": 12,
+     "reverse_remove_attempts": 6,
+     "subscription_calls": 23,
+     "subscription_value_visits": 49,
+     "union_frontier_probes": 5,
+     "union_redirected_edges": 11,
+     "union_wake_visits": 11
+    },
+    "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+   },
+   "raw_forward_entries": 15,
+   "repair_collisions": 2,
+   "repair_key_hash_changes": 4,
+   "repaired_dependencies": 9,
+   "verified_reverse_edges": 0,
+   "work": {
+    "audit": true,
+    "audited_adoptions": 0,
+    "copied_payloads": 0,
+    "deferred_forward_headers": 0,
+    "displaced_edges": 11,
+    "eager_forward_edges": 0,
+    "fact_adoptions": 0,
+    "fact_kept_index": 0,
+    "fact_payloads": 0,
+    "function_adoptions": 0,
+    "function_kept_index": 0,
+    "function_payloads": 0,
+    "index_audits": 0,
+    "merge_insertions": 12,
+    "missing_payloads": 0,
+    "mode": 0,
+    "payload_attempts": 0,
+    "payload_audits": 0,
+    "peak_pending": 0,
+    "pending_cap": 0,
+    "pending_consumed": 0,
+    "pending_saved": 0,
+    "retired_index_once": 0,
+    "retirement_row_reads_saved": 0,
+    "reverse_audits": 0,
+    "scalar_positions": 0,
+    "source_fields": 0,
+    "substitutions": 0,
+    "survivor_edges": 12,
+    "unions": 5,
+    "unsupported_schemas": 0,
+    "untouched_payloads": 0
+   }
+  }
+ },
+ "reverse": {
+  "size": [
+   [
+    [
+     null,
+     {
+      "Int": 3
+     }
+    ]
+   ],
+   [],
+   [
+    [
+     {
+      "Int": 3
+     },
+     {
+      "Int": 1
+     }
+    ]
+   ],
+   [],
+   [],
+   []
+  ],
+  "source": {
+   "rhs": [
+    "3997e6d818456261e6ce2913eca632ee8ce96d69aaaaa15b01c5ace0d2b88f64",
+    "b502e80734524f0e4dc55710c78a1a1736bf4bbde3651a6a965d673258ee45e0",
+    "f01c419bef86ef591c0c36e98d09429c9989e5dad325b52cb63068f33d78c65e",
+    "9668f3df3e016d1b719019d1b853e5b3c61971e758345ae05141f9076edaf8f3",
+    "d805e3e00556d9b257d521604ec8b3a95b8d4dfc7c86f4426dad2bd81e0a2576",
+    "6f0a902ac6608b8398d2c629802ea723384585993f56e5276f59917c7c80f5da"
+   ],
+   "writes": [
+    [
+     1,
+     "e292a97bfd6309ed96aa29a91e01e09fee843a91ac21478ff869b793f6e72cf2"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     1,
+     "f677e1ba68378c26de580ae0770cae08f2e77af3e243349e411842655551471f"
+    ],
+    [
+     1,
+     "3431a65301e341f01078e272eeec95143707151c276ff8ccf3775bac8d5b1cf7"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ]
+   ],
+   "resumes": [
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     1,
+     "7de919affa1a58f10e1e15c38041f8493525691f49bfaa083df5e7930654c5d1"
+    ]
+   ],
+   "schedule": [
+    [
+     "observe",
+     1,
+     [
+      0,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "connect",
+     2,
+     [
+      1,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "observe",
+     3,
+     [
+      2,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "repoint",
+     4,
+     [
+      3,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "second",
+     5,
+     [
+      4,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "finish",
+     6,
+     [
+      5,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ]
+   ],
+   "state_sha": "c526d5fc51c50ea054135a60cf68bce100b5c462f922fb9d693844deccac24a0",
+   "cell_ids": [
+    [
+     1,
+     11,
+     2,
+     2,
+     false
+    ],
+    [
+     3,
+     13,
+     2,
+     2,
+     false
+    ],
+    [
+     4,
+     14,
+     3,
+     3,
+     false
+    ],
+    [
+     6,
+     16,
+     1,
+     1,
+     false
+    ]
+   ]
+  },
+  "unions": [
+   [],
+   [
+    [
+     "union",
+     4,
+     3
+    ],
+    [
+     "union",
+     5,
+     3
+    ],
+    [
+     "union",
+     7,
+     6
+    ],
+    [
+     "union",
+     8,
+     6
+    ]
+   ],
+   [],
+   [],
+   [
+    [
+     "union",
+     2,
+     1
+    ]
+   ],
+   []
+  ],
+  "repair": {
+   "forward_headers": 13,
+   "native": {
+    "dependency_headers": 13,
+    "reverse_headers": 6,
+    "stats": {
+     "live_reverse_edges": 15,
+     "peak_reverse_edges": 20,
+     "repair_candidate_checks": 2,
+     "repair_key_probes": 7,
+     "reverse_edges_coalesced": 3,
+     "reverse_edges_created": 23,
+     "reverse_edges_removed": 5,
+     "reverse_insert_attempts": 32,
+     "reverse_merge_inserts": 9,
+     "reverse_remove_attempts": 6,
+     "subscription_calls": 23,
+     "subscription_value_visits": 49,
+     "union_frontier_probes": 5,
+     "union_redirected_edges": 11,
+     "union_wake_visits": 11
+    },
+    "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+   },
+   "raw_forward_entries": 15,
+   "repair_collisions": 2,
+   "repair_key_hash_changes": 4,
+   "repaired_dependencies": 9,
+   "verified_reverse_edges": 0,
+   "work": {
+    "audit": true,
+    "audited_adoptions": 0,
+    "copied_payloads": 0,
+    "deferred_forward_headers": 0,
+    "displaced_edges": 11,
+    "eager_forward_edges": 0,
+    "fact_adoptions": 0,
+    "fact_kept_index": 0,
+    "fact_payloads": 0,
+    "function_adoptions": 0,
+    "function_kept_index": 0,
+    "function_payloads": 0,
+    "index_audits": 0,
+    "merge_insertions": 9,
+    "missing_payloads": 0,
+    "mode": 1,
+    "payload_attempts": 0,
+    "payload_audits": 0,
+    "peak_pending": 0,
+    "pending_cap": 0,
+    "pending_consumed": 0,
+    "pending_saved": 0,
+    "retired_index_once": 0,
+    "retirement_row_reads_saved": 0,
+    "reverse_audits": 5,
+    "scalar_positions": 0,
+    "source_fields": 0,
+    "substitutions": 0,
+    "survivor_edges": 12,
+    "unions": 5,
+    "unsupported_schemas": 0,
+    "untouched_payloads": 0
+   }
+  }
+ },
+ "payload": {
+  "size": [
+   [
+    [
+     null,
+     {
+      "Int": 3
+     }
+    ]
+   ],
+   [],
+   [
+    [
+     {
+      "Int": 3
+     },
+     {
+      "Int": 1
+     }
+    ]
+   ],
+   [],
+   [],
+   []
+  ],
+  "source": {
+   "rhs": [
+    "3997e6d818456261e6ce2913eca632ee8ce96d69aaaaa15b01c5ace0d2b88f64",
+    "b502e80734524f0e4dc55710c78a1a1736bf4bbde3651a6a965d673258ee45e0",
+    "f01c419bef86ef591c0c36e98d09429c9989e5dad325b52cb63068f33d78c65e",
+    "9668f3df3e016d1b719019d1b853e5b3c61971e758345ae05141f9076edaf8f3",
+    "d805e3e00556d9b257d521604ec8b3a95b8d4dfc7c86f4426dad2bd81e0a2576",
+    "6f0a902ac6608b8398d2c629802ea723384585993f56e5276f59917c7c80f5da"
+   ],
+   "writes": [
+    [
+     1,
+     "e292a97bfd6309ed96aa29a91e01e09fee843a91ac21478ff869b793f6e72cf2"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     1,
+     "f677e1ba68378c26de580ae0770cae08f2e77af3e243349e411842655551471f"
+    ],
+    [
+     1,
+     "3431a65301e341f01078e272eeec95143707151c276ff8ccf3775bac8d5b1cf7"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ]
+   ],
+   "resumes": [
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     1,
+     "7de919affa1a58f10e1e15c38041f8493525691f49bfaa083df5e7930654c5d1"
+    ]
+   ],
+   "schedule": [
+    [
+     "observe",
+     1,
+     [
+      0,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "connect",
+     2,
+     [
+      1,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "observe",
+     3,
+     [
+      2,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "repoint",
+     4,
+     [
+      3,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "second",
+     5,
+     [
+      4,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "finish",
+     6,
+     [
+      5,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ]
+   ],
+   "state_sha": "c526d5fc51c50ea054135a60cf68bce100b5c462f922fb9d693844deccac24a0",
+   "cell_ids": [
+    [
+     1,
+     11,
+     2,
+     2,
+     false
+    ],
+    [
+     3,
+     13,
+     2,
+     2,
+     false
+    ],
+    [
+     4,
+     14,
+     3,
+     3,
+     false
+    ],
+    [
+     6,
+     16,
+     1,
+     1,
+     false
+    ]
+   ]
+  },
+  "unions": [
+   [],
+   [
+    [
+     "union",
+     4,
+     3
+    ],
+    [
+     "union",
+     5,
+     3
+    ],
+    [
+     "union",
+     7,
+     6
+    ],
+    [
+     "union",
+     8,
+     6
+    ]
+   ],
+   [],
+   [],
+   [
+    [
+     "union",
+     2,
+     1
+    ]
+   ],
+   []
+  ],
+  "repair": {
+   "forward_headers": 13,
+   "native": {
+    "dependency_headers": 13,
+    "reverse_headers": 6,
+    "stats": {
+     "live_reverse_edges": 15,
+     "peak_reverse_edges": 20,
+     "repair_candidate_checks": 2,
+     "repair_key_probes": 7,
+     "reverse_edges_coalesced": 3,
+     "reverse_edges_created": 23,
+     "reverse_edges_removed": 5,
+     "reverse_insert_attempts": 32,
+     "reverse_merge_inserts": 12,
+     "reverse_remove_attempts": 6,
+     "subscription_calls": 23,
+     "subscription_value_visits": 49,
+     "union_frontier_probes": 5,
+     "union_redirected_edges": 11,
+     "union_wake_visits": 11
+    },
+    "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+   },
+   "raw_forward_entries": 15,
+   "repair_collisions": 2,
+   "repair_key_hash_changes": 4,
+   "repaired_dependencies": 9,
+   "verified_reverse_edges": 0,
+   "work": {
+    "audit": true,
+    "audited_adoptions": 0,
+    "copied_payloads": 0,
+    "deferred_forward_headers": 0,
+    "displaced_edges": 11,
+    "eager_forward_edges": 0,
+    "fact_adoptions": 0,
+    "fact_kept_index": 0,
+    "fact_payloads": 7,
+    "function_adoptions": 0,
+    "function_kept_index": 0,
+    "function_payloads": 2,
+    "index_audits": 0,
+    "merge_insertions": 12,
+    "missing_payloads": 0,
+    "mode": 2,
+    "payload_attempts": 11,
+    "payload_audits": 9,
+    "peak_pending": 0,
+    "pending_cap": 0,
+    "pending_consumed": 0,
+    "pending_saved": 0,
+    "retired_index_once": 0,
+    "retirement_row_reads_saved": 0,
+    "reverse_audits": 0,
+    "scalar_positions": 16,
+    "source_fields": 0,
+    "substitutions": 10,
+    "survivor_edges": 12,
+    "unions": 5,
+    "unsupported_schemas": 2,
+    "untouched_payloads": 0
+   }
+  }
+ },
+ "key": {
+  "size": [
+   [
+    [
+     null,
+     {
+      "Int": 3
+     }
+    ]
+   ],
+   [],
+   [
+    [
+     {
+      "Int": 3
+     },
+     {
+      "Int": 1
+     }
+    ]
+   ],
+   [],
+   [],
+   []
+  ],
+  "source": {
+   "rhs": [
+    "3997e6d818456261e6ce2913eca632ee8ce96d69aaaaa15b01c5ace0d2b88f64",
+    "b502e80734524f0e4dc55710c78a1a1736bf4bbde3651a6a965d673258ee45e0",
+    "f01c419bef86ef591c0c36e98d09429c9989e5dad325b52cb63068f33d78c65e",
+    "9668f3df3e016d1b719019d1b853e5b3c61971e758345ae05141f9076edaf8f3",
+    "d805e3e00556d9b257d521604ec8b3a95b8d4dfc7c86f4426dad2bd81e0a2576",
+    "6f0a902ac6608b8398d2c629802ea723384585993f56e5276f59917c7c80f5da"
+   ],
+   "writes": [
+    [
+     1,
+     "e292a97bfd6309ed96aa29a91e01e09fee843a91ac21478ff869b793f6e72cf2"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     1,
+     "f677e1ba68378c26de580ae0770cae08f2e77af3e243349e411842655551471f"
+    ],
+    [
+     1,
+     "3431a65301e341f01078e272eeec95143707151c276ff8ccf3775bac8d5b1cf7"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ]
+   ],
+   "resumes": [
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     1,
+     "7de919affa1a58f10e1e15c38041f8493525691f49bfaa083df5e7930654c5d1"
+    ]
+   ],
+   "schedule": [
+    [
+     "observe",
+     1,
+     [
+      0,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "connect",
+     2,
+     [
+      1,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "observe",
+     3,
+     [
+      2,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "repoint",
+     4,
+     [
+      3,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "second",
+     5,
+     [
+      4,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "finish",
+     6,
+     [
+      5,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ]
+   ],
+   "state_sha": "c526d5fc51c50ea054135a60cf68bce100b5c462f922fb9d693844deccac24a0",
+   "cell_ids": [
+    [
+     1,
+     11,
+     2,
+     2,
+     false
+    ],
+    [
+     3,
+     13,
+     2,
+     2,
+     false
+    ],
+    [
+     4,
+     14,
+     3,
+     3,
+     false
+    ],
+    [
+     6,
+     16,
+     1,
+     1,
+     false
+    ]
+   ]
+  },
+  "unions": [
+   [],
+   [
+    [
+     "union",
+     4,
+     3
+    ],
+    [
+     "union",
+     5,
+     3
+    ],
+    [
+     "union",
+     7,
+     6
+    ],
+    [
+     "union",
+     8,
+     6
+    ]
+   ],
+   [],
+   [],
+   [
+    [
+     "union",
+     2,
+     1
+    ]
+   ],
+   []
+  ],
+  "repair": {
+   "forward_headers": 13,
+   "native": {
+    "dependency_headers": 13,
+    "reverse_headers": 6,
+    "stats": {
+     "live_reverse_edges": 15,
+     "peak_reverse_edges": 20,
+     "repair_candidate_checks": 2,
+     "repair_key_probes": 7,
+     "reverse_edges_coalesced": 3,
+     "reverse_edges_created": 23,
+     "reverse_edges_removed": 5,
+     "reverse_insert_attempts": 32,
+     "reverse_merge_inserts": 12,
+     "reverse_remove_attempts": 6,
+     "subscription_calls": 23,
+     "subscription_value_visits": 49,
+     "union_frontier_probes": 5,
+     "union_redirected_edges": 11,
+     "union_wake_visits": 11
+    },
+    "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+   },
+   "raw_forward_entries": 15,
+   "repair_collisions": 2,
+   "repair_key_hash_changes": 4,
+   "repaired_dependencies": 9,
+   "verified_reverse_edges": 0,
+   "work": {
+    "audit": true,
+    "audited_adoptions": 0,
+    "copied_payloads": 0,
+    "deferred_forward_headers": 0,
+    "displaced_edges": 11,
+    "eager_forward_edges": 0,
+    "fact_adoptions": 0,
+    "fact_kept_index": 3,
+    "fact_payloads": 0,
+    "function_adoptions": 0,
+    "function_kept_index": 2,
+    "function_payloads": 0,
+    "index_audits": 2,
+    "merge_insertions": 12,
+    "missing_payloads": 0,
+    "mode": 4,
+    "payload_attempts": 0,
+    "payload_audits": 0,
+    "peak_pending": 0,
+    "pending_cap": 0,
+    "pending_consumed": 0,
+    "pending_saved": 0,
+    "retired_index_once": 2,
+    "retirement_row_reads_saved": 2,
+    "reverse_audits": 0,
+    "scalar_positions": 0,
+    "source_fields": 0,
+    "substitutions": 0,
+    "survivor_edges": 12,
+    "unions": 5,
+    "unsupported_schemas": 0,
+    "untouched_payloads": 0
+   }
+  }
+ },
+ "all": {
+  "size": [
+   [
+    [
+     null,
+     {
+      "Int": 3
+     }
+    ]
+   ],
+   [],
+   [
+    [
+     {
+      "Int": 3
+     },
+     {
+      "Int": 1
+     }
+    ]
+   ],
+   [],
+   [],
+   []
+  ],
+  "source": {
+   "rhs": [
+    "3997e6d818456261e6ce2913eca632ee8ce96d69aaaaa15b01c5ace0d2b88f64",
+    "b502e80734524f0e4dc55710c78a1a1736bf4bbde3651a6a965d673258ee45e0",
+    "f01c419bef86ef591c0c36e98d09429c9989e5dad325b52cb63068f33d78c65e",
+    "9668f3df3e016d1b719019d1b853e5b3c61971e758345ae05141f9076edaf8f3",
+    "d805e3e00556d9b257d521604ec8b3a95b8d4dfc7c86f4426dad2bd81e0a2576",
+    "6f0a902ac6608b8398d2c629802ea723384585993f56e5276f59917c7c80f5da"
+   ],
+   "writes": [
+    [
+     1,
+     "e292a97bfd6309ed96aa29a91e01e09fee843a91ac21478ff869b793f6e72cf2"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     1,
+     "f677e1ba68378c26de580ae0770cae08f2e77af3e243349e411842655551471f"
+    ],
+    [
+     1,
+     "3431a65301e341f01078e272eeec95143707151c276ff8ccf3775bac8d5b1cf7"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ]
+   ],
+   "resumes": [
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     1,
+     "7de919affa1a58f10e1e15c38041f8493525691f49bfaa083df5e7930654c5d1"
+    ]
+   ],
+   "schedule": [
+    [
+     "observe",
+     1,
+     [
+      0,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "connect",
+     2,
+     [
+      1,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "observe",
+     3,
+     [
+      2,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "repoint",
+     4,
+     [
+      3,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "second",
+     5,
+     [
+      4,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "finish",
+     6,
+     [
+      5,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ]
+   ],
+   "state_sha": "c526d5fc51c50ea054135a60cf68bce100b5c462f922fb9d693844deccac24a0",
+   "cell_ids": [
+    [
+     1,
+     11,
+     2,
+     2,
+     false
+    ],
+    [
+     3,
+     13,
+     2,
+     2,
+     false
+    ],
+    [
+     4,
+     14,
+     3,
+     3,
+     false
+    ],
+    [
+     6,
+     16,
+     1,
+     1,
+     false
+    ]
+   ]
+  },
+  "unions": [
+   [],
+   [
+    [
+     "union",
+     4,
+     3
+    ],
+    [
+     "union",
+     5,
+     3
+    ],
+    [
+     "union",
+     7,
+     6
+    ],
+    [
+     "union",
+     8,
+     6
+    ]
+   ],
+   [],
+   [],
+   [
+    [
+     "union",
+     2,
+     1
+    ]
+   ],
+   []
+  ],
+  "repair": {
+   "forward_headers": 13,
+   "native": {
+    "dependency_headers": 13,
+    "reverse_headers": 6,
+    "stats": {
+     "live_reverse_edges": 15,
+     "peak_reverse_edges": 20,
+     "repair_candidate_checks": 2,
+     "repair_key_probes": 7,
+     "reverse_edges_coalesced": 3,
+     "reverse_edges_created": 23,
+     "reverse_edges_removed": 5,
+     "reverse_insert_attempts": 32,
+     "reverse_merge_inserts": 9,
+     "reverse_remove_attempts": 6,
+     "subscription_calls": 23,
+     "subscription_value_visits": 49,
+     "union_frontier_probes": 5,
+     "union_redirected_edges": 11,
+     "union_wake_visits": 11
+    },
+    "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+   },
+   "raw_forward_entries": 15,
+   "repair_collisions": 2,
+   "repair_key_hash_changes": 4,
+   "repaired_dependencies": 9,
+   "verified_reverse_edges": 0,
+   "work": {
+    "audit": true,
+    "audited_adoptions": 0,
+    "copied_payloads": 0,
+    "deferred_forward_headers": 0,
+    "displaced_edges": 11,
+    "eager_forward_edges": 0,
+    "fact_adoptions": 0,
+    "fact_kept_index": 3,
+    "fact_payloads": 7,
+    "function_adoptions": 0,
+    "function_kept_index": 2,
+    "function_payloads": 2,
+    "index_audits": 2,
+    "merge_insertions": 9,
+    "missing_payloads": 0,
+    "mode": 7,
+    "payload_attempts": 11,
+    "payload_audits": 9,
+    "peak_pending": 0,
+    "pending_cap": 0,
+    "pending_consumed": 0,
+    "pending_saved": 0,
+    "retired_index_once": 2,
+    "retirement_row_reads_saved": 2,
+    "reverse_audits": 5,
+    "scalar_positions": 16,
+    "source_fields": 0,
+    "substitutions": 10,
+    "survivor_edges": 12,
+    "unions": 5,
+    "unsupported_schemas": 2,
+    "untouched_payloads": 0
+   }
+  }
+ },
+ "defer": {
+  "size": [
+   [
+    [
+     null,
+     {
+      "Int": 3
+     }
+    ]
+   ],
+   [],
+   [
+    [
+     {
+      "Int": 3
+     },
+     {
+      "Int": 1
+     }
+    ]
+   ],
+   [],
+   [],
+   []
+  ],
+  "source": {
+   "rhs": [
+    "3997e6d818456261e6ce2913eca632ee8ce96d69aaaaa15b01c5ace0d2b88f64",
+    "b502e80734524f0e4dc55710c78a1a1736bf4bbde3651a6a965d673258ee45e0",
+    "f01c419bef86ef591c0c36e98d09429c9989e5dad325b52cb63068f33d78c65e",
+    "9668f3df3e016d1b719019d1b853e5b3c61971e758345ae05141f9076edaf8f3",
+    "d805e3e00556d9b257d521604ec8b3a95b8d4dfc7c86f4426dad2bd81e0a2576",
+    "6f0a902ac6608b8398d2c629802ea723384585993f56e5276f59917c7c80f5da"
+   ],
+   "writes": [
+    [
+     1,
+     "e292a97bfd6309ed96aa29a91e01e09fee843a91ac21478ff869b793f6e72cf2"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     1,
+     "f677e1ba68378c26de580ae0770cae08f2e77af3e243349e411842655551471f"
+    ],
+    [
+     1,
+     "3431a65301e341f01078e272eeec95143707151c276ff8ccf3775bac8d5b1cf7"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ]
+   ],
+   "resumes": [
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     1,
+     "7de919affa1a58f10e1e15c38041f8493525691f49bfaa083df5e7930654c5d1"
+    ]
+   ],
+   "schedule": [
+    [
+     "observe",
+     1,
+     [
+      0,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "connect",
+     2,
+     [
+      1,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "observe",
+     3,
+     [
+      2,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "repoint",
+     4,
+     [
+      3,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "second",
+     5,
+     [
+      4,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "finish",
+     6,
+     [
+      5,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ]
+   ],
+   "state_sha": "c526d5fc51c50ea054135a60cf68bce100b5c462f922fb9d693844deccac24a0",
+   "cell_ids": [
+    [
+     1,
+     11,
+     2,
+     2,
+     false
+    ],
+    [
+     3,
+     13,
+     2,
+     2,
+     false
+    ],
+    [
+     4,
+     14,
+     3,
+     3,
+     false
+    ],
+    [
+     6,
+     16,
+     1,
+     1,
+     false
+    ]
+   ]
+  },
+  "unions": [
+   [],
+   [
+    [
+     "union",
+     4,
+     3
+    ],
+    [
+     "union",
+     5,
+     3
+    ],
+    [
+     "union",
+     7,
+     6
+    ],
+    [
+     "union",
+     8,
+     6
+    ]
+   ],
+   [],
+   [],
+   [
+    [
+     "union",
+     2,
+     1
+    ]
+   ],
+   []
+  ],
+  "repair": {
+   "forward_headers": 13,
+   "native": {
+    "dependency_headers": 13,
+    "reverse_headers": 6,
+    "stats": {
+     "live_reverse_edges": 15,
+     "peak_reverse_edges": 20,
+     "repair_candidate_checks": 2,
+     "repair_key_probes": 7,
+     "reverse_edges_coalesced": 3,
+     "reverse_edges_created": 23,
+     "reverse_edges_removed": 5,
+     "reverse_insert_attempts": 23,
+     "reverse_merge_inserts": 12,
+     "reverse_remove_attempts": 6,
+     "subscription_calls": 16,
+     "subscription_value_visits": 34,
+     "union_frontier_probes": 5,
+     "union_redirected_edges": 11,
+     "union_wake_visits": 11
+    },
+    "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+   },
+   "raw_forward_entries": 17,
+   "repair_collisions": 2,
+   "repair_key_hash_changes": 4,
+   "repaired_dependencies": 9,
+   "verified_reverse_edges": 15,
+   "work": {
+    "audit": true,
+    "audited_adoptions": 7,
+    "copied_payloads": 0,
+    "deferred_forward_headers": 7,
+    "displaced_edges": 11,
+    "eager_forward_edges": 0,
+    "fact_adoptions": 5,
+    "fact_kept_index": 0,
+    "fact_payloads": 0,
+    "function_adoptions": 2,
+    "function_kept_index": 0,
+    "function_payloads": 0,
+    "index_audits": 0,
+    "merge_insertions": 12,
+    "missing_payloads": 0,
+    "mode": 16,
+    "payload_attempts": 0,
+    "payload_audits": 0,
+    "peak_pending": 0,
+    "pending_cap": 0,
+    "pending_consumed": 0,
+    "pending_saved": 0,
+    "retired_index_once": 0,
+    "retirement_row_reads_saved": 0,
+    "reverse_audits": 0,
+    "scalar_positions": 0,
+    "source_fields": 14,
+    "substitutions": 0,
+    "survivor_edges": 12,
+    "unions": 5,
+    "unsupported_schemas": 0,
+    "untouched_payloads": 0
+   }
+  }
+ },
+ "combined": {
+  "size": [
+   [
+    [
+     null,
+     {
+      "Int": 3
+     }
+    ]
+   ],
+   [],
+   [
+    [
+     {
+      "Int": 3
+     },
+     {
+      "Int": 1
+     }
+    ]
+   ],
+   [],
+   [],
+   []
+  ],
+  "source": {
+   "rhs": [
+    "3997e6d818456261e6ce2913eca632ee8ce96d69aaaaa15b01c5ace0d2b88f64",
+    "b502e80734524f0e4dc55710c78a1a1736bf4bbde3651a6a965d673258ee45e0",
+    "f01c419bef86ef591c0c36e98d09429c9989e5dad325b52cb63068f33d78c65e",
+    "9668f3df3e016d1b719019d1b853e5b3c61971e758345ae05141f9076edaf8f3",
+    "d805e3e00556d9b257d521604ec8b3a95b8d4dfc7c86f4426dad2bd81e0a2576",
+    "6f0a902ac6608b8398d2c629802ea723384585993f56e5276f59917c7c80f5da"
+   ],
+   "writes": [
+    [
+     1,
+     "e292a97bfd6309ed96aa29a91e01e09fee843a91ac21478ff869b793f6e72cf2"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     1,
+     "f677e1ba68378c26de580ae0770cae08f2e77af3e243349e411842655551471f"
+    ],
+    [
+     1,
+     "3431a65301e341f01078e272eeec95143707151c276ff8ccf3775bac8d5b1cf7"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ]
+   ],
+   "resumes": [
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     0,
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     1,
+     "7de919affa1a58f10e1e15c38041f8493525691f49bfaa083df5e7930654c5d1"
+    ]
+   ],
+   "schedule": [
+    [
+     "observe",
+     1,
+     [
+      0,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "connect",
+     2,
+     [
+      1,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "observe",
+     3,
+     [
+      2,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "repoint",
+     4,
+     [
+      3,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "second",
+     5,
+     [
+      4,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ],
+    [
+     "finish",
+     6,
+     [
+      5,
+      0,
+      0
+     ],
+     [
+      0
+     ],
+     1,
+     true
+    ]
+   ],
+   "state_sha": "c526d5fc51c50ea054135a60cf68bce100b5c462f922fb9d693844deccac24a0",
+   "cell_ids": [
+    [
+     1,
+     11,
+     2,
+     2,
+     false
+    ],
+    [
+     3,
+     13,
+     2,
+     2,
+     false
+    ],
+    [
+     4,
+     14,
+     3,
+     3,
+     false
+    ],
+    [
+     6,
+     16,
+     1,
+     1,
+     false
+    ]
+   ]
+  },
+  "unions": [
+   [],
+   [
+    [
+     "union",
+     4,
+     3
+    ],
+    [
+     "union",
+     5,
+     3
+    ],
+    [
+     "union",
+     7,
+     6
+    ],
+    [
+     "union",
+     8,
+     6
+    ]
+   ],
+   [],
+   [],
+   [
+    [
+     "union",
+     2,
+     1
+    ]
+   ],
+   []
+  ],
+  "repair": {
+   "forward_headers": 13,
+   "native": {
+    "dependency_headers": 13,
+    "reverse_headers": 6,
+    "stats": {
+     "live_reverse_edges": 15,
+     "peak_reverse_edges": 20,
+     "repair_candidate_checks": 2,
+     "repair_key_probes": 7,
+     "reverse_edges_coalesced": 3,
+     "reverse_edges_created": 23,
+     "reverse_edges_removed": 5,
+     "reverse_insert_attempts": 23,
+     "reverse_merge_inserts": 9,
+     "reverse_remove_attempts": 6,
+     "subscription_calls": 16,
+     "subscription_value_visits": 34,
+     "union_frontier_probes": 5,
+     "union_redirected_edges": 11,
+     "union_wake_visits": 11
+    },
+    "unit": "actual operations; created/removed/coalesced edges and live/peak occupancy are separate gauges"
+   },
+   "raw_forward_entries": 17,
+   "repair_collisions": 2,
+   "repair_key_hash_changes": 4,
+   "repaired_dependencies": 9,
+   "verified_reverse_edges": 15,
+   "work": {
+    "audit": true,
+    "audited_adoptions": 7,
+    "copied_payloads": 0,
+    "deferred_forward_headers": 7,
+    "displaced_edges": 11,
+    "eager_forward_edges": 0,
+    "fact_adoptions": 5,
+    "fact_kept_index": 3,
+    "fact_payloads": 7,
+    "function_adoptions": 2,
+    "function_kept_index": 2,
+    "function_payloads": 2,
+    "index_audits": 2,
+    "merge_insertions": 9,
+    "missing_payloads": 0,
+    "mode": 23,
+    "payload_attempts": 11,
+    "payload_audits": 9,
+    "peak_pending": 0,
+    "pending_cap": 0,
+    "pending_consumed": 0,
+    "pending_saved": 0,
+    "retired_index_once": 2,
+    "retirement_row_reads_saved": 2,
+    "reverse_audits": 5,
+    "scalar_positions": 16,
+    "source_fields": 14,
+    "substitutions": 10,
+    "survivor_edges": 12,
+    "unions": 5,
+    "unsupported_schemas": 2,
+    "untouched_payloads": 0
+   }
+  }
+ }
+}

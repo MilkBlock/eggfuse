@@ -1,0 +1,28 @@
+{
+ "source_revision": "31bf7e41",
+ "extensions": [
+  "incremental-neural-index",
+  "baked-port-codes",
+  "adaptive-row-policy",
+  "witness-production-profile",
+  "multi-root-pages",
+  "transaction-guards",
+  "single-signature-frontier",
+  "integrated-cpu-policy",
+  "learned-prefix-feasibility",
+  "projected-single-verifier",
+  "prepared-port-blocks",
+  "learned-atom-constraints",
+  "tiered-port-projections",
+  "complete-generation",
+  "pair-source-frontier",
+  "lazy-equation-ports",
+  "published-single-headers",
+  "ordered-repair-reuse"
+ ],
+ "source_sha256": {
+  "ordered-repair-reuse/repair.rs": "8c9adeffbf98747f5fab0805eff83034bc7409bbe77e406ed3c657fe2e14b969",
+  "ordered-repair-reuse/overlay.py": "d67d3915ee931a90b49f8256b6e85f121d120b7c71fae80fb5afe4ea93b70776"
+ },
+ "executable_sha256": "db5f01a61292dbb36825558ba46c1c2793c3a5c88ce093af596bd32a956200e1"
+}
