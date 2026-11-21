@@ -1,0 +1,302 @@
+{
+  "sum-bits": {
+    "generic": {
+      "counts": {
+        "active_middles": 35,
+        "admissions": 0,
+        "block_captures": 0,
+        "capture_ns": 0,
+        "capture_row_reads": 35,
+        "cleared_on_error": 0,
+        "completed_blocks": 0,
+        "confirmed": 26,
+        "direct_binds": 0,
+        "encoded": 194,
+        "excluded_generation": 0,
+        "exhausted_fresh_ports": 0,
+        "existing_key": 0,
+        "fresh_activations": 35,
+        "internal_bind_ns": 0,
+        "invalidated": 0,
+        "opened": 26,
+        "published": 35,
+        "replayed_operands": 35,
+        "set_attempts": 35,
+        "withheld": 0
+      },
+      "packets": 12601,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "state_sha": true,
+        "schedule": true,
+        "runs": true,
+        "unions": true
+      },
+      "fept": 0.21355447980319023,
+      "ms": [
+        33.019917,
+        31.636667,
+        31.819917000000004,
+        31.425083,
+        31.71575,
+        34.051458
+      ],
+      "bind_ns": [
+        9041,
+        9373,
+        9747,
+        9332,
+        10497,
+        9875
+      ],
+      "capture_ns": [
+        5998,
+        5874,
+        6418,
+        6879,
+        6459,
+        6958
+      ],
+      "receiver_ns": [
+        68701,
+        70071,
+        72433,
+        73185,
+        70159,
+        69627
+      ],
+      "median": {
+        "ms": 31.767833500000002,
+        "bind_ns": 9560.0,
+        "capture_ns": 6438.5,
+        "receiver_ns": 70115.0
+      }
+    },
+    "block": {
+      "counts": {
+        "active_middles": 35,
+        "admissions": 194,
+        "block_captures": 35,
+        "capture_ns": 0,
+        "capture_row_reads": 0,
+        "cleared_on_error": 0,
+        "completed_blocks": 26,
+        "confirmed": 26,
+        "direct_binds": 61,
+        "encoded": 194,
+        "excluded_generation": 0,
+        "exhausted_fresh_ports": 26,
+        "existing_key": 0,
+        "fresh_activations": 35,
+        "internal_bind_ns": 0,
+        "invalidated": 0,
+        "opened": 26,
+        "published": 35,
+        "replayed_operands": 0,
+        "set_attempts": 35,
+        "withheld": 0
+      },
+      "packets": 12601,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "state_sha": true,
+        "schedule": true,
+        "runs": true,
+        "unions": true
+      },
+      "fept": 0.21355447980319023,
+      "ms": [
+        31.246541999999998,
+        32.134334,
+        33.9895,
+        33.433833,
+        34.185958,
+        31.503083
+      ],
+      "bind_ns": [
+        2619,
+        2620,
+        2624,
+        3460,
+        3133,
+        2461
+      ],
+      "capture_ns": [
+        916,
+        874,
+        792,
+        1211,
+        752,
+        961
+      ],
+      "receiver_ns": [
+        67739,
+        70653,
+        66453,
+        76754,
+        71552,
+        69079
+      ],
+      "median": {
+        "ms": 32.7840835,
+        "bind_ns": 2622.0,
+        "capture_ns": 895.0,
+        "receiver_ns": 69866.0
+      }
+    }
+  },
+  "3mm": {
+    "generic": {
+      "counts": {
+        "active_middles": 1229,
+        "admissions": 0,
+        "block_captures": 0,
+        "capture_ns": 0,
+        "capture_row_reads": 1229,
+        "cleared_on_error": 0,
+        "completed_blocks": 0,
+        "confirmed": 932,
+        "direct_binds": 0,
+        "encoded": 5413,
+        "excluded_generation": 0,
+        "exhausted_fresh_ports": 0,
+        "existing_key": 0,
+        "fresh_activations": 1229,
+        "internal_bind_ns": 0,
+        "invalidated": 0,
+        "opened": 932,
+        "published": 1229,
+        "replayed_operands": 1229,
+        "set_attempts": 1229,
+        "withheld": 0
+      },
+      "packets": 555913,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "state_sha": true,
+        "schedule": true,
+        "runs": true,
+        "unions": true
+      },
+      "fept": 0.16667715991531049,
+      "ms": [
+        1613.455208,
+        1607.6715,
+        1604.628667,
+        1578.8781250000002,
+        1618.985041,
+        1599.4904170000002
+      ],
+      "bind_ns": [
+        326575,
+        262889,
+        258712,
+        295437,
+        277631,
+        271586
+      ],
+      "capture_ns": [
+        209079,
+        185811,
+        186703,
+        198922,
+        191762,
+        192015
+      ],
+      "receiver_ns": [
+        1229450,
+        1090425,
+        1080530,
+        1305023,
+        1109769,
+        1148070
+      ],
+      "median": {
+        "ms": 1606.1500835,
+        "bind_ns": 274608.5,
+        "capture_ns": 191888.5,
+        "receiver_ns": 1128919.5
+      }
+    },
+    "block": {
+      "counts": {
+        "active_middles": 1229,
+        "admissions": 5413,
+        "block_captures": 1229,
+        "capture_ns": 0,
+        "capture_row_reads": 0,
+        "cleared_on_error": 0,
+        "completed_blocks": 932,
+        "confirmed": 932,
+        "direct_binds": 2161,
+        "encoded": 5413,
+        "excluded_generation": 0,
+        "exhausted_fresh_ports": 932,
+        "existing_key": 0,
+        "fresh_activations": 1229,
+        "internal_bind_ns": 0,
+        "invalidated": 0,
+        "opened": 932,
+        "published": 1229,
+        "replayed_operands": 0,
+        "set_attempts": 1229,
+        "withheld": 0
+      },
+      "packets": 555913,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "state_sha": true,
+        "schedule": true,
+        "runs": true,
+        "unions": true
+      },
+      "fept": 0.16667715991531049,
+      "ms": [
+        1580.920834,
+        1595.65475,
+        1599.285208,
+        1591.7896250000001,
+        1581.386542,
+        1575.424291
+      ],
+      "bind_ns": [
+        80558,
+        84436,
+        85434,
+        84674,
+        90573,
+        81361
+      ],
+      "capture_ns": [
+        29036,
+        29498,
+        28224,
+        29163,
+        29754,
+        29751
+      ],
+      "receiver_ns": [
+        1087737,
+        1058979,
+        1091193,
+        1085141,
+        1167147,
+        1065300
+      ],
+      "median": {
+        "ms": 1586.5880835,
+        "bind_ns": 84555.0,
+        "capture_ns": 29330.5,
+        "receiver_ns": 1086439.0
+      }
+    }
+  }
+}

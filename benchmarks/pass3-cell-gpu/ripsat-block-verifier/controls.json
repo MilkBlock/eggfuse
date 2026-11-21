@@ -1,0 +1,244 @@
+{
+  "sum-bits": {
+    "growth_kib": 9490,
+    "arms": {
+      "generic": {
+        "endpoints": {
+          "runs": 1428,
+          "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+          "emitted": [
+            6498,
+            5912
+          ],
+          "internal": 61,
+          "set_internal": 26
+        },
+        "header_checks": 50745,
+        "rejected": 0,
+        "trials": [
+          {
+            "growth_crossing": [
+              "reached",
+              24540,
+              1256
+            ],
+            "peak_kib": 276512,
+            "plain_ms": 31.197833000000003
+          },
+          {
+            "growth_crossing": [
+              "reached",
+              24795,
+              1257
+            ],
+            "peak_kib": 276624,
+            "plain_ms": 31.210291
+          },
+          {
+            "growth_crossing": [
+              "reached",
+              24706,
+              1084
+            ],
+            "peak_kib": 276608,
+            "plain_ms": 31.442958
+          },
+          {
+            "growth_crossing": [
+              "reached",
+              23900,
+              1256
+            ],
+            "peak_kib": 276624,
+            "plain_ms": 31.475917
+          }
+        ],
+        "single_verify_ns": [
+          2144898,
+          2177857,
+          2188706,
+          2182191
+        ]
+      },
+      "block": {
+        "endpoints": {
+          "runs": 1428,
+          "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+          "emitted": [
+            6498,
+            5912
+          ],
+          "internal": 61,
+          "set_internal": 26
+        },
+        "header_checks": 50536,
+        "rejected": 0,
+        "trials": [
+          {
+            "growth_crossing": [
+              "reached",
+              24063,
+              1256
+            ],
+            "peak_kib": 276688,
+            "plain_ms": 31.155375
+          },
+          {
+            "growth_crossing": [
+              "reached",
+              24900,
+              1256
+            ],
+            "peak_kib": 276656,
+            "plain_ms": 31.110417
+          },
+          {
+            "growth_crossing": [
+              "reached",
+              24953,
+              1258
+            ],
+            "peak_kib": 276656,
+            "plain_ms": 31.351499999999998
+          },
+          {
+            "growth_crossing": [
+              "reached",
+              26480,
+              1263
+            ],
+            "peak_kib": 276640,
+            "plain_ms": 31.107916
+          }
+        ],
+        "single_verify_ns": [
+          2148979,
+          2161748,
+          2155467,
+          2174689
+        ]
+      }
+    }
+  },
+  "3mm": {
+    "growth_kib": 270446,
+    "arms": {
+      "generic": {
+        "endpoints": {
+          "runs": 4260,
+          "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+          "emitted": [
+            332433,
+            220972
+          ],
+          "internal": 2161,
+          "set_internal": 932
+        },
+        "header_checks": 2031145,
+        "rejected": 0,
+        "trials": [
+          {
+            "growth_crossing": [
+              "reached",
+              925164,
+              1257
+            ],
+            "peak_kib": 723552,
+            "plain_ms": 1582.3092920000001
+          },
+          {
+            "growth_crossing": [
+              "reached",
+              924796,
+              1256
+            ],
+            "peak_kib": 723568,
+            "plain_ms": 1594.510708
+          },
+          {
+            "growth_crossing": [
+              "reached",
+              937075,
+              1256
+            ],
+            "peak_kib": 723648,
+            "plain_ms": 1592.146166
+          },
+          {
+            "growth_crossing": [
+              "reached",
+              941902,
+              1260
+            ],
+            "peak_kib": 723440,
+            "plain_ms": 1602.43225
+          }
+        ],
+        "single_verify_ns": [
+          124823231,
+          124891374,
+          127890252,
+          130231490
+        ]
+      },
+      "block": {
+        "endpoints": {
+          "runs": 4260,
+          "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+          "emitted": [
+            332433,
+            220972
+          ],
+          "internal": 2161,
+          "set_internal": 932
+        },
+        "header_checks": 2023730,
+        "rejected": 0,
+        "trials": [
+          {
+            "growth_crossing": [
+              "reached",
+              926130,
+              1260
+            ],
+            "peak_kib": 723600,
+            "plain_ms": 1582.413667
+          },
+          {
+            "growth_crossing": [
+              "reached",
+              930461,
+              1257
+            ],
+            "peak_kib": 723488,
+            "plain_ms": 1587.206792
+          },
+          {
+            "growth_crossing": [
+              "reached",
+              938860,
+              1257
+            ],
+            "peak_kib": 723584,
+            "plain_ms": 1581.616667
+          },
+          {
+            "growth_crossing": [
+              "reached",
+              929857,
+              1256
+            ],
+            "peak_kib": 725968,
+            "plain_ms": 1570.469208
+          }
+        ],
+        "single_verify_ns": [
+          126449169,
+          125312128,
+          125211972,
+          129451544
+        ]
+      }
+    }
+  }
+}
