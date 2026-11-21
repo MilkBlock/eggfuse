@@ -1,0 +1,351 @@
+{
+ "partial": true,
+ "value_guards": true,
+ "donors": {
+  "dot-product": {
+   "outcome": {
+    "ccc4365ab72048e2b634c7c1734ad7204daf37c93ec7c9f2cbfe7ecf7ad078f1": {
+     "commits": 32,
+     "typed": 3
+    },
+    "cdc7062f3b207a3f3cf3bfb35de56def01fe29ec5a91027f7c73393871653cdf": {
+     "commits": 32,
+     "typed": 38
+    },
+    "0c1271d719941ca9101ee67744711869d1478c7ab4f39785a716725aaf1ce654": {
+     "commits": 13,
+     "typed": 9
+    },
+    "b522eeb0b3c7692f6eadce0780a8612a59f82957ae3384a0009b6583b7dd0268": {
+     "commits": 82
+    },
+    "1748de2fe350c9021aefc81b17b7ec6c796d11c0565343869294124491551a58": {
+     "commits": 9,
+     "typed": 15
+    },
+    "42e6355d652bb905d085fc57089b8202ecd74cdf4ec2449a73e94555131c3498": {
+     "commits": 12,
+     "typed": 12
+    },
+    "57221ffafc9b7397e1fd539ffc7b24de9dfbc6588a7a204640320f0f74d86856": {
+     "commits": 12,
+     "typed": 12
+    },
+    "6615124399a8e31356bd57805544a16e89da08f5131dd26a3b38f9015abf1f96": {
+     "commits": 12
+    },
+    "bba0d3971a2a6fcba8ed1ade0046bbfb0a36c84b07353405ac9c3263ac8c66b8": {
+     "commits": 12,
+     "typed": 12
+    },
+    "99c641c6d9f2f995e2149ec573508319271182a21e739e6bcf4bbeb48699ef53": {
+     "commits": 12,
+     "typed": 12
+    },
+    "64ca005bcd13b6fb728ebfd7a70920219383d74582f9282789aaefe43e6161be": {
+     "commits": 183,
+     "typed": 2,
+     "independent_child": 29,
+     "dynamic": 3
+    },
+    "4d5dbf9b100eb0f0cb264c17b471f23522c1f9cc959ac6559ce90656953b79d1": {
+     "commits": 28,
+     "typed": 28
+    },
+    "c573bef6ba3b767456a5487b6d7917414dee64f640ceaa10301108185f19bd04": {
+     "commits": 10,
+     "typed": 4
+    }
+   },
+   "visible": 2689,
+   "born": 3035,
+   "packets": 13764,
+   "child_packets": 210,
+   "source": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "rhs": 6704,
+   "runs": 1535,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "origin_sha": "9330c606e0d034614a69b1b3f0c9af449dd67ec5ef31bdfa521b3d636c7080e9",
+   "parents": "ae003238e455d0cfc803e886e70f4d929b300f974b43f10c9495e13f29ca7dc5",
+   "physical": "cc8f1bf52f1c7edc3d6146c990ba59f5a33b26e6d4cae551f407e5632c4f0254",
+   "writes": "2e85ad92a526f54bc9603e081cd3b7ec654261dae09071c97ebf380d0df8fbc4",
+   "children": "388cc1613f1f94ebdc99a304f1465c5117c88e34160a72f2f9d024c08cb488db",
+   "removed": 449,
+   "typed": 147,
+   "dynamic": 3,
+   "paid": 29,
+   "registered": 570,
+   "fept": 0.19536471955826795
+  },
+  "jacobi-1d": {
+   "outcome": {
+    "ccc4365ab72048e2b634c7c1734ad7204daf37c93ec7c9f2cbfe7ecf7ad078f1": {
+     "commits": 228,
+     "typed": 25
+    },
+    "cdc7062f3b207a3f3cf3bfb35de56def01fe29ec5a91027f7c73393871653cdf": {
+     "commits": 228,
+     "typed": 245
+    },
+    "0c1271d719941ca9101ee67744711869d1478c7ab4f39785a716725aaf1ce654": {
+     "commits": 55,
+     "typed": 41
+    },
+    "b522eeb0b3c7692f6eadce0780a8612a59f82957ae3384a0009b6583b7dd0268": {
+     "commits": 428
+    },
+    "1748de2fe350c9021aefc81b17b7ec6c796d11c0565343869294124491551a58": {
+     "commits": 68,
+     "typed": 136
+    },
+    "42e6355d652bb905d085fc57089b8202ecd74cdf4ec2449a73e94555131c3498": {
+     "commits": 62,
+     "typed": 62
+    },
+    "57221ffafc9b7397e1fd539ffc7b24de9dfbc6588a7a204640320f0f74d86856": {
+     "commits": 62,
+     "typed": 62
+    },
+    "6615124399a8e31356bd57805544a16e89da08f5131dd26a3b38f9015abf1f96": {
+     "commits": 62
+    },
+    "bba0d3971a2a6fcba8ed1ade0046bbfb0a36c84b07353405ac9c3263ac8c66b8": {
+     "commits": 62,
+     "typed": 62
+    },
+    "c089f3e73a3c8980ee0d88aa669d35a6d887108d9e5a22eff8bd7aa3db12c0d0": {
+     "commits": 62,
+     "typed": 70
+    },
+    "64ca005bcd13b6fb728ebfd7a70920219383d74582f9282789aaefe43e6161be": {
+     "commits": 785,
+     "typed": 2,
+     "independent_child": 71,
+     "dynamic": 52
+    },
+    "4d5dbf9b100eb0f0cb264c17b471f23522c1f9cc959ac6559ce90656953b79d1": {
+     "commits": 6,
+     "typed": 6
+    },
+    "a0c3adacb3d1542c0e08b2d91f89390107b6ff7c274214953821e4f50649d507": {
+     "commits": 21,
+     "typed": 9
+    },
+    "5578cd0fedbaf7245d87f5146c1294e850b9f34d37d5dd3bf58d2167952aadaa": {
+     "commits": 439
+    }
+   },
+   "visible": 14711,
+   "born": 19315,
+   "packets": 67723,
+   "child_packets": 764,
+   "source": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+   "rhs": 41319,
+   "runs": 1990,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "origin_sha": "22f9c5d3798eba5f2da8b67f59b42e8ca0f8af1b13dbddf012d8bb6732266b88",
+   "parents": "e8499989e6bd1f6845243e265b40cd3cdb1641aab9576152fe99ea2313974395",
+   "physical": "e92e1826ceb532460001bbc3ec28e31be10736cdba00c0072e484a2516448bae",
+   "writes": "91bb59fa3f7b37786b754c789d1ec94dd1254fbcaf7a88447b3da9cec7d6d7fb",
+   "children": "62ad861911789feabd72ae5deffd13e0b284bf20f6adc1cc642e0caa60dbca29",
+   "removed": 2568,
+   "typed": 720,
+   "dynamic": 52,
+   "paid": 71,
+   "registered": 3625,
+   "fept": 0.21722309998080416
+  }
+ },
+ "ranked": {
+  "commits": [
+   [
+    "64ca005bcd13b6fb728ebfd7a70920219383d74582f9282789aaefe43e6161be",
+    968
+   ],
+   [
+    "b522eeb0b3c7692f6eadce0780a8612a59f82957ae3384a0009b6583b7dd0268",
+    510
+   ],
+   [
+    "5578cd0fedbaf7245d87f5146c1294e850b9f34d37d5dd3bf58d2167952aadaa",
+    439
+   ],
+   [
+    "ccc4365ab72048e2b634c7c1734ad7204daf37c93ec7c9f2cbfe7ecf7ad078f1",
+    260
+   ],
+   [
+    "cdc7062f3b207a3f3cf3bfb35de56def01fe29ec5a91027f7c73393871653cdf",
+    260
+   ],
+   [
+    "1748de2fe350c9021aefc81b17b7ec6c796d11c0565343869294124491551a58",
+    77
+   ],
+   [
+    "42e6355d652bb905d085fc57089b8202ecd74cdf4ec2449a73e94555131c3498",
+    74
+   ],
+   [
+    "57221ffafc9b7397e1fd539ffc7b24de9dfbc6588a7a204640320f0f74d86856",
+    74
+   ],
+   [
+    "6615124399a8e31356bd57805544a16e89da08f5131dd26a3b38f9015abf1f96",
+    74
+   ],
+   [
+    "bba0d3971a2a6fcba8ed1ade0046bbfb0a36c84b07353405ac9c3263ac8c66b8",
+    74
+   ],
+   [
+    "0c1271d719941ca9101ee67744711869d1478c7ab4f39785a716725aaf1ce654",
+    68
+   ],
+   [
+    "c089f3e73a3c8980ee0d88aa669d35a6d887108d9e5a22eff8bd7aa3db12c0d0",
+    62
+   ],
+   [
+    "4d5dbf9b100eb0f0cb264c17b471f23522c1f9cc959ac6559ce90656953b79d1",
+    34
+   ],
+   [
+    "a0c3adacb3d1542c0e08b2d91f89390107b6ff7c274214953821e4f50649d507",
+    21
+   ],
+   [
+    "99c641c6d9f2f995e2149ec573508319271182a21e739e6bcf4bbeb48699ef53",
+    12
+   ],
+   [
+    "c573bef6ba3b767456a5487b6d7917414dee64f640ceaa10301108185f19bd04",
+    10
+   ]
+  ],
+  "typed": [
+   [
+    "cdc7062f3b207a3f3cf3bfb35de56def01fe29ec5a91027f7c73393871653cdf",
+    283
+   ],
+   [
+    "1748de2fe350c9021aefc81b17b7ec6c796d11c0565343869294124491551a58",
+    151
+   ],
+   [
+    "42e6355d652bb905d085fc57089b8202ecd74cdf4ec2449a73e94555131c3498",
+    74
+   ],
+   [
+    "57221ffafc9b7397e1fd539ffc7b24de9dfbc6588a7a204640320f0f74d86856",
+    74
+   ],
+   [
+    "bba0d3971a2a6fcba8ed1ade0046bbfb0a36c84b07353405ac9c3263ac8c66b8",
+    74
+   ],
+   [
+    "c089f3e73a3c8980ee0d88aa669d35a6d887108d9e5a22eff8bd7aa3db12c0d0",
+    70
+   ],
+   [
+    "0c1271d719941ca9101ee67744711869d1478c7ab4f39785a716725aaf1ce654",
+    50
+   ],
+   [
+    "4d5dbf9b100eb0f0cb264c17b471f23522c1f9cc959ac6559ce90656953b79d1",
+    34
+   ],
+   [
+    "ccc4365ab72048e2b634c7c1734ad7204daf37c93ec7c9f2cbfe7ecf7ad078f1",
+    28
+   ],
+   [
+    "99c641c6d9f2f995e2149ec573508319271182a21e739e6bcf4bbeb48699ef53",
+    12
+   ],
+   [
+    "a0c3adacb3d1542c0e08b2d91f89390107b6ff7c274214953821e4f50649d507",
+    9
+   ],
+   [
+    "64ca005bcd13b6fb728ebfd7a70920219383d74582f9282789aaefe43e6161be",
+    4
+   ],
+   [
+    "c573bef6ba3b767456a5487b6d7917414dee64f640ceaa10301108185f19bd04",
+    4
+   ]
+  ],
+  "typed_and_dynamic": [
+   [
+    "cdc7062f3b207a3f3cf3bfb35de56def01fe29ec5a91027f7c73393871653cdf",
+    283
+   ],
+   [
+    "1748de2fe350c9021aefc81b17b7ec6c796d11c0565343869294124491551a58",
+    151
+   ],
+   [
+    "42e6355d652bb905d085fc57089b8202ecd74cdf4ec2449a73e94555131c3498",
+    74
+   ],
+   [
+    "57221ffafc9b7397e1fd539ffc7b24de9dfbc6588a7a204640320f0f74d86856",
+    74
+   ],
+   [
+    "bba0d3971a2a6fcba8ed1ade0046bbfb0a36c84b07353405ac9c3263ac8c66b8",
+    74
+   ],
+   [
+    "c089f3e73a3c8980ee0d88aa669d35a6d887108d9e5a22eff8bd7aa3db12c0d0",
+    70
+   ],
+   [
+    "64ca005bcd13b6fb728ebfd7a70920219383d74582f9282789aaefe43e6161be",
+    59
+   ],
+   [
+    "0c1271d719941ca9101ee67744711869d1478c7ab4f39785a716725aaf1ce654",
+    50
+   ],
+   [
+    "4d5dbf9b100eb0f0cb264c17b471f23522c1f9cc959ac6559ce90656953b79d1",
+    34
+   ],
+   [
+    "ccc4365ab72048e2b634c7c1734ad7204daf37c93ec7c9f2cbfe7ecf7ad078f1",
+    28
+   ],
+   [
+    "99c641c6d9f2f995e2149ec573508319271182a21e739e6bcf4bbeb48699ef53",
+    12
+   ],
+   [
+    "a0c3adacb3d1542c0e08b2d91f89390107b6ff7c274214953821e4f50649d507",
+    9
+   ],
+   [
+    "c573bef6ba3b767456a5487b6d7917414dee64f640ceaa10301108185f19bd04",
+    4
+   ]
+  ]
+ }
+}

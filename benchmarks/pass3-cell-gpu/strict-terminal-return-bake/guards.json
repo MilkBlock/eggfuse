@@ -1,0 +1,1219 @@
+{
+ "sum-bits": {
+  "leaf": {
+   "outcome": {},
+   "visible": 2691,
+   "born": 3610,
+   "packets": 12662,
+   "child_packets": 191,
+   "source": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "rhs": 7265,
+   "runs": 1428,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "origin_sha": "cff92630cc8109cd8402fc15d20b2ee98c75a591ce76a5676793d8fa3ea9c980",
+   "parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+   "writes": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+   "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+   "removed": 0,
+   "typed": 0,
+   "dynamic": 0,
+   "paid": 0,
+   "registered": 0,
+   "fept": 0.21252566735112938,
+   "programs": null,
+   "availability": {}
+  },
+  "all": {
+   "outcome": {
+    "ccc4365ab72048e2b634c7c1734ad7204daf37c93ec7c9f2cbfe7ecf7ad078f1": {
+     "commits": 36,
+     "typed": 7
+    },
+    "cdc7062f3b207a3f3cf3bfb35de56def01fe29ec5a91027f7c73393871653cdf": {
+     "commits": 36,
+     "typed": 35
+    },
+    "0c1271d719941ca9101ee67744711869d1478c7ab4f39785a716725aaf1ce654": {
+     "commits": 10,
+     "typed": 6
+    },
+    "b522eeb0b3c7692f6eadce0780a8612a59f82957ae3384a0009b6583b7dd0268": {
+     "commits": 125
+    },
+    "1748de2fe350c9021aefc81b17b7ec6c796d11c0565343869294124491551a58": {
+     "commits": 9,
+     "typed": 10
+    },
+    "64ca005bcd13b6fb728ebfd7a70920219383d74582f9282789aaefe43e6161be": {
+     "commits": 192,
+     "typed": 2,
+     "independent_child": 24
+    },
+    "5e82b65b6605f44083d70ab88caafef1c0b4c6257bf3334c5b0598cf0f4a91ee": {
+     "commits": 2
+    },
+    "004336ff12b7458047435121e6d45ad507a1ede0b42ccb3486a1753318fc87c3": {
+     "commits": 2,
+     "typed": 4
+    },
+    "58a87467cf897230144d2ed0d9db89e3bf25718b3641cd4bcf604d31ab0092b0": {
+     "commits": 2,
+     "typed": 1
+    },
+    "ee54d20b32eec3ed05697e593b4bc1312c66b8ee57fa57c4027c16cdffe8fbf5": {
+     "commits": 2,
+     "typed": 2
+    },
+    "111522c96035f347327dd6223ee05586ab6efb27288450ea9f50044979856d63": {
+     "commits": 90
+    },
+    "a0c3adacb3d1542c0e08b2d91f89390107b6ff7c274214953821e4f50649d507": {
+     "commits": 8,
+     "typed": 8
+    },
+    "c573bef6ba3b767456a5487b6d7917414dee64f640ceaa10301108185f19bd04": {
+     "commits": 2,
+     "typed": 2
+    }
+   },
+   "visible": 2691,
+   "born": 3610,
+   "packets": 12146,
+   "child_packets": 191,
+   "source": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "rhs": 7265,
+   "runs": 1428,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "origin_sha": "cff92630cc8109cd8402fc15d20b2ee98c75a591ce76a5676793d8fa3ea9c980",
+   "parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+   "writes": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+   "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+   "removed": 516,
+   "typed": 77,
+   "dynamic": 0,
+   "paid": 24,
+   "registered": 933,
+   "fept": 0.22155442120862837,
+   "programs": null,
+   "availability": {
+    "100": [
+     1,
+     1,
+     5,
+     0,
+     1,
+     0
+    ],
+    "110": [
+     1,
+     1,
+     2,
+     0,
+     1,
+     0
+    ],
+    "113": [
+     2,
+     1,
+     4,
+     0,
+     2,
+     0
+    ],
+    "114": [
+     1,
+     1,
+     5,
+     0,
+     1,
+     0
+    ],
+    "115": [
+     1,
+     1,
+     2,
+     0,
+     1,
+     0
+    ],
+    "137": [
+     44,
+     157,
+     239,
+     0,
+     33,
+     11
+    ],
+    "138": [
+     44,
+     157,
+     239,
+     0,
+     40,
+     4
+    ],
+    "143": [
+     25,
+     86,
+     148,
+     0,
+     11,
+     14
+    ],
+    "149": [
+     1,
+     1,
+     5,
+     0,
+     1,
+     0
+    ],
+    "159": [
+     2,
+     1,
+     4,
+     0,
+     2,
+     0
+    ],
+    "161": [
+     1,
+     1,
+     2,
+     0,
+     1,
+     0
+    ],
+    "266": [
+     2,
+     90,
+     90,
+     0,
+     1,
+     1
+    ],
+    "316": [
+     2,
+     90,
+     40,
+     0,
+     2,
+     0
+    ],
+    "420": [
+     1,
+     1,
+     5,
+     0,
+     1,
+     0
+    ],
+    "430": [
+     2,
+     1,
+     4,
+     0,
+     2,
+     0
+    ],
+    "432": [
+     1,
+     1,
+     2,
+     0,
+     1,
+     0
+    ],
+    "502": [
+     1,
+     1,
+     5,
+     0,
+     1,
+     0
+    ],
+    "503": [
+     2,
+     1,
+     4,
+     0,
+     2,
+     0
+    ],
+    "506": [
+     27,
+     192,
+     192,
+     0,
+     0,
+     27
+    ],
+    "51": [
+     5,
+     4,
+     5,
+     0,
+     3,
+     2
+    ],
+    "527": [
+     1,
+     1,
+     2,
+     0,
+     1,
+     0
+    ],
+    "54": [
+     2,
+     1,
+     4,
+     0,
+     2,
+     0
+    ],
+    "541": [
+     5,
+     4,
+     5,
+     0,
+     3,
+     2
+    ],
+    "544": [
+     2,
+     1,
+     4,
+     0,
+     2,
+     0
+    ],
+    "55": [
+     16,
+     23,
+     38,
+     0,
+     13,
+     3
+    ],
+    "58": [
+     25,
+     86,
+     148,
+     0,
+     11,
+     14
+    ],
+    "63": [
+     2,
+     1,
+     4,
+     0,
+     2,
+     0
+    ],
+    "64": [
+     2,
+     8,
+     8,
+     0,
+     1,
+     1
+    ],
+    "65": [
+     4,
+     10,
+     27,
+     0,
+     3,
+     1
+    ],
+    "67": [
+     1,
+     1,
+     2,
+     0,
+     1,
+     0
+    ],
+    "69": [
+     5,
+     4,
+     5,
+     0,
+     3,
+     2
+    ],
+    "85": [
+     5,
+     4,
+     5,
+     0,
+     3,
+     2
+    ]
+   }
+  },
+  "commits-1": {
+   "outcome": {
+    "64ca005bcd13b6fb728ebfd7a70920219383d74582f9282789aaefe43e6161be": {
+     "commits": 192,
+     "typed": 2,
+     "independent_child": 24
+    }
+   },
+   "visible": 2691,
+   "born": 3610,
+   "packets": 12470,
+   "child_packets": 191,
+   "source": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "rhs": 7265,
+   "runs": 1428,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "origin_sha": "cff92630cc8109cd8402fc15d20b2ee98c75a591ce76a5676793d8fa3ea9c980",
+   "parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+   "writes": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+   "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+   "removed": 192,
+   "typed": 2,
+   "dynamic": 0,
+   "paid": 24,
+   "registered": 192,
+   "fept": 0.21579791499599038,
+   "programs": 12,
+   "availability": {
+    "506": [
+     27,
+     192,
+     192,
+     0,
+     0,
+     27
+    ]
+   }
+  },
+  "commits-2": {
+   "outcome": {
+    "b522eeb0b3c7692f6eadce0780a8612a59f82957ae3384a0009b6583b7dd0268": {
+     "commits": 160
+    },
+    "64ca005bcd13b6fb728ebfd7a70920219383d74582f9282789aaefe43e6161be": {
+     "commits": 192,
+     "typed": 2,
+     "independent_child": 24
+    }
+   },
+   "visible": 2691,
+   "born": 3610,
+   "packets": 12310,
+   "child_packets": 191,
+   "source": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "rhs": 7265,
+   "runs": 1428,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "origin_sha": "cff92630cc8109cd8402fc15d20b2ee98c75a591ce76a5676793d8fa3ea9c980",
+   "parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+   "writes": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+   "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+   "removed": 352,
+   "typed": 2,
+   "dynamic": 0,
+   "paid": 24,
+   "registered": 388,
+   "fept": 0.21860276198212836,
+   "programs": 24,
+   "availability": {
+    "137": [
+     44,
+     196,
+     239,
+     0,
+     25,
+     19
+    ],
+    "506": [
+     27,
+     192,
+     192,
+     0,
+     0,
+     27
+    ]
+   }
+  },
+  "typed-1": {
+   "outcome": {
+    "cdc7062f3b207a3f3cf3bfb35de56def01fe29ec5a91027f7c73393871653cdf": {
+     "commits": 36,
+     "typed": 35
+    }
+   },
+   "visible": 2691,
+   "born": 3610,
+   "packets": 12626,
+   "child_packets": 191,
+   "source": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "rhs": 7265,
+   "runs": 1428,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "origin_sha": "cff92630cc8109cd8402fc15d20b2ee98c75a591ce76a5676793d8fa3ea9c980",
+   "parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+   "writes": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+   "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+   "removed": 36,
+   "typed": 35,
+   "dynamic": 0,
+   "paid": 0,
+   "registered": 86,
+   "fept": 0.21313163313796926,
+   "programs": 65,
+   "availability": {
+    "143": [
+     25,
+     86,
+     148,
+     0,
+     11,
+     14
+    ]
+   }
+  },
+  "typed-2": {
+   "outcome": {
+    "cdc7062f3b207a3f3cf3bfb35de56def01fe29ec5a91027f7c73393871653cdf": {
+     "commits": 36,
+     "typed": 35
+    },
+    "1748de2fe350c9021aefc81b17b7ec6c796d11c0565343869294124491551a58": {
+     "commits": 9,
+     "typed": 10
+    }
+   },
+   "visible": 2691,
+   "born": 3610,
+   "packets": 12617,
+   "child_packets": 191,
+   "source": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "rhs": 7265,
+   "runs": 1428,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "origin_sha": "cff92630cc8109cd8402fc15d20b2ee98c75a591ce76a5676793d8fa3ea9c980",
+   "parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+   "writes": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+   "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+   "removed": 45,
+   "typed": 45,
+   "dynamic": 0,
+   "paid": 0,
+   "registered": 243,
+   "fept": 0.2132836648965681,
+   "programs": 77,
+   "availability": {
+    "138": [
+     44,
+     157,
+     239,
+     0,
+     40,
+     4
+    ],
+    "143": [
+     25,
+     86,
+     148,
+     0,
+     11,
+     14
+    ]
+   }
+  },
+  "typed_and_dynamic-1": {
+   "outcome": {
+    "cdc7062f3b207a3f3cf3bfb35de56def01fe29ec5a91027f7c73393871653cdf": {
+     "commits": 36,
+     "typed": 35
+    }
+   },
+   "visible": 2691,
+   "born": 3610,
+   "packets": 12626,
+   "child_packets": 191,
+   "source": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "rhs": 7265,
+   "runs": 1428,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "origin_sha": "cff92630cc8109cd8402fc15d20b2ee98c75a591ce76a5676793d8fa3ea9c980",
+   "parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+   "writes": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+   "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+   "removed": 36,
+   "typed": 35,
+   "dynamic": 0,
+   "paid": 0,
+   "registered": 86,
+   "fept": 0.21313163313796926,
+   "programs": 65,
+   "availability": {
+    "143": [
+     25,
+     86,
+     148,
+     0,
+     11,
+     14
+    ]
+   },
+   "identical_config": "typed-1"
+  },
+  "typed_and_dynamic-2": {
+   "outcome": {
+    "cdc7062f3b207a3f3cf3bfb35de56def01fe29ec5a91027f7c73393871653cdf": {
+     "commits": 36,
+     "typed": 35
+    },
+    "1748de2fe350c9021aefc81b17b7ec6c796d11c0565343869294124491551a58": {
+     "commits": 9,
+     "typed": 10
+    }
+   },
+   "visible": 2691,
+   "born": 3610,
+   "packets": 12617,
+   "child_packets": 191,
+   "source": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "rhs": 7265,
+   "runs": 1428,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "origin_sha": "cff92630cc8109cd8402fc15d20b2ee98c75a591ce76a5676793d8fa3ea9c980",
+   "parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+   "writes": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+   "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+   "removed": 45,
+   "typed": 45,
+   "dynamic": 0,
+   "paid": 0,
+   "registered": 243,
+   "fept": 0.2132836648965681,
+   "programs": 77,
+   "availability": {
+    "138": [
+     44,
+     157,
+     239,
+     0,
+     40,
+     4
+    ],
+    "143": [
+     25,
+     86,
+     148,
+     0,
+     11,
+     14
+    ]
+   },
+   "identical_config": "typed-2"
+  }
+ },
+ "3mm": {
+  "leaf": {
+   "outcome": {},
+   "visible": 92658,
+   "born": 119503,
+   "packets": 558074,
+   "child_packets": 2508,
+   "source": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "rhs": 294917,
+   "runs": 4260,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "origin_sha": "bf73354cc23f703a095121db079abb29e55995f92171978f2cea9b999f254dd1",
+   "parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+   "writes": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "removed": 0,
+   "typed": 0,
+   "dynamic": 0,
+   "paid": 0,
+   "registered": 0,
+   "fept": 0.16603174489404632,
+   "programs": null,
+   "availability": {}
+  },
+  "all": {
+   "outcome": {
+    "ccc4365ab72048e2b634c7c1734ad7204daf37c93ec7c9f2cbfe7ecf7ad078f1": {
+     "commits": 1555,
+     "typed": 101
+    },
+    "cdc7062f3b207a3f3cf3bfb35de56def01fe29ec5a91027f7c73393871653cdf": {
+     "commits": 1555,
+     "typed": 1611
+    },
+    "0c1271d719941ca9101ee67744711869d1478c7ab4f39785a716725aaf1ce654": {
+     "commits": 409,
+     "typed": 181
+    },
+    "b522eeb0b3c7692f6eadce0780a8612a59f82957ae3384a0009b6583b7dd0268": {
+     "commits": 2595,
+     "typed": 3
+    },
+    "1748de2fe350c9021aefc81b17b7ec6c796d11c0565343869294124491551a58": {
+     "commits": 495,
+     "typed": 1052
+    },
+    "42e6355d652bb905d085fc57089b8202ecd74cdf4ec2449a73e94555131c3498": {
+     "commits": 330,
+     "typed": 330
+    },
+    "57221ffafc9b7397e1fd539ffc7b24de9dfbc6588a7a204640320f0f74d86856": {
+     "commits": 330,
+     "typed": 330
+    },
+    "6615124399a8e31356bd57805544a16e89da08f5131dd26a3b38f9015abf1f96": {
+     "commits": 330
+    },
+    "bba0d3971a2a6fcba8ed1ade0046bbfb0a36c84b07353405ac9c3263ac8c66b8": {
+     "commits": 330,
+     "typed": 330
+    },
+    "92abc97ff16a99332c9cfb85737aebaf1a0b67177bb29844208c3c3a259c02f3": {
+     "commits": 330,
+     "typed": 330
+    },
+    "64ca005bcd13b6fb728ebfd7a70920219383d74582f9282789aaefe43e6161be": {
+     "commits": 3728,
+     "typed": 2,
+     "dynamic": 408
+    },
+    "a0c3adacb3d1542c0e08b2d91f89390107b6ff7c274214953821e4f50649d507": {
+     "commits": 108,
+     "typed": 70
+    }
+   },
+   "visible": 92658,
+   "born": 119503,
+   "packets": 545979,
+   "child_packets": 2508,
+   "source": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "rhs": 294917,
+   "runs": 4260,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "origin_sha": "bf73354cc23f703a095121db079abb29e55995f92171978f2cea9b999f254dd1",
+   "parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+   "writes": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "removed": 12095,
+   "typed": 4340,
+   "dynamic": 408,
+   "paid": 0,
+   "registered": 16431,
+   "fept": 0.16970982400421994,
+   "programs": null,
+   "availability": {
+    "100": [
+     6,
+     330,
+     389,
+     0,
+     2,
+     4
+    ],
+    "114": [
+     6,
+     330,
+     389,
+     0,
+     2,
+     4
+    ],
+    "137": [
+     70,
+     3713,
+     6842,
+     0,
+     42,
+     28
+    ],
+    "138": [
+     70,
+     3713,
+     6842,
+     0,
+     57,
+     13
+    ],
+    "143": [
+     36,
+     1555,
+     3959,
+     0,
+     11,
+     25
+    ],
+    "149": [
+     6,
+     330,
+     389,
+     0,
+     2,
+     4
+    ],
+    "420": [
+     3,
+     330,
+     389,
+     0,
+     0,
+     3
+    ],
+    "502": [
+     3,
+     330,
+     389,
+     0,
+     0,
+     3
+    ],
+    "506": [
+     48,
+     3728,
+     4058,
+     0,
+     0,
+     48
+    ],
+    "55": [
+     28,
+     409,
+     1405,
+     0,
+     16,
+     12
+    ],
+    "58": [
+     36,
+     1555,
+     3959,
+     0,
+     11,
+     25
+    ],
+    "64": [
+     4,
+     108,
+     124,
+     0,
+     3,
+     1
+    ]
+   }
+  },
+  "commits-1": {
+   "outcome": {
+    "64ca005bcd13b6fb728ebfd7a70920219383d74582f9282789aaefe43e6161be": {
+     "commits": 4058,
+     "typed": 2,
+     "dynamic": 408
+    }
+   },
+   "visible": 92658,
+   "born": 119503,
+   "packets": 554016,
+   "child_packets": 2508,
+   "source": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "rhs": 294917,
+   "runs": 4260,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "origin_sha": "bf73354cc23f703a095121db079abb29e55995f92171978f2cea9b999f254dd1",
+   "parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+   "writes": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "removed": 4058,
+   "typed": 2,
+   "dynamic": 408,
+   "paid": 0,
+   "registered": 4058,
+   "fept": 0.16724787731762258,
+   "programs": 12,
+   "availability": {
+    "506": [
+     48,
+     4058,
+     4058,
+     0,
+     0,
+     48
+    ]
+   }
+  },
+  "commits-2": {
+   "outcome": {
+    "b522eeb0b3c7692f6eadce0780a8612a59f82957ae3384a0009b6583b7dd0268": {
+     "commits": 4137,
+     "typed": 5
+    },
+    "64ca005bcd13b6fb728ebfd7a70920219383d74582f9282789aaefe43e6161be": {
+     "commits": 4058,
+     "typed": 2,
+     "dynamic": 408
+    }
+   },
+   "visible": 92658,
+   "born": 119503,
+   "packets": 549879,
+   "child_packets": 2508,
+   "source": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "rhs": 294917,
+   "runs": 4260,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "origin_sha": "bf73354cc23f703a095121db079abb29e55995f92171978f2cea9b999f254dd1",
+   "parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+   "writes": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "removed": 8195,
+   "typed": 7,
+   "dynamic": 408,
+   "paid": 0,
+   "registered": 9758,
+   "fept": 0.16850616226478915,
+   "programs": 24,
+   "availability": {
+    "137": [
+     70,
+     5700,
+     6842,
+     0,
+     40,
+     30
+    ],
+    "506": [
+     48,
+     4058,
+     4058,
+     0,
+     0,
+     48
+    ]
+   }
+  },
+  "typed-1": {
+   "outcome": {
+    "cdc7062f3b207a3f3cf3bfb35de56def01fe29ec5a91027f7c73393871653cdf": {
+     "commits": 1555,
+     "typed": 1611
+    }
+   },
+   "visible": 92658,
+   "born": 119503,
+   "packets": 556519,
+   "child_packets": 2508,
+   "source": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "rhs": 294917,
+   "runs": 4260,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "origin_sha": "bf73354cc23f703a095121db079abb29e55995f92171978f2cea9b999f254dd1",
+   "parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+   "writes": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "removed": 1555,
+   "typed": 1611,
+   "dynamic": 0,
+   "paid": 0,
+   "registered": 1555,
+   "fept": 0.16649566322084242,
+   "programs": 943,
+   "availability": {
+    "143": [
+     36,
+     1555,
+     3959,
+     0,
+     11,
+     25
+    ]
+   }
+  },
+  "typed-2": {
+   "outcome": {
+    "cdc7062f3b207a3f3cf3bfb35de56def01fe29ec5a91027f7c73393871653cdf": {
+     "commits": 1555,
+     "typed": 1611
+    },
+    "1748de2fe350c9021aefc81b17b7ec6c796d11c0565343869294124491551a58": {
+     "commits": 495,
+     "typed": 1052
+    }
+   },
+   "visible": 92658,
+   "born": 119503,
+   "packets": 556024,
+   "child_packets": 2508,
+   "source": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "rhs": 294917,
+   "runs": 4260,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "origin_sha": "bf73354cc23f703a095121db079abb29e55995f92171978f2cea9b999f254dd1",
+   "parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+   "writes": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "removed": 2050,
+   "typed": 2663,
+   "dynamic": 0,
+   "paid": 0,
+   "registered": 5268,
+   "fept": 0.16664388587542983,
+   "programs": 955,
+   "availability": {
+    "138": [
+     70,
+     3713,
+     6842,
+     0,
+     57,
+     13
+    ],
+    "143": [
+     36,
+     1555,
+     3959,
+     0,
+     11,
+     25
+    ]
+   }
+  },
+  "typed_and_dynamic-1": {
+   "outcome": {
+    "cdc7062f3b207a3f3cf3bfb35de56def01fe29ec5a91027f7c73393871653cdf": {
+     "commits": 1555,
+     "typed": 1611
+    }
+   },
+   "visible": 92658,
+   "born": 119503,
+   "packets": 556519,
+   "child_packets": 2508,
+   "source": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "rhs": 294917,
+   "runs": 4260,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "origin_sha": "bf73354cc23f703a095121db079abb29e55995f92171978f2cea9b999f254dd1",
+   "parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+   "writes": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "removed": 1555,
+   "typed": 1611,
+   "dynamic": 0,
+   "paid": 0,
+   "registered": 1555,
+   "fept": 0.16649566322084242,
+   "programs": 943,
+   "availability": {
+    "143": [
+     36,
+     1555,
+     3959,
+     0,
+     11,
+     25
+    ]
+   },
+   "identical_config": "typed-1"
+  },
+  "typed_and_dynamic-2": {
+   "outcome": {
+    "cdc7062f3b207a3f3cf3bfb35de56def01fe29ec5a91027f7c73393871653cdf": {
+     "commits": 1555,
+     "typed": 1611
+    },
+    "1748de2fe350c9021aefc81b17b7ec6c796d11c0565343869294124491551a58": {
+     "commits": 495,
+     "typed": 1052
+    }
+   },
+   "visible": 92658,
+   "born": 119503,
+   "packets": 556024,
+   "child_packets": 2508,
+   "source": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "rhs": 294917,
+   "runs": 4260,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "origin_sha": "bf73354cc23f703a095121db079abb29e55995f92171978f2cea9b999f254dd1",
+   "parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+   "writes": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "removed": 2050,
+   "typed": 2663,
+   "dynamic": 0,
+   "paid": 0,
+   "registered": 5268,
+   "fept": 0.16664388587542983,
+   "programs": 955,
+   "availability": {
+    "138": [
+     70,
+     3713,
+     6842,
+     0,
+     57,
+     13
+    ],
+    "143": [
+     36,
+     1555,
+     3959,
+     0,
+     11,
+     25
+    ]
+   },
+   "identical_config": "typed-2"
+  }
+ }
+}

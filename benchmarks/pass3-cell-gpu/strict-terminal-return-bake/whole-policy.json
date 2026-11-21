@@ -1,0 +1,123 @@
+{
+ "donors": {
+  "dot-product": {
+   "outcome": {
+    "64ca005bcd13b6fb728ebfd7a70920219383d74582f9282789aaefe43e6161be": {
+     "commits": 146,
+     "typed": 2,
+     "independent_child": 19
+    },
+    "4d5dbf9b100eb0f0cb264c17b471f23522c1f9cc959ac6559ce90656953b79d1": {
+     "commits": 8,
+     "typed": 8
+    }
+   },
+   "visible": 2689,
+   "born": 3035,
+   "packets": 14059,
+   "child_packets": 210,
+   "source": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+   "rhs": 6704,
+   "runs": 1535,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "origin_sha": "9330c606e0d034614a69b1b3f0c9af449dd67ec5ef31bdfa521b3d636c7080e9",
+   "parents": "ae003238e455d0cfc803e886e70f4d929b300f974b43f10c9495e13f29ca7dc5",
+   "physical": "cc8f1bf52f1c7edc3d6146c990ba59f5a33b26e6d4cae551f407e5632c4f0254",
+   "writes": "2e85ad92a526f54bc9603e081cd3b7ec654261dae09071c97ebf380d0df8fbc4",
+   "children": "388cc1613f1f94ebdc99a304f1465c5117c88e34160a72f2f9d024c08cb488db",
+   "removed": 154,
+   "typed": 10,
+   "dynamic": 0,
+   "paid": 19,
+   "registered": 422,
+   "fept": 0.19126538160608864
+  },
+  "jacobi-1d": {
+   "outcome": {
+    "64ca005bcd13b6fb728ebfd7a70920219383d74582f9282789aaefe43e6161be": {
+     "commits": 697,
+     "typed": 2,
+     "independent_child": 71
+    },
+    "4d5dbf9b100eb0f0cb264c17b471f23522c1f9cc959ac6559ce90656953b79d1": {
+     "commits": 4,
+     "typed": 4
+    },
+    "5578cd0fedbaf7245d87f5146c1294e850b9f34d37d5dd3bf58d2167952aadaa": {
+     "commits": 439
+    }
+   },
+   "visible": 14711,
+   "born": 19315,
+   "packets": 69151,
+   "child_packets": 764,
+   "source": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+   "rhs": 41319,
+   "runs": 1990,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "origin_sha": "22f9c5d3798eba5f2da8b67f59b42e8ca0f8af1b13dbddf012d8bb6732266b88",
+   "parents": "e8499989e6bd1f6845243e265b40cd3cdb1641aab9576152fe99ea2313974395",
+   "physical": "e92e1826ceb532460001bbc3ec28e31be10736cdba00c0072e484a2516448bae",
+   "writes": "91bb59fa3f7b37786b754c789d1ec94dd1254fbcaf7a88447b3da9cec7d6d7fb",
+   "children": "62ad861911789feabd72ae5deffd13e0b284bf20f6adc1cc642e0caa60dbca29",
+   "removed": 1140,
+   "typed": 6,
+   "dynamic": 0,
+   "paid": 71,
+   "registered": 2736,
+   "fept": 0.2127373429162268
+  }
+ },
+ "ranked": {
+  "commits": [
+   [
+    "64ca005bcd13b6fb728ebfd7a70920219383d74582f9282789aaefe43e6161be",
+    843
+   ],
+   [
+    "5578cd0fedbaf7245d87f5146c1294e850b9f34d37d5dd3bf58d2167952aadaa",
+    439
+   ],
+   [
+    "4d5dbf9b100eb0f0cb264c17b471f23522c1f9cc959ac6559ce90656953b79d1",
+    12
+   ]
+  ],
+  "typed": [
+   [
+    "4d5dbf9b100eb0f0cb264c17b471f23522c1f9cc959ac6559ce90656953b79d1",
+    12
+   ],
+   [
+    "64ca005bcd13b6fb728ebfd7a70920219383d74582f9282789aaefe43e6161be",
+    4
+   ]
+  ],
+  "typed_and_dynamic": [
+   [
+    "4d5dbf9b100eb0f0cb264c17b471f23522c1f9cc959ac6559ce90656953b79d1",
+    12
+   ],
+   [
+    "64ca005bcd13b6fb728ebfd7a70920219383d74582f9282789aaefe43e6161be",
+    4
+   ]
+  ]
+ }
+}
