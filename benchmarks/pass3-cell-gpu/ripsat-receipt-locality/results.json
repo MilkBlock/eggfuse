@@ -1,0 +1,1350 @@
+{
+ "sum-bits": {
+  "arms": {
+   "all": {
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "rhs": 7265,
+    "runs": 1428,
+    "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+    "roots": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+    "nested": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+    "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+    "commits": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+    "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+    "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+    "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+    "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+    "score": "15576378264816477716",
+    "births_sha": "172cde88b1e4bb2c0bd48e61ea6c7da69a684cbd50894c30289bf5730deae1b5",
+    "end_sha": "cc411875294ca05a458e8c66917fb6390f1498c621d92cd61d8496448ef2c9fa",
+    "new": 3610,
+    "visible": 2691,
+    "child_candidates": 305,
+    "emitted": [
+     6498,
+     5912
+    ],
+    "child": 191,
+    "packets": 12601,
+    "fept": 0.21355447980319023,
+    "internal": 61,
+    "set_internal": 26,
+    "ordinary_let_internal": 35,
+    "set_counts": {
+     "active_middles": 35,
+     "cleared_on_error": 0,
+     "confirmed": 26,
+     "encoded": 194,
+     "excluded_generation": 0,
+     "existing_key": 0,
+     "fresh_activations": 35,
+     "invalidated": 0,
+     "opened": 190,
+     "published": 35,
+     "set_attempts": 35,
+     "withheld": 0
+    },
+    "set_origins": {
+     "typed": [
+      26,
+      6
+     ],
+     "dynamic": [
+      0,
+      0
+     ],
+     "paid": [
+      0,
+      0
+     ]
+    },
+    "paths": {
+     "[[143,1,55]]": 35,
+     "[[143,1,55],[55,1,143]]": 26
+    },
+    "signed_ordinals_sha": "8f606b88d75ed6bc48d7d1ee23b063c6741b0c66e79e21097d38901221cc232e",
+    "terminal_ordinals_sha": "e990b219ad26b7ad5c5b5c5db0f43fd51d272f7bc2d443da8aa88bc2b0ee32b5",
+    "examples": [
+     {
+      "consumer": 1274,
+      "consumer_rule": 143,
+      "consumer_run": 106,
+      "fact": [
+       572,
+       1
+      ],
+      "fields": [
+       {
+        "Eq": 2284922601477
+       },
+       {
+        "Int": 0
+       },
+       {
+        "Eq": 554050781307
+       }
+      ],
+      "middle": 795,
+      "middle_run": 102,
+      "path": [
+       [
+        143,
+        1,
+        55
+       ],
+       [
+        55,
+        1,
+        143
+       ]
+      ],
+      "ports": [
+       [
+        532,
+        1,
+        98,
+        98
+       ],
+       [
+        572,
+        1,
+        102,
+        102
+       ]
+      ],
+      "root": 761,
+      "table": 223,
+      "version": 102
+     }
+    ],
+    "scan": {
+     "excluded_by_version": 0,
+     "index_ns": 0,
+     "member_checks": 1045,
+     "possible": 1045,
+     "posting_reads": 0,
+     "profile": false,
+     "receiver_ns": 0,
+     "release_calls": 39,
+     "row_reads": 352,
+     "sort_items": 0,
+     "stamped": 0,
+     "visited": 1045
+    },
+    "scope": {
+     "absent": 144,
+     "actual_internal": 61,
+     "actual_output_events": 35,
+     "audit_score_inputs": 0,
+     "changed": 0,
+     "complete_banks": 0,
+     "direct_spine_lookups": 0,
+     "explicit_addresses": 1045,
+     "external_roots": 194,
+     "local_field_reads": 148,
+     "named_ports": 70,
+     "no_named_input": 0,
+     "no_score_banks": 0,
+     "no_score_inputs": 0,
+     "released": 61,
+     "selected_primary": 229,
+     "source_commits": 61,
+     "stale": 291,
+     "tagged": 194,
+     "tries": 183,
+     "two_with_internal_parent": 26,
+     "uncovered": 14
+    },
+    "ms": [
+     32.911667,
+     37.642125,
+     32.460958,
+     31.500375,
+     31.8835
+    ],
+    "profile": [
+     {
+      "excluded_by_version": 0,
+      "index_ns": 0,
+      "member_checks": 1045,
+      "possible": 1045,
+      "posting_reads": 0,
+      "profile": true,
+      "receiver_ns": 97235,
+      "release_calls": 39,
+      "row_reads": 352,
+      "sort_items": 0,
+      "stamped": 0,
+      "visited": 1045
+     },
+     {
+      "excluded_by_version": 0,
+      "index_ns": 0,
+      "member_checks": 1045,
+      "possible": 1045,
+      "posting_reads": 0,
+      "profile": true,
+      "receiver_ns": 104946,
+      "release_calls": 39,
+      "row_reads": 352,
+      "sort_items": 0,
+      "stamped": 0,
+      "visited": 1045
+     },
+     {
+      "excluded_by_version": 0,
+      "index_ns": 0,
+      "member_checks": 1045,
+      "possible": 1045,
+      "posting_reads": 0,
+      "profile": true,
+      "receiver_ns": 100820,
+      "release_calls": 39,
+      "row_reads": 352,
+      "sort_items": 0,
+      "stamped": 0,
+      "visited": 1045
+     }
+    ],
+    "median_ms": 32.460958
+   },
+   "early": {
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "rhs": 7265,
+    "runs": 1428,
+    "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+    "roots": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+    "nested": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+    "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+    "commits": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+    "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+    "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+    "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+    "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+    "score": "15576378264816477716",
+    "births_sha": "172cde88b1e4bb2c0bd48e61ea6c7da69a684cbd50894c30289bf5730deae1b5",
+    "end_sha": "cc411875294ca05a458e8c66917fb6390f1498c621d92cd61d8496448ef2c9fa",
+    "new": 3610,
+    "visible": 2691,
+    "child_candidates": 305,
+    "emitted": [
+     6498,
+     5912
+    ],
+    "child": 191,
+    "packets": 12601,
+    "fept": 0.21355447980319023,
+    "internal": 61,
+    "set_internal": 26,
+    "ordinary_let_internal": 35,
+    "set_counts": {
+     "active_middles": 35,
+     "cleared_on_error": 0,
+     "confirmed": 26,
+     "encoded": 194,
+     "excluded_generation": 0,
+     "existing_key": 0,
+     "fresh_activations": 35,
+     "invalidated": 0,
+     "opened": 26,
+     "published": 35,
+     "set_attempts": 35,
+     "withheld": 0
+    },
+    "set_origins": {
+     "typed": [
+      26,
+      6
+     ],
+     "dynamic": [
+      0,
+      0
+     ],
+     "paid": [
+      0,
+      0
+     ]
+    },
+    "paths": {
+     "[[143,1,55]]": 35,
+     "[[143,1,55],[55,1,143]]": 26
+    },
+    "signed_ordinals_sha": "8f606b88d75ed6bc48d7d1ee23b063c6741b0c66e79e21097d38901221cc232e",
+    "terminal_ordinals_sha": "e990b219ad26b7ad5c5b5c5db0f43fd51d272f7bc2d443da8aa88bc2b0ee32b5",
+    "examples": [
+     {
+      "consumer": 1274,
+      "consumer_rule": 143,
+      "consumer_run": 106,
+      "fact": [
+       572,
+       1
+      ],
+      "fields": [
+       {
+        "Eq": 2284922601477
+       },
+       {
+        "Int": 0
+       },
+       {
+        "Eq": 554050781307
+       }
+      ],
+      "middle": 795,
+      "middle_run": 102,
+      "path": [
+       [
+        143,
+        1,
+        55
+       ],
+       [
+        55,
+        1,
+        143
+       ]
+      ],
+      "ports": [
+       [
+        532,
+        1,
+        98,
+        98
+       ],
+       [
+        572,
+        1,
+        102,
+        102
+       ]
+      ],
+      "root": 761,
+      "table": 223,
+      "version": 102
+     }
+    ],
+    "scan": {
+     "excluded_by_version": 975,
+     "index_ns": 0,
+     "member_checks": 70,
+     "possible": 1045,
+     "posting_reads": 0,
+     "profile": false,
+     "receiver_ns": 0,
+     "release_calls": 39,
+     "row_reads": 61,
+     "sort_items": 0,
+     "stamped": 0,
+     "visited": 1045
+    },
+    "scope": {
+     "absent": 144,
+     "actual_internal": 61,
+     "actual_output_events": 35,
+     "audit_score_inputs": 0,
+     "changed": 0,
+     "complete_banks": 0,
+     "direct_spine_lookups": 0,
+     "explicit_addresses": 70,
+     "external_roots": 194,
+     "local_field_reads": 148,
+     "named_ports": 70,
+     "no_named_input": 0,
+     "no_score_banks": 0,
+     "no_score_inputs": 0,
+     "released": 61,
+     "selected_primary": 229,
+     "source_commits": 61,
+     "stale": 0,
+     "tagged": 194,
+     "tries": 183,
+     "two_with_internal_parent": 26,
+     "uncovered": 14
+    },
+    "ms": [
+     31.537957999999996,
+     33.843708,
+     32.581166,
+     31.753916,
+     32.766541000000004
+    ],
+    "profile": [
+     {
+      "excluded_by_version": 975,
+      "index_ns": 0,
+      "member_checks": 70,
+      "possible": 1045,
+      "posting_reads": 0,
+      "profile": true,
+      "receiver_ns": 74632,
+      "release_calls": 39,
+      "row_reads": 61,
+      "sort_items": 0,
+      "stamped": 0,
+      "visited": 1045
+     },
+     {
+      "excluded_by_version": 975,
+      "index_ns": 0,
+      "member_checks": 70,
+      "possible": 1045,
+      "posting_reads": 0,
+      "profile": true,
+      "receiver_ns": 73004,
+      "release_calls": 39,
+      "row_reads": 61,
+      "sort_items": 0,
+      "stamped": 0,
+      "visited": 1045
+     },
+     {
+      "excluded_by_version": 975,
+      "index_ns": 0,
+      "member_checks": 70,
+      "possible": 1045,
+      "posting_reads": 0,
+      "profile": true,
+      "receiver_ns": 66244,
+      "release_calls": 39,
+      "row_reads": 61,
+      "sort_items": 0,
+      "stamped": 0,
+      "visited": 1045
+     }
+    ],
+    "median_ms": 32.581166
+   },
+   "indexed": {
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "rhs": 7265,
+    "runs": 1428,
+    "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+    "roots": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+    "nested": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+    "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+    "commits": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+    "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+    "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+    "single_winners": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+    "multi_winners": "b8c431726e0ae7b9821fdfa8fbd681ac1b7ce5372d2af39e76d2dbfb347676f2",
+    "score": "15576378264816477716",
+    "births_sha": "172cde88b1e4bb2c0bd48e61ea6c7da69a684cbd50894c30289bf5730deae1b5",
+    "end_sha": "cc411875294ca05a458e8c66917fb6390f1498c621d92cd61d8496448ef2c9fa",
+    "new": 3610,
+    "visible": 2691,
+    "child_candidates": 305,
+    "emitted": [
+     6498,
+     5912
+    ],
+    "child": 191,
+    "packets": 12601,
+    "fept": 0.21355447980319023,
+    "internal": 61,
+    "set_internal": 26,
+    "ordinary_let_internal": 35,
+    "set_counts": {
+     "active_middles": 35,
+     "cleared_on_error": 0,
+     "confirmed": 26,
+     "encoded": 194,
+     "excluded_generation": 0,
+     "existing_key": 0,
+     "fresh_activations": 35,
+     "invalidated": 0,
+     "opened": 26,
+     "published": 35,
+     "set_attempts": 35,
+     "withheld": 0
+    },
+    "set_origins": {
+     "typed": [
+      26,
+      6
+     ],
+     "dynamic": [
+      0,
+      0
+     ],
+     "paid": [
+      0,
+      0
+     ]
+    },
+    "paths": {
+     "[[143,1,55]]": 35,
+     "[[143,1,55],[55,1,143]]": 26
+    },
+    "signed_ordinals_sha": "8f606b88d75ed6bc48d7d1ee23b063c6741b0c66e79e21097d38901221cc232e",
+    "terminal_ordinals_sha": "e990b219ad26b7ad5c5b5c5db0f43fd51d272f7bc2d443da8aa88bc2b0ee32b5",
+    "examples": [
+     {
+      "consumer": 1274,
+      "consumer_rule": 143,
+      "consumer_run": 106,
+      "fact": [
+       572,
+       1
+      ],
+      "fields": [
+       {
+        "Eq": 2284922601477
+       },
+       {
+        "Int": 0
+       },
+       {
+        "Eq": 554050781307
+       }
+      ],
+      "middle": 795,
+      "middle_run": 102,
+      "path": [
+       [
+        143,
+        1,
+        55
+       ],
+       [
+        55,
+        1,
+        143
+       ]
+      ],
+      "ports": [
+       [
+        532,
+        1,
+        98,
+        98
+       ],
+       [
+        572,
+        1,
+        102,
+        102
+       ]
+      ],
+      "root": 761,
+      "table": 223,
+      "version": 102
+     }
+    ],
+    "scan": {
+     "excluded_by_version": 975,
+     "index_ns": 0,
+     "member_checks": 70,
+     "possible": 1045,
+     "posting_reads": 28,
+     "profile": false,
+     "receiver_ns": 0,
+     "release_calls": 39,
+     "row_reads": 61,
+     "sort_items": 54,
+     "stamped": 70,
+     "visited": 70
+    },
+    "scope": {
+     "absent": 144,
+     "actual_internal": 61,
+     "actual_output_events": 35,
+     "audit_score_inputs": 0,
+     "changed": 0,
+     "complete_banks": 0,
+     "direct_spine_lookups": 0,
+     "explicit_addresses": 70,
+     "external_roots": 194,
+     "local_field_reads": 148,
+     "named_ports": 70,
+     "no_named_input": 0,
+     "no_score_banks": 0,
+     "no_score_inputs": 0,
+     "released": 61,
+     "selected_primary": 229,
+     "source_commits": 61,
+     "stale": 0,
+     "tagged": 194,
+     "tries": 183,
+     "two_with_internal_parent": 26,
+     "uncovered": 14
+    },
+    "ms": [
+     32.660083,
+     31.588625,
+     31.457167000000002,
+     32.455084,
+     31.819124999999996
+    ],
+    "profile": [
+     {
+      "excluded_by_version": 975,
+      "index_ns": 4502,
+      "member_checks": 70,
+      "possible": 1045,
+      "posting_reads": 28,
+      "profile": true,
+      "receiver_ns": 72735,
+      "release_calls": 39,
+      "row_reads": 61,
+      "sort_items": 54,
+      "stamped": 70,
+      "visited": 70
+     },
+     {
+      "excluded_by_version": 975,
+      "index_ns": 4541,
+      "member_checks": 70,
+      "possible": 1045,
+      "posting_reads": 28,
+      "profile": true,
+      "receiver_ns": 66660,
+      "release_calls": 39,
+      "row_reads": 61,
+      "sort_items": 54,
+      "stamped": 70,
+      "visited": 70
+     },
+     {
+      "excluded_by_version": 975,
+      "index_ns": 4994,
+      "member_checks": 70,
+      "possible": 1045,
+      "posting_reads": 28,
+      "profile": true,
+      "receiver_ns": 73045,
+      "release_calls": 39,
+      "row_reads": 61,
+      "sort_items": 54,
+      "stamped": 70,
+      "visited": 70
+     }
+    ],
+    "median_ms": 31.819124999999996
+   }
+  },
+  "faults": {
+   "missing": {
+    "runs": 1428,
+    "source": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "emitted": [
+     6524,
+     5912
+    ]
+   },
+   "stale": {
+    "runs": 1428,
+    "source": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "emitted": [
+     6524,
+     5912
+    ]
+   },
+   "wrong_fields": {
+    "message": "Set activation key/value or version differs",
+    "runs": 101
+   }
+  }
+ },
+ "3mm": {
+  "arms": {
+   "all": {
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "rhs": 294917,
+    "runs": 4260,
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+    "roots": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+    "nested": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+    "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+    "commits": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+    "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+    "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+    "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+    "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+    "score": "16767102213097954485",
+    "births_sha": "6240f921820dea0b4e7b7728982c53a3486df083f451c897e92484edcc776796",
+    "end_sha": "0f5fc7e44add1467558ff78c72933b612a835b732a0bfe234580a03d631b6320",
+    "new": 119503,
+    "visible": 92658,
+    "child_candidates": 7120,
+    "emitted": [
+     332433,
+     220972
+    ],
+    "child": 2508,
+    "packets": 555913,
+    "fept": 0.16667715991531049,
+    "internal": 2161,
+    "set_internal": 932,
+    "ordinary_let_internal": 1229,
+    "set_counts": {
+     "active_middles": 1229,
+     "cleared_on_error": 0,
+     "confirmed": 932,
+     "encoded": 5413,
+     "excluded_generation": 0,
+     "existing_key": 0,
+     "fresh_activations": 1229,
+     "invalidated": 0,
+     "opened": 7418,
+     "published": 1229,
+     "set_attempts": 1229,
+     "withheld": 0
+    },
+    "set_origins": {
+     "typed": [
+      932,
+      139
+     ],
+     "dynamic": [
+      0,
+      0
+     ],
+     "paid": [
+      0,
+      0
+     ]
+    },
+    "paths": {
+     "[[143,1,55]]": 1229,
+     "[[143,1,55],[55,1,143]]": 932
+    },
+    "signed_ordinals_sha": "e47c6a6150e6137e2938fdab19a36c2d6d00a73c0d43087f5e41ba05b7849814",
+    "terminal_ordinals_sha": "79fc8412cef56fe3673237ca94f98cc39a4534b904d35dcbf64bfd110e980b7f",
+    "examples": [
+     {
+      "consumer": 66237,
+      "consumer_rule": 143,
+      "consumer_run": 831,
+      "fact": [
+       20198,
+       1
+      ],
+      "fields": [
+       {
+        "Eq": 79190607003653
+       },
+       {
+        "Int": 0
+       },
+       {
+        "Eq": 554050781229
+       }
+      ],
+      "middle": 45772,
+      "middle_run": 826,
+      "path": [
+       [
+        143,
+        1,
+        55
+       ],
+       [
+        55,
+        1,
+        143
+       ]
+      ],
+      "ports": [
+       [
+        18438,
+        1,
+        822,
+        822
+       ],
+       [
+        20198,
+        1,
+        826,
+        826
+       ]
+      ],
+      "root": 43986,
+      "table": 223,
+      "version": 826
+     }
+    ],
+    "scan": {
+     "excluded_by_version": 0,
+     "index_ns": 0,
+     "member_checks": 62168,
+     "possible": 62168,
+     "posting_reads": 0,
+     "profile": false,
+     "receiver_ns": 0,
+     "release_calls": 62,
+     "row_reads": 14817,
+     "sort_items": 0,
+     "stamped": 0,
+     "visited": 62168
+    },
+    "scope": {
+     "absent": 165,
+     "actual_internal": 2161,
+     "actual_output_events": 1242,
+     "audit_score_inputs": 0,
+     "changed": 29,
+     "complete_banks": 0,
+     "direct_spine_lookups": 0,
+     "explicit_addresses": 62168,
+     "external_roots": 5413,
+     "local_field_reads": 5254,
+     "named_ports": 2471,
+     "no_named_input": 0,
+     "no_score_banks": 0,
+     "no_score_inputs": 0,
+     "released": 2161,
+     "selected_primary": 6642,
+     "source_commits": 2161,
+     "stale": 12627,
+     "tagged": 5413,
+     "tries": 227,
+     "two_with_internal_parent": 932,
+     "uncovered": 17
+    },
+    "ms": [
+     1640.683708,
+     1663.030375,
+     1613.18775,
+     1679.0335830000001,
+     1612.514917
+    ],
+    "profile": [
+     {
+      "excluded_by_version": 0,
+      "index_ns": 0,
+      "member_checks": 62168,
+      "possible": 62168,
+      "posting_reads": 0,
+      "profile": true,
+      "receiver_ns": 6391472,
+      "release_calls": 62,
+      "row_reads": 14817,
+      "sort_items": 0,
+      "stamped": 0,
+      "visited": 62168
+     },
+     {
+      "excluded_by_version": 0,
+      "index_ns": 0,
+      "member_checks": 62168,
+      "possible": 62168,
+      "posting_reads": 0,
+      "profile": true,
+      "receiver_ns": 5834497,
+      "release_calls": 62,
+      "row_reads": 14817,
+      "sort_items": 0,
+      "stamped": 0,
+      "visited": 62168
+     },
+     {
+      "excluded_by_version": 0,
+      "index_ns": 0,
+      "member_checks": 62168,
+      "possible": 62168,
+      "posting_reads": 0,
+      "profile": true,
+      "receiver_ns": 6984579,
+      "release_calls": 62,
+      "row_reads": 14817,
+      "sort_items": 0,
+      "stamped": 0,
+      "visited": 62168
+     }
+    ],
+    "median_ms": 1640.683708
+   },
+   "early": {
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "rhs": 294917,
+    "runs": 4260,
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+    "roots": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+    "nested": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+    "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+    "commits": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+    "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+    "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+    "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+    "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+    "score": "16767102213097954485",
+    "births_sha": "6240f921820dea0b4e7b7728982c53a3486df083f451c897e92484edcc776796",
+    "end_sha": "0f5fc7e44add1467558ff78c72933b612a835b732a0bfe234580a03d631b6320",
+    "new": 119503,
+    "visible": 92658,
+    "child_candidates": 7120,
+    "emitted": [
+     332433,
+     220972
+    ],
+    "child": 2508,
+    "packets": 555913,
+    "fept": 0.16667715991531049,
+    "internal": 2161,
+    "set_internal": 932,
+    "ordinary_let_internal": 1229,
+    "set_counts": {
+     "active_middles": 1229,
+     "cleared_on_error": 0,
+     "confirmed": 932,
+     "encoded": 5413,
+     "excluded_generation": 0,
+     "existing_key": 0,
+     "fresh_activations": 1229,
+     "invalidated": 0,
+     "opened": 932,
+     "published": 1229,
+     "set_attempts": 1229,
+     "withheld": 0
+    },
+    "set_origins": {
+     "typed": [
+      932,
+      139
+     ],
+     "dynamic": [
+      0,
+      0
+     ],
+     "paid": [
+      0,
+      0
+     ]
+    },
+    "paths": {
+     "[[143,1,55]]": 1229,
+     "[[143,1,55],[55,1,143]]": 932
+    },
+    "signed_ordinals_sha": "e47c6a6150e6137e2938fdab19a36c2d6d00a73c0d43087f5e41ba05b7849814",
+    "terminal_ordinals_sha": "79fc8412cef56fe3673237ca94f98cc39a4534b904d35dcbf64bfd110e980b7f",
+    "examples": [
+     {
+      "consumer": 66237,
+      "consumer_rule": 143,
+      "consumer_run": 831,
+      "fact": [
+       20198,
+       1
+      ],
+      "fields": [
+       {
+        "Eq": 79190607003653
+       },
+       {
+        "Int": 0
+       },
+       {
+        "Eq": 554050781229
+       }
+      ],
+      "middle": 45772,
+      "middle_run": 826,
+      "path": [
+       [
+        143,
+        1,
+        55
+       ],
+       [
+        55,
+        1,
+        143
+       ]
+      ],
+      "ports": [
+       [
+        18438,
+        1,
+        822,
+        822
+       ],
+       [
+        20198,
+        1,
+        826,
+        826
+       ]
+      ],
+      "root": 43986,
+      "table": 223,
+      "version": 826
+     }
+    ],
+    "scan": {
+     "excluded_by_version": 59697,
+     "index_ns": 0,
+     "member_checks": 2471,
+     "possible": 62168,
+     "posting_reads": 0,
+     "profile": false,
+     "receiver_ns": 0,
+     "release_calls": 62,
+     "row_reads": 2161,
+     "sort_items": 0,
+     "stamped": 0,
+     "visited": 62168
+    },
+    "scope": {
+     "absent": 165,
+     "actual_internal": 2161,
+     "actual_output_events": 1242,
+     "audit_score_inputs": 0,
+     "changed": 0,
+     "complete_banks": 0,
+     "direct_spine_lookups": 0,
+     "explicit_addresses": 2471,
+     "external_roots": 5413,
+     "local_field_reads": 5254,
+     "named_ports": 2471,
+     "no_named_input": 0,
+     "no_score_banks": 0,
+     "no_score_inputs": 0,
+     "released": 2161,
+     "selected_primary": 6642,
+     "source_commits": 2161,
+     "stale": 0,
+     "tagged": 5413,
+     "tries": 227,
+     "two_with_internal_parent": 932,
+     "uncovered": 17
+    },
+    "ms": [
+     1655.8515419999999,
+     1750.585375,
+     1632.079167,
+     1604.599917,
+     1590.6063339999998
+    ],
+    "profile": [
+     {
+      "excluded_by_version": 59697,
+      "index_ns": 0,
+      "member_checks": 2471,
+      "possible": 62168,
+      "posting_reads": 0,
+      "profile": true,
+      "receiver_ns": 2063444,
+      "release_calls": 62,
+      "row_reads": 2161,
+      "sort_items": 0,
+      "stamped": 0,
+      "visited": 62168
+     },
+     {
+      "excluded_by_version": 59697,
+      "index_ns": 0,
+      "member_checks": 2471,
+      "possible": 62168,
+      "posting_reads": 0,
+      "profile": true,
+      "receiver_ns": 2066899,
+      "release_calls": 62,
+      "row_reads": 2161,
+      "sort_items": 0,
+      "stamped": 0,
+      "visited": 62168
+     },
+     {
+      "excluded_by_version": 59697,
+      "index_ns": 0,
+      "member_checks": 2471,
+      "possible": 62168,
+      "posting_reads": 0,
+      "profile": true,
+      "receiver_ns": 2455088,
+      "release_calls": 62,
+      "row_reads": 2161,
+      "sort_items": 0,
+      "stamped": 0,
+      "visited": 62168
+     }
+    ],
+    "median_ms": 1632.079167
+   },
+   "indexed": {
+    "checks": {
+     "rhs": true,
+     "writes": true,
+     "resumes": true,
+     "state_sha": true,
+     "schedule": true,
+     "runs": true,
+     "unions": true
+    },
+    "rhs": 294917,
+    "runs": 4260,
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+    "roots": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+    "nested": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+    "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+    "commits": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+    "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+    "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+    "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+    "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+    "score": "16767102213097954485",
+    "births_sha": "6240f921820dea0b4e7b7728982c53a3486df083f451c897e92484edcc776796",
+    "end_sha": "0f5fc7e44add1467558ff78c72933b612a835b732a0bfe234580a03d631b6320",
+    "new": 119503,
+    "visible": 92658,
+    "child_candidates": 7120,
+    "emitted": [
+     332433,
+     220972
+    ],
+    "child": 2508,
+    "packets": 555913,
+    "fept": 0.16667715991531049,
+    "internal": 2161,
+    "set_internal": 932,
+    "ordinary_let_internal": 1229,
+    "set_counts": {
+     "active_middles": 1229,
+     "cleared_on_error": 0,
+     "confirmed": 932,
+     "encoded": 5413,
+     "excluded_generation": 0,
+     "existing_key": 0,
+     "fresh_activations": 1229,
+     "invalidated": 0,
+     "opened": 932,
+     "published": 1229,
+     "set_attempts": 1229,
+     "withheld": 0
+    },
+    "set_origins": {
+     "typed": [
+      932,
+      139
+     ],
+     "dynamic": [
+      0,
+      0
+     ],
+     "paid": [
+      0,
+      0
+     ]
+    },
+    "paths": {
+     "[[143,1,55]]": 1229,
+     "[[143,1,55],[55,1,143]]": 932
+    },
+    "signed_ordinals_sha": "e47c6a6150e6137e2938fdab19a36c2d6d00a73c0d43087f5e41ba05b7849814",
+    "terminal_ordinals_sha": "79fc8412cef56fe3673237ca94f98cc39a4534b904d35dcbf64bfd110e980b7f",
+    "examples": [
+     {
+      "consumer": 66237,
+      "consumer_rule": 143,
+      "consumer_run": 831,
+      "fact": [
+       20198,
+       1
+      ],
+      "fields": [
+       {
+        "Eq": 79190607003653
+       },
+       {
+        "Int": 0
+       },
+       {
+        "Eq": 554050781229
+       }
+      ],
+      "middle": 45772,
+      "middle_run": 826,
+      "path": [
+       [
+        143,
+        1,
+        55
+       ],
+       [
+        55,
+        1,
+        143
+       ]
+      ],
+      "ports": [
+       [
+        18438,
+        1,
+        822,
+        822
+       ],
+       [
+        20198,
+        1,
+        826,
+        826
+       ]
+      ],
+      "root": 43986,
+      "table": 223,
+      "version": 826
+     }
+    ],
+    "scan": {
+     "excluded_by_version": 59697,
+     "index_ns": 0,
+     "member_checks": 2471,
+     "possible": 62168,
+     "posting_reads": 46,
+     "profile": false,
+     "receiver_ns": 0,
+     "release_calls": 62,
+     "row_reads": 2161,
+     "sort_items": 2469,
+     "stamped": 2471,
+     "visited": 2471
+    },
+    "scope": {
+     "absent": 165,
+     "actual_internal": 2161,
+     "actual_output_events": 1242,
+     "audit_score_inputs": 0,
+     "changed": 0,
+     "complete_banks": 0,
+     "direct_spine_lookups": 0,
+     "explicit_addresses": 2471,
+     "external_roots": 5413,
+     "local_field_reads": 5254,
+     "named_ports": 2471,
+     "no_named_input": 0,
+     "no_score_banks": 0,
+     "no_score_inputs": 0,
+     "released": 2161,
+     "selected_primary": 6642,
+     "source_commits": 2161,
+     "stale": 0,
+     "tagged": 5413,
+     "tries": 227,
+     "two_with_internal_parent": 932,
+     "uncovered": 17
+    },
+    "ms": [
+     1773.3029999999999,
+     1905.9672910000002,
+     1594.937208,
+     1599.4385,
+     1619.4426250000001
+    ],
+    "profile": [
+     {
+      "excluded_by_version": 59697,
+      "index_ns": 106443,
+      "member_checks": 2471,
+      "possible": 62168,
+      "posting_reads": 46,
+      "profile": true,
+      "receiver_ns": 1664435,
+      "release_calls": 62,
+      "row_reads": 2161,
+      "sort_items": 2469,
+      "stamped": 2471,
+      "visited": 2471
+     },
+     {
+      "excluded_by_version": 59697,
+      "index_ns": 79407,
+      "member_checks": 2471,
+      "possible": 62168,
+      "posting_reads": 46,
+      "profile": true,
+      "receiver_ns": 1150320,
+      "release_calls": 62,
+      "row_reads": 2161,
+      "sort_items": 2469,
+      "stamped": 2471,
+      "visited": 2471
+     },
+     {
+      "excluded_by_version": 59697,
+      "index_ns": 85031,
+      "member_checks": 2471,
+      "possible": 62168,
+      "posting_reads": 46,
+      "profile": true,
+      "receiver_ns": 1341337,
+      "release_calls": 62,
+      "row_reads": 2161,
+      "sort_items": 2469,
+      "stamped": 2471,
+      "visited": 2471
+     }
+    ],
+    "median_ms": 1619.4426250000001
+   }
+  },
+  "faults": {
+   "missing": {
+    "runs": 4260,
+    "source": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "emitted": [
+     333365,
+     220972
+    ]
+   },
+   "stale": {
+    "runs": 4260,
+    "source": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "emitted": [
+     333365,
+     220972
+    ]
+   },
+   "wrong_fields": {
+    "message": "Set activation key/value or version differs",
+    "runs": 825
+   }
+  }
+ }
+}
