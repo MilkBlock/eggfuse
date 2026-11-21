@@ -1,0 +1,9 @@
+{
+ "pinned_runtime": "31bf7e41",
+ "binary_sha256": "3773ed1f9d2ceb5f0fcc8b1878873d02c553372a808bd1f96985cbef976c02f2",
+ "policy_sha256": "702e0c2e3892195c337006b5145989a121491cb7941d635e160ae1ee50c12a19",
+ "head": "run/coverage",
+ "cap": 8192,
+ "seed": 1703,
+ "compiled_voucher_sha256": "43e59e1946ddffeab74f587d402a5c18edb672836e2e479eefc6128f69bd49c2"
+}
