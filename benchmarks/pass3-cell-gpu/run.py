@@ -164,6 +164,8 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
         limits.update(COMPOUND=1,COM_JOINS=len(joins),COM_BATCH=int(compound['batch']),
                       COM_MASK_PARENT=int(compound.get('mask_parent',False)),
                       COM_RECORDS=records,COM_QUEUE=queue,COM_HEAD=queue+nr*steps)
+    if compound and compound.get('audit_claim_time'):
+        limits['COM_FAILURE_RUN']=limits['COM_HEAD']+2*limits['ROW_CAP']
     constants='\n'.join(f'#define {k} {v}' for k,v in {**layout,**limits}.items())
     if block_study:
         for name,values in [('bake_entries',block_study['entries']),('repair_shapes',block_study['shapes']),('bake_pivots',block_study['pivots']),('bake_tables',block_study['tables'])]:
@@ -214,6 +216,7 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
         if capture_receipts:meta_words+=steps*leaves*ranks
         if capture_edges:meta_words+=cap+5*limits['TRACE_CAP']
     if compound is not None:meta_words=limits['COM_HEAD']+2*cap
+    if 'COM_FAILURE_RUN' in limits:meta_words+=steps*nr
     if block_study:meta_words=limits['BLOCK_BASE']+3*cap+layout["TABLES"]*lanes*tiles
     if region:
         region_windows=steps//window+1
@@ -381,6 +384,10 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
             if compound is not None:
                 offset=limits['COM_RECORDS']
                 claims=meta.view(-1)[offset:offset+st[11]*nr*11].reshape(st[11],nr,11).cpu().numpy()
+                if 'COM_FAILURE_RUN' in limits:
+                    failure_offset=limits['COM_FAILURE_RUN']
+                    failure_run=meta.view(-1)[failure_offset:failure_offset+st[11]*nr].reshape(st[11],nr).cpu().numpy()
+                    np.savez_compressed(root/'claim-failure-times.npz',failure_run=failure_run)
                 np.savez_compressed(root/'compound-output.npz',claims=claims)
                 child_wins=int((claims[:,:,7]>0).sum())
                 neural_wins+=child_wins

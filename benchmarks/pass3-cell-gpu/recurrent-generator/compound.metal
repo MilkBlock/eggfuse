@@ -49,7 +49,11 @@ kernel void compound_resume(device const int *rom,device const long *lits,device
         int id=queue[i];device CompoundClaim &c=claims(meta)[id];
         int row=c.row,leaf=compound_joins[4*c.join+3];constant int *entry=neural_catalog+4*leaf;
         int rid=entry[0],pivot=entry[1];
-        if(meta[6*row+3] || anchor(meta,row)[4]!=c.ticket){c.status=3;continue;}
+        if(meta[6*row+3] || anchor(meta,row)[4]!=c.ticket){
+#ifdef COM_FAILURE_RUN
+            meta[COM_FAILURE_RUN+id]=state[3];
+#endif
+            c.status=3;continue;}
         bool scheduled=false;
         for(int k=0;k<rs[0];k++)if(rom[rs[1]+k]==rid){scheduled=true;break;}
         if(!scheduled){queue[keep++]=id;continue;}
@@ -62,7 +66,11 @@ kernel void compound_resume(device const int *rom,device const long *lits,device
         if(index[0]==state[3])for(int prev=index[1]-1;prev>=0;prev=claims(meta)[prev].next-1){
             duplicate|=compound_joins[4*claims(meta)[prev].join+3]==leaf;
         }
-        if(duplicate){c.status=4;continue;}
+        if(duplicate){
+#ifdef COM_FAILURE_RUN
+            meta[COM_FAILURE_RUN+id]=state[3];
+#endif
+            c.status=4;continue;}
         int before=count[2*rid];
         route<false,true>(state,rom,lits,meta,dyn,head,rom+RULE+7*rid,rom+entry[2],pivot,wm[rid],shard_of(meta,row),
                          PARTS,count+2*rid,tokens+token_offset(rom,rid),nullptr,row);

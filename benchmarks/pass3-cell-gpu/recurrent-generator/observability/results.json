@@ -1,0 +1,38 @@
+{
+  "sum-bits": {
+    "runs": 1428,
+    "issued": 71,
+    "untimed_failures": 19,
+    "winning_children": 25,
+    "winner_in_root_bank": 23,
+    "winners_reoffered": 4,
+    "candidate_pairs": 4,
+    "same_entire_bank": 0,
+    "identical_actor_input": 0
+  },
+  "dot-product": {
+    "runs": 1535,
+    "issued": 26,
+    "untimed_failures": 4,
+    "winning_children": 17,
+    "winner_in_root_bank": 15,
+    "winners_reoffered": 1,
+    "candidate_pairs": 1,
+    "same_entire_bank": 0,
+    "identical_actor_input": 0
+  },
+  "gemm-bias-relu": {
+    "runs": 1652,
+    "issued": 37,
+    "untimed_failures": 5,
+    "winning_children": 23,
+    "winner_in_root_bank": 11
+  },
+  "stable-argmax": {
+    "runs": 1149,
+    "issued": 33,
+    "untimed_failures": 5,
+    "winning_children": 17,
+    "winner_in_root_bank": 10
+  }
+}
