@@ -1,0 +1,229 @@
+{
+ "donor": "jacobi-1d",
+ "source_sample_id": "jacobi-1d-p143-o1-c55-full",
+ "program_sha256": "36394e6af88e962527a232db783fbb39e8ffb95e0fabf8087c68c013f4c43a95",
+ "recipe_sha256": "1393dc1cfb4265af2e454369e183f66a1d3a67c41af1b3c5f0c94d408e9f8b95",
+ "source_origin_sha256": "4113678b01b47fb35d4a29ff8fec58a408945514a2aabc255a8dd2b816b1ea63",
+ "native_acceptance_sha256": "8e4b6f9f73bddcd81e6f0a49a3d767d4bb510ef505bffd9d44db43bca9c5dfb7",
+ "native_history_sha256": "ce9dd2aaee283188d1c6f2edfee3b75ae96d5e904bb244827bd329e6eab428ba",
+ "trust_index_sha256": "7d25bac5b8256fb7ddf45d0a25ba464e3370ddb0d3c832585a4631eae0b71f3a",
+ "reference": {
+  "runs": 1990,
+  "rhs": 41319,
+  "state_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+  "rhs_sha": "32cce8c2ec86f539a8e60adb716172161e04b8802495de423d9aa1acab1b91ae",
+  "writes_sha": "7cf0c8c35d9509fa388ddac0d5160866e8132070f8f6ea81ea9f43443fba26bb",
+  "resumes_sha": "f64bd8fcdcf13da8d2c24a19dcfd238fddda1a06eea3afc90d13d5666e022c07",
+  "events_sha": "4d64db2cdb5b345c0fb694a5cff3347f53a0db8aa12251972d7faa7585c3e4bc",
+  "physical_sha": "30405e59baf6fca6fb549219c3d1e333ab860840c143972163fddbb6f2264c74",
+  "root_commits_sha": "91bb59fa3f7b37786b754c789d1ec94dd1254fbcaf7a88447b3da9cec7d6d7fb"
+ },
+ "first_origin_sample": {
+  "producer": {
+   "rule": 143,
+   "fingerprint": "a5ed2254ee3c5aa581eb67dbceb57847ed4652adfec359299b088a4f181f915a",
+   "source_name": "(rule ((Get expr i))\n      ((union (Single (Get expr i)) (SubTuple expr i 1)))\n        :ruleset always-run )",
+   "ruleset": "always-run",
+   "epoch": 225,
+   "ordinal": 2685,
+   "serial": 5314,
+   "rows": [
+    {
+     "atom": 0,
+     "table": "Get",
+     "values": [
+      {
+       "Eq": 554050781213
+      },
+      {
+       "Int": 0
+      },
+      {
+       "Eq": 554050781215
+      }
+     ],
+     "named": {
+      "atom": 0,
+      "row": {
+       "Fact": {
+        "cell": 129,
+        "op": 30
+       }
+      },
+      "version": 1
+     },
+     "terms": [
+      "(Arg (TupleT (TCons (StateT) (TNil))) (InFunc \"dummy\"))",
+      "0"
+     ],
+     "result_term": "(Get (Arg (TupleT (TCons (StateT) (TNil))) (InFunc \"dummy\")) 0)",
+     "size": 8
+    }
+   ]
+  },
+  "consumer": {
+   "rule": 55,
+   "fingerprint": "34b28caf3130f32bff53a971c78504f8dcbc16f36b4a322444cbd74d4cb246e5",
+   "source_name": "(rule ((Single expr))\n      ((union (Get (Single expr) 0) expr))\n        :ruleset always-run )",
+   "ruleset": "always-run",
+   "epoch": 229,
+   "ordinal": 2959,
+   "serial": 5598,
+   "rows": [
+    {
+     "atom": 0,
+     "table": "Single",
+     "values": [
+      {
+       "Eq": 554050781215
+      },
+      {
+       "Eq": 12081743003653
+      }
+     ],
+     "named": {
+      "atom": 0,
+      "row": {
+       "Fact": {
+        "cell": 2813,
+        "op": 1
+       }
+      },
+      "version": 225
+     },
+     "terms": [
+      "(Get (Arg (TupleT (TCons (StateT) (TNil))) (InFunc \"dummy\")) 0)"
+     ],
+     "result_term": "(Single (Get (Arg (TupleT (TCons (StateT) (TNil))) (InFunc \"dummy\")) 0))",
+     "size": 9
+    }
+   ]
+  },
+  "producer_op": 1,
+  "consumer_atom": 0,
+  "original_fact": 12081743003649,
+  "original_version": 225,
+  "birth_event": [
+   "birth",
+   323,
+   [
+    {
+     "Eq": 554050781215
+    }
+   ],
+   {
+    "Eq": 12081743003653
+   },
+   12081743003649,
+   [
+    713,
+    143
+   ]
+  ],
+  "relative_runs": 4,
+  "support": 192,
+  "selection": "requested"
+ },
+ "middle_signed_trail": [
+  5598,
+  5314,
+  [
+   [
+    143,
+    1,
+    55
+   ]
+  ],
+  [
+   [
+    2813,
+    1,
+    225,
+    225
+   ]
+  ],
+  229
+ ],
+ "original_committed_roots": {
+  "5314": {
+   "root_ordinal": 2685,
+   "rule": 143,
+   "template": 143,
+   "epoch": 225,
+   "refs": [
+    {
+     "atom": 0,
+     "row": {
+      "Fact": {
+       "cell": 129,
+       "op": 30
+      }
+     },
+     "version": 1
+    }
+   ],
+   "slot_values": {
+    "0": {
+     "Eq": 554050781213
+    },
+    "1": {
+     "Int": 0
+    },
+    "2": {
+     "Eq": 554050781215
+    }
+   }
+  },
+  "5598": {
+   "root_ordinal": 2959,
+   "rule": 55,
+   "template": 55,
+   "epoch": 229,
+   "refs": [
+    {
+     "atom": 0,
+     "row": {
+      "Fact": {
+       "cell": 2813,
+       "op": 1
+      }
+     },
+     "version": 225
+    }
+   ],
+   "slot_values": {
+    "0": {
+     "Eq": 554050781215
+    },
+    "1": {
+     "Eq": 12081743003653
+    }
+   }
+  }
+ },
+ "middle_set_fact": 13258564042753,
+ "set_version": 229,
+ "middle_set_birth_event": [
+  "birth",
+  223,
+  [
+   {
+    "Eq": 12081743003653
+   },
+   {
+    "Int": 0
+   }
+  ],
+  {
+   "Eq": 554050781215
+  },
+  13258564042753,
+  [
+   1,
+   55
+  ]
+ ],
+ "later_143_paid_serials": [],
+ "later_143_internal_serials": [],
+ "companions": []
+}

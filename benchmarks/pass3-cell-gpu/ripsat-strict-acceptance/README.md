@@ -53,3 +53,35 @@ python check.py --evidence "$evidence" \
 python proof_layers.py "$evidence" "$exp/compact-holdouts-20261121-v1/dot-product-1703/program.json" "$exp/ripsat-negative-scratch/layers.json"
 python verify.py
 ```
+
+
+## Does a signed Single continue?
+
+For each of the two authenticated donor cards, the **local RipSat replay** contains a genuine three-application history: records 0 → 8 → 12 run 143 → 55 → 143. The next record names a fact token actually produced by the preceding record. These are local tokens (6 then 10 in dot-product, 6 then 9 in jacobi-1d). In the **default portable catalog**, two donor cards authorize the same single edge 143[1] → 55 and zero authorize a second edge. Before imposing source schema, the native-directed sample edges give four same-donor ordered pairs of adjacent rule labels; none share the same actual middle occurrence. The 446 self-return stays in the static-consumer-only library. A function-level test uses one synthetic connected positive and ten independently altered receipts to verify the actual adapter join, including donor, serial, commit ordinal, Run, schema, atom, FactRef cell/op and version. Synthetic inputs never enter the published library.
+
+| Source donor | First signed internal 55 roots | op 0 `let Single` elided by native static alias | Fresh op 1 `set Get` facts | Distinct later paid 143 reads of those identities/versions | Free second steps executed |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| dot-product | 44 | 44 | 44 | 36 | 0 |
+| jacobi-1d | 192 | 192 | 192 | 153 | 0 |
+
+The observation hook records pre-existing constructor returns only when the native operation actually returns a witness. At op 0 the existing compiler elides the operation as the statically known old input slot; no newly returned op-0 fact was recorded. The fresh facts at op 1 are concrete constructor-table **Set** births. The default adapter's returning-constructor certificate requires **Let**. All detected later 143 reads above were ordinary external proposals. The table therefore measures opportunities for a different publication ABI, not extra program steps or saved packets.
+
+The exact middle of the selected **dot-product** card matters. Serial 1,737 in Run 131 supplies Single to internally signed serial 1,822 (ordinal 843) in Run 135. That very invocation of 55 creates Get at **Cell 971, op 1, version 135**. Later paid rule 143 serial 2,625 (ordinal 1,288, Run 139) reads the same original fact at atom 0. The companion's producer is the original accepted card's consumer byte-for-byte. In **jacobi-1d**, serial 5,314 feeds signed middle 5,598 (ordinal 2,959, Run 229); this precise middle creates Get at **Cell 3,087, op 1, version 229**. There are zero later 143 reads of that particular identity/version. Other productive jacobi middles cannot be substituted for it.
+
+Separate ordinary-leaf and signed executions check equal source Run schedules, RHS, effective writes, Spine, root ledger, complete event stream, physical allocations and final graph. The observer records output identities and executes no matching or inference on behalf of the runtime. No timing is claimed. The jointly pinned files include the original evidence origin and native-acceptance hashes, full three-root compiled slots/references where present, true source birth event, consumed input port and donor ground terms. The companion is evidence for authorizer tests; it does not change the default library.
+
+[Catalog/guard counts](catalog-chains.json) · [All signed-middle operations](chain-audit.json) · [Pinned companion source receipts](companion-pins.json) · [Dot-product witness](dot-product-same-middle.json) · [Jacobi counterexample](jacobi-1d-same-middle.json)
+
+```sh
+python build_chain_audit.py "$exp/chain-return-observer"
+python chain_audit.py "$exp" "$exp/chain-return-observer/session" "$evidence" "$exp/chain-run" \
+  --donor "dot-product=$exp/compact-holdouts-20261121-v1/dot-product-1703/program.json" \
+  --donor "jacobi-1d=$exp/compact-holdouts-20261121-v1/jacobi-1d-1703/program.json"
+python companion.py "$exp" "$exp/chain-return-observer/session" "$evidence" "$exp/chain-port-receipts" \
+  --donor "dot-product=$exp/compact-holdouts-20261121-v1/dot-product-1703/program.json" \
+  --donor "jacobi-1d=$exp/compact-holdouts-20261121-v1/jacobi-1d-1703/program.json"
+python chain_catalog.py "$evidence" "$exp/extra-pass3-transfer-v1/3mm-1703/program.json" "$exp/catalog-chains.json" \
+  --donor "dot-product=$exp/compact-holdouts-20261121-v1/dot-product-1703/program.json" \
+  --donor "jacobi-1d=$exp/compact-holdouts-20261121-v1/jacobi-1d-1703/program.json"
+python verify_chain.py
+```

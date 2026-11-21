@@ -1,0 +1,24 @@
+{
+  "dot-product": {
+    "file": "dot-product-same-middle.json",
+    "sha256": "53e8634c0c82ab98664027445e0e7e4963a12108145d2b9edaa78e3ebffcc0c9",
+    "source_sample": "dot-product-p143-o1-c55-full",
+    "middle": 1822,
+    "fact": 4170413244417,
+    "version": 135,
+    "later_143": [
+      2625
+    ],
+    "internal": []
+  },
+  "jacobi-1d": {
+    "file": "jacobi-1d-same-middle.json",
+    "sha256": "ec693ae9e0f5537895e15e50cb7adf83cefe8fdb972c0a69e0f5ff9a2fc610e7",
+    "source_sample": "jacobi-1d-p143-o1-c55-full",
+    "middle": 5598,
+    "fact": 13258564042753,
+    "version": 229,
+    "later_143": [],
+    "internal": []
+  }
+}

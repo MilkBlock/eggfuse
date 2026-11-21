@@ -1,0 +1,110 @@
+{
+  "strict_paths": [
+    [
+      [
+        143,
+        1,
+        55
+      ]
+    ]
+  ],
+  "strict_certificates": 2,
+  "static_only_paths": [
+    [
+      [
+        446,
+        0,
+        446
+      ]
+    ]
+  ],
+  "static_only_certificates": 2,
+  "local_replay_triples": {
+    "dot-product": {
+      "sample_id": "dot-product-p143-o1-c55-full",
+      "history_sha": "dacc4736fc723fde2549085da512f33286ef86429e421c6e3df428f469b6c9b4",
+      "triples": [
+        {
+          "local_records": [
+            0,
+            8,
+            12
+          ],
+          "required_return_tokens": [
+            6,
+            10
+          ],
+          "local_record_indices": [
+            0,
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    "jacobi-1d": {
+      "sample_id": "jacobi-1d-p143-o1-c55-full",
+      "history_sha": "ce9dd2aaee283188d1c6f2edfee3b75ae96d5e904bb244827bd329e6eab428ba",
+      "triples": [
+        {
+          "local_records": [
+            0,
+            8,
+            12
+          ],
+          "required_return_tokens": [
+            6,
+            9
+          ],
+          "local_record_indices": [
+            0,
+            1,
+            2
+          ]
+        }
+      ]
+    }
+  },
+  "catalog_counts": {
+    "all_native_accepted_full_regions": {
+      "schema_adjacent": 27,
+      "same_donor_schema_adjacent": 14,
+      "same_middle_occurrence": 0,
+      "same_middle_and_input_ref": 0
+    },
+    "native_directed_edges_before_source_schema": {
+      "schema_adjacent": 8,
+      "same_donor_schema_adjacent": 4,
+      "same_middle_occurrence": 0,
+      "same_middle_and_input_ref": 0
+    },
+    "default_strict_cards": {
+      "schema_adjacent": 0,
+      "same_donor_schema_adjacent": 0,
+      "same_middle_occurrence": 0,
+      "same_middle_and_input_ref": 0
+    },
+    "including_static_only_cards": {
+      "schema_adjacent": 4,
+      "same_donor_schema_adjacent": 2,
+      "same_middle_occurrence": 0,
+      "same_middle_and_input_ref": 0
+    }
+  },
+  "production_join": {
+    "synthetic_positive_paths": 1,
+    "rejected_controls": [
+      "other-donor",
+      "other-serial",
+      "other-ordinal",
+      "other-run",
+      "other-middle-schema",
+      "absence-of-explicit-premise",
+      "different-slot",
+      "different-source-cell",
+      "different-source-op",
+      "different-version"
+    ],
+    "genuine_two_step_paths": 0
+  }
+}

@@ -1,0 +1,357 @@
+{
+ "dot-product": {
+  "nominated_middle": {
+   "result_fact": 3835405795329,
+   "version": 131,
+   "producer_named": [
+    {
+     "atom": 0,
+     "row": {
+      "Fact": {
+       "cell": 129,
+       "op": 28
+      }
+     },
+     "version": 1
+    }
+   ],
+   "producer_serial": 1737,
+   "consumer_serial": 1822,
+   "producer_ordinal": 765,
+   "consumer_ordinal": 843,
+   "producer_run": 131,
+   "consumer_run": 135,
+   "middle_signed": true,
+   "elided_single_at_op0": true,
+   "get_at_op1": [
+    {
+     "fact": 4170413244417,
+     "cell": 971,
+     "op": 1,
+     "version": 135,
+     "kind": "fresh",
+     "later_143": [
+      {
+       "run": 139,
+       "ordinal": 1288,
+       "serial": 2625,
+       "rule": 143,
+       "atom": 0,
+       "external": true
+      }
+     ]
+    }
+   ]
+  },
+  "runs": 1535,
+  "rhs": 6704,
+  "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+  "root_commits_sha": "2e85ad92a526f54bc9603e081cd3b7ec654261dae09071c97ebf380d0df8fbc4",
+  "ordinary_root_packets": [
+   6752,
+   7207
+  ],
+  "separately_selected_child_packets": 210,
+  "signed_first_steps": 44,
+  "signed_second_steps": 0,
+  "by_operation": {
+   "0:let:Single": {
+    "signed_applications": 44,
+    "static_alias_elided": 44,
+    "distinct_later_external_serials": 0
+   },
+   "1:set:Get": {
+    "signed_applications": 44,
+    "observed": 44,
+    "fresh": 44,
+    "same_as_middle_input": 0,
+    "later_external_named_uses": 257,
+    "middle_occurrences_with_later_named_use": 36,
+    "later_named_consumers": 257,
+    "distinct_later_external_serials": 257
+   }
+  },
+  "outgoing_uses": [
+   [
+    "1:set:Get",
+    58,
+    "not_a_returning_constructor",
+    "ordinary_or_other_owner",
+    36
+   ],
+   [
+    "1:set:Get",
+    90,
+    "not_a_returning_constructor",
+    "ordinary_or_other_owner",
+    21
+   ],
+   [
+    "1:set:Get",
+    103,
+    "not_a_returning_constructor",
+    "ordinary_or_other_owner",
+    4
+   ],
+   [
+    "1:set:Get",
+    122,
+    "not_a_returning_constructor",
+    "ordinary_or_other_owner",
+    29
+   ],
+   [
+    "1:set:Get",
+    143,
+    "not_a_returning_constructor",
+    "ordinary_or_other_owner",
+    36
+   ],
+   [
+    "1:set:Get",
+    153,
+    "not_a_returning_constructor",
+    "ordinary_or_other_owner",
+    52
+   ],
+   [
+    "1:set:Get",
+    294,
+    "not_a_returning_constructor",
+    "ordinary_or_other_owner",
+    6
+   ],
+   [
+    "1:set:Get",
+    424,
+    "not_a_returning_constructor",
+    "ordinary_or_other_owner",
+    21
+   ],
+   [
+    "1:set:Get",
+    504,
+    "not_a_returning_constructor",
+    "ordinary_or_other_owner",
+    10
+   ],
+   [
+    "1:set:Get",
+    518,
+    "not_a_returning_constructor",
+    "ordinary_or_other_owner",
+    21
+   ],
+   [
+    "1:set:Get",
+    538,
+    "not_a_returning_constructor",
+    "ordinary_or_other_owner",
+    21
+   ]
+  ],
+  "examples": {
+   "1:set:Get": {
+    "root": 1737,
+    "middle": 1822,
+    "middle_ordinal": 843,
+    "middle_run": 135,
+    "incoming_fact": 3835405795329,
+    "outgoing_fact": 4170413244417,
+    "op": 1,
+    "kind": "fresh",
+    "version": 135,
+    "terminal": 2625,
+    "next_rule": 143,
+    "next_atom": 0,
+    "next_run": 139,
+    "next_ordinal": 1288,
+    "terminal_external": true,
+    "static_check": "not_a_returning_constructor"
+   }
+  },
+  "source_rhs_sha": "b1c8487c29aee05ceaae0764ddc61d756be89d1ba9ab1fa31885cb48d4567da8",
+  "source_write_sha": "de5952348d049211280475eda189fafb9a50425b7b9a29bd62d7b06c8d1943ee",
+  "source_spine_sha": "5667346fa87a7a31880a2482c24527e6648fab9fd1ad20932c048bd1d0415916"
+ },
+ "jacobi-1d": {
+  "nominated_middle": {
+   "result_fact": 12081743003649,
+   "version": 225,
+   "producer_named": [
+    {
+     "atom": 0,
+     "row": {
+      "Fact": {
+       "cell": 129,
+       "op": 30
+      }
+     },
+     "version": 1
+    }
+   ],
+   "producer_serial": 5314,
+   "consumer_serial": 5598,
+   "producer_ordinal": 2685,
+   "consumer_ordinal": 2959,
+   "producer_run": 225,
+   "consumer_run": 229,
+   "middle_signed": true,
+   "elided_single_at_op0": true,
+   "get_at_op1": [
+    {
+     "fact": 13258564042753,
+     "cell": 3087,
+     "op": 1,
+     "version": 229,
+     "kind": "fresh",
+     "later_143": []
+    }
+   ]
+  },
+  "runs": 1990,
+  "rhs": 41319,
+  "state_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+  "root_commits_sha": "91bb59fa3f7b37786b754c789d1ec94dd1254fbcaf7a88447b3da9cec7d6d7fb",
+  "ordinary_root_packets": [
+   36085,
+   33250
+  ],
+  "separately_selected_child_packets": 764,
+  "signed_first_steps": 192,
+  "signed_second_steps": 0,
+  "by_operation": {
+   "0:let:Single": {
+    "signed_applications": 192,
+    "static_alias_elided": 192,
+    "distinct_later_external_serials": 0
+   },
+   "1:set:Get": {
+    "signed_applications": 192,
+    "observed": 192,
+    "fresh": 192,
+    "same_as_middle_input": 0,
+    "middle_occurrences_with_later_named_use": 153,
+    "later_named_consumers": 1347,
+    "later_external_named_uses": 1347,
+    "distinct_later_external_serials": 1347
+   }
+  },
+  "outgoing_uses": [
+   [
+    "1:set:Get",
+    58,
+    "not_a_returning_constructor",
+    "ordinary_or_other_owner",
+    153
+   ],
+   [
+    "1:set:Get",
+    90,
+    "not_a_returning_constructor",
+    "ordinary_or_other_owner",
+    178
+   ],
+   [
+    "1:set:Get",
+    103,
+    "not_a_returning_constructor",
+    "ordinary_or_other_owner",
+    9
+   ],
+   [
+    "1:set:Get",
+    122,
+    "not_a_returning_constructor",
+    "ordinary_or_other_owner",
+    119
+   ],
+   [
+    "1:set:Get",
+    143,
+    "not_a_returning_constructor",
+    "ordinary_or_other_owner",
+    153
+   ],
+   [
+    "1:set:Get",
+    153,
+    "not_a_returning_constructor",
+    "ordinary_or_other_owner",
+    390
+   ],
+   [
+    "1:set:Get",
+    294,
+    "not_a_returning_constructor",
+    "ordinary_or_other_owner",
+    14
+   ],
+   [
+    "1:set:Get",
+    324,
+    "not_a_returning_constructor",
+    "ordinary_or_other_owner",
+    52
+   ],
+   [
+    "1:set:Get",
+    424,
+    "not_a_returning_constructor",
+    "ordinary_or_other_owner",
+    78
+   ],
+   [
+    "1:set:Get",
+    475,
+    "not_a_returning_constructor",
+    "ordinary_or_other_owner",
+    13
+   ],
+   [
+    "1:set:Get",
+    504,
+    "not_a_returning_constructor",
+    "ordinary_or_other_owner",
+    32
+   ],
+   [
+    "1:set:Get",
+    518,
+    "not_a_returning_constructor",
+    "ordinary_or_other_owner",
+    78
+   ],
+   [
+    "1:set:Get",
+    538,
+    "not_a_returning_constructor",
+    "ordinary_or_other_owner",
+    78
+   ]
+  ],
+  "examples": {
+   "1:set:Get": {
+    "root": 5317,
+    "middle": 5600,
+    "middle_ordinal": 2960,
+    "middle_run": 229,
+    "incoming_fact": 12116102742017,
+    "outgoing_fact": 13262859010049,
+    "op": 1,
+    "kind": "fresh",
+    "version": 229,
+    "terminal": 8739,
+    "next_rule": 143,
+    "next_atom": 0,
+    "next_run": 233,
+    "next_ordinal": 4738,
+    "terminal_external": true,
+    "static_check": "not_a_returning_constructor"
+   }
+  },
+  "source_rhs_sha": "32cce8c2ec86f539a8e60adb716172161e04b8802495de423d9aa1acab1b91ae",
+  "source_write_sha": "7cf0c8c35d9509fa388ddac0d5160866e8132070f8f6ea81ea9f43443fba26bb",
+  "source_spine_sha": "f64bd8fcdcf13da8d2c24a19dcfd238fddda1a06eea3afc90d13d5666e022c07"
+ }
+}
