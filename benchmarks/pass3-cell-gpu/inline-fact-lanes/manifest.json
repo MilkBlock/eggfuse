@@ -1,0 +1,32 @@
+{
+ "base": "31bf7e41",
+ "source_overlays": {
+  "resident-cell-slabs/resident.rs": "6ea2ec07647b6777d9db97d7f0c7d658c89324e0366f5fdb7b4839d3fc85fb6a",
+  "resident-cell-slabs/conformance.rs": "9cfe66f8bdfa7a520e84e52993ecb7cf00f18448644c7f5bce0e57366f2deec0",
+  "resident-cell-slabs/overlay.py": "58fc6b582b82d80229a6bc8d663f094d2f0afd2fcdbcad12d07abbd6cd2cbd3a",
+  "inline-fact-lanes/tests.rs": "9e8cb378b21a9ce76f7ba228d337429b5453eba7dd06a5bc9b76dcbddfd578a7",
+  "inline-fact-lanes/overlay.py": "916f71f2dc3bb9cd52dcd0d5e360f6fef261c264d62859ab1274adba86a0d0aa"
+ },
+ "executables": {
+  "vec": "f894871a9234a61d6f0ca7ec12cbe59946ae7e56d095c9fb3cd0882a804b1e9d",
+  "inline1": "9f0f7a14fd46c1ecf87e64f768ba29b48e298fb3254a46316c01a158270d0546",
+  "inline2": "6daf0c615ae164550b8d0ac56552235394621e83aaa0198dd3646db189b7bbe6"
+ },
+ "inputs": {
+  "conjugate-gradient": {
+   "program.json": "decf722a0df14dddb3ed40eeadee5fad00743eceb695bdf7237932eddb94e428",
+   "plans.json": "50083314582aa90fe7ba33210b2c6fc334d7df4714fd58329154e99dc175c3fc",
+   "request.json": "4769fc43a2d3c2870c16af2814f1c3ee2eb8bc707aead5c619ec9d6491c86076"
+  },
+  "3mm": {
+   "program.json": "8d81462db16dcee0689b2e8dc11ac3e068c9dc976a2e69f5005a8acad06905af",
+   "plans.json": "50083314582aa90fe7ba33210b2c6fc334d7df4714fd58329154e99dc175c3fc",
+   "request.json": "df6137cb5ba033ac91dae00465273afafda8722ba8f9110acacd2f589f300947"
+  }
+ },
+ "seed": 1703,
+ "cap": 8192,
+ "wave": 65536,
+ "page": 64,
+ "policy": "702e0c2e3892195c337006b5145989a121491cb7941d635e160ae1ee50c12a19"
+}
