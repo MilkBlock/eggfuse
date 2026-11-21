@@ -119,6 +119,29 @@ Consult the existing evidence before proposing these mechanisms as new:
   A composed certificate or a different wave budget needs its own measurement.
   Identify who generated the bindings whenever reusing a Pass 3 result.
 
+## Neural and Bake optimization metrics
+
+Prioritize two outcomes on equivalent source executions. Measure time from
+inference entry to a common, independently calibrated process RSS threshold,
+and measure effective constructor nodes per externally issued token. Record
+entry RSS, absolute and incremental crossings (including already reached and
+unreached thresholds), peak RSS, and how many speculative members were later
+redeemed or retired. Keep full inference latency as a secondary metric.
+
+Report both first constructor publications and the subset whose original source
+identity remains visible at final export. Count unique original fact references,
+excluding the input graph, duplicate constructor requests and function writes.
+Charge rejected root packets and separately issued child packets in the external
+denominator. Report committed-root yield separately. Cross-Run attribution to
+an ancestor is useful lineage evidence. Credit a composed token with eliminating
+external packets only when the executor really suppresses them while the
+verifier preserves the original release and visibility semantics.
+
+The Python-package milestone remains parity with the default vanilla EggFuse
+CPU runtime. The matched references and metric definitions are in the
+[constructor ledger](benchmarks/pass3-cell-gpu/token-constructor-births/README.md)
+and [RSS study](benchmarks/pass3-cell-gpu/verified-wave-rss/README.md).
+
 ## Semantic acceptance
 
 - Use `python3 benchmarks/marker-handoff/choice_diagnosis.py ARTIFACT_ROOT OUTPUT.json`
