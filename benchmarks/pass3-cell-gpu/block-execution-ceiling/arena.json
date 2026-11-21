@@ -1,0 +1,1544 @@
+{
+ "conjugate-gradient": {
+  "vanilla": {
+   "ms": [
+    335.94991699999997,
+    354.1955,
+    346.56045800000004,
+    369.30658300000005
+   ],
+   "runs": 2896,
+   "rhs": 131371,
+   "median_ms": 350.377979
+  },
+  "hash-original-live": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 131371,
+   "fresh": 97139,
+   "direct_cells": 97026,
+   "source_pass_rhs": 131371,
+   "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+   "wire_bytes": 6182696,
+   "root_row_decodes": 0,
+   "root_header_checks": 853372,
+   "owned_slot_transfers": 131371,
+   "raw": "10431860128350219007",
+   "emitted": [
+    243383,
+    83313
+   ],
+   "wire_hash": "6168948855503912532",
+   "commits": "ef8d551cdc8dc317259602b5552be49fdf83e415e69f8a16f6d58018e00cbb32",
+   "physical": "704047e92ded5214ed806cbfed9eeb7ca4aa1911d3cab455e005ec1df78893e8",
+   "multi": "cc1f53cfe0ac95a4f39d82de5595e7de19be4c96e42907893311b5cfdda75887",
+   "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+   "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+   "rejected": 0,
+   "root_allocated": 96535,
+   "applied": 131371,
+   "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+   "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+   "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+   "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+   "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+   "ms": [
+    718.861417,
+    689.148916,
+    719.113,
+    714.245041
+   ],
+   "verified_roots": 131371,
+   "online_root_rhs": 131371,
+   "phase_ms": [
+    [
+     505.033612000004,
+     127.9302259999967,
+     45.44369400000073,
+     35.19254599999983,
+     4.085098000000002
+    ],
+    [
+     486.49294400000576,
+     122.43321699999662,
+     42.09962200000076,
+     33.459351999999804,
+     3.5262140000000186
+    ],
+    [
+     509.2963210000033,
+     127.34120899999658,
+     41.983175000000685,
+     34.999026999999835,
+     4.146353999999996
+    ],
+    [
+     497.1611570000071,
+     130.50618299999837,
+     45.68103900000075,
+     35.84577299999981,
+     4.05323899999999
+    ]
+   ],
+   "store": {
+    "layout": "hash"
+   },
+   "median_ms": 716.553229
+  },
+  "hash-original-positive": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 131371,
+   "fresh": 97139,
+   "direct_cells": 97026,
+   "source_pass_rhs": 131371,
+   "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+   "wire_bytes": 1928864,
+   "root_row_decodes": 0,
+   "root_header_checks": 853372,
+   "owned_slot_transfers": 131371,
+   "raw": "9649924707524619775",
+   "emitted": [
+    73676,
+    57695
+   ],
+   "wire_hash": "16004110192085505466",
+   "commits": "c710b1f2379558bba4444090734bf123eecbf66bdcd58f303ebaf589f6524903",
+   "physical": "6696f80f0a116d977933140906006d54c77c573ae8cc9a3aa28d6d79ef43a021",
+   "multi": "ec8293f8108188e819b85870b54081b98a01250c185b4fec30687574c5cad9ae",
+   "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+   "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+   "rejected": 0,
+   "root_allocated": 96535,
+   "applied": 131371,
+   "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+   "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+   "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+   "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+   "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+   "ms": [
+    323.91975,
+    333.953625,
+    326.350625,
+    353.827041
+   ],
+   "verified_roots": 131371,
+   "online_root_rhs": 0,
+   "phase_ms": [
+    [
+     143.02075999999826,
+     110.90971699999699,
+     39.95034500000085,
+     26.210170000000144,
+     3.0319890000000114
+    ],
+    [
+     146.23787999999797,
+     113.69610199999703,
+     42.3804340000008,
+     27.36289900000016,
+     3.4453120000000133
+    ],
+    [
+     146.24147299999842,
+     109.57147399999741,
+     40.18668700000083,
+     26.24009800000018,
+     3.2437640000000134
+    ],
+    [
+     155.18424699999835,
+     122.88971799999698,
+     43.30322400000081,
+     28.02093200000018,
+     3.5128260000000107
+    ]
+   ],
+   "store": {
+    "layout": "hash"
+   },
+   "median_ms": 330.15212499999996
+  },
+  "hash-joint-live": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 131371,
+   "fresh": 97139,
+   "direct_cells": 97026,
+   "source_pass_rhs": 131371,
+   "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+   "wire_bytes": 6182696,
+   "root_row_decodes": 0,
+   "root_header_checks": 853372,
+   "owned_slot_transfers": 131371,
+   "raw": "10431860128350219007",
+   "emitted": [
+    243383,
+    83313
+   ],
+   "wire_hash": "6168948855503912532",
+   "commits": "ef8d551cdc8dc317259602b5552be49fdf83e415e69f8a16f6d58018e00cbb32",
+   "physical": "704047e92ded5214ed806cbfed9eeb7ca4aa1911d3cab455e005ec1df78893e8",
+   "multi": "cc1f53cfe0ac95a4f39d82de5595e7de19be4c96e42907893311b5cfdda75887",
+   "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+   "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+   "rejected": 0,
+   "root_allocated": 96535,
+   "applied": 131371,
+   "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+   "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+   "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+   "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+   "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+   "ms": [
+    649.9701249999999,
+    664.32725,
+    679.712042,
+    698.901041
+   ],
+   "verified_roots": 131371,
+   "online_root_rhs": 131371,
+   "phase_ms": [
+    [
+     468.22014600000705,
+     115.56620999999681,
+     30.17724300000031,
+     31.503550000000388,
+     3.5971320000000158
+    ],
+    [
+     477.28702900000496,
+     118.92134799999698,
+     31.725870000000324,
+     31.864668000000393,
+     3.57862000000002
+    ],
+    [
+     483.14488500000584,
+     124.64803899999663,
+     33.54981200000065,
+     33.635979999999805,
+     3.676249000000016
+    ],
+    [
+     497.00568700000457,
+     129.6242409999982,
+     33.23582000000075,
+     34.0692449999998,
+     4.024738000000011
+    ]
+   ],
+   "store": {
+    "layout": "hash"
+   },
+   "median_ms": 672.019646
+  },
+  "hash-repair-live": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 131371,
+   "fresh": 97139,
+   "direct_cells": 97026,
+   "source_pass_rhs": 131371,
+   "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+   "wire_bytes": 6182696,
+   "root_row_decodes": 0,
+   "root_header_checks": 853372,
+   "owned_slot_transfers": 131371,
+   "raw": "10431860128350219007",
+   "emitted": [
+    243383,
+    83313
+   ],
+   "wire_hash": "6168948855503912532",
+   "commits": "ef8d551cdc8dc317259602b5552be49fdf83e415e69f8a16f6d58018e00cbb32",
+   "physical": "704047e92ded5214ed806cbfed9eeb7ca4aa1911d3cab455e005ec1df78893e8",
+   "multi": "cc1f53cfe0ac95a4f39d82de5595e7de19be4c96e42907893311b5cfdda75887",
+   "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+   "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+   "rejected": 0,
+   "root_allocated": 96535,
+   "applied": 131371,
+   "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+   "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+   "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+   "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+   "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+   "ms": [
+    652.542458,
+    639.989459,
+    687.114708,
+    684.2462499999999
+   ],
+   "verified_roots": 131371,
+   "online_root_rhs": 131371,
+   "phase_ms": [
+    [
+     469.38196200000596,
+     115.6478359999965,
+     31.168920000000334,
+     31.952821000000366,
+     3.4234990000000236
+    ],
+    [
+     459.62184700000716,
+     114.29556799999696,
+     30.449856000000356,
+     31.414259000000456,
+     3.322453000000023
+    ],
+    [
+     490.5141240000056,
+     124.89836499999657,
+     33.44297100000077,
+     33.444285999999835,
+     3.7868050000000197
+    ],
+    [
+     487.232269000005,
+     124.78564099999672,
+     32.958603000000615,
+     34.21002099999976,
+     3.9176400000000196
+    ]
+   ],
+   "store": {
+    "layout": "hash"
+   },
+   "median_ms": 668.394354
+  },
+  "arena-original-live": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 131371,
+   "fresh": 97139,
+   "direct_cells": 97026,
+   "source_pass_rhs": 131371,
+   "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+   "wire_bytes": 6182696,
+   "root_row_decodes": 0,
+   "root_header_checks": 853372,
+   "owned_slot_transfers": 131371,
+   "raw": "10431860128350219007",
+   "emitted": [
+    243383,
+    83313
+   ],
+   "wire_hash": "6168948855503912532",
+   "commits": "ef8d551cdc8dc317259602b5552be49fdf83e415e69f8a16f6d58018e00cbb32",
+   "physical": "704047e92ded5214ed806cbfed9eeb7ca4aa1911d3cab455e005ec1df78893e8",
+   "multi": "cc1f53cfe0ac95a4f39d82de5595e7de19be4c96e42907893311b5cfdda75887",
+   "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+   "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+   "rejected": 0,
+   "root_allocated": 96535,
+   "applied": 131371,
+   "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+   "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+   "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+   "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+   "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+   "ms": [
+    625.397791,
+    638.56425,
+    642.948792,
+    605.358667
+   ],
+   "verified_roots": 131371,
+   "online_root_rhs": 131371,
+   "phase_ms": [
+    [
+     444.55981300000417,
+     106.19291799999726,
+     39.374889000000756,
+     31.25483100000036,
+     2.82048100000001
+    ],
+    [
+     451.9167630000046,
+     109.68389499999735,
+     40.387672000000734,
+     32.756028999999856,
+     2.9035610000000127
+    ],
+    [
+     457.4181650000047,
+     109.73606299999761,
+     39.23467400000075,
+     32.17378599999994,
+     3.198389000000009
+    ],
+    [
+     431.851645000004,
+     102.08189299999789,
+     37.73663300000079,
+     30.08682400000035,
+     2.731664000000007
+    ]
+   ],
+   "store": {
+    "layout": "arena",
+    "live": 35238,
+    "outliers": 0,
+    "position_capacity": 262144,
+    "record_capacity": 65536
+   },
+   "median_ms": 631.9810205
+  },
+  "arena-joint-live": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 131371,
+   "fresh": 97139,
+   "direct_cells": 97026,
+   "source_pass_rhs": 131371,
+   "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+   "wire_bytes": 6182696,
+   "root_row_decodes": 0,
+   "root_header_checks": 853372,
+   "owned_slot_transfers": 131371,
+   "raw": "10431860128350219007",
+   "emitted": [
+    243383,
+    83313
+   ],
+   "wire_hash": "6168948855503912532",
+   "commits": "ef8d551cdc8dc317259602b5552be49fdf83e415e69f8a16f6d58018e00cbb32",
+   "physical": "704047e92ded5214ed806cbfed9eeb7ca4aa1911d3cab455e005ec1df78893e8",
+   "multi": "cc1f53cfe0ac95a4f39d82de5595e7de19be4c96e42907893311b5cfdda75887",
+   "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+   "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+   "rejected": 0,
+   "root_allocated": 96535,
+   "applied": 131371,
+   "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+   "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+   "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+   "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+   "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+   "ms": [
+    637.1716250000001,
+    646.602833,
+    664.669042,
+    577.0862500000001
+   ],
+   "verified_roots": 131371,
+   "online_root_rhs": 131371,
+   "phase_ms": [
+    [
+     459.53190600000585,
+     111.58352799999723,
+     30.23861200000036,
+     31.56762200000041,
+     3.1655720000000187
+    ],
+    [
+     463.78333100000566,
+     115.84208199999703,
+     30.802678000000327,
+     31.809386000000384,
+     3.3947000000000176
+    ],
+    [
+     478.09345100000616,
+     115.734967999997,
+     33.2446990000008,
+     33.086482999999774,
+     3.368102000000025
+    ],
+    [
+     419.0408300000047,
+     99.33608999999814,
+     27.224269000000184,
+     27.978238000000275,
+     2.691461000000012
+    ]
+   ],
+   "store": {
+    "layout": "arena",
+    "live": 35238,
+    "outliers": 0,
+    "position_capacity": 262144,
+    "record_capacity": 65536
+   },
+   "median_ms": 641.887229
+  },
+  "arena-joint-positive": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 131371,
+   "fresh": 97139,
+   "direct_cells": 97026,
+   "source_pass_rhs": 131371,
+   "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+   "wire_bytes": 1928864,
+   "root_row_decodes": 0,
+   "root_header_checks": 853372,
+   "owned_slot_transfers": 131371,
+   "raw": "9649924707524619775",
+   "emitted": [
+    73676,
+    57695
+   ],
+   "wire_hash": "16004110192085505466",
+   "commits": "c710b1f2379558bba4444090734bf123eecbf66bdcd58f303ebaf589f6524903",
+   "physical": "6696f80f0a116d977933140906006d54c77c573ae8cc9a3aa28d6d79ef43a021",
+   "multi": "ec8293f8108188e819b85870b54081b98a01250c185b4fec30687574c5cad9ae",
+   "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+   "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+   "rejected": 0,
+   "root_allocated": 96535,
+   "applied": 131371,
+   "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+   "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+   "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+   "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+   "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+   "ms": [
+    319.56958299999997,
+    302.3375,
+    291.149625,
+    292.102875
+   ],
+   "verified_roots": 131371,
+   "online_root_rhs": 0,
+   "phase_ms": [
+    [
+     146.4233099999983,
+     110.66999399999703,
+     31.611271000000375,
+     26.753563000000188,
+     3.2163240000000153
+    ],
+    [
+     139.3601789999981,
+     103.78761199999778,
+     30.173691000000268,
+     25.22507700000014,
+     2.908553000000011
+    ],
+    [
+     135.72755499999835,
+     99.74102799999818,
+     28.117029000000265,
+     23.987244000000153,
+     2.7884560000000107
+    ],
+    [
+     136.77213899999813,
+     101.01233599999762,
+     27.4249800000003,
+     23.47960400000019,
+     2.6111580000000094
+    ]
+   ],
+   "store": {
+    "layout": "arena",
+    "live": 35238,
+    "outliers": 0,
+    "position_capacity": 262144,
+    "record_capacity": 65536
+   },
+   "median_ms": 297.22018749999995
+  },
+  "arena-repair-live": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 131371,
+   "fresh": 97139,
+   "direct_cells": 97026,
+   "source_pass_rhs": 131371,
+   "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+   "wire_bytes": 6182696,
+   "root_row_decodes": 0,
+   "root_header_checks": 853372,
+   "owned_slot_transfers": 131371,
+   "raw": "10431860128350219007",
+   "emitted": [
+    243383,
+    83313
+   ],
+   "wire_hash": "6168948855503912532",
+   "commits": "ef8d551cdc8dc317259602b5552be49fdf83e415e69f8a16f6d58018e00cbb32",
+   "physical": "704047e92ded5214ed806cbfed9eeb7ca4aa1911d3cab455e005ec1df78893e8",
+   "multi": "cc1f53cfe0ac95a4f39d82de5595e7de19be4c96e42907893311b5cfdda75887",
+   "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+   "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+   "rejected": 0,
+   "root_allocated": 96535,
+   "applied": 131371,
+   "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+   "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+   "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+   "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+   "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+   "ms": [
+    655.843,
+    661.360834,
+    612.577084,
+    648.615417
+   ],
+   "verified_roots": 131371,
+   "online_root_rhs": 131371,
+   "phase_ms": [
+    [
+     472.87251400000605,
+     114.87082799999676,
+     31.151662000000325,
+     32.26816199999985,
+     3.365419000000027
+    ],
+    [
+     472.8315380000061,
+     117.41237399999677,
+     32.55005100000061,
+     34.18469499999987,
+     3.4334650000000284
+    ],
+    [
+     442.90767200000334,
+     105.31312199999738,
+     29.348896000000288,
+     30.671193000000354,
+     3.338234000000012
+    ],
+    [
+     468.6182500000034,
+     111.86861399999735,
+     30.771798000000366,
+     32.58132099999984,
+     3.8553730000000175
+    ]
+   ],
+   "store": {
+    "layout": "arena",
+    "live": 35238,
+    "outliers": 0,
+    "position_capacity": 262144,
+    "record_capacity": 65536
+   },
+   "median_ms": 652.2292084999999
+  },
+  "arena-repair-positive": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 131371,
+   "fresh": 97139,
+   "direct_cells": 97026,
+   "source_pass_rhs": 131371,
+   "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+   "wire_bytes": 1928864,
+   "root_row_decodes": 0,
+   "root_header_checks": 853372,
+   "owned_slot_transfers": 131371,
+   "raw": "9649924707524619775",
+   "emitted": [
+    73676,
+    57695
+   ],
+   "wire_hash": "16004110192085505466",
+   "commits": "c710b1f2379558bba4444090734bf123eecbf66bdcd58f303ebaf589f6524903",
+   "physical": "6696f80f0a116d977933140906006d54c77c573ae8cc9a3aa28d6d79ef43a021",
+   "multi": "ec8293f8108188e819b85870b54081b98a01250c185b4fec30687574c5cad9ae",
+   "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+   "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+   "rejected": 0,
+   "root_allocated": 96535,
+   "applied": 131371,
+   "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+   "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+   "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+   "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+   "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+   "ms": [
+    295.488625,
+    292.087292,
+    293.1005,
+    314.78225
+   ],
+   "verified_roots": 131371,
+   "online_root_rhs": 0,
+   "phase_ms": [
+    [
+     136.81560099999803,
+     100.53580399999802,
+     29.193796000000344,
+     25.011891000000144,
+     3.1055300000000123
+    ],
+    [
+     134.1733609999986,
+     100.67958799999806,
+     28.798268000000267,
+     24.588073000000186,
+     2.9781560000000113
+    ],
+    [
+     134.9809429999983,
+     99.41315099999807,
+     29.945011000000342,
+     24.9945940000001,
+     2.9600040000000103
+    ],
+    [
+     143.11244199999837,
+     109.90439799999687,
+     30.31315600000033,
+     27.106251000000295,
+     3.259466000000022
+    ]
+   ],
+   "store": {
+    "layout": "arena",
+    "live": 35238,
+    "outliers": 0,
+    "position_capacity": 262144,
+    "record_capacity": 65536
+   },
+   "median_ms": 294.2945625
+  }
+ },
+ "3mm": {
+  "vanilla": {
+   "ms": [
+    950.407917,
+    887.939334,
+    887.9042499999999,
+    958.0589170000001
+   ],
+   "runs": 4260,
+   "rhs": 294917,
+   "median_ms": 919.1736255000001
+  },
+  "hash-original-live": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 20817600,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "7377151213120924531",
+   "emitted": [
+    845168,
+    220972
+   ],
+   "wire_hash": "15785836946056912275",
+   "commits": "efb7993f5a2133149ca81ae9aa479a8b8de7111be99d2fb0e1c7945d357c1fc8",
+   "physical": "78498066eae00dba42a33f18c2d215abfbe3b493e9e002e51087b4e74b283376",
+   "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    2030.785625,
+    2064.656084,
+    2130.970917,
+    2051.596875
+   ],
+   "verified_roots": 294917,
+   "online_root_rhs": 294917,
+   "phase_ms": [
+    [
+     1503.1064119999912,
+     320.08496000000974,
+     111.5675759999945,
+     85.86110099999914,
+     8.603762000000089
+    ],
+    [
+     1534.7144339999884,
+     321.72371300001066,
+     109.82285499999455,
+     88.03539899999949,
+     8.806572000000072
+    ],
+    [
+     1580.0862999999854,
+     339.5106920000096,
+     113.5286319999945,
+     87.280497999999,
+     8.828173000000117
+    ],
+    [
+     1521.4648179999824,
+     328.51910200000935,
+     106.67875799999416,
+     85.07713299999902,
+     8.43681700000004
+    ]
+   ],
+   "store": {
+    "layout": "hash"
+   },
+   "median_ms": 2058.1264795
+  },
+  "hash-original-positive": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 3793024,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "9536985815488480615",
+   "emitted": [
+    147952,
+    146965
+   ],
+   "wire_hash": "5452119695208716943",
+   "commits": "07f86422b315de7361f04674ca5f1008187319559c1cffbbf7691d826d0dbadf",
+   "physical": "1fbfc8700176b0edbc2ea8f5e5af9d9a9f73bfc81ae53b7ea9e0f67d33678574",
+   "multi": "e7f3df8bb40a59b9cf14580dc67a034c838a95bd7e66b9da23f628686fc639cc",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    864.2303340000001,
+    799.123375,
+    828.5671249999999,
+    875.25675
+   ],
+   "verified_roots": 294917,
+   "online_root_rhs": 0,
+   "phase_ms": [
+    [
+     363.6119920000079,
+     312.8240010000105,
+     109.42418499999435,
+     69.7887039999991,
+     7.270409999999942
+    ],
+    [
+     331.7643920000034,
+     291.5911050000104,
+     104.4214579999941,
+     63.80626299999734,
+     6.318218999999979
+    ],
+    [
+     346.2570470000051,
+     300.05243000000934,
+     108.86167399999367,
+     65.31054799999819,
+     6.828070999999954
+    ],
+    [
+     360.87095000000926,
+     318.2050000000099,
+     117.95957699999248,
+     69.89649299999903,
+     6.93243999999996
+    ]
+   ],
+   "store": {
+    "layout": "hash"
+   },
+   "median_ms": 846.3987295
+  },
+  "hash-joint-live": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 20817600,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "7377151213120924531",
+   "emitted": [
+    845168,
+    220972
+   ],
+   "wire_hash": "15785836946056912275",
+   "commits": "efb7993f5a2133149ca81ae9aa479a8b8de7111be99d2fb0e1c7945d357c1fc8",
+   "physical": "78498066eae00dba42a33f18c2d215abfbe3b493e9e002e51087b4e74b283376",
+   "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    2018.738375,
+    1978.1466669999998,
+    1828.4429169999999,
+    2095.03625
+   ],
+   "verified_roots": 294917,
+   "online_root_rhs": 294917,
+   "phase_ms": [
+    [
+     1517.410066999985,
+     325.85707700001007,
+     79.30642999999596,
+     85.884756999999,
+     8.870396000000083
+    ],
+    [
+     1492.7710449999847,
+     319.5555320000098,
+     72.42231799999574,
+     83.28274299999885,
+     8.567163000000077
+    ],
+    [
+     1382.3155899999915,
+     292.4607670000082,
+     68.17287699999574,
+     76.84803999999917,
+     7.474801999999961
+    ],
+    [
+     1582.6342769999894,
+     332.5510560000101,
+     80.57040099999631,
+     88.02429799999904,
+     9.64945200000011
+    ]
+   ],
+   "store": {
+    "layout": "hash"
+   },
+   "median_ms": 1998.442521
+  },
+  "hash-repair-live": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 20817600,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "7377151213120924531",
+   "emitted": [
+    845168,
+    220972
+   ],
+   "wire_hash": "15785836946056912275",
+   "commits": "efb7993f5a2133149ca81ae9aa479a8b8de7111be99d2fb0e1c7945d357c1fc8",
+   "physical": "78498066eae00dba42a33f18c2d215abfbe3b493e9e002e51087b4e74b283376",
+   "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    1999.528292,
+    1871.302583,
+    2095.2177500000003,
+    2029.138917
+   ],
+   "verified_roots": 294917,
+   "online_root_rhs": 294917,
+   "phase_ms": [
+    [
+     1516.3387539999878,
+     315.07634800001034,
+     73.67344999999605,
+     84.35365799999902,
+     8.596045000000094
+    ],
+    [
+     1414.7914909999918,
+     294.0590040000077,
+     73.29551899999598,
+     79.71432699999919,
+     8.073397000000003
+    ],
+    [
+     1575.72715899999,
+     340.2523830000099,
+     80.70531999999601,
+     87.14305999999911,
+     9.6640630000001
+    ],
+    [
+     1530.4442169999866,
+     329.41359400001005,
+     74.85176299999613,
+     84.01514999999885,
+     8.807186000000085
+    ]
+   ],
+   "store": {
+    "layout": "hash"
+   },
+   "median_ms": 2014.3336045
+  },
+  "arena-original-live": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 20817600,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "7377151213120924531",
+   "emitted": [
+    845168,
+    220972
+   ],
+   "wire_hash": "15785836946056912275",
+   "commits": "efb7993f5a2133149ca81ae9aa479a8b8de7111be99d2fb0e1c7945d357c1fc8",
+   "physical": "78498066eae00dba42a33f18c2d215abfbe3b493e9e002e51087b4e74b283376",
+   "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    1983.038916,
+    1967.6425,
+    1888.6485830000001,
+    1965.902709
+   ],
+   "verified_roots": 294917,
+   "online_root_rhs": 294917,
+   "phase_ms": [
+    [
+     1480.4793189999878,
+     301.6191290000102,
+     106.53357199999408,
+     85.61341399999966,
+     7.222764999999943
+    ],
+    [
+     1468.4569879999817,
+     301.8414510000097,
+     104.76478699999417,
+     83.54953599999916,
+     7.375003999999923
+    ],
+    [
+     1410.3037499999875,
+     283.8419610000086,
+     106.97976999999446,
+     79.78668199999923,
+     6.3353229999999865
+    ],
+    [
+     1467.1509259999905,
+     301.4551850000098,
+     106.08403999999459,
+     82.26966399999921,
+     7.321427999999953
+    ]
+   ],
+   "store": {
+    "layout": "arena",
+    "live": 94210,
+    "outliers": 0,
+    "position_capacity": 524288,
+    "record_capacity": 131072
+   },
+   "median_ms": 1966.7726045
+  },
+  "arena-joint-live": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 20817600,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "7377151213120924531",
+   "emitted": [
+    845168,
+    220972
+   ],
+   "wire_hash": "15785836946056912275",
+   "commits": "efb7993f5a2133149ca81ae9aa479a8b8de7111be99d2fb0e1c7945d357c1fc8",
+   "physical": "78498066eae00dba42a33f18c2d215abfbe3b493e9e002e51087b4e74b283376",
+   "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    1945.516042,
+    1928.2169580000002,
+    1961.362291,
+    1955.4499170000001
+   ],
+   "verified_roots": 294917,
+   "online_root_rhs": 294917,
+   "phase_ms": [
+    [
+     1473.5676879999926,
+     304.2339240000092,
+     72.95244999999606,
+     85.24596199999903,
+     7.87701199999996
+    ],
+    [
+     1458.1706189999784,
+     300.111709000009,
+     75.48509799999604,
+     85.17671899999928,
+     7.760288999999948
+    ],
+    [
+     1489.4071159999849,
+     303.3625650000078,
+     75.0236089999959,
+     83.94847999999936,
+     7.861006999999948
+    ],
+    [
+     1475.2271589999807,
+     311.82671300000976,
+     74.2892069999959,
+     84.76346199999956,
+     7.7730309999999525
+    ]
+   ],
+   "store": {
+    "layout": "arena",
+    "live": 94210,
+    "outliers": 0,
+    "position_capacity": 524288,
+    "record_capacity": 131072
+   },
+   "median_ms": 1950.4829795
+  },
+  "arena-joint-positive": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 3793024,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "9536985815488480615",
+   "emitted": [
+    147952,
+    146965
+   ],
+   "wire_hash": "5452119695208716943",
+   "commits": "07f86422b315de7361f04674ca5f1008187319559c1cffbbf7691d826d0dbadf",
+   "physical": "1fbfc8700176b0edbc2ea8f5e5af9d9a9f73bfc81ae53b7ea9e0f67d33678574",
+   "multi": "e7f3df8bb40a59b9cf14580dc67a034c838a95bd7e66b9da23f628686fc639cc",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    732.72875,
+    750.3703750000001,
+    716.4557080000001,
+    760.994167
+   ],
+   "verified_roots": 294917,
+   "online_root_rhs": 0,
+   "phase_ms": [
+    [
+     329.39067200000324,
+     266.5722940000079,
+     67.54581399999525,
+     62.05857299999726,
+     5.948035999999957
+    ],
+    [
+     335.99970600000535,
+     275.1865320000086,
+     67.9645399999955,
+     63.54746299999774,
+     6.489414999999973
+    ],
+    [
+     317.1283700000067,
+     260.78162700000746,
+     70.18403399999528,
+     61.54847699999758,
+     5.72369499999998
+    ],
+    [
+     340.15999500000487,
+     278.93766500000805,
+     69.83121299999543,
+     64.64611799999818,
+     6.228584999999986
+    ]
+   ],
+   "store": {
+    "layout": "arena",
+    "live": 94210,
+    "outliers": 0,
+    "position_capacity": 524288,
+    "record_capacity": 131072
+   },
+   "median_ms": 741.5495625000001
+  },
+  "arena-repair-live": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 20817600,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "7377151213120924531",
+   "emitted": [
+    845168,
+    220972
+   ],
+   "wire_hash": "15785836946056912275",
+   "commits": "efb7993f5a2133149ca81ae9aa479a8b8de7111be99d2fb0e1c7945d357c1fc8",
+   "physical": "78498066eae00dba42a33f18c2d215abfbe3b493e9e002e51087b4e74b283376",
+   "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    1888.215209,
+    1987.53475,
+    1831.081083,
+    1920.682791
+   ],
+   "verified_roots": 294917,
+   "online_root_rhs": 294917,
+   "phase_ms": [
+    [
+     1437.4176759999857,
+     291.49643400001054,
+     70.00989599999605,
+     80.63918399999942,
+     7.14195799999995
+    ],
+    [
+     1474.0923459999904,
+     342.06140500000953,
+     77.70736899999592,
+     84.3276699999994,
+     7.791983999999943
+    ],
+    [
+     1396.2721769999955,
+     278.02780400000734,
+     68.99369099999568,
+     78.96084299999964,
+     7.388391999999948
+    ],
+    [
+     1462.874382999996,
+     293.118226000008,
+     72.97085199999579,
+     82.42705299999922,
+     7.736758999999947
+    ]
+   ],
+   "store": {
+    "layout": "arena",
+    "live": 94210,
+    "outliers": 0,
+    "position_capacity": 524288,
+    "record_capacity": 131072
+   },
+   "median_ms": 1904.449
+  },
+  "arena-repair-positive": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 3793024,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "9536985815488480615",
+   "emitted": [
+    147952,
+    146965
+   ],
+   "wire_hash": "5452119695208716943",
+   "commits": "07f86422b315de7361f04674ca5f1008187319559c1cffbbf7691d826d0dbadf",
+   "physical": "1fbfc8700176b0edbc2ea8f5e5af9d9a9f73bfc81ae53b7ea9e0f67d33678574",
+   "multi": "e7f3df8bb40a59b9cf14580dc67a034c838a95bd7e66b9da23f628686fc639cc",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    776.236833,
+    737.716542,
+    694.425708,
+    748.559834
+   ],
+   "verified_roots": 294917,
+   "online_root_rhs": 0,
+   "phase_ms": [
+    [
+     343.8151690000061,
+     284.2552660000082,
+     73.5281709999956,
+     66.56814999999915,
+     6.766246999999952
+    ],
+    [
+     323.0771060000052,
+     271.28855800000855,
+     71.77447899999555,
+     64.35485499999778,
+     6.07663199999997
+    ],
+    [
+     309.18874600000595,
+     255.0687590000067,
+     64.28802399999924,
+     58.95991499999777,
+     5.7927219999999675
+    ],
+    [
+     325.4352390000056,
+     279.63979300000955,
+     72.2104109999955,
+     64.09574599999756,
+     5.961160999999972
+    ]
+   ],
+   "store": {
+    "layout": "arena",
+    "live": 94210,
+    "outliers": 0,
+    "position_capacity": 524288,
+    "record_capacity": 131072
+   },
+   "median_ms": 743.138188
+  }
+ }
+}
