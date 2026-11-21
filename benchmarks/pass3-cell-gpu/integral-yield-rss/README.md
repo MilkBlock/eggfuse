@@ -10,6 +10,27 @@ Detailed audits retain the original Run-by-Run wire and receipt trajectories. Th
 
 ## Reproduce
 
+## Same-growth crossings
+
+The reference CPU calibrates the 90% rise at **9.27 MiB** for sum-bits and **264.08 MiB** for 3mm. The table uses four fresh-process observations. Wire avoided compares the raw external stream at the same completed source Run. Fractional counts arise from taking the median across an even number of trials.
+
+| Workload | Arm | Peak RSS (MiB) | Time to 90% rise (ms) | Wire B avoided at crossing | Committed internal bindings at crossing |
+|---|---|---:|---:|---:|---:|
+| sum-bits | cpu | 261.32 | 18.6 | — | — |
+| sum-bits | raw_external | 270.86 | 24.5 | 0.0 | 0.0 |
+| sum-bits | filter_external | 270.81 | 23.3 | 29,336.0 | 0.0 |
+| sum-bits | raw_closed | 270.81 | 23.7 | 19,352.0 | 529.0 |
+| sum-bits | filter_closed | 270.84 | 23.3 | 49,152.0 | 530.0 |
+| sum-bits | filter_mixed | 270.91 | 23.0 | 52,968.0 | 777.0 |
+| 3mm | cpu | 693.38 | 583.1 | — | — |
+| 3mm | raw_external | 731.88 | 1,070.7 | 0.0 | 0.0 |
+| 3mm | filter_external | 744.90 | 1,027.1 | 1,764,708.0 | 0.0 |
+| 3mm | raw_closed | 742.65 | 1,046.8 | 148,896.0 | 5,764.0 |
+| 3mm | filter_closed | 749.03 | 1,038.9 | 1,911,312.0 | 5,648.5 |
+| 3mm | filter_mixed | 765.11 | 1,020.2 | 2,073,848.0 | 14,208.0 |
+
+On 3mm, filtered mixed reaches the common growth level 50.48 ms before raw external and has avoided about 2.07 MB of external root wire at that observed point. It also reaches a higher peak RSS (765.11 versus 731.88 MiB). Earlier growth can coexist with more retained proof/index storage. The counters establish the actual ordered activations and savings already present at the crossing. [sum-bits curves](sum-bits.svg) · [3mm curves](3mm.svg) · [Individual measurements](results.json)
+
 ```sh
 d=benchmarks/pass3-cell-gpu/integral-yield-rss
 python "$d/build.py" "$EXP/integral-yield-rss-build" "$EXP/verified-wave-rss-native-v1/vanilla"
