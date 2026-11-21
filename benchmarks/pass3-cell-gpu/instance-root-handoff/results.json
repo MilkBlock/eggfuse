@@ -1,0 +1,642 @@
+{
+ "conjugate-gradient": {
+  "vanilla": {
+   "rhs": 131371,
+   "runs": 2896,
+   "ms": [
+    354.188625,
+    370.741875,
+    334.977917,
+    340.308542,
+    362.149583,
+    339.58916700000003
+   ],
+   "wall_ms": [
+    464.48716695886105,
+    482.63437498826534,
+    443.6050410149619,
+    444.9975830502808,
+    468.2203329866752,
+    445.36062504630536
+   ],
+   "median_ms": 347.2485835,
+   "median_wall_ms": 454.9238960025832
+  },
+  "directory": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 131371,
+   "neural_rhs": 131371,
+   "fresh": 97139,
+   "direct_cells": 97026,
+   "source_pass_rhs": 131371,
+   "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+   "wire_bytes": 3454136,
+   "root_row_decodes": 0,
+   "root_header_checks": 853372,
+   "owned_slot_transfers": 131371,
+   "raw": "2589875146572254001",
+   "emitted": [
+    133565,
+    83313
+   ],
+   "wire_hash": "1993356065541734829",
+   "commits": "a1e33e0aaa982aa58bfb3f89f1e30552d8298b4b5d4776251fd52da0c3f3c1ba",
+   "physical": "aee548a2a013cffebe71e61f2d052a96a7564bb6e5916393e5793e063cd25f6d",
+   "multi": "cc1f53cfe0ac95a4f39d82de5595e7de19be4c96e42907893311b5cfdda75887",
+   "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+   "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+   "rejected": 0,
+   "root_allocated": 96535,
+   "applied": 131371,
+   "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+   "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+   "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+   "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+   "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+   "ms": [
+    624.403583,
+    631.358833,
+    617.820708,
+    664.349709,
+    641.490292,
+    667.089708
+   ],
+   "claims": {
+    "counts": {
+     "archived_comparisons": 0,
+     "attached": 0,
+     "transferred": 0
+    },
+    "directory_bytes": 6291456,
+    "instance_bytes": 272,
+    "tickets": 57695
+   },
+   "queue": {
+    "banks": 3884,
+    "lanes": 133565,
+    "pages": 3884,
+    "peak_pending_bytes": 279552,
+    "pending_bytes": 0,
+    "total_queue_capacity_bytes": 8144192,
+    "verified": 73676
+   },
+   "scores": "7920110403220796580",
+   "events": {
+    "mixed_waves": 512,
+    "multi_sets": 8494,
+    "multiple_rules": 1155,
+    "peak_rules": 222,
+    "peak_tuples": 6236,
+    "sealed_multi": 83313,
+    "sealed_single": 133565,
+    "single_sets": 8088,
+    "validated_multi_sets": 8494,
+    "verified_single_sets": 8088,
+    "waves": 2895
+   },
+   "wall_ms": [
+    729.8439589794725,
+    732.1810000576079,
+    728.9384589530528,
+    785.1449170848355,
+    739.1222500009462,
+    787.814874900505
+   ],
+   "phase_ms": [
+    [
+     432.7818310000021,
+     115.61288899999697,
+     39.745640000000726,
+     31.795988000000378,
+     3.4055320000000124
+    ],
+    [
+     438.63525300000254,
+     116.80074499999685,
+     38.762910000000716,
+     32.77893999999983,
+     3.3085690000000225
+    ],
+    [
+     426.0521700000037,
+     114.93987699999731,
+     41.032775000000704,
+     31.563160000000305,
+     3.1919700000000026
+    ],
+    [
+     461.0746090000041,
+     122.68977999999689,
+     41.29617300000078,
+     34.300745999999805,
+     3.832632000000013
+    ],
+    [
+     441.7512330000046,
+     120.8668289999968,
+     41.31318000000069,
+     32.995286999999735,
+     3.5534870000000125
+    ],
+    [
+     459.1450090000047,
+     127.2899229999964,
+     42.37265300000071,
+     33.45069899999983,
+     3.739143000000021
+    ]
+   ],
+   "normal_claims": {
+    "counts": {
+     "archived_comparisons": 0,
+     "attached": 0,
+     "transferred": 0
+    },
+    "directory_bytes": 6291456,
+    "instance_bytes": 272,
+    "tickets": 57695
+   },
+   "median_ms": 636.4245625,
+   "median_wall_ms": 735.651625029277
+  },
+  "instance": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 131371,
+   "neural_rhs": 131371,
+   "fresh": 97139,
+   "direct_cells": 97026,
+   "source_pass_rhs": 131371,
+   "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+   "wire_bytes": 3454136,
+   "root_row_decodes": 0,
+   "root_header_checks": 853372,
+   "owned_slot_transfers": 131371,
+   "raw": "2589875146572254001",
+   "emitted": [
+    133565,
+    83313
+   ],
+   "wire_hash": "1993356065541734829",
+   "commits": "a1e33e0aaa982aa58bfb3f89f1e30552d8298b4b5d4776251fd52da0c3f3c1ba",
+   "physical": "aee548a2a013cffebe71e61f2d052a96a7564bb6e5916393e5793e063cd25f6d",
+   "multi": "cc1f53cfe0ac95a4f39d82de5595e7de19be4c96e42907893311b5cfdda75887",
+   "children": "dc415fe27601867fc44f13c04942cee893424ff2addca8060307edc352f106da",
+   "cells": "80731368120f5afac1565984b7005bbd25fc7355ca352dcfb8481f846198890a",
+   "rejected": 0,
+   "root_allocated": 96535,
+   "applied": 131371,
+   "single_winners": "615a3a7c19258b0116b36af9f71c7ac96e75414ea6ee1fe81503d8fbd71b6d7d",
+   "multi_winners": "70071698f5998588c6db676fc61fd7f013611b16b9c169802bb5646f011dd215",
+   "root_parents": "53e3840d174ba1934944e959a5b0f005841ae244bca4d2aa738957994a09e7c9",
+   "root_ids": "63ec15b593832db2405740cf1b58eb03f85fba60c475d54c96f6d3d22edac1f5",
+   "nested_ids": "fb82e4fceb75207076560296318aaf68233867df903275b1f3e96ba6cf0534fb",
+   "ms": [
+    642.491375,
+    624.36875,
+    659.161667,
+    621.1184159999999,
+    649.202,
+    638.872458
+   ],
+   "claims": {
+    "counts": {
+     "archived_comparisons": 57695,
+     "attached": 57695,
+     "transferred": 57695
+    },
+    "directory_bytes": 6291456,
+    "instance_bytes": 272,
+    "tickets": 57695
+   },
+   "queue": {
+    "banks": 3884,
+    "lanes": 133565,
+    "pages": 3884,
+    "peak_pending_bytes": 279552,
+    "pending_bytes": 0,
+    "total_queue_capacity_bytes": 8144192,
+    "verified": 73676
+   },
+   "scores": "7920110403220796580",
+   "events": {
+    "mixed_waves": 512,
+    "multi_sets": 8494,
+    "multiple_rules": 1155,
+    "peak_rules": 222,
+    "peak_tuples": 6236,
+    "sealed_multi": 83313,
+    "sealed_single": 133565,
+    "single_sets": 8088,
+    "validated_multi_sets": 8494,
+    "verified_single_sets": 8088,
+    "waves": 2895
+   },
+   "wall_ms": [
+    760.9457919606939,
+    729.0001669898629,
+    783.5689169587567,
+    718.8895829021931,
+    776.6502910526469,
+    760.3430000599474
+   ],
+   "phase_ms": [
+    [
+     446.18247400000166,
+     117.04260399999733,
+     41.48670500000069,
+     32.74773099999976,
+     3.7019520000000106
+    ],
+    [
+     435.54744700000407,
+     114.56540799999696,
+     38.22715600000082,
+     31.79752900000042,
+     3.1824520000000094
+    ],
+    [
+     451.809775000004,
+     126.29855899999676,
+     42.94747600000079,
+     33.683677999999766,
+     3.3677690000000093
+    ],
+    [
+     432.1362320000028,
+     113.32035599999719,
+     39.44879900000081,
+     31.46152900000039,
+     3.4293220000000075
+    ],
+    [
+     447.4175400000042,
+     119.01886799999676,
+     44.1080260000008,
+     33.98999099999982,
+     3.665282000000015
+    ],
+    [
+     440.91569500000264,
+     120.31945599999706,
+     40.19441100000079,
+     32.915859999999746,
+     3.5363060000000197
+    ]
+   ],
+   "normal_claims": {
+    "counts": {
+     "archived_comparisons": 0,
+     "attached": 57695,
+     "transferred": 57695
+    },
+    "directory_bytes": 0,
+    "instance_bytes": 272,
+    "tickets": 0
+   },
+   "median_ms": 640.6819164999999,
+   "median_wall_ms": 760.6443960103206
+  },
+  "corruption": {
+   "error": "instance claim disagrees with winning source rule",
+   "completed_runs": 16
+  }
+ },
+ "3mm": {
+  "vanilla": {
+   "rhs": 294917,
+   "runs": 4260,
+   "ms": [
+    879.319708,
+    884.7972910000001,
+    874.7787500000001,
+    843.777833,
+    863.227375,
+    841.530042
+   ],
+   "wall_ms": [
+    1115.5785829760134,
+    1119.6976660285145,
+    1113.1015410646796,
+    1070.666000014171,
+    1094.2251670639962,
+    1068.7796249985695
+   ],
+   "median_ms": 869.0030625,
+   "median_wall_ms": 1103.663354064338
+  },
+  "directory": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "neural_rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 8415216,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "11154018460456003428",
+   "emitted": [
+    334594,
+    220972
+   ],
+   "wire_hash": "3666051417264130189",
+   "commits": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+   "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+   "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    1760.5596249999999,
+    1768.117875,
+    1785.0544579999998,
+    1695.162625,
+    1685.414666,
+    1703.412459
+   ],
+   "claims": {
+    "counts": {
+     "archived_comparisons": 0,
+     "attached": 0,
+     "transferred": 0
+    },
+    "directory_bytes": 25165824,
+    "instance_bytes": 272,
+    "tickets": 146965
+   },
+   "queue": {
+    "banks": 6015,
+    "lanes": 334594,
+    "pages": 6015,
+    "peak_pending_bytes": 535680,
+    "pending_bytes": 0,
+    "total_queue_capacity_bytes": 19826400,
+    "verified": 147952
+   },
+   "scores": "16767102213097954485",
+   "events": {
+    "mixed_waves": 862,
+    "multi_sets": 11689,
+    "multiple_rules": 1812,
+    "peak_rules": 222,
+    "peak_tuples": 13938,
+    "sealed_multi": 220972,
+    "sealed_single": 334594,
+    "single_sets": 12404,
+    "validated_multi_sets": 11689,
+    "verified_single_sets": 12404,
+    "waves": 4259
+   },
+   "wall_ms": [
+    1995.0794579926878,
+    1996.0344160208479,
+    2022.0894169760868,
+    1953.1286670826375,
+    1909.032833063975,
+    1954.9075840041041
+   ],
+   "phase_ms": [
+    [
+     1275.0995040000064,
+     293.8105270000073,
+     103.44425899999426,
+     79.24966099999915,
+     7.454490999999956
+    ],
+    [
+     1283.0571500000012,
+     296.74268600000795,
+     100.74989799999399,
+     78.64660699999945,
+     7.34058299999995
+    ],
+    [
+     1286.8016760000046,
+     303.58367600000906,
+     105.76382699999459,
+     80.08593299999902,
+     7.3624089999999365
+    ],
+    [
+     1222.2048890000087,
+     289.94989300000805,
+     98.76690599999559,
+     75.93281999999935,
+     6.99367299999996
+    ],
+    [
+     1214.8855440000073,
+     287.6379640000094,
+     98.80662599999617,
+     75.90439799999918,
+     6.769838999999945
+    ],
+    [
+     1238.8282600000077,
+     282.4719090000083,
+     98.66066499999607,
+     75.32357099999923,
+     6.798914999999943
+    ]
+   ],
+   "normal_claims": {
+    "counts": {
+     "archived_comparisons": 0,
+     "attached": 0,
+     "transferred": 0
+    },
+    "directory_bytes": 25165824,
+    "instance_bytes": 272,
+    "tickets": 146965
+   },
+   "median_ms": 1731.986042,
+   "median_wall_ms": 1974.993520998396
+  },
+  "instance": {
+   "aligned": true,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "rhs": 294917,
+   "neural_rhs": 294917,
+   "fresh": 229880,
+   "direct_cells": 229311,
+   "source_pass_rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "wire_bytes": 8415216,
+   "root_row_decodes": 0,
+   "root_header_checks": 2031145,
+   "owned_slot_transfers": 294917,
+   "raw": "11154018460456003428",
+   "emitted": [
+    334594,
+    220972
+   ],
+   "wire_hash": "3666051417264130189",
+   "commits": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+   "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+   "multi": "fe77552ca31c3109e2a81dd8aa566c1f6bb967ba826ff2298c06eca2b0224bf2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "rejected": 0,
+   "root_allocated": 228095,
+   "applied": 294917,
+   "single_winners": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "multi_winners": "adb1aa63228df141596733c6790c30b7c88b16c0b9fe8055b0a1f93a37a6ede1",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "root_ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested_ids": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "ms": [
+    1830.535916,
+    1889.531375,
+    1920.5360420000002,
+    1724.5586250000001,
+    1701.1087499999999,
+    1684.976042
+   ],
+   "claims": {
+    "counts": {
+     "archived_comparisons": 146965,
+     "attached": 146965,
+     "transferred": 146965
+    },
+    "directory_bytes": 25165824,
+    "instance_bytes": 272,
+    "tickets": 146965
+   },
+   "queue": {
+    "banks": 6015,
+    "lanes": 334594,
+    "pages": 6015,
+    "peak_pending_bytes": 535680,
+    "pending_bytes": 0,
+    "total_queue_capacity_bytes": 19826400,
+    "verified": 147952
+   },
+   "scores": "16767102213097954485",
+   "events": {
+    "mixed_waves": 862,
+    "multi_sets": 11689,
+    "multiple_rules": 1812,
+    "peak_rules": 222,
+    "peak_tuples": 13938,
+    "sealed_multi": 220972,
+    "sealed_single": 334594,
+    "single_sets": 12404,
+    "validated_multi_sets": 11689,
+    "verified_single_sets": 12404,
+    "waves": 4259
+   },
+   "wall_ms": [
+    2107.3073749430478,
+    2119.3041250808164,
+    2186.613457975909,
+    1957.1291250176728,
+    1960.615499992855,
+    1939.8387080291286
+   ],
+   "phase_ms": [
+    [
+     1325.0646040000076,
+     309.13062800000813,
+     103.90010699999425,
+     82.76833899999951,
+     8.068305999999959
+    ],
+    [
+     1353.9717340000022,
+     330.1464500000097,
+     111.1529859999948,
+     84.68578799999882,
+     7.904694999999973
+    ],
+    [
+     1381.6079120000034,
+     330.35295800001023,
+     111.79394899999431,
+     86.65193999999916,
+     8.41982000000004
+    ],
+    [
+     1251.0083770000006,
+     284.43904800000763,
+     101.89622199999596,
+     78.11539999999961,
+     7.60366299999993
+    ],
+    [
+     1234.149587000012,
+     281.7315390000081,
+     97.32870699999599,
+     79.7147349999991,
+     6.7362559999999645
+    ],
+    [
+     1222.3064770000085,
+     281.43540500000813,
+     98.30387199999623,
+     74.67565599999968,
+     6.832681999999961
+    ]
+   ],
+   "normal_claims": {
+    "counts": {
+     "archived_comparisons": 0,
+     "attached": 146965,
+     "transferred": 146965
+    },
+    "directory_bytes": 0,
+    "instance_bytes": 272,
+    "tickets": 0
+   },
+   "median_ms": 1777.5472705000002,
+   "median_wall_ms": 2033.9614374679513
+  },
+  "corruption": {
+   "error": "instance claim disagrees with winning source rule",
+   "completed_runs": 26
+  }
+ }
+}

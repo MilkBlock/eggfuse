@@ -1,0 +1,16 @@
+{
+  "base": "31bf7e41",
+  "binary_sha256": "fac920ab03ebf66cdb6317f658c498212bf99e2eeb006add4937e3786838f747",
+  "files": {
+    "../verified-wave-execution/build.py": "567624a837b770db8e3c630ad7d2ccb4d551c11aef40afb74f780a603cd71857",
+    "../verified-wave-execution/study.py": "d05350a947bf70e77f8c8159860061a7cd2c009b912580ef5e2a2f1dac26b6dd",
+    "build.py": "55323e7d86d154e77f62f1065f8be0602b456c4d523254b72dadcb52698bd205",
+    "claim.rs": "5c54f3837a3f1ce2b580c5755e94ddbd7b8a7fa1069289568bcf8eb1495794f4",
+    "overlay.py": "3dbb7d27c1fcfaa8a46ea6346d7d822c995e71975263014e0f8e08f2b31ffb81",
+    "peak.py": "f4f3efe6ac5f036ba09ffae6855c9013000a2548ad2b063ad61b02d2cb3d7160",
+    "results.json": "860d105a4b05e45dc3e4311e91a860c56c5b4ccbc2cfa5c76ecf1826c45c3417",
+    "rss.json": "21a04d3415cbcebf7c6e7903a697619b458dfd4f96e434868d263b3717b6d052",
+    "study.py": "bee08211ab122e4fae9d59247f2a3a9e6bd3004288424ac0242c70c0a91ad93b",
+    "verify.py": "9c625355b1445596570a93ada6912f3dab8afb37397c0518165a5673e0f0fcf8"
+  }
+}
