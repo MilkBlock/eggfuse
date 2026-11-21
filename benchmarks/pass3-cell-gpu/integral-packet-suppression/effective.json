@@ -1,0 +1,98 @@
+{
+ "sum-bits": {
+  "external": {
+   "issued": [
+    7889,
+    5912
+   ],
+   "all_child_decisions": 305,
+   "selected_child": 191,
+   "root_and_selected_child": 13992,
+   "owned_births": 3610,
+   "owned_visible": 2691,
+   "other_births": 1,
+   "other_visible": 1,
+   "birth_per_packet": 0.25800457404230986,
+   "visible_per_packet": 0.19232418524871356,
+   "release_checks": {
+    "delta_ports": 12066,
+    "anchor_reads": 3187,
+    "point_reads": 2635,
+    "primitives": 23,
+    "offers": 1243
+   },
+   "wire_bytes": 287128
+  },
+  "closed": {
+   "issued": [
+    7175,
+    5912
+   ],
+   "all_child_decisions": 305,
+   "selected_child": 191,
+   "root_and_selected_child": 13278,
+   "owned_births": 3610,
+   "owned_visible": 2691,
+   "other_births": 1,
+   "other_visible": 1,
+   "birth_per_packet": 0.27187829492393434,
+   "visible_per_packet": 0.2026660641662901,
+   "release_checks": {
+    "delta_ports": 12066,
+    "anchor_reads": 3187,
+    "point_reads": 2635,
+    "primitives": 23,
+    "offers": 1243
+   },
+   "wire_bytes": 261032
+  }
+ },
+ "3mm": {
+  "external": {
+   "issued": [
+    845168,
+    220972
+   ],
+   "all_child_decisions": 7120,
+   "selected_child": 2508,
+   "root_and_selected_child": 1068648,
+   "owned_births": 119503,
+   "owned_visible": 92658,
+   "other_births": 28,
+   "other_visible": 28,
+   "birth_per_packet": 0.11182634506404354,
+   "visible_per_packet": 0.0867058189413165,
+   "release_checks": {
+    "delta_ports": 1284218,
+    "anchor_reads": 115928,
+    "point_reads": 106245,
+    "primitives": 488,
+    "offers": 36873
+   },
+   "wire_bytes": 20817600
+  },
+  "closed": {
+   "issued": [
+    836221,
+    220972
+   ],
+   "all_child_decisions": 7120,
+   "selected_child": 2508,
+   "root_and_selected_child": 1059701,
+   "owned_births": 119503,
+   "owned_visible": 92658,
+   "other_births": 28,
+   "other_visible": 28,
+   "birth_per_packet": 0.11277048903417096,
+   "visible_per_packet": 0.08743787162605302,
+   "release_checks": {
+    "delta_ports": 1284218,
+    "anchor_reads": 115928,
+    "point_reads": 106245,
+    "primitives": 488,
+    "offers": 36873
+   },
+   "wire_bytes": 20586680
+  }
+ }
+}
