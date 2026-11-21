@@ -1,0 +1,196 @@
+{
+ "sum-bits": {
+  "raw_external": {
+   "decision_inputs": 7889,
+   "regular_verifications": 7889,
+   "regular_point_reads": 8270,
+   "regular_primitive_checks": 1677,
+   "scalar_candidate_checks": 0,
+   "scalar_key_reads": 0,
+   "delta_ports": 12066,
+   "anchor_reads": 3187,
+   "integral_suffix_reads": 2635,
+   "integral_primitive_checks": 23,
+   "integral_offers": 1243,
+   "emitted": [
+    7889,
+    5912
+   ],
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "rhs": 7265
+  },
+  "raw_closed": {
+   "decision_inputs": 7889,
+   "regular_verifications": 7175,
+   "regular_point_reads": 8109,
+   "regular_primitive_checks": 1657,
+   "scalar_candidate_checks": 0,
+   "scalar_key_reads": 0,
+   "delta_ports": 12066,
+   "anchor_reads": 3187,
+   "integral_suffix_reads": 2635,
+   "integral_primitive_checks": 23,
+   "integral_offers": 1243,
+   "emitted": [
+    7175,
+    5912
+   ],
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "rhs": 7265
+  },
+  "filter_external": {
+   "decision_inputs": 7889,
+   "regular_verifications": 6559,
+   "regular_point_reads": 6293,
+   "regular_primitive_checks": 1045,
+   "scalar_candidate_checks": 1896,
+   "scalar_key_reads": 2687,
+   "delta_ports": 12066,
+   "anchor_reads": 3187,
+   "integral_suffix_reads": 2635,
+   "integral_primitive_checks": 23,
+   "integral_offers": 1243,
+   "emitted": [
+    6559,
+    5912
+   ],
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "rhs": 7265
+  },
+  "filter_closed": {
+   "decision_inputs": 7889,
+   "regular_verifications": 5842,
+   "regular_point_reads": 6127,
+   "regular_primitive_checks": 1023,
+   "scalar_candidate_checks": 1896,
+   "scalar_key_reads": 2687,
+   "delta_ports": 12066,
+   "anchor_reads": 3187,
+   "integral_suffix_reads": 2635,
+   "integral_primitive_checks": 23,
+   "integral_offers": 1243,
+   "emitted": [
+    5842,
+    5912
+   ],
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "rhs": 7265
+  },
+  "filter_mixed": {
+   "decision_inputs": 7889,
+   "regular_verifications": 5444,
+   "regular_point_reads": 5811,
+   "regular_primitive_checks": 1022,
+   "scalar_candidate_checks": 1896,
+   "scalar_key_reads": 2687,
+   "delta_ports": 12066,
+   "anchor_reads": 3187,
+   "integral_suffix_reads": 2635,
+   "integral_primitive_checks": 23,
+   "integral_offers": 1243,
+   "emitted": [
+    5444,
+    5912
+   ],
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "rhs": 7265
+  }
+ },
+ "3mm": {
+  "raw_external": {
+   "decision_inputs": 845168,
+   "regular_verifications": 845168,
+   "regular_point_reads": 1125727,
+   "regular_primitive_checks": 315993,
+   "scalar_candidate_checks": 0,
+   "scalar_key_reads": 0,
+   "delta_ports": 1284218,
+   "anchor_reads": 115928,
+   "integral_suffix_reads": 106245,
+   "integral_primitive_checks": 488,
+   "integral_offers": 36873,
+   "emitted": [
+    845168,
+    220972
+   ],
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "rhs": 294917
+  },
+  "raw_closed": {
+   "decision_inputs": 845168,
+   "regular_verifications": 836221,
+   "regular_point_reads": 1123829,
+   "regular_primitive_checks": 315741,
+   "scalar_candidate_checks": 0,
+   "scalar_key_reads": 0,
+   "delta_ports": 1284218,
+   "anchor_reads": 115928,
+   "integral_suffix_reads": 106245,
+   "integral_primitive_checks": 488,
+   "integral_offers": 36873,
+   "emitted": [
+    836221,
+    220972
+   ],
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "rhs": 294917
+  },
+  "filter_external": {
+   "decision_inputs": 845168,
+   "regular_verifications": 334594,
+   "regular_point_reads": 368757,
+   "regular_primitive_checks": 66363,
+   "scalar_candidate_checks": 604303,
+   "scalar_key_reads": 888666,
+   "delta_ports": 1284218,
+   "anchor_reads": 115928,
+   "integral_suffix_reads": 106245,
+   "integral_primitive_checks": 488,
+   "integral_offers": 36873,
+   "emitted": [
+    334594,
+    220972
+   ],
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "rhs": 294917
+  },
+  "filter_closed": {
+   "decision_inputs": 845168,
+   "regular_verifications": 325603,
+   "regular_point_reads": 366784,
+   "regular_primitive_checks": 66080,
+   "scalar_candidate_checks": 604303,
+   "scalar_key_reads": 888666,
+   "delta_ports": 1284218,
+   "anchor_reads": 115928,
+   "integral_suffix_reads": 106245,
+   "integral_primitive_checks": 488,
+   "integral_offers": 36873,
+   "emitted": [
+    325603,
+    220972
+   ],
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "rhs": 294917
+  },
+  "filter_mixed": {
+   "decision_inputs": 845168,
+   "regular_verifications": 311648,
+   "regular_point_reads": 356877,
+   "regular_primitive_checks": 65875,
+   "scalar_candidate_checks": 604303,
+   "scalar_key_reads": 888666,
+   "delta_ports": 1284218,
+   "anchor_reads": 115928,
+   "integral_suffix_reads": 106245,
+   "integral_primitive_checks": 488,
+   "integral_offers": 36873,
+   "emitted": [
+    311648,
+    220972
+   ],
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "rhs": 294917
+  }
+ }
+}

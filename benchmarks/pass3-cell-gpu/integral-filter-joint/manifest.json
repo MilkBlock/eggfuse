@@ -1,0 +1,34 @@
+{
+ "base": "31bf7e41",
+ "exe": "f9e68bde07987b557b11be78e2ff0cee6e0cd898a0bebdced4ac838211c1454d",
+ "sources": {
+  "integral-root-certificates/integral.rs": "e5b403cea44c81bcb9044dd2592657dae87a6496dbd67d7e4dcab74683a29dfd",
+  "integral-root-certificates/overlay.py": "4558a5c9286f5a31a13ea57a230e9ddcf3ff220a36f27624fd4b10337ea67319",
+  "token-constructor-births/births.rs": "bd11ea919a5615bea0cc6530228cd7ef8621d52303bb812df2331b71fad0981f",
+  "token-constructor-births/overlay.py": "086fdf3e0a64358c9992f6d90c311f527eb8dca0b64ceb55375aaf846b87b46a",
+  "single-pivot-certificates/certificate.rs": "c3f531e6f40246432807fc02347db0e9b3e702e04b941ecb7771f2a32f3a09fc",
+  "single-pivot-certificates/overlay.py": "a416b1332cbb407f517d94ccc9e4a2551dadfd55e3fa7d5cbe4c19788ddecad5",
+  "integral-packet-suppression/packets.rs": "bc7e52308c9dac58d46b6cfb701c2405976ebb7498a6ef3ca894e0a79043b781",
+  "integral-packet-suppression/overlay.py": "fa07404601aaed6cfb4d604cff7a01fb23d69fac6eb433804b7e2a2345071156",
+  "integral-filter-joint/seal.rs": "b15372c06fac8e43f2e11e45ec4d6b6741aecbebbf4c8b6d80397d20999ec569",
+  "integral-filter-joint/overlay.py": "19337456aa6025bff401a89813832b7b26f52c36af4103425cc08bc5bf0bc792"
+ },
+ "seed": 1703,
+ "waves": 65536,
+ "programs": {
+  "sum-bits": {
+   "program.json": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+   "plans.json": "50083314582aa90fe7ba33210b2c6fc334d7df4714fd58329154e99dc175c3fc",
+   "single.json": "cf12b0abebf3c6c9d862bee5dba1b5c16f8682f0faf4f08526ba29c2567ea9e8",
+   "merge.json": "ef75bfab0baf698392460224d88a02be3760a0305136bd762bda1ad72fed195b",
+   "request.json": "37d53c19806527149219b5ce274cc64ada7d69d5c01085cc16744488271a387b"
+  },
+  "3mm": {
+   "program.json": "8d81462db16dcee0689b2e8dc11ac3e068c9dc976a2e69f5005a8acad06905af",
+   "plans.json": "50083314582aa90fe7ba33210b2c6fc334d7df4714fd58329154e99dc175c3fc",
+   "single.json": "cf12b0abebf3c6c9d862bee5dba1b5c16f8682f0faf4f08526ba29c2567ea9e8",
+   "merge.json": "d4261a765c6a70a53e79fcb9f3068b8a9f42ce0ca9d22d8a5e6847e02a88e8fb",
+   "request.json": "df6137cb5ba033ac91dae00465273afafda8722ba8f9110acacd2f589f300947"
+  }
+ }
+}
