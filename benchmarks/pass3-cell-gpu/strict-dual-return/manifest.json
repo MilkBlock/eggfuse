@@ -1,0 +1,16 @@
+{
+ "native_sha256": "6956cddc502b2f98f200169ebfa2dfd732ef2540835f3490647bb72621bdbf3c",
+ "runtime_base": "31bf7e41",
+ "study_jobs": [
+  2742,
+  2743,
+  2744,
+  2745
+ ],
+ "donor_shape_catalog_sha256": "b47c306d074395395df35bc0e2dca93532f2e400403857c24d1e44dff2cd6dbb",
+ "template_sha256": "217522d58f0dd54e88bc16e965b25386580c7b6007256adced7c6e8304a262b1",
+ "sum-bits_and_3mm": {
+  "sum-bits": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+  "3mm": "8d81462db16dcee0689b2e8dc11ac3e068c9dc976a2e69f5005a8acad06905af"
+ }
+}

@@ -1,0 +1,18 @@
+{
+ "pair_shape": "b8fd7735552352ba32e46d6167a40c2b4b7c8494d181aed7da6a32e36391534f",
+ "producer": "d9fdfeddf0d632ea7fae63caa418ad989d202fdfda3e64bec5ff0939423d3474",
+ "consumer": "e8202f2a3ceab484cc2e379bc6c0ff61366948723e5e1e680be68d4c0d08f5c4",
+ "ops": [
+  6,
+  5
+ ],
+ "distance": 1,
+ "donor_counts": [
+  26,
+  174
+ ],
+ "donors": [
+  "dot-product",
+  "jacobi-1d"
+ ]
+}
