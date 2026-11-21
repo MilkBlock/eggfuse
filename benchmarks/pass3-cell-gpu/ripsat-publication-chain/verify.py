@@ -3,12 +3,15 @@ from argparse import ArgumentParser
 from pathlib import Path
 from authorize import HERE,V2,load_checked,read
 def main():
-    p=ArgumentParser(description=__doc__);p.add_argument('exp',type=Path);a=p.parse_args();small=a.exp/'compact-holdouts-20261121-v1'
-    donors={n:small/(n+'-1703')/'program.json' for n in ('dot-product','jacobi-1d')}
+    p=ArgumentParser(description=__doc__);p.add_argument('exp',type=Path,nargs='?',help='optional bundles for independent recompilation');a=p.parse_args()
     controls=read(HERE/'controls.json');assert len(controls)==12
     for n in ('dot-product','sum-bits','3mm'):
-        program=(a.exp/'extra-pass3-transfer-v1' if n=='3mm' else small)/(n+'-1703')/'program.json'
-        c=load_checked(HERE/(n+'.json'),V2/'evidence.json',donors,program)
+        c=read(HERE/(n+'.json'))
+        if a.exp is not None:
+            small=a.exp/'compact-holdouts-20261121-v1'
+            donors={k:small/(k+'-1703')/'program.json' for k in ('dot-product','jacobi-1d')}
+            program=(a.exp/'extra-pass3-transfer-v1' if n=='3mm' else small)/(n+'-1703')/'program.json'
+            assert load_checked(HERE/(n+'.json'),V2/'evidence.json',donors,program)==c
         assert c['strict_named']['library']==[[[143,1,55]]]
         t=c['strict_named']['set_publication'];assert t['target_sha256']==c['target_sha256']
         assert t['path']==[[143,1,55],[55,1,143]] and t['kinds']==['fresh_constructor_let','fresh_constructor_set']

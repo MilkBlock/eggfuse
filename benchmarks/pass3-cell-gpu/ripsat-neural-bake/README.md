@@ -48,3 +48,5 @@ python "$d/ripsat-neural-bake/verify.py"
 ```
 
 See the [standard compilation and cached-load commands](../explicit-parent-cell-composition/README.md), [lowering and rejection contracts](../ripsat-strict-programs/README.md) and [independent counterexamples](../ripsat-strict-acceptance/README.md).
+
+With the authenticated Set-publication protocol enabled, a *new* joint native four-arm study verified 26 additional internal terminal commits on sum-bits and 932 on 3mm in both RipSat and the actual union against their matched Let-only controls. The union's totals were 12,534 / 554,339 external packets, with 2,691 / 92,658 final-visible origins. This result is backed by complete independent runs, not an addition of the earlier one-hop and two-step totals. [Opt-in four-arm study and fresh-process memory](../ripsat-publication-matrix/README.md)

@@ -370,6 +370,13 @@ card([从训练监督看],[字段投影让合法绑定的字段读出正确。�
 #src("S156","显式多输入接线的离线核对","benchmarks/pass3-cell-gpu/strict-composition-opportunities/README.md")
 #src("S157","两个实际返回供给一个真实后继","benchmarks/pass3-cell-gpu/strict-dual-return/README.md")
 #src("S158","过滤叶模板与显式父静态组合","benchmarks/pass3-cell-gpu/filtered-explicit-parent/README.md")
+#src("S159","真实供体局部饱和与历史","benchmarks/pass3-cell-gpu/ripsat-donor-evidence/README.md")
+#src("S160","RipSat 到具名静态程序","benchmarks/pass3-cell-gpu/ripsat-strict-programs/README.md")
+#src("S161","来源和历史的独立拒绝测试","benchmarks/pass3-cell-gpu/ripsat-strict-acceptance/README.md")
+#src("S162","最终证据的四组推理与 RSS","benchmarks/pass3-cell-gpu/ripsat-neural-bake/README.md")
+#src("S163","相同供体中间实例的两步授权","benchmarks/pass3-cell-gpu/ripsat-publication-chain/README.md")
+#src("S164","按原 Run 消费明确的 Set 发布","benchmarks/pass3-cell-gpu/ripsat-set-receipt/README.md")
+#src("S165","两步发布凭证的联合矩阵","benchmarks/pass3-cell-gpu/ripsat-publication-matrix/README.md")
 #v(2mm)
 #label[两篇用于构造对照的原始文献]
 #v(1.5mm)

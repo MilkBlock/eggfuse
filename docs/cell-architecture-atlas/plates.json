@@ -10584,5 +10584,295 @@
         ]
       }
     ]
+  },
+  {
+    "id": "169-native-ripsat-neural-bake",
+    "section": "从局部不动点到静态模板",
+    "title": "一份 RipSat 导出怎样变成可执行的神经 Cell？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "固定真实供体的具名入口，执行原生局部饱和。只有一条指令实际写出、且后续原生记录读取同一 token 时，才将它作为默认接线候选。",
+    "arms": "a　保存局部终图和固定端口。b　关联同一次运行的历史、原始供体提交和具体返回身份。c　在目标编译程序中重新证明类型、操作位置和消费端口。",
+    "fix": "79 个有界作用域来自 dot-product 和 Jacobi，其中 50 个通过原生饱和导出验收。训练实例中的等价关系仍须独立证明才能推广。",
+    "measure": "局部记录 0 的规则 143 写出 Single，记录 8 的规则 55 读取同一个写 token。两个供体支持同一条实际返回边，目标库去重为一个模板。",
+    "note": "没有本地读取证据的消费者只列入诊断。替换图、篡改版本、伪造来源和缺失独立父等 26 项 CLI 反例均未取得被禁止的路径。",
+    "src": "S159 S160 S161",
+    "diagram": [
+      {
+        "title": "Endpoint",
+        "layers": [
+          [
+            [
+              "s",
+              "saturate local scope"
+            ]
+          ],
+          [
+            [
+              "s",
+              "typed graph and ports"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Directed proof",
+        "layers": [
+          [
+            [
+              "t",
+              "native write and later read"
+            ]
+          ],
+          [
+            [
+              "v",
+              "authenticate donor occurrence"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Relink",
+        "layers": [
+          [
+            [
+              "s",
+              "producer instruction"
+            ]
+          ],
+          [
+            [
+              "v",
+              "check target source"
+            ]
+          ],
+          [
+            [
+              "s",
+              "signed static edge"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "170-final-ripsat-library-matrix",
+    "section": "真实目标上的四组对照",
+    "title": "RipSat 能补上轨迹库漏掉的有用模板吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "冻结选父模型和原始调度，用相同的标量过滤和具名父验证器比较叶模板、轨迹库、RipSat 库及两库合并。",
+    "arms": "a　保留叶提案。b　各自链接轨迹库或 RipSat 库。c　合并已授权的静态程序，在同一源作业里执行。",
+    "fix": "每个免发的子步骤按原 RHS 序号核对。独立源运行对齐图、绑定、写入、union 与 Spine。另在新进程中测相同 RSS 增量。",
+    "measure": "3mm 轨迹库免发 1,574 个，RipSat 免发 1,229 个，两个序号集合不相交。合并后 FEPT 为 0.166870，叶模板为 0.166032。",
+    "note": "合并库达 +264.11 MiB 用 1,063.15 ms，叶模板用 1,034.54 ms。外发提案减少和达到共同 RSS 水位的时间分别计量。",
+    "src": "S162",
+    "diagram": [
+      {
+        "title": "Leaf",
+        "layers": [
+          [
+            [
+              "n",
+              "named parents"
+            ]
+          ],
+          [
+            [
+              "v",
+              "original rule"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Two libraries",
+        "layers": [
+          [
+            [
+              "t",
+              "trace-selected paths"
+            ]
+          ],
+          [
+            [
+              "s",
+              "RipSat-certified paths"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Combined",
+        "layers": [
+          [
+            [
+              "s",
+              "union of checked paths"
+            ]
+          ],
+          [
+            [
+              "v",
+              "release actual ports"
+            ]
+          ],
+          [
+            [
+              "t",
+              "measure FEPT and RSS"
+            ]
+          ]
+        ]
+      }
+    ],
+    "observation": {
+      "figure": "170-ripsat-rss-fept.svg",
+      "source": "benchmarks/pass3-cell-gpu/ripsat-neural-bake/measurements.svg",
+      "title": "四种模板库的严格 FEPT 与固定 RSS 增量用时",
+      "caption": "上排为完整源作业的有效终图节点／外部具名包；下排展示四个新进程的到达时间及中位数。两个工作负载采用各自预先校准的字节水位。"
+    }
+  },
+  {
+    "id": "171-ripsat-set-publication",
+    "section": "多步接续的类型边界",
+    "title": "中间操作是 Set，如何把真正发布的结果接到下一 Run？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "默认构造 Let 返回凭证只支持 143→55。显式启用新的 Set 发布类型，在成功的 RHS 提交后保存这条指令真正新建的构造表事实。",
+    "arms": "a　仅采用已证的 Let 前缀。b　同一根签署 Let 与 Set 两种不同接线。c　改变版本、目标程序或字段时拒绝或恢复普通提案。",
+    "fix": "同一供体的原生记录为 0→8→12，真实提交为 1737→1822→2625。中间结果必须是同一已认证实例发布的事实；没有独立选父搜索。",
+    "measure": "3mm 额外免发 932 份第二跳包，FEPT 0.166398→0.166677，终端指令产生 139 个最终可见原来源。sum-bits 多省 26 份，有 6 个可见原来源。",
+    "note": "3mm 中间 Cell 20198/op1 在 Run 826 发布 Get，Run 831 按相同地址和版本直接读取。失效后必须恢复原 Run 的显式支付。",
+    "src": "S163 S164",
+    "diagram": [
+      {
+        "title": "Let",
+        "layers": [
+          [
+            [
+              "n",
+              "root names source"
+            ]
+          ],
+          [
+            [
+              "s",
+              "exact Single return"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Set publication",
+        "layers": [
+          [
+            [
+              "s",
+              "same committed middle"
+            ]
+          ],
+          [
+            [
+              "v",
+              "validate op, key, value"
+            ]
+          ],
+          [
+            [
+              "s",
+              "fresh Get receipt"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Next Run",
+        "layers": [
+          [
+            [
+              "v",
+              "read named Get + version"
+            ]
+          ],
+          [
+            [
+              "s",
+              "original terminal RHS"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "172-ripsat-publication-matrix",
+    "section": "两步库联合验收",
+    "title": "新增的第二跳在合并库里还会真正兑现吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "固定源端和模型，用带独立 Set 发布凭证的原生二进制运行四个方案。额外在同一构建只使用 Let 前缀，对比省掉的真实子决定。",
+    "arms": "a　叶模板与原轨迹库。b　只有 RipSat 两步模板。c　两库同时链接，核对实际提交的源序号集合。",
+    "fix": "标量过滤、所有独立父、后续 Run 及水位均相同。确认第二跳输出的最终可见来源，并对照撤回凭证后恢复的外发流量。",
+    "measure": "3mm 单独用两步库免发 2,161 个包，合并后实际免发 3,735 个，严格 FEPT 0.167150。sum-bits 合并实际免发 128 个，0.214696。",
+    "note": "3mm 到达同一 +264.11 MiB 增量的叶／轨迹／RipSat／合并中位数为 1,011.73／1,075.11／1,037.52／1,085.09 ms。两步库没有稳定更早达到水位。",
+    "src": "S165",
+    "diagram": [
+      {
+        "title": "Leaf / trace",
+        "layers": [
+          [
+            [
+              "n",
+              "same explicit parents"
+            ]
+          ],
+          [
+            [
+              "s",
+              "original releases"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Two-step proof",
+        "layers": [
+          [
+            [
+              "v",
+              "authenticated Set result"
+            ]
+          ],
+          [
+            [
+              "s",
+              "publish at source Run"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Real union",
+        "layers": [
+          [
+            [
+              "s",
+              "both admitted libraries"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verify original ordinals"
+            ]
+          ],
+          [
+            [
+              "t",
+              "strict FEPT + process RSS"
+            ]
+          ]
+        ]
+      }
+    ]
   }
 ]
