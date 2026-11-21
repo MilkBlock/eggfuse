@@ -1,0 +1,770 @@
+{
+ "sum-bits": {
+  "ordinary": {
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "runs": 1428,
+   "rhs": 7265,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "nested": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+   "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "ordered": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "source_births": "781e472dc80d81bb6dd2c4ccd249bcfeb0599269bc11779c68eabe69bcb36d9c",
+   "births": "172cde88b1e4bb2c0bd48e61ea6c7da69a684cbd50894c30289bf5730deae1b5",
+   "roots": "8e44ada7e9264bfe956954af9d8e6d7c91e407b47ad1489c5a36038e3c402fbc",
+   "final": "cc411875294ca05a458e8c66917fb6390f1498c621d92cd61d8496448ef2c9fa",
+   "single": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+   "retained": 2691,
+   "expanded_multi": 5912,
+   "emitted": [
+    6559,
+    5912
+   ],
+   "selected_children": 191,
+   "all_child_decisions": 305,
+   "possible": 0,
+   "possible_source_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "ordinary_alternatives": {},
+   "confirmed": 0,
+   "direct_new": {},
+   "direct_retained": {},
+   "examples": [],
+   "issued_child_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "details": {},
+   "external": 12662,
+   "fept": 0.21252566735112938,
+   "ms": [
+    37.545457999999996,
+    38.849833000000004,
+    34.110166,
+    38.862708000000005
+   ],
+   "median_ms": 38.1976455
+  },
+  "carried": {
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "runs": 1428,
+   "rhs": 7265,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "nested": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+   "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "ordered": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "source_births": "781e472dc80d81bb6dd2c4ccd249bcfeb0599269bc11779c68eabe69bcb36d9c",
+   "births": "172cde88b1e4bb2c0bd48e61ea6c7da69a684cbd50894c30289bf5730deae1b5",
+   "roots": "8e44ada7e9264bfe956954af9d8e6d7c91e407b47ad1489c5a36038e3c402fbc",
+   "final": "cc411875294ca05a458e8c66917fb6390f1498c621d92cd61d8496448ef2c9fa",
+   "single": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+   "retained": 2691,
+   "expanded_multi": 5912,
+   "emitted": [
+    6559,
+    5912
+   ],
+   "selected_children": 191,
+   "all_child_decisions": 305,
+   "possible": 0,
+   "possible_source_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "ordinary_alternatives": {},
+   "confirmed": 0,
+   "direct_new": {},
+   "direct_retained": {},
+   "examples": [],
+   "issued_child_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "details": {
+    "counts": {
+     "actual_outputs": 0,
+     "allocated": 4,
+     "atom_guards": 0,
+     "audited_external": 4,
+     "confirmed": 0,
+     "count_unions": 44,
+     "count_updates": 173,
+     "expired": 0,
+     "incomplete_named": 0,
+     "missing": 0,
+     "not_unique": 0,
+     "old_binding": 0,
+     "prefix_checks": 0,
+     "prefix_preempted": 0,
+     "private_roots": 0,
+     "producers": 4,
+     "protected": 0,
+     "public_counts": 0,
+     "release_attempts": 0,
+     "stale": 0,
+     "tags": 4,
+     "typed_reads": 0,
+     "wrong_table": 0
+    },
+    "degree_keys": 129,
+    "guard_failure_atoms": [
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "outstanding": 0,
+    "reference_live_degree_bins": [
+     0,
+     0,
+     0
+    ],
+    "reference_rows": 0,
+    "terminal_degree_bins": [
+     0,
+     0,
+     0
+    ]
+   },
+   "external": 12662,
+   "fept": 0.21252566735112938,
+   "ms": [
+    34.598916,
+    37.541333,
+    34.205875,
+    35.544083
+   ],
+   "median_ms": 35.0714995
+  },
+  "wrong_version": {
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "runs": 1428,
+   "rhs": 7265,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "nested": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+   "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "ordered": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "source_births": "781e472dc80d81bb6dd2c4ccd249bcfeb0599269bc11779c68eabe69bcb36d9c",
+   "births": "172cde88b1e4bb2c0bd48e61ea6c7da69a684cbd50894c30289bf5730deae1b5",
+   "roots": "8e44ada7e9264bfe956954af9d8e6d7c91e407b47ad1489c5a36038e3c402fbc",
+   "final": "cc411875294ca05a458e8c66917fb6390f1498c621d92cd61d8496448ef2c9fa",
+   "single": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+   "retained": 2691,
+   "expanded_multi": 5912,
+   "emitted": [
+    6559,
+    5912
+   ],
+   "selected_children": 191,
+   "all_child_decisions": 305,
+   "possible": 0,
+   "possible_source_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "ordinary_alternatives": {},
+   "confirmed": 0,
+   "direct_new": {},
+   "direct_retained": {},
+   "examples": [],
+   "issued_child_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "details": {
+    "counts": {
+     "actual_outputs": 0,
+     "allocated": 4,
+     "atom_guards": 0,
+     "audited_external": 4,
+     "confirmed": 0,
+     "count_unions": 44,
+     "count_updates": 173,
+     "expired": 0,
+     "incomplete_named": 0,
+     "missing": 0,
+     "not_unique": 0,
+     "old_binding": 0,
+     "prefix_checks": 0,
+     "prefix_preempted": 0,
+     "private_roots": 0,
+     "producers": 4,
+     "protected": 0,
+     "public_counts": 0,
+     "release_attempts": 0,
+     "stale": 0,
+     "tags": 4,
+     "typed_reads": 0,
+     "wrong_table": 0
+    },
+    "degree_keys": 129,
+    "guard_failure_atoms": [
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "outstanding": 0,
+    "reference_live_degree_bins": [
+     0,
+     0,
+     0
+    ],
+    "reference_rows": 0,
+    "terminal_degree_bins": [
+     0,
+     0,
+     0
+    ]
+   },
+   "external": 12662,
+   "fept": 0.21252566735112938
+  },
+  "no_unique": {
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "runs": 1428,
+   "rhs": 7265,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "root_parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "nested": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+   "cells": "e0a9cc7157a4f809fc2636a9111611efcd379d8e24412a4e9a7d56fa27fc309c",
+   "ordered": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "source_births": "781e472dc80d81bb6dd2c4ccd249bcfeb0599269bc11779c68eabe69bcb36d9c",
+   "births": "172cde88b1e4bb2c0bd48e61ea6c7da69a684cbd50894c30289bf5730deae1b5",
+   "roots": "8e44ada7e9264bfe956954af9d8e6d7c91e407b47ad1489c5a36038e3c402fbc",
+   "final": "cc411875294ca05a458e8c66917fb6390f1498c621d92cd61d8496448ef2c9fa",
+   "single": "9a27a99cd1d073491ac49a34dd61caf8b1ac68c13a82f7ee6dfc412ee8758a7e",
+   "retained": 2691,
+   "expanded_multi": 5912,
+   "emitted": [
+    6559,
+    5912
+   ],
+   "selected_children": 191,
+   "all_child_decisions": 305,
+   "possible": 0,
+   "possible_source_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "ordinary_alternatives": {},
+   "confirmed": 0,
+   "direct_new": {},
+   "direct_retained": {},
+   "examples": [],
+   "issued_child_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "details": {
+    "counts": {
+     "actual_outputs": 0,
+     "allocated": 4,
+     "atom_guards": 0,
+     "audited_external": 4,
+     "confirmed": 0,
+     "count_unions": 44,
+     "count_updates": 173,
+     "expired": 0,
+     "incomplete_named": 0,
+     "missing": 0,
+     "not_unique": 0,
+     "old_binding": 0,
+     "prefix_checks": 0,
+     "prefix_preempted": 0,
+     "private_roots": 0,
+     "producers": 4,
+     "protected": 0,
+     "public_counts": 0,
+     "release_attempts": 0,
+     "stale": 0,
+     "tags": 4,
+     "typed_reads": 0,
+     "wrong_table": 0
+    },
+    "degree_keys": 129,
+    "guard_failure_atoms": [
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "outstanding": 0,
+    "reference_live_degree_bins": [
+     0,
+     0,
+     0
+    ],
+    "reference_rows": 0,
+    "terminal_degree_bins": [
+     0,
+     0,
+     0
+    ]
+   },
+   "external": 12662,
+   "fept": 0.21252566735112938
+  }
+ },
+ "3mm": {
+  "ordinary": {
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "runs": 4260,
+   "rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "nested": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "ordered": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "source_births": "db22a1ba2d72d8b45b0f037d110b0eb264da924a3c9bcd7488152796a304f8ea",
+   "births": "6240f921820dea0b4e7b7728982c53a3486df083f451c897e92484edcc776796",
+   "roots": "1e4dd266f2614e326dce7903ef34097b9d078dbf352a7a8391e7ac52bb382345",
+   "final": "0f5fc7e44add1467558ff78c72933b612a835b732a0bfe234580a03d631b6320",
+   "single": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "retained": 92658,
+   "expanded_multi": 220972,
+   "emitted": [
+    334594,
+    220972
+   ],
+   "selected_children": 2508,
+   "all_child_decisions": 7120,
+   "possible": 330,
+   "possible_source_digest": "22a19ca67a104553542abddedff33eda48678a1a25d3dbd41e2735ab5b8948e5",
+   "ordinary_alternatives": {
+    "1": 330
+   },
+   "confirmed": 0,
+   "direct_new": {},
+   "direct_retained": {},
+   "examples": [],
+   "issued_child_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "details": {},
+   "external": 558074,
+   "fept": 0.16603174489404632,
+   "ms": [
+    2003.230292,
+    1947.986166,
+    1921.773,
+    1950.53775
+   ],
+   "median_ms": 1949.261958
+  },
+  "carried": {
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "runs": 4260,
+   "rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "nested": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "ordered": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "source_births": "db22a1ba2d72d8b45b0f037d110b0eb264da924a3c9bcd7488152796a304f8ea",
+   "births": "6240f921820dea0b4e7b7728982c53a3486df083f451c897e92484edcc776796",
+   "roots": "1e4dd266f2614e326dce7903ef34097b9d078dbf352a7a8391e7ac52bb382345",
+   "final": "0f5fc7e44add1467558ff78c72933b612a835b732a0bfe234580a03d631b6320",
+   "single": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "retained": 92658,
+   "expanded_multi": 220642,
+   "emitted": [
+    334594,
+    220642
+   ],
+   "selected_children": 2508,
+   "all_child_decisions": 7120,
+   "possible": 330,
+   "possible_source_digest": "22a19ca67a104553542abddedff33eda48678a1a25d3dbd41e2735ab5b8948e5",
+   "ordinary_alternatives": {
+    "1": 330
+   },
+   "confirmed": 330,
+   "direct_new": {
+    "lsr-inv": 330
+   },
+   "direct_retained": {
+    "lsr-inv": 330
+   },
+   "examples": [
+    [
+     42043,
+     49883,
+     843,
+     [
+      [
+       554050784568,
+       1
+      ],
+      [
+       147935853543425,
+       835
+      ],
+      [
+       121423020425217,
+       831
+      ],
+      [
+       181123065839618,
+       839
+      ],
+      [
+       34153579937793,
+       57
+      ]
+     ],
+     {
+      "atom": 3,
+      "row": {
+       "Fact": {
+        "cell": 129,
+        "op": 22
+       }
+      },
+      "version": 1
+     }
+    ],
+    [
+     42044,
+     49888,
+     843,
+     [
+      [
+       554050784568,
+       1
+      ],
+      [
+       147935853543425,
+       835
+      ],
+      [
+       121423020425217,
+       831
+      ],
+      [
+       181127360806914,
+       839
+      ],
+      [
+       34153579937793,
+       57
+      ]
+     ],
+     {
+      "atom": 3,
+      "row": {
+       "Fact": {
+        "cell": 129,
+        "op": 28
+       }
+      },
+      "version": 1
+     }
+    ],
+    [
+     42045,
+     49893,
+     843,
+     [
+      [
+       554050784568,
+       1
+      ],
+      [
+       147935853543425,
+       835
+      ],
+      [
+       121423020425217,
+       831
+      ],
+      [
+       181131655774210,
+       839
+      ],
+      [
+       34153579937793,
+       57
+      ]
+     ],
+     {
+      "atom": 3,
+      "row": {
+       "Fact": {
+        "cell": 129,
+        "op": 34
+       }
+      },
+      "version": 1
+     }
+    ]
+   ],
+   "issued_child_digest": "3adc5ef782fa4aa4b04785205c198b2090c3e785df7ad023a13e652bd7726041",
+   "details": {
+    "counts": {
+     "actual_outputs": 330,
+     "allocated": 12118,
+     "atom_guards": 0,
+     "audited_external": 12118,
+     "confirmed": 330,
+     "count_unions": 1183,
+     "count_updates": 5945,
+     "expired": 0,
+     "incomplete_named": 0,
+     "missing": 0,
+     "not_unique": 0,
+     "old_binding": 0,
+     "prefix_checks": 10773,
+     "prefix_preempted": 330,
+     "private_roots": 330,
+     "producers": 12118,
+     "protected": 330,
+     "public_counts": 330,
+     "release_attempts": 330,
+     "stale": 0,
+     "tags": 12118,
+     "typed_reads": 1650,
+     "wrong_table": 0
+    },
+    "degree_keys": 4762,
+    "guard_failure_atoms": [
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "outstanding": 0,
+    "reference_live_degree_bins": [
+     0,
+     330,
+     0
+    ],
+    "reference_rows": 1145293,
+    "terminal_degree_bins": [
+     0,
+     330,
+     0
+    ]
+   },
+   "external": 557744,
+   "fept": 0.16612998077971255,
+   "ms": [
+    1872.395208,
+    1946.426167,
+    1972.137917,
+    2011.4554999999998
+   ],
+   "median_ms": 1959.282042
+  },
+  "wrong_version": {
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "runs": 4260,
+   "rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "nested": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "ordered": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "source_births": "db22a1ba2d72d8b45b0f037d110b0eb264da924a3c9bcd7488152796a304f8ea",
+   "births": "6240f921820dea0b4e7b7728982c53a3486df083f451c897e92484edcc776796",
+   "roots": "1e4dd266f2614e326dce7903ef34097b9d078dbf352a7a8391e7ac52bb382345",
+   "final": "0f5fc7e44add1467558ff78c72933b612a835b732a0bfe234580a03d631b6320",
+   "single": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "retained": 92658,
+   "expanded_multi": 220972,
+   "emitted": [
+    334594,
+    220972
+   ],
+   "selected_children": 2508,
+   "all_child_decisions": 7120,
+   "possible": 330,
+   "possible_source_digest": "22a19ca67a104553542abddedff33eda48678a1a25d3dbd41e2735ab5b8948e5",
+   "ordinary_alternatives": {
+    "1": 330
+   },
+   "confirmed": 0,
+   "direct_new": {},
+   "direct_retained": {},
+   "examples": [],
+   "issued_child_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "details": {
+    "counts": {
+     "actual_outputs": 330,
+     "allocated": 12448,
+     "atom_guards": 0,
+     "audited_external": 12448,
+     "confirmed": 0,
+     "count_unions": 1183,
+     "count_updates": 5945,
+     "expired": 0,
+     "incomplete_named": 0,
+     "missing": 0,
+     "not_unique": 0,
+     "old_binding": 0,
+     "prefix_checks": 0,
+     "prefix_preempted": 0,
+     "private_roots": 0,
+     "producers": 12448,
+     "protected": 0,
+     "public_counts": 0,
+     "release_attempts": 330,
+     "stale": 330,
+     "tags": 12448,
+     "typed_reads": 1320,
+     "wrong_table": 0
+    },
+    "degree_keys": 4762,
+    "guard_failure_atoms": [
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "outstanding": 0,
+    "reference_live_degree_bins": [
+     0,
+     0,
+     0
+    ],
+    "reference_rows": 0,
+    "terminal_degree_bins": [
+     0,
+     0,
+     0
+    ]
+   },
+   "external": 558074,
+   "fept": 0.16603174489404632
+  },
+  "no_unique": {
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "runs": 4260,
+   "rhs": 294917,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "root_parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "nested": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "cells": "41d422941ca9d315d26d78d83350a9c7e7a9c885144ab4ee472828b112e2873d",
+   "ordered": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "source_births": "db22a1ba2d72d8b45b0f037d110b0eb264da924a3c9bcd7488152796a304f8ea",
+   "births": "6240f921820dea0b4e7b7728982c53a3486df083f451c897e92484edcc776796",
+   "roots": "1e4dd266f2614e326dce7903ef34097b9d078dbf352a7a8391e7ac52bb382345",
+   "final": "0f5fc7e44add1467558ff78c72933b612a835b732a0bfe234580a03d631b6320",
+   "single": "2381e90234cdcb57501416c7ecb8623b1e67a2d17f2c0772d10078ee526e7474",
+   "retained": 92658,
+   "expanded_multi": 220972,
+   "emitted": [
+    334594,
+    220972
+   ],
+   "selected_children": 2508,
+   "all_child_decisions": 7120,
+   "possible": 330,
+   "possible_source_digest": "22a19ca67a104553542abddedff33eda48678a1a25d3dbd41e2735ab5b8948e5",
+   "ordinary_alternatives": {
+    "1": 330
+   },
+   "confirmed": 0,
+   "direct_new": {},
+   "direct_retained": {},
+   "examples": [],
+   "issued_child_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "details": {
+    "counts": {
+     "actual_outputs": 330,
+     "allocated": 12448,
+     "atom_guards": 0,
+     "audited_external": 12448,
+     "confirmed": 0,
+     "count_unions": 1183,
+     "count_updates": 5945,
+     "expired": 0,
+     "incomplete_named": 0,
+     "missing": 0,
+     "not_unique": 330,
+     "old_binding": 0,
+     "prefix_checks": 0,
+     "prefix_preempted": 0,
+     "private_roots": 0,
+     "producers": 12448,
+     "protected": 0,
+     "public_counts": 330,
+     "release_attempts": 330,
+     "stale": 0,
+     "tags": 12448,
+     "typed_reads": 1650,
+     "wrong_table": 0
+    },
+    "degree_keys": 4762,
+    "guard_failure_atoms": [
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "outstanding": 0,
+    "reference_live_degree_bins": [
+     0,
+     330,
+     0
+    ],
+    "reference_rows": 1145293,
+    "terminal_degree_bins": [
+     0,
+     330,
+     0
+    ]
+   },
+   "external": 558074,
+   "fept": 0.16603174489404632
+  }
+ }
+}

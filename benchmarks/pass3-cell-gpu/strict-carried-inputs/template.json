@@ -1,0 +1,41 @@
+{
+ "pair_shape": "59379ebd422b1ed858bd315721b6f48dae9d8057e343aba46891c775874d3b9c",
+ "producer": "a78770c31762c6d491d2d5c2b645bb03394b6e1fd92bc24aa638c4db39d9fd1c",
+ "consumer": "a78770c31762c6d491d2d5c2b645bb03394b6e1fd92bc24aa638c4db39d9fd1c",
+ "wires": [
+  [
+   0,
+   "input",
+   0
+  ],
+  [
+   1,
+   "input",
+   1
+  ],
+  [
+   2,
+   "input",
+   2
+  ],
+  [
+   3,
+   "op",
+   2
+  ],
+  [
+   4,
+   "input",
+   4
+  ]
+ ],
+ "distance": 4,
+ "donor_counts": [
+  12,
+  62
+ ],
+ "donors": [
+  "dot-product",
+  "jacobi-1d"
+ ]
+}

@@ -1,0 +1,14 @@
+{
+ "native_sha256": "412b794fb418b915447aaec3a7e5d1db8c94ce9e4d7e4f08aa36c7d50cc9c7fb",
+ "build_sha256": "d4baae3ec8009a022bdab297031109dc42b9cbf3711fd72f961588b34235b6f7",
+ "template_sha256": "83f3f21ea66c0381c04ecb77ab464a46ad754f679b5bb16de199bc77e5153b46",
+ "base": "31bf7e41",
+ "ordinary_root_archive_commit": "4b779313",
+ "native_probe": true,
+ "scope": "one five-atom self template; four literal parent rows plus one fresh typed op receipt",
+ "jobs": {
+  "validated_build": 2765,
+  "semantic_and_timing": 2770,
+  "inference_window_rss": 2771
+ }
+}
