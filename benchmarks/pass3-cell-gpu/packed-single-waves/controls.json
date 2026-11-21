@@ -1,0 +1,27 @@
+{
+ "none": {
+  "digest": "4f3779d62b4ccc6728ad3a0c06ede95ab82a485ae7c5d7eb47b707ef8fc47e7b",
+  "used": 2140,
+  "duplicates": 0
+ },
+ "withheld": {
+  "digest": "4f3779d62b4ccc6728ad3a0c06ede95ab82a485ae7c5d7eb47b707ef8fc47e7b",
+  "used": 0,
+  "duplicates": 0
+ },
+ "duplicate": {
+  "digest": "4f3779d62b4ccc6728ad3a0c06ede95ab82a485ae7c5d7eb47b707ef8fc47e7b",
+  "used": 2140,
+  "duplicates": 2140
+ },
+ "foreign": {
+  "digest": "4f3779d62b4ccc6728ad3a0c06ede95ab82a485ae7c5d7eb47b707ef8fc47e7b",
+  "used": 0,
+  "duplicates": 0
+ },
+ "stale": {
+  "digest": "4f3779d62b4ccc6728ad3a0c06ede95ab82a485ae7c5d7eb47b707ef8fc47e7b",
+  "used": 0,
+  "duplicates": 0
+ }
+}
