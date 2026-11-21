@@ -1,0 +1,855 @@
+{
+ "sum-bits": {
+  "0": {
+   "runs": 1428,
+   "rhs": 7265,
+   "source": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+   "parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+   "nested": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+   "commits": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+   "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+   "scores": "15576378264816477716",
+   "packets": 12662,
+   "emitted": [
+    6559,
+    5912
+   ],
+   "child": 191,
+   "born": 3610,
+   "visible": 2691,
+   "fept": 0.21252566735112938,
+   "internal": 0,
+   "rules": {},
+   "guard_rules": [],
+   "guard_counts": [
+    0,
+    0,
+    0
+   ],
+   "ms": [
+    36.193333,
+    34.233125,
+    36.5845
+   ],
+   "compiled_repeat_ops": [],
+   "depths": {},
+   "typed_visible_by_depth": {}
+  },
+  "2": {
+   "runs": 1428,
+   "rhs": 7265,
+   "source": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+   "parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+   "nested": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+   "commits": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+   "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+   "scores": "15576378264816477716",
+   "packets": 12082,
+   "emitted": [
+    5979,
+    5912
+   ],
+   "child": 191,
+   "born": 3610,
+   "visible": 2691,
+   "fept": 0.22272802516139711,
+   "internal": 580,
+   "rules": {
+    "58": {
+     "commits": 36,
+     "typed_births": 7,
+     "typed_visible": 7
+    },
+    "143": {
+     "commits": 36,
+     "typed_births": 61,
+     "typed_visible": 35
+    },
+    "55": {
+     "commits": 38,
+     "typed_births": 38,
+     "typed_visible": 7
+    },
+    "137": {
+     "commits": 159,
+     "typed_births": 1,
+     "typed_visible": 0
+    },
+    "138": {
+     "commits": 11,
+     "typed_births": 20,
+     "typed_visible": 16
+    },
+    "506": {
+     "commits": 192,
+     "typed_births": 2,
+     "typed_visible": 2,
+     "separately_paid_births": 24,
+     "separately_paid_visible": 24
+    },
+    "541": {
+     "commits": 2
+    },
+    "51": {
+     "commits": 2,
+     "typed_births": 6,
+     "typed_visible": 4
+    },
+    "69": {
+     "commits": 2,
+     "typed_births": 2,
+     "typed_visible": 1
+    },
+    "85": {
+     "commits": 2,
+     "typed_births": 2,
+     "typed_visible": 2
+    },
+    "266": {
+     "commits": 90
+    },
+    "64": {
+     "commits": 8,
+     "typed_births": 8,
+     "typed_visible": 8
+    },
+    "65": {
+     "commits": 2,
+     "typed_births": 2,
+     "typed_visible": 2
+    }
+   },
+   "guard_rules": [
+    137,
+    138
+   ],
+   "guard_counts": [
+    350,
+    180,
+    170
+   ],
+   "ms": [
+    35.257083,
+    38.917667,
+    39.160124999999994
+   ],
+   "compiled_repeat_ops": [
+    [
+     138,
+     5
+    ]
+   ],
+   "depths": {
+    "1": 514,
+    "2": 66
+   },
+   "typed_visible_by_depth": {
+    "1": 75,
+    "2": 9
+   }
+  },
+  "4": {
+   "runs": 1428,
+   "rhs": 7265,
+   "source": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+   "parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+   "nested": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+   "commits": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+   "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+   "scores": "15576378264816477716",
+   "packets": 12080,
+   "emitted": [
+    5977,
+    5912
+   ],
+   "child": 191,
+   "born": 3610,
+   "visible": 2691,
+   "fept": 0.22276490066225166,
+   "internal": 582,
+   "rules": {
+    "58": {
+     "commits": 36,
+     "typed_births": 7,
+     "typed_visible": 7
+    },
+    "143": {
+     "commits": 36,
+     "typed_births": 61,
+     "typed_visible": 35
+    },
+    "55": {
+     "commits": 37,
+     "typed_births": 37,
+     "typed_visible": 7
+    },
+    "137": {
+     "commits": 160,
+     "typed_births": 2,
+     "typed_visible": 0
+    },
+    "138": {
+     "commits": 13,
+     "typed_births": 24,
+     "typed_visible": 17
+    },
+    "506": {
+     "commits": 192,
+     "typed_births": 2,
+     "typed_visible": 2,
+     "separately_paid_births": 24,
+     "separately_paid_visible": 24
+    },
+    "541": {
+     "commits": 2
+    },
+    "51": {
+     "commits": 2,
+     "typed_births": 6,
+     "typed_visible": 4
+    },
+    "69": {
+     "commits": 2,
+     "typed_births": 2,
+     "typed_visible": 1
+    },
+    "85": {
+     "commits": 2,
+     "typed_births": 2,
+     "typed_visible": 2
+    },
+    "266": {
+     "commits": 90
+    },
+    "64": {
+     "commits": 8,
+     "typed_births": 8,
+     "typed_visible": 8
+    },
+    "65": {
+     "commits": 2,
+     "typed_births": 2,
+     "typed_visible": 2
+    }
+   },
+   "guard_rules": [
+    137,
+    138
+   ],
+   "guard_counts": [
+    356,
+    183,
+    173
+   ],
+   "ms": [
+    36.265708000000004,
+    36.040334,
+    39.754125
+   ],
+   "compiled_repeat_ops": [
+    [
+     138,
+     5
+    ]
+   ],
+   "depths": {
+    "1": 512,
+    "2": 66,
+    "3": 3,
+    "4": 1
+   },
+   "typed_visible_by_depth": {
+    "1": 75,
+    "2": 9,
+    "3": 1
+   }
+  },
+  "8": {
+   "runs": 1428,
+   "rhs": 7265,
+   "source": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "physical": "dd593d5bf7dcc8d2f9727a2ca51aa07374c2cb6f87b968ca07bf6ccb9794409c",
+   "parents": "fa9b4f9286d906517d05275261714410840d116a3a11a25e662d24457e268675",
+   "ids": "90e9b03c35f3fcedcd0070914315592ca701b792f91d794511329737250169c1",
+   "nested": "38ca9bec29ba0dccd2eb93d333a424e7324a19091f9ae356d4183fed97651d4a",
+   "commits": "cceeb5cde9d1108a6dc01f3f6697211d4c9512e78fbe05ed56efba8f82295dce",
+   "children": "bb31c5022a1bff899a222c3920779793b93464db14724a3f850b62fc0dd7b326",
+   "scores": "15576378264816477716",
+   "packets": 12080,
+   "emitted": [
+    5977,
+    5912
+   ],
+   "child": 191,
+   "born": 3610,
+   "visible": 2691,
+   "fept": 0.22276490066225166,
+   "internal": 582,
+   "rules": {
+    "58": {
+     "commits": 36,
+     "typed_births": 7,
+     "typed_visible": 7
+    },
+    "143": {
+     "commits": 36,
+     "typed_births": 61,
+     "typed_visible": 35
+    },
+    "55": {
+     "commits": 37,
+     "typed_births": 37,
+     "typed_visible": 7
+    },
+    "137": {
+     "commits": 160,
+     "typed_births": 2,
+     "typed_visible": 0
+    },
+    "138": {
+     "commits": 13,
+     "typed_births": 24,
+     "typed_visible": 17
+    },
+    "506": {
+     "commits": 192,
+     "typed_births": 2,
+     "typed_visible": 2,
+     "separately_paid_births": 24,
+     "separately_paid_visible": 24
+    },
+    "541": {
+     "commits": 2
+    },
+    "51": {
+     "commits": 2,
+     "typed_births": 6,
+     "typed_visible": 4
+    },
+    "69": {
+     "commits": 2,
+     "typed_births": 2,
+     "typed_visible": 1
+    },
+    "85": {
+     "commits": 2,
+     "typed_births": 2,
+     "typed_visible": 2
+    },
+    "266": {
+     "commits": 90
+    },
+    "64": {
+     "commits": 8,
+     "typed_births": 8,
+     "typed_visible": 8
+    },
+    "65": {
+     "commits": 2,
+     "typed_births": 2,
+     "typed_visible": 2
+    }
+   },
+   "guard_rules": [
+    137,
+    138
+   ],
+   "guard_counts": [
+    356,
+    183,
+    173
+   ],
+   "ms": [
+    37.979416,
+    37.296709,
+    39.478958
+   ],
+   "compiled_repeat_ops": [
+    [
+     138,
+     5
+    ]
+   ],
+   "depths": {
+    "1": 512,
+    "2": 66,
+    "3": 3,
+    "4": 1
+   },
+   "typed_visible_by_depth": {
+    "1": 75,
+    "2": 9,
+    "3": 1
+   }
+  }
+ },
+ "3mm": {
+  "0": {
+   "runs": 4260,
+   "rhs": 294917,
+   "source": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+   "parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "commits": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "scores": "16767102213097954485",
+   "packets": 558074,
+   "emitted": [
+    334594,
+    220972
+   ],
+   "child": 2508,
+   "born": 119503,
+   "visible": 92658,
+   "fept": 0.16603174489404632,
+   "internal": 0,
+   "rules": {},
+   "guard_rules": [],
+   "guard_counts": [
+    0,
+    0,
+    0
+   ],
+   "ms": [
+    1778.656375,
+    1736.524833,
+    1689.0339999999999
+   ],
+   "compiled_repeat_ops": [],
+   "depths": {},
+   "typed_visible_by_depth": {}
+  },
+  "2": {
+   "runs": 4260,
+   "rhs": 294917,
+   "source": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+   "parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "commits": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "scores": "16767102213097954485",
+   "packets": 542857,
+   "emitted": [
+    319377,
+    220972
+   ],
+   "child": 2508,
+   "born": 119503,
+   "visible": 92658,
+   "fept": 0.17068583439100904,
+   "internal": 15217,
+   "rules": {
+    "58": {
+     "commits": 1555,
+     "typed_births": 101,
+     "typed_visible": 101
+    },
+    "143": {
+     "commits": 1555,
+     "typed_births": 2563,
+     "typed_visible": 1611
+    },
+    "55": {
+     "commits": 1507,
+     "typed_births": 1507,
+     "typed_visible": 330
+    },
+    "137": {
+     "commits": 4132,
+     "typed_births": 23,
+     "typed_visible": 4
+    },
+    "138": {
+     "commits": 652,
+     "typed_births": 1512,
+     "typed_visible": 1367
+    },
+    "100": {
+     "commits": 330,
+     "typed_births": 330,
+     "typed_visible": 330
+    },
+    "114": {
+     "commits": 330,
+     "typed_births": 330,
+     "typed_visible": 330
+    },
+    "149": {
+     "commits": 330
+    },
+    "420": {
+     "commits": 330,
+     "typed_births": 330,
+     "typed_visible": 330
+    },
+    "502": {
+     "commits": 330,
+     "typed_births": 330,
+     "typed_visible": 330
+    },
+    "506": {
+     "commits": 4058,
+     "typed_births": 2,
+     "typed_visible": 2,
+     "dynamic_births": 485,
+     "dynamic_visible": 408
+    },
+    "64": {
+     "commits": 108,
+     "typed_births": 70,
+     "typed_visible": 70
+    }
+   },
+   "guard_rules": [
+    137,
+    138
+   ],
+   "guard_counts": [
+    9568,
+    4784,
+    4784
+   ],
+   "ms": [
+    1853.5176660000002,
+    1769.383167,
+    1749.732125
+   ],
+   "compiled_repeat_ops": [
+    [
+     138,
+     5
+    ]
+   ],
+   "depths": {
+    "1": 11884,
+    "2": 3333
+   },
+   "typed_visible_by_depth": {
+    "1": 3972,
+    "2": 833
+   }
+  },
+  "4": {
+   "runs": 4260,
+   "rhs": 294917,
+   "source": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+   "parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "commits": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "scores": "16767102213097954485",
+   "packets": 542826,
+   "emitted": [
+    319346,
+    220972
+   ],
+   "child": 2508,
+   "born": 119503,
+   "visible": 92658,
+   "fept": 0.17069558200970478,
+   "internal": 15248,
+   "rules": {
+    "58": {
+     "commits": 1555,
+     "typed_births": 101,
+     "typed_visible": 101
+    },
+    "143": {
+     "commits": 1555,
+     "typed_births": 2563,
+     "typed_visible": 1611
+    },
+    "55": {
+     "commits": 1403,
+     "typed_births": 1403,
+     "typed_visible": 279
+    },
+    "137": {
+     "commits": 4126,
+     "typed_births": 19,
+     "typed_visible": 3
+    },
+    "138": {
+     "commits": 793,
+     "typed_births": 1837,
+     "typed_visible": 1647
+    },
+    "100": {
+     "commits": 330,
+     "typed_births": 330,
+     "typed_visible": 330
+    },
+    "114": {
+     "commits": 330,
+     "typed_births": 330,
+     "typed_visible": 330
+    },
+    "149": {
+     "commits": 330
+    },
+    "420": {
+     "commits": 330,
+     "typed_births": 330,
+     "typed_visible": 330
+    },
+    "502": {
+     "commits": 330,
+     "typed_births": 330,
+     "typed_visible": 330
+    },
+    "506": {
+     "commits": 4058,
+     "typed_births": 2,
+     "typed_visible": 2,
+     "dynamic_births": 485,
+     "dynamic_visible": 408
+    },
+    "64": {
+     "commits": 108,
+     "typed_births": 70,
+     "typed_visible": 70
+    }
+   },
+   "guard_rules": [
+    137,
+    138
+   ],
+   "guard_counts": [
+    9838,
+    4919,
+    4919
+   ],
+   "ms": [
+    1897.7905,
+    1760.8595409999998,
+    1795.769542
+   ],
+   "compiled_repeat_ops": [
+    [
+     138,
+     5
+    ]
+   ],
+   "depths": {
+    "1": 11702,
+    "2": 3176,
+    "3": 193,
+    "4": 177
+   },
+   "typed_visible_by_depth": {
+    "1": 3715,
+    "2": 585,
+    "3": 389,
+    "4": 344
+   }
+  },
+  "8": {
+   "runs": 4260,
+   "rhs": 294917,
+   "source": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "physical": "b8605e614c99cacb28f95b2a1eb5c39cc6f2b25fc5e88d8d177f995b4536931d",
+   "parents": "3e0a85ac70c1cdc7342bbe7847bcc0aad1a52fe89ed34b6396eb521c5bc51193",
+   "ids": "7715fc95dddab582255f48b62b566488b6e959e718f1432611fb52756d431c2c",
+   "nested": "9f63836547a3c5291cb3424613f82ac83d65855e47029a89bbf06bea80752ed5",
+   "commits": "558bb78b69c7e7f381d57f9e809ec06e22f61788fc6b2f4bcc611c11cee09be2",
+   "children": "71c7e200c09c81b16d60360d5fbea5d0710b4edd669c7f71de7695f04cc3e924",
+   "scores": "16767102213097954485",
+   "packets": 542800,
+   "emitted": [
+    319320,
+    220972
+   ],
+   "child": 2508,
+   "born": 119503,
+   "visible": 92658,
+   "fept": 0.17070375829034634,
+   "internal": 15274,
+   "rules": {
+    "58": {
+     "commits": 1555,
+     "typed_births": 101,
+     "typed_visible": 101
+    },
+    "143": {
+     "commits": 1555,
+     "typed_births": 2563,
+     "typed_visible": 1611
+    },
+    "55": {
+     "commits": 1343,
+     "typed_births": 1343,
+     "typed_visible": 230
+    },
+    "137": {
+     "commits": 4137,
+     "typed_births": 28,
+     "typed_visible": 5
+    },
+    "138": {
+     "commits": 868,
+     "typed_births": 2010,
+     "typed_visible": 1809
+    },
+    "100": {
+     "commits": 330,
+     "typed_births": 330,
+     "typed_visible": 330
+    },
+    "114": {
+     "commits": 330,
+     "typed_births": 330,
+     "typed_visible": 330
+    },
+    "149": {
+     "commits": 330
+    },
+    "420": {
+     "commits": 330,
+     "typed_births": 330,
+     "typed_visible": 330
+    },
+    "502": {
+     "commits": 330,
+     "typed_births": 330,
+     "typed_visible": 330
+    },
+    "506": {
+     "commits": 4058,
+     "typed_births": 2,
+     "typed_visible": 2,
+     "dynamic_births": 485,
+     "dynamic_visible": 408
+    },
+    "64": {
+     "commits": 108,
+     "typed_births": 70,
+     "typed_visible": 70
+    }
+   },
+   "guard_rules": [
+    137,
+    138
+   ],
+   "guard_counts": [
+    10010,
+    5005,
+    5005
+   ],
+   "ms": [
+    1804.892333,
+    1759.674667,
+    1782.382541
+   ],
+   "compiled_repeat_ops": [
+    [
+     138,
+     5
+    ]
+   ],
+   "depths": {
+    "1": 11602,
+    "2": 3079,
+    "3": 132,
+    "4": 116,
+    "5": 101,
+    "6": 89,
+    "7": 80,
+    "8": 75
+   },
+   "typed_visible_by_depth": {
+    "1": 3531,
+    "2": 436,
+    "3": 260,
+    "4": 228,
+    "5": 203,
+    "6": 183,
+    "7": 162,
+    "8": 145
+   }
+  }
+ }
+}

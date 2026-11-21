@@ -1,0 +1,473 @@
+{
+  "sum-bits": {
+    "issued_tokens": 12080,
+    "depth": 4,
+    "deepest_terminal_commits": 1,
+    "internal_typed_increment_hist": [
+      [
+        0,
+        12024
+      ],
+      [
+        1,
+        42
+      ],
+      [
+        2,
+        9
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        7,
+        1
+      ],
+      [
+        8,
+        1
+      ]
+    ],
+    "root_rule": 138,
+    "root_serial": 1250,
+    "root_Run": 106,
+    "named_parents": [
+      {
+        "atom": 0,
+        "row": {
+          "Fact": {
+            "cell": 671,
+            "op": 2
+          }
+        },
+        "version": 102
+      }
+    ],
+    "producer_typed_visible": 2,
+    "typed_visible_on_this_chain": 7,
+    "steps": [
+      {
+        "producer": 1250,
+        "child_serial": 1536,
+        "from_rule": 138,
+        "to_rule": 138,
+        "op": 5,
+        "actual_ref": [
+          822,
+          5
+        ],
+        "version": 106,
+        "run": 110,
+        "typed_visible": [
+          [
+            4312147165186,
+            "Single"
+          ],
+          [
+            4312147165189,
+            "SubTuple"
+          ],
+          [
+            4312147165190,
+            "Concat"
+          ]
+        ]
+      },
+      {
+        "producer": 1536,
+        "child_serial": 1804,
+        "from_rule": 138,
+        "to_rule": 138,
+        "op": 5,
+        "actual_ref": [
+          1004,
+          5
+        ],
+        "version": 110,
+        "run": 114,
+        "typed_visible": [
+          [
+            5016521801730,
+            "Single"
+          ],
+          [
+            5016521801733,
+            "SubTuple"
+          ],
+          [
+            5016521801734,
+            "Concat"
+          ]
+        ]
+      },
+      {
+        "producer": 1804,
+        "child_serial": 2044,
+        "from_rule": 138,
+        "to_rule": 138,
+        "op": 5,
+        "actual_ref": [
+          1168,
+          5
+        ],
+        "version": 114,
+        "run": 118,
+        "typed_visible": [
+          [
+            5690831667205,
+            "SubTuple"
+          ]
+        ]
+      },
+      {
+        "producer": 2044,
+        "child_serial": 2241,
+        "from_rule": 138,
+        "to_rule": 137,
+        "op": 5,
+        "actual_ref": [
+          1325,
+          5
+        ],
+        "version": 118,
+        "run": 122,
+        "typed_visible": []
+      }
+    ]
+  },
+  "3mm": {
+    "issued_tokens": 542800,
+    "depth": 8,
+    "deepest_terminal_commits": 75,
+    "internal_typed_increment_hist": [
+      [
+        0,
+        540666
+      ],
+      [
+        1,
+        1474
+      ],
+      [
+        2,
+        103
+      ],
+      [
+        3,
+        96
+      ],
+      [
+        4,
+        332
+      ],
+      [
+        5,
+        15
+      ],
+      [
+        6,
+        2
+      ],
+      [
+        7,
+        9
+      ],
+      [
+        8,
+        9
+      ],
+      [
+        9,
+        3
+      ],
+      [
+        10,
+        4
+      ],
+      [
+        11,
+        6
+      ],
+      [
+        12,
+        5
+      ],
+      [
+        13,
+        3
+      ],
+      [
+        14,
+        8
+      ],
+      [
+        15,
+        1
+      ],
+      [
+        16,
+        29
+      ],
+      [
+        19,
+        2
+      ],
+      [
+        20,
+        2
+      ],
+      [
+        22,
+        2
+      ],
+      [
+        23,
+        14
+      ],
+      [
+        24,
+        12
+      ],
+      [
+        25,
+        3
+      ]
+    ],
+    "root_rule": 138,
+    "root_serial": 65247,
+    "root_Run": 831,
+    "named_parents": [
+      {
+        "atom": 0,
+        "row": {
+          "Fact": {
+            "cell": 24146,
+            "op": 2
+          }
+        },
+        "version": 826
+      }
+    ],
+    "producer_typed_visible": 3,
+    "typed_visible_on_this_chain": 23,
+    "steps": [
+      {
+        "producer": 65247,
+        "child_serial": 75523,
+        "from_rule": 138,
+        "to_rule": 138,
+        "op": 5,
+        "actual_ref": [
+          29787,
+          5
+        ],
+        "version": 831,
+        "run": 835,
+        "typed_visible": [
+          [
+            153570850635778,
+            "Single"
+          ],
+          [
+            153570850635781,
+            "SubTuple"
+          ],
+          [
+            153570850635782,
+            "Concat"
+          ]
+        ]
+      },
+      {
+        "producer": 75523,
+        "child_serial": 85238,
+        "from_rule": 138,
+        "to_rule": 138,
+        "op": 5,
+        "actual_ref": [
+          35756,
+          5
+        ],
+        "version": 835,
+        "run": 839,
+        "typed_visible": [
+          [
+            176793738805250,
+            "Single"
+          ],
+          [
+            176793738805253,
+            "SubTuple"
+          ],
+          [
+            176793738805254,
+            "Concat"
+          ]
+        ]
+      },
+      {
+        "producer": 85238,
+        "child_serial": 95553,
+        "from_rule": 138,
+        "to_rule": 138,
+        "op": 5,
+        "actual_ref": [
+          41163,
+          5
+        ],
+        "version": 839,
+        "run": 843,
+        "typed_visible": [
+          [
+            203362406498306,
+            "Single"
+          ],
+          [
+            203362406498309,
+            "SubTuple"
+          ],
+          [
+            203362406498310,
+            "Concat"
+          ]
+        ]
+      },
+      {
+        "producer": 95553,
+        "child_serial": 108735,
+        "from_rule": 138,
+        "to_rule": 138,
+        "op": 5,
+        "actual_ref": [
+          47349,
+          5
+        ],
+        "version": 843,
+        "run": 847,
+        "typed_visible": [
+          [
+            240569708183554,
+            "Single"
+          ],
+          [
+            240569708183557,
+            "SubTuple"
+          ],
+          [
+            240569708183558,
+            "Concat"
+          ]
+        ]
+      },
+      {
+        "producer": 108735,
+        "child_serial": 122758,
+        "from_rule": 138,
+        "to_rule": 138,
+        "op": 5,
+        "actual_ref": [
+          56012,
+          5
+        ],
+        "version": 847,
+        "run": 851,
+        "typed_visible": [
+          [
+            281367602528258,
+            "Single"
+          ],
+          [
+            281367602528261,
+            "SubTuple"
+          ],
+          [
+            281367602528262,
+            "Concat"
+          ]
+        ]
+      },
+      {
+        "producer": 122758,
+        "child_serial": 130207,
+        "from_rule": 138,
+        "to_rule": 138,
+        "op": 5,
+        "actual_ref": [
+          65511,
+          5
+        ],
+        "version": 851,
+        "run": 855,
+        "typed_visible": [
+          [
+            299951926018050,
+            "Single"
+          ],
+          [
+            299951926018053,
+            "SubTuple"
+          ],
+          [
+            299951926018054,
+            "Concat"
+          ]
+        ]
+      },
+      {
+        "producer": 130207,
+        "child_serial": 137204,
+        "from_rule": 138,
+        "to_rule": 138,
+        "op": 5,
+        "actual_ref": [
+          69838,
+          5
+        ],
+        "version": 855,
+        "run": 859,
+        "typed_visible": [
+          [
+            318630738788354,
+            "Single"
+          ],
+          [
+            318630738788357,
+            "SubTuple"
+          ],
+          [
+            318630738788358,
+            "Concat"
+          ]
+        ]
+      },
+      {
+        "producer": 137204,
+        "child_serial": 143959,
+        "from_rule": 138,
+        "to_rule": 138,
+        "op": 5,
+        "actual_ref": [
+          74187,
+          5
+        ],
+        "version": 859,
+        "run": 863,
+        "typed_visible": [
+          [
+            335428355883013,
+            "SubTuple"
+          ],
+          [
+            335428355883014,
+            "Concat"
+          ]
+        ]
+      }
+    ]
+  }
+}
