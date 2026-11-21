@@ -1,0 +1,27 @@
+{
+ "base": "31bf7e41",
+ "executable": "57957aec1c034bcc0b264113d29fa789c3c520ee0fb0bb91974be1ba0b29f202",
+ "inputs": {
+  "conjugate-gradient": {
+   "program.json": "decf722a0df14dddb3ed40eeadee5fad00743eceb695bdf7237932eddb94e428",
+   "plans.json": "50083314582aa90fe7ba33210b2c6fc334d7df4714fd58329154e99dc175c3fc",
+   "single.json": "cf12b0abebf3c6c9d862bee5dba1b5c16f8682f0faf4f08526ba29c2567ea9e8",
+   "merge.json": "95b716da49f35b992dab605d2d3b16a2d93c836fd28a70740e08a90f1f7ebc63",
+   "request.json": "4769fc43a2d3c2870c16af2814f1c3ee2eb8bc707aead5c619ec9d6491c86076"
+  },
+  "3mm": {
+   "program.json": "8d81462db16dcee0689b2e8dc11ac3e068c9dc976a2e69f5005a8acad06905af",
+   "plans.json": "50083314582aa90fe7ba33210b2c6fc334d7df4714fd58329154e99dc175c3fc",
+   "single.json": "cf12b0abebf3c6c9d862bee5dba1b5c16f8682f0faf4f08526ba29c2567ea9e8",
+   "merge.json": "d4261a765c6a70a53e79fcb9f3068b8a9f42ce0ca9d22d8a5e6847e02a88e8fb",
+   "request.json": "df6137cb5ba033ac91dae00465273afafda8722ba8f9110acacd2f589f300947"
+  }
+ },
+ "sources": {
+  "single-pivot-certificates/certificate.rs": "c3f531e6f40246432807fc02347db0e9b3e702e04b941ecb7771f2a32f3a09fc",
+  "single-pivot-certificates/overlay.py": "a416b1332cbb407f517d94ccc9e4a2551dadfd55e3fa7d5cbe4c19788ddecad5",
+  "single-delta-frontier/frontier.rs": "4830d0052562a2f441234685febbc9377937ecca7bd80c30d9bdd0eac953274c",
+  "single-delta-frontier/overlay.py": "fa590ef567adbb9c91c44fa6dcf73df4e773af11b12badffbe4828ecf973aee2"
+ },
+ "seed": 1703
+}
