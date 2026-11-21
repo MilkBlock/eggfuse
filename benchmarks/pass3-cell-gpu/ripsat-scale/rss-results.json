@@ -1,0 +1,482 @@
+{
+  "sum-bits": {
+    "growth_kib": 9490,
+    "arms": {
+      "leaf": {
+        "trials": [
+          {
+            "crossing": [
+              "reached",
+              26738,
+              1256
+            ],
+            "peak_kib": 276672,
+            "sampled_ms": 34.068667,
+            "control_ms": 30.860249999999997
+          },
+          {
+            "crossing": [
+              "reached",
+              24149,
+              1259
+            ],
+            "peak_kib": 276576,
+            "sampled_ms": 31.421040999999995,
+            "control_ms": 30.918458
+          },
+          {
+            "crossing": [
+              "reached",
+              24250,
+              1276
+            ],
+            "peak_kib": 276592,
+            "sampled_ms": 31.25925,
+            "control_ms": 30.862625
+          },
+          {
+            "crossing": [
+              "reached",
+              24241,
+              1256
+            ],
+            "peak_kib": 276576,
+            "sampled_ms": 31.308041000000003,
+            "control_ms": 31.222625
+          }
+        ],
+        "reached": 4,
+        "crossing_us": 24245.5,
+        "control_ms": 30.8905415
+      },
+      "trace": {
+        "trials": [
+          {
+            "crossing": [
+              "reached",
+              23916,
+              1256
+            ],
+            "peak_kib": 276720,
+            "sampled_ms": 31.385416,
+            "control_ms": 31.179875
+          },
+          {
+            "crossing": [
+              "reached",
+              23778,
+              1256
+            ],
+            "peak_kib": 276720,
+            "sampled_ms": 31.171916,
+            "control_ms": 31.571416
+          },
+          {
+            "crossing": [
+              "reached",
+              24422,
+              1256
+            ],
+            "peak_kib": 276720,
+            "sampled_ms": 31.255583000000005,
+            "control_ms": 31.235292
+          },
+          {
+            "crossing": [
+              "reached",
+              24985,
+              1257
+            ],
+            "peak_kib": 276704,
+            "sampled_ms": 31.410417000000002,
+            "control_ms": 31.268542000000004
+          }
+        ],
+        "reached": 4,
+        "crossing_us": 24169.0,
+        "control_ms": 31.251917000000002
+      },
+      "ripsat": {
+        "trials": [
+          {
+            "crossing": [
+              "reached",
+              24467,
+              1259
+            ],
+            "peak_kib": 276624,
+            "sampled_ms": 31.256875000000004,
+            "control_ms": 31.323084
+          },
+          {
+            "crossing": [
+              "reached",
+              25066,
+              1256
+            ],
+            "peak_kib": 276624,
+            "sampled_ms": 31.759542000000003,
+            "control_ms": 31.428667
+          },
+          {
+            "crossing": [
+              "reached",
+              25162,
+              1257
+            ],
+            "peak_kib": 276624,
+            "sampled_ms": 31.773000000000003,
+            "control_ms": 31.316291000000003
+          },
+          {
+            "crossing": [
+              "reached",
+              26807,
+              1258
+            ],
+            "peak_kib": 276640,
+            "sampled_ms": 34.653917,
+            "control_ms": 31.248667
+          }
+        ],
+        "reached": 4,
+        "crossing_us": 25114.0,
+        "control_ms": 31.3196875
+      },
+      "union": {
+        "trials": [
+          {
+            "crossing": [
+              "reached",
+              24501,
+              1262
+            ],
+            "peak_kib": 276688,
+            "sampled_ms": 31.696707999999997,
+            "control_ms": 33.719291999999996
+          },
+          {
+            "crossing": [
+              "reached",
+              24234,
+              1255
+            ],
+            "peak_kib": 276688,
+            "sampled_ms": 31.455917,
+            "control_ms": 31.107125
+          },
+          {
+            "crossing": [
+              "reached",
+              24088,
+              1257
+            ],
+            "peak_kib": 276672,
+            "sampled_ms": 31.558374999999998,
+            "control_ms": 31.151167
+          },
+          {
+            "crossing": [
+              "reached",
+              24935,
+              1256
+            ],
+            "peak_kib": 276672,
+            "sampled_ms": 31.402874999999998,
+            "control_ms": 31.317625000000003
+          }
+        ],
+        "reached": 4,
+        "crossing_us": 24367.5,
+        "control_ms": 31.234396000000004
+      },
+      "union_ridge": {
+        "trials": [
+          {
+            "crossing": [
+              "reached",
+              25996,
+              1256
+            ],
+            "peak_kib": 278736,
+            "sampled_ms": 31.467083,
+            "control_ms": 31.546583000000002
+          },
+          {
+            "crossing": [
+              "reached",
+              25820,
+              1256
+            ],
+            "peak_kib": 278736,
+            "sampled_ms": 31.198458,
+            "control_ms": 31.192917
+          },
+          {
+            "crossing": [
+              "reached",
+              25627,
+              1255
+            ],
+            "peak_kib": 278752,
+            "sampled_ms": 31.362709000000002,
+            "control_ms": 31.825958
+          },
+          {
+            "crossing": [
+              "reached",
+              26980,
+              1258
+            ],
+            "peak_kib": 278736,
+            "sampled_ms": 32.118500000000004,
+            "control_ms": 31.211917
+          }
+        ],
+        "reached": 4,
+        "crossing_us": 25908.0,
+        "control_ms": 31.37925
+      }
+    }
+  },
+  "3mm": {
+    "growth_kib": 270446,
+    "arms": {
+      "leaf": {
+        "trials": [
+          {
+            "crossing": [
+              "reached",
+              907316,
+              1256
+            ],
+            "peak_kib": 738448,
+            "sampled_ms": 1574.3816669999999,
+            "control_ms": 1566.196833
+          },
+          {
+            "crossing": [
+              "reached",
+              929659,
+              1258
+            ],
+            "peak_kib": 735712,
+            "sampled_ms": 1570.4365,
+            "control_ms": 1540.2357499999998
+          },
+          {
+            "crossing": [
+              "reached",
+              910072,
+              1258
+            ],
+            "peak_kib": 738096,
+            "sampled_ms": 1578.437291,
+            "control_ms": 1565.995167
+          },
+          {
+            "crossing": [
+              "reached",
+              926956,
+              1257
+            ],
+            "peak_kib": 735584,
+            "sampled_ms": 1568.163666,
+            "control_ms": 1556.498833
+          }
+        ],
+        "reached": 4,
+        "crossing_us": 918514.0,
+        "control_ms": 1561.247
+      },
+      "trace": {
+        "trials": [
+          {
+            "crossing": [
+              "reached",
+              923519,
+              1257
+            ],
+            "peak_kib": 737632,
+            "sampled_ms": 1574.957084,
+            "control_ms": 1577.9806669999998
+          },
+          {
+            "crossing": [
+              "reached",
+              941459,
+              1258
+            ],
+            "peak_kib": 735456,
+            "sampled_ms": 1584.85125,
+            "control_ms": 1636.9569579999998
+          },
+          {
+            "crossing": [
+              "reached",
+              924005,
+              1258
+            ],
+            "peak_kib": 737632,
+            "sampled_ms": 1582.144958,
+            "control_ms": 1562.152
+          },
+          {
+            "crossing": [
+              "reached",
+              929692,
+              1257
+            ],
+            "peak_kib": 737776,
+            "sampled_ms": 1614.352291,
+            "control_ms": 1581.96725
+          }
+        ],
+        "reached": 4,
+        "crossing_us": 926848.5,
+        "control_ms": 1579.9739584999998
+      },
+      "ripsat": {
+        "trials": [
+          {
+            "crossing": [
+              "reached",
+              954954,
+              1265
+            ],
+            "peak_kib": 723472,
+            "sampled_ms": 1593.5861249999998,
+            "control_ms": 1575.592834
+          },
+          {
+            "crossing": [
+              "reached",
+              937488,
+              1256
+            ],
+            "peak_kib": 723440,
+            "sampled_ms": 1584.3374999999999,
+            "control_ms": 1564.003917
+          },
+          {
+            "crossing": [
+              "reached",
+              1042819,
+              1259
+            ],
+            "peak_kib": 721232,
+            "sampled_ms": 1575.730125,
+            "control_ms": 1585.883291
+          },
+          {
+            "crossing": [
+              "reached",
+              929228,
+              1257
+            ],
+            "peak_kib": 723408,
+            "sampled_ms": 1572.069958,
+            "control_ms": 1579.715
+          }
+        ],
+        "reached": 4,
+        "crossing_us": 946221.0,
+        "control_ms": 1577.653917
+      },
+      "union": {
+        "trials": [
+          {
+            "crossing": [
+              "reached",
+              955024,
+              1257
+            ],
+            "peak_kib": 723840,
+            "sampled_ms": 1604.1444170000002,
+            "control_ms": 1568.120875
+          },
+          {
+            "crossing": [
+              "reached",
+              925612,
+              1258
+            ],
+            "peak_kib": 726336,
+            "sampled_ms": 1609.106917,
+            "control_ms": 1583.537917
+          },
+          {
+            "crossing": [
+              "reached",
+              943416,
+              1262
+            ],
+            "peak_kib": 726096,
+            "sampled_ms": 1603.619125,
+            "control_ms": 1578.0271670000002
+          },
+          {
+            "crossing": [
+              "reached",
+              928440,
+              1256
+            ],
+            "peak_kib": 723968,
+            "sampled_ms": 1595.1809580000001,
+            "control_ms": 1573.8199590000002
+          }
+        ],
+        "reached": 4,
+        "crossing_us": 935928.0,
+        "control_ms": 1575.9235630000003
+      },
+      "union_ridge": {
+        "trials": [
+          {
+            "crossing": [
+              "reached",
+              905403,
+              1255
+            ],
+            "peak_kib": 729216,
+            "sampled_ms": 1596.4568749999999,
+            "control_ms": 1575.710959
+          },
+          {
+            "crossing": [
+              "reached",
+              904219,
+              1256
+            ],
+            "peak_kib": 729312,
+            "sampled_ms": 1581.8225830000001,
+            "control_ms": 1590.012958
+          },
+          {
+            "crossing": [
+              "reached",
+              898131,
+              1257
+            ],
+            "peak_kib": 718832,
+            "sampled_ms": 1567.8654999999999,
+            "control_ms": 1574.738375
+          },
+          {
+            "crossing": [
+              "reached",
+              901361,
+              1257
+            ],
+            "peak_kib": 729280,
+            "sampled_ms": 1572.3871250000002,
+            "control_ms": 1588.9734170000002
+          }
+        ],
+        "reached": 4,
+        "crossing_us": 902790.0,
+        "control_ms": 1582.342188
+      }
+    }
+  }
+}

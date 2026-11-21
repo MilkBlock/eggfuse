@@ -1,0 +1,70 @@
+{
+  "schema": "eggfuse-ripsat-scale/v1",
+  "native_session_sha256": "e4ded5dfd9d49761b921fd23489cba569406dad0551b9d45bdb25d4fa9c050d8",
+  "targets": {
+    "sum-bits": {
+      "target_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+      "library_sha256": "b41f0b2c700d8912fc2a118990b8adcc2086140c2d882adf8bb0467875a1c94b",
+      "native_exporter_sha256": "8de67d832009872e7686d673cc2997749ee17d6fba2df1b2bc9e5413cb362cf2",
+      "donor_candidates": 670,
+      "shared_candidates": 670,
+      "accepted_shapes": 670,
+      "target_sites": 952,
+      "ordered_id_digest": "018c63dcec8ea0b1bcfd65d2ad0051905672050b3fe0bd9711a3eed607b7f383",
+      "named_let_paths": [
+        [
+          [
+            24,
+            4,
+            65
+          ]
+        ],
+        [
+          [
+            143,
+            1,
+            55
+          ]
+        ]
+      ]
+    },
+    "3mm": {
+      "target_sha256": "8d81462db16dcee0689b2e8dc11ac3e068c9dc976a2e69f5005a8acad06905af",
+      "library_sha256": "3414f8c08291fc5fc94cb2c8b38aacbbc59fa9758aac06db0380479b602144be",
+      "native_exporter_sha256": "8de67d832009872e7686d673cc2997749ee17d6fba2df1b2bc9e5413cb362cf2",
+      "donor_candidates": 670,
+      "shared_candidates": 670,
+      "accepted_shapes": 670,
+      "target_sites": 952,
+      "ordered_id_digest": "018c63dcec8ea0b1bcfd65d2ad0051905672050b3fe0bd9711a3eed607b7f383",
+      "named_let_paths": [
+        [
+          [
+            24,
+            4,
+            65
+          ]
+        ],
+        [
+          [
+            143,
+            1,
+            55
+          ]
+        ]
+      ]
+    }
+  },
+  "checkpoint_sha256": "190f8b9d60d45d74be4234c1dd30ec2870ee378dca7dfa27806d352e2de5b9c7",
+  "training_device": "cpu (explicit control)",
+  "mps_training": {
+    "queue_job": 2891,
+    "exit_code": 134,
+    "fallback": false,
+    "reason": "Metal compiler service unavailable (XPC error 141)"
+  },
+  "sum_bits_saved_choice_contract": {
+    "status": "pass",
+    "sha256": "59e0924d3e2d19aaffedf641107203700a7995e9f9b8904b8da998492f57cb84"
+  }
+}

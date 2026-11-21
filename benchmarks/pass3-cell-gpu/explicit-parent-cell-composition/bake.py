@@ -4,6 +4,9 @@ from pathlib import Path
 from runpy import run_path
 HERE=Path(__file__).resolve().parent
 ripsat=run_path(str(HERE/"ripsat_bridge.py"))
+if __name__ == "__main__" and sys.argv[1:2] == ["ripsat-fragments"]:
+    run_path(str(HERE.parent / "ripsat-scale/library.py"))["cli"](sys.argv[2:])
+    sys.exit(0)
 if __name__=="__main__" and sys.argv[1:2]==["ripsat"]:
     ripsat["cli"](sys.argv[2:])
     sys.exit(0)
