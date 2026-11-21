@@ -1,0 +1,326 @@
+{
+ "sum-bits": {
+  "compiled1": {
+   "credited_external_roots": 239,
+   "internal_source_commits": 239,
+   "typed_and_dynamic_sources": {
+    "internal.paid_merge_child.births": 20,
+    "internal.paid_merge_child.visible": 20,
+    "internal.typed.births": 10,
+    "internal.typed.visible": 10,
+    "producer.typed.births": 596,
+    "producer.typed.visible": 472
+   },
+   "endpoint_yield_hist": [
+    [
+     0,
+     4
+    ],
+    [
+     1,
+     110
+    ],
+    [
+     2,
+     9
+    ],
+    [
+     3,
+     111
+    ],
+    [
+     4,
+     4
+    ],
+    [
+     5,
+     1
+    ]
+   ],
+   "increment_from_internal": [
+    [
+     0,
+     230
+    ],
+    [
+     1,
+     8
+    ],
+    [
+     2,
+     1
+    ]
+   ],
+   "actual_internal_visible_excluding_paid_child": 10,
+   "visible": 2691,
+   "births": 3610,
+   "link_depth": {
+    "1": 239
+   }
+  },
+  "compiled2": {
+   "credited_external_roots": 239,
+   "internal_source_commits": 239,
+   "typed_and_dynamic_sources": {
+    "internal.paid_merge_child.births": 20,
+    "internal.paid_merge_child.visible": 20,
+    "internal.typed.births": 10,
+    "internal.typed.visible": 10,
+    "producer.typed.births": 596,
+    "producer.typed.visible": 472
+   },
+   "endpoint_yield_hist": [
+    [
+     0,
+     4
+    ],
+    [
+     1,
+     110
+    ],
+    [
+     2,
+     9
+    ],
+    [
+     3,
+     111
+    ],
+    [
+     4,
+     4
+    ],
+    [
+     5,
+     1
+    ]
+   ],
+   "increment_from_internal": [
+    [
+     0,
+     230
+    ],
+    [
+     1,
+     8
+    ],
+    [
+     2,
+     1
+    ]
+   ],
+   "actual_internal_visible_excluding_paid_child": 10,
+   "visible": 2691,
+   "births": 3610,
+   "link_depth": {
+    "1": 239
+   }
+  },
+  "complete1": {
+   "credited_external_roots": 141,
+   "internal_source_commits": 141,
+   "typed_and_dynamic_sources": {
+    "internal.paid_merge_child.births": 20,
+    "internal.paid_merge_child.visible": 20,
+    "internal.typed.births": 2,
+    "internal.typed.visible": 2,
+    "producer.typed.births": 357,
+    "producer.typed.visible": 357
+   },
+   "endpoint_yield_hist": [
+    [
+     1,
+     33
+    ],
+    [
+     3,
+     107
+    ],
+    [
+     5,
+     1
+    ]
+   ],
+   "increment_from_internal": [
+    [
+     0,
+     140
+    ],
+    [
+     2,
+     1
+    ]
+   ],
+   "actual_internal_visible_excluding_paid_child": 2,
+   "visible": 2691,
+   "births": 3610,
+   "link_depth": {
+    "1": 141
+   }
+  }
+ },
+ "3mm": {
+  "compiled1": {
+   "credited_external_roots": 3448,
+   "internal_source_commits": 3448,
+   "typed_and_dynamic_sources": {
+    "internal.runtime_dynamic.births": 337,
+    "internal.runtime_dynamic.visible": 264,
+    "internal.typed.births": 2,
+    "internal.typed.visible": 2,
+    "producer.typed.births": 7024,
+    "producer.typed.visible": 7024
+   },
+   "endpoint_yield_hist": [
+    [
+     1,
+     1652
+    ],
+    [
+     2,
+     8
+    ],
+    [
+     3,
+     1531
+    ],
+    [
+     4,
+     256
+    ],
+    [
+     5,
+     1
+    ]
+   ],
+   "increment_from_internal": [
+    [
+     0,
+     3183
+    ],
+    [
+     1,
+     264
+    ],
+    [
+     2,
+     1
+    ]
+   ],
+   "actual_internal_visible_excluding_paid_child": 266,
+   "visible": 92658,
+   "births": 119503,
+   "link_depth": {
+    "1": 3448
+   }
+  },
+  "compiled2": {
+   "credited_external_roots": 3448,
+   "internal_source_commits": 3448,
+   "typed_and_dynamic_sources": {
+    "internal.runtime_dynamic.births": 337,
+    "internal.runtime_dynamic.visible": 264,
+    "internal.typed.births": 2,
+    "internal.typed.visible": 2,
+    "producer.typed.births": 7024,
+    "producer.typed.visible": 7024
+   },
+   "endpoint_yield_hist": [
+    [
+     1,
+     1652
+    ],
+    [
+     2,
+     8
+    ],
+    [
+     3,
+     1531
+    ],
+    [
+     4,
+     256
+    ],
+    [
+     5,
+     1
+    ]
+   ],
+   "increment_from_internal": [
+    [
+     0,
+     3183
+    ],
+    [
+     1,
+     264
+    ],
+    [
+     2,
+     1
+    ]
+   ],
+   "actual_internal_visible_excluding_paid_child": 266,
+   "visible": 92658,
+   "births": 119503,
+   "link_depth": {
+    "1": 3448
+   }
+  },
+  "complete1": {
+   "credited_external_roots": 3448,
+   "internal_source_commits": 3448,
+   "typed_and_dynamic_sources": {
+    "internal.runtime_dynamic.births": 337,
+    "internal.runtime_dynamic.visible": 264,
+    "internal.typed.births": 2,
+    "internal.typed.visible": 2,
+    "producer.typed.births": 7024,
+    "producer.typed.visible": 7024
+   },
+   "endpoint_yield_hist": [
+    [
+     1,
+     1652
+    ],
+    [
+     2,
+     8
+    ],
+    [
+     3,
+     1531
+    ],
+    [
+     4,
+     256
+    ],
+    [
+     5,
+     1
+    ]
+   ],
+   "increment_from_internal": [
+    [
+     0,
+     3183
+    ],
+    [
+     1,
+     264
+    ],
+    [
+     2,
+     1
+    ]
+   ],
+   "actual_internal_visible_excluding_paid_child": 266,
+   "visible": 92658,
+   "births": 119503,
+   "link_depth": {
+    "1": 3448
+   }
+  }
+ }
+}

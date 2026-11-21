@@ -1,0 +1,186 @@
+{
+ "sum-bits": {
+  "complete1": {
+   "paths": 33,
+   "eligible_consumers": [
+    267,
+    446,
+    506
+   ],
+   "packets": 12521,
+   "visible": 2691,
+   "fept": 0.2149189361872055,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "counts": {
+    "absent": 156,
+    "actual_internal": 141,
+    "actual_output_events": 192,
+    "audit_score_inputs": 0,
+    "changed": 9,
+    "complete_banks": 18,
+    "direct_spine_lookups": 141,
+    "explicit_addresses": 3130,
+    "external_roots": 236,
+    "local_field_reads": 576,
+    "named_ports": 192,
+    "no_named_input": 0,
+    "no_score_banks": 18,
+    "no_score_inputs": 141,
+    "released": 141,
+    "selected_primary": 236,
+    "source_commits": 141,
+    "stale": 2929,
+    "tagged": 312,
+    "tries": 183,
+    "two_with_internal_parent": 0,
+    "uncovered": 9
+   }
+  },
+  "complete2": {
+   "paths": 40,
+   "eligible_consumers": [
+    267,
+    446,
+    506
+   ],
+   "packets": 12521,
+   "visible": 2691,
+   "fept": 0.2149189361872055,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+   "counts": {
+    "absent": 156,
+    "actual_internal": 141,
+    "actual_output_events": 192,
+    "audit_score_inputs": 0,
+    "changed": 9,
+    "complete_banks": 18,
+    "direct_spine_lookups": 141,
+    "explicit_addresses": 3130,
+    "external_roots": 236,
+    "local_field_reads": 576,
+    "named_ports": 192,
+    "no_named_input": 0,
+    "no_score_banks": 18,
+    "no_score_inputs": 141,
+    "released": 141,
+    "selected_primary": 377,
+    "source_commits": 141,
+    "stale": 2929,
+    "tagged": 312,
+    "tries": 183,
+    "two_with_internal_parent": 0,
+    "uncovered": 9
+   }
+  }
+ },
+ "3mm": {
+  "complete1": {
+   "paths": 33,
+   "eligible_consumers": [
+    267,
+    446,
+    506
+   ],
+   "packets": 554626,
+   "visible": 92658,
+   "fept": 0.16706393136996822,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "counts": {
+    "absent": 179,
+    "actual_internal": 3448,
+    "actual_output_events": 4058,
+    "audit_score_inputs": 0,
+    "changed": 958,
+    "complete_banks": 25,
+    "direct_spine_lookups": 3448,
+    "explicit_addresses": 151498,
+    "external_roots": 5060,
+    "local_field_reads": 12174,
+    "named_ports": 4058,
+    "no_named_input": 0,
+    "no_score_banks": 25,
+    "no_score_inputs": 3448,
+    "released": 3448,
+    "selected_primary": 5060,
+    "source_commits": 3448,
+    "stale": 146482,
+    "tagged": 7128,
+    "tries": 227,
+    "two_with_internal_parent": 0,
+    "uncovered": 23
+   }
+  },
+  "complete2": {
+   "paths": 40,
+   "eligible_consumers": [
+    267,
+    446,
+    506
+   ],
+   "packets": 554626,
+   "visible": 92658,
+   "fept": 0.16706393136996822,
+   "checks": {
+    "rhs": true,
+    "writes": true,
+    "resumes": true,
+    "state_sha": true,
+    "schedule": true,
+    "runs": true,
+    "unions": true
+   },
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+   "counts": {
+    "absent": 179,
+    "actual_internal": 3448,
+    "actual_output_events": 4058,
+    "audit_score_inputs": 0,
+    "changed": 958,
+    "complete_banks": 25,
+    "direct_spine_lookups": 3448,
+    "explicit_addresses": 151498,
+    "external_roots": 5060,
+    "local_field_reads": 12174,
+    "named_ports": 4058,
+    "no_named_input": 0,
+    "no_score_banks": 25,
+    "no_score_inputs": 3448,
+    "released": 3448,
+    "selected_primary": 8508,
+    "source_commits": 3448,
+    "stale": 146482,
+    "tagged": 7128,
+    "tries": 227,
+    "two_with_internal_parent": 0,
+    "uncovered": 23
+   }
+  }
+ }
+}
