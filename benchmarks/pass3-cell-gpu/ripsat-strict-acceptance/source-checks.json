@@ -1,0 +1,16 @@
+{
+  "local_source_execution": {
+    "pairs": 2,
+    "unguarded": 2,
+    "alias_guarded": 1
+  },
+  "passed_positive": [
+    "Jacobi-1d 143[1] \u2192 55[0]",
+    "Pair(x,y) \u2192 unguarded"
+  ],
+  "rejected": {
+    "missing_independent_source_premise": "external_lhs_or_guard_not_implemented",
+    "constructor_set_has_no_static_return": "not_a_returning_constructor",
+    "instance_equality_as_template_theorem": "alias_guard_requires_runtime_equality"
+  }
+}

@@ -1,0 +1,10 @@
+running 7 tests
+test alternate_routes_share_the_native_cell_registry_but_keep_entry_proofs ... ok
+test already_proven_union_does_not_hide_constructor_structure ... ok
+test failed_rhs_does_not_train_a_completed_transition ... ok
+test deletable_results_keep_the_original_rhs_responsibility ... ok
+test direct_completion_projects_real_results_and_preserves_every_run ... ok
+test separate_pair_instances_do_not_train_a_three_cell_bridge ... ok
+test a_second_derivation_inherits_an_existing_completion_at_its_own_output_position ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.19s

@@ -1,0 +1,289 @@
+{
+  "source_manifest_sha": "23e63daa7aa6441e9f83f44aafd475480558259e01c2f2964066b517899aa70e",
+  "original_sample": "dot-product-p143-o1-c55-full",
+  "attempts": {
+    "stopped": {
+      "exit": 0,
+      "authorized_paths": 0,
+      "forbidden_paths": 1,
+      "static_consumer_paths": 0,
+      "reasons": [
+        "native_receipt_artifact_mismatch"
+      ],
+      "leaked_paths": []
+    },
+    "unfinished_round_with_saturated_label": {
+      "exit": 0,
+      "authorized_paths": 0,
+      "forbidden_paths": 1,
+      "static_consumer_paths": 0,
+      "reasons": [
+        "native_receipt_artifact_mismatch"
+      ],
+      "leaked_paths": []
+    },
+    "producer_scope_only": {
+      "exit": 0,
+      "authorized_paths": 0,
+      "forbidden_paths": 1,
+      "static_consumer_paths": 0,
+      "reasons": [
+        "non_full_pair_scope"
+      ],
+      "leaked_paths": []
+    },
+    "observation_only": {
+      "exit": 0,
+      "authorized_paths": 0,
+      "forbidden_paths": 1,
+      "static_consumer_paths": 0,
+      "reasons": [
+        "native_receipt_artifact_mismatch"
+      ],
+      "leaked_paths": []
+    },
+    "wrong_grounded_report_source": {
+      "exit": 0,
+      "authorized_paths": 0,
+      "forbidden_paths": 1,
+      "static_consumer_paths": 0,
+      "reasons": [
+        "native_receipt_artifact_mismatch"
+      ],
+      "leaked_paths": []
+    },
+    "wrong_ordered_port_same_cardinality": {
+      "exit": 0,
+      "authorized_paths": 0,
+      "forbidden_paths": 1,
+      "static_consumer_paths": 0,
+      "reasons": [
+        "native_receipt_artifact_mismatch"
+      ],
+      "leaked_paths": []
+    },
+    "local_alias_instead_of_second_input": {
+      "exit": 0,
+      "authorized_paths": 0,
+      "forbidden_paths": 1,
+      "static_consumer_paths": 0,
+      "reasons": [
+        "native_receipt_artifact_mismatch"
+      ],
+      "leaked_paths": []
+    },
+    "wrong_ground_literal": {
+      "exit": 0,
+      "authorized_paths": 0,
+      "forbidden_paths": 1,
+      "static_consumer_paths": 0,
+      "reasons": [
+        "native_receipt_artifact_mismatch"
+      ],
+      "leaked_paths": []
+    },
+    "missing_original_named_parent": {
+      "exit": 0,
+      "authorized_paths": 0,
+      "forbidden_paths": 1,
+      "static_consumer_paths": 0,
+      "reasons": [
+        "untrusted_donor_origin"
+      ],
+      "leaked_paths": []
+    },
+    "wrong_op": {
+      "exit": 0,
+      "authorized_paths": 0,
+      "forbidden_paths": 1,
+      "static_consumer_paths": 0,
+      "reasons": [
+        "untrusted_donor_origin"
+      ],
+      "leaked_paths": []
+    },
+    "wrong_op_and_fact_id_rebound": {
+      "exit": 0,
+      "authorized_paths": 0,
+      "forbidden_paths": 1,
+      "static_consumer_paths": 0,
+      "reasons": [
+        "untrusted_donor_origin"
+      ],
+      "leaked_paths": []
+    },
+    "wrong_but_later_source_run": {
+      "exit": 0,
+      "authorized_paths": 0,
+      "forbidden_paths": 1,
+      "static_consumer_paths": 0,
+      "reasons": [
+        "untrusted_donor_origin"
+      ],
+      "leaked_paths": []
+    },
+    "activation_same_run": {
+      "exit": 0,
+      "authorized_paths": 0,
+      "forbidden_paths": 1,
+      "static_consumer_paths": 0,
+      "reasons": [
+        "untrusted_donor_origin"
+      ],
+      "leaked_paths": []
+    },
+    "wrong_consumer_fact_version": {
+      "exit": 0,
+      "authorized_paths": 0,
+      "forbidden_paths": 1,
+      "static_consumer_paths": 0,
+      "reasons": [
+        "untrusted_donor_origin"
+      ],
+      "leaked_paths": []
+    },
+    "local_history_application_missing": {
+      "exit": 0,
+      "authorized_paths": 0,
+      "forbidden_paths": 1,
+      "static_consumer_paths": 0,
+      "reasons": [
+        "native_receipt_artifact_mismatch"
+      ],
+      "leaked_paths": []
+    },
+    "disconnected_native_applications": {
+      "exit": 0,
+      "authorized_paths": 0,
+      "forbidden_paths": 1,
+      "static_consumer_paths": 0,
+      "reasons": [
+        "native_receipt_artifact_mismatch"
+      ],
+      "leaked_paths": []
+    },
+    "wrong_later_consumer_read": {
+      "exit": 0,
+      "authorized_paths": 0,
+      "forbidden_paths": 1,
+      "static_consumer_paths": 0,
+      "reasons": [
+        "native_receipt_artifact_mismatch"
+      ],
+      "leaked_paths": []
+    },
+    "produced_port_resolves_to_another_class": {
+      "exit": 0,
+      "authorized_paths": 0,
+      "forbidden_paths": 1,
+      "static_consumer_paths": 0,
+      "reasons": [
+        "native_receipt_artifact_mismatch"
+      ],
+      "leaked_paths": []
+    },
+    "local_history_read_dependency_changed": {
+      "exit": 0,
+      "authorized_paths": 0,
+      "forbidden_paths": 1,
+      "static_consumer_paths": 0,
+      "reasons": [
+        "native_receipt_artifact_mismatch"
+      ],
+      "leaked_paths": []
+    },
+    "consistent_observation_only_markers": {
+      "exit": 0,
+      "authorized_paths": 0,
+      "forbidden_paths": 1,
+      "static_consumer_paths": 0,
+      "reasons": [
+        "native_receipt_artifact_mismatch"
+      ],
+      "leaked_paths": []
+    },
+    "forged_native_receipt_and_literal": {
+      "exit": 0,
+      "authorized_paths": 0,
+      "forbidden_paths": 1,
+      "static_consumer_paths": 0,
+      "reasons": [
+        "untrusted_native_acceptance"
+      ],
+      "leaked_paths": []
+    },
+    "raw_digest_mismatch": {
+      "exit": 0,
+      "authorized_paths": 0,
+      "forbidden_paths": 1,
+      "static_consumer_paths": 0,
+      "reasons": [
+        "artifact_digest_mismatch"
+      ],
+      "leaked_paths": []
+    },
+    "foreign_compiled_donor": {
+      "exit": 1,
+      "authorized_paths": 0,
+      "forbidden_paths": 1,
+      "static_consumer_paths": 0,
+      "reasons": [
+        "<run_path>.Refusal: foreign_donor_program"
+      ],
+      "leaked_paths": []
+    },
+    "unrelated_compiled_target": {
+      "exit": 0,
+      "authorized_paths": 0,
+      "forbidden_paths": 1,
+      "static_consumer_paths": 0,
+      "reasons": [
+        "target_schema_absent"
+      ],
+      "leaked_paths": []
+    },
+    "other_real_graph_only": {
+      "exit": 0,
+      "authorized_paths": 0,
+      "forbidden_paths": 1,
+      "static_consumer_paths": 0,
+      "reasons": [
+        "native_receipt_artifact_mismatch"
+      ],
+      "leaked_paths": []
+    },
+    "other_real_source_and_export": {
+      "exit": 0,
+      "authorized_paths": 0,
+      "forbidden_paths": 1,
+      "static_consumer_paths": 0,
+      "reasons": [
+        "untrusted_native_acceptance"
+      ],
+      "leaked_paths": []
+    }
+  },
+  "positive_paths": [
+    [
+      [
+        143,
+        1,
+        55
+      ]
+    ]
+  ],
+  "producer_only_trace": {
+    "sample": "dot-product-p446-o0-c446-full",
+    "default_authorized": 0,
+    "static_consumer_programs": 1,
+    "rejections": {}
+  },
+  "foreign": {
+    "cardinalities": [
+      15,
+      14
+    ],
+    "original_graph_sha": "4e09dcdeb632f6f1dd9e947a8b2a1986e3c7c9057c5d8c1016c1a922e891bbac",
+    "alien_graph_sha": "6eb3c0d6fd0e8270a2a9b15d2d38448851d40051ed21d9156d984ace85634273"
+  }
+}

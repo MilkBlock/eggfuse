@@ -1,0 +1,40 @@
+{
+  "native_positive": {
+    "producer": [
+      0
+    ],
+    "consumer": [
+      {
+        "producer_record": 0,
+        "consumer_record": 8,
+        "producer_index": 0,
+        "consumer_index": 1,
+        "write_read_token": 6,
+        "read_site": "Some(\"/Volumes/EggFuseWorkspace/experiments/ripsat-donor-evidence-v2/samples/dot-product-p143-o1-c55-full/entry.egg\"):432:445",
+        "source_parent_port": [
+          0,
+          8
+        ]
+      }
+    ],
+    "local_args": [
+      4
+    ],
+    "local_result": 5
+  },
+  "rejections": {
+    "both_graphs_observation_only": "observation_only_graph",
+    "no_source_ordered_return": "return_incidence_missing",
+    "unjustified_local_alias": "foreign_grounded_class",
+    "wrong_source_grounding": "foreign_report_source",
+    "missing_native_trace": "native_history_count_mismatch",
+    "wrong_producer_prerequisite": "history_required_facts_disagree",
+    "wrong_produced_class": "history_required_fact_not_in_graph",
+    "disconnected_applications": "no certified subsequent consumer read",
+    "wrong_consumer_fact": "no certified subsequent consumer read",
+    "no_explicit_root_parent": "no_explicit_root_parent",
+    "forged_op": "producer_consumer_table_mismatch",
+    "wrong_run_order": "invalid_run_order",
+    "wrong_return_version": "consumer_did_not_read_named_return"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "eggfuse-ripsat-acceptance-tests/v1",
+  "files": {
+    "../ripsat-donor-evidence/trust.json": "7d25bac5b8256fb7ddf45d0a25ba464e3370ddb0d3c832585a4631eae0b71f3a",
+    "../ripsat-strict-programs/compile.py": "f8c3d8b47d53fb283ed6a97c8b22c8c461b5588d5e529922df494f7252723c81",
+    "../ripsat-strict-programs/native_proof.py": "ddbb4c2be2635a62037b4c4aedb206740c00bb765b1869eb4356f7012695d1d2",
+    "../ripsat-strict-programs/source_proof.py": "701237da1cc5f275d60548883a1c588676a6d5a2eb3c36b8bfa0ac026ca800a7",
+    "adapter-checks.json": "49992d621130a69ec17014c5937b53a93698fc4dcd634e2c9f24ddcab284fbf8",
+    "cargo-reference.txt": "0cd958b0a466817237dfb3b3a0d44174e6f608f7880eab11a1f786205fe19f75",
+    "check.py": "b16478a934c8c244f22fe49865bdec10e162efeb71cb6c07a7c1ac88468af0fe",
+    "foreign_export.py": "245a20f7f5997d36df29bfeb6ad760b2872ca2b874c0641a642ec06863c24f0f",
+    "local-equality.egg": "0108e59c0cc95beda3f3aed6a13ddeb35133c2fa6ae4842dba0ca8fadb9a4cc2",
+    "mutations.py": "7b607ffda70f72ef67e327113174b535cafd71f8577ec56eb024864627964c2b",
+    "proof-checks.json": "8d8d9aa8a82556ff206cdfcc5fcec39d18e60fc8af2c14cd55c9666cfd869e6a",
+    "proof_layers.py": "ffa5f34703369edba019dfc82505bb9bbf52049cbba7b67fe1981620116a0761",
+    "source-checks.json": "01d57ab18bc9545eb1096f6bdc7a7d1a04e39ce4f375ae4b97bd79b7075febaf",
+    "source_cases.py": "4b886f04a488d37a0cda18ee5dd8ee8dd23ade16338c92ac36ec4845d5e814bc",
+    "verify.py": "84d2c83fe1ca57b2724c5d8b9815ca70c995d1c5cb3ad861097b12170f4deac4"
+  }
+}
