@@ -61,6 +61,8 @@ On 3mm the second full-pass median fell about 94 ms whereas measured repair fell
 
 Deriche had 46,146 unions. The smaller-side merge presented 108,622 entries instead of 1,171,446. The eager treatment applied 115,999 scalar replacements, and 37,106 fact and 10,269 function subscriptions were maintained by the earlier union. All 446,700 normalized reverse edges survived. Deferred forward storage had 456,698 raw entries. The delayed representation consumed 50,259 / 80,373 previously decoded facts on 3mm / Deriche, holding at most 1,812 / 6,903 pending at once. On Deriche the eager and delayed combined repair intervals were effectively equal despite their different complete-pass medians. Eager combined won two of four total-time pairs, delayed combined three of four. The fixed repair-phase gain transfers. Complete pass timings do not support a universally superior payload policy. [Larger programs and timings](late.json)
 
+In an independent production replay all seven measured treatment/program combinations reproduced the audited work counts, including copy-on-write payload counts, while the audit-only counters were zero. [Production counters](production.json)
+
 ## Reproduction
 
 Build with the ordinary composed CPU provider and use fresh output folders on the experiment volume. [Build identity](build-manifest.json)

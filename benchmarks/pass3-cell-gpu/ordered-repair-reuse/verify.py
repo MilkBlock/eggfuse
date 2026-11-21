@@ -56,6 +56,21 @@ def verify(folder):
         assert v['size']==[[[None,{'Int':3}]],[],[[{'Int':3},{'Int':1}]],[],[],[]]
     w=fixture['all']['repair']['work']
     assert w['unsupported_schemas']>0 and w['substitutions']>0 and w['retirement_row_reads_saved']>0
+    production=json.loads((folder/'production.json').read_bytes())
+    assert set(production)=={*basic,*subs,*late}
+    expected={}
+    for group in (basic,subs,late):
+        for case,arms in group.items():
+            for arm,r in arms.items():expected[case,arm]=r
+    ignore={'audit','audited_adoptions','reverse_audits','payload_audits','index_audits'}
+    for case,arms in production.items():
+        for arm,row in arms.items():
+            ref=expected[case,arm]
+            assert row['rhs']==ref['rhs'] and row['state_sha']==ref['state_sha'] and row['root_allocated']==ref['root_allocated']
+            x=row['repair_work']['work'];y=ref['repair_work']['work']
+            assert not any(x[k] for k in ignore)
+            assert all(x[k]==v for k,v in y.items() if k not in ignore)
+            assert row['repair_work']['native']==ref['repair_work']['native']
     return {*basic,*subs,*late}
 
 
