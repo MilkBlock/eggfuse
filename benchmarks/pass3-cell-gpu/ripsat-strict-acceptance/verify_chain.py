@@ -33,5 +33,18 @@ def check():
             assert item['birth_event'][5][1]==55 and item['producer']['epoch']==item['original_version']==port['version']
             named=item['consumer']['rows'][0]['named'];assert named=={'atom':0,'row':{'Fact':{'cell':port['cell'],'op':1}},'version':port['version']}
             assert item['consumer']['epoch']>item['producer']['epoch']
+    optional=read('publication-proof-checks.json');execution=read('publication-native-checks.json')
+    assert len(optional['faults'])==15 and optional['source_serials']==[1737,1822,2625]
+    assert optional['local_records']==[0,8,12] and optional['local_fact_tokens']==[6,10]
+    assert execution['binding']=='authorizer-output'
+    baseline=read('dot-product-same-middle.json')['reference']
+    for name,key in [('runs','runs'),('state_sha','state_sha'),('source_rhs','rhs_sha'),('writes','writes_sha'),('resumes','resumes_sha')]:
+        assert execution['valid'][name]==baseline[key]
+    real=execution['nominated'];assert [real[k] for k in ('root','middle','consumer')]==optional['source_serials']
+    assert real['fact']==[971,1] and real['version']==135 and real['consumer_run']==139 and real['middle_run']==135
+    assert set(execution['faults'])=={'wrong_kind','wrong_pivot','wrong_set_operation','one_wrong_target','both_wrong_target','wrong_fields','missing','stale'}
+    for k,v in execution['faults'].items():
+        if k in ('missing','stale'):assert v=={'fell_back_to_paid':36,'internal':0}
+        else:assert v['rejected'] is True and v['internal_if_accepted']==0
     print('Both authenticated donor middle occurrences, local two-edge reports, all signed root returns and 10 production join guards verified.')
 if __name__=='__main__':check()

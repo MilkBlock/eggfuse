@@ -1,0 +1,118 @@
+{
+  "nominated": {
+    "consumer": 2625,
+    "consumer_rule": 143,
+    "consumer_run": 139,
+    "fact": [
+      971,
+      1
+    ],
+    "fields": [
+      {
+        "Eq": 3835405795333
+      },
+      {
+        "Int": 0
+      },
+      {
+        "Eq": 554050781213
+      }
+    ],
+    "middle": 1822,
+    "middle_run": 135,
+    "path": [
+      [
+        143,
+        1,
+        55
+      ],
+      [
+        55,
+        1,
+        143
+      ]
+    ],
+    "ports": [
+      [
+        893,
+        1,
+        131,
+        131
+      ],
+      [
+        971,
+        1,
+        135,
+        135
+      ]
+    ],
+    "root": 1737,
+    "table": 223,
+    "version": 135
+  },
+  "binding": "authorizer-output",
+  "source_sha": "c0d1da51c3aca3e61c945b39dc7da9e3ed135d77c57330ffd34dbbed8adc1159",
+  "valid": {
+    "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+    "runs": 1535,
+    "source_rhs": "b1c8487c29aee05ceaae0764ddc61d756be89d1ba9ab1fa31885cb48d4567da8",
+    "writes": "de5952348d049211280475eda189fafb9a50425b7b9a29bd62d7b06c8d1943ee",
+    "resumes": "5667346fa87a7a31880a2482c24527e6648fab9fd1ad20932c048bd1d0415916",
+    "set_counts": {
+      "active_middles": 44,
+      "cleared_on_error": 0,
+      "confirmed": 36,
+      "encoded": 129,
+      "excluded_generation": 0,
+      "existing_key": 0,
+      "fresh_activations": 44,
+      "invalidated": 0,
+      "opened": 196,
+      "published": 44,
+      "set_attempts": 44,
+      "withheld": 0
+    },
+    "packets": 13923,
+    "paid_children": 210
+  },
+  "faults": {
+    "wrong_kind": {
+      "rejected": true,
+      "reason": "Error: \"incorrect typed Set-publication ABI\"",
+      "internal_if_accepted": 0
+    },
+    "wrong_pivot": {
+      "rejected": true,
+      "reason": "Error: \"incorrect typed Set-publication ABI\"",
+      "internal_if_accepted": 0
+    },
+    "wrong_set_operation": {
+      "rejected": true,
+      "reason": "Error: \"second publication edge is not a Set\"",
+      "internal_if_accepted": 0
+    },
+    "one_wrong_target": {
+      "rejected": true,
+      "reason": "Error: \"incorrect Set authorization target\"",
+      "internal_if_accepted": 0
+    },
+    "both_wrong_target": {
+      "rejected": true,
+      "reason": "Error: \"incorrect Set authorization target\"",
+      "internal_if_accepted": 0
+    },
+    "wrong_fields": {
+      "rejected": true,
+      "reason": "Set activation key/value or version differs",
+      "internal_if_accepted": 0
+    },
+    "missing": {
+      "fell_back_to_paid": 36,
+      "internal": 0
+    },
+    "stale": {
+      "fell_back_to_paid": 36,
+      "internal": 0
+    }
+  }
+}

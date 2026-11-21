@@ -2,6 +2,7 @@
   "schema": "eggfuse-ripsat-acceptance-tests/v1",
   "files": {
     "../ripsat-donor-evidence/trust.json": "7d25bac5b8256fb7ddf45d0a25ba464e3370ddb0d3c832585a4631eae0b71f3a",
+    "../ripsat-publication-chain/authorize.py": "3941efa57ebe4882dd2e606681c21470738db9915d54c13537736ce06a1a2b25",
     "../ripsat-strict-programs/compile.py": "f9023a0acc6105bc13401a0fad1cd11b18ce931247278b03d064fb293115fd0b",
     "../ripsat-strict-programs/native_proof.py": "36afdd551f3b544fe020a136ae5781d91a95cf2ed4ef92576f096ea517c39b2a",
     "../ripsat-strict-programs/source_proof.py": "701237da1cc5f275d60548883a1c588676a6d5a2eb3c36b8bfa0ac026ca800a7",
@@ -23,9 +24,14 @@
     "overlay.py": "d3dce8ed44527547887b2b138f4b5ceeff847808f19121fa87f5099b7c8e87b1",
     "proof-checks.json": "8d8d9aa8a82556ff206cdfcc5fcec39d18e60fc8af2c14cd55c9666cfd869e6a",
     "proof_layers.py": "ffa5f34703369edba019dfc82505bb9bbf52049cbba7b67fe1981620116a0761",
+    "publication-native-checks.json": "ca2e3f8c941917f2c341fd8cb5aed93a63bd26b0a627a50c71b220aa341f976c",
+    "publication-proof-checks.json": "c697d68c191fe164e9ff7d77f8ce18a61109955f15a4e0244033c182c06a400d",
+    "publication_controls.py": "aa4e1070cf9b7f79605ae8d6636de9d29b6b307f8ea4005edd7f7c14a86c9234",
+    "publication_proofs.py": "e9b33939b5472ef707afa9fb241580cbc4ce5372912160ed1d253b41acb8b846",
     "source-checks.json": "01d57ab18bc9545eb1096f6bdc7a7d1a04e39ce4f375ae4b97bd79b7075febaf",
     "source_cases.py": "4b886f04a488d37a0cda18ee5dd8ee8dd23ade16338c92ac36ec4845d5e814bc",
     "verify.py": "84d2c83fe1ca57b2724c5d8b9815ca70c995d1c5cb3ad861097b12170f4deac4",
-    "verify_chain.py": "1d39705844374dbcd0127a7d0cda062308bca00a13c690f1a8090366de822390"
-  }
+    "verify_chain.py": "323aca971b8ed99b15f1940cfc7823d29f72061ac09d5d8857a481431583e3ae"
+  },
+  "publication_native_sha256": "7a66f2282029e23fe08476e7eaa61d2f09cbe12a981a4d2af5ff494feedbad8b"
 }

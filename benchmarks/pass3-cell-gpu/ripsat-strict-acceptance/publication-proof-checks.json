@@ -1,0 +1,43 @@
+{
+  "source_serials": [
+    1737,
+    1822,
+    2625
+  ],
+  "source_ports": [
+    [
+      3835405795329,
+      131
+    ],
+    [
+      4170413244417,
+      135
+    ]
+  ],
+  "local_records": [
+    0,
+    8,
+    12
+  ],
+  "local_fact_tokens": [
+    6,
+    10
+  ],
+  "faults": {
+    "different_committed_middle": "middle_occurrence_mismatch",
+    "terminal_already_internal": "terminal_not_a_real_separate_external_proposal",
+    "different_set_fact": "wrong_fresh_set_coordinates",
+    "different_set_version": "wrong_fresh_set_coordinates",
+    "different_actual_middle_port": "wrong_signed_first_step",
+    "different_terminal_release": "wrong_terminal_release",
+    "different_terminal_ref": "ordinary_named_parent_mismatch",
+    "union_masquerades_as_birth": "foreign_fresh_set_birth",
+    "set_assignment_columns_permuted": "set_keys_or_value_not_causal",
+    "terminal_reads_another_fact": "missing_or_ambiguous_same_history_terminal",
+    "terminal_not_connected_to_middle": "missing_or_ambiguous_same_history_terminal",
+    "no_middle_Get_publication": "history_did_not_emit_exact_typed_row",
+    "foreign_first_parent_of_middle": "broken_first_native_write_read",
+    "Set_as_returning_Let": "not_a_returning_constructor",
+    "Set_wrong_operation": "unsupported_middle_set_prefix"
+  }
+}

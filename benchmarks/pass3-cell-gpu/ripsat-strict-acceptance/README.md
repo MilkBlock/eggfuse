@@ -85,3 +85,21 @@ python chain_catalog.py "$evidence" "$exp/extra-pass3-transfer-v1/3mm-1703/progr
   --donor "jacobi-1d=$exp/compact-holdouts-20261121-v1/jacobi-1d-1703/program.json"
 python verify_chain.py
 ```
+
+
+## Separate fresh-Set publication ABI
+
+The optional typed Set-publication program has a different contract from the default library above. We independently reproduced the publication authorizer's exact artifact for dot-product and tested its actual persistent native entry point. Its program executes the previously paid terminal serial **2,625** internally at Run 139 with the actual Get fact **Cell 971, op 1, version 135**, issued by the same signed middle serial 1,822. The ordinary endpoint and signed trail are independently pinned. The default returning-Let path continues to reject Set as a return source.
+
+Fifteen direct authorizer counterexamples check the identity of the middle occurrence, both physical input ports, publication version, freshly activated Set birth, assigned fields, native history dependencies, terminal witness, and the distinction between constructor-table Set and returning Let. The additional eight native cases cover wrong ABI kind, pivot, operation, target, coordinated substitution of both request and authorization digests, actual assigned fields, withheld receipt, and stale receipt. The persistent decoder now compares both target fields with the SHA-256 of the actual loaded bytes. Using an identical fake SHA in both fields rejects. Withholding or staling receipts produces zero second internal steps and restores exactly 36 separate external terminal packets. This is an audit-only run, not another performance measurement.
+
+[Source and local-history publication obligations](publication-proof-checks.json) · [Persistent native corruption and fallback results](publication-native-checks.json)
+
+```sh
+python publication_proofs.py "$evidence" "$exp/compact-holdouts-20261121-v1/dot-product-1703/program.json" \
+  "$exp/ripsat-publication-authorized-v1/dot-product.json" "$exp/publication-proof-checks.json" \
+  --donor "dot-product=$exp/compact-holdouts-20261121-v1/dot-product-1703/program.json" \
+  --donor "jacobi-1d=$exp/compact-holdouts-20261121-v1/jacobi-1d-1703/program.json"
+python publication_controls.py "$exp" "$exp/ripsat-set-receipt-pinned/session" "$exp/publication-native-checks.json" \
+  --authorization "$exp/ripsat-publication-authorized-v1/dot-product.json"
+```
