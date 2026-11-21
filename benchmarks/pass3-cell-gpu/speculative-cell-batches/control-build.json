@@ -1,0 +1,15 @@
+{
+ "revision": "31bf7e41",
+ "binary_sha256": "5f2547395f4cd7243fd431080b02908fa771c38b06f35bc2386743fe53f8acdb",
+ "source_sha256": {
+  "src/speculative_staging.rs": "fe89e523322f7c292060474996d977160fd4f4c0ffe366881ebc811992f0ef06",
+  "src/graph.rs": "519f6de24971ab364d8f39a23d1f7142c6a7056d993e7d7e22c22b63cb5635cb",
+  "src/runtime.rs": "720df33451a9d2553d505dddb4aaea1b46a5f9ddf99646e8e532fa547444bea1",
+  "src/slots.rs": "89bf6d080d27d9029555185a56110e717a6270b3f8d11e998dae771d7782b09c",
+  "src/joint_root.rs": "eebfbffbf4bf631dafbb84675b6378521075bcf65f11b1b276ddcbe6e079cde6",
+  "src/ordinary_witness.rs": "14e42a03b043fb08894c47764023958d0f3127a83ba95d76d7fd759e28113567",
+  "src/adaptive_rows.rs": "aa1247d08acd52c6912807b7e9447bfa1b5d77fdb87091c53dbe9b0152d1b181",
+  "examples/joint_witness_session.rs": "2c27adc63affb0a1fc75cabb58462f96fc14ff109ac4b733fe4ccee96ca9bdb1"
+ },
+ "supplemental_verifier_tally": false
+}
