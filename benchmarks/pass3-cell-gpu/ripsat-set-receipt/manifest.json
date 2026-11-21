@@ -1,0 +1,20 @@
+{
+ "base": "31bf7e41",
+ "sources": {
+  "strict-partial-named-ports/partial.rs": "11c7535e9dff32ec166ab864db67f6951ea0d3ad4389be9c9217eb8e4fa9efe5",
+  "strict-partial-named-ports/overlay.py": "d3ef5f7b509e4b0af34b3d68d49aff9bb8c3c7f8020f71afaf212d48e7757e4b",
+  "ripsat-set-receipt/publication.rs": "ab1d5e529aaa610908c9bb3123ac38168d56f05c4e286bfdbd0c953f128aaa15",
+  "ripsat-set-receipt/overlay.py": "7556c57af17b5055ab411fcf4cee7333c8c50013cd93195ed9690a486bfa15bd"
+ },
+ "shortlist": true,
+ "merge_child": true,
+ "root_recipe": true,
+ "cli_allocator": true,
+ "exe": "7a66f2282029e23fe08476e7eaa61d2f09cbe12a981a4d2af5ff494feedbad8b",
+ "authorization": {
+  "dot-product": "b4edd12852ea7cca85faf61951e6601f51c8f721f322f6a9e28e185f4a354f3f",
+  "sum-bits": "88875d59b74724b191551c6e6be8030b4863f27aae08e12dd728ea1656fbe27f",
+  "3mm": "3f786e346950106aca07fdc80a652b45c27aece4a95c48dff29abbb6d67eb194"
+ },
+ "reference_source": "standalone Rust Cell CPU, checked precomputed-forest, slot-transfer-audit"
+}

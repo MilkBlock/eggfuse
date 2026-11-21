@@ -1,0 +1,86 @@
+{
+ "dot-product": {
+  "let": {
+   "internal": 44,
+   "committed": 44,
+   "full_bank_without_scores": 0,
+   "mixed_prebound_without_scores": 44,
+   "internal_child_logits": 0,
+   "checked_named_coordinates": 291,
+   "direct_Spine_addresses": 44,
+   "residual_bank_metadata": 44,
+   "skipped_before_residual_scoring": 44,
+   "residual_scored": 0,
+   "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  },
+  "set": {
+   "internal": 80,
+   "committed": 80,
+   "full_bank_without_scores": 0,
+   "mixed_prebound_without_scores": 80,
+   "internal_child_logits": 0,
+   "checked_named_coordinates": 638,
+   "direct_Spine_addresses": 80,
+   "residual_bank_metadata": 126,
+   "skipped_before_residual_scoring": 80,
+   "residual_scored": 46,
+   "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+  }
+ },
+ "sum-bits": {
+  "let": {
+   "internal": 35,
+   "committed": 35,
+   "full_bank_without_scores": 0,
+   "mixed_prebound_without_scores": 35,
+   "internal_child_logits": 0,
+   "checked_named_coordinates": 429,
+   "direct_Spine_addresses": 35,
+   "residual_bank_metadata": 41,
+   "skipped_before_residual_scoring": 35,
+   "residual_scored": 6,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "set": {
+   "internal": 61,
+   "committed": 61,
+   "full_bank_without_scores": 0,
+   "mixed_prebound_without_scores": 61,
+   "internal_child_logits": 0,
+   "checked_named_coordinates": 1045,
+   "direct_Spine_addresses": 61,
+   "residual_bank_metadata": 116,
+   "skipped_before_residual_scoring": 61,
+   "residual_scored": 55,
+   "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  }
+ },
+ "3mm": {
+  "let": {
+   "internal": 1229,
+   "committed": 1229,
+   "full_bank_without_scores": 0,
+   "mixed_prebound_without_scores": 1229,
+   "internal_child_logits": 0,
+   "checked_named_coordinates": 28052,
+   "direct_Spine_addresses": 1229,
+   "residual_bank_metadata": 1655,
+   "skipped_before_residual_scoring": 1229,
+   "residual_scored": 426,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+  },
+  "set": {
+   "internal": 2161,
+   "committed": 2161,
+   "full_bank_without_scores": 0,
+   "mixed_prebound_without_scores": 2161,
+   "internal_child_logits": 0,
+   "checked_named_coordinates": 62168,
+   "direct_Spine_addresses": 2161,
+   "residual_bank_metadata": 5540,
+   "skipped_before_residual_scoring": 2161,
+   "residual_scored": 3379,
+   "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+  }
+ }
+}
