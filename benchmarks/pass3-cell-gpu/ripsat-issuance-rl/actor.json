@@ -1,0 +1,453 @@
+{
+  "schema": "ripsat-issuance-actor/v1",
+  "training_device": "cpu",
+  "weights": [
+    1.539306879043579,
+    2.031853199005127,
+    2.0393054485321045
+  ],
+  "features": [
+    "bias",
+    "log_page_count",
+    "log_parent_age"
+  ],
+  "initial_weights": [
+    -0.5,
+    0.0,
+    0.0
+  ],
+  "episodes": [
+    {
+      "seed": 9029,
+      "decisions": 16,
+      "composed": 4,
+      "leaf_packets": 80,
+      "sample_packets": 80,
+      "savings": 0,
+      "terminal": 0
+    },
+    {
+      "seed": 9030,
+      "decisions": 10,
+      "composed": 5,
+      "leaf_packets": 60,
+      "sample_packets": 56,
+      "savings": 4,
+      "terminal": 2
+    },
+    {
+      "seed": 9031,
+      "decisions": 24,
+      "composed": 7,
+      "leaf_packets": 130,
+      "sample_packets": 126,
+      "savings": 4,
+      "terminal": 2
+    },
+    {
+      "seed": 9032,
+      "decisions": 22,
+      "composed": 7,
+      "leaf_packets": 130,
+      "sample_packets": 122,
+      "savings": 8,
+      "terminal": 4
+    },
+    {
+      "seed": 9033,
+      "decisions": 12,
+      "composed": 7,
+      "leaf_packets": 70,
+      "sample_packets": 66,
+      "savings": 4,
+      "terminal": 2
+    },
+    {
+      "seed": 9034,
+      "decisions": 7,
+      "composed": 6,
+      "leaf_packets": 40,
+      "sample_packets": 38,
+      "savings": 2,
+      "terminal": 1
+    },
+    {
+      "seed": 9035,
+      "decisions": 11,
+      "composed": 6,
+      "leaf_packets": 60,
+      "sample_packets": 58,
+      "savings": 2,
+      "terminal": 1
+    },
+    {
+      "seed": 9036,
+      "decisions": 25,
+      "composed": 9,
+      "leaf_packets": 140,
+      "sample_packets": 134,
+      "savings": 6,
+      "terminal": 3
+    },
+    {
+      "seed": 9037,
+      "decisions": 16,
+      "composed": 12,
+      "leaf_packets": 110,
+      "sample_packets": 98,
+      "savings": 12,
+      "terminal": 6
+    },
+    {
+      "seed": 9038,
+      "decisions": 4,
+      "composed": 2,
+      "leaf_packets": 20,
+      "sample_packets": 20,
+      "savings": 0,
+      "terminal": 0
+    },
+    {
+      "seed": 9039,
+      "decisions": 7,
+      "composed": 4,
+      "leaf_packets": 40,
+      "sample_packets": 38,
+      "savings": 2,
+      "terminal": 1
+    },
+    {
+      "seed": 9040,
+      "decisions": 12,
+      "composed": 4,
+      "leaf_packets": 70,
+      "sample_packets": 66,
+      "savings": 4,
+      "terminal": 2
+    },
+    {
+      "seed": 9041,
+      "decisions": 23,
+      "composed": 10,
+      "leaf_packets": 140,
+      "sample_packets": 130,
+      "savings": 10,
+      "terminal": 5
+    },
+    {
+      "seed": 9042,
+      "decisions": 12,
+      "composed": 1,
+      "leaf_packets": 60,
+      "sample_packets": 60,
+      "savings": 0,
+      "terminal": 0
+    },
+    {
+      "seed": 9043,
+      "decisions": 10,
+      "composed": 6,
+      "leaf_packets": 60,
+      "sample_packets": 56,
+      "savings": 4,
+      "terminal": 2
+    },
+    {
+      "seed": 9044,
+      "decisions": 22,
+      "composed": 7,
+      "leaf_packets": 120,
+      "sample_packets": 116,
+      "savings": 4,
+      "terminal": 2
+    },
+    {
+      "seed": 9045,
+      "decisions": 19,
+      "composed": 17,
+      "leaf_packets": 130,
+      "sample_packets": 116,
+      "savings": 14,
+      "terminal": 7
+    },
+    {
+      "seed": 9046,
+      "decisions": 16,
+      "composed": 7,
+      "leaf_packets": 100,
+      "sample_packets": 92,
+      "savings": 8,
+      "terminal": 4
+    },
+    {
+      "seed": 9047,
+      "decisions": 17,
+      "composed": 12,
+      "leaf_packets": 90,
+      "sample_packets": 88,
+      "savings": 2,
+      "terminal": 1
+    },
+    {
+      "seed": 9048,
+      "decisions": 11,
+      "composed": 3,
+      "leaf_packets": 60,
+      "sample_packets": 58,
+      "savings": 2,
+      "terminal": 1
+    },
+    {
+      "seed": 9049,
+      "decisions": 23,
+      "composed": 13,
+      "leaf_packets": 120,
+      "sample_packets": 118,
+      "savings": 2,
+      "terminal": 1
+    },
+    {
+      "seed": 9050,
+      "decisions": 15,
+      "composed": 11,
+      "leaf_packets": 90,
+      "sample_packets": 84,
+      "savings": 6,
+      "terminal": 3
+    },
+    {
+      "seed": 9051,
+      "decisions": 5,
+      "composed": 5,
+      "leaf_packets": 40,
+      "sample_packets": 34,
+      "savings": 6,
+      "terminal": 3
+    },
+    {
+      "seed": 9052,
+      "decisions": 3,
+      "composed": 1,
+      "leaf_packets": 20,
+      "sample_packets": 18,
+      "savings": 2,
+      "terminal": 1
+    },
+    {
+      "seed": 9053,
+      "decisions": 11,
+      "composed": 7,
+      "leaf_packets": 70,
+      "sample_packets": 64,
+      "savings": 6,
+      "terminal": 3
+    },
+    {
+      "seed": 9054,
+      "decisions": 17,
+      "composed": 15,
+      "leaf_packets": 130,
+      "sample_packets": 112,
+      "savings": 18,
+      "terminal": 9
+    },
+    {
+      "seed": 9055,
+      "decisions": 6,
+      "composed": 3,
+      "leaf_packets": 40,
+      "sample_packets": 36,
+      "savings": 4,
+      "terminal": 2
+    },
+    {
+      "seed": 9056,
+      "decisions": 6,
+      "composed": 5,
+      "leaf_packets": 50,
+      "sample_packets": 42,
+      "savings": 8,
+      "terminal": 4
+    },
+    {
+      "seed": 9057,
+      "decisions": 3,
+      "composed": 3,
+      "leaf_packets": 30,
+      "sample_packets": 24,
+      "savings": 6,
+      "terminal": 3
+    },
+    {
+      "seed": 9058,
+      "decisions": 16,
+      "composed": 15,
+      "leaf_packets": 100,
+      "sample_packets": 92,
+      "savings": 8,
+      "terminal": 4
+    },
+    {
+      "seed": 9059,
+      "decisions": 20,
+      "composed": 14,
+      "leaf_packets": 120,
+      "sample_packets": 112,
+      "savings": 8,
+      "terminal": 4
+    },
+    {
+      "seed": 9060,
+      "decisions": 14,
+      "composed": 12,
+      "leaf_packets": 90,
+      "sample_packets": 82,
+      "savings": 8,
+      "terminal": 4
+    },
+    {
+      "seed": 9061,
+      "decisions": 16,
+      "composed": 11,
+      "leaf_packets": 100,
+      "sample_packets": 92,
+      "savings": 8,
+      "terminal": 4
+    },
+    {
+      "seed": 9062,
+      "decisions": 19,
+      "composed": 14,
+      "leaf_packets": 110,
+      "sample_packets": 104,
+      "savings": 6,
+      "terminal": 3
+    },
+    {
+      "seed": 9063,
+      "decisions": 12,
+      "composed": 9,
+      "leaf_packets": 70,
+      "sample_packets": 66,
+      "savings": 4,
+      "terminal": 2
+    },
+    {
+      "seed": 9064,
+      "decisions": 17,
+      "composed": 12,
+      "leaf_packets": 90,
+      "sample_packets": 88,
+      "savings": 2,
+      "terminal": 1
+    },
+    {
+      "seed": 9065,
+      "decisions": 18,
+      "composed": 16,
+      "leaf_packets": 110,
+      "sample_packets": 102,
+      "savings": 8,
+      "terminal": 4
+    },
+    {
+      "seed": 9066,
+      "decisions": 13,
+      "composed": 10,
+      "leaf_packets": 80,
+      "sample_packets": 74,
+      "savings": 6,
+      "terminal": 3
+    },
+    {
+      "seed": 9067,
+      "decisions": 8,
+      "composed": 6,
+      "leaf_packets": 50,
+      "sample_packets": 46,
+      "savings": 4,
+      "terminal": 2
+    },
+    {
+      "seed": 9068,
+      "decisions": 4,
+      "composed": 4,
+      "leaf_packets": 20,
+      "sample_packets": 20,
+      "savings": 0,
+      "terminal": 0
+    },
+    {
+      "seed": 9069,
+      "decisions": 4,
+      "composed": 4,
+      "leaf_packets": 30,
+      "sample_packets": 26,
+      "savings": 4,
+      "terminal": 2
+    },
+    {
+      "seed": 9070,
+      "decisions": 11,
+      "composed": 11,
+      "leaf_packets": 80,
+      "sample_packets": 70,
+      "savings": 10,
+      "terminal": 5
+    },
+    {
+      "seed": 9071,
+      "decisions": 6,
+      "composed": 6,
+      "leaf_packets": 50,
+      "sample_packets": 42,
+      "savings": 8,
+      "terminal": 4
+    },
+    {
+      "seed": 9072,
+      "decisions": 6,
+      "composed": 4,
+      "leaf_packets": 40,
+      "sample_packets": 36,
+      "savings": 4,
+      "terminal": 2
+    },
+    {
+      "seed": 9073,
+      "decisions": 24,
+      "composed": 20,
+      "leaf_packets": 140,
+      "sample_packets": 132,
+      "savings": 8,
+      "terminal": 4
+    },
+    {
+      "seed": 9074,
+      "decisions": 7,
+      "composed": 6,
+      "leaf_packets": 50,
+      "sample_packets": 44,
+      "savings": 6,
+      "terminal": 3
+    },
+    {
+      "seed": 9075,
+      "decisions": 14,
+      "composed": 11,
+      "leaf_packets": 100,
+      "sample_packets": 88,
+      "savings": 12,
+      "terminal": 6
+    },
+    {
+      "seed": 9076,
+      "decisions": 19,
+      "composed": 19,
+      "leaf_packets": 140,
+      "sample_packets": 122,
+      "savings": 18,
+      "terminal": 9
+    }
+  ]
+}

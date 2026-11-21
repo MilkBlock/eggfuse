@@ -1,0 +1,612 @@
+{
+  "sum-bits": {
+    "growth_kib": 9490,
+    "arms": {
+      "leaf": {
+        "packets": 12662,
+        "child_proposals": 191,
+        "signed": 0,
+        "terminal": 0,
+        "root_rejections": 0,
+        "receiver_counts": {
+          "absent": 183,
+          "actual_internal": 0,
+          "actual_output_events": 0,
+          "audit_score_inputs": 0,
+          "changed": 0,
+          "complete_banks": 0,
+          "direct_spine_lookups": 0,
+          "explicit_addresses": 0,
+          "external_roots": 0,
+          "local_field_reads": 0,
+          "named_ports": 0,
+          "no_named_input": 0,
+          "no_score_banks": 0,
+          "no_score_inputs": 0,
+          "released": 0,
+          "selected_primary": 0,
+          "source_commits": 0,
+          "stale": 0,
+          "tagged": 220,
+          "tries": 183,
+          "two_with_internal_parent": 0,
+          "uncovered": 0
+        },
+        "exact_rhs": 0,
+        "native_ms": [
+          31.072,
+          30.386125,
+          30.314166,
+          30.51225
+        ],
+        "request_ms": [
+          66.28370797261596,
+          65.92574995011091,
+          65.82058407366276,
+          66.59741594921798
+        ],
+        "median_native_ms": 30.4491875,
+        "median_request_ms": 66.10472896136343,
+        "rss": [
+          {
+            "increment": [
+              "reached",
+              24786,
+              1257
+            ],
+            "peak_kib": 276656,
+            "control_ms": 31.003958
+          },
+          {
+            "increment": [
+              "reached",
+              24647,
+              1256
+            ],
+            "peak_kib": 276592,
+            "control_ms": 31.012874999999998
+          },
+          {
+            "increment": [
+              "reached",
+              24859,
+              1257
+            ],
+            "peak_kib": 276656,
+            "control_ms": 32.721042
+          },
+          {
+            "increment": [
+              "reached",
+              23732,
+              1257
+            ],
+            "peak_kib": 276640,
+            "control_ms": 31.755083000000003
+          }
+        ]
+      },
+      "learned": {
+        "packets": 12601,
+        "child_proposals": 191,
+        "signed": 61,
+        "terminal": 26,
+        "root_rejections": 0,
+        "receiver_counts": {
+          "absent": 144,
+          "actual_internal": 61,
+          "actual_output_events": 35,
+          "audit_score_inputs": 0,
+          "changed": 0,
+          "complete_banks": 0,
+          "direct_spine_lookups": 0,
+          "explicit_addresses": 1045,
+          "external_roots": 194,
+          "local_field_reads": 148,
+          "named_ports": 70,
+          "no_named_input": 0,
+          "no_score_banks": 0,
+          "no_score_inputs": 0,
+          "released": 61,
+          "selected_primary": 229,
+          "source_commits": 61,
+          "stale": 291,
+          "tagged": 194,
+          "tries": 183,
+          "two_with_internal_parent": 26,
+          "uncovered": 14
+        },
+        "exact_rhs": 0,
+        "native_ms": [
+          30.740084,
+          30.582417,
+          30.635375,
+          30.604167
+        ],
+        "request_ms": [
+          65.4707079520449,
+          66.06820900924504,
+          65.26908301748335,
+          64.81991696637124
+        ],
+        "median_native_ms": 30.619771,
+        "median_request_ms": 65.36989548476413,
+        "rss": [
+          {
+            "increment": [
+              "reached",
+              24503,
+              1257
+            ],
+            "peak_kib": 276608,
+            "control_ms": 35.411417
+          },
+          {
+            "increment": [
+              "reached",
+              23803,
+              1256
+            ],
+            "peak_kib": 276624,
+            "control_ms": 32.308792000000004
+          },
+          {
+            "increment": [
+              "reached",
+              24837,
+              1256
+            ],
+            "peak_kib": 276496,
+            "control_ms": 31.331042000000004
+          },
+          {
+            "increment": [
+              "reached",
+              28535,
+              1261
+            ],
+            "peak_kib": 276608,
+            "control_ms": 31.245084
+          }
+        ]
+      },
+      "full": {
+        "packets": 12601,
+        "child_proposals": 191,
+        "signed": 61,
+        "terminal": 26,
+        "root_rejections": 0,
+        "receiver_counts": {
+          "absent": 144,
+          "actual_internal": 61,
+          "actual_output_events": 35,
+          "audit_score_inputs": 0,
+          "changed": 0,
+          "complete_banks": 0,
+          "direct_spine_lookups": 0,
+          "explicit_addresses": 1045,
+          "external_roots": 194,
+          "local_field_reads": 148,
+          "named_ports": 70,
+          "no_named_input": 0,
+          "no_score_banks": 0,
+          "no_score_inputs": 0,
+          "released": 61,
+          "selected_primary": 229,
+          "source_commits": 61,
+          "stale": 291,
+          "tagged": 194,
+          "tries": 183,
+          "two_with_internal_parent": 26,
+          "uncovered": 14
+        },
+        "exact_rhs": 0,
+        "native_ms": [
+          30.813457999999997,
+          31.623375000000003,
+          30.909167,
+          30.9765
+        ],
+        "request_ms": [
+          65.91183296404779,
+          66.20474997907877,
+          65.52579195704311,
+          65.5142089817673
+        ],
+        "median_native_ms": 30.9428335,
+        "median_request_ms": 65.71881246054545,
+        "rss": [
+          {
+            "increment": [
+              "reached",
+              23770,
+              1256
+            ],
+            "peak_kib": 276624,
+            "control_ms": 32.014958
+          },
+          {
+            "increment": [
+              "reached",
+              23886,
+              1256
+            ],
+            "peak_kib": 276608,
+            "control_ms": 31.15925
+          },
+          {
+            "increment": [
+              "reached",
+              25930,
+              1257
+            ],
+            "peak_kib": 276608,
+            "control_ms": 31.211875
+          },
+          {
+            "increment": [
+              "reached",
+              26224,
+              1264
+            ],
+            "peak_kib": 276640,
+            "control_ms": 33.285083
+          }
+        ]
+      },
+      "stale": {
+        "packets": 12627,
+        "child_proposals": 191,
+        "signed": 35,
+        "terminal": 0,
+        "root_rejections": 0,
+        "receiver_counts": {
+          "absent": 144,
+          "actual_internal": 35,
+          "actual_output_events": 35,
+          "audit_score_inputs": 0,
+          "changed": 0,
+          "complete_banks": 0,
+          "direct_spine_lookups": 0,
+          "explicit_addresses": 1045,
+          "external_roots": 220,
+          "local_field_reads": 70,
+          "named_ports": 70,
+          "no_named_input": 0,
+          "no_score_banks": 0,
+          "no_score_inputs": 0,
+          "released": 35,
+          "selected_primary": 255,
+          "source_commits": 35,
+          "stale": 127,
+          "tagged": 220,
+          "tries": 183,
+          "two_with_internal_parent": 0,
+          "uncovered": 25
+        },
+        "exact_rhs": 0
+      },
+      "exact": {
+        "native_ms": [
+          20.372333,
+          20.309084000000002,
+          20.622875,
+          20.309458999999997
+        ],
+        "request_ms": [
+          51.5646249987185,
+          51.47033301182091,
+          51.52966605965048,
+          51.130042062141
+        ],
+        "median_native_ms": 20.340896,
+        "median_request_ms": 51.4999995357357
+      }
+    }
+  },
+  "3mm": {
+    "growth_kib": 270446,
+    "arms": {
+      "leaf": {
+        "packets": 558074,
+        "child_proposals": 2508,
+        "signed": 0,
+        "terminal": 0,
+        "root_rejections": 0,
+        "receiver_counts": {
+          "absent": 227,
+          "actual_internal": 0,
+          "actual_output_events": 0,
+          "audit_score_inputs": 0,
+          "changed": 0,
+          "complete_banks": 0,
+          "direct_spine_lookups": 0,
+          "explicit_addresses": 0,
+          "external_roots": 0,
+          "local_field_reads": 0,
+          "named_ports": 0,
+          "no_named_input": 0,
+          "no_score_banks": 0,
+          "no_score_inputs": 0,
+          "released": 0,
+          "selected_primary": 0,
+          "source_commits": 0,
+          "stale": 0,
+          "tagged": 6345,
+          "tries": 227,
+          "two_with_internal_parent": 0,
+          "uncovered": 0
+        },
+        "exact_rhs": 0,
+        "native_ms": [
+          1661.237708,
+          1706.4467080000002,
+          1678.183083,
+          1757.6205
+        ],
+        "request_ms": [
+          1914.709166972898,
+          1972.58912504185,
+          1941.4131669327617,
+          2025.2744579920545
+        ],
+        "median_native_ms": 1692.3148955000001,
+        "median_request_ms": 1957.0011459873058,
+        "rss": [
+          {
+            "increment": [
+              "reached",
+              1037030,
+              1257
+            ],
+            "peak_kib": 738736,
+            "control_ms": 1827.145958
+          },
+          {
+            "increment": [
+              "reached",
+              918405,
+              1265
+            ],
+            "peak_kib": 738560,
+            "control_ms": 1610.4827080000002
+          },
+          {
+            "increment": [
+              "reached",
+              926319,
+              1256
+            ],
+            "peak_kib": 736704,
+            "control_ms": 1564.9330830000001
+          },
+          {
+            "increment": [
+              "reached",
+              1148726,
+              1257
+            ],
+            "peak_kib": 738944,
+            "control_ms": 1771.9290829999998
+          }
+        ]
+      },
+      "learned": {
+        "packets": 555913,
+        "child_proposals": 2508,
+        "signed": 2161,
+        "terminal": 932,
+        "root_rejections": 0,
+        "receiver_counts": {
+          "absent": 165,
+          "actual_internal": 2161,
+          "actual_output_events": 1242,
+          "audit_score_inputs": 0,
+          "changed": 29,
+          "complete_banks": 0,
+          "direct_spine_lookups": 0,
+          "explicit_addresses": 62168,
+          "external_roots": 5413,
+          "local_field_reads": 5254,
+          "named_ports": 2471,
+          "no_named_input": 0,
+          "no_score_banks": 0,
+          "no_score_inputs": 0,
+          "released": 2161,
+          "selected_primary": 6642,
+          "source_commits": 2161,
+          "stale": 12627,
+          "tagged": 5413,
+          "tries": 227,
+          "two_with_internal_parent": 932,
+          "uncovered": 17
+        },
+        "exact_rhs": 0,
+        "native_ms": [
+          1668.9315840000002,
+          1671.656167,
+          1727.945083,
+          1849.9985410000002
+        ],
+        "request_ms": [
+          1920.1868750387803,
+          1937.1700410265476,
+          1999.3431669427082,
+          2115.558458957821
+        ],
+        "median_native_ms": 1699.800625,
+        "median_request_ms": 1968.2566039846279,
+        "rss": [
+          {
+            "increment": [
+              "reached",
+              961050,
+              1265
+            ],
+            "peak_kib": 723632,
+            "control_ms": 1704.9432920000002
+          },
+          {
+            "increment": [
+              "reached",
+              948297,
+              1260
+            ],
+            "peak_kib": 723392,
+            "control_ms": 1597.150042
+          },
+          {
+            "increment": [
+              "reached",
+              1010151,
+              1257
+            ],
+            "peak_kib": 723568,
+            "control_ms": 1676.580833
+          },
+          {
+            "increment": [
+              "reached",
+              1036929,
+              1256
+            ],
+            "peak_kib": 723408,
+            "control_ms": 1715.278375
+          }
+        ]
+      },
+      "full": {
+        "packets": 555913,
+        "child_proposals": 2508,
+        "signed": 2161,
+        "terminal": 932,
+        "root_rejections": 0,
+        "receiver_counts": {
+          "absent": 165,
+          "actual_internal": 2161,
+          "actual_output_events": 1242,
+          "audit_score_inputs": 0,
+          "changed": 29,
+          "complete_banks": 0,
+          "direct_spine_lookups": 0,
+          "explicit_addresses": 62168,
+          "external_roots": 5413,
+          "local_field_reads": 5254,
+          "named_ports": 2471,
+          "no_named_input": 0,
+          "no_score_banks": 0,
+          "no_score_inputs": 0,
+          "released": 2161,
+          "selected_primary": 6642,
+          "source_commits": 2161,
+          "stale": 12627,
+          "tagged": 5413,
+          "tries": 227,
+          "two_with_internal_parent": 932,
+          "uncovered": 17
+        },
+        "exact_rhs": 0,
+        "native_ms": [
+          1676.7230829999999,
+          1706.712833,
+          1747.806167,
+          1665.7999160000002
+        ],
+        "request_ms": [
+          1934.200374991633,
+          1956.301625003107,
+          2004.2265000520274,
+          1918.467832962051
+        ],
+        "median_native_ms": 1691.717958,
+        "median_request_ms": 1945.25099999737,
+        "rss": [
+          {
+            "increment": [
+              "reached",
+              956630,
+              1267
+            ],
+            "peak_kib": 723328,
+            "control_ms": 1612.869166
+          },
+          {
+            "increment": [
+              "reached",
+              945918,
+              1256
+            ],
+            "peak_kib": 723248,
+            "control_ms": 1602.026459
+          },
+          {
+            "increment": [
+              "reached",
+              954311,
+              1257
+            ],
+            "peak_kib": 723168,
+            "control_ms": 1622.469958
+          },
+          {
+            "increment": [
+              "reached",
+              1015763,
+              1257
+            ],
+            "peak_kib": 723488,
+            "control_ms": 1602.751292
+          }
+        ]
+      },
+      "stale": {
+        "packets": 556845,
+        "child_proposals": 2508,
+        "signed": 1229,
+        "terminal": 0,
+        "root_rejections": 0,
+        "receiver_counts": {
+          "absent": 165,
+          "actual_internal": 1229,
+          "actual_output_events": 1242,
+          "audit_score_inputs": 0,
+          "changed": 29,
+          "complete_banks": 0,
+          "direct_spine_lookups": 0,
+          "explicit_addresses": 62168,
+          "external_roots": 6345,
+          "local_field_reads": 2458,
+          "named_ports": 2471,
+          "no_named_input": 0,
+          "no_score_banks": 0,
+          "no_score_inputs": 0,
+          "released": 1229,
+          "selected_primary": 7574,
+          "source_commits": 1229,
+          "stale": 6141,
+          "tagged": 6345,
+          "tries": 227,
+          "two_with_internal_parent": 0,
+          "uncovered": 39
+        },
+        "exact_rhs": 0
+      },
+      "exact": {
+        "native_ms": [
+          851.3212500000001,
+          884.772083,
+          900.4138750000001,
+          865.6743329999999
+        ],
+        "request_ms": [
+          1099.7974580386654,
+          1138.7452919734642,
+          1152.8932909714058,
+          1124.9639169545844
+        ],
+        "median_native_ms": 875.2232079999999,
+        "median_request_ms": 1131.8546044640243
+      }
+    }
+  }
+}

@@ -1,0 +1,236 @@
+{
+  "sum-bits": {
+    "leaf": {
+      "saved": 0,
+      "terminal": 0,
+      "credited_roots": 0,
+      "token_actions": [
+        220,
+        0
+      ],
+      "packets": 12662,
+      "fept": 0.21252566735112938,
+      "final_origins": 2691,
+      "rhs": 7265,
+      "runs": 1428,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "state_sha": true,
+        "schedule": true,
+        "runs": true,
+        "unions": true
+      }
+    },
+    "initial": {
+      "saved": 0,
+      "terminal": 0,
+      "credited_roots": 0,
+      "token_actions": [
+        220,
+        0
+      ],
+      "packets": 12662,
+      "fept": 0.21252566735112938,
+      "final_origins": 2691,
+      "rhs": 7265,
+      "runs": 1428,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "state_sha": true,
+        "schedule": true,
+        "runs": true,
+        "unions": true
+      }
+    },
+    "sample": {
+      "saved": 56,
+      "terminal": 24,
+      "credited_roots": 32,
+      "token_actions": [
+        11,
+        185
+      ],
+      "packets": 12606,
+      "fept": 0.21346977629700142,
+      "final_origins": 2691,
+      "rhs": 7265,
+      "runs": 1428,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "state_sha": true,
+        "schedule": true,
+        "runs": true,
+        "unions": true
+      }
+    },
+    "learned": {
+      "saved": 61,
+      "terminal": 26,
+      "credited_roots": 35,
+      "token_actions": [
+        0,
+        194
+      ],
+      "packets": 12601,
+      "fept": 0.21355447980319023,
+      "final_origins": 2691,
+      "rhs": 7265,
+      "runs": 1428,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "state_sha": true,
+        "schedule": true,
+        "runs": true,
+        "unions": true
+      }
+    },
+    "full": {
+      "saved": 61,
+      "terminal": 26,
+      "credited_roots": 35,
+      "token_actions": [
+        0,
+        194
+      ],
+      "packets": 12601,
+      "fept": 0.21355447980319023,
+      "final_origins": 2691,
+      "rhs": 7265,
+      "runs": 1428,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "state_sha": true,
+        "schedule": true,
+        "runs": true,
+        "unions": true
+      }
+    }
+  },
+  "3mm": {
+    "leaf": {
+      "saved": 0,
+      "terminal": 0,
+      "credited_roots": 0,
+      "token_actions": [
+        6345,
+        0
+      ],
+      "packets": 558074,
+      "fept": 0.16603174489404632,
+      "final_origins": 92658,
+      "rhs": 294917,
+      "runs": 4260,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "state_sha": true,
+        "schedule": true,
+        "runs": true,
+        "unions": true
+      }
+    },
+    "initial": {
+      "saved": 0,
+      "terminal": 0,
+      "credited_roots": 0,
+      "token_actions": [
+        6345,
+        0
+      ],
+      "packets": 558074,
+      "fept": 0.16603174489404632,
+      "final_origins": 92658,
+      "rhs": 294917,
+      "runs": 4260,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "state_sha": true,
+        "schedule": true,
+        "runs": true,
+        "unions": true
+      }
+    },
+    "sample": {
+      "saved": 2080,
+      "terminal": 897,
+      "credited_roots": 1183,
+      "token_actions": [
+        205,
+        5243
+      ],
+      "packets": 555994,
+      "fept": 0.1666528775490383,
+      "final_origins": 92658,
+      "rhs": 294917,
+      "runs": 4260,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "state_sha": true,
+        "schedule": true,
+        "runs": true,
+        "unions": true
+      }
+    },
+    "learned": {
+      "saved": 2161,
+      "terminal": 932,
+      "credited_roots": 1229,
+      "token_actions": [
+        0,
+        5413
+      ],
+      "packets": 555913,
+      "fept": 0.16667715991531049,
+      "final_origins": 92658,
+      "rhs": 294917,
+      "runs": 4260,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "state_sha": true,
+        "schedule": true,
+        "runs": true,
+        "unions": true
+      }
+    },
+    "full": {
+      "saved": 2161,
+      "terminal": 932,
+      "credited_roots": 1229,
+      "token_actions": [
+        0,
+        5413
+      ],
+      "packets": 555913,
+      "fept": 0.16667715991531049,
+      "final_origins": 92658,
+      "rhs": 294917,
+      "runs": 4260,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "state_sha": true,
+        "schedule": true,
+        "runs": true,
+        "unions": true
+      }
+    }
+  }
+}
