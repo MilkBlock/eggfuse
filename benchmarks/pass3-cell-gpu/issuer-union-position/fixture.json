@@ -1,0 +1,1145 @@
+{
+ "native": {
+  "state_sha": "e2cd8faf38ef4e6b1ed57c49194174d62d43f0967c51d303d6dce6c803372c06",
+  "rhs": 4,
+  "source": [
+   "0bb7205b3e6d0152293901c57a2e6776625ae5a17048d87c02f6766863814fa0",
+   "4ff68e6ccdd53ee16d717b2066848fac316c03d6ef68b19c4c510314c95308c8"
+  ],
+  "writes": [
+   [
+    0,
+    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   ],
+   [
+    0,
+    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   ]
+  ],
+  "resumes": [
+   [
+    0,
+    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   ],
+   [
+    0,
+    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   ]
+  ],
+  "schedule": [
+   [
+    "input-unions",
+    1,
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0
+    ],
+    1,
+    true
+   ],
+   [
+    "constructed",
+    2,
+    [
+     1,
+     0,
+     0
+    ],
+    [
+     0
+    ],
+    3,
+    true
+   ]
+  ],
+  "unions": [
+   [
+    [
+     "union",
+     2,
+     1
+    ],
+    [
+     "union",
+     3,
+     1
+    ],
+    [
+     "union",
+     6,
+     5
+    ],
+    [
+     "union",
+     7,
+     5
+    ]
+   ],
+   [
+    [
+     "union",
+     4,
+     1
+    ]
+   ]
+  ],
+  "cells": "1f3e911e5d3de5a413ce05071256d24dc55cf5360abc1c5794632bd6ee8c4299",
+  "winners": "cf2e0a1fa4270fa6256c9a910ea4794efcaa471e551a258792f9ed99ab7f9b35",
+  "root_fresh": "d9ae4618eaf850a546cee90d04c9affb70d580f7350a65424a6accff71d8ff02",
+  "raw": "6591770626653541648",
+  "multi": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "position": null
+ },
+ "cert": {
+  "state_sha": "e2cd8faf38ef4e6b1ed57c49194174d62d43f0967c51d303d6dce6c803372c06",
+  "rhs": 4,
+  "source": [
+   "0bb7205b3e6d0152293901c57a2e6776625ae5a17048d87c02f6766863814fa0",
+   "4ff68e6ccdd53ee16d717b2066848fac316c03d6ef68b19c4c510314c95308c8"
+  ],
+  "writes": [
+   [
+    0,
+    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   ],
+   [
+    0,
+    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   ]
+  ],
+  "resumes": [
+   [
+    0,
+    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   ],
+   [
+    0,
+    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   ]
+  ],
+  "schedule": [
+   [
+    "input-unions",
+    1,
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0
+    ],
+    1,
+    true
+   ],
+   [
+    "constructed",
+    2,
+    [
+     1,
+     0,
+     0
+    ],
+    [
+     0
+    ],
+    3,
+    true
+   ]
+  ],
+  "unions": [
+   [
+    [
+     "union",
+     2,
+     1
+    ],
+    [
+     "union",
+     3,
+     1
+    ],
+    [
+     "union",
+     6,
+     5
+    ],
+    [
+     "union",
+     7,
+     5
+    ]
+   ],
+   [
+    [
+     "union",
+     4,
+     1
+    ]
+   ]
+  ],
+  "cells": "1f3e911e5d3de5a413ce05071256d24dc55cf5360abc1c5794632bd6ee8c4299",
+  "winners": "cf2e0a1fa4270fa6256c9a910ea4794efcaa471e551a258792f9ed99ab7f9b35",
+  "root_fresh": "d9ae4618eaf850a546cee90d04c9affb70d580f7350a65424a6accff71d8ff02",
+  "raw": "6591770626653541648",
+  "multi": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "position": {
+   "examples": [
+    {
+     "category": 13,
+     "cell": 9,
+     "correct_displaced": true,
+     "current": [
+      1,
+      2
+     ],
+     "displaced": 2,
+     "issued": [
+      1,
+      2
+     ],
+     "local_slots": [
+      null,
+      null
+     ],
+     "op": 1,
+     "ordinal": 1,
+     "queued": [
+      1,
+      2
+     ],
+     "requested": [
+      null,
+      null
+     ],
+     "resolved": [
+      1,
+      2
+     ],
+     "reverse_readers": 3,
+     "rule": 1,
+     "run": 1,
+     "selected": true,
+     "selected_side": 1,
+     "serial": 1,
+     "survivor": 1,
+     "template": 1,
+     "verified_inputs": [
+      1,
+      2
+     ],
+     "words": [
+      {
+       "address": {
+        "Fact": {
+         "cell": 8,
+         "op": 0
+        }
+       },
+       "atom": 0,
+       "column": 0,
+       "id": 1,
+       "role": 0,
+       "version": 0
+      },
+      {
+       "address": {
+        "Fact": {
+         "cell": 8,
+         "op": 0
+        }
+       },
+       "atom": 0,
+       "column": 1,
+       "id": 2,
+       "role": 0,
+       "version": 0
+      }
+     ]
+    }
+   ],
+   "features": [
+    [
+     [
+      1,
+      1,
+      0,
+      0,
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0
+     ],
+     {
+      "admissible": 2,
+      "both_effective": 2,
+      "displaced_raw": 2,
+      "displaced_valid": 2,
+      "effective": 2,
+      "either_readers": [
+       0,
+       6
+      ],
+      "either_valid": [
+       0,
+       2
+      ],
+      "local_pair_known": 2,
+      "local_pair_valid": 2,
+      "offers": 2,
+      "pair_valid": 2,
+      "parent_only_readers": 6,
+      "parent_only_valid": 2,
+      "reached": 2,
+      "readers": 6,
+      "selected": 2,
+      "selected_readers": 6,
+      "selected_valid": 2,
+      "valid_readers": 6
+     }
+    ]
+   ],
+   "mode": "all",
+   "origin_examples": {
+    "constructor_collision": {
+     "cell": 0,
+     "displaced": 6,
+     "epoch": 1,
+     "kept": 5,
+     "op": 0,
+     "raw": [
+      6,
+      5
+     ],
+     "reader_count": 0,
+     "template": 0
+    },
+    "constructor_set": {
+     "cell": 0,
+     "displaced": 4,
+     "epoch": 2,
+     "kept": 1,
+     "op": 0,
+     "raw": [
+      4,
+      1
+     ],
+     "reader_count": 1,
+     "template": 0
+    },
+    "explicit": {
+     "cell": 9,
+     "displaced": 2,
+     "epoch": 1,
+     "kept": 1,
+     "op": 1,
+     "raw": [
+      1,
+      2
+     ],
+     "reader_count": 3,
+     "template": 1
+    }
+   },
+   "origins": {
+    "constructor_collision": {
+     "attempts": 2,
+     "effective": 2,
+     "reader_visits": 0
+    },
+    "constructor_set": {
+     "attempts": 1,
+     "effective": 1,
+     "reader_visits": 1
+    },
+    "explicit": {
+     "attempts": 2,
+     "effective": 2,
+     "reader_visits": 6
+    }
+   },
+   "site_examples": [
+    [
+     [
+      1,
+      1
+     ],
+     {
+      "cell": 9,
+      "correct_displaced": true,
+      "current": [
+       1,
+       2
+      ],
+      "displaced": 2,
+      "local_slots": [
+       null,
+       null
+      ],
+      "op": 1,
+      "ordinal": 1,
+      "queued": [
+       1,
+       2
+      ],
+      "readers": 3,
+      "requested": [
+       null,
+       null
+      ],
+      "rule": 1,
+      "run": 1,
+      "selected_side": 1,
+      "serial": 1,
+      "survivor": 1,
+      "words": [
+       {
+        "address": {
+         "Fact": {
+          "cell": 8,
+          "op": 0
+         }
+        },
+        "atom": 0,
+        "column": 0,
+        "id": 1,
+        "role": 0,
+        "version": 0
+       },
+       {
+        "address": {
+         "Fact": {
+          "cell": 8,
+          "op": 0
+         }
+        },
+        "atom": 0,
+        "column": 1,
+        "id": 2,
+        "role": 0,
+        "version": 0
+       }
+      ]
+     }
+    ],
+    [
+     [
+      1,
+      2
+     ],
+     {
+      "cell": 9,
+      "correct_displaced": true,
+      "current": [
+       1,
+       3
+      ],
+      "displaced": 3,
+      "local_slots": [
+       null,
+       null
+      ],
+      "op": 2,
+      "ordinal": 1,
+      "queued": [
+       2,
+       3
+      ],
+      "readers": 3,
+      "requested": [
+       null,
+       null
+      ],
+      "rule": 1,
+      "run": 1,
+      "selected_side": 1,
+      "serial": 1,
+      "survivor": 1,
+      "words": [
+       {
+        "address": {
+         "Fact": {
+          "cell": 8,
+          "op": 0
+         }
+        },
+        "atom": 0,
+        "column": 1,
+        "id": 2,
+        "role": 0,
+        "version": 0
+       },
+       {
+        "address": {
+         "Fact": {
+          "cell": 8,
+          "op": 0
+         }
+        },
+        "atom": 0,
+        "column": 2,
+        "id": 3,
+        "role": 0,
+        "version": 0
+       }
+      ]
+     }
+    ]
+   ],
+   "sites": [
+    [
+     [
+      1,
+      1
+     ],
+     [
+      1,
+      1,
+      1,
+      1,
+      3,
+      1,
+      3
+     ]
+    ],
+    [
+     [
+      1,
+      2
+     ],
+     [
+      1,
+      1,
+      1,
+      1,
+      3,
+      1,
+      3
+     ]
+    ]
+   ],
+   "sources": "958162ef0ba839e47a655b3d2e0dbe70ffee538e02c7d34c2687d9871028bd8e",
+   "static_rules": 2,
+   "static_sites": [
+    [
+     1,
+     1,
+     [
+      {
+       "op": 1,
+       "sides": [
+        {
+         "columns": [
+          [
+           0,
+           0
+          ]
+         ],
+         "literal": null,
+         "local": null,
+         "slot": 0
+        },
+        {
+         "columns": [
+          [
+           0,
+           1
+          ]
+         ],
+         "literal": null,
+         "local": null,
+         "slot": 1
+        }
+       ]
+      },
+      {
+       "op": 2,
+       "sides": [
+        {
+         "columns": [
+          [
+           0,
+           1
+          ]
+         ],
+         "literal": null,
+         "local": null,
+         "slot": 1
+        },
+        {
+         "columns": [
+          [
+           0,
+           2
+          ]
+         ],
+         "literal": null,
+         "local": null,
+         "slot": 2
+        }
+       ]
+      }
+     ]
+    ]
+   ],
+   "totals": {
+    "attempts": 5,
+    "choices": 2,
+    "committed_input_pair": 2,
+    "committed_pair_valid": 2,
+    "committed_roots": 4,
+    "discarded_equal": 0,
+    "effective": 5,
+    "issued_sites": 2,
+    "matched_explicit": 2,
+    "no_parent_known": 0,
+    "parent_pair_known": 2,
+    "parent_pair_valid": 2,
+    "parent_single_known": 0,
+    "point_fields": 0,
+    "point_key_extra_rows": 0,
+    "point_ns": 0,
+    "point_requests": 0,
+    "point_results": 0,
+    "point_reuses": 0,
+    "point_validated_sides": 0,
+    "proposed_roots": 1,
+    "readers": 7,
+    "source_reads": 1,
+    "union_hash": 14534991280575325695
+   }
+  }
+ },
+ "wrong": {
+  "state_sha": "e2cd8faf38ef4e6b1ed57c49194174d62d43f0967c51d303d6dce6c803372c06",
+  "rhs": 4,
+  "source": [
+   "0bb7205b3e6d0152293901c57a2e6776625ae5a17048d87c02f6766863814fa0",
+   "4ff68e6ccdd53ee16d717b2066848fac316c03d6ef68b19c4c510314c95308c8"
+  ],
+  "writes": [
+   [
+    0,
+    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   ],
+   [
+    0,
+    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   ]
+  ],
+  "resumes": [
+   [
+    0,
+    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   ],
+   [
+    0,
+    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+   ]
+  ],
+  "schedule": [
+   [
+    "input-unions",
+    1,
+    [
+     0,
+     0,
+     0
+    ],
+    [
+     0
+    ],
+    1,
+    true
+   ],
+   [
+    "constructed",
+    2,
+    [
+     1,
+     0,
+     0
+    ],
+    [
+     0
+    ],
+    3,
+    true
+   ]
+  ],
+  "unions": [
+   [
+    [
+     "union",
+     2,
+     1
+    ],
+    [
+     "union",
+     3,
+     1
+    ],
+    [
+     "union",
+     6,
+     5
+    ],
+    [
+     "union",
+     7,
+     5
+    ]
+   ],
+   [
+    [
+     "union",
+     4,
+     1
+    ]
+   ]
+  ],
+  "cells": "1f3e911e5d3de5a413ce05071256d24dc55cf5360abc1c5794632bd6ee8c4299",
+  "winners": "cf2e0a1fa4270fa6256c9a910ea4794efcaa471e551a258792f9ed99ab7f9b35",
+  "root_fresh": "d9ae4618eaf850a546cee90d04c9affb70d580f7350a65424a6accff71d8ff02",
+  "raw": "6591770626653541648",
+  "multi": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "position": {
+   "examples": [
+    {
+     "category": 12,
+     "cell": 9,
+     "correct_displaced": false,
+     "current": [
+      1,
+      2
+     ],
+     "displaced": 2,
+     "issued": [
+      18446744073709551614,
+      18446744073709551614
+     ],
+     "local_slots": [
+      null,
+      null
+     ],
+     "op": 1,
+     "ordinal": 1,
+     "queued": [
+      1,
+      2
+     ],
+     "requested": [
+      null,
+      null
+     ],
+     "resolved": [
+      18446744073709551614,
+      18446744073709551614
+     ],
+     "reverse_readers": 3,
+     "rule": 1,
+     "run": 1,
+     "selected": true,
+     "selected_side": 1,
+     "serial": 1,
+     "survivor": 1,
+     "template": 1,
+     "verified_inputs": [
+      1,
+      2
+     ],
+     "words": [
+      {
+       "address": {
+        "Fact": {
+         "cell": 8,
+         "op": 0
+        }
+       },
+       "atom": 0,
+       "column": 0,
+       "id": 1,
+       "role": 0,
+       "version": 0
+      },
+      {
+       "address": {
+        "Fact": {
+         "cell": 8,
+         "op": 0
+        }
+       },
+       "atom": 0,
+       "column": 1,
+       "id": 2,
+       "role": 0,
+       "version": 0
+      }
+     ]
+    }
+   ],
+   "features": [
+    [
+     [
+      1,
+      1,
+      0,
+      0,
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0
+     ],
+     {
+      "admissible": 2,
+      "both_effective": 2,
+      "displaced_raw": 0,
+      "displaced_valid": 0,
+      "effective": 2,
+      "either_readers": [
+       0,
+       0
+      ],
+      "either_valid": [
+       0,
+       0
+      ],
+      "local_pair_known": 2,
+      "local_pair_valid": 0,
+      "offers": 2,
+      "pair_valid": 0,
+      "parent_only_readers": 0,
+      "parent_only_valid": 0,
+      "reached": 2,
+      "readers": 6,
+      "selected": 2,
+      "selected_readers": 0,
+      "selected_valid": 0,
+      "valid_readers": 0
+     }
+    ]
+   ],
+   "mode": "all",
+   "origin_examples": {
+    "constructor_collision": {
+     "cell": 0,
+     "displaced": 6,
+     "epoch": 1,
+     "kept": 5,
+     "op": 0,
+     "raw": [
+      6,
+      5
+     ],
+     "reader_count": 0,
+     "template": 0
+    },
+    "constructor_set": {
+     "cell": 0,
+     "displaced": 4,
+     "epoch": 2,
+     "kept": 1,
+     "op": 0,
+     "raw": [
+      4,
+      1
+     ],
+     "reader_count": 1,
+     "template": 0
+    },
+    "explicit": {
+     "cell": 9,
+     "displaced": 2,
+     "epoch": 1,
+     "kept": 1,
+     "op": 1,
+     "raw": [
+      1,
+      2
+     ],
+     "reader_count": 3,
+     "template": 1
+    }
+   },
+   "origins": {
+    "constructor_collision": {
+     "attempts": 2,
+     "effective": 2,
+     "reader_visits": 0
+    },
+    "constructor_set": {
+     "attempts": 1,
+     "effective": 1,
+     "reader_visits": 1
+    },
+    "explicit": {
+     "attempts": 2,
+     "effective": 2,
+     "reader_visits": 6
+    }
+   },
+   "site_examples": [
+    [
+     [
+      1,
+      1
+     ],
+     {
+      "cell": 9,
+      "correct_displaced": false,
+      "current": [
+       1,
+       2
+      ],
+      "displaced": 2,
+      "local_slots": [
+       null,
+       null
+      ],
+      "op": 1,
+      "ordinal": 1,
+      "queued": [
+       1,
+       2
+      ],
+      "readers": 3,
+      "requested": [
+       null,
+       null
+      ],
+      "rule": 1,
+      "run": 1,
+      "selected_side": 1,
+      "serial": 1,
+      "survivor": 1,
+      "words": [
+       {
+        "address": {
+         "Fact": {
+          "cell": 8,
+          "op": 0
+         }
+        },
+        "atom": 0,
+        "column": 0,
+        "id": 1,
+        "role": 0,
+        "version": 0
+       },
+       {
+        "address": {
+         "Fact": {
+          "cell": 8,
+          "op": 0
+         }
+        },
+        "atom": 0,
+        "column": 1,
+        "id": 2,
+        "role": 0,
+        "version": 0
+       }
+      ]
+     }
+    ],
+    [
+     [
+      1,
+      2
+     ],
+     {
+      "cell": 9,
+      "correct_displaced": false,
+      "current": [
+       1,
+       3
+      ],
+      "displaced": 3,
+      "local_slots": [
+       null,
+       null
+      ],
+      "op": 2,
+      "ordinal": 1,
+      "queued": [
+       2,
+       3
+      ],
+      "readers": 3,
+      "requested": [
+       null,
+       null
+      ],
+      "rule": 1,
+      "run": 1,
+      "selected_side": 1,
+      "serial": 1,
+      "survivor": 1,
+      "words": [
+       {
+        "address": {
+         "Fact": {
+          "cell": 8,
+          "op": 0
+         }
+        },
+        "atom": 0,
+        "column": 1,
+        "id": 2,
+        "role": 0,
+        "version": 0
+       },
+       {
+        "address": {
+         "Fact": {
+          "cell": 8,
+          "op": 0
+         }
+        },
+        "atom": 0,
+        "column": 2,
+        "id": 3,
+        "role": 0,
+        "version": 0
+       }
+      ]
+     }
+    ]
+   ],
+   "sites": [
+    [
+     [
+      1,
+      1
+     ],
+     [
+      1,
+      1,
+      1,
+      0,
+      3,
+      1,
+      0
+     ]
+    ],
+    [
+     [
+      1,
+      2
+     ],
+     [
+      1,
+      1,
+      1,
+      0,
+      3,
+      1,
+      0
+     ]
+    ]
+   ],
+   "sources": "958162ef0ba839e47a655b3d2e0dbe70ffee538e02c7d34c2687d9871028bd8e",
+   "static_rules": 2,
+   "static_sites": [
+    [
+     1,
+     1,
+     [
+      {
+       "op": 1,
+       "sides": [
+        {
+         "columns": [
+          [
+           0,
+           0
+          ]
+         ],
+         "literal": null,
+         "local": null,
+         "slot": 0
+        },
+        {
+         "columns": [
+          [
+           0,
+           1
+          ]
+         ],
+         "literal": null,
+         "local": null,
+         "slot": 1
+        }
+       ]
+      },
+      {
+       "op": 2,
+       "sides": [
+        {
+         "columns": [
+          [
+           0,
+           1
+          ]
+         ],
+         "literal": null,
+         "local": null,
+         "slot": 1
+        },
+        {
+         "columns": [
+          [
+           0,
+           2
+          ]
+         ],
+         "literal": null,
+         "local": null,
+         "slot": 2
+        }
+       ]
+      }
+     ]
+    ]
+   ],
+   "totals": {
+    "attempts": 5,
+    "choices": 2,
+    "committed_input_pair": 2,
+    "committed_pair_valid": 2,
+    "committed_roots": 4,
+    "discarded_equal": 0,
+    "effective": 5,
+    "issued_sites": 2,
+    "matched_explicit": 2,
+    "no_parent_known": 0,
+    "parent_pair_known": 2,
+    "parent_pair_valid": 0,
+    "parent_single_known": 0,
+    "point_fields": 0,
+    "point_key_extra_rows": 0,
+    "point_ns": 0,
+    "point_requests": 0,
+    "point_results": 0,
+    "point_reuses": 0,
+    "point_validated_sides": 0,
+    "proposed_roots": 1,
+    "readers": 7,
+    "source_reads": 1,
+    "union_hash": 14534991280575325695
+   }
+  }
+ }
+}

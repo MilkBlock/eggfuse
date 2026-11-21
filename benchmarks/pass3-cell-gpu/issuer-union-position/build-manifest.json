@@ -1,0 +1,20 @@
+{
+ "occurrence": {
+  "base": "31bf7e41",
+  "overlay": "434f7c6b0d861107d7a0b987f5ee62a18793201305a111ab2ba59a444074417e",
+  "observer": "b4aaa379514f44e190c6e0c4520c53c049a49dff5a244eacaccaf7ae0c12be13",
+  "binary_sha256": "51f7417ca57958369b0a73865905935cb2ab5ac5d320d24dce63c51045dbd33e"
+ },
+ "global": {
+  "base": "31bf7e41",
+  "overlay": "6bc94fd6aaa71364d6f22caf00707e5ec4adc5db713b232b8c16ab465d52b7ee",
+  "observer": "9321666add28a8553ea245367144715fe5d97113708825c99d7e19424aed3a9e",
+  "binary_sha256": "f650c2afc00921ed256a289d3d28c7468b69a8cb36ea73ae0eee3b8458164ec7"
+ },
+ "point": {
+  "base": "31bf7e41",
+  "overlay": "6bc94fd6aaa71364d6f22caf00707e5ec4adc5db713b232b8c16ab465d52b7ee",
+  "observer": "1c4b097466e8157831393206c34d53ce14663c7033dd9ea5171a42cb94515941",
+  "binary_sha256": "469cf005601769781b9c799221492a860ecf398a3073f2247035279ad38c42a4"
+ }
+}

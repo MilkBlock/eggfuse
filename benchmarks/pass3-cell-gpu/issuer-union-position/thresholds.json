@@ -1,0 +1,70 @@
+{
+ "training": {
+  "uniform": {
+   "threshold": 0.0,
+   "tie_probability": 0.25,
+   "training_budget": 2041.75
+  },
+  "static": {
+   "threshold": 2.0,
+   "tie_probability": 0.8962906057945567,
+   "training_budget": 2041.75
+  },
+  "learned-hits": {
+   "threshold": 0.29878039393500233,
+   "tie_probability": 0.22557471264367815,
+   "training_budget": 2041.75
+  },
+  "learned-readers": {
+   "threshold": 0.585051815217073,
+   "tie_probability": 0.16810344827586207,
+   "training_budget": 2041.75
+  }
+ },
+ "heldout": {
+  "conjugate-gradient": {
+   "uniform": {
+    "expected_hints": 5383.75,
+    "expected_correct": 599.25,
+    "expected_readers": 641.25
+   },
+   "static": {
+    "expected_hints": 3567.236611062335,
+    "expected_correct": 67.22179543459175,
+    "expected_readers": 140.7176251097454
+   },
+   "learned-hits": {
+    "expected_hints": 3588.137931034483,
+    "expected_correct": 2322.0,
+    "expected_readers": 2408.0
+   },
+   "learned-readers": {
+    "expected_hints": 3593.344827586207,
+    "expected_correct": 2320.0,
+    "expected_readers": 2404.0
+   }
+  },
+  "3mm": {
+   "uniform": {
+    "expected_hints": 15478.25,
+    "expected_correct": 1267.25,
+    "expected_readers": 1354.75
+   },
+   "static": {
+    "expected_hints": 11312.980026338895,
+    "expected_correct": 207.0431299385426,
+    "expected_readers": 423.9454565408253
+   },
+   "learned-hits": {
+    "expected_hints": 7704.652298850575,
+    "expected_correct": 4838.0,
+    "expected_readers": 4946.0
+   },
+   "learned-readers": {
+    "expected_hints": 7615.422413793103,
+    "expected_correct": 4838.0,
+    "expected_readers": 4946.0
+   }
+  }
+ }
+}
