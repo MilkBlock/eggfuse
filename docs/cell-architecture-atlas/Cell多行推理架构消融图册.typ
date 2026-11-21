@@ -40,7 +40,7 @@
   card([现有边界],[图 71 的选择性模型覆盖 99.83%–99.97% 的源 RHS，图 75 的根／子配方直接构造超过 99% 的新 Cell。整轮仍慢于精确 Rust。]))
 #v(1fr)
 #linebar()
-#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–37 涵盖真实负载与块级上限。图 38–115 含后续实验。图 70–75 比较不同的全源覆盖分母、模板分配和代价。]
+#small[代码基线 68193237　·　图 01–16 已测模板表示、生成、协调与所有权转移。图 17–19 已测组合证明、私有接续与停止条件，图 20 检查模板等价类，21–37 涵盖真实负载与块级上限。图 38–133 含后续实验。图 70–75 比较不同的全源覆盖分母、模板分配和代价。]
 
 #pagebreak()
 #kicker[阅读指南   /   如何比较两种架构]
@@ -313,6 +313,24 @@ card([从训练监督看],[字段投影让合法绑定的字段读出正确。�
 #src("S99","两种执行器分别进行原生 PGO","benchmarks/pass3-cell-gpu/native-backend-pgo/README.md")
 #src("S100","同一 PGO 二进制内比较跨 union 订阅","benchmarks/pass3-cell-gpu/profiled-request-ports/README.md")
 #src("S101","首次安置的单次配对回报","benchmarks/pass3-cell-gpu/prefix-placement-return/README.md")
+#src("S102","页内共享局部前提与完整键结果","benchmarks/pass3-cell-gpu/page-premise-programs/README.md")
+#src("S103","真正发行的角色字典凭证","benchmarks/pass3-cell-gpu/factored-receipt-pages/README.md")
+#src("S104","多父 Cell 块的可执行后缀","benchmarks/pass3-cell-gpu/batched-cell-verifier/README.md")
+#src("S105","直接消费页和函数结果的坐标","benchmarks/pass3-cell-gpu/coordinate-cell-block/README.md")
+#src("S106","两轮页程序准入与返回值头","benchmarks/pass3-cell-gpu/iterative-page-library/README.md")
+#src("S107","有序效果块与延迟写入者","benchmarks/pass3-cell-gpu/ordered-effect-blocks/README.md")
+#src("S108","共享反向边及原生修复","benchmarks/pass3-cell-gpu/ordered-repair-reuse/README.md")
+#src("S109","稳定 Cell 身份下的物理寻址","benchmarks/pass3-cell-gpu/paged-cell-ids/README.md")
+#src("S110","同图执行的页验证、RHS 和修复","benchmarks/pass3-cell-gpu/block-execution-ceiling/README.md")
+#src("S111","由已验证的页槽直接接续物理根","benchmarks/pass3-cell-gpu/block-root-transfer/README.md")
+#src("S112","发行时的 union 端点证书","benchmarks/pass3-cell-gpu/issuer-union-position/README.md")
+#src("S113","反向查找之前的神经字段定位","benchmarks/pass3-cell-gpu/union-location-witness/README.md")
+#src("S114","由正向证据恢复的 owner 订阅","benchmarks/pass3-cell-gpu/implicit-owner-subscribers/README.md")
+#src("S115","先密封全 Run 在线提案","benchmarks/pass3-cell-gpu/run-proposal-waves/README.md")
+#src("S116","验真前的真实私有 Cell","benchmarks/pass3-cell-gpu/speculative-cell-batches/README.md")
+#src("S117","预测整波物理分配需求","benchmarks/pass3-cell-gpu/speculative-allocation-policy/README.md")
+#src("S118","全 Run 预发行与真实物理激活","benchmarks/pass3-cell-gpu/wave-cell-allocation/README.md")
+#src("S119","严格具名的批内共享分配","benchmarks/pass3-cell-gpu/group-named-cells/README.md")
 #v(2mm)
 #label[两篇用于构造对照的原始文献]
 #v(1.5mm)

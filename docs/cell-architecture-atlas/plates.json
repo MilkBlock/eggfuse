@@ -6886,5 +6886,1337 @@
         ]
       }
     ]
+  },
+  {
+    "id": "116-sealed-page-premises",
+    "section": "同一页的共享前提",
+    "title": "同一 Run 内，多少个父行读取确实可以共享？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "把每个父角色自己的字面量及重复列，与不同父之间的等值条件分开。源图保持不可变时，同一角色和带版本地址只需读取一次。",
+    "arms": "a　逐候选读取物理行。b　按页保留已核验的父行，候选继续执行自己的跨父等值判断。c　再共享确定后缀的完整键点查结果和缺失证明。",
+    "fix": "由原模型先签发相同的完整页，逐项核对原始元组、成功及拒绝的前缀、RHS、写入、Spine、union、最终图及实际 Cell。",
+    "measure": "3mm 的 526,257 次父读取降为 325,615 次，其中 112,418 次复用位于第二个或更晚的父。后缀点查由 104,197 降至 68,388。",
+    "note": "完整推理从 1,931.27 变为 1,926.37 ms。Deriche 虽省去 334,528 次父读取，整轮仍从 3,548.33 增至 3,662.49 ms。",
+    "src": "S102",
+    "diagram": [
+      {
+        "title": "Read per tuple",
+        "layers": [
+          [
+            [
+              "n",
+              "seal parent tuples"
+            ]
+          ],
+          [
+            [
+              "v",
+              "resolve each parent"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Shared premises",
+        "layers": [
+          [
+            [
+              "s",
+              "role + address + epoch"
+            ]
+          ],
+          [
+            [
+              "v",
+              "compare across roles"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Shared point result",
+        "layers": [
+          [
+            [
+              "s",
+              "complete function key"
+            ]
+          ],
+          [
+            [
+              "v",
+              "reuse a row or absence"
+            ]
+          ],
+          [
+            [
+              "v",
+              "ordered binding"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "117-factored-receipt-pages",
+    "section": "模型的输出表示",
+    "title": "同一父角色出现很多次时，发行的凭证能直接用坐标表示吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "固定原提案顺序，为每个角色选择直接列、单值表示或源地址／版本字典。一个元组仍有完整的独立父，只改变它们在页上的编码。",
+    "arms": "a　逐元组存原始引用。b　按角色去掉重复元数据或改用 0／8／16／32 位坐标。c　边发行边为各角色建立相同的编码。",
+    "fix": "解码器独立检查原始完整线序、类型化地址、版本以及原 Run 的全部源效果。损坏坐标必须在提交之前拒绝。",
+    "measure": "3mm 的 220,972 个元组及 526,429 个父引用完全保留。包含头、目录与坐标的完整编码从 17,104,712 降至 5,995,652 B。",
+    "note": "3mm 原页／流式自适应编码为 1,970.53／1,923.11 ms，四次配对中两次更快。累计页字节与峰值进程 RSS 分开计量。",
+    "src": "S103",
+    "diagram": [
+      {
+        "title": "Flat",
+        "layers": [
+          [
+            [
+              "n",
+              "parent tuple"
+            ]
+          ],
+          [
+            [
+              "s",
+              "physical refs"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Role dictionary",
+        "layers": [
+          [
+            [
+              "n",
+              "role words"
+            ]
+          ],
+          [
+            [
+              "s",
+              "ordered coordinates"
+            ]
+          ],
+          [
+            [
+              "v",
+              "read physical refs"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Streamed",
+        "layers": [
+          [
+            [
+              "n",
+              "emit parents"
+            ]
+          ],
+          [
+            [
+              "s",
+              "build per-role lanes"
+            ]
+          ],
+          [
+            [
+              "v",
+              "seal immutable page"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "118-compiled-page-suffix",
+    "section": "可执行 Cell 块",
+    "title": "后缀可以按确定的端口接线执行到一次提交吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "每个点查或 primitive 的操作数在编译期已有来源。只在整组条件都成立时物化源槽位，并尝试按父端口复用函数请求。",
+    "arms": "a　复用父行后进入原递归验证器。b　从父列和之前的运算结果直接执行后缀。c　当完整键只依赖一个父时，按其物理来源共享函数结果。",
+    "fix": "实际父和每份根配方保持独立，完整键、标量语义、水位和原提交顺序均由原生 CPU 负责。",
+    "measure": "3mm 的 220,268 组有效父连接中，146,965 组完成。其余分别因缺键、标量或结果条件、水位而拒绝，只有完成者物化最终绑定。",
+    "note": "父端口复用省去 7,300 次点查。完整推理为递归 1,987.72 ms，寄存器 1,952.33 ms，加端口复用 1,962.73 ms。",
+    "src": "S104",
+    "diagram": [
+      {
+        "title": "Recursive",
+        "layers": [
+          [
+            [
+              "s",
+              "parent bindings"
+            ]
+          ],
+          [
+            [
+              "v",
+              "interpret each step"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Compiled suffix",
+        "layers": [
+          [
+            [
+              "s",
+              "parent / result fields"
+            ]
+          ],
+          [
+            [
+              "v",
+              "execute exact operations"
+            ]
+          ],
+          [
+            [
+              "s",
+              "materialize winners"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Parent port",
+        "layers": [
+          [
+            [
+              "s",
+              "proved key source"
+            ]
+          ],
+          [
+            [
+              "v",
+              "reuse function receipt"
+            ]
+          ],
+          [
+            [
+              "v",
+              "check output predicate"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "119-coordinate-cell-block",
+    "section": "坐标驱动的验真",
+    "title": "验证器能直接消费角色坐标吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "某一角色的坐标在同一页内唯一标识一个带版本的物理词。把该坐标直接接入验证程序可以避免逐元组重建哈希键。",
+    "arms": "a　先还原完整父数组。b　按需验证每个字典词，按坐标取得源行。c　把单父可确定的后缀结果也写到坐标槽。",
+    "fix": "页内等值约束、后缀、实际父引用和提交顺序保持一致；专门的源程序覆盖缺失函数、后续填充、union 和越界坐标。",
+    "measure": "CG 的完整推理为 666.03 ms（哈希绑定）、646.54 ms（父坐标）和 630.41 ms（父及后缀坐标）。3mm 则为 1,853.92、1,933.31 和 1,938.09 ms。",
+    "note": "相似的少读次数没有保证相似的墙钟收益。直接列可给相同物理地址多个坐标，按坐标计的复用次数也会改变。",
+    "src": "S105",
+    "diagram": [
+      {
+        "title": "Expand",
+        "layers": [
+          [
+            [
+              "n",
+              "sealed coordinates"
+            ]
+          ],
+          [
+            [
+              "s",
+              "expand parent refs"
+            ]
+          ],
+          [
+            [
+              "v",
+              "hash lookup"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Check word",
+        "layers": [
+          [
+            [
+              "s",
+              "role coordinate"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verify one source"
+            ]
+          ],
+          [
+            [
+              "v",
+              "cross-role test"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Check port",
+        "layers": [
+          [
+            [
+              "s",
+              "word + step"
+            ]
+          ],
+          [
+            [
+              "v",
+              "reuse exact point"
+            ]
+          ],
+          [
+            [
+              "s",
+              "source binding"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "120-iterative-page-admission",
+    "section": "迭代 Bake",
+    "title": "再跑一轮选择，会改变保留的验证程序吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "对三个训练源的通用查询形状，测量启用页程序的净收益。第二轮在已经选中第一批形状的实际引擎上测量其余项。",
+    "arms": "a　一次选择最多十六个形状。b　两轮各选最多八个。c　训练九或八十一参数的静态回报头，在加载程序时选择形状。",
+    "fix": "冻结全部选择后才跑 CG 和 3mm。额外的新源形状单独测试，策略不能借助该图轨迹调参。",
+    "measure": "341 个入口归为 242 个形状。一次选择保留 15 个，两轮保留 16 个，两者只有 9 个相同。3mm 原模型 1,870.47 ms，两轮库 1,896.70 ms。",
+    "note": "这组迭代改变库成员，未增加模板深度。选出的库在留出程序上没有稳定优于普通执行。",
+    "src": "S106",
+    "diagram": [
+      {
+        "title": "One pass",
+        "layers": [
+          [
+            [
+              "s",
+              "all / none"
+            ]
+          ],
+          [
+            [
+              "t",
+              "paired time"
+            ]
+          ],
+          [
+            [
+              "s",
+              "select 16"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Two rounds",
+        "layers": [
+          [
+            [
+              "t",
+              "select first eight"
+            ]
+          ],
+          [
+            [
+              "s",
+              "run mixed library"
+            ]
+          ],
+          [
+            [
+              "t",
+              "admit next shapes"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Static head",
+        "layers": [
+          [
+            [
+              "s",
+              "shape properties"
+            ]
+          ],
+          [
+            [
+              "n",
+              "predict advantage"
+            ]
+          ],
+          [
+            [
+              "s",
+              "freeze membership"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "121-ordered-effect-blocks",
+    "section": "有序效果执行",
+    "title": "同一批规则实例能否共享效果程序？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "构造器、set、union 与 Spine 仍按原顺序发生。编译器可预先解析懒 Copy 链，还可以专门处理只写一个函数的形状。",
+    "arms": "a　解释原指令。b　同组共享紧凑指令位置与操作数接线。c　计算实际写入值，有效变化时才保留写入者的帧。",
+    "fix": "每个实际获胜者独立提交；保持源操作下标、构造器首次缺失、数值溢出及同键有序 merge 的语义。",
+    "measure": "3mm 有 102,108 次适用写入，其中 38,200 次没有有效变化。独立矩阵中原路径／效果块＋写入器的 RHS 为 326.86／304.29 ms，整轮 2,017.38／1,898.15 ms。",
+    "note": "规则 249 的两个构造器保留原序，直接从已解析的输入取值。绕过 Copy 本身不足以保证加速。",
+    "src": "S107",
+    "diagram": [
+      {
+        "title": "Source ops",
+        "layers": [
+          [
+            [
+              "s",
+              "copy slots"
+            ]
+          ],
+          [
+            [
+              "v",
+              "construct and set"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Effect block",
+        "layers": [
+          [
+            [
+              "s",
+              "resolved operands"
+            ]
+          ],
+          [
+            [
+              "v",
+              "original op ordinals"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Writer",
+        "layers": [
+          [
+            [
+              "s",
+              "compute candidate"
+            ]
+          ],
+          [
+            [
+              "v",
+              "ordered merge"
+            ]
+          ],
+          [
+            [
+              "s",
+              "retain changed writer"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "122-ordered-repair-reuse",
+    "section": "union 与 repair",
+    "title": "同一批效果触发的修复，哪些维护可以省掉？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "union 已把被替换类的反向依赖移到保留类。某个存活且没有键冲突的事实，可采用已经被正确移动的订阅。",
+    "arms": "a　按原方向合并有序桶并重新构建订阅。b　唤醒原成员后合并较小集合。c　结合已解码字段替换、实际键检查和已有订阅采用。",
+    "fix": "碰撞、退役、Set 和有序 union 都由原源处理；独立重建最终反向边，并核对全部执行和物理来源。",
+    "measure": "3mm 的第一组中，反向插入候选 815,544→65,347，repair 110.89→71.75 ms。另一组再复用已重定向订阅，repair 108.37→64.03 ms。",
+    "note": "较少的 repair 工作不会总是降低整轮。Deriche 对应组合的 repair 降到约 108 ms，整轮则依具体处理方式而变化。",
+    "src": "S108",
+    "diagram": [
+      {
+        "title": "Original",
+        "layers": [
+          [
+            [
+              "s",
+              "displaced readers"
+            ]
+          ],
+          [
+            [
+              "v",
+              "rebuild subscriptions"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Smaller bucket",
+        "layers": [
+          [
+            [
+              "v",
+              "wake old readers"
+            ]
+          ],
+          [
+            [
+              "s",
+              "move small reverse set"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Adopt",
+        "layers": [
+          [
+            [
+              "v",
+              "check no collision"
+            ]
+          ],
+          [
+            [
+              "s",
+              "reuse redirected edges"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "123-paged-cell-ids",
+    "section": "物理 Cell 寻址",
+    "title": "密集创建的 Cell 适合哪种物理布局？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "同一事实始终通过 Cell id 和操作号引用。连续存放活记录，或按 id 分成小页，都可改变访问局部性。",
+    "arms": "a　普通哈希存储。b　稳定 id 映射到稠密 arena。c　每 16／64 个逻辑 id 共享位图，以 rank 定位实际记录。",
+    "fix": "同一输入分别在精确 CPU 与真实模型路径执行。任意移位都要保留旧地址可读。另测新进程 RSS 和稀疏大 id 的插入、迁移与退役。",
+    "measure": "3mm 普通模型／稠密 arena／64 槽页为 1,962.14／1,810.46／1,845.54 ms。三条路径终点都保留 94,210 个活 Cell。",
+    "note": "64 槽页实际搬移了 1,451,250 个记录位置。容量、终点物理记录数和进程峰值内存是不同计量。",
+    "src": "S109",
+    "diagram": [
+      {
+        "title": "Hash",
+        "layers": [
+          [
+            [
+              "s",
+              "stable id"
+            ]
+          ],
+          [
+            [
+              "s",
+              "hash bucket"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Dense arena",
+        "layers": [
+          [
+            [
+              "s",
+              "stable id"
+            ]
+          ],
+          [
+            [
+              "s",
+              "reverse slot"
+            ]
+          ],
+          [
+            [
+              "s",
+              "live record"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Rank page",
+        "layers": [
+          [
+            [
+              "s",
+              "id prefix"
+            ]
+          ],
+          [
+            [
+              "s",
+              "bitmap rank"
+            ]
+          ],
+          [
+            [
+              "s",
+              "page-local record"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "124-joint-block-runtime",
+    "section": "联合执行",
+    "title": "在同一引擎里同时改变页、效果和修复会怎样？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "固定模型和源调度，联合执行压缩坐标页、后缀程序、有序效果块及修补。预付父地址的对照仍重新验真。",
+    "arms": "a　普通在线发行。b　在线走组合路径。c　在同一二进制中重放原先验真成功的父地址，分别测原路径与组合路径。",
+    "fix": "同一来源下的原始密封页、获胜父、实际 Cell 和逐 Run 语义完全对齐。诊断重放不获得在线发现贡献。",
+    "measure": "Deriche 在线从 3,826.34 变为 3,931.51 ms；只重放成功地址时从 1,671.17 降至 1,600.78 ms。同组默认 CPU 为 1,599.71 ms。",
+    "note": "在线还要支付构造所有候选页的费用。不能把单项指标的下降相加当作整轮速度。",
+    "src": "S110",
+    "diagram": [
+      {
+        "title": "Online",
+        "layers": [
+          [
+            [
+              "n",
+              "actual parent issuer"
+            ]
+          ],
+          [
+            [
+              "v",
+              "ordinary verifier"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Joint",
+        "layers": [
+          [
+            [
+              "n",
+              "role coordinates"
+            ]
+          ],
+          [
+            [
+              "v",
+              "compiled block"
+            ]
+          ],
+          [
+            [
+              "s",
+              "effect / repair"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Prepaid",
+        "layers": [
+          [
+            [
+              "t",
+              "accepted addresses"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verify again"
+            ]
+          ],
+          [
+            [
+              "s",
+              "ordered source"
+            ]
+          ]
+        ]
+      }
+    ],
+    "observation": {
+      "figure": "124-joint-observations.svg",
+      "source": "benchmarks/pass3-cell-gpu/block-execution-ceiling/latency.svg",
+      "title": "真实发行和已知成功地址下的完整推理时间",
+      "caption": "每组除以相同输入上独立默认 CPU 的中位数。重放只提供父地址，原有验真和执行仍实际进行。"
+    }
+  },
+  {
+    "id": "125-checked-page-root",
+    "section": "验真与实例化",
+    "title": "验过的同一页和 lane 可以直接授权物理根吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "所有输入都已被原验证器检查。将不可伪造的页槽和借用的图视图交给根配方，避免对同一父再次查表。",
+    "arms": "a　普通根绑定再次解码。b　验证相同页、lane、Run、模板和源布局，直接采用已检查的槽。c　槽位顺序完全相同时复制连续输入缓冲。",
+    "fix": "原提交仍核对并消费独立的根输入。改变 lane、模板、版本或撤回票据必须失败。",
+    "measure": "3mm 的 146,965 份成功多父绑定去掉 1,281,847 次重复表头核对，坐标版／直接移交分别为 1,852.52／1,779.50 ms。",
+    "note": "这一步消除重复根验证，并保留模型究竟签发了哪些物理来源。",
+    "src": "S111",
+    "diagram": [
+      {
+        "title": "Decode again",
+        "layers": [
+          [
+            [
+              "s",
+              "verified binding"
+            ]
+          ],
+          [
+            [
+              "v",
+              "read root headers"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Attested lane",
+        "layers": [
+          [
+            [
+              "v",
+              "same sealed page"
+            ]
+          ],
+          [
+            [
+              "v",
+              "same lane and Run"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Activate",
+        "layers": [
+          [
+            [
+              "s",
+              "checked inputs"
+            ]
+          ],
+          [
+            [
+              "v",
+              "consume root"
+            ]
+          ],
+          [
+            [
+              "s",
+              "physical Cell"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "126-issuer-union-position",
+    "section": "union 证书",
+    "title": "能否在查反向读者前指出被替换的类？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "模型可以引用已经签发的父字或当前 Cell 的构造结果槽。若缺少一个可由完整键确定的结果，可将这个请求作为额外前提。",
+    "arms": "a　只给独立父引用。b　附加模板中的构造输出槽。c　让 Rust 完成一次类型化点读，并在 union 前复查原始来源和版本。",
+    "fix": "显式 RHS、构造器赋值和同余碰撞分别计数。位置提示不单独证明完整读者表。",
+    "measure": "3mm 有 28,142 次有效 union。规则 317 原先不能指出任何被替换端；补上 AddContext 完整键的结果后，1,957／1,957 次均可核对。",
+    "note": "这组完整程序为此新增 38,696 次点查；诊断时间从 1,924.36 增至 1,965.05 ms。原反向遍历在该控制中完整执行。",
+    "src": "S112",
+    "diagram": [
+      {
+        "title": "Parent only",
+        "layers": [
+          [
+            [
+              "n",
+              "parent word"
+            ]
+          ],
+          [
+            [
+              "v",
+              "resolve endpoint"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Local result",
+        "layers": [
+          [
+            [
+              "n",
+              "Cell + output slot"
+            ]
+          ],
+          [
+            [
+              "v",
+              "check actual root"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Point request",
+        "layers": [
+          [
+            [
+              "n",
+              "symbolic key"
+            ]
+          ],
+          [
+            [
+              "s",
+              "physical result"
+            ]
+          ],
+          [
+            [
+              "v",
+              "check at union"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "127-physical-union-locator",
+    "section": "union 证书",
+    "title": "给出 Cell、操作号和字段，能否直接驱动更新？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "在反向集合提供候选之前，从 losing owner 与已签父发射位置掩码。模型可以只给出少量具体地址。",
+    "arms": "a　编译器直接槽与 Copy 别名。b　训练的共享字段头发射地址和掩码。c　核对源字段、序号以及覆盖计数，完整时直接按序通知。",
+    "fix": "模型输入不含真实反向成员和受影响字段标签。留出程序上对每个通过的字段修补重新解码源数据。",
+    "measure": "3mm 宽阈值提出 39,346 个字段，25,535 个真实命中。可寻址范围内共有 25,812 个，全部实际标量位置为 70,336 个。",
+    "note": "8,350／19,182 个非空 union 得到了完整读者表。高条件覆盖与全局完整性是不同的结果。",
+    "src": "S113",
+    "diagram": [
+      {
+        "title": "Static ports",
+        "layers": [
+          [
+            [
+              "s",
+              "template slot"
+            ]
+          ],
+          [
+            [
+              "v",
+              "source equality"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Learned locations",
+        "layers": [
+          [
+            [
+              "n",
+              "Cell / op / mask"
+            ]
+          ],
+          [
+            [
+              "v",
+              "positive witnesses"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Complete list",
+        "layers": [
+          [
+            [
+              "v",
+              "distinct readers"
+            ]
+          ],
+          [
+            [
+              "v",
+              "exact cardinality"
+            ]
+          ],
+          [
+            [
+              "s",
+              "notify in order"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "128-implicit-owner-subscriber",
+    "section": "可退役的状态",
+    "title": "既然能指出 owner，哪些反向记录真的可以删除？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "原事实及模板定义足以恢复自己的物理读者地址，现有正向订阅可证明该地址确实订阅了当前类。外部读者需要另外表示。",
+    "arms": "a　显式反向桶。b　仅在唯一读者可重建时省掉桶。c　继续从混合桶中省去有正向证明的 owner 地址。",
+    "fix": "按原序恢复每次 union 的完整读者集合，逐 Run 核对实际通知和后续效果。用同算法显式存储与被销毁的反向索引字节作对照。",
+    "measure": "3mm 省去 72,401／321,407 条边，61,102 个类没有反向头。反向索引 25.84→10.78 MB，完整动态 Graph 140.28→125.22 MB。",
+    "note": "9,004 次 union 同时关联 owner 与其他读者。如果把正确的局部命中当成完整列表，会少 35,524 次通知。",
+    "src": "S114",
+    "diagram": [
+      {
+        "title": "Explicit",
+        "layers": [
+          [
+            [
+              "s",
+              "class bucket"
+            ]
+          ],
+          [
+            [
+              "s",
+              "all physical readers"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Self only",
+        "layers": [
+          [
+            [
+              "s",
+              "class + owner slot"
+            ]
+          ],
+          [
+            [
+              "v",
+              "forward membership"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Mixed",
+        "layers": [
+          [
+            [
+              "v",
+              "derive owner"
+            ]
+          ],
+          [
+            [
+              "s",
+              "explicit peers"
+            ]
+          ],
+          [
+            [
+              "v",
+              "ordered wake"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "129-run-proposal-waves",
+    "section": "大批量推理",
+    "title": "先生成整个 Run 的 token，再一起验真可行吗？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "源 Run 在搜索期间不公开 RHS。把原有单父和多父神经发行器分成签发、验证两遍，网络状态仍按原生成顺序前进。",
+    "arms": "a　每条规则签发后立即验真。b　先生成一或八条规则的页。c　同一 Run 全部活跃规则先密封，再处理全部候选。",
+    "fix": "同一权重和原始初图。候选只有父地址、端口与版本；没有预先提供成功标签。核对每次神经决策与原始密封流。",
+    "measure": "3mm 单波最多 15,968 个 token，规则数的独立峰值为 222。1,812 个波含多条规则，862 个同时有两类父生成器。",
+    "note": "同组 3mm 完整推理由 1,899.89 降至 1,847.82 ms，sum-bits 为 31.36 与 31.47 ms。",
+    "src": "S115",
+    "diagram": [
+      {
+        "title": "Rule local",
+        "layers": [
+          [
+            [
+              "n",
+              "issue rule A"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verify A"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Rule window",
+        "layers": [
+          [
+            [
+              "n",
+              "seal several rules"
+            ]
+          ],
+          [
+            [
+              "v",
+              "check frozen window"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Whole Run",
+        "layers": [
+          [
+            [
+              "n",
+              "all model parents"
+            ]
+          ],
+          [
+            [
+              "s",
+              "hold private pages"
+            ]
+          ],
+          [
+            [
+              "v",
+              "verify then publish"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "130-speculative-cell-batches",
+    "section": "乐观分配",
+    "title": "在检查 LHS 之前能否先建出真实物理 Cell？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "把模型建议的模板与数量用于分配。私有记录在命中之前持有真实 backing，但没有可在图中查询的公开身份。",
+    "arms": "a　只 reserve 容量。b　按预测模板预建实际 Cell。c　把预建 Cell 关联到已签发的页、父、序号和 lane。",
+    "fix": "只在原 source 真正创建物理根时接管。比较实际 backing 指针。被撤销或过期的命名凭证不得领走其他记录。",
+    "measure": "sum-bits 采用独立固定小预算时，5,764 个新根中 Run 级具名预建供给 1,514 个，逐页具名供给 2,813 个。",
+    "note": "容量保留不记作已预建的 Cell。写入者在有效变化前可能仍需普通临时帧，这种晋升与直接构造分别计数。",
+    "src": "S116",
+    "diagram": [
+      {
+        "title": "Reserve",
+        "layers": [
+          [
+            [
+              "n",
+              "template budget"
+            ]
+          ],
+          [
+            [
+              "s",
+              "capacity only"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Real records",
+        "layers": [
+          [
+            [
+              "n",
+              "count by template"
+            ]
+          ],
+          [
+            [
+              "s",
+              "private Cells"
+            ]
+          ],
+          [
+            [
+              "v",
+              "accept at commit"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Named records",
+        "layers": [
+          [
+            [
+              "n",
+              "sealed parent word"
+            ]
+          ],
+          [
+            [
+              "s",
+              "private lane"
+            ]
+          ],
+          [
+            [
+              "v",
+              "same root serial"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "131-neural-allocation-policy",
+    "section": "分配需求预测",
+    "title": "网络如何在尚未验真时决定每种模板备多少份？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "共享预测头从过去的发行、成功和实建数量及程序形状估计下一批需求，发出各个模板的非负计数。",
+    "arms": "a　沿用上次实建数。b　在三个训练程序上拟合偏向覆盖的需求回归。c　比较提前一整个 Run、已知当前候选页大小和较小全局预算。",
+    "fix": "以实际源时刻产生的新根为标签。Run 特征中当前页大小为零；对留出输入先预测整张数量向量，再按最大余数分配全局预算。",
+    "measure": "3mm 同一 Run 预测总计预建 232,796 个记录。模板池兑现 137,864 个，逐 token 具名兑现 78,955 个，总共有 228,095 个新根。",
+    "note": "预测数量接近真实总数仍可能配错具体规则、时刻或父实例。这里独立测量预算与存储，再在下一组联合执行。",
+    "src": "S117",
+    "diagram": [
+      {
+        "title": "History",
+        "layers": [
+          [
+            [
+              "s",
+              "previous offers / births"
+            ]
+          ],
+          [
+            [
+              "n",
+              "shared demand head"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Run vector",
+        "layers": [
+          [
+            [
+              "n",
+              "counts per template"
+            ]
+          ],
+          [
+            [
+              "s",
+              "budget across rules"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Page forecast",
+        "layers": [
+          [
+            [
+              "n",
+              "current offer count"
+            ]
+          ],
+          [
+            [
+              "s",
+              "allocate before check"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "132-wave-cell-allocation",
+    "section": "预测后批量物化",
+    "title": "为所有候选都预建一份，能覆盖多少实际分配？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "先预测并安置真实私有 Cell，随后密封整个 Run 的模型 token，最后才处理源前提和效果。极端控制给每份 token 一份私有存储。",
+    "arms": "a　全 Run 签发，不预建。b　按预测分模板预建。c　给所有已签发 token 预建具名记录，失败只退役私有数据。",
+    "fix": "首个验证器的边界有独立计数。在两个留出程序中，所有提案及所有 granted 记录都在各自 Run 的第一次验真前完成。",
+    "measure": "3mm 实际预建 1,066,140 个，228,095 次新根分配全部保留原 backing，其余 838,045 个未发布。单波峰值 15,968 个。",
+    "note": "同组纯合批 1,837.76 ms，全候选具名预建 1,987.99 ms。另一次联合试验也用编译过的块来批量验证这些已生成的父。",
+    "src": "S118",
+    "diagram": [
+      {
+        "title": "Wave only",
+        "layers": [
+          [
+            [
+              "n",
+              "all source tokens"
+            ]
+          ],
+          [
+            [
+              "v",
+              "whole-Run barrier"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Forecast pool",
+        "layers": [
+          [
+            [
+              "n",
+              "template counts"
+            ]
+          ],
+          [
+            [
+              "s",
+              "real private slab"
+            ]
+          ],
+          [
+            [
+              "v",
+              "publish winners"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Every lane",
+        "layers": [
+          [
+            [
+              "n",
+              "all sealed parents"
+            ]
+          ],
+          [
+            [
+              "s",
+              "one Cell per lane"
+            ]
+          ],
+          [
+            [
+              "v",
+              "drop unused"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "133-group-named-cells",
+    "section": "批内所有权",
+    "title": "能否保留父凭证，同时让正确的候选共享预建记录？",
+    "status": "已测 · 原生 Cell CPU 研究执行器",
+    "q": "把预建记录的所有者从一个猜测的独立 serial 改为同模板的一组已签页。只有本组中通过验证且未消费的 lane 可以真正领取一次。",
+    "arms": "a　同模板无名池。b　每个预建记录固定绑定到一个预测 serial。c　保留具名父页和逐 lane 认领位图，允许尚空闲的同模板记录重新分配。",
+    "fix": "完整检查页、epoch、规则、模板、源父和版本。过期、异组、撤回以及重复提交的凭证分别验证。",
+    "measure": "在同样的 232,796 个 3mm 预建记录中，逐一具名用上 78,955 个，批内具名认领用上 137,864 个，恢复了池化的全部命中。",
+    "note": "3mm 具名／批内具名中位数 1,948.71／1,993.46 ms，额外的完整性检查仍有代价。认领位图峰值 2,144 B。",
+    "src": "S119",
+    "diagram": [
+      {
+        "title": "Pooled",
+        "layers": [
+          [
+            [
+              "s",
+              "template slab"
+            ]
+          ],
+          [
+            [
+              "v",
+              "next eligible slot"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "One serial",
+        "layers": [
+          [
+            [
+              "n",
+              "one named token"
+            ]
+          ],
+          [
+            [
+              "s",
+              "one reserved Cell"
+            ]
+          ]
+        ]
+      },
+      {
+        "title": "Group voucher",
+        "layers": [
+          [
+            [
+              "n",
+              "sealed pages"
+            ]
+          ],
+          [
+            [
+              "v",
+              "check and claim lane"
+            ]
+          ],
+          [
+            [
+              "s",
+              "use any free member"
+            ]
+          ]
+        ]
+      }
+    ]
   }
 ]
