@@ -1,0 +1,1952 @@
+{
+ "schema": "eggfuse-ripsat-strict-programs/v1",
+ "target_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+ "evidence_sha256": "23e63daa7aa6441e9f83f44aafd475480558259e01c2f2964066b517899aa70e",
+ "trust_index_sha256": "7d25bac5b8256fb7ddf45d0a25ba464e3370ddb0d3c832585a4631eae0b71f3a",
+ "donor_sha256": {
+  "dot-product": "c0d1da51c3aca3e61c945b39dc7da9e3ed135d77c57330ffd34dbbed8adc1159",
+  "jacobi-1d": "36394e6af88e962527a232db783fbb39e8ffb95e0fabf8087c68c013f4c43a95"
+ },
+ "strict_named": {
+  "depth": 1,
+  "library": [
+   [
+    [
+     143,
+     1,
+     55
+    ]
+   ]
+  ]
+ },
+ "library_sha256": "34e6bc837c3c60b3384c0d43e2d05ab814c5421722140c834dc4304980c5c465",
+ "strict_named_static_consumer": {
+  "depth": 1,
+  "library": [
+   [
+    [
+     446,
+     0,
+     446
+    ]
+   ]
+  ]
+ },
+ "strict_named_independent_corroboration": {
+  "depth": 1,
+  "library": [
+   [
+    [
+     24,
+     4,
+     65
+    ]
+   ],
+   [
+    [
+     143,
+     1,
+     55
+    ]
+   ]
+  ]
+ },
+ "mapped_decisions": [
+  {
+   "sample_id": "dot-product-p24-o5-c151-augmented",
+   "donor": "dot-product",
+   "status": "other_producer",
+   "target_edge": [
+    24,
+    4,
+    65
+   ]
+  },
+  {
+   "sample_id": "dot-product-p143-o2-c137-augmented",
+   "donor": "dot-product",
+   "status": "same_producer",
+   "target_edge": [
+    143,
+    1,
+    55
+   ]
+  },
+  {
+   "sample_id": "jacobi-1d-p143-o2-c137-augmented",
+   "donor": "jacobi-1d",
+   "status": "same_producer",
+   "target_edge": [
+    143,
+    1,
+    55
+   ]
+  }
+ ],
+ "independently_corroborated": [
+  {
+   "sample_id": "dot-product-p24-o5-c151-augmented",
+   "donor": "dot-product",
+   "static": {
+    "producer_rule": 24,
+    "producer_op": 4,
+    "consumer_rule": 65,
+    "pivot": 0,
+    "producer_schema": "d35c88f8770be7b49d1de2be6b8d5f9706503fd1fe5992d81a44d8499fa58864",
+    "consumer_schema": "5735a66ed30604b8fdc7ff330b91d31f51a04eb610d3ab10ba22b9eeea08d452",
+    "source_set": "always-run",
+    "table": "Bop",
+    "sorts": [
+     [
+      "BinaryOp",
+      "eq"
+     ],
+     [
+      "Expr",
+      "eq"
+     ],
+     [
+      "Expr",
+      "eq"
+     ],
+     [
+      "Expr",
+      "eq"
+     ]
+    ],
+    "producer_columns": [
+     {
+      "slot": 9
+     },
+     {
+      "slot": 2
+     },
+     {
+      "slot": 4
+     },
+     {
+      "slot": 10
+     }
+    ],
+    "consumer_slots": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "rhs_projections": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      1
+     ],
+     [
+      2,
+      2
+     ],
+     [
+      3,
+      3
+     ]
+    ]
+   },
+   "native": {
+    "history_producer_occurrences": [
+     8
+    ],
+    "local_proof": [
+     {
+      "record": 8,
+      "required": [
+       10,
+       16,
+       6
+      ],
+      "output_sites": [
+       {
+        "path": "head/0/expr/1/args/2",
+        "span": "Some(\"/Volumes/EggFuseWorkspace/experiments/ripsat-donor-evidence-v2/samples/dot-product-p24-o5-c151-augmented/entry.egg\"):1488:1504",
+        "token": 14,
+        "columns": [
+         0,
+         11,
+         11,
+         14
+        ]
+       }
+      ]
+     }
+    ],
+    "native_consumer_reads": [
+     {
+      "producer_record": 8,
+      "consumer_record": 18,
+      "producer_index": 2,
+      "consumer_index": 3,
+      "write_read_token": 14,
+      "read_site": "Some(\"/Volumes/EggFuseWorkspace/experiments/ripsat-donor-evidence-v2/samples/dot-product-p24-o5-c151-augmented/entry.egg\"):809:820",
+      "source_parent_port": [
+       0,
+       13
+      ]
+     }
+    ],
+    "table": "Bop",
+    "local_args": [
+     0,
+     11,
+     11
+    ],
+    "local_result": 14,
+    "native_consumer_rule_present": true,
+    "local_ids": "sample-local",
+    "checked_seed_ports": 9
+   },
+   "artifacts": {
+    "origin.json": "66aa2b2a6f78369bd054db4de64cc18ecdef999e825b4b84862181c1067df637",
+    "entry.egg": "ab750e87a9646c3c12d1fb718f5f85a829cea677df3738231cac7b49cc33f584",
+    "native/entry.egg": "ab750e87a9646c3c12d1fb718f5f85a829cea677df3738231cac7b49cc33f584",
+    "native/acceptance.json": "230c644dd24eb8575df89e47a5ee93f20cd2cf09e150bcaa0670dc1e772f6ecc",
+    "native/ripen.json": "c984e48dfd26fbd6a2bf33bb34ff91d233ffca5591b18681a2b4cf9102a6a15f",
+    "native/history.json": "72723f4d6b45db9d8ed06c587e07b143aeff833eb9955687daad7aa9bd109856",
+    "native/initial-state.json": "df750027c2265034b13e5d4e02b175621c69cdcf55f3e176e3cc07f9bbaf8482",
+    "native/saturated-rule-composition.json": "282cfe63a352f1d27e4e60d2677a65ff8194aeb0f9149fc2b75fdcf753b3f412"
+   },
+   "producer_input_proof": {
+    "explicit_roles": [
+     1,
+     2
+    ],
+    "deterministic_checks": [
+     [
+      0,
+      {
+       "table": "PtrAdd"
+      }
+     ]
+    ]
+   },
+   "local_seed_producer_serial": 12496,
+   "corroborating_receipt": {
+    "producer_rule": 24,
+    "producer_op": 4,
+    "producer_epoch": 788,
+    "producer_serial": 9080,
+    "consumer_rule": 65,
+    "consumer_atom": 0,
+    "consumer_epoch": 797,
+    "consumer_serial": 9736,
+    "consumer_version": 788,
+    "fact": 21285857918980,
+    "birth_event": [
+     "birth",
+     27,
+     [
+      {
+       "Eq": 10
+      },
+      {
+       "Eq": 554050781229
+      },
+      {
+       "Eq": 554050781235
+      }
+     ],
+     {
+      "Eq": 21285857918987
+     },
+     21285857918980,
+     [
+      0,
+      24
+     ]
+    ]
+   },
+   "donor_join": "other_producer",
+   "observation": "native_local_writer_and_reader_plus_independent_original_source_receipt",
+   "target": {
+    "producer_rule": 24,
+    "producer_op": 4,
+    "consumer_rule": 65,
+    "pivot": 0,
+    "producer_schema": "d35c88f8770be7b49d1de2be6b8d5f9706503fd1fe5992d81a44d8499fa58864",
+    "consumer_schema": "5735a66ed30604b8fdc7ff330b91d31f51a04eb610d3ab10ba22b9eeea08d452",
+    "source_set": "always-run",
+    "table": "Bop",
+    "sorts": [
+     [
+      "BinaryOp",
+      "eq"
+     ],
+     [
+      "Expr",
+      "eq"
+     ],
+     [
+      "Expr",
+      "eq"
+     ],
+     [
+      "Expr",
+      "eq"
+     ]
+    ],
+    "producer_columns": [
+     {
+      "slot": 9
+     },
+     {
+      "slot": 2
+     },
+     {
+      "slot": 4
+     },
+     {
+      "slot": 10
+     }
+    ],
+    "consumer_slots": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "rhs_projections": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      1
+     ],
+     [
+      2,
+      2
+     ],
+     [
+      3,
+      3
+     ]
+    ]
+   }
+  },
+  {
+   "sample_id": "dot-product-p143-o2-c137-augmented",
+   "donor": "dot-product",
+   "static": {
+    "producer_rule": 143,
+    "producer_op": 1,
+    "consumer_rule": 55,
+    "pivot": 0,
+    "producer_schema": "0957912358ce9f5a96dee402bdfcea29acda7c77e84fd6d57344d2403b04bbff",
+    "consumer_schema": "519fde6cfce4abbe3c095b7ef7b9fc8636802e44ed6c09bec2a4d3cc90e69dda",
+    "source_set": "always-run",
+    "table": "Single",
+    "sorts": [
+     [
+      "Expr",
+      "eq"
+     ],
+     [
+      "Expr",
+      "eq"
+     ]
+    ],
+    "producer_columns": [
+     {
+      "slot": 3
+     },
+     {
+      "slot": 4
+     }
+    ],
+    "consumer_slots": [
+     0,
+     1
+    ],
+    "rhs_projections": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "native": {
+    "history_producer_occurrences": [
+     0
+    ],
+    "local_proof": [
+     {
+      "record": 0,
+      "required": [
+       8
+      ],
+      "output_sites": [
+       {
+        "path": "head/0/expr/0",
+        "span": "Some(\"/Volumes/EggFuseWorkspace/experiments/ripsat-donor-evidence-v2/samples/dot-product-p143-o2-c137-augmented/entry.egg\"):932:953",
+        "token": 6,
+        "columns": [
+         4,
+         5
+        ]
+       }
+      ]
+     }
+    ],
+    "native_consumer_reads": [
+     {
+      "producer_record": 0,
+      "consumer_record": 8,
+      "producer_index": 0,
+      "consumer_index": 1,
+      "write_read_token": 6,
+      "read_site": "Some(\"/Volumes/EggFuseWorkspace/experiments/ripsat-donor-evidence-v2/samples/dot-product-p143-o2-c137-augmented/entry.egg\"):432:445",
+      "source_parent_port": [
+       0,
+       8
+      ]
+     }
+    ],
+    "table": "Single",
+    "local_args": [
+     4
+    ],
+    "local_result": 5,
+    "native_consumer_rule_present": true,
+    "local_ids": "sample-local",
+    "checked_seed_ports": 3
+   },
+   "artifacts": {
+    "origin.json": "b54341ccb419a90464ebb8b0e9d2dc8164ff47610df0e39af9511bc63279ba93",
+    "entry.egg": "ab0d2adf13442c1e8505de4eed4374b138726c040c74898727911b0c0bc9b9ee",
+    "native/entry.egg": "ab0d2adf13442c1e8505de4eed4374b138726c040c74898727911b0c0bc9b9ee",
+    "native/acceptance.json": "1e1c59484185d7b2ca1a667ef05fa5ea8c7c04b225412f2db727e41c150d18d7",
+    "native/ripen.json": "89969942f58fed3a00bb35039683391319d49d4804207526f7acf804e0f919d4",
+    "native/history.json": "5e5b26b22fa28702bbeed197ab80521371ae62ca1964bd3c9ff32a6414f63e07",
+    "native/initial-state.json": "68a7180d6d7a6b4aaaae00a9904a471f20067c259f32b39dcab4945df7cfc3f9",
+    "native/saturated-rule-composition.json": "6554fe01d295793498185609e75f63ae2c091f4ef6f5a5846fcb28ff5c7713e3"
+   },
+   "producer_input_proof": {
+    "explicit_roles": [
+     0
+    ],
+    "deterministic_checks": []
+   },
+   "local_seed_producer_serial": 1737,
+   "corroborating_receipt": {
+    "producer_rule": 143,
+    "producer_op": 1,
+    "producer_epoch": 131,
+    "producer_serial": 1737,
+    "consumer_rule": 55,
+    "consumer_atom": 0,
+    "consumer_epoch": 135,
+    "consumer_serial": 1822,
+    "consumer_version": 131,
+    "fact": 3835405795329,
+    "birth_event": [
+     "birth",
+     323,
+     [
+      {
+       "Eq": 554050781213
+      }
+     ],
+     {
+      "Eq": 3835405795333
+     },
+     3835405795329,
+     [
+      203,
+      143
+     ]
+    ]
+   },
+   "donor_join": "same_producer",
+   "observation": "native_local_writer_and_reader_plus_independent_original_source_receipt",
+   "target": {
+    "producer_rule": 143,
+    "producer_op": 1,
+    "consumer_rule": 55,
+    "pivot": 0,
+    "producer_schema": "0957912358ce9f5a96dee402bdfcea29acda7c77e84fd6d57344d2403b04bbff",
+    "consumer_schema": "519fde6cfce4abbe3c095b7ef7b9fc8636802e44ed6c09bec2a4d3cc90e69dda",
+    "source_set": "always-run",
+    "table": "Single",
+    "sorts": [
+     [
+      "Expr",
+      "eq"
+     ],
+     [
+      "Expr",
+      "eq"
+     ]
+    ],
+    "producer_columns": [
+     {
+      "slot": 3
+     },
+     {
+      "slot": 4
+     }
+    ],
+    "consumer_slots": [
+     0,
+     1
+    ],
+    "rhs_projections": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "sample_id": "jacobi-1d-p143-o2-c137-augmented",
+   "donor": "jacobi-1d",
+   "static": {
+    "producer_rule": 143,
+    "producer_op": 1,
+    "consumer_rule": 55,
+    "pivot": 0,
+    "producer_schema": "0957912358ce9f5a96dee402bdfcea29acda7c77e84fd6d57344d2403b04bbff",
+    "consumer_schema": "519fde6cfce4abbe3c095b7ef7b9fc8636802e44ed6c09bec2a4d3cc90e69dda",
+    "source_set": "always-run",
+    "table": "Single",
+    "sorts": [
+     [
+      "Expr",
+      "eq"
+     ],
+     [
+      "Expr",
+      "eq"
+     ]
+    ],
+    "producer_columns": [
+     {
+      "slot": 3
+     },
+     {
+      "slot": 4
+     }
+    ],
+    "consumer_slots": [
+     0,
+     1
+    ],
+    "rhs_projections": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "native": {
+    "history_producer_occurrences": [
+     0
+    ],
+    "local_proof": [
+     {
+      "record": 0,
+      "required": [
+       8
+      ],
+      "output_sites": [
+       {
+        "path": "head/0/expr/0",
+        "span": "Some(\"/Volumes/EggFuseWorkspace/experiments/ripsat-donor-evidence-v2/samples/jacobi-1d-p143-o2-c137-augmented/entry.egg\"):901:922",
+        "token": 6,
+        "columns": [
+         4,
+         5
+        ]
+       }
+      ]
+     }
+    ],
+    "native_consumer_reads": [
+     {
+      "producer_record": 0,
+      "consumer_record": 8,
+      "producer_index": 0,
+      "consumer_index": 1,
+      "write_read_token": 6,
+      "read_site": "Some(\"/Volumes/EggFuseWorkspace/experiments/ripsat-donor-evidence-v2/samples/jacobi-1d-p143-o2-c137-augmented/entry.egg\"):401:414",
+      "source_parent_port": [
+       0,
+       8
+      ]
+     }
+    ],
+    "table": "Single",
+    "local_args": [
+     4
+    ],
+    "local_result": 5,
+    "native_consumer_rule_present": true,
+    "local_ids": "sample-local",
+    "checked_seed_ports": 3
+   },
+   "artifacts": {
+    "origin.json": "e5b83de887020212254d7d3e162be6d354770235ab66bb24a5c13e11e4357f34",
+    "entry.egg": "ce30a6187a8826672d0df9e862d2ead643f3d3ceaaa3bbe75f990bd8bb789eec",
+    "native/entry.egg": "ce30a6187a8826672d0df9e862d2ead643f3d3ceaaa3bbe75f990bd8bb789eec",
+    "native/acceptance.json": "74552920f4f43bdc918d25f230aa3505c1674b5811fcbce8246b0b9aea48e310",
+    "native/ripen.json": "0181f30d7fcbfcca845d9ff55b8aca95aa1b92d4ebf189b3ff7b2ea174cd386c",
+    "native/history.json": "f013e36bcee46b3e70cd298c87ea744c693297e4aac4c7cf81715c8f990bafe1",
+    "native/initial-state.json": "e20df61fe02bb484c7adb075d00478cc0a50170e8b6164686e82797f664e8f62",
+    "native/saturated-rule-composition.json": "511f148b2f7bee49a39034c21c0f0b33857737bd97bfd234c50f4f8a12dbee57"
+   },
+   "producer_input_proof": {
+    "explicit_roles": [
+     0
+    ],
+    "deterministic_checks": []
+   },
+   "local_seed_producer_serial": 5314,
+   "corroborating_receipt": {
+    "producer_rule": 143,
+    "producer_op": 1,
+    "producer_epoch": 225,
+    "producer_serial": 5314,
+    "consumer_rule": 55,
+    "consumer_atom": 0,
+    "consumer_epoch": 229,
+    "consumer_serial": 5598,
+    "consumer_version": 225,
+    "fact": 12081743003649,
+    "birth_event": [
+     "birth",
+     323,
+     [
+      {
+       "Eq": 554050781215
+      }
+     ],
+     {
+      "Eq": 12081743003653
+     },
+     12081743003649,
+     [
+      713,
+      143
+     ]
+    ]
+   },
+   "donor_join": "same_producer",
+   "observation": "native_local_writer_and_reader_plus_independent_original_source_receipt",
+   "target": {
+    "producer_rule": 143,
+    "producer_op": 1,
+    "consumer_rule": 55,
+    "pivot": 0,
+    "producer_schema": "0957912358ce9f5a96dee402bdfcea29acda7c77e84fd6d57344d2403b04bbff",
+    "consumer_schema": "519fde6cfce4abbe3c095b7ef7b9fc8636802e44ed6c09bec2a4d3cc90e69dda",
+    "source_set": "always-run",
+    "table": "Single",
+    "sorts": [
+     [
+      "Expr",
+      "eq"
+     ],
+     [
+      "Expr",
+      "eq"
+     ]
+    ],
+    "producer_columns": [
+     {
+      "slot": 3
+     },
+     {
+      "slot": 4
+     }
+    ],
+    "consumer_slots": [
+     0,
+     1
+    ],
+    "rhs_projections": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   }
+  }
+ ],
+ "paths": [
+  {
+   "path": [
+    [
+     143,
+     1,
+     55
+    ]
+   ],
+   "sample_chains": [
+    [
+     "dot-product-p143-o1-c55-full"
+    ],
+    [
+     "jacobi-1d-p143-o1-c55-full"
+    ]
+   ]
+  }
+ ],
+ "decisions": [
+  {
+   "sample_id": "dot-product-p24-o5-c151-full",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "not_a_returning_constructor"
+  },
+  {
+   "sample_id": "dot-product-p24-o5-c151-augmented",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "dot-product-p55-o1-c143-full",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "not_a_returning_constructor"
+  },
+  {
+   "sample_id": "dot-product-p55-o1-c143-augmented",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "dot-product-p55-o1-c143-producer",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "dot-product-p55-o1-c143-consumer",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "dot-product-p55-o1-c153-full",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "not_a_returning_constructor"
+  },
+  {
+   "sample_id": "dot-product-p55-o1-c424-full",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "not_a_returning_constructor"
+  },
+  {
+   "sample_id": "dot-product-p55-o1-c518-full",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "not_a_returning_constructor"
+  },
+  {
+   "sample_id": "dot-product-p143-o1-c55-full",
+   "donor": "dot-product",
+   "status": "locally_linked",
+   "reason": null,
+   "target_edge": [
+    143,
+    1,
+    55
+   ]
+  },
+  {
+   "sample_id": "dot-product-p143-o1-c55-augmented",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "dot-product-p143-o1-c55-producer",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "dot-product-p143-o1-c55-consumer",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "dot-product-p143-o2-c137-full",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "literal_or_non_slot_guard"
+  },
+  {
+   "sample_id": "dot-product-p143-o2-c137-augmented",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "dot-product-p143-o2-c137-producer",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "dot-product-p143-o2-c137-consumer",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "dot-product-p403-o0-c442-full",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "native_export_not_accepted"
+  },
+  {
+   "sample_id": "dot-product-p403-o0-c442-augmented",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "dot-product-p440-o3-c446-full",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "native_export_not_accepted"
+  },
+  {
+   "sample_id": "dot-product-p440-o3-c446-augmented",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "dot-product-p440-o3-c446-producer",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "dot-product-p440-o3-c446-consumer",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "dot-product-p446-o0-c446-full",
+   "donor": "dot-product",
+   "status": "static_consumer_only",
+   "reason": null,
+   "target_edge": [
+    446,
+    0,
+    446
+   ]
+  },
+  {
+   "sample_id": "dot-product-p446-o0-c446-producer",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "dot-product-p446-o0-c446-consumer",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "dot-product-p502-o2-c312-full",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "external_lhs_or_guard_not_implemented"
+  },
+  {
+   "sample_id": "dot-product-p502-o2-c312-augmented",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "dot-product-p502-o2-c498-full",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "external_lhs_or_guard_not_implemented"
+  },
+  {
+   "sample_id": "dot-product-p502-o2-c498-augmented",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "dot-product-p502-o3-c506-full",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "native_export_not_accepted"
+  },
+  {
+   "sample_id": "dot-product-p502-o3-c506-producer",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "dot-product-p502-o3-c506-consumer",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "dot-product-p504-o4-c506-full",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "native_export_not_accepted"
+  },
+  {
+   "sample_id": "dot-product-p504-o4-c506-producer",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "dot-product-p504-o4-c506-consumer",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "dot-product-p505-o4-c506-full",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "native_export_not_accepted"
+  },
+  {
+   "sample_id": "dot-product-p505-o4-c506-producer",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "dot-product-p505-o4-c506-consumer",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "dot-product-p506-o1-c507-full",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "native_export_not_accepted"
+  },
+  {
+   "sample_id": "dot-product-p506-o1-c510-full",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "native_export_not_accepted"
+  },
+  {
+   "sample_id": "dot-product-p539-o4-c49-full",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "external_lhs_or_guard_not_implemented"
+  },
+  {
+   "sample_id": "dot-product-p539-o4-c49-augmented",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "dot-product-p539-o4-c540-full",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "external_lhs_or_guard_not_implemented"
+  },
+  {
+   "sample_id": "dot-product-p539-o4-c540-augmented",
+   "donor": "dot-product",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "jacobi-1d-p55-o1-c143-full",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "not_a_returning_constructor"
+  },
+  {
+   "sample_id": "jacobi-1d-p55-o1-c143-augmented",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "jacobi-1d-p55-o1-c143-producer",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "jacobi-1d-p55-o1-c143-consumer",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "jacobi-1d-p55-o1-c424-full",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "not_a_returning_constructor"
+  },
+  {
+   "sample_id": "jacobi-1d-p55-o1-c518-full",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "not_a_returning_constructor"
+  },
+  {
+   "sample_id": "jacobi-1d-p92-o0-c90-full",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "external_lhs_or_guard_not_implemented"
+  },
+  {
+   "sample_id": "jacobi-1d-p143-o1-c55-full",
+   "donor": "jacobi-1d",
+   "status": "locally_linked",
+   "reason": null,
+   "target_edge": [
+    143,
+    1,
+    55
+   ]
+  },
+  {
+   "sample_id": "jacobi-1d-p143-o1-c55-augmented",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "jacobi-1d-p143-o1-c55-producer",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "jacobi-1d-p143-o1-c55-consumer",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "jacobi-1d-p143-o2-c137-full",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "literal_or_non_slot_guard"
+  },
+  {
+   "sample_id": "jacobi-1d-p143-o2-c137-augmented",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "jacobi-1d-p143-o2-c137-producer",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "jacobi-1d-p143-o2-c137-consumer",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "jacobi-1d-p328-o3-c328-full",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "not_a_returning_constructor"
+  },
+  {
+   "sample_id": "jacobi-1d-p446-o0-c446-full",
+   "donor": "jacobi-1d",
+   "status": "static_consumer_only",
+   "reason": null,
+   "target_edge": [
+    446,
+    0,
+    446
+   ]
+  },
+  {
+   "sample_id": "jacobi-1d-p446-o0-c446-producer",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "jacobi-1d-p446-o0-c446-consumer",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "jacobi-1d-p501-o5-c501-full",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "native_export_not_accepted"
+  },
+  {
+   "sample_id": "jacobi-1d-p501-o5-c501-augmented",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "jacobi-1d-p502-o3-c506-full",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "native_export_not_accepted"
+  },
+  {
+   "sample_id": "jacobi-1d-p502-o3-c506-producer",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "jacobi-1d-p502-o3-c506-consumer",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "jacobi-1d-p504-o4-c506-full",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "native_export_not_accepted"
+  },
+  {
+   "sample_id": "jacobi-1d-p504-o4-c506-producer",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "jacobi-1d-p504-o4-c506-consumer",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "jacobi-1d-p505-o4-c506-full",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "native_export_not_accepted"
+  },
+  {
+   "sample_id": "jacobi-1d-p505-o4-c506-producer",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "jacobi-1d-p505-o4-c506-consumer",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  },
+  {
+   "sample_id": "jacobi-1d-p506-o1-c507-full",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "native_export_not_accepted"
+  },
+  {
+   "sample_id": "jacobi-1d-p506-o1-c510-full",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "native_export_not_accepted"
+  },
+  {
+   "sample_id": "jacobi-1d-p539-o4-c540-full",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "external_lhs_or_guard_not_implemented"
+  },
+  {
+   "sample_id": "jacobi-1d-p539-o4-c540-augmented",
+   "donor": "jacobi-1d",
+   "status": "rejected",
+   "reason": "non_full_pair_scope"
+  }
+ ],
+ "certificates": [
+  {
+   "sample_id": "dot-product-p143-o1-c55-full",
+   "donor": "dot-product",
+   "donor_program_sha256": "c0d1da51c3aca3e61c945b39dc7da9e3ed135d77c57330ffd34dbbed8adc1159",
+   "artifacts": {
+    "origin.json": "610d9dfad2501a5b5854d510ac108bfaaa43956d7a8eb140a147ebaf7f91a026",
+    "entry.egg": "8950bb6bab1b764d276e083ad82631d455edcebd242b8614e01d97023fd00caa",
+    "native/entry.egg": "8950bb6bab1b764d276e083ad82631d455edcebd242b8614e01d97023fd00caa",
+    "native/acceptance.json": "ff0b07b1309958cf95cd0f529dec3ac79699fe65a3e7ea01d1d1c3ec68f4a5b4",
+    "native/ripen.json": "451c8bf1df938441819eb41047fa3f0b0b90588c2c0b3356b2b33c5b21acccca",
+    "native/history.json": "dacc4736fc723fde2549085da512f33286ef86429e421c6e3df428f469b6c9b4",
+    "native/initial-state.json": "52176bf611bd2e2442a76db369c59a5a422271f611dab5dfd9d97aae288c0f39",
+    "native/saturated-rule-composition.json": "4e09dcdeb632f6f1dd9e947a8b2a1986e3c7c9057c5d8c1016c1a922e891bbac"
+   },
+   "original": {
+    "result_fact": 3835405795329,
+    "version": 131,
+    "producer_named": [
+     {
+      "atom": 0,
+      "row": {
+       "Fact": {
+        "cell": 129,
+        "op": 28
+       }
+      },
+      "version": 1
+     }
+    ],
+    "producer_serial": 1737,
+    "consumer_serial": 1822,
+    "producer_ordinal": 765,
+    "consumer_ordinal": 843,
+    "producer_run": 131,
+    "consumer_run": 135
+   },
+   "static": {
+    "producer_rule": 143,
+    "producer_op": 1,
+    "consumer_rule": 55,
+    "pivot": 0,
+    "producer_schema": "0957912358ce9f5a96dee402bdfcea29acda7c77e84fd6d57344d2403b04bbff",
+    "consumer_schema": "519fde6cfce4abbe3c095b7ef7b9fc8636802e44ed6c09bec2a4d3cc90e69dda",
+    "source_set": "always-run",
+    "table": "Single",
+    "sorts": [
+     [
+      "Expr",
+      "eq"
+     ],
+     [
+      "Expr",
+      "eq"
+     ]
+    ],
+    "producer_columns": [
+     {
+      "slot": 3
+     },
+     {
+      "slot": 4
+     }
+    ],
+    "consumer_slots": [
+     0,
+     1
+    ],
+    "rhs_projections": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "producer_input_proof": {
+    "explicit_roles": [
+     0
+    ],
+    "deterministic_checks": []
+   },
+   "native": {
+    "history_producer_occurrences": [
+     0
+    ],
+    "local_proof": [
+     {
+      "record": 0,
+      "required": [
+       8
+      ],
+      "output_sites": [
+       {
+        "path": "head/0/expr/0",
+        "span": "Some(\"/Volumes/EggFuseWorkspace/experiments/ripsat-donor-evidence-v2/samples/dot-product-p143-o1-c55-full/entry.egg\"):715:736",
+        "token": 6,
+        "columns": [
+         4,
+         5
+        ]
+       }
+      ]
+     }
+    ],
+    "native_consumer_reads": [
+     {
+      "producer_record": 0,
+      "consumer_record": 8,
+      "producer_index": 0,
+      "consumer_index": 1,
+      "write_read_token": 6,
+      "read_site": "Some(\"/Volumes/EggFuseWorkspace/experiments/ripsat-donor-evidence-v2/samples/dot-product-p143-o1-c55-full/entry.egg\"):432:445",
+      "source_parent_port": [
+       0,
+       8
+      ]
+     }
+    ],
+    "table": "Single",
+    "local_args": [
+     4
+    ],
+    "local_result": 5,
+    "native_consumer_rule_present": true,
+    "local_ids": "sample-local",
+    "checked_seed_ports": 3
+   },
+   "target": {
+    "producer_rule": 143,
+    "producer_op": 1,
+    "consumer_rule": 55,
+    "pivot": 0,
+    "producer_schema": "0957912358ce9f5a96dee402bdfcea29acda7c77e84fd6d57344d2403b04bbff",
+    "consumer_schema": "519fde6cfce4abbe3c095b7ef7b9fc8636802e44ed6c09bec2a4d3cc90e69dda",
+    "source_set": "always-run",
+    "table": "Single",
+    "sorts": [
+     [
+      "Expr",
+      "eq"
+     ],
+     [
+      "Expr",
+      "eq"
+     ]
+    ],
+    "producer_columns": [
+     {
+      "slot": 3
+     },
+     {
+      "slot": 4
+     }
+    ],
+    "consumer_slots": [
+     0,
+     1
+    ],
+    "rhs_projections": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "sample_id": "jacobi-1d-p143-o1-c55-full",
+   "donor": "jacobi-1d",
+   "donor_program_sha256": "36394e6af88e962527a232db783fbb39e8ffb95e0fabf8087c68c013f4c43a95",
+   "artifacts": {
+    "origin.json": "4113678b01b47fb35d4a29ff8fec58a408945514a2aabc255a8dd2b816b1ea63",
+    "entry.egg": "3ceb1ee53f5b9c33aa9580b55c863e78135d8b93d37582e965ac5b638da55473",
+    "native/entry.egg": "3ceb1ee53f5b9c33aa9580b55c863e78135d8b93d37582e965ac5b638da55473",
+    "native/acceptance.json": "8e4b6f9f73bddcd81e6f0a49a3d767d4bb510ef505bffd9d44db43bca9c5dfb7",
+    "native/ripen.json": "b9a29e3294da08ada0f76d450947ce80ea109a973217387758adc73d947f80ae",
+    "native/history.json": "ce9dd2aaee283188d1c6f2edfee3b75ae96d5e904bb244827bd329e6eab428ba",
+    "native/initial-state.json": "3be6c324d5767120fdafc074fc07654d0d05b495cc4d70a053c5465d63f86a1c",
+    "native/saturated-rule-composition.json": "e06b320d10a48ff2de86e17e00bf2e600ede26fc7bb0ada88a1ecd5ae6da1f66"
+   },
+   "original": {
+    "result_fact": 12081743003649,
+    "version": 225,
+    "producer_named": [
+     {
+      "atom": 0,
+      "row": {
+       "Fact": {
+        "cell": 129,
+        "op": 30
+       }
+      },
+      "version": 1
+     }
+    ],
+    "producer_serial": 5314,
+    "consumer_serial": 5598,
+    "producer_ordinal": 2685,
+    "consumer_ordinal": 2959,
+    "producer_run": 225,
+    "consumer_run": 229
+   },
+   "static": {
+    "producer_rule": 143,
+    "producer_op": 1,
+    "consumer_rule": 55,
+    "pivot": 0,
+    "producer_schema": "0957912358ce9f5a96dee402bdfcea29acda7c77e84fd6d57344d2403b04bbff",
+    "consumer_schema": "519fde6cfce4abbe3c095b7ef7b9fc8636802e44ed6c09bec2a4d3cc90e69dda",
+    "source_set": "always-run",
+    "table": "Single",
+    "sorts": [
+     [
+      "Expr",
+      "eq"
+     ],
+     [
+      "Expr",
+      "eq"
+     ]
+    ],
+    "producer_columns": [
+     {
+      "slot": 3
+     },
+     {
+      "slot": 4
+     }
+    ],
+    "consumer_slots": [
+     0,
+     1
+    ],
+    "rhs_projections": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   },
+   "producer_input_proof": {
+    "explicit_roles": [
+     0
+    ],
+    "deterministic_checks": []
+   },
+   "native": {
+    "history_producer_occurrences": [
+     0
+    ],
+    "local_proof": [
+     {
+      "record": 0,
+      "required": [
+       8
+      ],
+      "output_sites": [
+       {
+        "path": "head/0/expr/0",
+        "span": "Some(\"/Volumes/EggFuseWorkspace/experiments/ripsat-donor-evidence-v2/samples/jacobi-1d-p143-o1-c55-full/entry.egg\"):684:705",
+        "token": 6,
+        "columns": [
+         4,
+         5
+        ]
+       }
+      ]
+     }
+    ],
+    "native_consumer_reads": [
+     {
+      "producer_record": 0,
+      "consumer_record": 8,
+      "producer_index": 0,
+      "consumer_index": 1,
+      "write_read_token": 6,
+      "read_site": "Some(\"/Volumes/EggFuseWorkspace/experiments/ripsat-donor-evidence-v2/samples/jacobi-1d-p143-o1-c55-full/entry.egg\"):401:414",
+      "source_parent_port": [
+       0,
+       8
+      ]
+     }
+    ],
+    "table": "Single",
+    "local_args": [
+     4
+    ],
+    "local_result": 5,
+    "native_consumer_rule_present": true,
+    "local_ids": "sample-local",
+    "checked_seed_ports": 3
+   },
+   "target": {
+    "producer_rule": 143,
+    "producer_op": 1,
+    "consumer_rule": 55,
+    "pivot": 0,
+    "producer_schema": "0957912358ce9f5a96dee402bdfcea29acda7c77e84fd6d57344d2403b04bbff",
+    "consumer_schema": "519fde6cfce4abbe3c095b7ef7b9fc8636802e44ed6c09bec2a4d3cc90e69dda",
+    "source_set": "always-run",
+    "table": "Single",
+    "sorts": [
+     [
+      "Expr",
+      "eq"
+     ],
+     [
+      "Expr",
+      "eq"
+     ]
+    ],
+    "producer_columns": [
+     {
+      "slot": 3
+     },
+     {
+      "slot": 4
+     }
+    ],
+    "consumer_slots": [
+     0,
+     1
+    ],
+    "rhs_projections": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      1
+     ]
+    ]
+   }
+  }
+ ],
+ "static_only": [
+  {
+   "sample_id": "dot-product-p446-o0-c446-full",
+   "donor": "dot-product",
+   "donor_program_sha256": "c0d1da51c3aca3e61c945b39dc7da9e3ed135d77c57330ffd34dbbed8adc1159",
+   "artifacts": {
+    "origin.json": "46af000a27fd20129e87f8f82df0841a2b1609b96941ea8dbaf0ca609af8cf41",
+    "entry.egg": "2c2abfc643113cad3e0f45abb971375060fb890339a2eb71111a3e4b3c34ec8e",
+    "native/entry.egg": "2c2abfc643113cad3e0f45abb971375060fb890339a2eb71111a3e4b3c34ec8e",
+    "native/acceptance.json": "8a5938789dc697beb181bc0a8dbcfe87770f5a51943b2061e784399cc531f291",
+    "native/ripen.json": "83287ab7fc7a96c6051d4e755abf9d7358b4fbabf92c220a868dc5497f29931f",
+    "native/history.json": "82ef25033f7a23cc8cc8d6818a3a039781bf5c3e2fcd7af265ffe716b041aa52",
+    "native/initial-state.json": "9a22f8019e5b943ca78be847f0fb2e5917591943d9f9b79f13128e8fbfe3d0c1",
+    "native/saturated-rule-composition.json": "d0b66a4c511e5d3f511c7f597888538b25cc9b2b864542dabb0e15663a385546"
+   },
+   "original": {
+    "result_fact": 27414776250368,
+    "version": 1168,
+    "producer_named": [
+     {
+      "atom": 0,
+      "row": {
+       "Fact": {
+        "cell": 6355,
+        "op": 3
+       }
+      },
+      "version": 1166
+     }
+    ],
+    "producer_serial": 12360,
+    "consumer_serial": 12376,
+    "producer_ordinal": 6125,
+    "consumer_ordinal": 6135,
+    "producer_run": 1168,
+    "consumer_run": 1170
+   },
+   "static": {
+    "producer_rule": 446,
+    "producer_op": 0,
+    "consumer_rule": 446,
+    "pivot": 0,
+    "producer_schema": "425a43c5a02efee1f1d35ad1d72582b7092eaa30dea2a14b741295aa253a9421",
+    "consumer_schema": "425a43c5a02efee1f1d35ad1d72582b7092eaa30dea2a14b741295aa253a9421",
+    "source_set": "mem-simple",
+    "table": "NoAlias",
+    "sorts": [
+     [
+      "Expr",
+      "eq"
+     ],
+     [
+      "Expr",
+      "eq"
+     ],
+     [
+      "___NoAliasSort",
+      "eq"
+     ]
+    ],
+    "producer_columns": [
+     {
+      "slot": 1
+     },
+     {
+      "slot": 0
+     },
+     {
+      "slot": 3
+     }
+    ],
+    "consumer_slots": [
+     0,
+     1,
+     2
+    ],
+    "rhs_projections": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      1
+     ],
+     [
+      2,
+      2
+     ]
+    ]
+   },
+   "producer_input_proof": {
+    "explicit_roles": [
+     0
+    ],
+    "deterministic_checks": []
+   },
+   "native": {
+    "history_producer_occurrences": [
+     0
+    ],
+    "local_proof": [
+     {
+      "record": 0,
+      "required": [
+       5
+      ],
+      "output_sites": [
+       {
+        "path": "head/0/expr/0",
+        "span": "Some(\"/Volumes/EggFuseWorkspace/experiments/ripsat-donor-evidence-v2/samples/dot-product-p446-o0-c446-full/entry.egg\"):779:792",
+        "token": 3,
+        "columns": [
+         11,
+         9,
+         19
+        ]
+       }
+      ]
+     }
+    ],
+    "native_consumer_reads": [],
+    "table": "NoAlias",
+    "local_args": [
+     11,
+     9
+    ],
+    "local_result": 19,
+    "native_consumer_rule_present": true,
+    "local_ids": "sample-local",
+    "checked_seed_ports": 3
+   },
+   "target": {
+    "producer_rule": 446,
+    "producer_op": 0,
+    "consumer_rule": 446,
+    "pivot": 0,
+    "producer_schema": "425a43c5a02efee1f1d35ad1d72582b7092eaa30dea2a14b741295aa253a9421",
+    "consumer_schema": "425a43c5a02efee1f1d35ad1d72582b7092eaa30dea2a14b741295aa253a9421",
+    "source_set": "mem-simple",
+    "table": "NoAlias",
+    "sorts": [
+     [
+      "Expr",
+      "eq"
+     ],
+     [
+      "Expr",
+      "eq"
+     ],
+     [
+      "___NoAliasSort",
+      "eq"
+     ]
+    ],
+    "producer_columns": [
+     {
+      "slot": 1
+     },
+     {
+      "slot": 0
+     },
+     {
+      "slot": 3
+     }
+    ],
+    "consumer_slots": [
+     0,
+     1,
+     2
+    ],
+    "rhs_projections": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      1
+     ],
+     [
+      2,
+      2
+     ]
+    ]
+   }
+  },
+  {
+   "sample_id": "jacobi-1d-p446-o0-c446-full",
+   "donor": "jacobi-1d",
+   "donor_program_sha256": "36394e6af88e962527a232db783fbb39e8ffb95e0fabf8087c68c013f4c43a95",
+   "artifacts": {
+    "origin.json": "9ec6a74ea4b31e2ceb43ba1eabfe67a3f66747d171bfd942648a3db2b29983ea",
+    "entry.egg": "ce942363154bd6095d762c55b8a71b8388ea93cfca2ac7bcfb27dd4b30feffbf",
+    "native/entry.egg": "ce942363154bd6095d762c55b8a71b8388ea93cfca2ac7bcfb27dd4b30feffbf",
+    "native/acceptance.json": "771a6f6d9aef18bbbac086626c3f82d7d5c347a044ed7712323bd818500bf6cc",
+    "native/ripen.json": "d3cdb5d8add96417926414b722587c51f360b02dd1b71e32a8ef94e097022745",
+    "native/history.json": "7ee39ba878ef61223efc08b570a32ff84a13c073106434e57b30395f8485af65",
+    "native/initial-state.json": "d4f886e88e4c7106e70318031e46fe74da7f2d26ea435801f6718b88b7700609",
+    "native/saturated-rule-composition.json": "8708bba3dddd143011588210d87b8815437601e1e6d0ed3711e466626304d4cb"
+   },
+   "original": {
+    "result_fact": 105093554765824,
+    "version": 880,
+    "producer_named": [
+     {
+      "atom": 0,
+      "row": {
+       "Fact": {
+        "cell": 24464,
+        "op": 4
+       }
+      },
+      "version": 878
+     }
+    ],
+    "producer_serial": 45107,
+    "consumer_serial": 45116,
+    "producer_ordinal": 23996,
+    "consumer_ordinal": 24002,
+    "producer_run": 880,
+    "consumer_run": 882
+   },
+   "static": {
+    "producer_rule": 446,
+    "producer_op": 0,
+    "consumer_rule": 446,
+    "pivot": 0,
+    "producer_schema": "425a43c5a02efee1f1d35ad1d72582b7092eaa30dea2a14b741295aa253a9421",
+    "consumer_schema": "425a43c5a02efee1f1d35ad1d72582b7092eaa30dea2a14b741295aa253a9421",
+    "source_set": "mem-simple",
+    "table": "NoAlias",
+    "sorts": [
+     [
+      "Expr",
+      "eq"
+     ],
+     [
+      "Expr",
+      "eq"
+     ],
+     [
+      "___NoAliasSort",
+      "eq"
+     ]
+    ],
+    "producer_columns": [
+     {
+      "slot": 1
+     },
+     {
+      "slot": 0
+     },
+     {
+      "slot": 3
+     }
+    ],
+    "consumer_slots": [
+     0,
+     1,
+     2
+    ],
+    "rhs_projections": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      1
+     ],
+     [
+      2,
+      2
+     ]
+    ]
+   },
+   "producer_input_proof": {
+    "explicit_roles": [
+     0
+    ],
+    "deterministic_checks": []
+   },
+   "native": {
+    "history_producer_occurrences": [
+     0
+    ],
+    "local_proof": [
+     {
+      "record": 0,
+      "required": [
+       5
+      ],
+      "output_sites": [
+       {
+        "path": "head/0/expr/0",
+        "span": "Some(\"/Volumes/EggFuseWorkspace/experiments/ripsat-donor-evidence-v2/samples/jacobi-1d-p446-o0-c446-full/entry.egg\"):792:805",
+        "token": 3,
+        "columns": [
+         9,
+         7,
+         19
+        ]
+       }
+      ]
+     }
+    ],
+    "native_consumer_reads": [],
+    "table": "NoAlias",
+    "local_args": [
+     9,
+     7
+    ],
+    "local_result": 19,
+    "native_consumer_rule_present": true,
+    "local_ids": "sample-local",
+    "checked_seed_ports": 3
+   },
+   "target": {
+    "producer_rule": 446,
+    "producer_op": 0,
+    "consumer_rule": 446,
+    "pivot": 0,
+    "producer_schema": "425a43c5a02efee1f1d35ad1d72582b7092eaa30dea2a14b741295aa253a9421",
+    "consumer_schema": "425a43c5a02efee1f1d35ad1d72582b7092eaa30dea2a14b741295aa253a9421",
+    "source_set": "mem-simple",
+    "table": "NoAlias",
+    "sorts": [
+     [
+      "Expr",
+      "eq"
+     ],
+     [
+      "Expr",
+      "eq"
+     ],
+     [
+      "___NoAliasSort",
+      "eq"
+     ]
+    ],
+    "producer_columns": [
+     {
+      "slot": 1
+     },
+     {
+      "slot": 0
+     },
+     {
+      "slot": 3
+     }
+    ],
+    "consumer_slots": [
+     0,
+     1,
+     2
+    ],
+    "rhs_projections": [
+     [
+      0,
+      0
+     ],
+     [
+      1,
+      1
+     ],
+     [
+      2,
+      2
+     ]
+    ]
+   }
+  }
+ ],
+ "rejections": {
+  "not_a_returning_constructor": 9,
+  "non_full_pair_scope": 45,
+  "literal_or_non_slot_guard": 2,
+  "native_export_not_accepted": 13,
+  "external_lhs_or_guard_not_implemented": 6
+ },
+ "obligations": [
+  "producer must expose the authenticated fresh physical FactRef at the exact source operation",
+  "consume only in the original later Run at its watermark",
+  "recheck visible current source identity, table and version",
+  "original ordered RHS, mutation visibility, deduplication and union remain authoritative"
+ ]
+}
