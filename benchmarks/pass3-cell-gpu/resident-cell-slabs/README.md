@@ -22,8 +22,8 @@ Run from this directory. The native builder expects the same frozen EggFuse sour
 exp=/Volumes/EggFuseWorkspace/experiments
 python3 build.py "$exp/resident-fresh-build"
 python3 probe.py "$exp/resident-fresh-build" "$exp/resident-fresh-test"
-python3 faults.py --exp "$exp" --native "$exp/resident-fresh-build/session" \
-  --weights ../speculative-allocation-policy/policy.json --out "$exp/resident-fresh-faults"
+python3 faults.py "$exp" "$exp/resident-fresh-build/session" \
+  ../speculative-allocation-policy/policy.json "$exp/resident-fresh-faults"
 python3 verify.py
 ```
 

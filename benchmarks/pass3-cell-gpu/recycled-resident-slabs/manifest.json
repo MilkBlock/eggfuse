@@ -1,0 +1,21 @@
+{
+  "base": "31bf7e41",
+  "binary_sha256": "16934af1fde93bf8a3988fc22b1b434cfb949cb75b1bbbc0d9e130c3c3e3d828",
+  "files": {
+    "../resident-cell-slabs/overlay.py": "58fc6b582b82d80229a6bc8d663f094d2f0afd2fcdbcad12d07abbd6cd2cbd3a",
+    "../resident-cell-slabs/resident.rs": "6ea2ec07647b6777d9db97d7f0c7d658c89324e0366f5fdb7b4839d3fc85fb6a",
+    "../speculative-allocation-policy/policy.json": "702e0c2e3892195c337006b5145989a121491cb7941d635e160ae1ee50c12a19",
+    "build.py": "c5518cd7ecdfc5dd851bd992585a22d60447f3de0013779fde98b84683508251",
+    "faults.json": "676771fe286d5388234e7934e1d0bd3350195a969ae9d3b3531198b88a5e9000",
+    "faults.py": "917e5fd49b4d848e38563231469388f0de6d010de3915183b1fde11fa7787e6d",
+    "fixture.rs": "05e7e37f4be518297e16dc921ca8876b5fe64c8d48c593b28c27263fae00bac1",
+    "overlay.py": "a5683392caac11a18583dc8da31c731b67c3e57ef5f0cb66d0202c5ac8a813ad",
+    "probe.py": "12b4615dde6e2a329565ad68bc4ff2aac42ace761ab9e2aa9fec4b7b74d45c40",
+    "recycle.rs": "8a7392b38d28e2ce139b63f4b77c203fd6c0ff97e7493713da25625055a5c3cd",
+    "results.json": "faa0df5048fe2e105fc10f652b4a8cddaa290ae7883d9ca408a04dcc2183baa7",
+    "rss.json": "579dbf7c7180b3517d2bb553ff14845ff0301fcb7b843df43094463bfedbb994",
+    "study.py": "956e8c41f74cf00616740b73f286080be53a6dd46a88ab25c6b625cf9f017b82",
+    "test.txt": "10b43e8a55e4cad69930cda11e05f6e98f755a7eb834f4eefc87bd56c5bc39ba",
+    "verify.py": "481a2b866e29cd1dfc73f70a178a2ef9ceff2d405470c2aed6abcdde8d22579d"
+  }
+}
