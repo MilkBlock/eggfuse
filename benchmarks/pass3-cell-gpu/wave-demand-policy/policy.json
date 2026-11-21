@@ -1,0 +1,183 @@
+{
+  "donors": [
+    "sum-bits",
+    "dot-product",
+    "jacobi-1d"
+  ],
+  "input_sha256": "0534233234e76982236b432c1ea87f23435b47828eff7df04db2f4c6ad25b490",
+  "cap": 8192,
+  "models": {
+    "balanced": [
+      0.08914544417061024,
+      -0.7359540182473578,
+      0.028579343508944727,
+      0.8744430311509749,
+      0.6937875754874617,
+      -0.8772487676883401,
+      0.4778032806507548,
+      0.8049397387009307
+    ],
+    "coverage": [
+      0.032954601544019545,
+      -0.8005141109815508,
+      0.016292382860524153,
+      0.7610233467179371,
+      0.12229641027085784,
+      -0.1756179445416226,
+      0.14024395135340448,
+      1.0100915622520699
+    ],
+    "fraction": [
+      1.1561266407234947,
+      -0.7523346873691402,
+      -0.2261258781571597,
+      1.0057904654628629,
+      1.812672594795763,
+      -1.5700838261650585,
+      0.4143269613752652,
+      -0.028345311691765615
+    ]
+  },
+  "fit": {
+    "balanced": {
+      "initial_loss": 0.38410230771577303,
+      "fitted_loss": 0.27286018975065385
+    },
+    "coverage": {
+      "initial_loss": 0.5341270735426807,
+      "fitted_loss": 0.18008659281870285
+    },
+    "fraction": {
+      "initial_loss": 0.6652956065001808,
+      "fitted_loss": 0.4906628232152066
+    }
+  },
+  "training_counts": {
+    "balanced": {
+      "sum-bits": {
+        "events": 48514,
+        "nonempty": 2765,
+        "offers": 13801,
+        "fresh": 5764,
+        "grants": 5455,
+        "overlap": 3905,
+        "missed": 1859,
+        "unused": 1550
+      },
+      "dot-product": {
+        "events": 52227,
+        "nonempty": 2338,
+        "offers": 15781,
+        "fresh": 5538,
+        "grants": 5425,
+        "overlap": 3608,
+        "missed": 1930,
+        "unused": 1817
+      },
+      "jacobi-1d": {
+        "events": 79714,
+        "nonempty": 4534,
+        "offers": 84439,
+        "fresh": 32316,
+        "grants": 29152,
+        "overlap": 22438,
+        "missed": 9878,
+        "unused": 6714
+      },
+      "total": {
+        "events": 180455,
+        "nonempty": 9637,
+        "offers": 114021,
+        "fresh": 43618,
+        "grants": 40032,
+        "overlap": 29951,
+        "missed": 13667,
+        "unused": 10081
+      }
+    },
+    "coverage": {
+      "sum-bits": {
+        "events": 48514,
+        "nonempty": 2765,
+        "offers": 13801,
+        "fresh": 5764,
+        "grants": 9487,
+        "overlap": 5379,
+        "missed": 385,
+        "unused": 4108
+      },
+      "dot-product": {
+        "events": 52227,
+        "nonempty": 2338,
+        "offers": 15781,
+        "fresh": 5538,
+        "grants": 10603,
+        "overlap": 5216,
+        "missed": 322,
+        "unused": 5387
+      },
+      "jacobi-1d": {
+        "events": 79714,
+        "nonempty": 4534,
+        "offers": 84439,
+        "fresh": 32316,
+        "grants": 49486,
+        "overlap": 30428,
+        "missed": 1888,
+        "unused": 19058
+      },
+      "total": {
+        "events": 180455,
+        "nonempty": 9637,
+        "offers": 114021,
+        "fresh": 43618,
+        "grants": 69576,
+        "overlap": 41023,
+        "missed": 2595,
+        "unused": 28553
+      }
+    },
+    "fraction": {
+      "sum-bits": {
+        "events": 48514,
+        "nonempty": 2765,
+        "offers": 13801,
+        "fresh": 5764,
+        "grants": 5876,
+        "overlap": 3803,
+        "missed": 1961,
+        "unused": 2073
+      },
+      "dot-product": {
+        "events": 52227,
+        "nonempty": 2338,
+        "offers": 15781,
+        "fresh": 5538,
+        "grants": 5973,
+        "overlap": 3605,
+        "missed": 1933,
+        "unused": 2368
+      },
+      "jacobi-1d": {
+        "events": 79714,
+        "nonempty": 4534,
+        "offers": 84439,
+        "fresh": 32316,
+        "grants": 31549,
+        "overlap": 22612,
+        "missed": 9704,
+        "unused": 8937
+      },
+      "total": {
+        "events": 180455,
+        "nonempty": 9637,
+        "offers": 114021,
+        "fresh": 43618,
+        "grants": 43398,
+        "overlap": 30020,
+        "missed": 13598,
+        "unused": 13378
+      }
+    }
+  }
+}
