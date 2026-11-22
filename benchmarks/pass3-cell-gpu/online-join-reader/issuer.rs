@@ -15,14 +15,44 @@ use std::{
 
 #[derive(Deserialize)]
 pub struct Model {
+    #[serde(default)]
+    order: Option<Order>,
     left: [bool; 4],
     sender: [[bool; 2]; 4],
     follow: [[bool; 4]; 2],
 }
+#[derive(Deserialize)]
+struct Order {
+    weights: [[f32; 8]; 16],
+    bias: [f32; 16],
+    out: [f32; 16],
+}
+
+impl Order {
+    fn score(&self, first: &[f32; 4], second: &[f32; 4]) -> f32 {
+        self.weights
+            .iter()
+            .zip(self.bias)
+            .zip(self.out)
+            .map(|((w, bias), out)| {
+                let z = first
+                    .iter()
+                    .chain(second)
+                    .zip(w)
+                    .fold(bias, |z, (x, w)| z + x * w);
+                out * z.tanh()
+            })
+            .sum()
+    }
+}
+
 #[derive(Default, Serialize)]
 pub struct Counts {
     reads: u64,
     encoded_fields: u64,
+    order_decisions: u64,
+    order_swaps: u64,
+    candidate_visits: u64,
     first_scores: u64,
     second_scores: u64,
     epoch_reads: u64,
@@ -70,7 +100,7 @@ struct Layout {
     reads: Vec<Read>,
     slots: usize,
 }
-fn layout(rule: &crate::program::Rule) -> Result<Option<Layout>> {
+fn layout(rule: &crate::program::Rule, first: Option<usize>) -> Result<Option<Layout>> {
     let mut atoms = vec![];
     for atom in rule.query.iter() {
         if let Call::Table(t) = atom.call {
@@ -109,7 +139,8 @@ fn layout(rule: &crate::program::Rule) -> Result<Option<Layout>> {
                 .count()
         };
         let i = if reads.is_empty() {
-            bridge
+            first
+                .or(bridge)
                 .or_else(|| atoms.iter().position(|(_, _, args)| args.len() > 1))
                 .unwrap_or(0)
         } else {
@@ -167,6 +198,7 @@ fn layout(rule: &crate::program::Rule) -> Result<Option<Layout>> {
 struct Issuer {
     model: Model,
     plans: Vec<Option<Layout>>,
+    alternatives: Vec<Option<Layout>>,
     bank: BTreeMap<usize, Rc<Vec<Token>>>,
     routes: HashMap<usize, HashMap<u16, Vec<usize>>>,
     pages: bool,
@@ -180,10 +212,22 @@ pub fn init(g: &Graph, model: Model, cap: u64, pages: bool) -> Result<()> {
         .program
         .rules
         .iter()
-        .map(layout)
+        .map(|rule| layout(rule, None))
         .collect::<Result<Vec<_>>>()?;
+    let mut alternatives = Vec::with_capacity(plans.len());
+    for (rule, plan) in g.program.rules.iter().zip(&plans) {
+        let alternative = match plan {
+            Some(p)
+                if model.order.is_some() && p.reads.len() == 2 && !p.reads[1].checks.is_empty() =>
+            {
+                layout(rule, Some(p.reads[1].index))?
+            }
+            _ => None,
+        };
+        alternatives.push(alternative);
+    }
     let mut layouts = BTreeMap::new();
-    for plan in plans.iter_mut().flatten() {
+    for plan in plans.iter_mut().chain(alternatives.iter_mut()).flatten() {
         for read in &mut plan.reads {
             let columns = read
                 .checks
@@ -198,6 +242,7 @@ pub fn init(g: &Graph, model: Model, cap: u64, pages: bool) -> Result<()> {
     ACTIVE.replace(Some(Issuer {
         model,
         plans,
+        alternatives,
         bank: BTreeMap::new(),
         routes: HashMap::new(),
         pages,
@@ -269,6 +314,30 @@ pub fn submit(g: &Graph, run: usize, rid: usize, wm: u64, inbox: &mut Inbox) -> 
             }
             if !later_fresh[0] {
                 return Ok(());
+            }
+        }
+        let mut plan = plan;
+        if a.pages
+            && let (Some(order), Some(alternative)) = (&a.model.order, &a.alternatives[rid])
+        {
+            let features = |i: usize| {
+                let rows = memory[i].len();
+                let fresh = if semi { fresh_rows[i].len() } else { rows };
+                [
+                    (rows as f32).ln_1p(),
+                    (fresh as f32).ln_1p(),
+                    (fresh == 0) as u8 as f32,
+                    (rows < 16) as u8 as f32,
+                ]
+            };
+            let (left, right) = (features(0), features(1));
+            a.counts.order_decisions += 1;
+            if order.score(&right, &left) > order.score(&left, &right) {
+                plan = alternative;
+                memory.swap(0, 1);
+                fresh_rows.swap(0, 1);
+                later_fresh[1] = !fresh_rows[1].is_empty();
+                a.counts.order_swaps += 1;
             }
         }
         let mut summary = [[[false; 2]; 32]; 4];
@@ -365,6 +434,7 @@ pub fn submit(g: &Graph, run: usize, rid: usize, wm: u64, inbox: &mut Inbox) -> 
                     return Ok(());
                 }
                 budget -= 1;
+                a.counts.candidate_visits += 1;
                 let current = usize::from(!g.program.rules[rid].seminaive || row.epoch >= wm);
                 if need_fresh && current == 0 {
                     continue;
