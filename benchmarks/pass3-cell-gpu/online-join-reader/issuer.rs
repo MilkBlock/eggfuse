@@ -19,6 +19,10 @@ pub struct Model {
     order: Option<Order>,
     #[serde(default)]
     scalars: BTreeMap<String, [f64; 3]>,
+    #[serde(default)]
+    wide_scalar: bool,
+    #[serde(default)]
+    port_distinct: bool,
     left: [bool; 4],
     sender: [[bool; 2]; 4],
     follow: [[bool; 4]; 2],
@@ -69,7 +73,13 @@ pub struct Counts {
     rule_calls: u64,
 }
 #[derive(Clone, Copy, PartialEq, Eq)]
-struct Code([u8; 20], i8);
+enum Payload {
+    Int(i64),
+    Eq(u64),
+    Other,
+}
+#[derive(Clone, Copy, PartialEq, Eq)]
+struct Code([u8; 20], Payload);
 impl Code {
     fn of(v: &Value) -> Result<Self> {
         let data = serde_json::to_vec(v).map_err(|e| e.to_string())?;
@@ -77,8 +87,9 @@ impl Code {
         let mut b = [0; 20];
         b.copy_from_slice(&h[..20]);
         let scalar = match v {
-            Value::Int(x) if (-16..=16).contains(x) => *x as i8,
-            _ => i8::MIN,
+            Value::Int(n) => Payload::Int(*n),
+            Value::Eq(id) => Payload::Eq(*id),
+            _ => Payload::Other,
         };
         Ok(Self(b, scalar))
     }
@@ -105,13 +116,16 @@ struct Read {
 }
 enum ScalarInput {
     Slot(usize),
-    Literal(i8),
+    Literal(i64),
 }
 impl ScalarInput {
-    fn read(&self, slots: &[Code]) -> Option<i8> {
+    fn read(&self, slots: &[Code]) -> Option<i64> {
         match self {
             Self::Literal(v) => Some(*v),
-            Self::Slot(i) => (slots[*i].1 != i8::MIN).then_some(slots[*i].1),
+            Self::Slot(i) => match slots[*i].1 {
+                Payload::Int(n) => Some(n),
+                _ => None,
+            },
         }
     }
 }
@@ -119,6 +133,7 @@ struct ScalarGate {
     inputs: [ScalarInput; 2],
     expected: Option<ScalarInput>,
     weights: [f64; 3],
+    wide: bool,
 }
 impl ScalarGate {
     fn rejects(&self, slots: &[Code]) -> bool {
@@ -126,17 +141,37 @@ impl ScalarGate {
             return false;
         };
         let [u, v, bias] = self.weights;
-        let score = u * f64::from(a) + v * f64::from(b) + bias;
-        match &self.expected {
-            None => score < 0.,
-            Some(out) => out
-                .read(slots)
-                .is_some_and(|n| (score - f64::from(n)).abs() > 0.5),
+        let score = |x: i64, y: i64| u * (x as f64) + v * (y as f64) + bias;
+        let small = |x: i64| (-16..=16).contains(&x);
+        if small(a) && small(b) {
+            let z = score(a, b);
+            return match &self.expected {
+                None => z < 0.,
+                Some(out) => out
+                    .read(slots)
+                    .is_some_and(|n| small(n) && (z - n as f64).abs() > 0.5),
+            };
         }
+        if !self.wide || self.expected.is_some() {
+            return false;
+        }
+        // Signed order is unsigned order after flipping the sign bit. Encode
+        // each operand independently, then apply the same certified digit gate.
+        let digits = |n: i64| (n as u64) ^ (1u64 << 63);
+        for shift in (0..16).rev().map(|plane| plane * 4) {
+            let x = ((digits(a) >> shift) & 15) as i64;
+            let y = ((digits(b) >> shift) & 15) as i64;
+            let xy = score(x, y) >= 0.;
+            if shift == 0 || xy != (score(y, x) >= 0.) {
+                return !xy;
+            }
+        }
+        unreachable!()
     }
 }
 struct Layout {
     gates: Vec<ScalarGate>,
+    distinct: Vec<(usize, usize)>,
     reads: Vec<Read>,
     slots: usize,
 }
@@ -235,9 +270,7 @@ fn layout(
         reads.push(read);
     }
     let scalar = |arg: &Arg| match arg {
-        Arg::Literal(Value::Int(x)) if (-16..=16).contains(x) => {
-            Some(ScalarInput::Literal(*x as i8))
-        }
+        Arg::Literal(Value::Int(x)) => Some(ScalarInput::Literal(*x)),
         Arg::Slot(s) => seen.get(s).copied().map(ScalarInput::Slot),
         _ => None,
     };
@@ -261,11 +294,26 @@ fn layout(
                 inputs: [scalar(a)?, scalar(b)?],
                 expected,
                 weights,
+                wide: model.wide_scalar,
             })
         })
         .collect();
+    let mut distinct = vec![];
+    if model.port_distinct {
+        for atom in rule.query.iter() {
+            if let Call::Primitive(op, ty) = &atom.call
+                && op == "!="
+                && ty == "Unit"
+                && let [Arg::Slot(a), Arg::Slot(b), _] = atom.args.as_slice()
+                && let (Some(&i), Some(&j)) = (seen.get(a), seen.get(b))
+            {
+                distinct.push((i, j));
+            }
+        }
+    }
     Ok(Some(Layout {
         gates,
+        distinct,
         reads,
         slots: seen.len(),
     }))
@@ -464,7 +512,7 @@ pub fn submit(g: &Graph, run: usize, rid: usize, wm: u64, inbox: &mut Inbox) -> 
         // Partial-code dispatch can prune only ports rejected by the frozen follower.
         let mut stack = vec![(
             Vec::<(usize, Dependency, u64)>::new(),
-            vec![Code([0; 20], i8::MIN); plan.slots],
+            vec![Code([0; 20], Payload::Other); plan.slots],
             false,
         )];
         let mut budget = a.cap;
@@ -472,7 +520,12 @@ pub fn submit(g: &Graph, run: usize, rid: usize, wm: u64, inbox: &mut Inbox) -> 
             let step = parents.len();
             if step == memory.len() {
                 if fresh || parents.is_empty() || !g.program.rules[rid].seminaive {
-                    if plan.gates.iter().any(|gate| gate.rejects(&slots)) {
+                    if plan.gates.iter().any(|gate| gate.rejects(&slots))
+                        || plan
+                            .distinct
+                            .iter()
+                            .any(|&(a, b)| slots[a].1 != Payload::Other && slots[a].1 == slots[b].1)
+                    {
                         *a.counts.scalar_suppressed.entry(rid).or_default() += 1;
                         continue;
                     }
