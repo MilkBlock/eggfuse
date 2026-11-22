@@ -1,0 +1,128 @@
+{
+  "dot-product": {
+    "returns_paid": 11197,
+    "inputs_paid": 8420,
+    "signed": {
+      "visible_birth": 2974,
+      "effective_write": 2159,
+      "effective_union": 341,
+      "visibility_change": 0
+    },
+    "returns_ept": 0.4888809502545325,
+    "inputs_ept": 0.6501187648456057,
+    "ledger_sha256": "9e1a9f99f07770a2ce93a65e8d1ef1b542615a3caeb18d12ed50c524fc971b18",
+    "audit": {
+      "exact_checks": 47032,
+      "gated_checks": 4562,
+      "matched_children": 1589,
+      "matched_rejections": 2813,
+      "direct_stale_rejections": 1269
+    },
+    "distinct_ports": [
+      7768,
+      37693,
+      1097
+    ],
+    "native_ms": {
+      "returns_only": [
+        56.281083,
+        62.21175,
+        60.336708
+      ],
+      "named_inputs": [
+        58.125834000000005,
+        67.34058399999999,
+        64.80312500000001
+      ],
+      "repeated_registration": [
+        60.672708,
+        65.733833,
+        68.767959
+      ]
+    }
+  },
+  "sum-bits": {
+    "returns_paid": 9100,
+    "inputs_paid": 7172,
+    "signed": {
+      "visible_birth": 3331,
+      "effective_write": 1449,
+      "effective_union": 526,
+      "visibility_change": 75
+    },
+    "returns_ept": 0.5913186813186814,
+    "inputs_ept": 0.7502788622420524,
+    "ledger_sha256": "4cc4c1c34874ef596379c3218854655706eff5a13bb0c7e1e4a38fc0cd70e0fa",
+    "audit": {
+      "exact_checks": 51094,
+      "gated_checks": 4224,
+      "matched_children": 1107,
+      "matched_rejections": 2812,
+      "direct_stale_rejections": 1272
+    },
+    "distinct_ports": [
+      9664,
+      33681,
+      1302
+    ],
+    "native_ms": {
+      "returns_only": [
+        69.362375,
+        65.649084,
+        66.76849999999999
+      ],
+      "named_inputs": [
+        70.482,
+        74.88262499999999,
+        68.69837500000001
+      ],
+      "repeated_registration": [
+        74.333333,
+        71.253167,
+        89.534625
+      ]
+    }
+  },
+  "3mm": {
+    "returns_paid": 368476,
+    "inputs_paid": 261233,
+    "signed": {
+      "visible_birth": 111901,
+      "effective_write": 81136,
+      "effective_union": 11544,
+      "visibility_change": 0
+    },
+    "returns_ept": 0.5552084803352185,
+    "inputs_ept": 0.7831361275183457,
+    "ledger_sha256": "63a923887e958fe32e63821392e62a71a9a52e8a21058c94cdc3af49899af2d0",
+    "audit": {
+      "exact_checks": 8000206,
+      "gated_checks": 230837,
+      "matched_children": 109040,
+      "matched_rejections": 148180,
+      "direct_stale_rejections": 103403
+    },
+    "distinct_ports": [
+      432223,
+      1526847,
+      37154
+    ],
+    "native_ms": {
+      "returns_only": [
+        3758.641458,
+        3716.9837079999998,
+        3759.185458
+      ],
+      "named_inputs": [
+        4141.860875,
+        4036.9027080000005,
+        4027.964583
+      ],
+      "repeated_registration": [
+        4170.512125,
+        4158.983958000001,
+        4141.5307920000005
+      ]
+    }
+  }
+}

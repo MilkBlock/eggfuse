@@ -306,18 +306,15 @@ pub(crate) fn history_tail_miss(
         if !t.own_misses {
             return false;
         }
+        if t.points.pivots.contains_key(&rid) {
+            t.points
+                .misses
+                .push((rid, epoch, PointReceipt::new(row, version), owner));
+            return true;
+        }
         let Dependency::Fact(f) = row else {
             return false;
         };
-        if t.points.pivots.contains_key(&rid) {
-            t.points.misses.push((
-                rid,
-                epoch,
-                [u64::from(f.cell), u64::from(f.op), version],
-                owner,
-            ));
-            return true;
-        }
         t.omitted
             .push((epoch, [u64::from(f.cell), u64::from(f.op), version], owner));
         true

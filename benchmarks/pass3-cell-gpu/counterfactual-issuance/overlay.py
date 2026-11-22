@@ -303,7 +303,7 @@ pub(crate) fn finish_set_edges(success:bool){
     root=crate/"src/joint_root.rs"
     edit(root,"audit:bool,emitted:", "history_issuer:Option<HistoryIssuer>,history:Option<([usize;2],Vec<[u64;8]>)>,pair_issuer:Option<PairIssuer>,pair_trace:Option<(Vec<usize>,Vec<[u64;7]>)>,audit:bool,emitted:")
     edit(root,"State{stage_watch:false,", "State{pair_issuer:None,history_issuer:None,history:None,pair_trace:None,stage_watch:false,")
-    edit(root,'"root_row_decodes":s.decodes', '"pair_checks":s.pair_issuer.as_ref().map(|p|[p.checked,p.verified]),"pair_proposals":s.pair_issuer.as_ref().map(|p|&p.proposals),"history_tail_misses":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|&t.omitted),"point_batch_gate":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|[t.points.batch_skips,t.points.avoided_visits]),"point_stale_omissions":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|t.points.stale_omissions),"point_union_probes":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|t.points.union_probes),"point_rekeyed":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|t.points.rekeyed),"point_skips":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|&t.points.skipped),"point_claims":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|(&t.points.attempts,&t.points.children,&t.points.misses)),"history_scale":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|t.scale),"history_tail":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|(t.attempts,&t.children)),"history_suppressed":s.history_issuer.as_ref().map(|h|&h.suppressed),"history_updates":s.history_issuer.as_ref().map(|h|&h.updates),"history_initial":s.history_issuer.as_ref().map(|h|&h.seeds),"history_access":s.history_issuer.as_ref().map(|h|[h.probes,h.visits]),"history_online":s.history_issuer.as_ref().map(|h|(&h.checked,&h.pending)),"history_returns":s.history.as_ref().map(|h|&h.1),"pair_returns":s.pair_trace.as_ref().map(|(_,rows)|rows),"root_row_decodes":s.decodes')
+    edit(root,'"root_row_decodes":s.decodes', '"pair_checks":s.pair_issuer.as_ref().map(|p|[p.checked,p.verified]),"pair_proposals":s.pair_issuer.as_ref().map(|p|&p.proposals),"history_tail_misses":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|&t.omitted),"distinct_point_ports":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|[t.points.duplicate_ports,t.points.skipped_registrations,t.points.seen_ports.len()]),"point_batch_gate":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|[t.points.batch_skips,t.points.avoided_visits]),"point_stale_omissions":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|t.points.stale_omissions),"point_union_probes":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|t.points.union_probes),"point_rekeyed":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|t.points.rekeyed),"point_skips":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|&t.points.skipped),"point_claims":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|(&t.points.attempts,&t.points.children,&t.points.misses)),"history_scale":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|t.scale),"history_tail":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|(t.attempts,&t.children)),"history_suppressed":s.history_issuer.as_ref().map(|h|&h.suppressed),"history_updates":s.history_issuer.as_ref().map(|h|&h.updates),"history_initial":s.history_issuer.as_ref().map(|h|&h.seeds),"history_access":s.history_issuer.as_ref().map(|h|[h.probes,h.visits]),"history_online":s.history_issuer.as_ref().map(|h|(&h.checked,&h.pending)),"history_returns":s.history.as_ref().map(|h|&h.1),"pair_returns":s.pair_trace.as_ref().map(|(_,rows)|rows),"root_row_decodes":s.decodes')
     with root.open("a") as f:
         f.write("""
 pub fn enable_return_history(program:&Program)->Result<()> {
@@ -315,19 +315,13 @@ pub fn enable_return_history(program:&Program)->Result<()> {
 pub(crate) fn history_return(table:usize,key:&[Value],result:&Value,op:usize,dep:Dependency,version:u64,epoch:u64){
     STATE.with_borrow_mut(|s|{
         let Some(s)=s else{return};
-        if s.point_authorized && let Some((owner,_,_,rid,_))=s.active && let Dependency::Fact(f)=dep
+        if s.point_authorized && let Some((owner,_,_,rid,_))=s.active && matches!(dep, Dependency::Fact(_))
             && let Some(wires)=s.layout[rid].point_wires.get(&op)
-            && let Some(tail)=s.history_issuer.as_mut().and_then(|h|h.tail.as_mut()){
+            && let Some(tail)=s.history_issuer.as_mut().and_then(|h|h.tail.as_mut())
+            && tail.points.admit_port((dep,version),wires.len()){
             for &(child,projection) in wires {
-                if tail.points.batch_gate {
-                    let upper=tail.points.newest_pivots.entry(child).or_default();
-                    *upper=(*upper).max(version);
-                }
                 let prefix=projection.and_then(|i|if i==key.len(){Some(result)}else{key.get(i)});
-                let prefix=match prefix { Some(Value::Eq(id))=>Some(*id), _=>None };
-                tail.points.pending.entry(child).or_default()
-                    .entry([u64::from(f.cell),u64::from(f.op),version])
-                    .or_insert((owner,epoch,prefix));
+                tail.points.register(child,(dep,version),owner,epoch,prefix);
             }
         }
         if s.active.is_some() && let Some(t)=s.history_issuer.as_mut().and_then(|h|h.tail.as_mut())
@@ -586,11 +580,23 @@ pub(crate) fn static_point_code(rid:usize)->Option<usize>{
     copyfile(Path(__file__).with_name("point_claims.rs"),crate/"src/point_claims.rs")
     with root.open("a") as f:
         f.write('\ninclude!("point_claims.rs");\n')
-    edit(root,"struct Layout{axiom:","struct Layout{point_wires:BTreeMap<usize,Vec<(usize,Option<usize>)>>,axiom:")
-    edit(root,"Layout{axiom:rule.query","Layout{point_wires:Default::default(),axiom:rule.query")
+    edit(root,"struct Layout{axiom:","struct Layout{point_inputs:BTreeMap<usize,Vec<(usize,Option<usize>)>>,point_wires:BTreeMap<usize,Vec<(usize,Option<usize>)>>,axiom:")
+    edit(root,"Layout{axiom:rule.query","Layout{point_inputs:Default::default(),point_wires:Default::default(),axiom:rule.query")
     edit(root,"struct State{stage_watch:", "struct State{point_authorized:bool,stage_watch:")
     edit(root,"State{pair_authorized:false,","State{point_authorized:false,pair_authorized:false,")
     edit(root,"state.active=Some((state.ordinal", "state.point_authorized=!r.refs.is_empty() && !r.layout.point_wires.is_empty();\n        state.active=Some((state.ordinal")
+    edit(root,"if let Some(h)=&mut state.history_issuer{h.cite", """if !r.layout.point_inputs.is_empty()
+            && let Some(tail)=state.history_issuer.as_mut().and_then(|h|h.tail.as_mut()) {
+            for premise in &r.refs {
+                let Some(wires)=r.layout.point_inputs.get(&premise.atom) else {continue};
+                let port=(premise.row,premise.version);
+                if !tail.points.admit_port(port,wires.len()){continue;}
+                for &(child,slot) in wires {
+                    tail.points.register(child,port,state.ordinal,epoch,slot.and_then(|i|inputs.get(&i)));
+                }
+            }
+        }
+        if let Some(h)=&mut state.history_issuer{h.cite""")
     edit(crate/"src/history_issuer.rs","    Ok(())\n}\n\nimpl HistoryIssuer", '    configure_point_claims(g,&spec["point_claims"])\n}\n\nimpl HistoryIssuer')
 
     edit(g,"crate::joint_root::pair_union(hi,lo);","crate::joint_root::point_claim_union(hi,lo);\n        crate::joint_root::pair_union(hi,lo);")

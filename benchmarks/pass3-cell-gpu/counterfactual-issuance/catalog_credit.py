@@ -403,7 +403,7 @@ def main(a):
                             raise ValueError("signed-tail control diverged")
                         seen,waiting=control["root_recipe"]["history_online"]
                         leaf_paid=study["packets"](control)+sum(not valid for _,_,valid in seen)+len(waiting)
-                        if a.point_claims and a.point_family in ("determined","chain","scalar-chain"):
+                        if a.point_claims and a.point_family in ("determined","chain","scalar-chain","input-chain"):
                             from point_catalog import strict_ordinals
                             control_strict = strict_ordinals(control)
                             control_rejected = control["size_omission_checks"]
@@ -420,7 +420,7 @@ def main(a):
                                      and plans[rid]["pivot"] == pivot ]
                         if not consumers:raise ValueError("empty point consumer catalog")
                         head["point_claims"] = dict(
-                            consumers=consumers, retained=a.point_claims != "once",
+                            consumers=consumers, input_ports=a.point_input_ports, distinct_ports=a.distinct_point_ports, retained=a.point_claims != "once",
                             delta_unions=a.point_unions == "delta", own_stale=a.own_stale_points,
                             compose_paths=a.compose_point_paths, batch_gate=a.point_batch_gate,
                             project_later=a.point_project_later,
@@ -487,11 +487,11 @@ def main(a):
                             extra = 0
                             if a.point_claims:
                                 from point_catalog import validate
-                                points = validate(takeover,recipe,consumers)
+                                points = validate(takeover,recipe,consumers, a.point_input_ports)
                                 points["templates"] = consumers
                                 arm["point_claims"] = points
                                 extra = sum(points["committed"].values()) + points["misses"]
-                            if a.point_claims and a.point_family in ("determined","chain","scalar-chain"):
+                            if a.point_claims and a.point_family in ("determined","chain","scalar-chain","input-chain"):
                                 from walk_credit import validate as validate_paths
                                 validate_paths(takeover, cfg)
                                 current = strict_ordinals(takeover)
@@ -570,12 +570,14 @@ if __name__ == "__main__":
     p.add_argument("--history-initial",action="store_true")
     p.add_argument("--history-tail-negative",action="store_true")
     p.add_argument("--point-unions",choices=("batch","delta"),default="delta")
+    p.add_argument("--distinct-point-ports", action="store_true")
+    p.add_argument("--point-input-ports", action="store_true")
     p.add_argument("--point-project-later", action="store_true")
     p.add_argument("--point-batch-gate", action="store_true")
     p.add_argument("--compose-point-paths", action="store_true")
     p.add_argument("--own-stale-points", action="store_true")
     p.add_argument("--compare-point-families", action="store_true")
-    p.add_argument("--point-family",choices=("size","get-single","all","determined","chain","scalar-chain"),default="size")
+    p.add_argument("--point-family",choices=("size","get-single","all","determined","chain","scalar-chain","input-chain"),default="size")
     p.add_argument("--point-training",choices=("only_new","short","small","mixed","wide"),default="mixed")
     p.add_argument("--point-claims",choices=("once","retained","gated"))
     p.add_argument("--point-catalog",action="store_true")
@@ -587,13 +589,19 @@ if __name__ == "__main__":
     p.add_argument("--ept",action="store_true")
     p.add_argument("--source-delta",choices=("size","all","local","distinct"))
     args=p.parse_args()
+    if args.distinct_point_ports and args.point_claims not in ("retained", "gated"):
+        p.error("--distinct-point-ports requires retained ownership")
+    if args.point_family == "input-chain" and not args.point_input_ports:
+        p.error("input-chain requires --point-input-ports")
+    if args.point_input_ports and not args.point_claims:
+        p.error("--point-input-ports requires a signed point catalog")
     if (args.point_batch_gate or args.point_project_later) and args.point_claims != "gated":
         p.error("batch and projected freshness checks require gated point claims")
-    if args.compose_point_paths and not (args.point_claims and args.point_family in ("chain","determined","scalar-chain")):
+    if args.compose_point_paths and not (args.point_claims and args.point_family in ("chain","determined","scalar-chain","input-chain")):
         p.error("--compose-point-paths requires a determined or chain catalog")
     if args.own_stale_points and args.point_claims != "gated":
         p.error("--own-stale-points requires gated point claims")
-    if args.compare_point_families and not (args.point_claims and args.point_family in ("determined", "chain")):
+    if args.compare_point_families and not (args.point_claims and args.point_family in ("determined", "chain", "input-chain")):
         p.error("--compare-point-families requires the determined point catalog")
     if args.fixed_subtuple_depth and (not args.row_guards or not args.depth_model or args.scale_comparison):
         p.error("--fixed-subtuple-depth requires the guarded depth policy outside the three-arm comparison")

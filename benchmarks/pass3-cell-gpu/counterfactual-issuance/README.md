@@ -378,3 +378,9 @@ times were 4.145 s and 3.973 s respectively; sum-bits had a higher native
 median despite using fewer tokens. This comparison measures a broader
 compiled action for an already signed token. It does not train a policy to
 choose a new independent parent or measure GPU performance.
+
+### Inheriting a signed input port
+
+Use `--point-family input-chain --point-input-ports` with retained point ownership to include versioned constructor and mutable-function inputs already cited by a signed source. A later Run can consume that named input after checking its visibility and version. The compiled receiver must still determine its remaining reads. Add `--distinct-point-ports` to share registration of repeated observations of the same dependency and revision. Retirement reopens registration. `--compare-point-families` compares the returns-only, named-input and repeated-registration variants.
+
+[input-port-results.json](input-port-results.json) records native Cell runtime audit results and three instrumented timing observations per variant. On 3mm the same 204,581 signed operations required 261,233 paid tokens versus 368,476. Median native time rose from 3.759 to 4.037 seconds. The change measures reuse of explicitly identified ports. Ordinary root matching can still enumerate candidates. These runs do not measure neural pointer selection or GPU inference.

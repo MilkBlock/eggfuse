@@ -50,12 +50,12 @@ def point_consumers(recipe, family):
     result = []
     for rid, rule in enumerate(recipe["rules"]):
         query = rule["query"]
-        if family in ("chain", "scalar-chain"):
+        if family in ("chain", "scalar-chain", "input-chain"):
             tables = sum("table" in q["call"] for q in query)
             if not rule["metadata"]["seminaive"] or len(query) < 2 or (tables < 2 and family == "chain"):
                 continue
             for pivot, source in enumerate(query):
-                if source["call"].get("table") in constructors and determined(query, {pivot}):
+                if (source["call"].get("table") in constructors or (family == "input-chain" and "table" in source["call"])) and determined(query, {pivot}):
                     result.append((rid, pivot))
             continue
         if len(query) != 2 or not rule["metadata"]["seminaive"]:
@@ -91,7 +91,7 @@ def strict_ordinals(data):
     return found
 
 
-def validate(data, recipe, consumers):
+def validate(data, recipe, consumers, input_ports=False):
     roots = data["root_recipe"]
     attempts, children, misses = roots["point_claims"]
     by_serial = {row[2]:row for row in roots["commits"]}
@@ -103,25 +103,36 @@ def validate(data, recipe, consumers):
             ports.add((owner,effect["call"]["table"],(cell,field,version)))
     pivots = dict(consumers)
     committed = set()
+    source_counts = Counter()
     claimed = {}
     for row in roots["commits"]:
         if row[3] in pivots:
+            source_counts[row[3]] += 1
             if [r["atom"] for r in row[6]] != [pivots[row[3]]]:
                 raise ValueError("unexpected source pivot")
             committed.add((row[3],row[5],identity(row[6][0])[1:]))
 
-    def check(owner,rid,epoch,port):
+    evidence = Counter()
+    def check(owner,rid,epoch,port,kind):
         parent = by_owner[owner]
         table = recipe["rules"][rid]["query"][pivots[rid]]["call"]["table"]
-        if parent[5]>=epoch or not parent[6] or (owner,table,port) not in ports:
-            raise ValueError("no earlier signed versioned output")
+        returned = (owner,table,port) in ports
+        cited = input_ports and any(
+            recipe["rules"][parent[3]]["query"][ref["atom"]]["call"].get("table") == table
+            and identity(ref)[1:] == port for ref in parent[6])
+        if parent[5]>=epoch or not parent[6] or not (returned or cited):
+            raise ValueError("signed port lacks causal evidence from the named owner")
+        source = "both" if returned and cited else "return" if returned else "input"
+        evidence[kind+"_"+source] += 1
+        if len(port) == 2:
+            evidence[kind+"_mutable"] += 1
 
     success = Counter()
     owner_epochs = defaultdict(set)
     producer_counts = Counter()
     for serial,owner in children:
         row = by_serial[serial]
-        check(owner,row[3],row[5],identity(row[6][0])[1:])
+        check(owner,row[3],row[5],identity(row[6][0])[1:],"success")
         if row[0] in claimed:
             raise ValueError("more than one owner credited")
         claimed[row[0]] = row[3]
@@ -131,7 +142,7 @@ def validate(data, recipe, consumers):
     failed = set()
     for rid,epoch,port,owner in misses:
         key = rid,epoch,tuple(port)
-        check(owner,*key)
+        check(owner,*key,"rejection")
         if key in failed or key in committed:
             raise ValueError("invalid failed point continuation")
         failed.add(key)
@@ -144,7 +155,7 @@ def validate(data, recipe, consumers):
     point_serials = {serial for serial, _ in children}
     downstream = Counter(len(path) for _, root, path, _, _ in data["strict_named"]["signed_commits"]
                          if root in point_serials)
-    return dict(signed_descendants_by_depth=dict(downstream), batch_gate=roots.get("point_batch_gate"), stale_omissions=roots.get("point_stale_omissions"), owners=len(owner_epochs), owners_used_across_epochs=sum(len(v)>1 for v in owner_epochs.values()),
+    return dict(source_counts=dict(source_counts), distinct_ports=roots.get("distinct_point_ports"), port_evidence=dict(evidence), signed_descendants_by_depth=dict(downstream), batch_gate=roots.get("point_batch_gate"), stale_omissions=roots.get("point_stale_omissions"), owners=len(owner_epochs), owners_used_across_epochs=sum(len(v)>1 for v in owner_epochs.values()),
                 producer_counts=dict(producer_counts),attempts=attempts, union_probes=roots.get("point_union_probes"), rekeyed_entries=roots.get("point_rekeyed"), skipped=roots.get("point_skips",{}), committed=success, misses=len(failed),
                 misses_by_rule=dict(Counter(rid for rid, _, _ in failed)),effective=dict(effective))
 
@@ -157,7 +168,15 @@ def compare_families(run, request, recipe, control, reference, packets, family):
     spec = head["point_claims"]
     old = set(point_consumers(recipe, "determined" if family == "chain" else "all"))
     old_consumers = [entry for entry in spec["consumers"] if tuple(entry) in old]
-    if family == "chain":
+    if spec.get("input_ports"):
+        return_consumers = set(point_consumers(recipe, "chain"))
+        arms = {"returns_only":dict(spec, input_ports=False, distinct_ports=False,
+                                    consumers=[entry for entry in spec["consumers"]
+                                               if tuple(entry) in return_consumers]),
+                "named_inputs":spec}
+        if spec.get("distinct_ports"):
+            arms["repeated_registration"] = dict(spec, distinct_ports=False)
+    elif family == "chain":
         arms = {"projected":dict(spec, consumers=old_consumers, compose_paths=False, batch_gate=False),
                 "chain":spec}
         if spec.get("project_later"):
@@ -168,7 +187,7 @@ def compare_families(run, request, recipe, control, reference, packets, family):
         arms = {"projected":spec, "first_field":dict(spec, consumers=old_consumers, own_stale=False)}
     stats = {name: dict(native_ms=[], request_ms=[]) for name in arms}
     names = list(arms)
-    for turn in range(3 if family == "chain" else 4):
+    for turn in range(3 if len(arms) == 3 else 4):
         for name in names[turn % len(names):] + names[:turn % len(names)]:
             config = dict(head, point_claims=arms[name])
             start = perf_counter()
@@ -200,7 +219,7 @@ def compare_families(run, request, recipe, control, reference, packets, family):
 def audit_stale_proof(run, request, treatment):
     """Clear the freshness filter and explicitly check every signed continuation."""
     head = request["history_head"]
-    options = dict(head["point_claims"], gate=None, own_stale=False)
+    options = dict(head["point_claims"], gate=None, own_stale=False, distinct_ports=False)
     exact = run(dict(request, history_head=dict(head, point_claims=options)))
     if exact.get("source_error"):
         raise ValueError(exact["source_error"])

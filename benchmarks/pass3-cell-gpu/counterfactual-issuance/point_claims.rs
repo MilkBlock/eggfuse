@@ -7,6 +7,10 @@ struct PointClaims {
     newest_pivots: BTreeMap<usize, u64>,
     batch_skips: usize,
     avoided_visits: usize,
+    distinct_ports: bool,
+    seen_ports: std::collections::HashSet<(Dependency, u64)>,
+    duplicate_ports: usize,
+    skipped_registrations: usize,
     retained: bool,
     own_stale: bool,
     stale_omissions: usize,
@@ -23,10 +27,26 @@ struct PointClaims {
     union_probes: usize,
     skipped: BTreeMap<usize, usize>,
     pivots: BTreeMap<usize, usize>,
-    pending: BTreeMap<usize, BTreeMap<VersionedPort, (usize, u64, Option<u64>)>>,
+    pending: BTreeMap<usize, BTreeMap<(Dependency, u64), (usize, u64, Option<u64>)>>,
     attempts: BTreeMap<usize, usize>,
     children: Vec<(u64, usize)>,
-    misses: Vec<(usize, u64, VersionedPort, usize)>,
+    misses: Vec<(usize, u64, PointReceipt, usize)>,
+}
+
+#[derive(Serialize)]
+#[serde(untagged)]
+enum PointReceipt {
+    Fact([u64; 3]),
+    Function([u64; 2]),
+}
+
+impl PointReceipt {
+    fn new(row: Dependency, version: u64) -> Self {
+        match row {
+            Dependency::Fact(f) => Self::Fact([u64::from(f.cell), u64::from(f.op), version]),
+            Dependency::Function(id) => Self::Function([id as u64, version]),
+        }
+    }
 }
 
 fn configure_point_claims(g: &Graph, spec: &J) -> Result<()> {
@@ -42,6 +62,7 @@ fn configure_point_claims(g: &Graph, spec: &J) -> Result<()> {
         unions: g.stats.unions,
         delta_unions: spec["delta_unions"] == true,
         retained: spec["retained"] == true,
+        distinct_ports: spec["distinct_ports"] == true,
         batch_gate: spec["batch_gate"] == true,
         own_stale: spec["own_stale"] == true,
         gate: serde_json::from_value(spec["gate"].clone()).map_err(|e| e.to_string())?,
@@ -59,7 +80,7 @@ fn configure_point_claims(g: &Graph, spec: &J) -> Result<()> {
         let Call::Table(src) = &source.call else {
             return Err("expected a constructor pivot".into());
         };
-        if !program.tables[*src].constructor {
+        if !program.tables[*src].constructor && spec["input_ports"] != true {
             return Err("expected a constructor pivot".into());
         }
         let order = crate::single_witness::signed_point_order(r, pivot)
@@ -122,10 +143,32 @@ fn configure_point_claims(g: &Graph, spec: &J) -> Result<()> {
             let mut wiring = BTreeMap::new();
             for (op, ins) in program.templates[r.template].ops.iter().enumerate() {
                 if let crate::program::Op::Let(_, Call::Table(t), _) = ins
+                    && program.tables[*t].constructor
                     && let Some(uses) = by_table.get(t)
                 {
                     wiring.insert(op, uses.clone());
                 }
+            }
+            if spec["input_ports"] == true {
+                let mut inputs = BTreeMap::new();
+                for (atom, query) in r.query.iter().enumerate() {
+                    let Call::Table(t) = query.call else { continue };
+                    let Some(uses) = by_table.get(&t) else {
+                        continue;
+                    };
+                    let wires = uses
+                        .iter()
+                        .map(|&(child, col)| {
+                            let slot = col.and_then(|i| match query.args.get(i) {
+                                Some(Arg::Slot(s)) => Some(*s),
+                                _ => None,
+                            });
+                            (child, slot)
+                        })
+                        .collect();
+                    inputs.insert(atom, wires);
+                }
+                Rc::make_mut(&mut s.layout[rid]).point_inputs = inputs;
             }
             if !wiring.is_empty() {
                 Rc::make_mut(&mut s.layout[rid]).point_wires = wiring;
@@ -145,6 +188,40 @@ fn configure_point_claims(g: &Graph, spec: &J) -> Result<()> {
 }
 
 impl PointClaims {
+    // All producer layouts subscribe the same consumer set for this table.
+    // Forget the shared admission when any consumer retires the version.
+    fn admit_port(&mut self, port: (Dependency, u64), uses: usize) -> bool {
+        if !self.distinct_ports || !self.retained || self.seen_ports.insert(port) {
+            return true;
+        }
+        self.duplicate_ports += 1;
+        self.skipped_registrations += uses;
+        false
+    }
+
+    fn register(
+        &mut self,
+        child: usize,
+        port: (Dependency, u64),
+        owner: usize,
+        epoch: u64,
+        prefix: Option<&Value>,
+    ) {
+        if self.batch_gate {
+            let upper = self.newest_pivots.entry(child).or_default();
+            *upper = (*upper).max(port.1);
+        }
+        let key = match prefix {
+            Some(Value::Eq(id)) => Some(*id),
+            _ => None,
+        };
+        self.pending
+            .entry(child)
+            .or_default()
+            .entry(port)
+            .or_insert((owner, epoch, key));
+    }
+
     fn publish(&mut self, g: &Graph) -> Result<()> {
         if self.unions != g.stats.unions {
             // Two formerly distinct keys can now name the same mutable row.
@@ -308,16 +385,16 @@ impl PointClaims {
         let pivot = self.pivots[&rid];
         let mut claims = Vec::new();
         let mut skipped = 0;
+        let mut retired = Vec::new();
         let stale = self.stale_test(g, rid, mark);
-        pending.retain(|&[cell, op, version], &mut (owner, birth, key)| {
+        pending.retain(|&(d, version), &mut (owner, birth, key)| {
             if birth >= g.epoch {
                 return true;
             }
-            let d = Dependency::Fact(crate::graph::FactRef {
-                cell: cell as u32,
-                op: op as u32,
-            });
             if g.visible_epoch(d) != Some(version) {
+                if self.distinct_ports {
+                    retired.push((d, version));
+                }
                 return false;
             }
             if stale.as_ref().is_some_and(|test| test(d, version, key)) {
@@ -328,6 +405,9 @@ impl PointClaims {
             self.retained
         });
         drop(stale);
+        for port in retired {
+            self.seen_ports.remove(&port);
+        }
         if !pending.is_empty() {
             self.pending.insert(rid, pending);
         }
@@ -379,10 +459,7 @@ pub(crate) fn owned_stale_point(
         if !t.own_misses || !points.own_stale || version >= mark {
             return None;
         }
-        let Dependency::Fact(f) = row else {
-            return None;
-        };
-        let port = [u64::from(f.cell), u64::from(f.op), version];
+        let port = (row, version);
         let &(owner, birth, key) = points.pending.get(&rid)?.get(&port)?;
         if birth >= g.epoch
             || !points.stale_test(g, rid, mark)?(row, version, key)
