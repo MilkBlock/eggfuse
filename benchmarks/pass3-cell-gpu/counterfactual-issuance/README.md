@@ -192,3 +192,27 @@ A successful internal check retains the matched instance. The signed child recei
 The paired root-only control runs on the same executable. The audit requires identical ordered source operations, committed input values and versions, source events, schedule, final state and EPT ledger. Each signed child must have a distinct source commit, an earlier signed ancestor and the exact versioned output of that ancestor. A discharged failed lane must have no corresponding reference commit at that boundary. The full difference in paid proposals must equal successful children plus discharged failed lanes. EPT attribution follows the signed chain to its root.
 
 On 3mm, allowing depth eight increased attempts from 3,103 to 4,395 and added no successful child beyond the first step. The context selector at depth eight kept all 1,292 successes using 4,157 attempts. On sum-bits it lost three successful takeovers. A useful larger Cell here spans two different rules. The measured traces provide no evidence for recursively repeating rule 521. [Native results and controls](history-tail-results.json)
+
+## Retaining signed point continuations across Runs
+
+Rebuild the native overlay and run the guarded history experiment with
+`--source-delta local --history-release --history-initial --point-claims gated --point-family all`.
+Each eligible producer signs static wiring to later consumers. A checked actual return supplies the
+pivot and its version. Remaining reads have fully determined keys. The runtime retains this authority
+while the port is live, checks the scheduled watermark and verifies the application in the original
+Run. Unowned roots keep their ordinary issuer. This extends one-parent continuations.
+Independent two-parent issuance from history is still exclusive to the rule 518 experiment.
+
+The native CPU experiment preserved the signed operation components and reference ledger on each
+workload. Paid tokens fell from 12,822 to 11,848 on dot-product, 11,091 to 10,476 on sum-bits and
+518,453 to 450,049 on 3mm relative to the previously signed 521 arm. Fourteen consumer templates
+qualified. The 3mm reduction includes 60,475 successful applications and 7,929 displaced failed
+proposals. Applications that leave the reference state unchanged earn zero effective operations.
+
+Use `--point-family size` with `--point-claims once` or `retained` to isolate authority lifetime.
+On those two rules, mixed synthetic freshness training reduced exact point attempts from 2,428,978
+to 53,617 compared with `--point-claims gated --point-training only_new`. The executable freshness
+gate runs on CPU. It still visits retained claims and maintains version upper bounds. For the larger
+family, `--point-unions batch` visited 2,601,337 entries on 3mm. The default incremental variant
+rekeyed 4,006 entries and made 281,420 union probes. EPT measures signed semantic output per paid
+token. These experiments do not establish end-to-end latency. [Paired native results](point-claims-results.json)

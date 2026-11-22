@@ -1,0 +1,386 @@
+{
+  "dot-product": {
+    "ledger_sha256": "9e1a9f99f07770a2ce93a65e8d1ef1b542615a3caeb18d12ed50c524fc971b18",
+    "signed": {
+      "visible_birth": 2974,
+      "effective_write": 2159,
+      "effective_union": 341,
+      "visibility_change": 0
+    },
+    "arms": {
+      "once": {
+        "paid": 12791,
+        "ept": 0.4279571573762802,
+        "attempts": 411,
+        "committed": 31,
+        "misses": 0
+      },
+      "retained": {
+        "paid": 12392,
+        "ept": 0.4417366042608134,
+        "attempts": 8167,
+        "committed": 430,
+        "misses": 0
+      },
+      "verified": {
+        "paid": 12392,
+        "ept": 0.4417366042608134,
+        "attempts": 506,
+        "committed": 430,
+        "misses": 0,
+        "rekeyed_entries": 11038
+      },
+      "fresh-only": {
+        "paid": 12392,
+        "ept": 0.4417366042608134,
+        "attempts": 8167,
+        "committed": 430,
+        "misses": 0,
+        "rekeyed_entries": 11038
+      },
+      "family": {
+        "paid": 11848,
+        "ept": 0.462018906144497,
+        "attempts": 1306,
+        "committed": 730,
+        "misses": 244,
+        "rekeyed_entries": 35417,
+        "union_probes": null
+      },
+      "delta-all": {
+        "paid": 11848,
+        "ept": 0.462018906144497,
+        "attempts": 1306,
+        "committed": 730,
+        "misses": 244,
+        "rekeyed_entries": 79,
+        "union_probes": 6110
+      }
+    },
+    "final_checks": {
+      "rhs": true,
+      "writes": true,
+      "resumes": true,
+      "events": true,
+      "runs": true,
+      "schedule": true,
+      "state_sha": true,
+      "ledger": true,
+      "commit_inputs": true
+    },
+    "consumer_pivots": [
+      [
+        103,
+        0
+      ],
+      [
+        105,
+        0
+      ],
+      [
+        125,
+        1
+      ],
+      [
+        145,
+        0
+      ],
+      [
+        146,
+        0
+      ],
+      [
+        153,
+        0
+      ],
+      [
+        155,
+        0
+      ],
+      [
+        213,
+        0
+      ],
+      [
+        233,
+        0
+      ],
+      [
+        288,
+        0
+      ],
+      [
+        424,
+        0
+      ],
+      [
+        426,
+        0
+      ],
+      [
+        551,
+        0
+      ],
+      [
+        552,
+        0
+      ]
+    ]
+  },
+  "sum-bits": {
+    "ledger_sha256": "4cc4c1c34874ef596379c3218854655706eff5a13bb0c7e1e4a38fc0cd70e0fa",
+    "signed": {
+      "visible_birth": 3331,
+      "effective_write": 1449,
+      "effective_union": 526,
+      "visibility_change": 75
+    },
+    "arms": {
+      "once": {
+        "paid": 11067,
+        "ept": 0.48622029456944066,
+        "attempts": 452,
+        "committed": 24,
+        "misses": 0
+      },
+      "retained": {
+        "paid": 10992,
+        "ept": 0.489537845705968,
+        "attempts": 4162,
+        "committed": 99,
+        "misses": 0
+      },
+      "verified": {
+        "paid": 10992,
+        "ept": 0.489537845705968,
+        "attempts": 221,
+        "committed": 99,
+        "misses": 0,
+        "rekeyed_entries": 7314
+      },
+      "fresh-only": {
+        "paid": 10992,
+        "ept": 0.489537845705968,
+        "attempts": 4162,
+        "committed": 99,
+        "misses": 0,
+        "rekeyed_entries": 7314
+      },
+      "family": {
+        "paid": 10476,
+        "ept": 0.5136502481863306,
+        "attempts": 956,
+        "committed": 346,
+        "misses": 269,
+        "rekeyed_entries": 27255,
+        "union_probes": null
+      },
+      "delta-all": {
+        "paid": 10476,
+        "ept": 0.5136502481863306,
+        "attempts": 956,
+        "committed": 346,
+        "misses": 269,
+        "rekeyed_entries": 118,
+        "union_probes": 10390
+      }
+    },
+    "final_checks": {
+      "rhs": true,
+      "writes": true,
+      "resumes": true,
+      "events": true,
+      "runs": true,
+      "schedule": true,
+      "state_sha": true,
+      "ledger": true,
+      "commit_inputs": true
+    },
+    "consumer_pivots": [
+      [
+        103,
+        0
+      ],
+      [
+        105,
+        0
+      ],
+      [
+        125,
+        1
+      ],
+      [
+        145,
+        0
+      ],
+      [
+        146,
+        0
+      ],
+      [
+        153,
+        0
+      ],
+      [
+        155,
+        0
+      ],
+      [
+        213,
+        0
+      ],
+      [
+        233,
+        0
+      ],
+      [
+        288,
+        0
+      ],
+      [
+        424,
+        0
+      ],
+      [
+        426,
+        0
+      ],
+      [
+        551,
+        0
+      ],
+      [
+        552,
+        0
+      ]
+    ]
+  },
+  "3mm": {
+    "ledger_sha256": "63a923887e958fe32e63821392e62a71a9a52e8a21058c94cdc3af49899af2d0",
+    "signed": {
+      "visible_birth": 111901,
+      "effective_write": 81136,
+      "effective_union": 11544,
+      "visibility_change": 0
+    },
+    "arms": {
+      "once": {
+        "paid": 517717,
+        "ept": 0.3951599039629759,
+        "attempts": 18678,
+        "committed": 736,
+        "misses": 0
+      },
+      "retained": {
+        "paid": 468041,
+        "ept": 0.43710059588796707,
+        "attempts": 2428978,
+        "committed": 50412,
+        "misses": 0
+      },
+      "verified": {
+        "paid": 468041,
+        "ept": 0.43710059588796707,
+        "attempts": 53617,
+        "committed": 50412,
+        "misses": 0,
+        "rekeyed_entries": 754795
+      },
+      "fresh-only": {
+        "paid": 468041,
+        "ept": 0.43710059588796707,
+        "attempts": 2428978,
+        "committed": 50412,
+        "misses": 0,
+        "rekeyed_entries": 754795
+      },
+      "family": {
+        "paid": 450049,
+        "ept": 0.4545749462836269,
+        "attempts": 81763,
+        "committed": 60475,
+        "misses": 7929,
+        "rekeyed_entries": 2601337,
+        "union_probes": null
+      },
+      "delta-all": {
+        "paid": 450049,
+        "ept": 0.4545749462836269,
+        "attempts": 81763,
+        "committed": 60475,
+        "misses": 7929,
+        "rekeyed_entries": 4006,
+        "union_probes": 281420
+      }
+    },
+    "final_checks": {
+      "rhs": true,
+      "writes": true,
+      "resumes": true,
+      "events": true,
+      "runs": true,
+      "schedule": true,
+      "state_sha": true,
+      "ledger": true,
+      "commit_inputs": true
+    },
+    "consumer_pivots": [
+      [
+        103,
+        0
+      ],
+      [
+        105,
+        0
+      ],
+      [
+        125,
+        1
+      ],
+      [
+        145,
+        0
+      ],
+      [
+        146,
+        0
+      ],
+      [
+        153,
+        0
+      ],
+      [
+        155,
+        0
+      ],
+      [
+        213,
+        0
+      ],
+      [
+        233,
+        0
+      ],
+      [
+        288,
+        0
+      ],
+      [
+        424,
+        0
+      ],
+      [
+        426,
+        0
+      ],
+      [
+        551,
+        0
+      ],
+      [
+        552,
+        0
+      ]
+    ]
+  }
+}

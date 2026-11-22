@@ -1,6 +1,7 @@
 // The issuer signs an optional, point-determined successor with its root.
 // The successor may read only its returned HasArgType and a fully keyed Single.
 struct HistoryTail {
+    points: PointClaims,
     rule: usize,
     effects: [usize; 2],
     depth: usize,
@@ -101,6 +102,7 @@ impl HistoryTail {
             })
             .collect();
         Ok(Some(Self {
+            points: Default::default(),
             rule: rid,
             effects: [effect(root)?, effect(rid)?],
             depth,
@@ -210,7 +212,11 @@ impl HistoryTail {
     }
 }
 
-pub(crate) fn history_tail_claims(rule: usize, epoch: u64) -> Vec<(Dependency, u64, usize, usize)> {
+pub(crate) fn history_tail_claims(
+    rule: usize,
+    g: &Graph,
+    mark: u64,
+) -> Vec<(Dependency, u64, usize, usize, usize)> {
     STATE.with_borrow_mut(|s| {
         let Some(t) = s
             .as_mut()
@@ -220,12 +226,12 @@ pub(crate) fn history_tail_claims(rule: usize, epoch: u64) -> Vec<(Dependency, u
             return vec![];
         };
         if rule != t.rule {
-            return vec![];
+            return t.points.drain(g, rule, mark);
         }
         let mut claims = Vec::new();
         t.pending
             .retain(|&[cell, op, version], (owner, birth, depth)| {
-                if *birth >= epoch {
+                if *birth >= g.epoch {
                     return true;
                 }
                 claims.push((
@@ -236,6 +242,7 @@ pub(crate) fn history_tail_claims(rule: usize, epoch: u64) -> Vec<(Dependency, u
                     version,
                     *owner,
                     *depth,
+                    1,
                 ));
                 false
             });
@@ -252,13 +259,18 @@ pub(crate) fn history_tail_recipe(
     owner: usize,
     depth: usize,
 ) -> Result<Recipe> {
-    let serial = STATE.with_borrow_mut(|s| -> Result<u64> {
+    let (serial, pivot) = STATE.with_borrow_mut(|s| -> Result<(u64, usize)> {
         let s = s.as_mut().ok_or("missing history issuer")?;
         let tail = s
             .history_issuer
             .as_mut()
             .and_then(|h| h.tail.as_mut())
             .ok_or("missing signed history tail")?;
+        if let Some(&pivot) = tail.points.pivots.get(&rid) {
+            s.serial += 1;
+            tail.points.children.push((s.serial, owner));
+            return Ok((s.serial, pivot));
+        }
         if tail.rule != rid {
             return Err("wrong signed history child".into());
         }
@@ -267,12 +279,18 @@ pub(crate) fn history_tail_recipe(
             tail.inherited.insert(s.serial, depth - 1);
         }
         tail.children.push((s.serial, owner));
-        Ok(s.serial)
+        Ok((s.serial, 1))
     })?;
-    internal_point(epoch, rid, 1, row, version, serial)
+    internal_point(epoch, rid, pivot, row, version, serial)
 }
 
-pub(crate) fn history_tail_miss(epoch: u64, row: Dependency, version: u64, owner: usize) -> bool {
+pub(crate) fn history_tail_miss(
+    rid: usize,
+    epoch: u64,
+    row: Dependency,
+    version: u64,
+    owner: usize,
+) -> bool {
     STATE.with_borrow_mut(|s| {
         let Some(t) = s
             .as_mut()
@@ -287,6 +305,15 @@ pub(crate) fn history_tail_miss(epoch: u64, row: Dependency, version: u64, owner
         let Dependency::Fact(f) = row else {
             return false;
         };
+        if t.points.pivots.contains_key(&rid) {
+            t.points.misses.push((
+                rid,
+                epoch,
+                [u64::from(f.cell), u64::from(f.op), version],
+                owner,
+            ));
+            return true;
+        }
         t.omitted
             .push((epoch, [u64::from(f.cell), u64::from(f.op), version], owner));
         true

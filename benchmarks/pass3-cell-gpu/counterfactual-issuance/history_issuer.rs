@@ -265,6 +265,11 @@ pub(crate) fn history_updates(g: &Graph) -> Result<()> {
         let Some(h) = s.as_mut().and_then(|s| s.history_issuer.as_mut()) else {
             return Ok(());
         };
+        if let Some(tail) = &mut h.tail
+            && tail.points.gate.is_some()
+        {
+            tail.points.publish(g)?;
+        }
         if !h.refresh {
             return Ok(());
         }

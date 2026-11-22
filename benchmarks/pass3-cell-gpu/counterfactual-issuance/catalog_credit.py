@@ -248,6 +248,10 @@ def main(a):
                                    if len(r["query"]) == 2 and all(
                                        atom["call"].get("table") in ctors for atom in r["query"])}
                         tables = {a["call"]["table"] for rid in history_targets for a in recipe["rules"][rid]["query"]}
+                        if a.point_claims:
+                            from point_catalog import point_consumers
+                            tables.update(recipe["rules"][rid]["query"][pivot]["call"]["table"]
+                                          for rid,pivot in point_consumers(recipe,a.point_family))
                         trace_rules.update(rid for rid,r in enumerate(recipe["rules"]) if any(
                             op.get("kind") == "construct" and op["call"]["table"] in tables for op in r["effects"]))
                     request["pair_trace_rules"] = sorted(trace_rules)
@@ -271,6 +275,9 @@ def main(a):
                         request["history_head"]["release"] = report["source_delta_training"]["arms"]["mixed"]["actions"]
                 if a.ept:request["ept"]=True
                 data = run(request)
+                if a.point_catalog and name=="sub_expected_guard":
+                    from point_catalog import rank
+                    report.setdefault("point_catalog",{})[case]=rank(data,recipe)
                 counts, ledger = matrix["summarize"](data,exact,bool(mode))
                 if baseline is None:
                     baseline = counts
@@ -382,6 +389,16 @@ def main(a):
                                          if [atom["call"].get("table") for atom in r["query"]] == ["Single","HasArgType"]
                                          and r["query"][0]["args"][0] == r["query"][1]["args"][0]]
                         head["tail"] = dict(rule=successor,depth=a.history_tail_depth,context=a.history_tail_context,own_misses=a.history_tail_negative)
+                    if a.point_claims:
+                        from point_catalog import point_consumers
+                        plans = data["single"]["plans"]
+                        consumers = [(rid,pivot) for rid,pivot in point_consumers(recipe,a.point_family)
+                                     if rid != successor and plans[rid] is not None
+                                     and plans[rid]["pivot"] == pivot and plans[rid]["order"] == [1-pivot]]
+                        if not consumers:raise ValueError("empty point consumer catalog")
+                        head["point_claims"] = dict(consumers=consumers,retained=a.point_claims!="once",delta_unions=a.point_unions=="delta")
+                        if a.point_claims=="gated":
+                            head["point_claims"]["gate"]=report["source_delta_training"]["arms"][a.point_training]["actions"]
                     takeover = run(dict(request, history_head=head))
                     if takeover.get("source_error"):
                         results[name]["history_takeover"] = dict(error=takeover["source_error"])
@@ -407,11 +424,20 @@ def main(a):
                             from history_successors import validate_tail
                             arm["tail"] = validate_tail(takeover,head["target"],head["tail"]["rule"],a.history_tail_depth)
                             tail = arm["tail"]
-                            if leaf_paid - paid_all != tail["committed"] + tail["omitted_paid_misses"]:
+                            extra = 0
+                            if a.point_claims:
+                                from point_catalog import validate
+                                points = validate(takeover,recipe,consumers)
+                                points["templates"] = consumers
+                                arm["point_claims"] = points
+                                extra = sum(points["committed"].values()) + points["misses"]
+                            if leaf_paid - paid_all != tail["committed"] + tail["omitted_paid_misses"] + extra:
                                 raise ValueError("unattributed difference in signed-tail paid proposals")
                             arm["tail"]["control_paid"] = leaf_paid
                         if all(checks.values()) and applied == accepted:
                             arm["effective_ops"] = score(takeover,recipe,paid_all,reference)
+                            if a.point_claims and arm["effective_ops"]["signed"] != results[name]["effective_ops"]["signed"]:
+                                raise ValueError("signed operation attribution changed")
                         results[name]["history_takeover"] = arm
                 print(case,name,paid,saved,flush=True)
         if a.depth_model and not a.parent_projection:
@@ -447,6 +473,11 @@ if __name__ == "__main__":
     p.add_argument("--history-updates",action="store_true")
     p.add_argument("--history-initial",action="store_true")
     p.add_argument("--history-tail-negative",action="store_true")
+    p.add_argument("--point-unions",choices=("batch","delta"),default="delta")
+    p.add_argument("--point-family",choices=("size","get-single","all"),default="size")
+    p.add_argument("--point-training",choices=("only_new","short","small","mixed","wide"),default="mixed")
+    p.add_argument("--point-claims",choices=("once","retained","gated"))
+    p.add_argument("--point-catalog",action="store_true")
     p.add_argument("--history-tail-context",action="store_true")
     p.add_argument("--history-tail-depth",type=int,default=1)
     p.add_argument("--history-tail",action="store_true")
@@ -458,8 +489,11 @@ if __name__ == "__main__":
     if args.history_release and not args.source_delta:p.error("--history-release requires the trained --source-delta head")
     args.history_updates |= args.history_release
     if args.history_tail_depth < 1:p.error("signed tail depth must be positive")
+    if args.point_claims=="gated" and not args.source_delta:p.error("gated ownership requires trained --source-delta")
+    args.history_tail_negative |= bool(args.point_claims)
     args.history_tail |= args.history_tail_depth > 1 or args.history_tail_context or args.history_tail_negative
     args.history_takeover |= args.history_tail
+    args.history_ports |= args.point_catalog
     args.history_ports |= args.history_takeover or args.history_initial or args.history_updates
     args.ept |= args.history_takeover
     args.pair_takeover |= args.history_takeover
