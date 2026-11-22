@@ -16,7 +16,7 @@ from compound_model import compiled_actions
 
 # The diagnostic invokes only independent grid lanes or single-lane kernels.
 # A threadgroup kernel cannot be serialized using this adapter.
-GRID_KERNELS = set("inject seed_keys seed_index next_run neural_features neural_propose "
+GRID_KERNELS = set("inject seed_keys seed_index next_run neural_snapshot_anchors neural_features neural_propose "
                    "compound_child neural_verify compound_resume search commit export_rows "
                    "frozen_compound_wave".split())
 CPU_HEADER = """#include <algorithm>
@@ -48,6 +48,8 @@ def serial_compiler(directory):
         wrappers = []
         for name, signature in re.findall(r"kernel void (\w+)\(([^)]*)\)", source, re.S):
             if name not in GRID_KERNELS:
+                continue
+            if name=="neural_snapshot_anchors" and "#define NEURAL_EDGES 1\n" not in source:
                 continue
             args = signature.split(",")
             if "thread_position_in_grid" not in args[-1]:
@@ -97,7 +99,7 @@ def check(args):
     if [list(j) for j in joins] != policy["joins"] or tails != policy["tails"] or wires != policy["wires"]:
         raise ValueError("policy differs from compiled donor")
     cfg = dict(catalog=load_catalog(image, program, donor), rows=2, hidden=8, ranks=8,
-               waves=2, weights=policy["roots"], compound=dict(joins=joins,tails=tails,
+               waves=2, weights=policy["roots"], compound=dict(named_boundary=policy.get("named_boundary",False),joins=joins,tails=tails,
                wires=wires,batch=True,child=policy["child"]))
     args.out.mkdir(parents=True, exist_ok=False)
     def run(arm):
@@ -119,7 +121,9 @@ def check(args):
         action = claims[t,lane,1]
         assert raw[t,2+lane,10] == wires[action]+1 and tails[action]>=0
         assert terminal[t,lane,2] == claims[t,lane,7] > 0
-        raw[t,2+lane,10] = joins[action][2]+1
+        prefix_index=next(i for i,j in enumerate(joins) if j[1:]==joins[action][1:] and tails[i]<0)
+        raw[t,2+lane,10] = wires[prefix_index]+1
+        later={k:z[k][:,:,7].copy() for k in z if k.startswith("hop_")}
     cfg["compound"]["replay"] = raw
     prefix = run("prefix")
     with np.load(prefix/"compound-output.npz") as z:
@@ -127,12 +131,17 @@ def check(args):
         expected[t,lane] = 0
         np.testing.assert_array_equal(z["tails"][:,:,7], expected)
         np.testing.assert_array_equal(z["claims"][:,:,7], claims[:,:,7])
+        removed=1
+        for key,after in later.items():
+            removed+=int(after[t,lane]>0)
+            after[t,lane]=0
+            np.testing.assert_array_equal(z[key][:,:,7],after)
     with np.load(prefix/"neural-output.npz") as p, np.load(full/"neural-output.npz") as f:
         np.testing.assert_array_equal(p["raw"], raw)
         np.testing.assert_array_equal(p["rhs_ordinal"], f["rhs_ordinal"])
     roles = [read(path/"run.json")["execution_roles"] for path in (full,prefix)]
     residual = [r["rhs_inputs_from_exact_search"] for r in roles]
-    assert residual[1] == residual[0]+1
+    assert residual[1] == residual[0]+removed
     # Each arm contains only evidence available before the consumer Run.
     # Keep oracle attribution in a separate target, outside observation.
     examples=[]

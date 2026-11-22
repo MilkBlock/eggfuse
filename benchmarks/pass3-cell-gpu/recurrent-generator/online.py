@@ -16,7 +16,7 @@ def run(packet,reader,ports,catalog,checkpoint,out,completion=True,bootstrap_onl
         entries=static['entries']
         if static['schema']!='eggfuse.compound-catalog/v1' or static['joins']!=model['joins']:
             raise ValueError('policy/catalog joins differ')
-        extra={}
+        extra=dict(named_boundary=model.get('named_boundary',False))
         if chain:
             for field in ('tails','wires'):
                 if field not in static or static[field]!=model[field]:

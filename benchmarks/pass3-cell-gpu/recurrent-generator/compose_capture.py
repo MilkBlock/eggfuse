@@ -1,5 +1,6 @@
 """Record source-visible producer RHS ordinals and their precise effect ports for each committed Spine input."""
 import argparse
+from tempfile import TemporaryDirectory
 from pathlib import Path
 import numpy as np
 from capture import execute, inputs, load_catalog, read, verify
@@ -8,14 +9,18 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     for k in ('corpus','ref','reader','out'):p.add_argument(k,type=Path)
     p.add_argument('--splits',nargs='+',choices=('train','development','heldout','anchor'),default=['heldout','anchor'])
+    p.add_argument('--serial-cpu',action='store_true')
+    from chain_check import serial_compiler
     a=p.parse_args();a.out.mkdir(parents=True,exist_ok=False)
     for case,info in read(a.corpus/'collection.json').items():
         if info['split'] not in a.splits:continue
         image,program,gold=inputs(a.corpus,a.ref,case)
         entries=load_catalog(image,program,a.ref/'sum-bits/program.json')
         dest=a.out/case
-        execute(image/'device.json',a.reader,a.ref/'ports-1703.pt',2048,2,dest,
-                neural=dict(catalog=entries,rows=2,ranks=8,hidden=8,capture=True,capture_edges=True))
+        with TemporaryDirectory() as tmp:
+            execute(image/'device.json',a.reader,a.ref/'ports-1703.pt',2048,2,dest,
+                neural=dict(catalog=entries,rows=2,ranks=8,hidden=8,capture=True,capture_edges=True,capture_boundaries=True),
+                serial_compile=serial_compiler(Path(tmp)) if a.serial_cpu else None)
         verify(dest,gold,image)
         with np.load(dest/'neural-inputs.npz') as z,np.load(dest/'output.npz') as g:
             consumed,pub,rhs=z['consumed'],z['publications'],g['rhs']

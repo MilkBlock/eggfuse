@@ -122,7 +122,7 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
         limits.update(NEURAL_BOOTSTRAP_ONLY=int(bootstrap),NEURAL_FUSE=fusion)
         per_run=nr*waves
         capture_receipts=ncapture and neural.get('receipt_labels',False)
-        capture_edges=ncapture and neural.get('capture_edges',False)
+        capture_edges=bool(neural.get('capture_edges',False))
         edge_base=limits['BLOCK_BASE']+limits['TRACE_CAP']+int(capture_receipts)*steps*leaves*ranks
         limits.update(NEURAL_EDGES=int(capture_edges),EDGE_BEFORE=edge_base,
                       EDGE_CONSUMED=edge_base+limits['ROW_CAP'],
@@ -166,7 +166,7 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
         if len(tails)!=len(joins) or len(wires)!=len(joins):
             raise ValueError("compound action metadata length mismatch")
         if any(t < -1 or t >= len(joins) or
-               (t >= 0 and (tails[t]!=-1 or joins[t][1]!=joins[i][3]))
+               (t >= 0 and (joins[t][1]!=joins[i][3]))
                for i,t in enumerate(tails)):
             raise ValueError("invalid compound continuation")
         if len({(j[1],w,j[3]) for j,w in zip(joins,wires)})!=len(joins) or any(w<0 for w in wires):
@@ -176,13 +176,53 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
             from catalog import validate_join_ports
             validate_join_ports(packet.parent,neural['catalog'],joins)
             limits['COM_TAIL_BASE']=nr*steps
-        claim_slots=nr*steps*(2 if chained else 1)
-        queue=records+11*claim_slots
+        available=[]
+        max_hops=1
+        for origin in range(len(joins)):
+            seen=set()
+            step=origin
+            compatible=True
+            while step>=0:
+                if step in seen:
+                    raise ValueError("cyclic compound continuation")
+                seen.add(step)
+                compatible &= neural['catalog'][joins[step][3]][0]>=0
+                step=tails[step]
+            available.append(int(compatible))
+            max_hops=max(max_hops,len(seen))
+        claim_slots=nr*steps*max_hops
+        # Only paths with an extra relational atom need instance witnesses.
+        boundary_width=0
+        for _,_,_,leaf in joins:
+            rid,_,path,_=neural['catalog'][leaf]
+            if rid>=0:
+                atoms=int(rom[layout['RULE']+7*rid])
+                for pos in range(1,atoms):
+                    if rom[path+4*pos]>=0:
+                        boundary_width=max(boundary_width,pos)
+        limits['COM_BOUNDARY_WIDTH']=boundary_width if compound.get('named_boundary',False) else 0
+        limits['COM_LAYER']=nr*steps
+        limits['COM_BOUNDARIES']=records+11*claim_slots
+        limits['COM_BOUNDARY_STATS']=limits['COM_BOUNDARIES']+2*limits['COM_BOUNDARY_WIDTH']*claim_slots
+        queue=limits['COM_BOUNDARY_STATS']+2*bool(limits['COM_BOUNDARY_WIDTH'])
         limits.update(COMPOUND=1,COM_JOINS=len(joins),COM_BATCH=int(compound['batch']),
                       COM_MASK_PARENT=int(compound.get('mask_parent',False)),
                       COM_RECORDS=records,COM_QUEUE=queue,COM_HEAD=queue+claim_slots)
     if compound and compound.get('audit_claim_time'):
         limits['COM_FAILURE_RUN']=limits['COM_HEAD']+2*limits['ROW_CAP']
+    capture_boundaries=bool(neural and neural.get("capture_boundaries"))
+    if neural is not None and capture_edges and not ncapture:
+        if compound is None or not capture_boundaries:
+            raise ValueError("active boundary audit requires compound execution")
+        start=limits['COM_HEAD']+2*limits['ROW_CAP']+int('COM_FAILURE_RUN' in limits)*claim_slots
+        limits.update(EDGE_BEFORE=start,EDGE_CONSUMED=start+limits['ROW_CAP'],
+                      EDGE_PUBLISHED=start+limits['ROW_CAP']+limits['TRACE_CAP'])
+    if capture_boundaries and not (capture_edges and arena=="shared"):
+        raise ValueError("boundary capture requires shared source event capture")
+    limits['CAPTURE_BOUNDARIES']=int(capture_boundaries)
+    if capture_boundaries:
+        limits['BOUNDARY_MATCH']=limits['EDGE_PUBLISHED']+4*limits['TRACE_CAP']
+        limits['BOUNDARY_COMMIT']=limits['BOUNDARY_MATCH']+3*layout['DEPTH']*layout['RULES']*2*limits['TOKEN_CAP']
     constants='\n'.join(f'#define {k} {v}' for k,v in {**layout,**limits}.items())
     if block_study:
         for name,values in [('bake_entries',block_study['entries']),('repair_shapes',block_study['shapes']),('bake_pivots',block_study['pivots']),('bake_tables',block_study['tables'])]:
@@ -211,7 +251,7 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
         catalog=','.join(str(int(i)) for row in neural['catalog'] for i in row)
         constants+='\nconstant int neural_catalog[]={'+catalog+'};'
         if compound is not None:
-            for name,values in (('compound_tails',tails),('compound_wires',wires)):
+            for name,values in (('compound_tails',tails),('compound_wires',wires),('compound_available',available)):
                 constants+='\nconstant int '+name+'[]={'+','.join(map(str,values))+'};'
             constants+='\nconstant int compound_joins[]={'+','.join(str(int(v)) for j in joins for v in j)+'};'
         module=HERE/'recurrent-generator'
@@ -237,6 +277,8 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
         if capture_edges:meta_words+=cap+5*limits['TRACE_CAP']
     if compound is not None:meta_words=limits['COM_HEAD']+2*cap
     if 'COM_FAILURE_RUN' in limits:meta_words+=claim_slots
+    if capture_boundaries:
+        meta_words=limits['BOUNDARY_COMMIT']+3*layout['DEPTH']*limits['TRACE_CAP']
     if block_study:meta_words=limits['BLOCK_BASE']+3*cap+layout["TABLES"]*lanes*tiles
     if region:
         region_windows=steps//window+1
@@ -393,12 +435,23 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
                 extra['publications']=mem[offset:offset+4*st[17]].reshape(-1,4).cpu().numpy()
                 offset=limits['EDGE_CONSUMED']
                 extra['consumed']=mem[offset:offset+st[9]].cpu().numpy()
+                if capture_boundaries:
+                    offset=limits['BOUNDARY_COMMIT']
+                    extra['witnesses']=mem[offset:offset+st[9]*layout['DEPTH']*3].reshape(st[9],layout['DEPTH'],3).cpu().numpy()
             if capture_receipts:
                 offset=nbase+limits['TRACE_CAP']
                 extra['receipt']=meta.view(-1)[offset:offset+st[11]*leaves*ranks].reshape(st[11],leaves*ranks).cpu().numpy()
             np.savez_compressed(root/'neural-inputs.npz',**extra,features=feats[:st[11]].cpu().numpy(),
                                 pivot=meta.view(-1)[nbase:nbase+st[9]].cpu().numpy())
         else:
+            if capture_boundaries:
+                mem=meta.view(-1)
+                start=limits['BOUNDARY_COMMIT']
+                observations=mem[start:start+st[9]*layout['DEPTH']*3].reshape(st[9],layout['DEPTH'],3)
+                start=limits['EDGE_PUBLISHED']
+                publications=mem[start:start+4*st[17]].reshape(-1,4)
+                np.savez_compressed(root/'boundary-output.npz',witnesses=observations.cpu().numpy(),
+                                    publications=publications.cpu().numpy())
             flags=meta.view(-1)[nbase+4*per_run:nbase+(4+st[11])*per_run].reshape(-1,per_run)
             neural_wins=int((flags!=0).sum().item())
             if compound is not None:
@@ -412,9 +465,21 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
                 if chained:
                     tail_offset=offset+11*limits['COM_TAIL_BASE']
                     extra_claims['tails']=meta.view(-1)[tail_offset:tail_offset+st[11]*nr*11].reshape(st[11],nr,11).cpu().numpy()
-                np.savez_compressed(root/'compound-output.npz',claims=claims,**extra_claims)
+                    for hop in range(2,max_hops):
+                        start=offset+11*hop*limits['COM_TAIL_BASE']
+                        extra_claims[f'hop_{hop+1}']=meta.view(-1)[start:start+st[11]*nr*11].reshape(st[11],nr,11).cpu().numpy()
+                boundary={}
+                if limits['COM_BOUNDARY_WIDTH']:
+                    start=limits['COM_BOUNDARIES']
+                    bank=meta.view(-1)[start:limits['COM_BOUNDARY_STATS']].reshape(max_hops,steps,nr,boundary_width,2)
+                    boundary['named_inputs']=bank[:,:st[11]].cpu().numpy()
+                np.savez_compressed(root/'compound-output.npz',claims=claims,**extra_claims,**boundary)
                 child_wins=int((claims[:,:,7]>0).sum())
-                tail_wins=int((extra_claims['tails'][:,:,7]>0).sum()) if chained else 0
+                tail_wins=sum(int((bank[:,:,7]>0).sum()) for bank in extra_claims.values())
+                terminal_wins=0
+                for bank in extra_claims.values():
+                    committed=bank[:,:,7]>0
+                    terminal_wins+=int((np.asarray(tails)[bank[:,:,1][committed]]<0).sum())
                 child_wins+=tail_wins
                 neural_wins+=child_wins
             np.savez_compressed(root/'neural-output.npz',raw=raw_trace[:st[11]].cpu().numpy(),
@@ -481,7 +546,12 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
             rhs_inputs_from_exact_search=st[9]-neural_wins,rhs_inputs_from_recurrent_neural_proposals=neural_wins,
             next_run_state='generated_device_token_and_committed_graph',recurrent_neural_token_input=True)
     if compound is not None:
-        record['execution_roles'].update(root_rhs=neural_wins-child_wins,child_rhs=child_wins,terminal_rhs=tail_wins,
+        if limits['COM_BOUNDARY_WIDTH']:
+            base=limits['COM_BOUNDARY_STATS']
+            reads=meta.view(-1)[base:base+2].cpu().tolist()
+            record['named_boundary']=dict(producer_point_lookups=reads[0],consumer_direct_reads=reads[1],
+                                          reserved_bytes=4*(limits['COM_QUEUE']-limits['COM_BOUNDARIES']))
+        record['execution_roles'].update(root_rhs=neural_wins-child_wins,child_rhs=child_wins,continued_rhs=tail_wins,terminal_rhs=terminal_wins,
                                          verification='pending_parent_batch' if compound['batch'] else 'per_wave')
     if replay is not None:
         record['execution_roles'].update(binding_generator='frozen_neural_proposal_replay_with_gpu_verification',

@@ -26,8 +26,7 @@ kernel void frozen_compound_wave(device int *state,device int *meta,device const
             match=j;
         }
         if(match<0 || neural_catalog[4*right]<0){state[5]=29;return;}
-        int tail=compound_tails[match];
-        if(tail>=0 && neural_catalog[4*compound_joins[4*tail+3]]<0){state[5]=29;return;}
+        if(!compound_available[match]){state[5]=29;return;}
         claim.parent=parent;claim.join=match;claim.status=1;
     }
 }

@@ -15,8 +15,7 @@ kernel void compound_child(device const int *state, device int *meta, device con
         for(int j=0;j<COM_JOINS;j++){
             constant int *link=compound_joins+4*j;
             if(link[1]!=leaf || neural_catalog[4*link[3]]<0)continue;
-            int tail=compound_tails[j];
-            if(tail>=0 && neural_catalog[4*compound_joins[4*tail+3]]<0)continue;
+            if(!compound_available[j])continue;
             device const float *w=weights+14*j;
             float score=w[8]+float(status==1)*w[9]+float(status==2)*w[10]+float(status==3)*w[11]
                 +p[10]*w[12]/float(NEURAL_RANKS)+float(peer==int(lane))*w[13]+weights[row_weights+lane*COM_JOINS+j];
@@ -74,8 +73,12 @@ kernel void compound_resume(device const int *rom,device const long *lits,device
 #endif
             c.status=4;continue;}
         int before=count[2*rid];
+        device const int *named=nullptr;
+#if COM_BOUNDARY_WIDTH
+        named=meta+COM_BOUNDARIES+2*id*COM_BOUNDARY_WIDTH;
+#endif
         route<false,true>(state,rom,lits,meta,dyn,head,rom+RULE+7*rid,rom+entry[2],pivot,wm[rid],shard_of(meta,row),
-                         PARTS,count+2*rid,tokens+token_offset(rom,rid),nullptr,row);
+                         PARTS,count+2*rid,tokens+token_offset(rom,rid),nullptr,row,named);
         c.attempts++;
         if(before==count[2*rid]){queue[keep++]=id;continue;}
         c.next=index[0]==state[3]?index[1]:0;

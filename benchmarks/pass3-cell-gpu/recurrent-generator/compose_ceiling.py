@@ -44,7 +44,7 @@ def maximum_cover(actions, runs, budget):
 
 
 
-def study(cap,donor,program,ingress,online=None,label_path=None):
+def study(cap,donor,program,ingress,online=None,label_path=None,compute_ceiling=True):
     source,target=donor['recipe'],program['recipe']
     assert source['tables']==target['tables']
     lib=donor['spine_blocks']['entries']
@@ -99,7 +99,12 @@ def study(cap,donor,program,ingress,online=None,label_path=None):
                 shape=((None,leaf[first]),)+tuple((int(pub[tickets[i]-1,1]),leaf[i]) for i in path[1:])
                 targets.append([int(run[first]),leaf[first],int(rank[0]),template_id[shape],len(path),
                                 *[int(i+1) for i in path],*([0]*(donor['iterative_bake']['limits']['depth']-len(path)))])
-            np.savez_compressed(label_path,targets=np.asarray(targets,dtype=np.int32))
+            # Keep every actual returned port, including zero-use exports, and
+            # every pivot use. Shared tickets preserve fanout across path boundaries.
+            from compound_boundaries import boundaries
+            boundary=boundaries(targets,pub,z['witnesses']) if 'witnesses' in z else {}
+            np.savez_compressed(label_path,**boundary,targets=np.asarray(targets,dtype=np.int32),
+                                publications=pub,consumed=tickets)
         maximum_by_length=dict(Counter(map(len,paths)))
         result=dict(rhs=len(rhs),runs=len(g['runs']),candidate_paths=maximum_by_length,
                     reachable_distinct=len({i for path in paths for i in path}),budgets={})
@@ -107,7 +112,7 @@ def study(cap,donor,program,ingress,online=None,label_path=None):
         example=[]
         for event in longest:
             ticket=int(tickets[event])
-            producer,effect,original_row,table=map(int,pub[ticket-1])
+            producer,effect,original_row,table=map(int,pub[ticket-1]) if ticket else (0,-1,-1,-1)
             example.append(dict(rhs_ordinal=event+1,source_run=int(run[event]),rule=int(rhs[event,1]),
                                 leaf=leaf[event],reads_row=int(rhs[event,3]),publication=ticket,
                                 producer_rhs=producer,producer_effect=effect,published_row=original_row,table=table))
@@ -134,6 +139,8 @@ def study(cap,donor,program,ingress,online=None,label_path=None):
                     roots_with_baked_successor=len({p[0] for p in reachable}),realized_candidate_chains=len(reachable),
                     all_members_already_neural=sum(all(e in roots for e in path) for path in reachable),
                     extra_reference_rhs_if_all_branches_known=len(outputs-emitted))
+        if not compute_ceiling:
+            return result
         counts=Counter(run[i] for i in sources)
         for b in (2,4,8,16,32):
             base=sum(min(n,b) for n in counts.values())

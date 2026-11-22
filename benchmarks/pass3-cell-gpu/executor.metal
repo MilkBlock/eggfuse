@@ -1,4 +1,7 @@
 #include <metal_stdlib>
+#ifndef CAPTURE_BOUNDARIES
+#define CAPTURE_BOUNDARIES 0
+#endif
 using namespace metal;
 // Initial members stay template-backed. Dynamic rows store only newly committed values.
 // meta = table, Cell instance (-1 for a dynamic row), member op, subsumed, epoch, next.
@@ -410,9 +413,42 @@ inline device int *anchor(device int *meta,int row){return meta+BIRTH_RUN+ROW_CA
 struct CompoundClaim {int parent,join,ordinal,row,ticket,verified,bank,winner,status,attempts,next;};
 inline device CompoundClaim *claims(device int *meta){return reinterpret_cast<device CompoundClaim *>(meta+COM_RECORDS);}
 inline device const CompoundClaim *claims(device const int *meta){return reinterpret_cast<device const CompoundClaim *>(meta+COM_RECORDS);}
+// Bind named side ports when the producer returns its actual pivot, before
+// the consumer Run. Only unique point keys derived from that pivot are legal.
+#if COM_BOUNDARY_WIDTH
+inline void bind_side_ports(device const int *rom,device const long *lits,device int *meta,
+                            device const long *dyn,device const int *head,int id){
+    device CompoundClaim &claim=claims(meta)[id];
+    constant int *entry=neural_catalog+4*compound_joins[4*claim.join+3];
+    int atoms=rom[RULE+7*entry[0]];
+    if(atoms<=1)return;
+    long values[MAXSLOTS];bool bound[MAXSLOTS]={false};
+    for(int pos=0;pos<atoms;pos++){
+        device const int *op=rom+entry[2]+4*pos,*args=rom+op[2];
+        int table_id=op[0],arity=op[1],row=claim.row;
+        if(table_id<0)continue;
+        if(pos){
+            long key[WIDTH];
+            for(int j=0;j<arity-1;j++){
+                if(args[j]>=0 && !bound[args[j]])return;
+                key[j]=operand(args[j],values,lits);
+            }
+            meta[COM_BOUNDARY_STATS]++;
+            row=find_key(rom,lits,meta,dyn,head,table_id,arity-1,key);
+            if(row<0 || meta[6*row+3])return;
+            device int *ref=meta+COM_BOUNDARIES+2*(id*COM_BOUNDARY_WIDTH+pos-1);
+            ref[0]=row+1;ref[1]=meta[6*row+4];
+        }
+        for(int j=0;j<arity;j++)if(args[j]>=0 && (op[3]&(1<<j))){
+            values[args[j]]=field(rom,lits,meta,dyn,row,j);bound[args[j]]=true;
+        }
+    }
+}
+#endif
 #endif
 inline void publish_anchor(device const int *rom,device int *state,device int *meta,int t,int row,
-                           int root,int producer,int depth,device int *pending=nullptr,int effect=-1){
+                           int root,int producer,int depth,device int *pending=nullptr,int effect=-1,device const long *lits=nullptr,
+                           device const long *dyn=nullptr,device const int *head=nullptr){
     if(!SPINE_ON || row<0 || !root || !rom[DEMANDED+t])return;
     if(pending){
         int n=pending[0]++;
@@ -435,6 +471,9 @@ inline void publish_anchor(device const int *rom,device int *state,device int *m
         if(link[2]!=effect || neural_catalog[4*link[3]+3]!=t)continue;
         c.ordinal=state[9];c.row=row;c.ticket=h[4];c.status=2;
         meta[COM_QUEUE+state[75]++]=id;
+#if COM_BOUNDARY_WIDTH
+        bind_side_ports(rom,lits,meta,dyn,head,id);
+#endif
     }
 #ifdef COM_TAIL_BASE
     if(state[77]){
@@ -446,6 +485,9 @@ inline void publish_anchor(device const int *rom,device int *state,device int *m
         if(!c.status && link[2]==effect && neural_catalog[4*link[3]+3]==t){
             c.join=tail;c.parent=origin;c.ordinal=state[9];c.row=row;c.ticket=h[4];c.status=2;
             meta[COM_QUEUE+state[75]++]=id;
+#if COM_BOUNDARY_WIDTH
+            bind_side_ports(rom,lits,meta,dyn,head,id);
+#endif
         }
     }
 #endif
@@ -467,11 +509,22 @@ inline int reserve_token(device int *count){
     if(pos<0 || pos>=(SHARED_ARENA?2:1)*TOKEN_CAP){token_error(count,-2);return -1;}
     return pos;
 }
+#if CAPTURE_BOUNDARIES
+inline void capture_inputs(device const int *meta,int rid,int pos,int n,thread int *witness){
+    device int *record=const_cast<device int *>(meta)+BOUNDARY_MATCH+3*DEPTH*(rid*2*TOKEN_CAP+pos);
+    for(int k=0;k<n;k++){
+        int row=witness[k];
+        record[3*k]=row+1;
+        record[3*k+1]=row<0?0:meta[6*row+4];
+        record[3*k+2]=row<0?0:anchor(meta,row)[4];
+    }
+}
+#endif
 template<bool CERT=false,bool ONE=false>
 inline void route(device int *state,device const int *rom,device const long *lits,device const int *meta,
                   device const long *dyn,device const int *head,device const int *rule,
                   device const int *path,int pivot,int last,int lane,int lanes,
-                  device int *cnt,device long *bank,device int *certs,int requested=-1){
+                  device int *cnt,device long *bank,device int *certs,int requested=-1,device const int *named=nullptr){
     int table0=path[0];
     int first=(TILES>1 || LEARN_OWNER)?head[SHARD_HEAD+table0*PARTS+lane]:head[table0];
 #if BLOCK_STUDY
@@ -525,19 +578,29 @@ inline void route(device int *state,device const int *rom,device const long *lit
             device const int *op=path+4*pos,*args=rom+op[2];int t=op[0],n=op[1],row=seed;
             if(t<0){
                 long v=0;matched=eval_op(state,meta,-1-t,args,n-1,env,lits,v);
-                if(CERT)witness[pos]=-1;
+                if(CERT || CAPTURE_BOUNDARIES)witness[pos]=-1;
                 if(op[3]&(1<<(n-1)))env[args[n-1]]=v;
                 else matched &= operand(args[n-1],env,lits)==v;
             }else{
                 if(pos){
-                    long key[WIDTH];for(int j=0;j<n-1;j++)key[j]=operand(args[j],env,lits);
 #if NEURAL_ACTIVE
                     if(COUNT_WORK)atomic_fetch_add_explicit((device atomic_int *)(state+(ONE?72:73)),1,memory_order_relaxed);
 #endif
-                    row=find_key(rom,lits,meta,dyn,head,t,n-1,key);
+                    if(named){
+#if COM_BOUNDARY_WIDTH
+                        const_cast<device int *>(meta)[COM_BOUNDARY_STATS+1]++;
+#endif
+                        row=named[2*(pos-1)]-1;
+                        if(row<0 || meta[6*row]!=t || meta[6*row+4]!=named[2*(pos-1)+1]){
+                            matched=false;break;
+                        }
+                    }else{
+                        long key[WIDTH];for(int j=0;j<n-1;j++)key[j]=operand(args[j],env,lits);
+                        row=find_key(rom,lits,meta,dyn,head,t,n-1,key);
+                    }
                     if(row<0 || meta[6*row+3]){matched=false;break;}
                 }
-                if(CERT)witness[pos]=row;
+                if(CERT || CAPTURE_BOUNDARIES)witness[pos]=row;
                 for(int j=0;j<n;j++){
                     long v=field(rom,lits,meta,dyn,row,j);
                     if(op[3]&(1<<j))env[args[j]]=v;
@@ -566,6 +629,9 @@ inline void route(device int *state,device const int *rom,device const long *lit
             for(int k=0;k<rule[0];k++)dst[3+k]=witness[k];
             continue;
         }
+#if CAPTURE_BOUNDARIES
+        capture_inputs(meta,int((rule-rom-RULE)/7),j,rule[0],witness);
+#endif
         int width=input_width(rule);device long *out=bank+j*(width+5);
         for(int k=0;k<rule[4];k++)out[k]=env[rom[rule[5]+k]];
         out[width]=seed;out[width+1]=h[0];out[width+2]=h[1];out[width+3]=h[2];
@@ -629,6 +695,9 @@ inline void do_search(device const int *rom,device const long *lits,device int *
                     for(int k=0;k<q;k++)dst[3+k]=witness[k];
                     depth--;continue;
                 }
+#if CAPTURE_BOUNDARIES
+                capture_inputs(meta,r,pos,q,witness);
+#endif
                 device long *out=target+pos*(width+5);
                 for(int j=0;j<rule[4];j++)out[j]=env[rom[rule[5]+j]];
                 out[width]=pivot>=0?witness[pivot]:-1;out[width+1]=0;out[width+3]=0;out[width+4]=0;
@@ -647,7 +716,7 @@ inline void do_search(device const int *rom,device const long *lits,device int *
         if(row<0){cur[depth]=-2;depth--;continue;}
         bool ok=true;int version=epoch[depth];
         if(t<0){
-            if(CERT)witness[depth]=-1;
+            if(CERT || CAPTURE_BOUNDARIES)witness[depth]=-1;
             cur[depth]=-1;long val=0;
             ok=eval_op(state,meta,-1-t,args,op[1]-1,env,lits,val);
             int lastcol=op[1]-1,key=args[lastcol];
@@ -976,6 +1045,10 @@ inline void do_commit(device const int *rom,device const long *lits,device int *
             if(proposals[1]>1)evidence[5]+=proposals[1]-1;
 #endif
             if(state[9]>=TRACE_CAP){state[5]=5;return;}
+#if CAPTURE_BOUNDARIES
+            for(int k=0;k<3*rule[0];k++)
+                meta[BOUNDARY_COMMIT+3*DEPTH*state[9]+k]=meta[BOUNDARY_MATCH+3*DEPTH*(rid*2*TOKEN_CAP+pos)+k];
+#endif
             long env[MAXSLOTS],args[WIDTH+2];
             device long *log=rhs+(state[9]++)*(NINPUT+4);
 #if BLOCK_STUDY
@@ -1054,7 +1127,7 @@ inline void do_commit(device const int *rom,device const long *lits,device int *
                 int found=find_key(rom,lits,meta,dyn,head,t,arity,args);
                 if(kind==1){
                     if(found<0){args[arity]=long(NSYMBOLS+1+state[0]);found=insert_row(rom,state,meta,dyn,head,t,arity+1,args);}
-                    if(found<0)return;publish_anchor(rom,state,meta,t,found,cursor,rid,depth,pending,k);env[op[2]]=field(rom,lits,meta,dyn,found,arity);continue;
+                    if(found<0)return;publish_anchor(rom,state,meta,t,found,cursor,rid,depth,pending,k,lits,dyn,head);env[op[2]]=field(rom,lits,meta,dyn,found,arity);continue;
                 }
                 if(kind==5){
                     if(found>=0 && !meta[6*found+3]){meta[6*found+3]=1;touch_row(state,meta,head,found,t,run);state[8]=1;}
@@ -1064,7 +1137,7 @@ inline void do_commit(device const int *rom,device const long *lits,device int *
                 if(schema[1]){
                     if(found<0)found=insert_row(rom,state,meta,dyn,head,t,arity+1,args);
                     else submit_union(state,meta,field(rom,lits,meta,dyn,found,arity),args[arity],head);
-                    if(state[5])return;publish_anchor(rom,state,meta,t,found,cursor,rid,depth,pending,k);
+                    if(state[5])return;publish_anchor(rom,state,meta,t,found,cursor,rid,depth,pending,k,lits,dyn,head);
                     continue;
                 }
                 bool had_old=found>=0;long previous=0;
@@ -1072,11 +1145,11 @@ inline void do_commit(device const int *rom,device const long *lits,device int *
                     long old=field(rom,lits,meta,dyn,found,arity),v=args[arity];
                     previous=old;v=merge_value(rom,lits,state,meta,dyn,head,t,old,v);
                     if(state[5]){state[6]=rid;return;}
-                    if(old==v){publish_anchor(rom,state,meta,t,found,cursor,rid,depth,pending,k);continue;}
+                    if(old==v){publish_anchor(rom,state,meta,t,found,cursor,rid,depth,pending,k,lits,dyn,head);continue;}
                     if(meta[6*found+1]>=0){state[5]=13;state[6]=rid;return;}
                     dyn[found*WIDTH+arity]=v;touch_row(state,meta,head,found,t,run);state[8]=1;
                 }else{found=insert_row(rom,state,meta,dyn,head,t,arity+1,args);if(found<0)return;}
-                publish_anchor(rom,state,meta,t,found,cursor,rid,depth,pending,k);
+                publish_anchor(rom,state,meta,t,found,cursor,rid,depth,pending,k,lits,dyn,head);
                 log_write(state,writes,rid,state[9]-base_rhs-1,t,found,args,arity,had_old,previous,
                           field(rom,lits,meta,dyn,found,arity));if(state[5])return;
             }

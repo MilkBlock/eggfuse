@@ -22,7 +22,7 @@ if __name__=='__main__':
         program=a.corpus/name/'program.json';image=a.corpus/name/'input'
         folder=a.out/split
         folder.mkdir(exist_ok=True)
-        result=study(a.capture/name,donor,read(program),read(image/'ingress.json'),label_path=folder/f'{name}.npz')
+        result=study(a.capture/name,donor,read(program),read(image/'ingress.json'),label_path=folder/f'{name}.npz',compute_ceiling=False)
         summary[name]=dict(split=split,paths=result['candidate_paths'],rhs=result['rhs'],
                            checked_spine_inputs=result['spine_receipts_checked'])
         (a.out/'manifest.json').write_text(json.dumps(summary,indent=1)+'\n')
