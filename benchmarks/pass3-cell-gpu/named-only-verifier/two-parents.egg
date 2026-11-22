@@ -1,0 +1,6 @@
+(datatype E (L i64) (R i64) (Both E E))
+(ruleset join)
+(rule ((= a (L i)) (= b (R i))) ((Both a b)) :ruleset join)
+(L 7)
+(R 7)
+(run-schedule (run join))

@@ -7,7 +7,7 @@ D=benchmarks/pass3-cell-gpu/search-work-ledger
 python "$D/build.py" "$OUT"
 python "$D/train_pages.py" "$OUT/model.json" --device cpu --seed 1703
 python "$D/study.py" "$OUT/session" "$BUNDLE" "$OUT/sum-bits.json" --model "$OUT/model.json"
-python "$D/accept.py" "$OUT" --arm learned-4
+python "$D/historical_gate.py" "$OUT" --arm learned-4
 ```
 
 The committed model came from generated random equality joins and synthetic epoch/freshness examples. Real workloads were used for evaluation. The Apple GPU compiler failed in the training environment, so this checkpoint is CPU-trained. Page selection ranks fixed eight-row pages. The secondary ranker reads membership and distinct-count summaries. Joint routing also ranks root pages. Each selected page can still require multiple row inspections per prefix. Budgeting pages does not bound the number of prefixes or the cost of scoring all headers.
