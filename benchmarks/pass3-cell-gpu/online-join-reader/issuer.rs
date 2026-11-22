@@ -7,7 +7,11 @@ use crate::{
 };
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
-use std::{cell::RefCell, collections::BTreeMap, rc::Rc};
+use std::{
+    cell::RefCell,
+    collections::{BTreeMap, HashMap},
+    rc::Rc,
+};
 
 #[derive(Deserialize)]
 pub struct Model {
@@ -21,6 +25,11 @@ pub struct Counts {
     encoded_fields: u64,
     first_scores: u64,
     second_scores: u64,
+    epoch_reads: u64,
+    denied_rules: BTreeMap<usize, u64>,
+    route_build_rows: u64,
+    route_probes: u64,
+    summary_reads: u64,
     issued: u64,
     abstained: u64,
     denied_budget: u64,
@@ -36,6 +45,9 @@ impl Code {
         b.copy_from_slice(&h[..20]);
         Ok(Self(b))
     }
+    fn page(self) -> u16 {
+        u16::from_le_bytes([self.0[4], self.0[5]]) & 1023
+    }
     fn matches(self, b: Self) -> bool {
         self.0[4..] == b.0[4..]
     }
@@ -47,6 +59,7 @@ struct Token {
 }
 struct Read {
     table: usize,
+    route_id: usize,
     checks: Vec<(usize, usize)>,
     literals: Vec<(usize, Code)>,
     repeats: Vec<(usize, usize)>,
@@ -95,6 +108,7 @@ fn layout(rule: &crate::program::Rule) -> Result<Option<Layout>> {
         let mut read = Read {
             table,
             index,
+            route_id: 0,
             checks: vec![],
             repeats: vec![],
             literals: vec![],
@@ -132,17 +146,39 @@ struct Issuer {
     model: Model,
     plans: Vec<Option<Layout>>,
     bank: BTreeMap<usize, Rc<Vec<Token>>>,
+    routes: HashMap<usize, HashMap<u16, Vec<usize>>>,
+    pages: bool,
     run: usize,
     counts: Counts,
     cap: u64,
 }
 thread_local! {static ACTIVE:RefCell<Option<Issuer>>=const{RefCell::new(None)};}
-pub fn init(g: &Graph, model: Model, cap: u64) -> Result<()> {
-    let plans = g.program.rules.iter().map(layout).collect::<Result<_>>()?;
+pub fn init(g: &Graph, model: Model, cap: u64, pages: bool) -> Result<()> {
+    let mut plans = g
+        .program
+        .rules
+        .iter()
+        .map(layout)
+        .collect::<Result<Vec<_>>>()?;
+    let mut layouts = BTreeMap::new();
+    for plan in plans.iter_mut().flatten() {
+        for read in &mut plan.reads {
+            let columns = read
+                .checks
+                .iter()
+                .map(|x| x.0)
+                .chain(read.literals.iter().map(|x| x.0))
+                .collect::<Vec<_>>();
+            let next = layouts.len();
+            read.route_id = *layouts.entry((read.table, columns)).or_insert(next);
+        }
+    }
     ACTIVE.replace(Some(Issuer {
         model,
         plans,
         bank: BTreeMap::new(),
+        routes: HashMap::new(),
+        pages,
         run: 0,
         counts: Counts::default(),
         cap,
@@ -159,6 +195,7 @@ pub fn submit(g: &Graph, run: usize, rid: usize, wm: u64, inbox: &mut Inbox) -> 
         a.counts.rule_calls += 1;
         if a.run != run {
             a.bank.clear();
+            a.routes.clear();
             a.run = run;
         }
         let Some(plan) = &a.plans[rid] else {
@@ -194,6 +231,24 @@ pub fn submit(g: &Graph, run: usize, rid: usize, wm: u64, inbox: &mut Inbox) -> 
         if memory.iter().any(|m| m.is_empty()) {
             return Ok(());
         }
+        let semi = g.program.rules[rid].seminaive && !memory.is_empty();
+        let mut later_fresh = vec![false; memory.len() + 1];
+        let mut fresh_rows = vec![vec![]; memory.len()];
+        if semi && a.pages {
+            for i in (0..memory.len()).rev() {
+                a.counts.epoch_reads += memory[i].len() as u64;
+                fresh_rows[i].extend(
+                    memory[i]
+                        .iter()
+                        .enumerate()
+                        .filter_map(|(j, r)| (r.epoch >= wm).then_some(j)),
+                );
+                later_fresh[i] = later_fresh[i + 1] || !fresh_rows[i].is_empty();
+            }
+            if !later_fresh[0] {
+                return Ok(());
+            }
+        }
         let mut summary = [[[false; 2]; 32]; 4];
         let shared = if memory.len() >= 2 && !plan.reads[1].checks.is_empty() {
             let (col, slot) = plan.reads[1].checks[0];
@@ -203,6 +258,7 @@ pub fn submit(g: &Graph, run: usize, rid: usize, wm: u64, inbox: &mut Inbox) -> 
                 .find(|(_, s)| *s == slot)
                 .unwrap()
                 .0;
+            a.counts.summary_reads += memory[1].len() as u64;
             for row in memory[1].iter() {
                 let fresh = usize::from(
                     !g.program.rules[rid].seminaive || row.epoch >= wm || memory.len() > 2,
@@ -219,7 +275,7 @@ pub fn submit(g: &Graph, run: usize, rid: usize, wm: u64, inbox: &mut Inbox) -> 
         } else {
             None
         };
-        // Visit every typed port for each conditional read. No keyed join list.
+        // Partial-code dispatch can prune only ports rejected by the frozen follower.
         let mut stack = vec![(
             Vec::<(usize, Dependency, u64)>::new(),
             vec![Code([0; 20]); plan.slots],
@@ -242,13 +298,55 @@ pub fn submit(g: &Graph, run: usize, rid: usize, wm: u64, inbox: &mut Inbox) -> 
                 continue;
             }
             let read = &plan.reads[step];
-            for row in memory[step].iter().rev() {
+            let fold = |hash: u16, code: Code| (hash.wrapping_mul(31) ^ code.page()) & 1023;
+            let mut shortlist = if a.pages
+                && memory[step].len() >= 16
+                && !(read.checks.is_empty() && read.literals.is_empty())
+            {
+                a.counts.route_probes += 1;
+                let idx = a.routes.entry(read.route_id).or_insert_with(|| {
+                    let mut map: HashMap<u16, Vec<usize>> = HashMap::new();
+                    for (i, row) in memory[step].iter().enumerate() {
+                        let page = read
+                            .checks
+                            .iter()
+                            .map(|x| row.fields[x.0])
+                            .chain(read.literals.iter().map(|x| row.fields[x.0]))
+                            .fold(0, fold);
+                        map.entry(page).or_default().push(i);
+                    }
+                    a.counts.route_build_rows += memory[step].len() as u64;
+                    map
+                });
+                let page = read
+                    .checks
+                    .iter()
+                    .map(|x| slots[x.1])
+                    .chain(read.literals.iter().map(|x| x.1))
+                    .fold(0, fold);
+                Some(idx.get(&page).map(Vec::as_slice).unwrap_or(&[]))
+            } else {
+                None
+            };
+            let need_fresh = semi && a.pages && !fresh && !later_fresh[step + 1];
+            if need_fresh
+                && fresh_rows[step].len() < shortlist.map_or(memory[step].len(), <[usize]>::len)
+            {
+                shortlist = Some(&fresh_rows[step]);
+            }
+            let size = shortlist.map_or(memory[step].len(), <[usize]>::len);
+            for i in (0..size).rev() {
+                let row = &memory[step][shortlist.map_or(i, |list| list[i])];
                 if budget == 0 {
                     a.counts.denied_budget += 1;
+                    *a.counts.denied_rules.entry(rid).or_default() += 1;
                     return Ok(());
                 }
                 budget -= 1;
                 let current = usize::from(!g.program.rules[rid].seminaive || row.epoch >= wm);
+                if need_fresh && current == 0 {
+                    continue;
+                }
                 if step == 0 {
                     a.counts.first_scores += 1;
                     if !a.model.left[current] {

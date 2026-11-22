@@ -1,0 +1,400 @@
+{
+  "3mm": {
+    "checks": {
+      "rhs": false,
+      "writes": false,
+      "state_sha": false,
+      "resumes": false,
+      "events": false,
+      "schedule": false,
+      "mutation_trace": false
+    },
+    "aligned_prefix": 890,
+    "runs": 4260,
+    "source_runs": 4260,
+    "first_observed": [
+      [
+        "always-run",
+        891,
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          17
+        ],
+        1972,
+        true
+      ]
+    ],
+    "first_expected": [
+      [
+        "always-run",
+        891,
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          17
+        ],
+        1990,
+        true
+      ]
+    ],
+    "observed_rhs": 293379,
+    "source_rhs": 294917,
+    "issuer": {
+      "abstained": 0,
+      "denied_budget": 17,
+      "denied_rules": {
+        "144": 14,
+        "566": 3
+      },
+      "encoded_fields": 55595575,
+      "epoch_reads": 128225907,
+      "first_scores": 14531782,
+      "issued": 325449,
+      "reads": 19232438,
+      "route_build_rows": 13619568,
+      "route_probes": 17796787,
+      "rule_calls": 24039,
+      "second_scores": 30636431,
+      "summary_reads": 56624642
+    },
+    "accepted": 293379,
+    "rejected": 32070,
+    "named_reads": 748820,
+    "failure": null
+  },
+  "conjugate-gradient": {
+    "checks": {
+      "rhs": true,
+      "writes": true,
+      "state_sha": true,
+      "resumes": false,
+      "events": false,
+      "schedule": true,
+      "mutation_trace": true
+    },
+    "aligned_prefix": 2896,
+    "runs": 2896,
+    "source_runs": 2896,
+    "first_observed": [],
+    "first_expected": [],
+    "observed_rhs": 131371,
+    "source_rhs": 131371,
+    "issuer": {
+      "abstained": 0,
+      "denied_budget": 0,
+      "denied_rules": {},
+      "encoded_fields": 16229575,
+      "epoch_reads": 38295520,
+      "first_scores": 4721231,
+      "issued": 143344,
+      "reads": 5561044,
+      "route_build_rows": 4017008,
+      "route_probes": 4206015,
+      "rule_calls": 16582,
+      "second_scores": 11432987,
+      "summary_reads": 17080793
+    },
+    "accepted": 131371,
+    "rejected": 11973,
+    "named_reads": 321252,
+    "failure": null
+  },
+  "deriche": {
+    "checks": {
+      "rhs": false,
+      "writes": false,
+      "state_sha": false,
+      "resumes": false,
+      "events": false,
+      "schedule": false,
+      "mutation_trace": false
+    },
+    "aligned_prefix": 862,
+    "runs": 5687,
+    "source_runs": 5687,
+    "first_observed": [
+      [
+        "always-run",
+        863,
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          17
+        ],
+        1479,
+        true
+      ]
+    ],
+    "first_expected": [
+      [
+        "always-run",
+        863,
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          17
+        ],
+        1494,
+        true
+      ]
+    ],
+    "observed_rhs": 635012,
+    "source_rhs": 635818,
+    "issuer": {
+      "abstained": 0,
+      "denied_budget": 17,
+      "denied_rules": {
+        "144": 15,
+        "566": 2
+      },
+      "encoded_fields": 87117568,
+      "epoch_reads": 178079404,
+      "first_scores": 21641104,
+      "issued": 696047,
+      "reads": 30021448,
+      "route_build_rows": 19592500,
+      "route_probes": 26119632,
+      "rule_calls": 30951,
+      "second_scores": 54820890,
+      "summary_reads": 77040051
+    },
+    "accepted": 635012,
+    "rejected": 61035,
+    "named_reads": 1662520,
+    "failure": null
+  },
+  "dot-product": {
+    "checks": {
+      "rhs": true,
+      "writes": true,
+      "state_sha": true,
+      "resumes": false,
+      "events": false,
+      "schedule": true,
+      "mutation_trace": true
+    },
+    "aligned_prefix": 1535,
+    "runs": 1535,
+    "source_runs": 1535,
+    "first_observed": [],
+    "first_expected": [],
+    "observed_rhs": 6704,
+    "source_rhs": 6704,
+    "issuer": {
+      "abstained": 0,
+      "denied_budget": 0,
+      "denied_rules": {},
+      "encoded_fields": 694408,
+      "epoch_reads": 795497,
+      "first_scores": 134152,
+      "issued": 8235,
+      "reads": 219055,
+      "route_build_rows": 138063,
+      "route_probes": 77143,
+      "rule_calls": 6099,
+      "second_scores": 120514,
+      "summary_reads": 324439
+    },
+    "accepted": 6704,
+    "rejected": 1531,
+    "named_reads": 19277,
+    "failure": null
+  },
+  "gemm-bias-relu": {
+    "checks": {
+      "rhs": true,
+      "writes": true,
+      "state_sha": true,
+      "resumes": false,
+      "events": false,
+      "schedule": true,
+      "mutation_trace": true
+    },
+    "aligned_prefix": 1652,
+    "runs": 1652,
+    "source_runs": 1652,
+    "first_observed": [],
+    "first_expected": [],
+    "observed_rhs": 15462,
+    "source_rhs": 15462,
+    "issuer": {
+      "abstained": 0,
+      "denied_budget": 0,
+      "denied_rules": {},
+      "encoded_fields": 1493212,
+      "epoch_reads": 2106409,
+      "first_scores": 377847,
+      "issued": 17933,
+      "reads": 489654,
+      "route_build_rows": 338693,
+      "route_probes": 279617,
+      "rule_calls": 8128,
+      "second_scores": 369657,
+      "summary_reads": 829306
+    },
+    "accepted": 15462,
+    "rejected": 2471,
+    "named_reads": 38805,
+    "failure": null
+  },
+  "jacobi-1d": {
+    "checks": {
+      "rhs": true,
+      "writes": true,
+      "state_sha": true,
+      "resumes": false,
+      "events": false,
+      "schedule": true,
+      "mutation_trace": true
+    },
+    "aligned_prefix": 1990,
+    "runs": 1990,
+    "source_runs": 1990,
+    "first_observed": [],
+    "first_expected": [],
+    "observed_rhs": 41319,
+    "source_rhs": 41319,
+    "issuer": {
+      "abstained": 0,
+      "denied_budget": 0,
+      "denied_rules": {},
+      "encoded_fields": 4554490,
+      "epoch_reads": 7868122,
+      "first_scores": 1050298,
+      "issued": 47357,
+      "reads": 1507020,
+      "route_build_rows": 1046775,
+      "route_probes": 820030,
+      "rule_calls": 10068,
+      "second_scores": 2147495,
+      "summary_reads": 3179316
+    },
+    "accepted": 41319,
+    "rejected": 6038,
+    "named_reads": 106617,
+    "failure": null
+  },
+  "stable-argmax": {
+    "checks": {
+      "rhs": true,
+      "writes": true,
+      "state_sha": true,
+      "resumes": false,
+      "events": false,
+      "schedule": true,
+      "mutation_trace": true
+    },
+    "aligned_prefix": 1149,
+    "runs": 1149,
+    "source_runs": 1149,
+    "first_observed": [],
+    "first_expected": [],
+    "observed_rhs": 8190,
+    "source_rhs": 8190,
+    "issuer": {
+      "abstained": 0,
+      "denied_budget": 0,
+      "denied_rules": {},
+      "encoded_fields": 551342,
+      "epoch_reads": 693648,
+      "first_scores": 116611,
+      "issued": 9598,
+      "reads": 176558,
+      "route_build_rows": 114650,
+      "route_probes": 76762,
+      "rule_calls": 5305,
+      "second_scores": 106418,
+      "summary_reads": 267633
+    },
+    "accepted": 8190,
+    "rejected": 1408,
+    "named_reads": 20591,
+    "failure": null
+  },
+  "sum-bits": {
+    "checks": {
+      "rhs": true,
+      "writes": true,
+      "state_sha": true,
+      "resumes": false,
+      "events": false,
+      "schedule": true,
+      "mutation_trace": true
+    },
+    "aligned_prefix": 1428,
+    "runs": 1428,
+    "source_runs": 1428,
+    "first_observed": [],
+    "first_expected": [],
+    "observed_rhs": 7265,
+    "source_rhs": 7265,
+    "issuer": {
+      "abstained": 0,
+      "denied_budget": 0,
+      "denied_rules": {},
+      "encoded_fields": 606078,
+      "epoch_reads": 733395,
+      "first_scores": 131857,
+      "issued": 8524,
+      "reads": 190643,
+      "route_build_rows": 133377,
+      "route_probes": 72049,
+      "rule_calls": 7653,
+      "second_scores": 140124,
+      "summary_reads": 298344
+    },
+    "accepted": 7265,
+    "rejected": 1259,
+    "named_reads": 17933,
+    "failure": null
+  }
+}

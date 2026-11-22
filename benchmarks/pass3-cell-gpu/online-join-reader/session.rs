@@ -14,6 +14,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         &engine.graph,
         serde_json::from_slice(&std::fs::read(model)?)?,
         500000,
+        std::env::var_os("EGGFUSE_JOIN_SCAN").is_none(),
     )?;
     audit::set_active(true);
     audit::enable_events();
