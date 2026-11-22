@@ -1,0 +1,88 @@
+{
+  "arm": "learned-4",
+  "status": "fail",
+  "cases": {
+    "sum-bits": {
+      "status": "fail",
+      "winners": 7191,
+      "rhs": 7265,
+      "required_winners": 7120,
+      "visits": 2476459,
+      "exact_visits": 49785,
+      "budget": 995,
+      "paid": 67677,
+      "visible": 2683,
+      "fept": 0.039644192266205656,
+      "unassisted": {
+        "equal_rhs_digest_prefix": 37,
+        "runs": 1048,
+        "aligned": false,
+        "source_error": null
+      },
+      "min_multi_without_per_binding_search": 3448
+    },
+    "dot-product": {
+      "status": "fail",
+      "winners": 6589,
+      "rhs": 6704,
+      "required_winners": 6570,
+      "visits": 2818102,
+      "exact_visits": 51133,
+      "budget": 1022,
+      "paid": 66247,
+      "visible": 2675,
+      "fept": 0.04037918698205202,
+      "unassisted": {
+        "equal_rhs_digest_prefix": 30,
+        "runs": 1169,
+        "aligned": false,
+        "source_error": null
+      },
+      "min_multi_without_per_binding_search": 2649
+    },
+    "gemm-bias-relu": {
+      "status": "fail",
+      "winners": 15000,
+      "rhs": 15462,
+      "required_winners": 15153,
+      "visits": 6611207,
+      "exact_visits": 115872,
+      "budget": 2317,
+      "paid": 203714,
+      "visible": 5166,
+      "fept": 0.025359081850044672,
+      "unassisted": {
+        "equal_rhs_digest_prefix": 29,
+        "runs": 839,
+        "aligned": false,
+        "source_error": null
+      },
+      "min_multi_without_per_binding_search": 6935
+    },
+    "stable-argmax": {
+      "status": "fail",
+      "winners": 8029,
+      "rhs": 8190,
+      "required_winners": 8027,
+      "visits": 2053942,
+      "exact_visits": 58746,
+      "budget": 1174,
+      "paid": 65982,
+      "visible": 2952,
+      "fept": 0.044739474402109666,
+      "unassisted": {
+        "equal_rhs_digest_prefix": 109,
+        "runs": 1005,
+        "aligned": false,
+        "source_error": null
+      },
+      "min_multi_without_per_binding_search": 3575
+    },
+    "3mm": {
+      "status": "missing"
+    },
+    "deriche": {
+      "status": "missing"
+    }
+  }
+}
