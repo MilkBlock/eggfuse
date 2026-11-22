@@ -1,0 +1,498 @@
+{
+  "jacobi-1d": {
+    "checks": {
+      "rhs": false,
+      "writes": false,
+      "state_sha": false,
+      "resumes": false,
+      "events": false,
+      "schedule": false,
+      "mutation_trace": false
+    },
+    "aligned_prefix": 236,
+    "runs": 1931,
+    "source_runs": 1990,
+    "first_observed": [
+      [
+        "always-run",
+        237,
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          3
+        ],
+        1075,
+        true
+      ]
+    ],
+    "first_expected": [
+      [
+        "always-run",
+        237,
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          3
+        ],
+        1085,
+        true
+      ]
+    ],
+    "observed_rhs": 37981,
+    "source_rhs": 41319,
+    "issuer": {
+      "abstained": 0,
+      "denied_budget": 298,
+      "encoded_fields": 4162738,
+      "first_scores": 1694371,
+      "issued": 43225,
+      "reads": 1389468,
+      "rule_calls": 9937,
+      "second_scores": 392718285
+    },
+    "accepted": 37981,
+    "rejected": 5244,
+    "named_reads": 95141,
+    "failure": null
+  },
+  "gemm-bias-relu": {
+    "checks": {
+      "rhs": false,
+      "writes": false,
+      "state_sha": false,
+      "resumes": false,
+      "events": false,
+      "schedule": false,
+      "mutation_trace": false
+    },
+    "aligned_prefix": 193,
+    "runs": 1652,
+    "source_runs": 1652,
+    "first_observed": [
+      [
+        "always-run",
+        194,
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          7
+        ],
+        496,
+        true
+      ]
+    ],
+    "first_expected": [
+      [
+        "always-run",
+        194,
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          7
+        ],
+        499,
+        true
+      ]
+    ],
+    "observed_rhs": 15191,
+    "source_rhs": 15462,
+    "issuer": {
+      "abstained": 0,
+      "denied_budget": 16,
+      "encoded_fields": 1454330,
+      "first_scores": 635053,
+      "issued": 17632,
+      "reads": 478073,
+      "rule_calls": 8083,
+      "second_scores": 65411187
+    },
+    "accepted": 15191,
+    "rejected": 2441,
+    "named_reads": 38111,
+    "failure": null
+  },
+  "deriche": {
+    "checks": {
+      "rhs": false,
+      "writes": false,
+      "state_sha": false,
+      "resumes": false,
+      "events": false,
+      "schedule": false,
+      "mutation_trace": false
+    },
+    "aligned_prefix": 56,
+    "runs": 1913,
+    "source_runs": 5687,
+    "first_observed": [
+      [
+        "type-analysis",
+        57,
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          2
+        ],
+        1258,
+        true
+      ]
+    ],
+    "first_expected": [
+      [
+        "type-analysis",
+        57,
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          2
+        ],
+        1280,
+        true
+      ]
+    ],
+    "observed_rhs": 50957,
+    "source_rhs": 635818,
+    "issuer": {
+      "abstained": 0,
+      "denied_budget": 1421,
+      "encoded_fields": 13876053,
+      "first_scores": 5492087,
+      "issued": 61847,
+      "reads": 4685953,
+      "rule_calls": 11276,
+      "second_scores": 1020036311
+    },
+    "accepted": 50957,
+    "rejected": 10890,
+    "named_reads": 120353,
+    "failure": null
+  },
+  "conjugate-gradient": {
+    "checks": {
+      "rhs": false,
+      "writes": false,
+      "state_sha": false,
+      "resumes": false,
+      "events": false,
+      "schedule": false,
+      "mutation_trace": false
+    },
+    "aligned_prefix": 55,
+    "runs": 2211,
+    "source_runs": 2896,
+    "first_observed": [
+      [
+        "type-analysis",
+        56,
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          6
+        ],
+        221,
+        true
+      ]
+    ],
+    "first_expected": [
+      [
+        "type-analysis",
+        56,
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          6
+        ],
+        244,
+        true
+      ]
+    ],
+    "observed_rhs": 50789,
+    "source_rhs": 131371,
+    "issuer": {
+      "abstained": 0,
+      "denied_budget": 1394,
+      "encoded_fields": 10909697,
+      "first_scores": 7638250,
+      "issued": 57960,
+      "reads": 3708082,
+      "rule_calls": 14975,
+      "second_scores": 1146849393
+    },
+    "accepted": 50789,
+    "rejected": 7171,
+    "named_reads": 117846,
+    "failure": null
+  },
+  "3mm": {
+    "checks": {
+      "rhs": false,
+      "writes": false,
+      "state_sha": false,
+      "resumes": false,
+      "events": false,
+      "schedule": false,
+      "mutation_trace": false
+    },
+    "aligned_prefix": 56,
+    "runs": 2107,
+    "source_runs": 4260,
+    "first_observed": [
+      [
+        "type-analysis",
+        57,
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          3
+        ],
+        531,
+        true
+      ]
+    ],
+    "first_expected": [
+      [
+        "type-analysis",
+        57,
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          3
+        ],
+        848,
+        true
+      ]
+    ],
+    "observed_rhs": 50095,
+    "source_rhs": 294917,
+    "issuer": {
+      "abstained": 0,
+      "denied_budget": 1404,
+      "encoded_fields": 13785016,
+      "first_scores": 6878414,
+      "issued": 61138,
+      "reads": 4670163,
+      "rule_calls": 13516,
+      "second_scores": 1084476100
+    },
+    "accepted": 50095,
+    "rejected": 11043,
+    "named_reads": 118470,
+    "failure": null
+  },
+  "sum-bits": {
+    "checks": {
+      "rhs": true,
+      "writes": true,
+      "state_sha": true,
+      "resumes": false,
+      "events": false,
+      "schedule": true,
+      "mutation_trace": true
+    },
+    "aligned_prefix": 1428,
+    "runs": 1428,
+    "source_runs": 1428,
+    "first_observed": [],
+    "first_expected": [],
+    "observed_rhs": 7265,
+    "source_rhs": 7265,
+    "issuer": {
+      "abstained": 0,
+      "denied_budget": 0,
+      "encoded_fields": 606078,
+      "first_scores": 228796,
+      "issued": 8524,
+      "reads": 190643,
+      "rule_calls": 7653,
+      "second_scores": 9111902
+    },
+    "accepted": 7265,
+    "rejected": 1259,
+    "named_reads": 17933,
+    "failure": null
+  },
+  "stable-argmax": {
+    "checks": {
+      "rhs": true,
+      "writes": true,
+      "state_sha": true,
+      "resumes": false,
+      "events": false,
+      "schedule": true,
+      "mutation_trace": true
+    },
+    "aligned_prefix": 1149,
+    "runs": 1149,
+    "source_runs": 1149,
+    "first_observed": [],
+    "first_expected": [],
+    "observed_rhs": 8190,
+    "source_rhs": 8190,
+    "issuer": {
+      "abstained": 0,
+      "denied_budget": 0,
+      "encoded_fields": 551342,
+      "first_scores": 205806,
+      "issued": 9598,
+      "reads": 176558,
+      "rule_calls": 5305,
+      "second_scores": 12897901
+    },
+    "accepted": 8190,
+    "rejected": 1408,
+    "named_reads": 20591,
+    "failure": null
+  },
+  "dot-product": {
+    "checks": {
+      "rhs": true,
+      "writes": true,
+      "state_sha": true,
+      "resumes": false,
+      "events": false,
+      "schedule": true,
+      "mutation_trace": true
+    },
+    "aligned_prefix": 1535,
+    "runs": 1535,
+    "source_runs": 1535,
+    "first_observed": [],
+    "first_expected": [],
+    "observed_rhs": 6704,
+    "source_rhs": 6704,
+    "issuer": {
+      "abstained": 0,
+      "denied_budget": 0,
+      "encoded_fields": 694408,
+      "first_scores": 187381,
+      "issued": 8235,
+      "reads": 219055,
+      "rule_calls": 6099,
+      "second_scores": 10480629
+    },
+    "accepted": 6704,
+    "rejected": 1531,
+    "named_reads": 19277,
+    "failure": null
+  }
+}
