@@ -1,0 +1,292 @@
+{
+  "scope": "Single-thread standalone serial kernel, exact residuals enabled. All six workloads are reused comparisons.",
+  "sha256": {
+    "all-depth-returns-v8": "b660e581776faaf74274097cbe177fa09475ee5f5b0d54c6c6af9069899f4661",
+    "compound-fept-root-v1": "c7a0d80fff6b24a4f50d77788271992da8960a623be0f035a78cd9af6795da08",
+    "compound-fept-root-stop-v1": "6ca81d57f5aded58fdca98fc83d9e5f666db238b9ad8e34f634f05075506c974"
+  },
+  "cases": {
+    "histogram-scatter": {
+      "all-depth-returns-v8": {
+        "issued": 99,
+        "visible": 23,
+        "completed_recipes": 2,
+        "rhs_commits": 51,
+        "exact_rhs": 6691,
+        "runs": 1195,
+        "added": 0,
+        "lost": 0,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      },
+      "compound-fept-root-v1": {
+        "issued": 99,
+        "visible": 31,
+        "completed_recipes": 2,
+        "rhs_commits": 72,
+        "exact_rhs": 6670,
+        "runs": 1195,
+        "added": 8,
+        "lost": 0,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      },
+      "compound-fept-root-stop-v1": {
+        "issued": 89,
+        "visible": 29,
+        "completed_recipes": 2,
+        "rhs_commits": 68,
+        "exact_rhs": 6674,
+        "runs": 1195,
+        "added": 6,
+        "lost": 0,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      }
+    },
+    "gated-state": {
+      "all-depth-returns-v8": {
+        "issued": 99,
+        "visible": 18,
+        "completed_recipes": 2,
+        "rhs_commits": 51,
+        "exact_rhs": 6067,
+        "runs": 1163,
+        "added": 0,
+        "lost": 0,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      },
+      "compound-fept-root-v1": {
+        "issued": 101,
+        "visible": 24,
+        "completed_recipes": 2,
+        "rhs_commits": 70,
+        "exact_rhs": 6048,
+        "runs": 1163,
+        "added": 6,
+        "lost": 0,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      },
+      "compound-fept-root-stop-v1": {
+        "issued": 92,
+        "visible": 24,
+        "completed_recipes": 2,
+        "rhs_commits": 67,
+        "exact_rhs": 6051,
+        "runs": 1163,
+        "added": 6,
+        "lost": 0,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      }
+    },
+    "sum-bits": {
+      "all-depth-returns-v8": {
+        "issued": 186,
+        "visible": 27,
+        "completed_recipes": 7,
+        "rhs_commits": 86,
+        "exact_rhs": 7179,
+        "runs": 1428,
+        "added": 0,
+        "lost": 0,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      },
+      "compound-fept-root-v1": {
+        "issued": 186,
+        "visible": 29,
+        "completed_recipes": 7,
+        "rhs_commits": 111,
+        "exact_rhs": 7154,
+        "runs": 1428,
+        "added": 2,
+        "lost": 0,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      },
+      "compound-fept-root-stop-v1": {
+        "issued": 174,
+        "visible": 29,
+        "completed_recipes": 7,
+        "rhs_commits": 106,
+        "exact_rhs": 7159,
+        "runs": 1428,
+        "added": 2,
+        "lost": 0,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      }
+    },
+    "dot-product": {
+      "all-depth-returns-v8": {
+        "issued": 108,
+        "visible": 31,
+        "completed_recipes": 5,
+        "rhs_commits": 68,
+        "exact_rhs": 6636,
+        "runs": 1535,
+        "added": 0,
+        "lost": 0,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      },
+      "compound-fept-root-v1": {
+        "issued": 118,
+        "visible": 49,
+        "completed_recipes": 5,
+        "rhs_commits": 105,
+        "exact_rhs": 6599,
+        "runs": 1535,
+        "added": 18,
+        "lost": 0,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      },
+      "compound-fept-root-stop-v1": {
+        "issued": 100,
+        "visible": 41,
+        "completed_recipes": 5,
+        "rhs_commits": 88,
+        "exact_rhs": 6616,
+        "runs": 1535,
+        "added": 11,
+        "lost": 1,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      }
+    },
+    "gemm-bias-relu": {
+      "all-depth-returns-v8": {
+        "issued": 124,
+        "visible": 20,
+        "completed_recipes": 6,
+        "rhs_commits": 71,
+        "exact_rhs": 15391,
+        "runs": 1652,
+        "added": 0,
+        "lost": 0,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      },
+      "compound-fept-root-v1": {
+        "issued": 126,
+        "visible": 24,
+        "completed_recipes": 6,
+        "rhs_commits": 88,
+        "exact_rhs": 15374,
+        "runs": 1652,
+        "added": 4,
+        "lost": 0,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      },
+      "compound-fept-root-stop-v1": {
+        "issued": 118,
+        "visible": 22,
+        "completed_recipes": 6,
+        "rhs_commits": 84,
+        "exact_rhs": 15378,
+        "runs": 1652,
+        "added": 2,
+        "lost": 0,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      }
+    },
+    "stable-argmax": {
+      "all-depth-returns-v8": {
+        "issued": 103,
+        "visible": 15,
+        "completed_recipes": 2,
+        "rhs_commits": 51,
+        "exact_rhs": 8139,
+        "runs": 1149,
+        "added": 0,
+        "lost": 0,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      },
+      "compound-fept-root-v1": {
+        "issued": 103,
+        "visible": 21,
+        "completed_recipes": 2,
+        "rhs_commits": 74,
+        "exact_rhs": 8116,
+        "runs": 1149,
+        "added": 6,
+        "lost": 0,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      },
+      "compound-fept-root-stop-v1": {
+        "issued": 96,
+        "visible": 20,
+        "completed_recipes": 2,
+        "rhs_commits": 71,
+        "exact_rhs": 8119,
+        "runs": 1149,
+        "added": 5,
+        "lost": 0,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      }
+    }
+  }
+}

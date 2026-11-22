@@ -100,6 +100,28 @@ def main(a):
             build.mkdir()
             libraries[key]=serial_compiler(build)(source)
         return libraries[key]
+    source_counts={}
+    reference={}
+    if a.birth_source:
+        from fept import measure,retained
+        for case in model['train']:
+            image,program,gold=inputs(corpus,ref,case)
+            source=a.birth_source/case
+            source_counts[case]=retained(source,image)
+            cfg=dict(catalog=load_catalog(image,program,donor),rows=2,hidden=8,ranks=8,waves=2,
+                     weights=model['roots'],compound=dict(joins=joins,tails=tails,wires=wires,
+                     child=model['child'],batch=True,named_boundary=True))
+            with TemporaryDirectory() as temp:
+                dest=Path(temp)/'baseline'
+                execute(image/'device.json',a.exp/'rotary-axes-20261119/packed-1703/final.pt',
+                        ref/'ports-1703.pt',2048,2,dest,neural=cfg,count_work=True,
+                        serial_compile=compile_kernel,birth_audit=True)
+                verify(dest,gold,image)
+                reference[case]=measure(dest,source,source_counts[case])
+        if not sum(v['issued'] for v in reference.values()):
+            raise ValueError("no training proposals for the FEPT baseline")
+        rho=sum(v['visible'] for v in reference.values())/sum(v['issued'] for v in reference.values())
+        (a.out/'training-baseline.json').write_text(json.dumps(reference,indent=2)+'\n')
     for iteration in range(a.updates):
         case=model['train'][iteration%len(model['train'])]
         image,program,gold=inputs(corpus,ref,case)
@@ -111,7 +133,7 @@ def main(a):
         natural=iteration>=2*len(model['three_step'])
         unit=None if natural else model['three_step'][iteration%len(model['three_step'])]
         if natural:
-            decision=1+(iteration*13)%26
+            decision=1+((iteration//4)*7+iteration%4*3)%19 if a.birth_source else 1+(iteration*13)%26
         skip=natural or iteration%2==0
         with TemporaryDirectory() as temp:
             for take in (True,False):
@@ -122,7 +144,7 @@ def main(a):
                                        batch=True,named_boundary=True,host_actor=policy))
                 execute(image/'device.json',a.exp/'rotary-axes-20261119/packed-1703/final.pt',
                         ref/'ports-1703.pt',2048,2,dest,neural=cfg,count_work=True,
-                        serial_compile=compile_kernel)
+                        serial_compile=compile_kernel,birth_audit=bool(a.birth_source))
                 verify(dest,gold,image)
                 if policy.record is None:
                     raise ValueError(f'missing prospective decision {decision} in {case}')
@@ -138,12 +160,18 @@ def main(a):
                 roles=read(dest/'run.json')['execution_roles']
                 arms.append(dict(issued=issued,residual=roles['rhs_inputs_from_exact_search'],
                                  won=won,prior_sha=prefix_hash))
+                if a.birth_source:
+                    measured=measure(dest,a.birth_source/case,source_counts[case])
+                    assert measured['issued']==issued
+                    arms[-1]['visible']=measured['visible']
         roots,lane,run,action,alternative=records[0]
         assert records[0][1:]==records[1][1:] and np.array_equal(roots,records[1][0])
         assert arms[0]['prior_sha']==arms[1]['prior_sha']
         # Charge an active independent token and an exact residual binding one unit each.
         saved={k:arms[1][k]-arms[0][k] for k in ('issued','residual')}
         delta=sum(saved.values())
+        if a.birth_source:
+            delta=arms[0]['visible']-arms[1]['visible']+rho*saved['issued']
         decisions.append((roots[0],lane,run,action,alternative,delta))
         # Exact two-arm advantage at the sampled decision. Reuse the measured
         # contexts between online episodes; subsequent episodes use the updated actor.
@@ -160,9 +188,12 @@ def main(a):
                          alternative='null' if skip else 'prefix',arms=arms,saved=saved,return_difference=delta))
         (a.out/'returns.json').write_text(json.dumps(rows,indent=2)+'\n')
     np.savez_compressed(a.out/'issuer-contexts.npz',roots=np.stack([v[0] for v in decisions]),
-                        actions=np.asarray([v[1:] for v in decisions],dtype=np.int32))
+                        actions=np.asarray([v[1:5] for v in decisions],dtype=np.int32),
+                        advantages=np.asarray([v[5] for v in decisions]))
     build_cache.cleanup()
     model.update(named_boundary=True,return_updates=len(rows),return_lr=a.learning_rate,return_replay=a.replay_steps)
+    if a.birth_source:
+        model.update(return_objective="visible_constructor_delta_minus_rho_times_issued_delta",training_rho=rho)
     model['child']=torch.cat([v.detach().flatten() for v in (actor.score,actor.row_score,actor.embedding,
                                                             actor.null,actor.row_latent)]).tolist()
     torch.save(actor.state_dict(),a.out/'actor.pt')
@@ -175,4 +206,5 @@ if __name__=='__main__':
     p.add_argument('--updates',type=int,default=56)
     p.add_argument('--learning-rate',type=float,default=.02)
     p.add_argument('--replay-steps',type=int,default=8)
+    p.add_argument('--birth-source',type=Path)
     main(p.parse_args())

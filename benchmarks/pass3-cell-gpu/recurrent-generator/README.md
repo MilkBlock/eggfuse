@@ -156,3 +156,65 @@ python "$d/recipe_check.py" "$e" "$e/new-supervised/train-1703/policy.json" "$e/
 python "$d/issuance_returns.py" "$e" "$e/new-supervised/train-1703" "$e/new-returns" --updates 56
 python "$d/returns_evaluate.py" "$e" "$e/new-supervised/train-1703/policy.json" "$e/new-returns/policy.json" "$e/new-eval" --cases histogram-scatter gated-state sum-bits dot-product gemm-bias-relu stable-argmax
 ```
+
+### Retained constructor credit and root policy search
+
+An optional ordered-RHS audit records the physical row interval actually allocated
+by each commit. The source ledger intersects each interval with constructor schema
+and endpoint visibility. A root or linked child gets credit only for its distinct
+winning RHS ordinal. Every active root and child pays one token. Exact residual
+execution still contributes to the graph, without earning proposal credit.
+The independent Rust ledger uses endpoint FactRefs and ordered birth locations.
+On sum-bits the two ledgers allocate one surviving birth differently between RHS
+ordinals 5954 and 6048. Neither ordinal wins in either frozen treatment or the
+baseline. Both ledgers agree on all winning ordinals across the six comparisons.
+
+The first experiment added final-visible births to boundary-audited training
+targets and same-decision child rollout rewards. Final-visible supervision alone
+gave 74/320 with zero completed long recipes. Tuning child issuance directly
+from the earlier checkpoint gave 124/561 and zero completed long recipes.
+Both trade away coverage against 134/719. The root experiment therefore retains
+the preceding recursive child policy and uses exact per-workload endpoint rewards.
+
+Root training uses four donor workloads. Each update runs two perturbed policies
+from the same initial graphs to completion. The score is the difference in
+retained constructor count minus a token charge calibrated on the training
+reference. The antisymmetric reward difference updates existing root weights.
+This is episode-level parameter-space reinforcement learning. It provides no
+causal attribution to a particular issuance. In the first phase only the eight
+parameters of the second issuer's row embedding vary. Checkpoint selection
+requires at least the starting numerator on every training program. The second
+phase also varies the existing shared stop bias, doubles the token charge, and
+requires a smaller train token budget and at least 90% of each starting numerator.
+All decisions during evaluation are ordinary greedy inference.
+
+| Frozen policy, six reused comparison workloads | Final-visible births | Issued tokens | FEPT | Completed three/four-step instances | Exact residual bindings |
+|---|---:|---:|---:|---:|---:|
+| Earlier return-trained policy | 134 | 719 | 0.1864 | 24 | 50,103 |
+| Second issuer trained | 178 | 733 | 0.2428 | 24 | 49,961 |
+| Second issuer and stop trained | 165 | 669 | 0.2466 | 24 | 49,997 |
+
+The first phase retains all 134 baseline identities. The second adds 32 and loses
+one on dot-product. All six programs individually increase their numerator in both
+phases. Each execution matches the ordered reference Runs, RHS inputs, writes,
+Spine resumes, unions and final rows. These comparisons use the standalone serial
+CPU kernel for online policy inference, verification and exact residual search.
+Rust independently supplies retained births for reward and attribution. The named
+boundary counters report zero producer lookups and consumer direct reads for
+these runs, with 98,312 bytes reserved. The study measures operation counts.
+Inference latency, time to common RSS, GPU execution and native neural-runtime
+throughput were not measured here. [Frozen policy](fept-root-policy.json) ·
+[Per-workload identity and work counts](fept-root-results.json)
+
+Reproduction uses the experiment root and shared compute launcher described
+above. The starting checkpoint is the preceding return-trained actor. Its exported
+policy hash is recorded in the comparison. The Rust audit session must support
+the baseline, audit and birth_ledger request fields.
+
+```sh
+source_dir="$e/compound-fept-source-v1"
+python "$d/fept.py" "$e" "$source_dir" affine-twins clamped-ramp segmented-prefix window-laplacian histogram-scatter gated-state sum-bits dot-product gemm-bias-relu stable-argmax --native "$e/recursive-prefix-fork-v1/session"
+python "$d/root_returns.py" "$e" "$source_dir" "$e/all-depth-returns-v8" "$e/new-root"
+python "$d/root_returns.py" "$e" "$source_dir" "$e/new-root" "$e/new-stop" --tune-stop --coverage-floor 0.9 --cost-weight 2 --updates 32
+python "$d/returns_evaluate.py" "$e" "$e/all-depth-returns-v8/policy.json" "$e/new-stop/policy.json" "$e/new-fept-comparison" --source "$source_dir" --cases histogram-scatter gated-state sum-bits dot-product gemm-bias-relu stable-argmax
+```

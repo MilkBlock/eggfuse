@@ -129,8 +129,29 @@ def train(a,seed):
         with np.load(a.data/n/'training.npz') as z:
             features=torch.from_numpy(z['features']);positive=torch.from_numpy(z['positive']);receipt=torch.from_numpy(z['receipt'])
         paths=torch.zeros(len(positive),positive.shape[1],len(joins),dtype=torch.bool)
+        teaching=torch.zeros((len(positive),ROWS),dtype=torch.long)
+        by_run={}
+        retained_counts=None
+        if a.birth_source:
+            from fept import retained
+            retained_counts=retained(a.birth_source/n,a.corpus/n/'input')
+            positive=torch.zeros_like(positive)
         with np.load(a.targets/'train'/f'{n}.npz') as z:
-            for run,leaf,rank,unit,depth,*_ in z['targets']:
+            if retained_counts is not None and 'outside_uses' not in z:
+                raise ValueError("birth supervision requires boundary-audited targets")
+            for run,leaf,rank,unit,depth,*ordinals in z['targets']:
+                if retained_counts is not None:
+                    if depth>1 and unit not in donor_ids:
+                        continue
+                    births=retained_counts[ordinals[:depth]]
+                    if births.sum():
+                        if a.distinct_targets:
+                            key=leaf*RANKS+rank
+                            kept=tuple(o for o,b in zip(ordinals,births) if b)
+                            by_run.setdefault(run-1,[]).append((key,kept))
+                        positive[run-1,leaf*RANKS+rank]=True
+                    if not births[1:].sum():
+                        continue
                 if depth>=2 and unit in donor_ids:paths[run-1,leaf*RANKS+rank,donor_ids[unit]]=True
         shapes=[]
         for index in range(len(joins)):
@@ -143,23 +164,43 @@ def train(a,seed):
             for prefix,shape in enumerate(shapes):
                 if len(shape)<len(shapes[action]) and shapes[action][:len(shape)]==shape:
                     paths[:,:,prefix] &= ~paths[:,:,action]
-        datasets.append((features,positive,receipt,paths,np.flatnonzero(paths.any((1,2)).numpy())))
+        if a.distinct_targets:
+            # Choose two different source addresses by marginal retained births.
+            # All constructors attributed to an ordinal have the same owner.
+            for run,options in by_run.items():
+                covered=set()
+                used=set()
+                for lane in range(ROWS):
+                    candidates=[(sum(retained_counts[o] for o in path if o not in covered),-key,path)
+                                for key,path in options if key not in used]
+                    if not candidates:break
+                    gain,negative_key,path=max(candidates)
+                    if not gain:break
+                    key=-negative_key
+                    teaching[run,lane]=key+1
+                    used.add(key)
+                    covered.update(path)
+        productive_runs=positive.any(-1) if a.birth_source else paths.any((1,2))
+        datasets.append((features,positive,receipt,paths,teaching,np.flatnonzero(productive_runs.numpy())))
     opt=torch.optim.Adam(actor.parameters(),lr=.006)
     losses=[]
     for update in range(a.updates):
         samples=[]
         for j in range(12):
-            x,y,r,g,h=datasets[int(rng.integers(len(names)))]
+            x,y,r,g,teacher,h=datasets[int(rng.integers(len(names)))]
             end=int(rng.choice(h) if j%3 else rng.integers(7,len(x)))
             start=max(0,end-7)
-            samples.append((x[start:start+8],y[start:start+8],r[start:start+8],g[start:start+8],torch.arange(start+1,start+9)))
-        x,y,r,g,source_run=map(torch.stack,zip(*samples))
+            samples.append((x[start:start+8],y[start:start+8],r[start:start+8],g[start:start+8],teacher[start:start+8],torch.arange(start+1,start+9)))
+        x,y,r,g,teacher,source_run=map(torch.stack,zip(*samples))
         prev=torch.zeros(len(x),ROWS,HIDDEN+4);loss=0
         for t in range(x.shape[1]):
             logits,roots=actor.root.step(x[:,t],prev)
             productive=g[:,t].any(-1)
-            root_target=torch.where(productive.any(-1)[:,None],productive,y[:,t]) if a.root_target=="continuation" else y[:,t]
+            root_target=torch.where(productive.any(-1)[:,None],productive,y[:,t]) if a.root_target=="continuation" and not a.birth_source else y[:,t]
             loss=loss+set_loss(logits,root_target)
+            if a.distinct_targets:
+                assignment=nn.functional.cross_entropy(logits.transpose(1,2),teacher[:,t],reduction='none')
+                loss=loss+(assignment*torch.where(teacher[:,t]>0,1.,.15)).mean()
             verdict,_=training_reply(roots.detach(),r[:,t],torch.zeros_like(y[:,t]))
             visible=torch.rand(len(x),1)>.5
             child_logits,prev,_=actor.propose_children(roots,verdict,visible,source_run[:,t])
@@ -173,7 +214,7 @@ def train(a,seed):
     torch.save(actor.state_dict(),out/'actor.pt')
     native=torch.cat([p.detach().flatten() for p in (actor.score,actor.row_score,actor.embedding,actor.null,actor.row_latent)]).tolist()
     (out/'policy.json').write_text(json.dumps(dict(schema='eggfuse.compound-chain/v1' if units else 'eggfuse.compound-pair/v1',joins=joins,three_step=units,tails=tails,wires=wires,
-        named_boundary=True,roots=actor.root.metal_weights(),child=native,seed=seed,root_target=a.root_target,train=names,updates=a.updates,loss=losses),separators=(',',':'))+'\n')
+        named_boundary=True,birth_supervision=bool(a.birth_source),distinct_targets=a.distinct_targets,roots=actor.root.metal_weights(),child=native,seed=seed,root_target=a.root_target,train=names,updates=a.updates,loss=losses),separators=(',',':'))+'\n')
     print(seed,len(joins),losses,flush=True)
 
 
@@ -184,5 +225,10 @@ if __name__=='__main__':
     p.add_argument('--three-step',type=int,nargs='*',default=None)
     p.add_argument('--updates',type=int,default=480)
     p.add_argument('--root-target',choices=('leaf','continuation'),default='continuation')
+    p.add_argument('--distinct-targets',action='store_true')
+    p.add_argument('--birth-source',type=Path)
+    p.add_argument('--corpus',type=Path)
     a=p.parse_args()
+    if a.distinct_targets and not a.birth_source:p.error('--distinct-targets requires --birth-source')
+    if a.birth_source and not a.corpus:p.error('--birth-source requires --corpus')
     for seed in a.seeds:train(a,seed)

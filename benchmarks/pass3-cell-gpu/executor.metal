@@ -1050,6 +1050,10 @@ inline void do_commit(device const int *rom,device const long *lits,device int *
                 meta[BOUNDARY_COMMIT+3*DEPTH*state[9]+k]=meta[BOUNDARY_MATCH+3*DEPTH*(rid*2*TOKEN_CAP+pos)+k];
 #endif
             long env[MAXSLOTS],args[WIDTH+2];
+#if BIRTH_AUDIT
+            device long *born=rhs+TRACE_CAP*(NINPUT+4)+2*state[9];
+            born[0]=state[0];
+#endif
             device long *log=rhs+(state[9]++)*(NINPUT+4);
 #if BLOCK_STUDY
             if(COUNT_WORK){
@@ -1153,6 +1157,9 @@ inline void do_commit(device const int *rom,device const long *lits,device int *
                 log_write(state,writes,rid,state[9]-base_rhs-1,t,found,args,arity,had_old,previous,
                           field(rom,lits,meta,dyn,found,arity));if(state[5])return;
             }
+#if BIRTH_AUDIT
+            born[1]=state[0];
+#endif
         }
     }
     if(PART){if(PART==2){scratch[RULES*513]=base_rhs;scratch[RULES*513+1]=base_write;}return;}

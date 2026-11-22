@@ -31,7 +31,7 @@ def pointer(weight,physical,dev):
 
 
 @torch.inference_mode()
-def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='learned',union='fenced',directory='published',spine=True,lookup='hash',batch_runs=0,tiles=32,token_layout='packed',arena='shared',router=None,export_only=False,token_cap=256,scalars='integer',profile_prims=False,prune=False,row_audit=False,measure_resident=None,hot_filter=4,index_repair=False,count_work=False,block_study=None,neural=None,maintenance_repeat=1,maintenance_control=False,serial_compile=None):
+def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='learned',union='fenced',directory='published',spine=True,lookup='hash',batch_runs=0,tiles=32,token_layout='packed',arena='shared',router=None,export_only=False,token_cap=256,scalars='integer',profile_prims=False,prune=False,row_audit=False,measure_resident=None,hot_filter=4,index_repair=False,count_work=False,block_study=None,neural=None,maintenance_repeat=1,maintenance_control=False,serial_compile=None,birth_audit=False):
     if serial_compile is None and (os.environ.get('PYTORCH_ENABLE_MPS_FALLBACK','0')!='0' or not torch.backends.mps.is_available()):
         raise RuntimeError('Metal GPU required')
     if steps<0 or steps>4096:raise ValueError('Run budget outside trace capacity')
@@ -223,6 +223,7 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
     if capture_boundaries:
         limits['BOUNDARY_MATCH']=limits['EDGE_PUBLISHED']+4*limits['TRACE_CAP']
         limits['BOUNDARY_COMMIT']=limits['BOUNDARY_MATCH']+3*layout['DEPTH']*layout['RULES']*2*limits['TOKEN_CAP']
+    limits['BIRTH_AUDIT']=int(birth_audit)
     constants='\n'.join(f'#define {k} {v}' for k,v in {**layout,**limits}.items())
     if block_study:
         for name,values in [('bake_entries',block_study['entries']),('repair_shapes',block_study['shapes']),('bake_pivots',block_study['pivots']),('bake_tables',block_study['tables'])]:
@@ -297,7 +298,11 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
     banks=2 if arena=='shared' else lanes*tiles
     count=zeros((layout['RULES'],banks));cols=layout['TOTAL_TOKEN_COLS'] if token_layout=='packed' else layout['RULES']*limits['TOKEN_WIDTH']
     tokens=zeros(cols*banks*limits['TOKEN_CAP'],torch.int64)
-    rhs=zeros((limits['TRACE_CAP'],layout['NINPUT']+4),torch.int64)
+    rhs_width=layout['NINPUT']+4
+    rhs_storage=zeros(limits['TRACE_CAP']*(rhs_width+2*int(birth_audit)),torch.int64)
+    rhs_log=rhs_storage[:limits['TRACE_CAP']*rhs_width].view(-1,rhs_width)
+    rhs=rhs_storage if birth_audit else rhs_log
+
     writes=zeros((limits['TRACE_CAP'],layout['WIDTH']+7),torch.int64);runs=zeros((max(1,steps)*(2 if row_audit or block_study else 1),6))
     resumes=zeros((limits['TRACE_CAP'],6));order=zeros(layout['NINST'])
     physical=torch.as_tensor(image['physical_order'],device=dev).long()
@@ -502,12 +507,15 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
         logical=export(schema,schema['tables'],take(out,n),take(meta,n),ids.cpu().numpy(),strings,set_members)
         (root/'state.json').write_text(json.dumps(logical,ensure_ascii=False,separators=(',',':')))
     else:
-        np.savez_compressed(root/'output.npz',set_members=set_members,rows=take(out,n),meta=take(meta,n),rhs=take(rhs,st[9]),writes=take(writes,st[10]),
+        np.savez_compressed(root/'output.npz',set_members=set_members,rows=take(out,n),meta=take(meta,n),rhs=take(rhs_log,st[9]),writes=take(writes,st[10]),
                         runs=take(runs,st[11]),parents=meta.view(-1)[6*limits['ROW_CAP']:6*limits['ROW_CAP']+n+layout['NSYMBOLS']+2].cpu().numpy(),
                         birth_runs=meta.view(-1)[birth_run:birth_run+n].cpu().numpy(),
                         birth_fields=take(dyn,n),
                         unions=meta.view(-1)[union_log:union_log+4*st[14]].reshape(-1,4).cpu().numpy(),
                         resumes=take(resumes,st[16]),block_coverage=take(runs[max(1,steps):],st[11]) if block_study else np.empty((0,6),np.int32),contributions=take(runs[max(1,steps):],st[11]) if row_audit else np.empty((0,6),np.int32),selected=selected.cpu().numpy())
+    if birth_audit:
+        spans=rhs_storage[limits['TRACE_CAP']*rhs_width:].view(-1,2)
+        np.save(root/'birth-ranges.npy',take(spans,st[9]))
     if capture:
         frames={}
         for j,(bank,m,st_dev,uf) in enumerate(snapshots):
