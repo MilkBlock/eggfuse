@@ -1,0 +1,440 @@
+{
+  "dot-product": {
+    "leaf": {
+      "fept": 0.18919299233096462,
+      "visible": 2689,
+      "ledger_sha256": "9e1a9f99f07770a2ce93a65e8d1ef1b542615a3caeb18d12ed50c524fc971b18",
+      "paid": 14213,
+      "signed": {
+        "visible_birth": 2974,
+        "effective_write": 2159,
+        "effective_union": 341,
+        "visibility_change": 0
+      },
+      "uncredited": {
+        "visible_birth": 9,
+        "effective_write": 9,
+        "effective_union": 270,
+        "visibility_change": 0
+      },
+      "ept": 0.3851403644550763,
+      "system_ept": 0.4054035038345177,
+      "no_rhs_owner": {
+        "visible_birth": 8,
+        "effective_write": 9,
+        "effective_union": 270,
+        "visibility_change": 0
+      },
+      "unsupported_root": {
+        "visible_birth": 1,
+        "effective_write": 0,
+        "effective_union": 0,
+        "visibility_change": 0
+      },
+      "rule_breakdown": {
+        "153": {
+          "commits": 359,
+          "signed": {
+            "visible_birth": 0,
+            "effective_write": 89,
+            "effective_union": 0,
+            "visibility_change": 0
+          },
+          "system": {
+            "visible_birth": 0,
+            "effective_write": 89,
+            "effective_union": 0,
+            "visibility_change": 0
+          }
+        },
+        "317": {
+          "commits": 0,
+          "signed": {
+            "visible_birth": 0,
+            "effective_write": 0,
+            "effective_union": 0,
+            "visibility_change": 0
+          },
+          "system": {
+            "visible_birth": 0,
+            "effective_write": 0,
+            "effective_union": 0,
+            "visibility_change": 0
+          }
+        }
+      },
+      "rule_153_writes": [
+        89,
+        89
+      ],
+      "rule_317_unions": [
+        0,
+        0
+      ]
+    },
+    "sub_expected_guard": {
+      "fept": 0.20279034690799397,
+      "visible": 2689,
+      "ledger_sha256": "9e1a9f99f07770a2ce93a65e8d1ef1b542615a3caeb18d12ed50c524fc971b18",
+      "paid": 13260,
+      "signed": {
+        "visible_birth": 2974,
+        "effective_write": 2159,
+        "effective_union": 341,
+        "visibility_change": 0
+      },
+      "uncredited": {
+        "visible_birth": 9,
+        "effective_write": 9,
+        "effective_union": 270,
+        "visibility_change": 0
+      },
+      "ept": 0.4128205128205128,
+      "system_ept": 0.4345399698340875,
+      "no_rhs_owner": {
+        "visible_birth": 8,
+        "effective_write": 9,
+        "effective_union": 270,
+        "visibility_change": 0
+      },
+      "unsupported_root": {
+        "visible_birth": 1,
+        "effective_write": 0,
+        "effective_union": 0,
+        "visibility_change": 0
+      },
+      "rule_breakdown": {
+        "153": {
+          "commits": 359,
+          "signed": {
+            "visible_birth": 0,
+            "effective_write": 89,
+            "effective_union": 0,
+            "visibility_change": 0
+          },
+          "system": {
+            "visible_birth": 0,
+            "effective_write": 89,
+            "effective_union": 0,
+            "visibility_change": 0
+          }
+        },
+        "317": {
+          "commits": 0,
+          "signed": {
+            "visible_birth": 0,
+            "effective_write": 0,
+            "effective_union": 0,
+            "visibility_change": 0
+          },
+          "system": {
+            "visible_birth": 0,
+            "effective_write": 0,
+            "effective_union": 0,
+            "visibility_change": 0
+          }
+        }
+      },
+      "rule_153_writes": [
+        89,
+        89
+      ],
+      "rule_317_unions": [
+        0,
+        0
+      ]
+    }
+  },
+  "sum-bits": {
+    "leaf": {
+      "fept": 0.21252566735112938,
+      "visible": 2691,
+      "ledger_sha256": "4cc4c1c34874ef596379c3218854655706eff5a13bb0c7e1e4a38fc0cd70e0fa",
+      "paid": 12662,
+      "signed": {
+        "visible_birth": 3331,
+        "effective_write": 1449,
+        "effective_union": 526,
+        "visibility_change": 75
+      },
+      "uncredited": {
+        "visible_birth": 2,
+        "effective_write": 1,
+        "effective_union": 513,
+        "visibility_change": 0
+      },
+      "ept": 0.4249723582372453,
+      "system_ept": 0.4657242141841731,
+      "no_rhs_owner": {
+        "visible_birth": 1,
+        "effective_write": 1,
+        "effective_union": 513,
+        "visibility_change": 0
+      },
+      "unsupported_root": {
+        "visible_birth": 1,
+        "effective_write": 0,
+        "effective_union": 0,
+        "visibility_change": 0
+      },
+      "rule_breakdown": {
+        "153": {
+          "commits": 133,
+          "signed": {
+            "visible_birth": 0,
+            "effective_write": 37,
+            "effective_union": 0,
+            "visibility_change": 0
+          },
+          "system": {
+            "visible_birth": 0,
+            "effective_write": 37,
+            "effective_union": 0,
+            "visibility_change": 0
+          }
+        },
+        "317": {
+          "commits": 177,
+          "signed": {
+            "visible_birth": 0,
+            "effective_write": 0,
+            "effective_union": 46,
+            "visibility_change": 0
+          },
+          "system": {
+            "visible_birth": 0,
+            "effective_write": 0,
+            "effective_union": 46,
+            "visibility_change": 0
+          }
+        }
+      },
+      "rule_153_writes": [
+        37,
+        37
+      ],
+      "rule_317_unions": [
+        46,
+        46
+      ]
+    },
+    "sub_expected_guard": {
+      "fept": 0.23057150201353782,
+      "visible": 2691,
+      "ledger_sha256": "4cc4c1c34874ef596379c3218854655706eff5a13bb0c7e1e4a38fc0cd70e0fa",
+      "paid": 11671,
+      "signed": {
+        "visible_birth": 3331,
+        "effective_write": 1449,
+        "effective_union": 526,
+        "visibility_change": 75
+      },
+      "uncredited": {
+        "visible_birth": 2,
+        "effective_write": 1,
+        "effective_union": 513,
+        "visibility_change": 0
+      },
+      "ept": 0.4610573215662754,
+      "system_ept": 0.5052694713392168,
+      "no_rhs_owner": {
+        "visible_birth": 1,
+        "effective_write": 1,
+        "effective_union": 513,
+        "visibility_change": 0
+      },
+      "unsupported_root": {
+        "visible_birth": 1,
+        "effective_write": 0,
+        "effective_union": 0,
+        "visibility_change": 0
+      },
+      "rule_breakdown": {
+        "153": {
+          "commits": 133,
+          "signed": {
+            "visible_birth": 0,
+            "effective_write": 37,
+            "effective_union": 0,
+            "visibility_change": 0
+          },
+          "system": {
+            "visible_birth": 0,
+            "effective_write": 37,
+            "effective_union": 0,
+            "visibility_change": 0
+          }
+        },
+        "317": {
+          "commits": 177,
+          "signed": {
+            "visible_birth": 0,
+            "effective_write": 0,
+            "effective_union": 46,
+            "visibility_change": 0
+          },
+          "system": {
+            "visible_birth": 0,
+            "effective_write": 0,
+            "effective_union": 46,
+            "visibility_change": 0
+          }
+        }
+      },
+      "rule_153_writes": [
+        37,
+        37
+      ],
+      "rule_317_unions": [
+        46,
+        46
+      ]
+    }
+  },
+  "3mm": {
+    "leaf": {
+      "fept": 0.16603174489404632,
+      "visible": 92658,
+      "ledger_sha256": "63a923887e958fe32e63821392e62a71a9a52e8a21058c94cdc3af49899af2d0",
+      "paid": 558074,
+      "signed": {
+        "visible_birth": 111901,
+        "effective_write": 81136,
+        "effective_union": 11544,
+        "visibility_change": 0
+      },
+      "uncredited": {
+        "visible_birth": 29,
+        "effective_write": 38,
+        "effective_union": 16598,
+        "visibility_change": 0
+      },
+      "ept": 0.3665840014048316,
+      "system_ept": 0.3964456326580346,
+      "no_rhs_owner": {
+        "visible_birth": 28,
+        "effective_write": 38,
+        "effective_union": 16598,
+        "visibility_change": 0
+      },
+      "unsupported_root": {
+        "visible_birth": 1,
+        "effective_write": 0,
+        "effective_union": 0,
+        "visibility_change": 0
+      },
+      "rule_breakdown": {
+        "153": {
+          "commits": 40018,
+          "signed": {
+            "visible_birth": 0,
+            "effective_write": 10900,
+            "effective_union": 0,
+            "visibility_change": 0
+          },
+          "system": {
+            "visible_birth": 0,
+            "effective_write": 10900,
+            "effective_union": 0,
+            "visibility_change": 0
+          }
+        },
+        "317": {
+          "commits": 7393,
+          "signed": {
+            "visible_birth": 0,
+            "effective_write": 0,
+            "effective_union": 1957,
+            "visibility_change": 0
+          },
+          "system": {
+            "visible_birth": 0,
+            "effective_write": 0,
+            "effective_union": 1957,
+            "visibility_change": 0
+          }
+        }
+      },
+      "rule_153_writes": [
+        10900,
+        10900
+      ],
+      "rule_317_unions": [
+        1957,
+        1957
+      ]
+    },
+    "sub_expected_guard": {
+      "fept": 0.1739661034769564,
+      "visible": 92658,
+      "ledger_sha256": "63a923887e958fe32e63821392e62a71a9a52e8a21058c94cdc3af49899af2d0",
+      "paid": 532621,
+      "signed": {
+        "visible_birth": 111901,
+        "effective_write": 81136,
+        "effective_union": 11544,
+        "visibility_change": 0
+      },
+      "uncredited": {
+        "visible_birth": 29,
+        "effective_write": 38,
+        "effective_union": 16598,
+        "visibility_change": 0
+      },
+      "ept": 0.38410239175699046,
+      "system_ept": 0.4153910566800783,
+      "no_rhs_owner": {
+        "visible_birth": 28,
+        "effective_write": 38,
+        "effective_union": 16598,
+        "visibility_change": 0
+      },
+      "unsupported_root": {
+        "visible_birth": 1,
+        "effective_write": 0,
+        "effective_union": 0,
+        "visibility_change": 0
+      },
+      "rule_breakdown": {
+        "153": {
+          "commits": 40018,
+          "signed": {
+            "visible_birth": 0,
+            "effective_write": 10900,
+            "effective_union": 0,
+            "visibility_change": 0
+          },
+          "system": {
+            "visible_birth": 0,
+            "effective_write": 10900,
+            "effective_union": 0,
+            "visibility_change": 0
+          }
+        },
+        "317": {
+          "commits": 7393,
+          "signed": {
+            "visible_birth": 0,
+            "effective_write": 0,
+            "effective_union": 1957,
+            "visibility_change": 0
+          },
+          "system": {
+            "visible_birth": 0,
+            "effective_write": 0,
+            "effective_union": 1957,
+            "visibility_change": 0
+          }
+        }
+      },
+      "rule_153_writes": [
+        10900,
+        10900
+      ],
+      "rule_317_unions": [
+        1957,
+        1957
+      ]
+    }
+  }
+}

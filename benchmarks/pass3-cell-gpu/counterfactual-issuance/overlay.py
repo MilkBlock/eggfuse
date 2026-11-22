@@ -406,3 +406,28 @@ pub(crate) fn trace_pair_return(op:usize,dep:Dependency,version:u64,reused:bool)
                 let Dependency::Fact(f)=a.row else{return Err("invalid residual pivot".into())};
                 p.external.push([run,u64::from(f.cell),u64::from(f.op)]);
             }""")
+    copyfile(Path(__file__).with_name("ept.rs"),crate/"src/ept.rs")
+    with (crate/"src/lib.rs").open("a") as f:
+        f.write('\npub mod ept;\n')
+    edit(session,'        let start = Instant::now();','        eggfuse_cell_runtime::ept::start(req["ept"]==true);\n        let start = Instant::now();')
+    edit(session,'        report["root_recipe"]=', '        report["ept"]=json!(eggfuse_cell_runtime::ept::finish());\n        report["root_recipe"]=')
+    runtime=crate/"src/runtime.rs"
+    edit(runtime,'        crate::transfer_audit::rhs(rid);','        crate::transfer_audit::rhs(rid);\n        crate::ept::rhs();')
+    edit(runtime,'        crate::joint_root::end();','        crate::ept::end_rhs();\n        crate::joint_root::end();')
+    text=runtime.read_text().replace('crate::transfer_audit::end_writes();','crate::transfer_audit::end_writes();\n        crate::ept::boundary(&self.graph)?;')
+    runtime.write_text(text)
+    edit(g,'        self.pending_unions.push((a, b));','        crate::ept::queue(a,b);\n        self.pending_unions.push((a, b));')
+    a="    fn union(&mut self, a: u64, b: u64) -> Result<()> {\n        let a = root(&self.parents, a);\n        let b = root(&self.parents, b);"
+    edit(g,a,a.replace("        let a =", "        let requested=(a,b);\n        let a =")+
+         "\n        crate::ept::union(requested.0,requested.1,a.max(b),a.min(b))?;")
+    edit(g,'        crate::transfer_audit::birth(t, key, &v, f.ordered_id());','        crate::transfer_audit::birth(t, key, &v, f.ordered_id());\n        crate::ept::birth(f,t);')
+    a='    pub fn hide(&mut self, t: usize, key: &[Value], delete: bool) -> Result<bool> {'
+    edit(g,a,a+"""
+        self.ept_hide(t,key,delete,true)
+    }
+    fn ept_hide(&mut self,t:usize,key:&[Value],delete:bool,existing:bool)->Result<bool>{""")
+    edit(g,'                self.hide(t, key, false)?;', '                self.ept_hide(t,key,false,false)?;')
+    a='        match row.witness {\n            Dependency::Fact(f) => {\n                let born'
+    edit(g,a,'        if existing && !row.hidden {crate::ept::hide(t,row.witness);}\n'+a)
+    audit=crate/"src/transfer_audit.rs"
+    edit(audit,'    event(|| serde_json::json!(["write",', '    crate::ept::write(table,index);\n    event(|| serde_json::json!(["write",')

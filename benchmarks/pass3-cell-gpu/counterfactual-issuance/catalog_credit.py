@@ -207,6 +207,13 @@ def main(a):
         baseline = None
         results = {}
         with study["src"].base.session(a.native,program,plans) as run:
+            if a.ept:
+                from ept import ledger_digest,score
+                exact_events=run(dict(baseline=True,audit=True,ept=True))
+                if any(exact_events.get(k)!=exact[k] for k in ("state_sha","runs","schedule","rhs","writes","resumes")):
+                    raise ValueError(("invalid exact EPT reference",exact_events.get("source_error")))
+                reference=ledger_digest(exact_events)
+                del exact_events
             for name, cfg, mode in (("leaf",catalog["leaf"],None),("original",spec,"greedy"),
                                     ("union",catalog["union"],"greedy"),("expanded",combined,"greedy"),
                                     ("wide_let_only",let_only,None),("wide",wide,"greedy"),("fixed_full",wide,"full"),
@@ -239,6 +246,7 @@ def main(a):
                     shadow_lanes=Counter(map(tuple,shadow["root_recipe"]["pair_external"]))
                     shadow_paid=study["packets"](shadow)
                     del shadow
+                if a.ept:request["ept"]=True
                 data = run(request)
                 counts, ledger = matrix["summarize"](data,exact,bool(mode))
                 if baseline is None:
@@ -272,6 +280,7 @@ def main(a):
                 results[name] = dict(paid=paid, saved=saved, visible=counts["visible"], fept=counts["fept"],
                                      terminal=counts["set_internal"], checks=counts["checks"],
                                      paths=len(cfg.get("library",[])), state_sha=counts["state_sha"])
+                if a.ept:results[name]["effective_ops"]=score(data,recipe,paid,reference)
                 if a.walk and name != "leaf":
                     from walk_credit import validate
                     results[name].update(validate(data,cfg))
@@ -345,6 +354,7 @@ if __name__ == "__main__":
     p.add_argument("--pair-takeover",action="store_true")
     p.add_argument("--pair-ambiguous",action="store_true")
     p.add_argument("--pair-tables",nargs=2,default=("PotentialExtractedExpr","TCPair"))
+    p.add_argument("--ept",action="store_true")
     args=p.parse_args()
     args.pair_takeover |= args.pair_ambiguous
     args.pair_owner |= args.pair_takeover
