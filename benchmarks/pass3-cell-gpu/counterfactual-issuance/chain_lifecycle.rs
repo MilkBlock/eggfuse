@@ -1,5 +1,6 @@
 // Optional observation of writes and later publications on already named ports.
 struct ChainLifecycle {
+    scheduled: Vec<[u64; 3]>,
     targets: BTreeMap<usize, usize>,
     inputs: Vec<Vec<Option<usize>>>,
     owners: std::collections::HashMap<(usize, Dependency), (usize, i64, u64)>,
@@ -40,6 +41,7 @@ pub fn configure_chain_lifecycle(program: &Program, spec: &J) -> Result<()> {
         })
         .collect();
     let trace = ChainLifecycle {
+        scheduled: vec![],
         targets,
         inputs,
         owners: Default::default(),
@@ -308,4 +310,14 @@ pub(crate) fn check_chain_packets(g: &Graph, rid: usize, mark: u64) -> Result<()
         }
         Ok(())
     })
+}
+
+pub(crate) fn observe_chain_run(rid: usize, epoch: u64, watermark: u64) {
+    STATE.with_borrow_mut(|state| {
+        if let Some(trace) = state.as_mut().and_then(|s| s.chain_lifecycle.as_mut())
+            && trace.targets.values().any(|&target| target == rid)
+        {
+            trace.scheduled.push([rid as u64, epoch, watermark]);
+        }
+    });
 }

@@ -353,3 +353,73 @@ pub(crate) fn takes_chain(rid: usize) -> bool {
             .is_some_and(|c| c.target == rid)
     })
 }
+
+pub fn watch_paid_ranges() {
+    STATE.with_borrow_mut(|s| {
+        if let Some(s) = s {
+            s.paid_ranges = Some(Vec::new());
+        }
+    });
+}
+
+fn record_paid(
+    ranges: &mut Option<Vec<(u64, usize, usize)>>,
+    first: u64,
+    count: usize,
+    rule: usize,
+) {
+    let Some(ranges) = ranges else { return };
+    if count == 0 {
+        return;
+    }
+    if let Some((start, n, rid)) = ranges.last_mut()
+        && *rid == rule
+        && *start + *n as u64 == first
+    {
+        *n += count;
+    } else {
+        ranges.push((first, count, rule));
+    }
+}
+
+pub fn enable_prefix_ports() {
+    STATE.with_borrow_mut(|s| {
+        if let Some(s) = s {
+            s.prefix_ports = true
+        }
+    });
+}
+pub(crate) fn prefix_port(
+    table: usize,
+    key: &[Value],
+    value: &Value,
+    op: usize,
+    dep: Dependency,
+    version: u64,
+    epoch: u64,
+    reused: bool,
+) {
+    if !STATE.with_borrow(|s| s.as_ref().is_some_and(|s| s.prefix_ports)) {
+        return;
+    }
+    history_return(table, key, value, op, dep, version, epoch);
+    // Keep the observed return for proof replay without altering pair selection.
+    STATE.with_borrow_mut(|s| {
+        let Some(s) = s else { return };
+        if let Some((owner, _, _, rid, _)) = s.active
+            && let Some((rules, rows)) = &mut s.pair_trace
+            && rules.contains(&rid)
+            && let Dependency::Fact(f) = dep
+        {
+            rows.push([
+                owner as u64,
+                rid as u64,
+                op as u64,
+                f.cell as u64,
+                f.op as u64,
+                version,
+                reused as u64,
+            ]);
+        }
+    });
+}

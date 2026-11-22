@@ -1,0 +1,119 @@
+{
+  "3mm-join": {
+    "direct": {
+      "pair_scores": 1578496,
+      "issued": 283,
+      "reference": 283,
+      "missing": 0,
+      "extra": 0
+    },
+    "conditional": {
+      "first_scores": 49328,
+      "pair_scores": 9056,
+      "issued": 283,
+      "reference": 283,
+      "missing": 0,
+      "extra": 0
+    },
+    "decoder_timing": {
+      "cpu": {
+        "direct": {
+          "samples_ms": [
+            6.776374997571111,
+            6.650042021647096,
+            6.531874882057309,
+            6.359875202178955
+          ],
+          "median_ms": 6.590958451852202
+        },
+        "conditional": {
+          "samples_ms": [
+            2.505458192899823,
+            2.331750001758337,
+            2.3769158869981766,
+            2.2902078926563263
+          ],
+          "median_ms": 2.354332944378257
+        }
+      }
+    }
+  },
+  "dot-product-join": {
+    "direct": {
+      "pair_scores": 148,
+      "issued": 10,
+      "reference": 10,
+      "missing": 0,
+      "extra": 0
+    },
+    "conditional": {
+      "first_scores": 74,
+      "pair_scores": 10,
+      "issued": 10,
+      "reference": 10,
+      "missing": 0,
+      "extra": 0
+    },
+    "decoder_timing": {
+      "cpu": {
+        "direct": {
+          "samples_ms": [
+            0.25654188357293606,
+            0.2554589882493019,
+            0.27204188518226147,
+            0.2552908845245838
+          ],
+          "median_ms": 0.256000435911119
+        },
+        "conditional": {
+          "samples_ms": [
+            0.467624980956316,
+            0.46941707842051983,
+            0.4695418756455183,
+            0.4709591157734394
+          ],
+          "median_ms": 0.46947947703301907
+        }
+      }
+    }
+  },
+  "sum-bits-join": {
+    "direct": {
+      "pair_scores": 168,
+      "issued": 3,
+      "reference": 3,
+      "missing": 0,
+      "extra": 0
+    },
+    "conditional": {
+      "first_scores": 168,
+      "pair_scores": 3,
+      "issued": 3,
+      "reference": 3,
+      "missing": 0,
+      "extra": 0
+    },
+    "decoder_timing": {
+      "cpu": {
+        "direct": {
+          "samples_ms": [
+            0.4329581279307604,
+            0.43116696178913116,
+            0.4391248803585768,
+            0.432583037763834
+          ],
+          "median_ms": 0.4327705828472972
+        },
+        "conditional": {
+          "samples_ms": [
+            0.7982919923961163,
+            0.8026671130210161,
+            0.7980829104781151,
+            0.788375036790967
+          ],
+          "median_ms": 0.7981874514371157
+        }
+      }
+    }
+  }
+}

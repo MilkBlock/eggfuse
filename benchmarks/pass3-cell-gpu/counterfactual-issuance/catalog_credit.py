@@ -246,7 +246,9 @@ def main(a):
                 if a.fixed_subtuple_depth and name == "sub_expected_guard":
                     cfg["depth_reader"] = dict(cfg["depth_reader"], fixed_depth=a.fixed_subtuple_depth)
                 request = matrix["cfg"](req,cfg,True)
+                if a.prefix_ports:request["prefix_ports"]=True
                 if a.live_chain:request["chain_watch"]=312
+                if a.rank_paid and name=="sub_expected_guard":request["paid_ranges"]=True
                 if a.pair_owner and name=="sub_expected_guard":
                     target, column, pairs = wiring(recipe,a.pair_tables)
                     trace_rules = set(pairs)
@@ -309,8 +311,15 @@ def main(a):
                 if a.chain_returns and name=="sub_expected_guard":
                     request["chain_rows"] = {atom["call"]["table"]:len(atom["args"]) for rid in (312,538)
                                              for atom in recipe["rules"][rid]["query"]}
+                if a.joined_history is not None and name=="sub_expected_guard":
+                    request["chain_lifecycle"]=[a.joined_history]
+                    request["chain_rows"]={atom["call"]["table"]:len(atom["args"])
+                                            for atom in recipe["rules"][a.joined_history]["query"]}
                 if a.ept:request["ept"]=True
                 data = run(request)
+                if a.joined_history is not None and name=="sub_expected_guard":
+                    from joined_history import export
+                    export(data,recipe,a.joined_history,a.out/(case+"-join.json"))
                 if a.live_chain and data.get("source_error"):
                     raise ValueError((case,name,data["source_error"]))
                 if a.point_catalog and name=="sub_expected_guard":
@@ -576,6 +585,9 @@ def main(a):
                             audit=takeover["root_recipe"]["chain_audit"]
                             arm["live_chain"] = dict(counts=audit["live"], lanes=audit["lanes"][1],
                                                      commits=sum(row[3] == 312 for row in actual), total_source=len(actual))
+                        if a.rank_paid:
+                            from paid_roots import rank
+                            arm["paid_roots"] = rank(takeover,recipe)
                         if a.time_live_chain:
                             from time import perf_counter
                             config=dict(request,history_head=head)
@@ -649,6 +661,9 @@ if __name__ == "__main__":
     p.add_argument("--history-takeover",action="store_true")
     p.add_argument("--chain-history", action="store_true")
     p.add_argument("--corrupt-chain-owner", action="store_true")
+    p.add_argument("--prefix-ports", action="store_true")
+    p.add_argument("--joined-history", type=int)
+    p.add_argument("--rank-paid", action="store_true")
     p.add_argument("--time-live-chain", action="store_true")
     p.add_argument("--withhold-live-chain", action="store_true")
     p.add_argument("--live-chain", action="store_true")
@@ -686,14 +701,14 @@ if __name__ == "__main__":
     if args.point_claims=="gated" and not args.source_delta:p.error("gated ownership requires trained --source-delta")
     args.history_tail_negative |= bool(args.point_claims)
     args.history_tail |= args.history_tail_depth > 1 or args.history_tail_context or args.history_tail_negative
-    args.history_takeover |= args.history_tail or args.history_address or args.time_live_chain
+    args.history_takeover |= args.history_tail or args.history_address or args.time_live_chain or args.rank_paid
     if args.chain_gate and not args.chain_packets:
         p.error("--chain-gate requires --chain-packets")
     args.chain_lifecycle |= args.chain_gate
     args.chain_returns |= args.chain_lifecycle
     args.live_chain |= args.withhold_live_chain or args.time_live_chain or args.corrupt_chain_owner
     args.chain_history |= args.chain_returns
-    args.history_ports |= args.live_chain or bool(args.chain_packets) or args.chain_history or args.export_reader_history or args.point_catalog
+    args.history_ports |= (args.joined_history is not None) or args.live_chain or bool(args.chain_packets) or args.chain_history or args.export_reader_history or args.point_catalog
     args.history_ports |= args.history_takeover or args.history_initial or args.history_updates
     args.ept |= args.history_takeover
     args.pair_takeover |= args.history_takeover

@@ -1,0 +1,287 @@
+{
+  "dot-product": {
+    "after": {
+      "replay": {
+        "source": 10,
+        "proposed": 10,
+        "hits": 10,
+        "extra": 0,
+        "address_reads": 280,
+        "port_visits": 20
+      },
+      "snapshots": {
+        "reference": 10,
+        "available": 10,
+        "missing": 0,
+        "compatible": 10,
+        "full_pairs": 148,
+        "minimum_first_loop_ports": 8,
+        "runs_checked": 21,
+        "positive_runs": 4,
+        "first_read_oracle": {
+          "1": {
+            "recoverable": 5,
+            "pair_scores": 74,
+            "first_scores": 42
+          },
+          "4": {
+            "recoverable": 10,
+            "pair_scores": 148,
+            "first_scores": 42
+          },
+          "8": {
+            "recoverable": 10,
+            "pair_scores": 148,
+            "first_scores": 42
+          },
+          "16": {
+            "recoverable": 10,
+            "pair_scores": 148,
+            "first_scores": 42
+          },
+          "32": {
+            "recoverable": 10,
+            "pair_scores": 148,
+            "first_scores": 42
+          }
+        }
+      },
+      "missing_allocators": {}
+    },
+    "native": {
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "events": true,
+        "runs": true,
+        "schedule": true,
+        "state_sha": true,
+        "ledger": true,
+        "commit_inputs": true
+      },
+      "paid": 8420,
+      "ept": 0.6501187648456057,
+      "rule": {
+        "rule": 243,
+        "paid": 50,
+        "won": 10,
+        "uncommitted": 40,
+        "source": 10,
+        "query": [
+          "BodyContainsExpr",
+          "DoWhile",
+          "Single",
+          "is-inv-Expr"
+        ]
+      }
+    }
+  },
+  "sum-bits": {
+    "after": {
+      "replay": {
+        "source": 3,
+        "proposed": 3,
+        "hits": 3,
+        "extra": 0,
+        "address_reads": 441,
+        "port_visits": 15
+      },
+      "snapshots": {
+        "reference": 3,
+        "available": 3,
+        "missing": 0,
+        "compatible": 3,
+        "full_pairs": 168,
+        "minimum_first_loop_ports": 1,
+        "runs_checked": 37,
+        "positive_runs": 1,
+        "first_read_oracle": {
+          "1": {
+            "recoverable": 3,
+            "pair_scores": 168,
+            "first_scores": 37
+          },
+          "4": {
+            "recoverable": 3,
+            "pair_scores": 168,
+            "first_scores": 37
+          },
+          "8": {
+            "recoverable": 3,
+            "pair_scores": 168,
+            "first_scores": 37
+          },
+          "16": {
+            "recoverable": 3,
+            "pair_scores": 168,
+            "first_scores": 37
+          },
+          "32": {
+            "recoverable": 3,
+            "pair_scores": 168,
+            "first_scores": 37
+          }
+        }
+      },
+      "missing_allocators": {}
+    },
+    "native": {
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "events": true,
+        "runs": true,
+        "schedule": true,
+        "state_sha": true,
+        "ledger": true,
+        "commit_inputs": true
+      },
+      "paid": 7172,
+      "ept": 0.7502788622420524,
+      "rule": {
+        "rule": 243,
+        "paid": 49,
+        "won": 3,
+        "uncommitted": 46,
+        "source": 3,
+        "query": [
+          "BodyContainsExpr",
+          "DoWhile",
+          "Single",
+          "is-inv-Expr"
+        ]
+      }
+    }
+  },
+  "3mm": {
+    "before": {
+      "replay": {
+        "source": 283,
+        "proposed": 348,
+        "hits": 242,
+        "extra": 106,
+        "address_reads": 23004,
+        "port_visits": 2964
+      },
+      "snapshots": {
+        "reference": 283,
+        "available": 242,
+        "missing": 41,
+        "compatible": 2827,
+        "full_pairs": 93760,
+        "minimum_first_loop_ports": 82,
+        "runs_checked": 18,
+        "positive_runs": 18,
+        "first_read_oracle": {
+          "1": {
+            "recoverable": 38,
+            "pair_scores": 2930,
+            "first_scores": 576
+          },
+          "4": {
+            "recoverable": 126,
+            "pair_scores": 11720,
+            "first_scores": 576
+          },
+          "8": {
+            "recoverable": 206,
+            "pair_scores": 23440,
+            "first_scores": 576
+          },
+          "16": {
+            "recoverable": 242,
+            "pair_scores": 46880,
+            "first_scores": 576
+          },
+          "32": {
+            "recoverable": 242,
+            "pair_scores": 93760,
+            "first_scores": 576
+          }
+        }
+      },
+      "missing_allocators": {
+        "240": 3,
+        "237": 38
+      }
+    },
+    "after": {
+      "replay": {
+        "source": 283,
+        "proposed": 348,
+        "hits": 283,
+        "extra": 65,
+        "address_reads": 23966,
+        "port_visits": 3616
+      },
+      "snapshots": {
+        "reference": 283,
+        "available": 283,
+        "missing": 0,
+        "compatible": 283,
+        "full_pairs": 1578496,
+        "minimum_first_loop_ports": 123,
+        "runs_checked": 100,
+        "positive_runs": 18,
+        "first_read_oracle": {
+          "1": {
+            "recoverable": 46,
+            "pair_scores": 49328,
+            "first_scores": 3200
+          },
+          "4": {
+            "recoverable": 147,
+            "pair_scores": 197312,
+            "first_scores": 3200
+          },
+          "8": {
+            "recoverable": 239,
+            "pair_scores": 394624,
+            "first_scores": 3200
+          },
+          "16": {
+            "recoverable": 283,
+            "pair_scores": 789248,
+            "first_scores": 3200
+          },
+          "32": {
+            "recoverable": 283,
+            "pair_scores": 1578496,
+            "first_scores": 3200
+          }
+        }
+      },
+      "missing_allocators": {}
+    },
+    "native": {
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "events": true,
+        "runs": true,
+        "schedule": true,
+        "state_sha": true,
+        "ledger": true,
+        "commit_inputs": true
+      },
+      "paid": 261213,
+      "ept": 0.7831960890154778,
+      "rule": {
+        "rule": 243,
+        "paid": 18823,
+        "won": 283,
+        "uncommitted": 18540,
+        "source": 283,
+        "query": [
+          "BodyContainsExpr",
+          "DoWhile",
+          "Single",
+          "is-inv-Expr"
+        ]
+      }
+    }
+  }
+}
