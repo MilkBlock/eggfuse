@@ -82,7 +82,7 @@ class Memory:
 
 
 @torch.no_grad()
-def rollout(binary,program,policy,mode,force_skip=None):
+def rollout(binary,program,policy,mode,force_skip=None,read_trace=None):
     with subprocess.Popen([binary,program],stdin=subprocess.PIPE,stdout=subprocess.PIPE,text=True) as proc:
         def read():
             line=proc.stdout.readline()
@@ -114,10 +114,14 @@ def rollout(binary,program,policy,mode,force_skip=None):
                 tried=set()
                 while len(tried)<len(mem.rows):
                     left=mem.read('left',used=tried)
+                    if read_trace is not None:
+                        read_trace.append(('left', left, mem.rows[left][1] if left else None))
                     if left is None:
                         break
                     tried.add(left)
                     right=mem.read('right',None if mode=='unconditioned' else left)
+                    if read_trace is not None:
+                        read_trace.append(('right', right, mem.rows[right][1] if right else None))
                     if right is None:
                         continue
                     root_key=mem.rows[left][1]
