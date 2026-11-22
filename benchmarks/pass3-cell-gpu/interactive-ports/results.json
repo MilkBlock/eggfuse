@@ -1,0 +1,91 @@
+{
+  "held_out": 12,
+  "train_cases": 12,
+  "skip_pairs": 16,
+  "arms": {
+    "leaf": {
+      "source_equal": 12,
+      "strict_equal": 4,
+      "paid": 32,
+      "receiver_reads": 40,
+      "queries": 106,
+      "pointer_scores": 878,
+      "encodings": 136,
+      "internal": 0,
+      "rejected": 0,
+      "transfers": 8
+    },
+    "full": {
+      "source_equal": 12,
+      "strict_equal": 4,
+      "paid": 24,
+      "receiver_reads": 40,
+      "queries": 106,
+      "pointer_scores": 878,
+      "encodings": 136,
+      "internal": 8,
+      "rejected": 0,
+      "transfers": 8
+    },
+    "learned": {
+      "source_equal": 12,
+      "strict_equal": 4,
+      "paid": 24,
+      "receiver_reads": 40,
+      "queries": 106,
+      "pointer_scores": 878,
+      "encodings": 136,
+      "internal": 8,
+      "rejected": 0,
+      "transfers": 8
+    },
+    "bad-owner": {
+      "source_equal": 4,
+      "strict_equal": 4,
+      "paid": 24,
+      "receiver_reads": 16,
+      "queries": 106,
+      "pointer_scores": 850,
+      "encodings": 116,
+      "internal": 0,
+      "rejected": 8,
+      "transfers": 4
+    },
+    "stale": {
+      "source_equal": 4,
+      "strict_equal": 4,
+      "paid": 24,
+      "receiver_reads": 16,
+      "queries": 106,
+      "pointer_scores": 850,
+      "encodings": 116,
+      "internal": 0,
+      "rejected": 8,
+      "transfers": 4
+    },
+    "old-owner": {
+      "source_equal": 8,
+      "strict_equal": 4,
+      "paid": 24,
+      "receiver_reads": 36,
+      "queries": 106,
+      "pointer_scores": 878,
+      "encodings": 132,
+      "internal": 8,
+      "rejected": 4,
+      "transfers": 8
+    },
+    "unconditioned": {
+      "source_equal": 4,
+      "strict_equal": 4,
+      "paid": 16,
+      "receiver_reads": 16,
+      "queries": 120,
+      "pointer_scores": 972,
+      "encodings": 116,
+      "internal": 0,
+      "rejected": 0,
+      "transfers": 4
+    }
+  }
+}
