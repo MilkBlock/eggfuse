@@ -1,0 +1,263 @@
+{
+  "cpu": [
+    {
+      "encoding": "vocabulary",
+      "width": 16,
+      "steps": 200,
+      "seed": 27,
+      "targets": 2069,
+      "best_possible_with_beam": 2068,
+      "results": {
+        "all_pairs": {
+          "correct": 2069,
+          "extra": 0,
+          "missed": 0,
+          "median_ms": 2.023915993049741,
+          "cached_ms": 1.7601249273866415,
+          "renamed_correct": 2069,
+          "renamed_extra": 0
+        },
+        "blind": {
+          "correct": 783,
+          "extra": 0,
+          "missed": 1286,
+          "median_ms": 1.119833905249834,
+          "cached_ms": 0.8985830936580896,
+          "renamed_correct": 783,
+          "renamed_extra": 0
+        },
+        "pooled": {
+          "correct": 1362,
+          "extra": 0,
+          "missed": 707,
+          "median_ms": 1.2609581463038921,
+          "cached_ms": 1.072749961167574,
+          "renamed_correct": 1265,
+          "renamed_extra": 0
+        }
+      }
+    },
+    {
+      "encoding": "vocabulary",
+      "width": 64,
+      "steps": 0,
+      "seed": 27,
+      "targets": 2069,
+      "best_possible_with_beam": 2068,
+      "results": {
+        "all_pairs": {
+          "correct": 2069,
+          "extra": 0,
+          "missed": 0,
+          "median_ms": 1.9991251174360514,
+          "cached_ms": 1.7549998592585325,
+          "renamed_correct": 2069,
+          "renamed_extra": 0
+        },
+        "blind": {
+          "correct": 783,
+          "extra": 0,
+          "missed": 1286,
+          "median_ms": 1.3360839802771807,
+          "cached_ms": 1.0962500236928463,
+          "renamed_correct": 783,
+          "renamed_extra": 0
+        },
+        "pooled": {
+          "correct": 1624,
+          "extra": 0,
+          "missed": 445,
+          "median_ms": 1.5587091911584139,
+          "cached_ms": 1.3152910396456718,
+          "renamed_correct": 1631,
+          "renamed_extra": 0
+        }
+      }
+    },
+    {
+      "encoding": "vocabulary",
+      "width": 64,
+      "steps": 200,
+      "seed": 27,
+      "targets": 2069,
+      "best_possible_with_beam": 2068,
+      "results": {
+        "all_pairs": {
+          "correct": 2069,
+          "extra": 0,
+          "missed": 0,
+          "median_ms": 2.038083039224148,
+          "cached_ms": 1.7659591976553202,
+          "renamed_correct": 2069,
+          "renamed_extra": 0
+        },
+        "blind": {
+          "correct": 783,
+          "extra": 0,
+          "missed": 1286,
+          "median_ms": 1.352167222648859,
+          "cached_ms": 1.1018330696970224,
+          "renamed_correct": 783,
+          "renamed_extra": 0
+        },
+        "pooled": {
+          "correct": 1871,
+          "extra": 0,
+          "missed": 198,
+          "median_ms": 1.5339578967541456,
+          "cached_ms": 1.2867089826613665,
+          "renamed_correct": 1631,
+          "renamed_extra": 0
+        }
+      }
+    },
+    {
+      "encoding": "vocabulary",
+      "width": 128,
+      "steps": 0,
+      "seed": 27,
+      "targets": 2069,
+      "best_possible_with_beam": 2068,
+      "results": {
+        "all_pairs": {
+          "correct": 2069,
+          "extra": 0,
+          "missed": 0,
+          "median_ms": 2.306584035977721,
+          "cached_ms": 1.851250184699893,
+          "renamed_correct": 2069,
+          "renamed_extra": 0
+        },
+        "blind": {
+          "correct": 783,
+          "extra": 0,
+          "missed": 1286,
+          "median_ms": 1.701833913102746,
+          "cached_ms": 1.2445829343050718,
+          "renamed_correct": 783,
+          "renamed_extra": 0
+        },
+        "pooled": {
+          "correct": 1809,
+          "extra": 0,
+          "missed": 260,
+          "median_ms": 1.981999957934022,
+          "cached_ms": 1.5608330722898245,
+          "renamed_correct": 1822,
+          "renamed_extra": 0
+        }
+      }
+    },
+    {
+      "encoding": "vocabulary",
+      "width": 128,
+      "steps": 200,
+      "seed": 27,
+      "targets": 2069,
+      "best_possible_with_beam": 2068,
+      "results": {
+        "all_pairs": {
+          "correct": 2069,
+          "extra": 0,
+          "missed": 0,
+          "median_ms": 2.307667164131999,
+          "cached_ms": 1.852167071774602,
+          "renamed_correct": 2069,
+          "renamed_extra": 0
+        },
+        "blind": {
+          "correct": 783,
+          "extra": 0,
+          "missed": 1286,
+          "median_ms": 1.709250034764409,
+          "cached_ms": 1.244999933987856,
+          "renamed_correct": 783,
+          "renamed_extra": 0
+        },
+        "pooled": {
+          "correct": 2068,
+          "extra": 0,
+          "missed": 1,
+          "median_ms": 2.0093750208616257,
+          "cached_ms": 1.576709095388651,
+          "renamed_correct": 1822,
+          "renamed_extra": 0
+        }
+      }
+    },
+    {
+      "encoding": "buckets",
+      "width": 256,
+      "steps": 0,
+      "seed": 27,
+      "targets": 2069,
+      "best_possible_with_beam": 2068,
+      "results": {
+        "all_pairs": {
+          "correct": 2069,
+          "extra": 0,
+          "missed": 0,
+          "median_ms": 3.849250031635165,
+          "cached_ms": 2.1443748846650124,
+          "renamed_correct": 2069,
+          "renamed_extra": 0
+        },
+        "blind": {
+          "correct": 783,
+          "extra": 0,
+          "missed": 1286,
+          "median_ms": 3.527167020365596,
+          "cached_ms": 1.8117500003427267,
+          "renamed_correct": 783,
+          "renamed_extra": 0
+        },
+        "pooled": {
+          "correct": 1727,
+          "extra": 0,
+          "missed": 342,
+          "median_ms": 4.158624913543463,
+          "cached_ms": 2.5270418263971806,
+          "renamed_correct": 1682,
+          "renamed_extra": 0
+        }
+      }
+    },
+    {
+      "encoding": "buckets",
+      "width": 256,
+      "steps": 200,
+      "seed": 27,
+      "targets": 2069,
+      "best_possible_with_beam": 2068,
+      "results": {
+        "all_pairs": {
+          "correct": 2069,
+          "extra": 0,
+          "missed": 0,
+          "median_ms": 3.835083218291402,
+          "cached_ms": 2.215416869148612,
+          "renamed_correct": 2069,
+          "renamed_extra": 0
+        },
+        "blind": {
+          "correct": 783,
+          "extra": 0,
+          "missed": 1286,
+          "median_ms": 3.5392078571021557,
+          "cached_ms": 1.83029193431139,
+          "renamed_correct": 783,
+          "renamed_extra": 0
+        },
+        "pooled": {
+          "correct": 2068,
+          "extra": 0,
+          "missed": 1,
+          "median_ms": 4.15704189799726,
+          "cached_ms": 2.58891680277884,
+          "renamed_correct": 2066,
+          "renamed_extra": 0
+        }
+      }
+    }
+  ]
+}
