@@ -201,6 +201,8 @@ def main(a):
                                     ("union",catalog["union"],"greedy"),("expanded",combined,"greedy"),
                                     ("wide_let_only",let_only,None),("wide",wide,"greedy"),("fixed_full",wide,"full"),
                                     *((("reuse_returns",dict(wide,reuse_returns=True),"greedy"),) if a.reuse_returns else ()), *guarded):
+                if a.parent_projection and name not in ("leaf","sub_expected_guard"):
+                    continue
                 if a.walk and not (a.depth_model and name.startswith("sub_")) and name not in ("leaf","all_literal","all_literal_reader") and not name.startswith(("walk","set")):
                     continue
                 if a.set_edges and not (a.depth_model and name.startswith("sub_")) and name not in ("leaf","all_literal","walk2_reuse1","set2","set8","set32","set2_reader","set8_reader","all_literal_reader"):
@@ -236,6 +238,9 @@ def main(a):
                     results[name].update(validate(data,cfg))
                 if cfg.get("row_guards"):
                     results[name]["guards"]=data["strict_named"]["row_guard_checks"]
+                    if a.parent_projection:
+                        from parent_projection import projection_profile
+                        results[name]["projection"] = projection_profile(data)
                     commits=Counter(
                         link[2][-1][-1] for link in data["strict_named"]["signed_commits"]
                         if len(recipe["rules"][link[2][-1][-1]]["query"])>1)
@@ -266,7 +271,7 @@ def main(a):
                     results[name]["reuse_committed"]=sum(
                         (r[0],tuple(r[1:4]),tuple(r[5:])) in used for r in captures)
                 print(case,name,paid,saved,flush=True)
-        if a.depth_model:
+        if a.depth_model and not a.parent_projection:
             if results["sub_deep"]["paid"] != results["set8_reader"]["paid"]:
                 raise ValueError((case,"forcing eight hops changed the fixed-depth control"))
         report["cases"][case] = results
@@ -289,7 +294,10 @@ if __name__ == "__main__":
     p.add_argument("--depth-model",type=Path)
     p.add_argument("--depth-variants",type=Path)
     p.add_argument("--row-guards",action="store_true")
+    p.add_argument("--parent-projection", action="store_true")
     args=p.parse_args()
+    if args.parent_projection and not args.row_guards:
+        p.error("--parent-projection evaluates the guarded policy")
     if args.row_guards and not args.depth_model:
         p.error("--row-guards compares the frozen depth policy")
     if args.depth_variants and not args.depth_model:

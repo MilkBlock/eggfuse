@@ -1,0 +1,746 @@
+{
+  "dot-product": {
+    "paid": 13455,
+    "visible": 2689,
+    "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+    "totals": {
+      "external_multi_parent_commits": 3648,
+      "one_prior_frame_covers_addresses": 240
+    },
+    "missing_by_arity": [
+      {
+        "arity": 2,
+        "missing": 0,
+        "count": 228
+      },
+      {
+        "arity": 2,
+        "missing": 1,
+        "count": 2459
+      },
+      {
+        "arity": 2,
+        "missing": 2,
+        "count": 12
+      },
+      {
+        "arity": 3,
+        "missing": 1,
+        "count": 75
+      },
+      {
+        "arity": 3,
+        "missing": 2,
+        "count": 499
+      },
+      {
+        "arity": 4,
+        "missing": 1,
+        "count": 45
+      },
+      {
+        "arity": 4,
+        "missing": 2,
+        "count": 35
+      },
+      {
+        "arity": 4,
+        "missing": 3,
+        "count": 88
+      },
+      {
+        "arity": 5,
+        "missing": 0,
+        "count": 12
+      },
+      {
+        "arity": 5,
+        "missing": 2,
+        "count": 10
+      },
+      {
+        "arity": 5,
+        "missing": 3,
+        "count": 68
+      },
+      {
+        "arity": 5,
+        "missing": 4,
+        "count": 117
+      }
+    ],
+    "families": [
+      {
+        "consumer": 286,
+        "producers": [
+          504
+        ],
+        "count": 68
+      },
+      {
+        "consumer": 286,
+        "producers": [
+          498
+        ],
+        "count": 35
+      },
+      {
+        "consumer": 286,
+        "producers": [
+          501
+        ],
+        "count": 26
+      },
+      {
+        "consumer": 286,
+        "producers": [
+          505
+        ],
+        "count": 20
+      },
+      {
+        "consumer": 279,
+        "producers": [
+          375
+        ],
+        "count": 14
+      },
+      {
+        "consumer": 289,
+        "producers": [
+          375
+        ],
+        "count": 14
+      },
+      {
+        "consumer": 286,
+        "producers": [
+          502
+        ],
+        "count": 14
+      },
+      {
+        "consumer": 249,
+        "producers": [
+          249
+        ],
+        "count": 12
+      },
+      {
+        "consumer": 24,
+        "producers": [
+          375
+        ],
+        "count": 8
+      },
+      {
+        "consumer": 49,
+        "producers": [
+          540
+        ],
+        "count": 7
+      },
+      {
+        "consumer": 243,
+        "producers": [
+          264
+        ],
+        "count": 5
+      },
+      {
+        "consumer": 231,
+        "producers": [
+          375
+        ],
+        "count": 4
+      },
+      {
+        "consumer": 539,
+        "producers": [
+          538
+        ],
+        "count": 3
+      },
+      {
+        "consumer": 49,
+        "producers": [
+          539
+        ],
+        "count": 3
+      },
+      {
+        "consumer": 49,
+        "producers": [
+          547
+        ],
+        "count": 2
+      },
+      {
+        "consumer": 279,
+        "producers": [
+          405
+        ],
+        "count": 2
+      },
+      {
+        "consumer": 49,
+        "producers": [
+          537
+        ],
+        "count": 1
+      },
+      {
+        "consumer": 296,
+        "producers": [
+          375
+        ],
+        "count": 1
+      },
+      {
+        "consumer": 286,
+        "producers": [
+          503
+        ],
+        "count": 1
+      }
+    ]
+  },
+  "sum-bits": {
+    "paid": 11863,
+    "visible": 2691,
+    "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "totals": {
+      "external_multi_parent_commits": 4428,
+      "one_prior_frame_covers_addresses": 216
+    },
+    "missing_by_arity": [
+      {
+        "arity": 2,
+        "missing": 0,
+        "count": 216
+      },
+      {
+        "arity": 2,
+        "missing": 1,
+        "count": 3535
+      },
+      {
+        "arity": 3,
+        "missing": 1,
+        "count": 44
+      },
+      {
+        "arity": 3,
+        "missing": 2,
+        "count": 468
+      },
+      {
+        "arity": 4,
+        "missing": 2,
+        "count": 11
+      },
+      {
+        "arity": 4,
+        "missing": 3,
+        "count": 19
+      },
+      {
+        "arity": 5,
+        "missing": 2,
+        "count": 5
+      },
+      {
+        "arity": 5,
+        "missing": 3,
+        "count": 34
+      },
+      {
+        "arity": 5,
+        "missing": 4,
+        "count": 84
+      },
+      {
+        "arity": 6,
+        "missing": 5,
+        "count": 4
+      },
+      {
+        "arity": 7,
+        "missing": 2,
+        "count": 2
+      },
+      {
+        "arity": 7,
+        "missing": 4,
+        "count": 1
+      },
+      {
+        "arity": 7,
+        "missing": 5,
+        "count": 1
+      },
+      {
+        "arity": 8,
+        "missing": 5,
+        "count": 4
+      }
+    ],
+    "families": [
+      {
+        "consumer": 286,
+        "producers": [
+          504
+        ],
+        "count": 71
+      },
+      {
+        "consumer": 286,
+        "producers": [
+          501
+        ],
+        "count": 29
+      },
+      {
+        "consumer": 286,
+        "producers": [
+          498
+        ],
+        "count": 26
+      },
+      {
+        "consumer": 286,
+        "producers": [
+          505
+        ],
+        "count": 20
+      },
+      {
+        "consumer": 324,
+        "producers": [
+          324
+        ],
+        "count": 16
+      },
+      {
+        "consumer": 289,
+        "producers": [
+          375
+        ],
+        "count": 10
+      },
+      {
+        "consumer": 286,
+        "producers": [
+          499
+        ],
+        "count": 8
+      },
+      {
+        "consumer": 279,
+        "producers": [
+          375
+        ],
+        "count": 4
+      },
+      {
+        "consumer": 49,
+        "producers": [
+          540
+        ],
+        "count": 4
+      },
+      {
+        "consumer": 523,
+        "producers": [
+          522
+        ],
+        "count": 4
+      },
+      {
+        "consumer": 124,
+        "producers": [
+          123
+        ],
+        "count": 4
+      },
+      {
+        "consumer": 328,
+        "producers": [
+          328
+        ],
+        "count": 4
+      },
+      {
+        "consumer": 243,
+        "producers": [
+          264
+        ],
+        "count": 3
+      },
+      {
+        "consumer": 49,
+        "producers": [
+          539
+        ],
+        "count": 2
+      },
+      {
+        "consumer": 286,
+        "producers": [
+          502
+        ],
+        "count": 2
+      },
+      {
+        "consumer": 286,
+        "producers": [
+          500
+        ],
+        "count": 2
+      },
+      {
+        "consumer": 289,
+        "producers": [
+          350
+        ],
+        "count": 2
+      },
+      {
+        "consumer": 539,
+        "producers": [
+          538
+        ],
+        "count": 1
+      },
+      {
+        "consumer": 49,
+        "producers": [
+          547
+        ],
+        "count": 1
+      },
+      {
+        "consumer": 286,
+        "producers": [
+          503
+        ],
+        "count": 1
+      },
+      {
+        "consumer": 49,
+        "producers": [
+          527
+        ],
+        "count": 1
+      },
+      {
+        "consumer": 321,
+        "producers": [
+          321
+        ],
+        "count": 1
+      }
+    ]
+  },
+  "3mm": {
+    "paid": 536680,
+    "visible": 92658,
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "totals": {
+      "external_multi_parent_commits": 144647,
+      "one_prior_frame_covers_addresses": 3997
+    },
+    "missing_by_arity": [
+      {
+        "arity": 2,
+        "missing": 0,
+        "count": 3667
+      },
+      {
+        "arity": 2,
+        "missing": 1,
+        "count": 109396
+      },
+      {
+        "arity": 2,
+        "missing": 2,
+        "count": 10
+      },
+      {
+        "arity": 3,
+        "missing": 1,
+        "count": 2271
+      },
+      {
+        "arity": 3,
+        "missing": 2,
+        "count": 10474
+      },
+      {
+        "arity": 4,
+        "missing": 1,
+        "count": 34
+      },
+      {
+        "arity": 4,
+        "missing": 2,
+        "count": 647
+      },
+      {
+        "arity": 4,
+        "missing": 3,
+        "count": 546
+      },
+      {
+        "arity": 5,
+        "missing": 0,
+        "count": 330
+      },
+      {
+        "arity": 5,
+        "missing": 2,
+        "count": 246
+      },
+      {
+        "arity": 5,
+        "missing": 3,
+        "count": 3237
+      },
+      {
+        "arity": 5,
+        "missing": 4,
+        "count": 13600
+      },
+      {
+        "arity": 6,
+        "missing": 4,
+        "count": 138
+      },
+      {
+        "arity": 7,
+        "missing": 2,
+        "count": 10
+      },
+      {
+        "arity": 7,
+        "missing": 6,
+        "count": 27
+      },
+      {
+        "arity": 8,
+        "missing": 5,
+        "count": 1
+      },
+      {
+        "arity": 8,
+        "missing": 6,
+        "count": 13
+      }
+    ],
+    "families": [
+      {
+        "consumer": 286,
+        "producers": [
+          501
+        ],
+        "count": 934
+      },
+      {
+        "consumer": 286,
+        "producers": [
+          504
+        ],
+        "count": 929
+      },
+      {
+        "consumer": 249,
+        "producers": [
+          249
+        ],
+        "count": 330
+      },
+      {
+        "consumer": 289,
+        "producers": [
+          375
+        ],
+        "count": 325
+      },
+      {
+        "consumer": 243,
+        "producers": [
+          264
+        ],
+        "count": 242
+      },
+      {
+        "consumer": 49,
+        "producers": [
+          540
+        ],
+        "count": 234
+      },
+      {
+        "consumer": 286,
+        "producers": [
+          498
+        ],
+        "count": 193
+      },
+      {
+        "consumer": 286,
+        "producers": [
+          505
+        ],
+        "count": 170
+      },
+      {
+        "consumer": 286,
+        "producers": [
+          499
+        ],
+        "count": 119
+      },
+      {
+        "consumer": 324,
+        "producers": [
+          324
+        ],
+        "count": 101
+      },
+      {
+        "consumer": 133,
+        "producers": [
+          375
+        ],
+        "count": 74
+      },
+      {
+        "consumer": 231,
+        "producers": [
+          375
+        ],
+        "count": 72
+      },
+      {
+        "consumer": 296,
+        "producers": [
+          375
+        ],
+        "count": 51
+      },
+      {
+        "consumer": 243,
+        "producers": [
+          237
+        ],
+        "count": 38
+      },
+      {
+        "consumer": 49,
+        "producers": [
+          547
+        ],
+        "count": 32
+      },
+      {
+        "consumer": 526,
+        "producers": [
+          375
+        ],
+        "count": 30
+      },
+      {
+        "consumer": 286,
+        "producers": [
+          502
+        ],
+        "count": 25
+      },
+      {
+        "consumer": 279,
+        "producers": [
+          375
+        ],
+        "count": 21
+      },
+      {
+        "consumer": 321,
+        "producers": [
+          321
+        ],
+        "count": 19
+      },
+      {
+        "consumer": 539,
+        "producers": [
+          535
+        ],
+        "count": 18
+      },
+      {
+        "consumer": 328,
+        "producers": [
+          328
+        ],
+        "count": 14
+      },
+      {
+        "consumer": 279,
+        "producers": [
+          405
+        ],
+        "count": 7
+      },
+      {
+        "consumer": 549,
+        "producers": [
+          375
+        ],
+        "count": 4
+      },
+      {
+        "consumer": 550,
+        "producers": [
+          375
+        ],
+        "count": 4
+      },
+      {
+        "consumer": 49,
+        "producers": [
+          539
+        ],
+        "count": 4
+      },
+      {
+        "consumer": 243,
+        "producers": [
+          240
+        ],
+        "count": 3
+      },
+      {
+        "consumer": 539,
+        "producers": [
+          538
+        ],
+        "count": 2
+      },
+      {
+        "consumer": 286,
+        "producers": [
+          503
+        ],
+        "count": 1
+      },
+      {
+        "consumer": 280,
+        "producers": [
+          406
+        ],
+        "count": 1
+      }
+    ]
+  }
+}
