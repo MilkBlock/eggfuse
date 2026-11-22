@@ -25,11 +25,15 @@ def main(a):
     capture=e/'compound-boundary-capture-v1'/a.case
     with np.load(capture/'neural-inputs.npz') as z:
         witnesses=z['witnesses'];pub=z['publications'];features=z['features']
-    with np.load(e/'recurrent-composition-targets-20261120'/split/(a.case+'.npz')) as z:
+    target_file=e/'compound-boundary-targets-v1'/split/(a.case+'.npz')
+    with np.load(target_file) as z:
         targets=z['targets']
+        saved={k:z[k] for k in ('imports','exports','outside_uses')}
     with np.load(gold/'output.npz') as z: rhs=z['rhs']
     a.out.mkdir(parents=True,exist_ok=False)
     boundary=boundaries(targets,pub,witnesses)
+    for key,records in boundary.items():
+        np.testing.assert_array_equal(records,saved[key])
     np.savez_compressed(a.out/'boundary-targets.npz',targets=targets,publications=pub,**boundary)
     report={}
     for unit in policy['three_step']:

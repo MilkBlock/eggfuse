@@ -86,3 +86,73 @@ python "$d/chain_check.py" "$e/repair-bake-families-20261120" \
   "$e/pass3-release-reproduction-20261120" "$e/rotary-axes-20261119/packed-1703/final.pt" \
   "$d/three-step-policy.json" "$e/new-three-step-sum" --case sum-bits --serial-cpu
 ```
+
+### Recursive Bake actions, named boundaries and measured issuance returns
+
+The default supervised trainer compiles every composed unit observed in its
+training split. The previous three-step checkpoint remains loadable. The four
+training families have 560 three-step and 106 four-step paths. There are six
+three-step recipes and one four-step recipe. The compiler interns their suffixes
+and checks effect-to-pivot table compatibility. Claim storage grows with the
+maximum number of hops in the catalog. Explicit unit lists still support ablations.
+
+Capture records the matched physical row, epoch and publication ticket for
+each relational query atom of the source winner. Target generation records
+external inputs, all observed returned ports and individual outside uses.
+A ticket can move to a surviving row during repair. The recorded consumer
+address preserves that distinction. The source engine still publishes ordinary
+effects. The takeover changes the route supplying the input binding.
+
+On an actual producer return a side input with a determined functional key
+can be named by one point lookup. The consumer checks that physical row, epoch,
+visibility and fields. If the name is missing or expires, exact matching can
+still supply the binding. A free relational join without a certified donor
+Entry lies outside this action bank. The named-input buffer in the experiment
+costs 98,312 bytes per execution. Source-witness capture is optional audit
+instrumentation.
+
+In the reference-selected affine-twins receiver check, 82 complete recipes
+ran across seven separate interventions. Unit 44 consumed the two expected
+external tuple-length witnesses. Staling one signed version removed precisely
+one internal winner. Unit 48 completed four steps 15 times. All witness arrays
+and public returns matched the source, including outside consumers. The 973
+outside uses are counted across instances and interventions. These results
+measure verifier capability on known eligible inputs. [Per-recipe controls](recipe-boundary-results.json)
+
+**Return training.** At a prospective decision the recursive actor executes
+two trajectories from identical preceding token streams and identical current
+root rows. One arm selects the action, the other its pair prefix or silence.
+Later tokens are generated afresh in both arms. All 56 pairs preserve the
+reference schedule, ordered RHS inputs, writes, Spine, unions and final rows.
+The initial 14 pairs explore each composed unit on visible root candidates.
+The following 42 pairs use ordinarily generated roots and compare a non-null
+child against silence. The trial selector uses no later outcome. The policy
+receives the measured difference in active tokens plus residual exact RHS
+bindings, charging one unit each. The trainer differentiates the expected
+return under the two actions' conditional softmax and reuses measured
+decision contexts between episodes. It updates the original child scores,
+row biases and null score. Ten actions in the full arms obtained zero child
+commits. No future label enters inference.
+
+Across six comparison workloads the frozen return-trained policy emitted 63
+fewer tokens and incurred 32 additional exact RHS bindings, improving that
+objective by 31 units. Completed three/four-step instances fell from 29 to
+24. Earlier exploratory training on long actions alone regressed on this
+comparison; these workloads are reused comparisons. These are operation
+counts for the standalone serial CPU kernel control. They do not establish
+Rust-runtime or GPU speedups. Apple Metal shader compilation failed to reach
+MTLCompilerService (error 141). [Frozen policy](baked-returns-policy.json) ·
+[Workload and training results](baked-returns-results.json)
+
+Run the following commands using the shared compute queue and worktree launcher,
+with fresh output directories. Set `e` to the experiment root, `d` to this
+directory, and `ref`, `corpus`, `reader` as in the capture commands above.
+
+```sh
+python "$d/compose_capture.py" "$corpus" "$ref" "$reader" "$e/compound-boundary-capture-v1" --splits train development --serial-cpu
+python "$d/compose_targets.py" "$corpus" "$ref" "$e/compound-boundary-capture-v1" "$e/compound-boundary-targets-v1"
+python "$d/compound_model.py" "$ref/sum-bits/program.json" "$e/recurrent-receipts-20261120" "$e/compound-boundary-targets-v1" "$e/new-supervised" --seeds 1703
+python "$d/recipe_check.py" "$e" "$e/new-supervised/train-1703/policy.json" "$e/new-recipe-check"
+python "$d/issuance_returns.py" "$e" "$e/new-supervised/train-1703" "$e/new-returns" --updates 56
+python "$d/returns_evaluate.py" "$e" "$e/new-supervised/train-1703/policy.json" "$e/new-returns/policy.json" "$e/new-eval" --cases histogram-scatter gated-state sum-bits dot-product gemm-bias-relu stable-argmax
+```

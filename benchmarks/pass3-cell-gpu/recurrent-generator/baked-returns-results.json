@@ -1,0 +1,215 @@
+{
+  "backend": "serial CPU grid kernels",
+  "split": "four train families, six comparison workloads",
+  "episodes": 56,
+  "issuer_cases": {
+    "exploratory": 14,
+    "ordinary": 42
+  },
+  "training_return_histogram": {
+    "1": 15,
+    "-1": 6,
+    "0": 35
+  },
+  "no_child_committed_in_full_arm": 10,
+  "per_case": {
+    "histogram-scatter": {
+      "supervised": {
+        "issued": 112,
+        "exact": 6683,
+        "proposed_rhs": 59,
+        "composed": 15,
+        "complete": 3,
+        "runs": 1195,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      },
+      "returns": {
+        "issued": 99,
+        "exact": 6691,
+        "proposed_rhs": 51,
+        "composed": 16,
+        "complete": 2,
+        "runs": 1195,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      }
+    },
+    "gated-state": {
+      "supervised": {
+        "issued": 108,
+        "exact": 6060,
+        "proposed_rhs": 58,
+        "composed": 15,
+        "complete": 3,
+        "runs": 1163,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      },
+      "returns": {
+        "issued": 99,
+        "exact": 6067,
+        "proposed_rhs": 51,
+        "composed": 15,
+        "complete": 2,
+        "runs": 1163,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      }
+    },
+    "sum-bits": {
+      "supervised": {
+        "issued": 205,
+        "exact": 7175,
+        "proposed_rhs": 90,
+        "composed": 33,
+        "complete": 7,
+        "runs": 1428,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      },
+      "returns": {
+        "issued": 186,
+        "exact": 7179,
+        "proposed_rhs": 86,
+        "composed": 34,
+        "complete": 7,
+        "runs": 1428,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      }
+    },
+    "dot-product": {
+      "supervised": {
+        "issued": 119,
+        "exact": 6631,
+        "proposed_rhs": 73,
+        "composed": 12,
+        "complete": 6,
+        "runs": 1535,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      },
+      "returns": {
+        "issued": 108,
+        "exact": 6636,
+        "proposed_rhs": 68,
+        "composed": 12,
+        "complete": 5,
+        "runs": 1535,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      }
+    },
+    "gemm-bias-relu": {
+      "supervised": {
+        "issued": 128,
+        "exact": 15389,
+        "proposed_rhs": 73,
+        "composed": 18,
+        "complete": 7,
+        "runs": 1652,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      },
+      "returns": {
+        "issued": 124,
+        "exact": 15391,
+        "proposed_rhs": 71,
+        "composed": 18,
+        "complete": 6,
+        "runs": 1652,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      }
+    },
+    "stable-argmax": {
+      "supervised": {
+        "issued": 110,
+        "exact": 8133,
+        "proposed_rhs": 57,
+        "composed": 16,
+        "complete": 3,
+        "runs": 1149,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      },
+      "returns": {
+        "issued": 103,
+        "exact": 8139,
+        "proposed_rhs": 51,
+        "composed": 16,
+        "complete": 2,
+        "runs": 1149,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      }
+    }
+  },
+  "no_exact": {
+    "sum-bits": {
+      "supervised": {
+        "issued": 0,
+        "exact": 0,
+        "proposed_rhs": 0,
+        "composed": 0,
+        "complete": 0,
+        "runs": 208,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      },
+      "returns": {
+        "issued": 0,
+        "exact": 0,
+        "proposed_rhs": 0,
+        "composed": 0,
+        "complete": 0,
+        "runs": 208,
+        "boundary": {
+          "producer_point_lookups": 0,
+          "consumer_direct_reads": 0,
+          "reserved_bytes": 98312
+        }
+      }
+    }
+  }
+}
