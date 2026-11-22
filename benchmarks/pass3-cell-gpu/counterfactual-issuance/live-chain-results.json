@@ -1,0 +1,131 @@
+{
+  "cases": {
+    "dot-product": {
+      "scheduled_calls": 6,
+      "issuer_index_probes": 1008,
+      "publication_version_checks": 852,
+      "publication_payload_reads": 163,
+      "ordinary_target_packets": 116,
+      "live_target_packets": 116,
+      "target_commits": 116,
+      "paid_control": 8420,
+      "paid_live": 8420,
+      "signed": {
+        "visible_birth": 2974,
+        "effective_write": 2159,
+        "effective_union": 341,
+        "visibility_change": 0
+      },
+      "ept_control": 0.6501187648456057,
+      "ept_live": 0.6501187648456057,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "events": true,
+        "runs": true,
+        "schedule": true,
+        "state_sha": true,
+        "ledger": true,
+        "commit_inputs": true
+      },
+      "ledger_sha256": "9e1a9f99f07770a2ce93a65e8d1ef1b542615a3caeb18d12ed50c524fc971b18"
+    },
+    "sum-bits": {
+      "scheduled_calls": 5,
+      "issuer_index_probes": 849,
+      "publication_version_checks": 752,
+      "publication_payload_reads": 121,
+      "ordinary_target_packets": 101,
+      "live_target_packets": 101,
+      "target_commits": 101,
+      "paid_control": 7172,
+      "paid_live": 7172,
+      "signed": {
+        "visible_birth": 3331,
+        "effective_write": 1449,
+        "effective_union": 526,
+        "visibility_change": 75
+      },
+      "ept_control": 0.7502788622420524,
+      "ept_live": 0.7502788622420524,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "events": true,
+        "runs": true,
+        "schedule": true,
+        "state_sha": true,
+        "ledger": true,
+        "commit_inputs": true
+      },
+      "ledger_sha256": "4cc4c1c34874ef596379c3218854655706eff5a13bb0c7e1e4a38fc0cd70e0fa"
+    },
+    "3mm": {
+      "scheduled_calls": 7,
+      "issuer_index_probes": 21501,
+      "publication_version_checks": 19535,
+      "publication_payload_reads": 3084,
+      "ordinary_target_packets": 2386,
+      "live_target_packets": 2366,
+      "target_commits": 2366,
+      "paid_control": 261233,
+      "paid_live": 261213,
+      "signed": {
+        "visible_birth": 111901,
+        "effective_write": 81136,
+        "effective_union": 11544,
+        "visibility_change": 0
+      },
+      "ept_control": 0.7831361275183457,
+      "ept_live": 0.7831960890154778,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "events": true,
+        "runs": true,
+        "schedule": true,
+        "state_sha": true,
+        "ledger": true,
+        "commit_inputs": true
+      },
+      "ledger_sha256": "63a923887e958fe32e63821392e62a71a9a52e8a21058c94cdc3af49899af2d0",
+      "timing": {
+        "live": {
+          "native_ms": [
+            4259.698416,
+            5062.026083,
+            4650.854625,
+            4654.319834
+          ],
+          "request_ms": [
+            10216.916040983051,
+            10195.949542103335,
+            9565.058334032074,
+            10365.089209051803
+          ]
+        },
+        "ordinary": {
+          "native_ms": [
+            4683.265042,
+            5344.016167000001,
+            4625.223166,
+            4513.371667
+          ],
+          "request_ms": [
+            12361.90625000745,
+            11525.543957948685,
+            9569.641875103116,
+            10326.473917113617
+          ]
+        }
+      }
+    }
+  },
+  "negative_controls": {
+    "--withhold-live-chain": "AssertionError",
+    "--corrupt-chain-owner": "invalid live chain owner slot or revision"
+  }
+}

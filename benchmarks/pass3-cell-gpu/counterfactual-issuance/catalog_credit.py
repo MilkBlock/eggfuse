@@ -246,6 +246,7 @@ def main(a):
                 if a.fixed_subtuple_depth and name == "sub_expected_guard":
                     cfg["depth_reader"] = dict(cfg["depth_reader"], fixed_depth=a.fixed_subtuple_depth)
                 request = matrix["cfg"](req,cfg,True)
+                if a.live_chain:request["chain_watch"]=312
                 if a.pair_owner and name=="sub_expected_guard":
                     target, column, pairs = wiring(recipe,a.pair_tables)
                     trace_rules = set(pairs)
@@ -266,6 +267,7 @@ def main(a):
                     shadow=run(dict(request,pair_policy=dict(request["pair_policy"],takeover=False)))
                     shadow_lanes=Counter(map(tuple,shadow["root_recipe"]["pair_external"]))
                     shadow_paid=study["packets"](shadow)
+                    if a.live_chain:shadow_chain=shadow["root_recipe"]["chain_audit"]["lanes"][1]
                     del shadow
                 if a.source_delta and name=="sub_expected_guard":
                     size_rule,=[i for i,r in enumerate(recipe["rules"])
@@ -292,6 +294,11 @@ def main(a):
                             report["address_controls"] = checkpoints
                     if a.history_release:
                         request["history_head"]["release"] = report["source_delta_training"]["arms"]["mixed"]["actions"]
+                if a.live_chain and name=="sub_expected_guard":
+                    from chain_address_reader import train
+                    layout = [[arg["slot"] for arg in atom["args"]] for atom in recipe["rules"][312]["query"]]
+                    (left,m,i,j),(n,right,l,k) = train(layout, True)
+                    request["live_chain"] = dict(rule=312,withhold=a.withhold_live_chain,corrupt_owner=a.corrupt_chain_owner,wires=[[left,m,i,j],[right,n,k,l]])
                 if a.chain_packets and name=="sub_expected_guard":
                     if a.chain_gate:
                         from chain_address_reader import release_gate
@@ -304,6 +311,8 @@ def main(a):
                                              for atom in recipe["rules"][rid]["query"]}
                 if a.ept:request["ept"]=True
                 data = run(request)
+                if a.live_chain and data.get("source_error"):
+                    raise ValueError((case,name,data["source_error"]))
                 if a.point_catalog and name=="sub_expected_guard":
                     from point_catalog import rank
                     report.setdefault("point_catalog",{})[case]=rank(data,recipe)
@@ -332,13 +341,18 @@ def main(a):
                 skipped=sum(c[0]+c[1] for c in delta_counts.values())
                 if skipped!=data.get("size_omission_checks",0):
                     raise ValueError("source omissions lack independent rejection receipts")
+                chain_saved=0
+                if a.live_chain:
+                    current_chain=data["root_recipe"]["chain_audit"]["lanes"][1]
+                    if name=="leaf":leaf_chain=current_chain
+                    chain_saved=leaf_chain-current_chain
                 displaced_rejects=0
                 if a.pair_takeover and name=="sub_expected_guard":
                     from pair_owner import compare_residual
                     displaced_rejects=compare_residual(data,shadow_lanes)
-                    if shadow_paid-paid != len(pair_children)+displaced_rejects+skipped:
+                    if shadow_paid-paid != len(pair_children)+displaced_rejects+skipped+(shadow_chain-current_chain if a.live_chain else 0):
                         raise ValueError((case,"unexplained difference from guarded shadow",shadow_paid,paid,len(pair_children),displaced_rejects))
-                if saved != len(ledger[0])+len(pair_children)+displaced_rejects+skipped or paid != counts["packets"]:
+                if saved != len(ledger[0])+len(pair_children)+displaced_rejects+skipped+chain_saved or paid != counts["packets"]:
                     raise ValueError((case,name,"unattributed packet"))
                 results[name] = dict(paid=paid, saved=saved, visible=counts["visible"], fept=counts["fept"],
                                      terminal=counts["set_internal"], checks=counts["checks"],
@@ -376,6 +390,11 @@ def main(a):
                             if a.export_reader_history:
                                 from history_reader import export_history
                                 export_history(data, recipe, a.out / (case + "-reader-history.json"))
+                            if a.live_chain:
+                                results[name]["live_chain"] = data["root_recipe"]["chain_audit"]["live"]
+                                results[name]["chain_lanes"] = dict(leaf=leaf_chain,shadow=shadow_chain,live=current_chain)
+                                if not results[name]["live_chain"]:
+                                    raise ValueError("missing live takeover")
                             if a.chain_packets:
                                 from independent_history import check_packets
                                 results[name]["chain_checked"] = check_packets(data,request["chain_checks"])
@@ -553,6 +572,26 @@ def main(a):
                                 raise ValueError("scale comparison needs verified history baseline")
                             arm["scale_comparison"] = compare(run, dict(request, history_head=head),
                                 takeover, recipe, reference, study["packets"])
+                        if a.live_chain:
+                            audit=takeover["root_recipe"]["chain_audit"]
+                            arm["live_chain"] = dict(counts=audit["live"], lanes=audit["lanes"][1],
+                                                     commits=sum(row[3] == 312 for row in actual), total_source=len(actual))
+                        if a.time_live_chain:
+                            from time import perf_counter
+                            config=dict(request,history_head=head)
+                            controls={"live":config,"ordinary":{k:v for k,v in config.items() if k!="live_chain"}}
+                            samples={key:dict(native_ms=[],request_ms=[]) for key in controls}
+                            for order in (controls,reversed(controls),controls,reversed(controls)):
+                                for key in order:
+                                    start=perf_counter()
+                                    sample=run(controls[key])
+                                    elapsed=1000*(perf_counter()-start)
+                                    if any(sample.get(k)!=takeover[k] for k in ("rhs","writes","runs","schedule","state_sha","resumes","events")):
+                                        raise ValueError(("timed chain changed reference",key))
+                                    samples[key]["native_ms"].append(sample["ms"])
+                                    samples[key]["request_ms"].append(elapsed)
+                                    del sample
+                            arm["live_chain_timing"]=samples
                         results[name]["history_takeover"] = arm
                 print(case,name,paid,saved,flush=True)
         if a.depth_model and not a.parent_projection:
@@ -609,6 +648,10 @@ if __name__ == "__main__":
     p.add_argument("--history-tail",action="store_true")
     p.add_argument("--history-takeover",action="store_true")
     p.add_argument("--chain-history", action="store_true")
+    p.add_argument("--corrupt-chain-owner", action="store_true")
+    p.add_argument("--time-live-chain", action="store_true")
+    p.add_argument("--withhold-live-chain", action="store_true")
+    p.add_argument("--live-chain", action="store_true")
     p.add_argument("--chain-gate", action="store_true")
     p.add_argument("--chain-packets", type=Path)
     p.add_argument("--chain-lifecycle", action="store_true")
@@ -643,13 +686,14 @@ if __name__ == "__main__":
     if args.point_claims=="gated" and not args.source_delta:p.error("gated ownership requires trained --source-delta")
     args.history_tail_negative |= bool(args.point_claims)
     args.history_tail |= args.history_tail_depth > 1 or args.history_tail_context or args.history_tail_negative
-    args.history_takeover |= args.history_tail or args.history_address
+    args.history_takeover |= args.history_tail or args.history_address or args.time_live_chain
     if args.chain_gate and not args.chain_packets:
         p.error("--chain-gate requires --chain-packets")
     args.chain_lifecycle |= args.chain_gate
     args.chain_returns |= args.chain_lifecycle
+    args.live_chain |= args.withhold_live_chain or args.time_live_chain or args.corrupt_chain_owner
     args.chain_history |= args.chain_returns
-    args.history_ports |= bool(args.chain_packets) or args.chain_history or args.export_reader_history or args.point_catalog
+    args.history_ports |= args.live_chain or bool(args.chain_packets) or args.chain_history or args.export_reader_history or args.point_catalog
     args.history_ports |= args.history_takeover or args.history_initial or args.history_updates
     args.ept |= args.history_takeover
     args.pair_takeover |= args.history_takeover

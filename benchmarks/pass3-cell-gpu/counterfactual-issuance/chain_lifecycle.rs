@@ -103,6 +103,22 @@ pub(crate) fn chain_function_result(g: &Graph, t: usize, i: usize, op: usize) {
         let Some((owner, _, _, rid, _)) = s.active else {
             return;
         };
+        if let Some(live) = &mut s.live_chain
+            && rid != live.target
+            && live.tables.contains(&t)
+            && let Some(row) = g.function(i)
+        {
+            live.returned(
+                rid,
+                t,
+                row.witness,
+                row.epoch,
+                g.epoch,
+                (owner, op as i64),
+                &row.values,
+                row.values.last().unwrap(),
+            );
+        }
         let Some(trace) = &mut s.chain_lifecycle else {
             return;
         };
@@ -127,6 +143,9 @@ pub(crate) fn chain_function_result(g: &Graph, t: usize, i: usize, op: usize) {
 
 pub(crate) fn chain_updates(g: &Graph) -> Result<()> {
     STATE.with_borrow_mut(|s| {
+        if let Some(chain) = s.as_mut().and_then(|s| s.live_chain.as_mut()) {
+            chain.publish(g)?;
+        }
         let Some(trace) = s.as_mut().and_then(|s| s.chain_lifecycle.as_mut()) else {
             return Ok(());
         };
