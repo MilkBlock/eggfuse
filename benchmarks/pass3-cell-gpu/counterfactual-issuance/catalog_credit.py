@@ -32,6 +32,26 @@ def main(a):
     w, histogram = fit(json.loads(a.training.read_bytes())["pairs"])
     lib = json.loads((here.parent / "filtered-explicit-parent/library.json").read_bytes())
     report = dict(training_paid_gain=histogram, weights=w, cases={})
+    if a.live:
+        from route_credit import run_split, fit as fit_reader
+        reader = {}
+        initial = run_split(a,"dot-product",84700,64)
+        fit_reader(initial,24,500,export=reader)
+        if a.recurrent:
+            from recurrent_credit import collect
+            later, evidence = collect(a,reader)
+            recurrent = {}
+            fit_reader(initial+later,24,500,export=recurrent)
+            first = [s for s in later if s[2]==1]
+            post = [s for s in later if s[2]>1]
+            balanced = first[:max(0,len(first)-len(post))] + post[:len(first)]
+            first_model, mixed_model = {}, {}
+            fit_reader(initial+first,24,500,export=first_model)
+            fit_reader(initial+balanced,24,500,export=mixed_model)
+            evidence["additional_samples"] = dict(first_only=len(first),mixed=len(balanced),all=len(later))
+            report["generated_interventions"]=evidence
+            (a.out/"recurrent-model.json").write_text(json.dumps(recurrent)+"\n")
+        (a.out/"route-model.json").write_text(json.dumps(reader)+"\n")
     for case in a.cases:
         program, plans, req, spec = study["setup"](a, case)
         matrix = study["matrix"]
@@ -98,6 +118,19 @@ def main(a):
             all_paths.update((e,t) for e in eligible for t in tails.get(e[2], []))
             guarded.append(("all_literal",dict(wide,library=sorted(all_paths),
                             literal_consumers=True,reuse_returns=True),"greedy"))
+        if a.live:
+            _, cfg, _ = guarded[-1]
+            from route_credit import continuation_edges
+            route_edges = continuation_edges(recipe, spec)
+            guarded.extend((name,dict(cfg,route_reader=dict(reader,edges=route_edges,single_only=one)),"full")
+                           for name,one in (("live_one",True),("live_both",False)))
+            if a.recurrent:
+                for name, model in (("live_first_extra",first_model),("live_equal_mixed",mixed_model),
+                                    ("live_recurrent",recurrent)):
+                    guarded.append((name,dict(cfg,route_reader=dict(model,edges=route_edges)),"full"))
+                if a.expected:
+                    guarded.append(("expected_gain",dict(cfg,route_reader=dict(recurrent,
+                                    expected_gain=True,edges=route_edges)),"full"))
         baseline = None
         results = {}
         with study["src"].base.session(a.native,program,plans) as run:
@@ -105,6 +138,10 @@ def main(a):
                                     ("union",catalog["union"],"greedy"),("expanded",combined,"greedy"),
                                     ("wide_let_only",let_only,None),("wide",wide,"greedy"),("fixed_full",wide,"full"),
                                     *((("reuse_returns",dict(wide,reuse_returns=True),"greedy"),) if a.reuse_returns else ()), *guarded):
+                if a.live and name not in ("leaf","all_literal","live_one","live_both","live_first_extra","live_equal_mixed","live_recurrent","expected_gain"):
+                    continue
+                if a.expected and name not in ("leaf","all_literal","live_recurrent","expected_gain"):
+                    continue
                 cfg = dict(cfg)
                 if mode:
                     cfg.update(issuance_actor=dict(mode=mode, weights=w, seed=0),
@@ -123,6 +160,13 @@ def main(a):
                 results[name] = dict(paid=paid, saved=saved, visible=counts["visible"], fept=counts["fept"],
                                      terminal=counts["set_internal"], checks=counts["checks"],
                                      paths=len(cfg.get("library",[])), state_sha=counts["state_sha"])
+                if "route_reader" in cfg:
+                    choices, runs = data["strict_named"]["route_choices"]
+                    if not sum(choices) or runs < 2:
+                        raise ValueError((case,name,"reader did not execute across Runs"))
+                    results[name].update(choices=choices,decision_runs=runs)
+                    if "route_fallback" in data["strict_named"]:
+                        results[name]["fallback"]=data["strict_named"]["route_fallback"]
                 if name=="reuse_returns":
                     captures=data["strict_named"]["actual_reused_returns"]
                     used={(r[1],tuple(r[2][0]),tuple(r[3][0]))
@@ -142,4 +186,11 @@ if __name__ == "__main__":
     p.add_argument("--cases",nargs="+",default=["sum-bits","3mm"])
     p.add_argument("--reuse-returns",action="store_true")
     p.add_argument("--literal",action="store_true")
-    main(p.parse_args())
+    p.add_argument("--live",action="store_true")
+    p.add_argument("--recurrent",action="store_true")
+    p.add_argument("--expected",action="store_true")
+    args=p.parse_args()
+    args.recurrent |= args.expected
+    args.live |= args.recurrent
+    args.literal |= args.live
+    main(args)

@@ -88,7 +88,7 @@ def run_split(args, case, start, count, policy=None):
     return examples
 
 
-def fit(train, hidden, steps):
+def fit(train, hidden, steps, export=None):
     torch.manual_seed(17)
     encoder = torch.nn.Sequential(torch.nn.Linear(15, hidden), torch.nn.Tanh())
     head = torch.nn.Linear(hidden, 3)
@@ -101,6 +101,10 @@ def fit(train, hidden, steps):
         opt.zero_grad()
         (head(encoder(batch).amax(dim=1))-y).square().mean().backward()
         opt.step()
+
+    if export is not None:
+        export.update(encoder=encoder[0].weight.tolist(), bias=encoder[0].bias.tolist(),
+                      head=head.weight.tolist(), out=head.bias.tolist())
 
     @torch.no_grad()
     def scores(x):

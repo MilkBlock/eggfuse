@@ -1,0 +1,410 @@
+{
+  "training_paid_gain": {
+    "0": 71,
+    "2": 57
+  },
+  "weights": [
+    4.17172908782959,
+    4.096371173858643,
+    4.17172384262085
+  ],
+  "cases": {
+    "sum-bits": {
+      "leaf": {
+        "paid": 12662,
+        "saved": 0,
+        "visible": 2691,
+        "fept": 0.21252566735112938,
+        "terminal": 0,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 0,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "all_literal": {
+        "paid": 12089,
+        "saved": 573,
+        "visible": 2691,
+        "fept": 0.22259905699396146,
+        "terminal": 8,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 2544,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "live_one": {
+        "paid": 12097,
+        "saved": 565,
+        "visible": 2691,
+        "fept": 0.22245184756551212,
+        "terminal": 8,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 2544,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+        "choices": [
+          0,
+          8,
+          168,
+          0
+        ],
+        "decision_runs": 22
+      },
+      "live_both": {
+        "paid": 12097,
+        "saved": 565,
+        "visible": 2691,
+        "fept": 0.22245184756551212,
+        "terminal": 8,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 2544,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+        "choices": [
+          0,
+          8,
+          168,
+          0
+        ],
+        "decision_runs": 22
+      },
+      "live_first_extra": {
+        "paid": 12089,
+        "saved": 573,
+        "visible": 2691,
+        "fept": 0.22259905699396146,
+        "terminal": 8,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 2544,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+        "choices": [
+          43,
+          0,
+          125,
+          8
+        ],
+        "decision_runs": 22
+      },
+      "live_equal_mixed": {
+        "paid": 12097,
+        "saved": 565,
+        "visible": 2691,
+        "fept": 0.22245184756551212,
+        "terminal": 8,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 2544,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+        "choices": [
+          43,
+          8,
+          125,
+          0
+        ],
+        "decision_runs": 22
+      },
+      "live_recurrent": {
+        "paid": 12089,
+        "saved": 573,
+        "visible": 2691,
+        "fept": 0.22259905699396146,
+        "terminal": 8,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 2544,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+        "choices": [
+          43,
+          0,
+          125,
+          8
+        ],
+        "decision_runs": 22,
+        "fallback": 0
+      },
+      "expected_gain": {
+        "paid": 12089,
+        "saved": 573,
+        "visible": 2691,
+        "fept": 0.22259905699396146,
+        "terminal": 8,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 2544,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+        "choices": [
+          42,
+          1,
+          125,
+          8
+        ],
+        "decision_runs": 22,
+        "fallback": 0
+      }
+    },
+    "3mm": {
+      "leaf": {
+        "paid": 558074,
+        "saved": 0,
+        "visible": 92658,
+        "fept": 0.16603174489404632,
+        "terminal": 0,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 0,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+      },
+      "all_literal": {
+        "paid": 543316,
+        "saved": 14758,
+        "visible": 92658,
+        "fept": 0.17054163691111618,
+        "terminal": 203,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 11548,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+      },
+      "live_one": {
+        "paid": 543519,
+        "saved": 14555,
+        "visible": 92658,
+        "fept": 0.17047794097354463,
+        "terminal": 203,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 11548,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+        "choices": [
+          0,
+          203,
+          4384,
+          0
+        ],
+        "decision_runs": 34
+      },
+      "live_both": {
+        "paid": 543519,
+        "saved": 14555,
+        "visible": 92658,
+        "fept": 0.17047794097354463,
+        "terminal": 203,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 11548,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+        "choices": [
+          0,
+          203,
+          4384,
+          0
+        ],
+        "decision_runs": 34
+      },
+      "live_first_extra": {
+        "paid": 543422,
+        "saved": 14652,
+        "visible": 92658,
+        "fept": 0.17050837102656868,
+        "terminal": 203,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 11548,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+        "choices": [
+          1690,
+          0,
+          2694,
+          203
+        ],
+        "decision_runs": 34
+      },
+      "live_equal_mixed": {
+        "paid": 543625,
+        "saved": 14449,
+        "visible": 92658,
+        "fept": 0.17044469993101863,
+        "terminal": 203,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 11548,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+        "choices": [
+          1690,
+          203,
+          2694,
+          0
+        ],
+        "decision_runs": 34
+      },
+      "live_recurrent": {
+        "paid": 543422,
+        "saved": 14652,
+        "visible": 92658,
+        "fept": 0.17050837102656868,
+        "terminal": 203,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 11548,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+        "choices": [
+          1690,
+          0,
+          2694,
+          203
+        ],
+        "decision_runs": 34,
+        "fallback": 0
+      },
+      "expected_gain": {
+        "paid": 543316,
+        "saved": 14758,
+        "visible": 92658,
+        "fept": 0.17054163691111618,
+        "terminal": 203,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 11548,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+        "choices": [
+          1581,
+          3,
+          2800,
+          203
+        ],
+        "decision_runs": 34,
+        "fallback": 0
+      }
+    }
+  },
+  "generated_interventions": {
+    "decision_runs": {
+      "1": 48,
+      "2": 33
+    },
+    "marginal_gains": {
+      "(1, 1, 2)": 14,
+      "(0, 1, 1)": 44,
+      "(1, 0, 1)": 10,
+      "(0, 0, 0)": 13
+    },
+    "additional_samples": {
+      "first_only": 48,
+      "mixed": 48,
+      "all": 81
+    }
+  }
+}

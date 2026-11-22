@@ -109,3 +109,31 @@ fn register_result(cell:u32, op:usize, f:FactRef, t:usize, epoch:u64, reused:boo
                 continue;
             }
             if reused && (!a.block''')
+    from shutil import copyfile
+    copyfile(Path(__file__).with_name("live_reader.rs"), crate/"src/live_reader.rs")
+    with strict.open("a") as f:
+        f.write('\ninclude!("live_reader.rs");\n')
+    edit(strict,"struct State {first_edges:", "struct State {reader:Option<RouteReader>,route:Option<usize>,first_edges:")
+    edit(strict,"    s.first_edges=spec", '    s.reader=RouteReader::load(&spec["route_reader"],g,&s)?;\n    s.first_edges=spec')
+    edit(strict,"        s.active = None;\n        s.terminal_block=false;",'''        let route = code >> 32;
+        let code = code & 0xffff_ffff;
+        s.route = if route==0 {None} else if (4..8).contains(&route) &&
+            s.reader.as_ref().is_some_and(|m|m.edges[0][0]==rid) {Some(route-4)}
+            else {return Err("invalid per-root route selection".into())};
+        s.active = None;
+        s.terminal_block=false;''')
+    edit(strict,"            if a.prior.is_empty() && s.first_edges",'''            if a.prior.is_empty() && let Some(mask)=s.route
+                && let Some(i)=s.reader.as_ref().and_then(|m|m.edges.iter().position(|e|e==&path[0]))
+                && mask & (1<<i)==0 { continue; }
+            if a.prior.is_empty() && s.first_edges''')
+    edit(strict,'json!({"actual_reused_returns"', 'json!({"route_fallback":s.reader.as_ref().map(|m|m.fallback),"route_observations":s.reader.as_ref().filter(|m|m.training_fork).map(|m|&m.observations),"route_choices":s.reader.as_ref().map(|m|(m.decisions,m.runs.len())),"actual_reused_returns"')
+    page=crate/"src/adaptive_root_page.rs"
+    edit(page,"pub(crate) fn single_page(\n","pub(crate) fn single_page(\n    graph:&crate::graph::Graph,\n")
+    for filename in ("strict_partial.rs","adaptive_rows.rs"):
+        edit(crate/"src"/filename,"single_page(g.epoch","single_page(g,g.epoch")
+    edit(page,"        for &(dep, version) in inputs {","        let context=crate::strict_named::route_page(graph,rid);\n        for &(dep, version) in inputs {")
+    edit(page,"            words.extend([tag|action, addr, v]);",'''            let route=context.as_ref().map_or(0,|rows|crate::strict_named::route_bits(graph,rows,dep,state.serial));
+            words.extend([tag|action|route, addr, v]);''')
+    # Bits 56..58 carry the learned route; the original strict code is 32 bits.
+    text=page.read_text().replace("!(1u64<<63)","!((1u64<<63)|(7u64<<56))")
+    page.write_text(text.replace("(w[4]>>32) as usize","((w[4]>>32) | (((w[i]>>56)&7)<<32)) as usize"))
