@@ -15,6 +15,7 @@ def validate_links(v,case):
     primary={r[0]:r[5] for r in v['root_recipe']['fresh']};fact={r[0]:r for r in born['rows']};visible={r[0] for r in born['endpoint'] if r[2]==0}
     events={e[4]:e for run in v['events'] for e in run if e[0]=='birth'}
     sn=v['strict_named'];signed={r[0]:r for r in sn['signed_commits']};rows=sn['set_commits'];sets=set()
+    reused={tuple(r) for r in sn.get('actual_reused_returns',[])}
     assert len(rows)==sn['set_publication']['confirmed']
     for item in rows:
         seed,mid,child=[item[k] for k in ('root','middle','consumer')]
@@ -29,7 +30,15 @@ def validate_links(v,case):
         want={'atom':0,'row':{'Fact':{'cell':fc,'op':op}},'version':version}
         assert want in roots[child][6]
         first=(trail[0][0]<<32)|trail[0][1]
-        assert primary[trail[0][0]]==seed and fact[first][4]==seed
+        if first in fact and primary.get(trail[0][0])==seed and fact[first][4]==seed:
+            assert trail[0][1]==path[0][1]
+        else:
+            # The signed producer executed this operation and got a different
+            # owner's existing physical reference. Check the return record and
+            # producer allocation separately from the consumer's named input.
+            coord=tuple([seed,*path[0]])
+            assert any(r[:4]==coord and primary.get(r[4])==seed and
+                       r[5:]==tuple(trail[0]) for r in reused)
         assert {'atom':0,'row':{'Fact':{'cell':trail[0][0],'op':trail[0][1]}},'version':trail[0][2]} in roots[mid][6]
         sets.add(child)
     paid={x['allocated']<<32 for x in v['merge_child']['issued'] if x['allocated'] is not None}

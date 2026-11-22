@@ -1,0 +1,122 @@
+{
+  "source": {
+    "corrupt_rejected": 0,
+    "reuse_returns": false,
+    "shared_input_result": true,
+    "episodes": 128,
+    "paired": 128,
+    "no_pair": 0,
+    "a_cheaper": 33,
+    "b_cheaper": 31,
+    "tied": 64,
+    "shared_successor": 0,
+    "joint_differs": 0,
+    "total_paid": {
+      "none": 1792,
+      "a": 1726,
+      "b": 1730,
+      "both": 1664
+    }
+  },
+  "reused": {
+    "corrupt_rejected": 1,
+    "reuse_returns": true,
+    "shared_input_result": true,
+    "episodes": 128,
+    "paired": 128,
+    "no_pair": 0,
+    "a_cheaper": 0,
+    "b_cheaper": 0,
+    "tied": 128,
+    "shared_successor": 64,
+    "joint_differs": 0,
+    "total_paid": {
+      "none": 1792,
+      "a": 1664,
+      "b": 1664,
+      "both": 1664
+    }
+  },
+  "full": {
+    "sum-bits": {
+      "wide": {
+        "paid": 12243,
+        "saved": 419,
+        "visible": 2691,
+        "fept": 0.21979906885567263,
+        "terminal": 8,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 2443,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "reuse_returns": {
+        "paid": 12243,
+        "saved": 419,
+        "visible": 2691,
+        "fept": 0.21979906885567263,
+        "terminal": 8,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 2443,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+        "reuse_registered": 17,
+        "reuse_committed": 0
+      }
+    },
+    "3mm": {
+      "wide": {
+        "paid": 547316,
+        "saved": 10758,
+        "visible": 92658,
+        "fept": 0.16929525173757026,
+        "terminal": 203,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 10569,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+      },
+      "reuse_returns": {
+        "paid": 547316,
+        "saved": 10758,
+        "visible": 92658,
+        "fept": 0.16929525173757026,
+        "terminal": 203,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 10569,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+        "reuse_registered": 872,
+        "reuse_committed": 0
+      }
+    }
+  }
+}

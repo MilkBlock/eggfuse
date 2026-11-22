@@ -69,7 +69,8 @@ def main(a):
         with study["src"].base.session(a.native,program,plans) as run:
             for name, cfg, mode in (("leaf",catalog["leaf"],None),("original",spec,"greedy"),
                                     ("union",catalog["union"],"greedy"),("expanded",combined,"greedy"),
-                                    ("wide_let_only",let_only,None),("wide",wide,"greedy"),("fixed_full",wide,"full")):
+                                    ("wide_let_only",let_only,None),("wide",wide,"greedy"),("fixed_full",wide,"full"),
+                                    *((("reuse_returns",dict(wide,reuse_returns=True),"greedy"),) if a.reuse_returns else ())):
                 cfg = dict(cfg)
                 if mode:
                     cfg.update(issuance_actor=dict(mode=mode, weights=w, seed=0),
@@ -88,6 +89,13 @@ def main(a):
                 results[name] = dict(paid=paid, saved=saved, visible=counts["visible"], fept=counts["fept"],
                                      terminal=counts["set_internal"], checks=counts["checks"],
                                      paths=len(cfg.get("library",[])), state_sha=counts["state_sha"])
+                if name=="reuse_returns":
+                    captures=data["strict_named"]["actual_reused_returns"]
+                    used={(r[1],tuple(r[2][0]),tuple(r[3][0]))
+                          for r in data["strict_named"]["signed_commits"] if len(r[2])==1}
+                    results[name]["reuse_registered"]=len(captures)
+                    results[name]["reuse_committed"]=sum(
+                        (r[0],tuple(r[1:4]),tuple(r[5:])) in used for r in captures)
                 print(case,name,paid,saved,flush=True)
         report["cases"][case] = results
         (a.out/"catalog-credit.json").write_text(json.dumps(report,indent=2)+"\n")
@@ -98,4 +106,5 @@ if __name__ == "__main__":
     for key in ("exp","native","training","out"):
         p.add_argument(key,type=Path)
     p.add_argument("--cases",nargs="+",default=["sum-bits","3mm"])
+    p.add_argument("--reuse-returns",action="store_true")
     main(p.parse_args())
