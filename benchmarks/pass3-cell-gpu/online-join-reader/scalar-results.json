@@ -1,0 +1,538 @@
+{
+  "sum-bits": {
+    "baseline": {
+      "visible": 2691,
+      "origins": "5ee619a7adeefb46170aafd167dedcdb70dfb13e9ea140650b9139a0b972cf7d",
+      "primitive_rejects": {
+        "!=": 219,
+        "+": 27,
+        "<": 655,
+        ">": 291,
+        ">=": 67
+      },
+      "paid": 8524,
+      "accepted": 7265,
+      "rejected": 1259,
+      "suppressed": {},
+      "named_reads": 17933,
+      "fept": 0.3156968559361802,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "state_sha": true,
+        "resumes": false,
+        "events": false,
+        "schedule": true,
+        "mutation_trace": true
+      }
+    },
+    "scalar": {
+      "visible": 2691,
+      "origins": "5ee619a7adeefb46170aafd167dedcdb70dfb13e9ea140650b9139a0b972cf7d",
+      "primitive_rejects": {
+        "!=": 219,
+        "<": 221,
+        ">": 48
+      },
+      "paid": 7753,
+      "accepted": 7265,
+      "rejected": 488,
+      "suppressed": {
+        "138": 208,
+        "144": 27,
+        "147": 10,
+        "349": 10,
+        "350": 2,
+        "376": 5,
+        "507": 230,
+        "508": 170,
+        "509": 8,
+        "510": 6,
+        "577": 20,
+        "578": 57,
+        "581": 2,
+        "62": 16
+      },
+      "named_reads": 16502,
+      "fept": 0.34709144847155937,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "state_sha": true,
+        "resumes": false,
+        "events": false,
+        "schedule": true,
+        "mutation_trace": true
+      }
+    }
+  },
+  "dot-product": {
+    "baseline": {
+      "visible": 2689,
+      "origins": "2e63c95317fafdc5ea5a87e085a20cfa5829f9eee8eb90598e55932ab9175809",
+      "primitive_rejects": {
+        "!=": 260,
+        "+": 12,
+        "<": 824,
+        ">": 327,
+        ">=": 108
+      },
+      "paid": 8235,
+      "accepted": 6704,
+      "rejected": 1531,
+      "suppressed": {},
+      "named_reads": 19277,
+      "fept": 0.3265330904675167,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "state_sha": true,
+        "resumes": false,
+        "events": false,
+        "schedule": true,
+        "mutation_trace": true
+      }
+    },
+    "scalar": {
+      "visible": 2689,
+      "origins": "2e63c95317fafdc5ea5a87e085a20cfa5829f9eee8eb90598e55932ab9175809",
+      "primitive_rejects": {
+        "!=": 260,
+        "<": 269,
+        ">": 84
+      },
+      "paid": 7317,
+      "accepted": 6704,
+      "rejected": 613,
+      "suppressed": {
+        "138": 147,
+        "144": 12,
+        "376": 16,
+        "440": 2,
+        "441": 30,
+        "442": 28,
+        "443": 68,
+        "507": 261,
+        "508": 169,
+        "509": 20,
+        "510": 18,
+        "577": 32,
+        "578": 108,
+        "62": 7
+      },
+      "named_reads": 16908,
+      "fept": 0.3675003416700834,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "state_sha": true,
+        "resumes": false,
+        "events": false,
+        "schedule": true,
+        "mutation_trace": true
+      }
+    }
+  },
+  "3mm": {
+    "baseline": {
+      "visible": 92658,
+      "origins": "6079fe45c6473b9fcbd7eb8ee6a124568795fbd0572b59fb1cc980486e4032a9",
+      "primitive_rejects": {
+        "!=": 6470,
+        "+": 118,
+        "<": 12792,
+        "<=": 28,
+        ">": 7445,
+        ">=": 5226
+      },
+      "paid": 326996,
+      "accepted": 294917,
+      "rejected": 32079,
+      "suppressed": {},
+      "named_reads": 752240,
+      "fept": 0.2833612643579738,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "state_sha": true,
+        "resumes": false,
+        "events": false,
+        "schedule": true,
+        "mutation_trace": true
+      }
+    },
+    "scalar": {
+      "visible": 92658,
+      "origins": "6079fe45c6473b9fcbd7eb8ee6a124568795fbd0572b59fb1cc980486e4032a9",
+      "primitive_rejects": {
+        "!=": 6470,
+        "+": 6,
+        "<": 4329,
+        "<=": 28,
+        ">": 1050,
+        ">=": 1145
+      },
+      "paid": 307945,
+      "accepted": 294917,
+      "rejected": 13028,
+      "suppressed": {
+        "138": 5704,
+        "144": 112,
+        "376": 39,
+        "507": 4756,
+        "508": 3368,
+        "509": 248,
+        "510": 204,
+        "577": 448,
+        "578": 4081,
+        "62": 91
+      },
+      "named_reads": 718264,
+      "fept": 0.3008913929435451,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "state_sha": true,
+        "resumes": false,
+        "events": false,
+        "schedule": true,
+        "mutation_trace": true
+      }
+    }
+  },
+  "deriche": {
+    "baseline": {
+      "visible": 120436,
+      "origins": "be83ca85579e45e36cb1b3fe184fd848ff832cebaba294d1a3d37e2ba3850a83",
+      "primitive_rejects": {
+        "!=": 7460,
+        "%": 17,
+        "+": 644,
+        "<": 38449,
+        "<=": 17,
+        ">": 9700,
+        ">=": 4948
+      },
+      "paid": 697053,
+      "accepted": 635818,
+      "rejected": 61235,
+      "suppressed": {},
+      "named_reads": 1664949,
+      "fept": 0.17277882743492962,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "state_sha": true,
+        "resumes": false,
+        "events": false,
+        "schedule": true,
+        "mutation_trace": true
+      }
+    },
+    "scalar": {
+      "visible": 120436,
+      "origins": "be83ca85579e45e36cb1b3fe184fd848ff832cebaba294d1a3d37e2ba3850a83",
+      "primitive_rejects": {
+        "!=": 7460,
+        "%": 17,
+        "+": 39,
+        "<": 29287,
+        "<=": 17,
+        ">": 3227,
+        ">=": 1250
+      },
+      "paid": 677115,
+      "accepted": 635818,
+      "rejected": 41297,
+      "suppressed": {
+        "138": 5621,
+        "144": 604,
+        "147": 10,
+        "264": 1,
+        "349": 6,
+        "350": 2,
+        "376": 109,
+        "441": 9,
+        "442": 9,
+        "443": 9,
+        "507": 5120,
+        "508": 3556,
+        "509": 308,
+        "510": 256,
+        "577": 474,
+        "578": 3688,
+        "581": 2,
+        "62": 154
+      },
+      "named_reads": 1628198,
+      "fept": 0.1778663890181136,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "state_sha": true,
+        "resumes": false,
+        "events": false,
+        "schedule": true,
+        "mutation_trace": true
+      }
+    }
+  },
+  "jacobi-1d": {
+    "baseline": {
+      "visible": 14711,
+      "origins": "24145ff6359b5e4ca0f3b4512ae9bc1f2a50c28617a77c259587b0065e4d19a1",
+      "primitive_rejects": {
+        "!=": 1214,
+        "+": 100,
+        "<": 2946,
+        ">": 1284,
+        ">=": 494
+      },
+      "paid": 47357,
+      "accepted": 41319,
+      "rejected": 6038,
+      "suppressed": {},
+      "named_reads": 106617,
+      "fept": 0.310640454420677,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "state_sha": true,
+        "resumes": false,
+        "events": false,
+        "schedule": true,
+        "mutation_trace": true
+      }
+    },
+    "scalar": {
+      "visible": 14711,
+      "origins": "24145ff6359b5e4ca0f3b4512ae9bc1f2a50c28617a77c259587b0065e4d19a1",
+      "primitive_rejects": {
+        "!=": 1214,
+        "<": 1189,
+        ">": 274
+      },
+      "paid": 43996,
+      "accepted": 41319,
+      "rejected": 2677,
+      "suppressed": {
+        "138": 836,
+        "144": 100,
+        "376": 18,
+        "440": 2,
+        "441": 4,
+        "442": 2,
+        "443": 4,
+        "445": 2,
+        "507": 979,
+        "508": 682,
+        "509": 50,
+        "510": 60,
+        "577": 92,
+        "578": 494,
+        "62": 36
+      },
+      "named_reads": 100246,
+      "fept": 0.3343713064824075,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "state_sha": true,
+        "resumes": false,
+        "events": false,
+        "schedule": true,
+        "mutation_trace": true
+      }
+    }
+  },
+  "conjugate-gradient": {
+    "baseline": {
+      "visible": 34595,
+      "origins": "604e82dcc55e631781c238cceba22c45c1a2b3e6cb65c9bcc97812b23f66dc8d",
+      "primitive_rejects": {
+        "!=": 2863,
+        "+": 242,
+        "<": 4559,
+        ">": 3176,
+        ">=": 1133
+      },
+      "paid": 143344,
+      "accepted": 131371,
+      "rejected": 11973,
+      "suppressed": {},
+      "named_reads": 321252,
+      "fept": 0.241342504743833,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "state_sha": true,
+        "resumes": false,
+        "events": false,
+        "schedule": true,
+        "mutation_trace": true
+      }
+    },
+    "scalar": {
+      "visible": 34595,
+      "origins": "604e82dcc55e631781c238cceba22c45c1a2b3e6cb65c9bcc97812b23f66dc8d",
+      "primitive_rejects": {
+        "!=": 2863,
+        "<": 1504,
+        ">": 274
+      },
+      "paid": 136012,
+      "accepted": 131371,
+      "rejected": 4641,
+      "suppressed": {
+        "138": 2624,
+        "144": 242,
+        "147": 4,
+        "376": 42,
+        "507": 1687,
+        "508": 1210,
+        "509": 78,
+        "510": 64,
+        "577": 172,
+        "578": 1129,
+        "62": 80
+      },
+      "named_reads": 308409,
+      "fept": 0.2543525571273123,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "state_sha": true,
+        "resumes": false,
+        "events": false,
+        "schedule": true,
+        "mutation_trace": true
+      }
+    }
+  },
+  "gemm-bias-relu": {
+    "baseline": {
+      "visible": 5277,
+      "origins": "9c0d8c5bcac0510c61cd4b3b809c65f3669c9b1d1b4d62ad854f004d09e4cd67",
+      "primitive_rejects": {
+        "!=": 467,
+        "+": 38,
+        "<": 1158,
+        ">": 566,
+        ">=": 242
+      },
+      "paid": 17933,
+      "accepted": 15462,
+      "rejected": 2471,
+      "suppressed": {},
+      "named_reads": 38805,
+      "fept": 0.29426197512964924,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "state_sha": true,
+        "resumes": false,
+        "events": false,
+        "schedule": true,
+        "mutation_trace": true
+      }
+    },
+    "scalar": {
+      "visible": 5277,
+      "origins": "9c0d8c5bcac0510c61cd4b3b809c65f3669c9b1d1b4d62ad854f004d09e4cd67",
+      "primitive_rejects": {
+        "!=": 467,
+        "<": 357,
+        ">": 88
+      },
+      "paid": 16374,
+      "accepted": 15462,
+      "rejected": 912,
+      "suppressed": {
+        "138": 422,
+        "144": 38,
+        "376": 6,
+        "507": 452,
+        "508": 323,
+        "509": 12,
+        "510": 12,
+        "577": 38,
+        "578": 242,
+        "62": 14
+      },
+      "named_reads": 35930,
+      "fept": 0.3222792231586662,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "state_sha": true,
+        "resumes": false,
+        "events": false,
+        "schedule": true,
+        "mutation_trace": true
+      }
+    }
+  },
+  "stable-argmax": {
+    "baseline": {
+      "visible": 2981,
+      "origins": "3358a2c4a41c09b68d368ada9f093c7bd4251c52807cd80bc758fb84db8245b5",
+      "primitive_rejects": {
+        "!=": 249,
+        "+": 25,
+        "<": 742,
+        ">": 282,
+        ">=": 110
+      },
+      "paid": 9598,
+      "accepted": 8190,
+      "rejected": 1408,
+      "suppressed": {},
+      "named_reads": 20591,
+      "fept": 0.3105855386538862,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "state_sha": true,
+        "resumes": false,
+        "events": false,
+        "schedule": true,
+        "mutation_trace": true
+      }
+    },
+    "scalar": {
+      "visible": 2981,
+      "origins": "3358a2c4a41c09b68d368ada9f093c7bd4251c52807cd80bc758fb84db8245b5",
+      "primitive_rejects": {
+        "!=": 249,
+        "<": 230,
+        ">": 38
+      },
+      "paid": 8707,
+      "accepted": 8190,
+      "rejected": 517,
+      "suppressed": {
+        "138": 210,
+        "144": 25,
+        "376": 6,
+        "507": 285,
+        "508": 217,
+        "509": 2,
+        "510": 2,
+        "577": 26,
+        "578": 110,
+        "62": 8
+      },
+      "named_reads": 18914,
+      "fept": 0.34236820948661995,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "state_sha": true,
+        "resumes": false,
+        "events": false,
+        "schedule": true,
+        "mutation_trace": true
+      }
+    }
+  }
+}

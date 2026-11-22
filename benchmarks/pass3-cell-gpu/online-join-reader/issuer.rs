@@ -17,6 +17,8 @@ use std::{
 pub struct Model {
     #[serde(default)]
     order: Option<Order>,
+    #[serde(default)]
+    scalars: BTreeMap<String, [f64; 3]>,
     left: [bool; 4],
     sender: [[bool; 2]; 4],
     follow: [[bool; 4]; 2],
@@ -60,20 +62,25 @@ pub struct Counts {
     route_build_rows: u64,
     route_probes: u64,
     summary_reads: u64,
+    scalar_suppressed: BTreeMap<usize, u64>,
     issued: u64,
     abstained: u64,
     denied_budget: u64,
     rule_calls: u64,
 }
 #[derive(Clone, Copy, PartialEq, Eq)]
-struct Code([u8; 20]);
+struct Code([u8; 20], i8);
 impl Code {
     fn of(v: &Value) -> Result<Self> {
         let data = serde_json::to_vec(v).map_err(|e| e.to_string())?;
         let h = Sha256::digest(data);
         let mut b = [0; 20];
         b.copy_from_slice(&h[..20]);
-        Ok(Self(b))
+        let scalar = match v {
+            Value::Int(x) if (-16..=16).contains(x) => *x as i8,
+            _ => i8::MIN,
+        };
+        Ok(Self(b, scalar))
     }
     fn page(self) -> u16 {
         u16::from_le_bytes([self.0[4], self.0[5]]) & 1023
@@ -96,11 +103,48 @@ struct Read {
     exports: Vec<(usize, usize)>,
     index: usize,
 }
+enum ScalarInput {
+    Slot(usize),
+    Literal(i8),
+}
+impl ScalarInput {
+    fn read(&self, slots: &[Code]) -> Option<i8> {
+        match self {
+            Self::Literal(v) => Some(*v),
+            Self::Slot(i) => (slots[*i].1 != i8::MIN).then_some(slots[*i].1),
+        }
+    }
+}
+struct ScalarGate {
+    inputs: [ScalarInput; 2],
+    expected: Option<ScalarInput>,
+    weights: [f64; 3],
+}
+impl ScalarGate {
+    fn rejects(&self, slots: &[Code]) -> bool {
+        let [Some(a), Some(b)] = self.inputs.each_ref().map(|v| v.read(slots)) else {
+            return false;
+        };
+        let [u, v, bias] = self.weights;
+        let score = u * f64::from(a) + v * f64::from(b) + bias;
+        match &self.expected {
+            None => score < 0.,
+            Some(out) => out
+                .read(slots)
+                .is_some_and(|n| (score - f64::from(n)).abs() > 0.5),
+        }
+    }
+}
 struct Layout {
+    gates: Vec<ScalarGate>,
     reads: Vec<Read>,
     slots: usize,
 }
-fn layout(rule: &crate::program::Rule, first: Option<usize>) -> Result<Option<Layout>> {
+fn layout(
+    rule: &crate::program::Rule,
+    first: Option<usize>,
+    model: &Model,
+) -> Result<Option<Layout>> {
     let mut atoms = vec![];
     for atom in rule.query.iter() {
         if let Call::Table(t) = atom.call {
@@ -190,7 +234,38 @@ fn layout(rule: &crate::program::Rule, first: Option<usize>) -> Result<Option<La
         }
         reads.push(read);
     }
+    let scalar = |arg: &Arg| match arg {
+        Arg::Literal(Value::Int(x)) if (-16..=16).contains(x) => {
+            Some(ScalarInput::Literal(*x as i8))
+        }
+        Arg::Slot(s) => seen.get(s).copied().map(ScalarInput::Slot),
+        _ => None,
+    };
+    let gates = rule
+        .query
+        .iter()
+        .filter_map(|atom| {
+            let Call::Primitive(op, ty) = &atom.call else {
+                return None;
+            };
+            let [a, b, out] = atom.args.as_slice() else {
+                return None;
+            };
+            let weights = *model.scalars.get(op)?;
+            let expected = match (op.as_str(), ty.as_str()) {
+                ("+" | "-", "i64") => Some(scalar(out)?),
+                ("<" | ">" | "<=" | ">=", "Unit") => None,
+                _ => return None,
+            };
+            Some(ScalarGate {
+                inputs: [scalar(a)?, scalar(b)?],
+                expected,
+                weights,
+            })
+        })
+        .collect();
     Ok(Some(Layout {
+        gates,
         reads,
         slots: seen.len(),
     }))
@@ -208,11 +283,31 @@ struct Issuer {
 }
 thread_local! {static ACTIVE:RefCell<Option<Issuer>>=const{RefCell::new(None)};}
 pub fn init(g: &Graph, model: Model, cap: u64, pages: bool) -> Result<()> {
+    // Validate the serialized readouts before allowing them to suppress a packet.
+    for (op, &[u, v, bias]) in &model.scalars {
+        for a in -16..=16 {
+            for b in -16..=16 {
+                let z = u * f64::from(a) + v * f64::from(b) + bias;
+                let valid = match op.as_str() {
+                    "+" => (z - f64::from(a + b)).abs() < 0.25,
+                    "-" => (z - f64::from(a - b)).abs() < 0.25,
+                    "<" => (z >= 0.) == (a < b),
+                    "<=" => (z >= 0.) == (a <= b),
+                    ">" => (z >= 0.) == (a > b),
+                    ">=" => (z >= 0.) == (a >= b),
+                    _ => false,
+                };
+                if !z.is_finite() || !valid {
+                    return Err(format!("uncertified scalar readout {op}"));
+                }
+            }
+        }
+    }
     let mut plans = g
         .program
         .rules
         .iter()
-        .map(|rule| layout(rule, None))
+        .map(|rule| layout(rule, None, &model))
         .collect::<Result<Vec<_>>>()?;
     let mut alternatives = Vec::with_capacity(plans.len());
     for (rule, plan) in g.program.rules.iter().zip(&plans) {
@@ -220,7 +315,7 @@ pub fn init(g: &Graph, model: Model, cap: u64, pages: bool) -> Result<()> {
             Some(p)
                 if model.order.is_some() && p.reads.len() == 2 && !p.reads[1].checks.is_empty() =>
             {
-                layout(rule, Some(p.reads[1].index))?
+                layout(rule, Some(p.reads[1].index), &model)?
             }
             _ => None,
         };
@@ -369,7 +464,7 @@ pub fn submit(g: &Graph, run: usize, rid: usize, wm: u64, inbox: &mut Inbox) -> 
         // Partial-code dispatch can prune only ports rejected by the frozen follower.
         let mut stack = vec![(
             Vec::<(usize, Dependency, u64)>::new(),
-            vec![Code([0; 20]); plan.slots],
+            vec![Code([0; 20], i8::MIN); plan.slots],
             false,
         )];
         let mut budget = a.cap;
@@ -377,6 +472,10 @@ pub fn submit(g: &Graph, run: usize, rid: usize, wm: u64, inbox: &mut Inbox) -> 
             let step = parents.len();
             if step == memory.len() {
                 if fresh || parents.is_empty() || !g.program.rules[rid].seminaive {
+                    if plan.gates.iter().any(|gate| gate.rejects(&slots)) {
+                        *a.counts.scalar_suppressed.entry(rid).or_default() += 1;
+                        continue;
+                    }
                     let mut ordered = parents;
                     ordered.sort_unstable_by_key(|p| p.0);
                     inbox.submit(Packet::issue(

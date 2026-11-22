@@ -8,6 +8,14 @@ def install(crate):
     with (crate/'src/lib.rs').open('a') as stream:
         stream.write('\npub mod live_issuer;\n')
     path=crate/'src/named_only.rs'
+    receiver = path.read_text()
+    receiver = receiver.replace("    pub rejected: usize,", "    pub rejected: usize,\n    pub primitive_rejects: BTreeMap<String,u64>,")
+    for anchor in ("let Some(value) = g.primitive(op, &values, ty)? else {",
+                   "if !g.bind(dest, &value, &mut frame) {"):
+        if receiver.count(anchor) != 1:
+            raise ValueError("unexpected primitive verification site")
+        receiver = receiver.replace(anchor, anchor+"\n                    *self.primitive_rejects.entry(op.clone()).or_default() += 1;")
+    path.write_text(receiver)
     with path.open('a') as stream:
         stream.write('''
 impl Packet {
