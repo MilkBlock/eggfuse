@@ -301,11 +301,28 @@ pub(crate) fn finish_set_edges(success:bool){
                 continue;''')
     # Audit output coordinates at the actual constructor return, including reused rows.
     root=crate/"src/joint_root.rs"
-    edit(root,"audit:bool,emitted:", "pair_issuer:Option<PairIssuer>,pair_trace:Option<(Vec<usize>,Vec<[u64;7]>)>,audit:bool,emitted:")
-    edit(root,"State{stage_watch:false,", "State{pair_issuer:None,pair_trace:None,stage_watch:false,")
-    edit(root,'"root_row_decodes":s.decodes', '"pair_checks":s.pair_issuer.as_ref().map(|p|[p.checked,p.verified]),"pair_proposals":s.pair_issuer.as_ref().map(|p|&p.proposals),"pair_returns":s.pair_trace.as_ref().map(|(_,rows)|rows),"root_row_decodes":s.decodes')
+    edit(root,"audit:bool,emitted:", "history:Option<([usize;2],Vec<[u64;8]>)>,pair_issuer:Option<PairIssuer>,pair_trace:Option<(Vec<usize>,Vec<[u64;7]>)>,audit:bool,emitted:")
+    edit(root,"State{stage_watch:false,", "State{pair_issuer:None,history:None,pair_trace:None,stage_watch:false,")
+    edit(root,'"root_row_decodes":s.decodes', '"pair_checks":s.pair_issuer.as_ref().map(|p|[p.checked,p.verified]),"pair_proposals":s.pair_issuer.as_ref().map(|p|&p.proposals),"history_returns":s.history.as_ref().map(|h|&h.1),"pair_returns":s.pair_trace.as_ref().map(|(_,rows)|rows),"root_row_decodes":s.decodes')
     with root.open("a") as f:
         f.write("""
+pub fn enable_return_history(program:&Program)->Result<()> {
+    let table=|name:&str|program.tables.iter().position(|t|t.name==name).ok_or("missing history table");
+    let tables=[table("Get")?,table("HasArgType")?];
+    STATE.with_borrow_mut(|s|if let Some(s)=s{s.history=Some((tables,Vec::new()))});
+    Ok(())
+}
+pub(crate) fn history_return(table:usize,key:&[Value],op:usize,dep:Dependency,version:u64,epoch:u64){
+    STATE.with_borrow_mut(|s|{
+        let Some(s)=s else{return};
+        let Some((tables,rows))=&mut s.history else{return};
+        let Some(role)=tables.iter().position(|t|*t==table) else{return};
+        let Some((ordinal,_,_,_,_))=s.active else{return};
+        if let (Some(Value::Eq(subject)),Dependency::Fact(f))=(key.first(),dep){
+            rows.push([epoch,ordinal as u64,op as u64,role as u64,f.cell as u64,f.op as u64,version,*subject]);
+        }
+    })
+}
 pub fn trace_pair_rules(rules:Vec<usize>) {
     STATE.with_borrow_mut(|s| if let Some(s)=s {s.pair_trace=Some((rules,Vec::new()));});
 }
@@ -333,6 +350,7 @@ pub(crate) fn trace_pair_return(op:usize,dep:Dependency,version:u64,reused:bool)
     session=crate/"examples/joint_witness_session.rs"
     anchor="eggfuse_cell_runtime::joint_root::configure(&program,root_config.as_deref(),audit)?;"
     edit(session,anchor,anchor+"""
+        if req["history_ports"].as_bool()==Some(true){eggfuse_cell_runtime::joint_root::enable_return_history(&program)?;}
         if !req["pair_policy"].is_null(){
             eggfuse_cell_runtime::joint_root::configure_pair_policy(serde_json::from_value(req["pair_policy"].clone()).map_err(|e|e.to_string())?,&program,&program_bytes)?;
         }
@@ -341,9 +359,10 @@ pub(crate) fn trace_pair_return(op:usize,dep:Dependency,version:u64,reused:bool)
             eggfuse_cell_runtime::joint_root::trace_pair_rules(rules);
         }""")
     edit(crate/"src/graph.rs","crate::strict_named::returned(cell,op,row.witness,t,row.epoch);",
-         "crate::joint_root::trace_pair_return(op,row.witness,row.epoch,true);\n                crate::strict_named::returned(cell,op,row.witness,t,row.epoch);")
+         "crate::joint_root::history_return(t,&row.values,op,row.witness,row.epoch,self.epoch);\n                crate::joint_root::trace_pair_return(op,row.witness,row.epoch,true);\n                crate::strict_named::returned(cell,op,row.witness,t,row.epoch);")
     edit(crate/"src/graph.rs","let value = self.insert_constructor(cell, op, t, &key, dst)?;",
          """let value = self.insert_constructor(cell, op, t, &key, dst)?;
+        crate::joint_root::history_return(t,&key,op,Dependency::Fact(FactRef{cell,op:op as u32}),self.epoch,self.epoch);
         crate::joint_root::trace_pair_return(op,Dependency::Fact(FactRef{cell,op:op as u32}),self.epoch,false);""")
     edit(crate/"src/ordinary_witness.rs","let rule=&g.program.rules[rid];\n        let plan=s.plans",
          "crate::joint_root::check_pairs(g,rid,mark)?;\n        let rule=&g.program.rules[rid];\n        let plan=s.plans")

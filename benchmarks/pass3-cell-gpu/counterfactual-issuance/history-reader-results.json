@@ -1,0 +1,274 @@
+{
+  "dot-product": {
+    "rule_518_prior_ports": {
+      "separate_return_frames": 117,
+      "requires_prior_input_citation": 8
+    },
+    "history_reader": {
+      "uniform": {
+        "model": {
+          "weight": -0.5803894400596619,
+          "bias": 4.75535249710083,
+          "max_distance": 8
+        },
+        "source": 125,
+        "proposed": 2474,
+        "matched_once": 117,
+        "distinct_owners": 117,
+        "extra": 2357,
+        "scores": 29841,
+        "key_changes": 0,
+        "final_bank_sizes": [
+          147,
+          203
+        ]
+      },
+      "near_misses": {
+        "model": {
+          "weight": -5.8023552894592285,
+          "bias": 3.797605514526367,
+          "max_distance": 0
+        },
+        "source": 125,
+        "proposed": 147,
+        "matched_once": 117,
+        "distinct_owners": 117,
+        "extra": 30,
+        "scores": 29841,
+        "key_changes": 0,
+        "final_bank_sizes": [
+          147,
+          203
+        ]
+      },
+      "all_positive": {
+        "model": {
+          "weight": -5.8023552894592285,
+          "bias": 3.797605514526367,
+          "max_distance": 0
+        },
+        "source": 125,
+        "proposed": 147,
+        "matched_once": 117,
+        "distinct_owners": 117,
+        "extra": 30,
+        "scores": 29841,
+        "key_changes": 0,
+        "final_bank_sizes": [
+          147,
+          203
+        ]
+      },
+      "same_epoch": {
+        "model": {
+          "weight": -5.8023552894592285,
+          "bias": 3.797605514526367,
+          "max_distance": 0
+        },
+        "source": 125,
+        "proposed": 0,
+        "matched_once": 0,
+        "distinct_owners": 0,
+        "extra": 0,
+        "scores": 19,
+        "key_changes": 0,
+        "final_bank_sizes": [
+          0,
+          2
+        ]
+      }
+    },
+    "source_state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+    "source_checks": {
+      "rhs": true,
+      "writes": true,
+      "resumes": true,
+      "state_sha": true,
+      "schedule": true,
+      "runs": true,
+      "unions": true
+    }
+  },
+  "sum-bits": {
+    "rule_518_prior_ports": {
+      "separate_return_frames": 56,
+      "requires_prior_input_citation": 92,
+      "missing_from_traced_history": 27
+    },
+    "history_reader": {
+      "uniform": {
+        "model": {
+          "weight": -0.5803894400596619,
+          "bias": 4.75535249710083,
+          "max_distance": 8
+        },
+        "source": 175,
+        "proposed": 2788,
+        "matched_once": 56,
+        "distinct_owners": 56,
+        "extra": 2732,
+        "scores": 36400,
+        "key_changes": 0,
+        "final_bank_sizes": [
+          208,
+          175
+        ]
+      },
+      "near_misses": {
+        "model": {
+          "weight": -5.8023552894592285,
+          "bias": 3.797605514526367,
+          "max_distance": 0
+        },
+        "source": 175,
+        "proposed": 216,
+        "matched_once": 56,
+        "distinct_owners": 56,
+        "extra": 160,
+        "scores": 36400,
+        "key_changes": 0,
+        "final_bank_sizes": [
+          208,
+          175
+        ]
+      },
+      "all_positive": {
+        "model": {
+          "weight": -5.8023552894592285,
+          "bias": 3.797605514526367,
+          "max_distance": 0
+        },
+        "source": 175,
+        "proposed": 216,
+        "matched_once": 56,
+        "distinct_owners": 56,
+        "extra": 160,
+        "scores": 36400,
+        "key_changes": 0,
+        "final_bank_sizes": [
+          208,
+          175
+        ]
+      },
+      "same_epoch": {
+        "model": {
+          "weight": -5.8023552894592285,
+          "bias": 3.797605514526367,
+          "max_distance": 0
+        },
+        "source": 175,
+        "proposed": 0,
+        "matched_once": 0,
+        "distinct_owners": 0,
+        "extra": 0,
+        "scores": 9,
+        "key_changes": 0,
+        "final_bank_sizes": [
+          0,
+          2
+        ]
+      }
+    },
+    "source_state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "source_checks": {
+      "rhs": true,
+      "writes": true,
+      "resumes": true,
+      "state_sha": true,
+      "schedule": true,
+      "runs": true,
+      "unions": true
+    }
+  },
+  "3mm": {
+    "rule_518_prior_ports": {
+      "separate_return_frames": 4220,
+      "missing_from_traced_history": 23,
+      "requires_prior_input_citation": 424
+    },
+    "history_reader": {
+      "uniform": {
+        "model": {
+          "weight": -0.5803894400596619,
+          "bias": 4.75535249710083,
+          "max_distance": 8
+        },
+        "source": 4667,
+        "proposed": 83704,
+        "matched_once": 3990,
+        "distinct_owners": 3990,
+        "extra": 79714,
+        "scores": 34141668,
+        "key_changes": 0,
+        "final_bank_sizes": [
+          5716,
+          5973
+        ]
+      },
+      "near_misses": {
+        "model": {
+          "weight": -5.8023552894592285,
+          "bias": 3.797605514526367,
+          "max_distance": 0
+        },
+        "source": 4667,
+        "proposed": 5419,
+        "matched_once": 3990,
+        "distinct_owners": 3990,
+        "extra": 1429,
+        "scores": 34141668,
+        "key_changes": 0,
+        "final_bank_sizes": [
+          5716,
+          5973
+        ]
+      },
+      "all_positive": {
+        "model": {
+          "weight": -5.8023552894592285,
+          "bias": 3.797605514526367,
+          "max_distance": 0
+        },
+        "source": 4667,
+        "proposed": 5649,
+        "matched_once": 4220,
+        "distinct_owners": 4220,
+        "extra": 1429,
+        "scores": 34141668,
+        "key_changes": 0,
+        "final_bank_sizes": [
+          5716,
+          5973
+        ]
+      },
+      "same_epoch": {
+        "model": {
+          "weight": -5.8023552894592285,
+          "bias": 3.797605514526367,
+          "max_distance": 0
+        },
+        "source": 4667,
+        "proposed": 0,
+        "matched_once": 0,
+        "distinct_owners": 0,
+        "extra": 0,
+        "scores": 2436,
+        "key_changes": 0,
+        "final_bank_sizes": [
+          0,
+          42
+        ]
+      }
+    },
+    "source_state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "source_checks": {
+      "rhs": true,
+      "writes": true,
+      "resumes": true,
+      "state_sha": true,
+      "schedule": true,
+      "runs": true,
+      "unions": true
+    }
+  }
+}

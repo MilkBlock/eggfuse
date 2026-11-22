@@ -242,7 +242,15 @@ def main(a):
                 request = matrix["cfg"](req,cfg,True)
                 if a.pair_owner and name=="sub_expected_guard":
                     target, column, pairs = wiring(recipe,a.pair_tables)
-                    request["pair_trace_rules"] = sorted(pairs)
+                    trace_rules = set(pairs)
+                    if a.history_ports:
+                        history_targets = {rid for rid,r in enumerate(recipe["rules"])
+                                   if len(r["query"]) == 2 and all(
+                                       atom["call"].get("table") in ctors for atom in r["query"])}
+                        tables = {a["call"]["table"] for rid in history_targets for a in recipe["rules"][rid]["query"]}
+                        trace_rules.update(rid for rid,r in enumerate(recipe["rules"]) if any(
+                            op.get("kind") == "construct" and op["call"]["table"] in tables for op in r["effects"]))
+                    request["pair_trace_rules"] = sorted(trace_rules)
                     request["pair_policy"] = dict(ambiguous_control=a.pair_ambiguous,takeover=a.pair_takeover,column=column,target=target, wiring=pairs, actions=list(action_table(policies["mixed"]).values()))
                 if a.pair_takeover and name=="sub_expected_guard":
                     shadow=run(dict(request,pair_policy=dict(request["pair_policy"],takeover=False)))
@@ -255,6 +263,7 @@ def main(a):
                              and r["effects"][-1].get("call",{}).get("table")=="Expr-size"]
                     request["size_reader"]=dict(local=a.source_delta in ("local","distinct"),tests=report["source_delta_training"]["tests"]["distinct" if a.source_delta=="distinct" else "ties"]["actions"],size_rule=size_rule,filter=True,only_size=a.source_delta=="size",
                         actions=report["source_delta_training"]["arms"]["mixed"]["actions"])
+                if a.history_ports and name=="sub_expected_guard":request["history_ports"]=True
                 if a.ept:request["ept"]=True
                 data = run(request)
                 counts, ledger = matrix["summarize"](data,exact,bool(mode))
@@ -318,6 +327,11 @@ def main(a):
                         results[name]["pair_displaced_extra_lanes"] = displaced_rejects
                         results[name]["pair_committed"] = len(pair_children)
                         results[name]["pair_checks"] = data["root_recipe"]["pair_checks"]
+                        if a.history_ports:
+                            from parent_projection import prior_port_coverage
+                            results[name]["prior_ports"] = prior_port_coverage(data,history_targets)
+                            from history_reader import study as history_study
+                            results[name]["history_reader"] = history_study(data,recipe)
                     if a.parent_projection:
                         from parent_projection import projection_profile
                         results[name]["projection"] = projection_profile(data)
@@ -380,6 +394,7 @@ if __name__ == "__main__":
     p.add_argument("--pair-takeover",action="store_true")
     p.add_argument("--pair-ambiguous",action="store_true")
     p.add_argument("--pair-tables",nargs=2,default=("PotentialExtractedExpr","TCPair"))
+    p.add_argument("--history-ports", action="store_true")
     p.add_argument("--ept",action="store_true")
     p.add_argument("--source-delta",choices=("size","all","local","distinct"))
     args=p.parse_args()
@@ -388,6 +403,7 @@ if __name__ == "__main__":
         args.ept=True
     args.pair_takeover |= args.pair_ambiguous
     args.pair_owner |= args.pair_takeover
+    args.pair_owner |= args.history_ports
     args.parent_projection |= args.pair_owner
     if args.parent_projection and not args.row_guards:
         p.error("--parent-projection evaluates the guarded policy")

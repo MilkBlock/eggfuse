@@ -1,0 +1,118 @@
+"""Shadow rule-518 issuer. Its only dynamic input is actual constructor return receipts."""
+from collections import Counter
+from itertools import groupby
+
+import torch
+
+
+def fit_cutoff(hard, seed=518):
+    # Random pairs of 64 bits have Binomial(64, .5) mismatches. Train the
+    # same affine pointer head on that distribution or with near misses.
+    rng = torch.Generator().manual_seed(seed)
+    mismatches = torch.randint(2, (512, 64), generator=rng).sum(1).float()
+    if hard:
+        mismatches[:256] = torch.randint(1, 5, (256,), generator=rng)
+    x = torch.cat([torch.zeros_like(mismatches), mismatches])
+    y = (x == 0).float()
+    head = torch.nn.Linear(1, 1)
+    with torch.no_grad():
+        head.weight.fill_(-.1)
+        head.bias.zero_()
+    opt = torch.optim.Adam(head.parameters(), lr=.05)
+    for _ in range(350):
+        opt.zero_grad()
+        torch.nn.functional.binary_cross_entropy_with_logits(head(x[:, None]).flatten(), y).backward()
+        opt.step()
+    weight, bias = head.weight.item(), head.bias.item()
+    accepted = [i for i in range(65) if i * weight + bias >= 0]
+    assert weight < 0 and accepted
+    return dict(weight=weight, bias=bias, max_distance=max(accepted))
+
+
+def issue(receipts, model, budget=8, keep_history=True):
+    # Histories use exact stable physical reference + version for identity;
+    # the model keys come only from the subject carried in each return.
+    banks = [{}, {}]
+    proposals = {}
+    comparisons = 0
+    stale_key = 0
+    for epoch, batch in groupby(receipts, key=lambda r: r[0]):
+        if not keep_history:
+            banks = [{}, {}]
+        new = [{}, {}]
+        for _, owner, effect, role, cell, op, version, subject in batch:
+            address = cell, op, version
+            entry = (subject, owner, effect)
+            old = new[role].get(address, banks[role].get(address))
+            if old is None or old[0] != subject:
+                stale_key += int(old is not None)
+                new[role][address] = entry
+        for role in (0, 1):
+            # Include fresh/fresh pairs once by installing the left side first.
+            opposite = banks[1-role]
+            if opposite and new[role]:
+                other = sorted(opposite.items())
+                def encode(values):
+                    return torch.tensor([[(v >> i) & 1 for i in range(64)] for v in values],
+                                        dtype=torch.float32)
+                keys = encode(v[0] for _, v in other)
+                items = list(new[role].items())
+                for start in range(0, len(items), 128):
+                    chunk = items[start:start+128]
+                    q = encode(v[0] for _, v in chunk)
+                    distance = q.sum(1)[:, None] + keys.sum(1) - 2 * (q @ keys.T)
+                    scores = distance * model["weight"] + model["bias"]
+                    comparisons += scores.numel()
+                    # One fixed budget for both frozen heads. Stable address order
+                    # breaks score ties independently of receipt insertion order.
+                    if budget is None:
+                        hits = (scores >= 0).nonzero().tolist()
+                    else:
+                        choices = scores.argsort(dim=1, descending=True, stable=True)[:, :budget]
+                        kept = (scores.gather(1, choices) >= 0).nonzero()
+                        hits = zip(kept[:,0].tolist(), choices[kept[:,0],kept[:,1]].tolist())
+                    for i, j in hits:
+                        a, x = chunk[i]
+                        b, y = other[j]
+                        pair = (a,b) if role == 0 else (b,a)
+                        logical = (x[1:],y[1:]) if role == 0 else (y[1:],x[1:])
+                        proposals.setdefault(pair, (epoch,logical))
+            banks[role].update(new[role])
+    return proposals, dict(scores=comparisons, key_changes=stale_key,
+                           final_bank_sizes=[len(b) for b in banks])
+
+
+def study(data, recipe):
+    from parent_projection import identity
+    target, = [i for i,r in enumerate(recipe["rules"])
+               if [atom["call"].get("table") for atom in r["query"]]==["Get","HasArgType"]
+               and r["query"][0]["args"][0] == r["query"][1]["args"][0]]
+    receipts = data["root_recipe"]["history_returns"]
+    owners = {row[0]:row[5] for row in data["root_recipe"]["commits"]}
+    if any(owners.get(owner) != epoch for epoch, owner, *_ in receipts):
+        raise ValueError("return outside its committed owner epoch")
+    if any(a[0] > b[0] for a,b in zip(receipts,receipts[1:])):
+        raise ValueError("unordered history")
+    results = {}
+    hard = fit_cutoff(True)
+    for name, model, budget, keep in (
+            ("uniform",fit_cutoff(False),8,True), ("near_misses",hard,8,True),
+            ("all_positive",hard,None,True), ("same_epoch",hard,None,False)):
+        issued, stats = issue(receipts, model, budget, keep)
+        # Labels enter only after the issuer has stopped. Each emitted packet
+        # earns credit at most once and only for a strictly later query epoch.
+        used = set()
+        total = 0
+        for _, _, _, rid, _, epoch, refs, _ in data["root_recipe"]["commits"]:
+            if rid != target:
+                continue
+            total += 1
+            ordered = sorted(refs, key=lambda r:r["atom"])
+            if [r["atom"] for r in ordered] != [0,1]:
+                continue
+            pair = tuple(identity(r)[1:] for r in ordered)
+            if pair in issued and issued[pair][0] < epoch:
+                used.add(pair)
+        results[name] = dict(model=model, source=total, proposed=len(issued),
+                             matched_once=len(used), distinct_owners=sum(issued[k][1][0][0] != issued[k][1][1][0] for k in used), extra=len(issued)-len(used), **stats)
+    return results
