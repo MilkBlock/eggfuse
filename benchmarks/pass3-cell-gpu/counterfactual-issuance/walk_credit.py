@@ -14,6 +14,10 @@ def validate(data, cfg):
     heads = {tuple(path[0]) for path in cfg["library"] if len(path)==1}
     pairs = {tuple(map(tuple,path)) for path in cfg["library"] if len(path)==2}
     terminals = {row["consumer"] for row in strict["set_commits"]}
+    recorded = strict.get("depth_caps") or []
+    caps = {serial: action for serial,_,action in recorded}
+    if len(caps)!=len(recorded):
+        raise ValueError("duplicate root depth decision")
     prefix_commits = {(root,tuple(map(tuple,path)),tuple(map(tuple,ports))):(serial,run)
                       for serial,root,path,ports,run in links}
     depth = Counter()
@@ -26,6 +30,9 @@ def validate(data, cfg):
             deep_roots[path[0][0]]+=1
         if n>cfg["depth"] or n!=len(ports) or not n:
             raise ValueError("invalid path depth")
+        if "depth_reader" in cfg and path[0][0]==cfg["depth_reader"]["rule"]:
+            if root not in caps or caps[root]==1 and n>2:
+                raise ValueError(("unlicensed root depth",root,n))
         if serial in terminals:
             continue  # Checked separately by the typed Set validator.
         parent,op,child=path[-1]

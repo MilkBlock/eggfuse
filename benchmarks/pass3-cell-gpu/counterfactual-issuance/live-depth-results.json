@@ -1,0 +1,518 @@
+{
+  "training_device": "cpu",
+  "inference_device": "cpu",
+  "generated": {
+    "clean_max": {
+      "paid": 4264,
+      "deep": 64
+    },
+    "clean_attention": {
+      "paid": 4296,
+      "deep": 19
+    },
+    "clean_anchored": {
+      "paid": 4302,
+      "deep": 19
+    },
+    "mixed_anchored": {
+      "paid": 4264,
+      "deep": 51
+    },
+    "mixed_max": {
+      "paid": 4266,
+      "deep": 57
+    },
+    "mixed_attention": {
+      "paid": 4266,
+      "deep": 55
+    },
+    "shallow": 4324,
+    "deep": 4264
+  },
+  "whole": {
+    "sum-bits": {
+      "leaf": {
+        "paid": 12662,
+        "visible": 2691,
+        "fept": 0.21252566735112938,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "set8_reader": {
+        "paid": 11950,
+        "visible": 2691,
+        "fept": 0.22518828451882844,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "sub_shallow": {
+        "paid": 11956,
+        "visible": 2691,
+        "fept": 0.22507527601204416,
+        "depth_choices": [
+          0,
+          94,
+          0
+        ],
+        "depth_runs": 32,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "sub_learned": {
+        "paid": 11950,
+        "visible": 2691,
+        "fept": 0.22518828451882844,
+        "depth_choices": [
+          0,
+          0,
+          94
+        ],
+        "depth_runs": 32,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "sub_deep": {
+        "paid": 11950,
+        "visible": 2691,
+        "fept": 0.22518828451882844,
+        "depth_choices": [
+          0,
+          0,
+          94
+        ],
+        "depth_runs": 32,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "sub_clean_attention": {
+        "paid": 11956,
+        "visible": 2691,
+        "fept": 0.22507527601204416,
+        "depth_choices": [
+          0,
+          92,
+          2
+        ],
+        "depth_runs": 32,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "sub_mixed_max": {
+        "paid": 11952,
+        "visible": 2691,
+        "fept": 0.22515060240963855,
+        "depth_choices": [
+          0,
+          54,
+          40
+        ],
+        "depth_runs": 32,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "sub_mixed_max_expected": {
+        "paid": 11951,
+        "visible": 2691,
+        "fept": 0.22516944188770815,
+        "depth_choices": [
+          0,
+          38,
+          56
+        ],
+        "depth_runs": 32,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "sub_mixed_attention": {
+        "paid": 11956,
+        "visible": 2691,
+        "fept": 0.22507527601204416,
+        "depth_choices": [
+          0,
+          94,
+          0
+        ],
+        "depth_runs": 32,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "sub_clean_anchored": {
+        "paid": 11955,
+        "visible": 2691,
+        "fept": 0.22509410288582182,
+        "depth_choices": [
+          0,
+          92,
+          2
+        ],
+        "depth_runs": 32,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "sub_mixed_anchored": {
+        "paid": 11950,
+        "visible": 2691,
+        "fept": 0.22518828451882844,
+        "depth_choices": [
+          0,
+          59,
+          35
+        ],
+        "depth_runs": 32,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "sub_mixed_anchored_expected": {
+        "paid": 11950,
+        "visible": 2691,
+        "fept": 0.22518828451882844,
+        "depth_choices": [
+          0,
+          20,
+          74
+        ],
+        "depth_runs": 32,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      }
+    },
+    "3mm": {
+      "leaf": {
+        "paid": 558074,
+        "visible": 92658,
+        "fept": 0.16603174489404632,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+      },
+      "set8_reader": {
+        "paid": 539418,
+        "visible": 92658,
+        "fept": 0.17177402311380044,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+      },
+      "sub_shallow": {
+        "paid": 539874,
+        "visible": 92658,
+        "fept": 0.17162893564053835,
+        "depth_choices": [
+          0,
+          3077,
+          0
+        ],
+        "depth_runs": 65,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+      },
+      "sub_learned": {
+        "paid": 539418,
+        "visible": 92658,
+        "fept": 0.17177402311380044,
+        "depth_choices": [
+          0,
+          0,
+          3077
+        ],
+        "depth_runs": 65,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+      },
+      "sub_deep": {
+        "paid": 539418,
+        "visible": 92658,
+        "fept": 0.17177402311380044,
+        "depth_choices": [
+          0,
+          0,
+          3077
+        ],
+        "depth_runs": 65,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+      },
+      "sub_clean_attention": {
+        "paid": 539874,
+        "visible": 92658,
+        "fept": 0.17162893564053835,
+        "depth_choices": [
+          0,
+          3054,
+          23
+        ],
+        "depth_runs": 65,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+      },
+      "sub_mixed_max": {
+        "paid": 539593,
+        "visible": 92658,
+        "fept": 0.17171831361785642,
+        "depth_choices": [
+          0,
+          1642,
+          1435
+        ],
+        "depth_runs": 65,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+      },
+      "sub_mixed_max_expected": {
+        "paid": 539521,
+        "visible": 92658,
+        "fept": 0.1717412297204372,
+        "depth_choices": [
+          0,
+          1130,
+          1947
+        ],
+        "depth_runs": 65,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+      },
+      "sub_mixed_attention": {
+        "paid": 539874,
+        "visible": 92658,
+        "fept": 0.17162893564053835,
+        "depth_choices": [
+          0,
+          3075,
+          2
+        ],
+        "depth_runs": 65,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+      },
+      "sub_clean_anchored": {
+        "paid": 539754,
+        "visible": 92658,
+        "fept": 0.17166709278671394,
+        "depth_choices": [
+          0,
+          2493,
+          584
+        ],
+        "depth_runs": 65,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+      },
+      "sub_mixed_anchored": {
+        "paid": 539418,
+        "visible": 92658,
+        "fept": 0.17177402311380044,
+        "depth_choices": [
+          0,
+          1019,
+          2058
+        ],
+        "depth_runs": 65,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+      },
+      "sub_mixed_anchored_expected": {
+        "paid": 539418,
+        "visible": 92658,
+        "fept": 0.17177402311380044,
+        "depth_choices": [
+          0,
+          76,
+          3001
+        ],
+        "depth_runs": 65,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+      }
+    }
+  }
+}

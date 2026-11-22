@@ -158,6 +158,20 @@ def main(a):
                 for name,cfg,mode in guarded.copy():
                     if name in ("all_literal","set2","set8"):
                         guarded.append((name+"_reader",dict(cfg,route_reader=m),"full"))
+        if a.depth_model:
+            cfg = next(config for name,config,_ in guarded if name=="set8_reader")
+            # Change only the chosen root family. Other roots retain depth eight.
+            rid, = [i for i,r in enumerate(recipe["rules"]) if r["metadata"]["name"].startswith("(rewrite (SubTuple expr a b) (Concat")]
+            model=dict(json.loads(a.depth_model.read_bytes()),rule=rid)
+            for name,threshold in (("sub_shallow",1e20),("sub_learned",.5),("sub_deep",-1e20)):
+                guarded.append((name,dict(cfg,depth=8,depth_reader=dict(model,threshold=threshold)),"full"))
+            if a.depth_variants:
+                for variant in ("clean_attention","mixed_max","mixed_attention","clean_anchored","mixed_anchored"):
+                    weights=json.loads((a.depth_variants/(variant+".json")).read_bytes())
+                    guarded.append(("sub_"+variant,dict(cfg,depth=8,depth_reader=dict(weights,rule=rid)),"full"))
+                    if variant in ("mixed_max","mixed_anchored"):
+                        guarded.append(("sub_"+variant+"_expected",dict(cfg,depth=8,
+                                         depth_reader=dict(weights,rule=rid,threshold=0.)),"full"))
         if a.live:
             _, cfg, _ = guarded[-1]
             from route_credit import continuation_edges
@@ -178,9 +192,11 @@ def main(a):
                                     ("union",catalog["union"],"greedy"),("expanded",combined,"greedy"),
                                     ("wide_let_only",let_only,None),("wide",wide,"greedy"),("fixed_full",wide,"full"),
                                     *((("reuse_returns",dict(wide,reuse_returns=True),"greedy"),) if a.reuse_returns else ()), *guarded):
-                if a.walk and name not in ("leaf","all_literal","all_literal_reader") and not name.startswith(("walk","set")):
+                if a.walk and not (a.depth_model and name.startswith("sub_")) and name not in ("leaf","all_literal","all_literal_reader") and not name.startswith(("walk","set")):
                     continue
-                if a.set_edges and name not in ("leaf","all_literal","walk2_reuse1","set2","set8","set32","set2_reader","set8_reader","all_literal_reader"):
+                if a.set_edges and not (a.depth_model and name.startswith("sub_")) and name not in ("leaf","all_literal","walk2_reuse1","set2","set8","set32","set2_reader","set8_reader","all_literal_reader"):
+                    continue
+                if a.depth_model and name not in ("leaf","set8_reader") and not name.startswith("sub_"):
                     continue
                 if a.live and name not in ("leaf","all_literal","live_one","live_both","live_first_extra","live_equal_mixed","live_recurrent","expected_gain"):
                     continue
@@ -207,6 +223,11 @@ def main(a):
                 if a.walk and name != "leaf":
                     from walk_credit import validate
                     results[name].update(validate(data,cfg))
+                if "depth_reader" in cfg:
+                    choices,runs=data["strict_named"]["depth_choices"]
+                    if not runs or choices[0] or (name=="sub_shallow" and choices[2]) or (name=="sub_deep" and choices[1]):
+                        raise ValueError((case,name,"missing or unexpected depth decision",choices,runs))
+                    results[name].update(depth_choices=choices,depth_runs=runs)
                 if "route_reader" in cfg:
                     choices, runs = data["strict_named"]["route_choices"]
                     if not sum(choices) or runs < 2:
@@ -222,6 +243,9 @@ def main(a):
                     results[name]["reuse_committed"]=sum(
                         (r[0],tuple(r[1:4]),tuple(r[5:])) in used for r in captures)
                 print(case,name,paid,saved,flush=True)
+        if a.depth_model:
+            if results["sub_deep"]["paid"] != results["set8_reader"]["paid"]:
+                raise ValueError((case,"forcing eight hops changed the fixed-depth control"))
         report["cases"][case] = results
         (a.out/"catalog-credit.json").write_text(json.dumps(report,indent=2)+"\n")
 
@@ -239,7 +263,13 @@ if __name__ == "__main__":
     p.add_argument("--walk",action="store_true")
     p.add_argument("--set-edges",action="store_true")
     p.add_argument("--set-reader",type=Path)
+    p.add_argument("--depth-model",type=Path)
+    p.add_argument("--depth-variants",type=Path)
     args=p.parse_args()
+    if args.depth_variants and not args.depth_model:
+        p.error("--depth-variants needs the clean --depth-model control")
+    if args.depth_model and not args.set_reader:
+        p.error("--depth-model compares against the frozen --set-reader control")
     args.set_edges |= bool(args.set_reader)
     args.walk |= args.set_edges
     if args.walk and (args.live or args.recurrent or args.expected):

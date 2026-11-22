@@ -236,3 +236,27 @@ pub(crate) fn finish_set_edges(success:bool){
                 continue;
             }
             if path.len() > a.limit''')
+    copyfile(Path(__file__).with_name("depth_reader.rs"),crate/"src/depth_reader.rs")
+    with strict.open("a") as f:
+        f.write('\ninclude!("depth_reader.rs");\n')
+    edit(strict,"struct State {limited_roots:","struct State {depth_reader:Option<DepthReader>,limited_roots:")
+    edit(strict,"    s.reader=RouteReader::load","    s.depth_reader=DepthReader::load(&spec[\"depth_reader\"],g,depth)?;\n    s.reader=RouteReader::load")
+    edit(strict,"        let route = code >> 32;","""        let depth_action=code>>36;
+        if depth_action>2 || depth_action!=0 && !s.depth_reader.as_ref().is_some_and(|m|m.rule==rid) {
+            return Err("invalid signed depth selection".into());
+        }
+        let route = (code >> 32)&7;""")
+    edit(strict,"            s.stats.external_roots += 1;","""            if let Some(m)=s.depth_reader.as_mut() && m.rule==rid {
+                m.applied[depth_action]+=1;
+                if s.record_links {m.caps.push((serial,s.run,depth_action));}
+                if depth_action!=0 {m.runs.insert(s.run);}
+            }
+            s.stats.external_roots += 1;""")
+    edit(strict,"limit:s.root_limit.filter","limit:if depth_action==1 {2} else if depth_action==2 {8} else {s.root_limit.filter")
+    edit(strict,".map_or(s.depth,|p|p[2]),",".map_or(s.depth,|p|p[2])},")
+    edit(strict,'json!({"limited_roots":','json!({"depth_caps":s.depth_reader.as_ref().map(|m|&m.caps),"depth_choices":s.depth_reader.as_ref().map(|m|(m.applied,m.runs.len())),"limited_roots":')
+    edit(page,"        let context=crate::strict_named::route_page","        let depths=crate::strict_named::depth_page(graph,rid);\n        let context=crate::strict_named::route_page")
+    edit(page,"            words.extend([tag|action|route, addr, v]);","""            let depth=depths.as_ref().map_or(0,|rows|crate::strict_named::depth_bits(graph,rows,dep));
+            words.extend([tag|action|route|depth, addr, v]);""")
+    text=page.read_text().replace("!((1u64<<63)|(7u64<<56))","!((1u64<<63)|(7u64<<56)|(3u64<<54))")
+    page.write_text(text.replace("(((w[i]>>56)&7)<<32)", "(((w[i]>>56)&7)<<32) | (((w[i]>>54)&3)<<36)"))
