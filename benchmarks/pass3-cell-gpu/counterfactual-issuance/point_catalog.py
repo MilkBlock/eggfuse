@@ -50,6 +50,14 @@ def point_consumers(recipe, family):
     result = []
     for rid, rule in enumerate(recipe["rules"]):
         query = rule["query"]
+        if family in ("chain", "scalar-chain"):
+            tables = sum("table" in q["call"] for q in query)
+            if not rule["metadata"]["seminaive"] or len(query) < 2 or (tables < 2 and family == "chain"):
+                continue
+            for pivot, source in enumerate(query):
+                if source["call"].get("table") in constructors and determined(query, {pivot}):
+                    result.append((rid, pivot))
+            continue
         if len(query) != 2 or not rule["metadata"]["seminaive"]:
             continue
         for pivot, source in enumerate(query):
@@ -133,25 +141,36 @@ def validate(data, recipe, consumers):
         for kind,ordinal,*_ in batch:
             if ordinal in claimed:
                 effective[claimed[ordinal]][KINDS[kind]]+=1
-    return dict(stale_omissions=roots.get("point_stale_omissions"), owners=len(owner_epochs), owners_used_across_epochs=sum(len(v)>1 for v in owner_epochs.values()),
+    point_serials = {serial for serial, _ in children}
+    downstream = Counter(len(path) for _, root, path, _, _ in data["strict_named"]["signed_commits"]
+                         if root in point_serials)
+    return dict(signed_descendants_by_depth=dict(downstream), batch_gate=roots.get("point_batch_gate"), stale_omissions=roots.get("point_stale_omissions"), owners=len(owner_epochs), owners_used_across_epochs=sum(len(v)>1 for v in owner_epochs.values()),
                 producer_counts=dict(producer_counts),attempts=attempts, union_probes=roots.get("point_union_probes"), rekeyed_entries=roots.get("point_rekeyed"), skipped=roots.get("point_skips",{}), committed=success, misses=len(failed),
                 misses_by_rule=dict(Counter(rid for rid, _, _ in failed)),effective=dict(effective))
 
 
-def compare_families(run, request, recipe, control, reference, packets):
+def compare_families(run, request, recipe, control, reference, packets, family):
     from time import perf_counter
     from ept import score
 
-    old = set(point_consumers(recipe, "all"))
     head = request["history_head"]
     spec = head["point_claims"]
-    families = {"projected": spec["consumers"],
-                "first_field": [entry for entry in spec["consumers"] if tuple(entry) in old]}
-    stats = {name: dict(native_ms=[], request_ms=[]) for name in families}
-    for turn in range(4):
-        for name in (families if turn % 2 == 0 else reversed(families)):
-            config = dict(head, point_claims=dict(spec, consumers=families[name],
-                                                  own_stale=name == "projected" and spec.get("own_stale", False)))
+    old = set(point_consumers(recipe, "determined" if family == "chain" else "all"))
+    old_consumers = [entry for entry in spec["consumers"] if tuple(entry) in old]
+    if family == "chain":
+        arms = {"projected":dict(spec, consumers=old_consumers, compose_paths=False, batch_gate=False),
+                "chain":spec}
+        if spec.get("project_later"):
+            arms["table_bounds"] = dict(spec, project_later=False)
+        else:
+            arms["chain_unbatched"] = dict(spec, batch_gate=False)
+    else:
+        arms = {"projected":spec, "first_field":dict(spec, consumers=old_consumers, own_stale=False)}
+    stats = {name: dict(native_ms=[], request_ms=[]) for name in arms}
+    names = list(arms)
+    for turn in range(3 if family == "chain" else 4):
+        for name in names[turn % len(names):] + names[:turn % len(names)]:
+            config = dict(head, point_claims=arms[name])
             start = perf_counter()
             data = run(dict(request, history_head=config))
             duration = 1000 * (perf_counter() - start)

@@ -303,7 +303,7 @@ pub(crate) fn finish_set_edges(success:bool){
     root=crate/"src/joint_root.rs"
     edit(root,"audit:bool,emitted:", "history_issuer:Option<HistoryIssuer>,history:Option<([usize;2],Vec<[u64;8]>)>,pair_issuer:Option<PairIssuer>,pair_trace:Option<(Vec<usize>,Vec<[u64;7]>)>,audit:bool,emitted:")
     edit(root,"State{stage_watch:false,", "State{pair_issuer:None,history_issuer:None,history:None,pair_trace:None,stage_watch:false,")
-    edit(root,'"root_row_decodes":s.decodes', '"pair_checks":s.pair_issuer.as_ref().map(|p|[p.checked,p.verified]),"pair_proposals":s.pair_issuer.as_ref().map(|p|&p.proposals),"history_tail_misses":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|&t.omitted),"point_stale_omissions":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|t.points.stale_omissions),"point_union_probes":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|t.points.union_probes),"point_rekeyed":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|t.points.rekeyed),"point_skips":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|&t.points.skipped),"point_claims":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|(&t.points.attempts,&t.points.children,&t.points.misses)),"history_scale":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|t.scale),"history_tail":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|(t.attempts,&t.children)),"history_suppressed":s.history_issuer.as_ref().map(|h|&h.suppressed),"history_updates":s.history_issuer.as_ref().map(|h|&h.updates),"history_initial":s.history_issuer.as_ref().map(|h|&h.seeds),"history_access":s.history_issuer.as_ref().map(|h|[h.probes,h.visits]),"history_online":s.history_issuer.as_ref().map(|h|(&h.checked,&h.pending)),"history_returns":s.history.as_ref().map(|h|&h.1),"pair_returns":s.pair_trace.as_ref().map(|(_,rows)|rows),"root_row_decodes":s.decodes')
+    edit(root,'"root_row_decodes":s.decodes', '"pair_checks":s.pair_issuer.as_ref().map(|p|[p.checked,p.verified]),"pair_proposals":s.pair_issuer.as_ref().map(|p|&p.proposals),"history_tail_misses":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|&t.omitted),"point_batch_gate":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|[t.points.batch_skips,t.points.avoided_visits]),"point_stale_omissions":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|t.points.stale_omissions),"point_union_probes":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|t.points.union_probes),"point_rekeyed":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|t.points.rekeyed),"point_skips":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|&t.points.skipped),"point_claims":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|(&t.points.attempts,&t.points.children,&t.points.misses)),"history_scale":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|t.scale),"history_tail":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|(t.attempts,&t.children)),"history_suppressed":s.history_issuer.as_ref().map(|h|&h.suppressed),"history_updates":s.history_issuer.as_ref().map(|h|&h.updates),"history_initial":s.history_issuer.as_ref().map(|h|&h.seeds),"history_access":s.history_issuer.as_ref().map(|h|[h.probes,h.visits]),"history_online":s.history_issuer.as_ref().map(|h|(&h.checked,&h.pending)),"history_returns":s.history.as_ref().map(|h|&h.1),"pair_returns":s.pair_trace.as_ref().map(|(_,rows)|rows),"root_row_decodes":s.decodes')
     with root.open("a") as f:
         f.write("""
 pub fn enable_return_history(program:&Program)->Result<()> {
@@ -319,6 +319,10 @@ pub(crate) fn history_return(table:usize,key:&[Value],result:&Value,op:usize,dep
             && let Some(wires)=s.layout[rid].point_wires.get(&op)
             && let Some(tail)=s.history_issuer.as_mut().and_then(|h|h.tail.as_mut()){
             for &(child,projection) in wires {
+                if tail.points.batch_gate {
+                    let upper=tail.points.newest_pivots.entry(child).or_default();
+                    *upper=(*upper).max(version);
+                }
                 let prefix=projection.and_then(|i|if i==key.len(){Some(result)}else{key.get(i)});
                 let prefix=match prefix { Some(Value::Eq(id))=>Some(*id), _=>None };
                 tail.points.pending.entry(child).or_default()
@@ -524,13 +528,15 @@ pub(crate) fn trace_pair_return(op:usize,dep:Dependency,version:u64,reused:bool)
     edit(single,'Ok(Self{waiting_wave:', 'Ok(Self{tail_bindings:BTreeMap::new(),waiting_wave:')
     anchor='let matched=if self.rows.verify.mode==0'
     edit(single,anchor,'let prior=token.w.and_then(|w|self.tail_bindings.remove(&(rid,w,token.version)));\n            let matched=if prior.is_some(){prior}else if self.rows.verify.mode==0')
+    with single.open("a") as f:
+        f.write("\npub(crate) fn signed_point_order(r:&Rule,pivot:usize)->Option<Vec<usize>> { compile(r,Some(pivot)).map(|p|p.order) }\n")
     rows=crate/"src/adaptive_rows.rs"
     anchor='        let model = self\n            .policy'
     edit(rows,anchor,'''        let claims=crate::joint_root::history_tail_claims(rid,g,wm);
         let mut inherited=BTreeMap::new();
         let mut failed_tail=BTreeMap::new();
         for (w,version,owner,depth,pivot) in claims {
-            if p.pivot!=Some(pivot) || p.order.as_slice()!=[1-pivot] || self.residual || !self.rows.batch {
+            if p.pivot!=Some(pivot) || p.order.len()+1!=r.query.len() || self.residual || !self.rows.batch {
                 return Err("incompatible signed point plan".into())
             }
             let token=Token{recipe:None,id:0,rid,w:Some(w),guarded:false,version,initial:false,score:0.};
@@ -561,6 +567,22 @@ pub(crate) fn trace_pair_return(op:usize,dep:Dependency,version:u64,reused:bool)
             }
 '''+anchor)
 
+    with strict.open("a") as f:
+        f.write("""
+pub(crate) fn static_point_code(rid:usize)->Option<usize>{
+    S.with_borrow(|slot|{
+        let s=slot.as_ref()?;
+        if !s.programs.contains_key(&rid) || selection(s,rid)!=rid+1
+            || s.reader.as_ref().is_some_and(|m|m.edges[0][0]==rid)
+            || s.depth_reader.as_ref().is_some_and(|m|m.rule==rid) { return None }
+        Some(rid+1)
+    })
+}
+""")
+    signature="pub(crate) fn internal_point(run:u64,rid:usize,atom:usize,row:Dependency,version:u64,serial:u64)->Result<Recipe>{"
+    edit(root,signature,signature+"\n    signed_point(run,rid,atom,row,version,serial,0)\n}\n"
+         +signature.replace("internal_point","signed_point").replace("serial:u64)","serial:u64,strict_code:usize)"))
+    edit(root,'Decoded{strict_code:0,serial,origin:"single"', 'Decoded{strict_code,serial,origin:"single"')
     copyfile(Path(__file__).with_name("point_claims.rs"),crate/"src/point_claims.rs")
     with root.open("a") as f:
         f.write('\ninclude!("point_claims.rs");\n')

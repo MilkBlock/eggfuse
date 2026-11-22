@@ -1,0 +1,869 @@
+{
+  "dot-product": {
+    "ledger_sha256": "9e1a9f99f07770a2ce93a65e8d1ef1b542615a3caeb18d12ed50c524fc971b18",
+    "signed_effective_ops": {
+      "visible_birth": 2974,
+      "effective_write": 2159,
+      "effective_union": 341,
+      "visibility_change": 0
+    },
+    "arms": {
+      "two_atoms": {
+        "paid": 11441,
+        "ept": 0.4784546805349183,
+        "licensed": 104,
+        "point_commits": 770,
+        "point_rejections": 610,
+        "point_checks": 1797,
+        "strict_changes": {
+          "gained": {
+            "65": 1
+          },
+          "lost": {}
+        },
+        "source_rejection_delta": 0
+      },
+      "chain_without_inherited_paths": {
+        "paid": 11253,
+        "ept": 0.48644805829556564,
+        "licensed": 140,
+        "point_commits": 879,
+        "point_rejections": 746,
+        "point_checks": 2373,
+        "strict_changes": {
+          "gained": {
+            "143": 20,
+            "65": 1
+          },
+          "lost": {
+            "58": 29,
+            "137": 32,
+            "143": 29
+          }
+        },
+        "source_rejection_delta": 13
+      },
+      "composed": {
+        "paid": 11197,
+        "ept": 0.4888809502545325,
+        "licensed": 140,
+        "point_commits": 879,
+        "point_rejections": 746,
+        "point_checks": 2373,
+        "strict_changes": {
+          "gained": {},
+          "lost": {}
+        },
+        "source_rejection_delta": 0
+      },
+      "batch": {
+        "paid": 11197,
+        "ept": 0.4888809502545325,
+        "licensed": 140,
+        "point_commits": 879,
+        "point_rejections": 746,
+        "point_checks": 2373,
+        "strict_changes": {
+          "gained": {},
+          "lost": {}
+        },
+        "source_rejection_delta": 0
+      },
+      "scalar": {
+        "paid": 11197,
+        "ept": 0.4888809502545325,
+        "licensed": 141,
+        "point_commits": 879,
+        "point_rejections": 746,
+        "point_checks": 2502,
+        "strict_changes": {
+          "gained": {},
+          "lost": {}
+        },
+        "source_rejection_delta": 0
+      }
+    },
+    "coarse_gate_timings": {
+      "projected": {
+        "native_ms": [
+          61.729,
+          59.608583,
+          60.817457999999995
+        ],
+        "request_ms": [
+          268.7034998089075,
+          263.95399984903634,
+          265.5340840574354
+        ],
+        "counts": {
+          "paid": 11441,
+          "signed": {
+            "visible_birth": 2974,
+            "effective_write": 2159,
+            "effective_union": 341,
+            "visibility_change": 0
+          },
+          "ept": 0.4784546805349183,
+          "receiver_table_lookups": 7393,
+          "point_attempts": 1797
+        }
+      },
+      "chain_unbatched": {
+        "native_ms": [
+          63.045041999999995,
+          61.431417,
+          60.855667000000004
+        ],
+        "request_ms": [
+          293.385999975726,
+          269.88545805215836,
+          268.3076250832528
+        ],
+        "counts": {
+          "paid": 11197,
+          "signed": {
+            "visible_birth": 2974,
+            "effective_write": 2159,
+            "effective_union": 341,
+            "visibility_change": 0
+          },
+          "ept": 0.4888809502545325,
+          "receiver_table_lookups": 8033,
+          "point_attempts": 2373
+        }
+      },
+      "chain": {
+        "native_ms": [
+          60.267458000000005,
+          63.810832999999995,
+          62.557083999999996
+        ],
+        "request_ms": [
+          267.2733331564814,
+          275.9070841129869,
+          269.7613330092281
+        ],
+        "counts": {
+          "paid": 11197,
+          "signed": {
+            "visible_birth": 2974,
+            "effective_write": 2159,
+            "effective_union": 341,
+            "visibility_change": 0
+          },
+          "ept": 0.4888809502545325,
+          "receiver_table_lookups": 8033,
+          "point_attempts": 2373
+        }
+      }
+    },
+    "final_timings": {
+      "projected": {
+        "native_ms": [
+          58.759458,
+          65.031167,
+          62.144541999999994
+        ],
+        "request_ms": [
+          249.37087506987154,
+          273.9539169706404,
+          261.13354112021625
+        ],
+        "counts": {
+          "paid": 11441,
+          "signed": {
+            "visible_birth": 2974,
+            "effective_write": 2159,
+            "effective_union": 341,
+            "visibility_change": 0
+          },
+          "ept": 0.4784546805349183,
+          "receiver_table_lookups": 7393,
+          "point_attempts": 1797
+        }
+      },
+      "chain": {
+        "native_ms": [
+          59.441292,
+          57.863917,
+          57.18025
+        ],
+        "request_ms": [
+          263.599457917735,
+          258.6783750448376,
+          250.57666702196002
+        ],
+        "counts": {
+          "paid": 11197,
+          "signed": {
+            "visible_birth": 2974,
+            "effective_write": 2159,
+            "effective_union": 341,
+            "visibility_change": 0
+          },
+          "ept": 0.4888809502545325,
+          "receiver_table_lookups": 7339,
+          "point_attempts": 2003
+        }
+      },
+      "table_bounds": {
+        "native_ms": [
+          62.995667000000005,
+          60.739292,
+          57.095791
+        ],
+        "request_ms": [
+          260.7214169111103,
+          262.3279590625316,
+          255.1506671588868
+        ],
+        "counts": {
+          "paid": 11197,
+          "signed": {
+            "visible_birth": 2974,
+            "effective_write": 2159,
+            "effective_union": 341,
+            "visibility_change": 0
+          },
+          "ept": 0.4888809502545325,
+          "receiver_table_lookups": 8033,
+          "point_attempts": 2373
+        }
+      }
+    },
+    "final_checks": {
+      "rhs": true,
+      "writes": true,
+      "resumes": true,
+      "events": true,
+      "runs": true,
+      "schedule": true,
+      "state_sha": true,
+      "ledger": true,
+      "commit_inputs": true
+    },
+    "audit": {
+      "exact_checks": 26479,
+      "gated_checks": 2003,
+      "matched_children": 879,
+      "matched_rejections": 746,
+      "direct_stale_rejections": 152
+    },
+    "batch_skips": 105,
+    "visits_skipped": 3405,
+    "downstream_depths": {
+      "1": 61,
+      "2": 57,
+      "3": 20
+    },
+    "arity": {
+      "2": {
+        "templates": 104,
+        "successes": 770,
+        "rejections": 610
+      },
+      "3": {
+        "templates": 18,
+        "successes": 54,
+        "rejections": 82
+      },
+      "4": {
+        "templates": 9,
+        "successes": 28,
+        "rejections": 0
+      },
+      "5": {
+        "templates": 6,
+        "successes": 27,
+        "rejections": 54
+      },
+      "6": {
+        "templates": 2,
+        "successes": 0,
+        "rejections": 0
+      },
+      "8": {
+        "templates": 1,
+        "successes": 0,
+        "rejections": 0
+      }
+    }
+  },
+  "sum-bits": {
+    "ledger_sha256": "4cc4c1c34874ef596379c3218854655706eff5a13bb0c7e1e4a38fc0cd70e0fa",
+    "signed_effective_ops": {
+      "visible_birth": 3331,
+      "effective_write": 1449,
+      "effective_union": 526,
+      "visibility_change": 75
+    },
+    "arms": {
+      "two_atoms": {
+        "paid": 9680,
+        "ept": 0.5558884297520661,
+        "licensed": 104,
+        "point_commits": 508,
+        "point_rejections": 906,
+        "point_checks": 2164,
+        "strict_changes": {
+          "gained": {},
+          "lost": {
+            "138": 3
+          }
+        },
+        "source_rejection_delta": 0
+      },
+      "chain_without_inherited_paths": {
+        "paid": 9167,
+        "ept": 0.5869968364786735,
+        "licensed": 140,
+        "point_commits": 685,
+        "point_rejections": 1306,
+        "point_checks": 3720,
+        "strict_changes": {
+          "gained": {
+            "143": 15
+          },
+          "lost": {
+            "58": 32,
+            "137": 23,
+            "143": 32,
+            "138": 3
+          }
+        },
+        "source_rejection_delta": 8
+      },
+      "composed": {
+        "paid": 9100,
+        "ept": 0.5913186813186814,
+        "licensed": 140,
+        "point_commits": 685,
+        "point_rejections": 1306,
+        "point_checks": 3720,
+        "strict_changes": {
+          "gained": {},
+          "lost": {}
+        },
+        "source_rejection_delta": 0
+      },
+      "batch": {
+        "paid": 9100,
+        "ept": 0.5913186813186814,
+        "licensed": 140,
+        "point_commits": 685,
+        "point_rejections": 1306,
+        "point_checks": 3720,
+        "strict_changes": {
+          "gained": {},
+          "lost": {}
+        },
+        "source_rejection_delta": 0
+      },
+      "scalar": {
+        "paid": 9100,
+        "ept": 0.5913186813186814,
+        "licensed": 141,
+        "point_commits": 685,
+        "point_rejections": 1306,
+        "point_checks": 3898,
+        "strict_changes": {
+          "gained": {},
+          "lost": {}
+        },
+        "source_rejection_delta": 0
+      }
+    },
+    "coarse_gate_timings": {
+      "projected": {
+        "native_ms": [
+          63.0815,
+          64.143375,
+          63.221917000000005
+        ],
+        "request_ms": [
+          268.4496250003576,
+          276.6592921689153,
+          285.5237079784274
+        ],
+        "counts": {
+          "paid": 9680,
+          "signed": {
+            "visible_birth": 3331,
+            "effective_write": 1449,
+            "effective_union": 526,
+            "visibility_change": 75
+          },
+          "ept": 0.5558884297520661,
+          "receiver_table_lookups": 7021,
+          "point_attempts": 2164
+        }
+      },
+      "chain_unbatched": {
+        "native_ms": [
+          70.47170899999999,
+          66.94462499999999,
+          64.956334
+        ],
+        "request_ms": [
+          277.5993328541517,
+          271.24670799821615,
+          281.5299581270665
+        ],
+        "counts": {
+          "paid": 9100,
+          "signed": {
+            "visible_birth": 3331,
+            "effective_write": 1449,
+            "effective_union": 526,
+            "visibility_change": 75
+          },
+          "ept": 0.5913186813186814,
+          "receiver_table_lookups": 8716,
+          "point_attempts": 3720
+        }
+      },
+      "chain": {
+        "native_ms": [
+          65.505458,
+          71.07025,
+          64.990166
+        ],
+        "request_ms": [
+          294.2944171372801,
+          297.3034579772502,
+          276.72033314593136
+        ],
+        "counts": {
+          "paid": 9100,
+          "signed": {
+            "visible_birth": 3331,
+            "effective_write": 1449,
+            "effective_union": 526,
+            "visibility_change": 75
+          },
+          "ept": 0.5913186813186814,
+          "receiver_table_lookups": 8716,
+          "point_attempts": 3720
+        }
+      }
+    },
+    "final_timings": {
+      "projected": {
+        "native_ms": [
+          61.913416999999995,
+          62.016166,
+          72.951167
+        ],
+        "request_ms": [
+          255.45666692778468,
+          270.68520803004503,
+          289.6995418705046
+        ],
+        "counts": {
+          "paid": 9680,
+          "signed": {
+            "visible_birth": 3331,
+            "effective_write": 1449,
+            "effective_union": 526,
+            "visibility_change": 75
+          },
+          "ept": 0.5558884297520661,
+          "receiver_table_lookups": 7021,
+          "point_attempts": 2164
+        }
+      },
+      "chain": {
+        "native_ms": [
+          60.421457999999994,
+          67.839,
+          68.129125
+        ],
+        "request_ms": [
+          254.61374991573393,
+          264.65391693636775,
+          280.86241614073515
+        ],
+        "counts": {
+          "paid": 9100,
+          "signed": {
+            "visible_birth": 3331,
+            "effective_write": 1449,
+            "effective_union": 526,
+            "visibility_change": 75
+          },
+          "ept": 0.5913186813186814,
+          "receiver_table_lookups": 6753,
+          "point_attempts": 2642
+        }
+      },
+      "table_bounds": {
+        "native_ms": [
+          62.798207999999995,
+          73.27033300000001,
+          62.843959000000005
+        ],
+        "request_ms": [
+          286.79549996741116,
+          308.6705410387367,
+          271.4588330127299
+        ],
+        "counts": {
+          "paid": 9100,
+          "signed": {
+            "visible_birth": 3331,
+            "effective_write": 1449,
+            "effective_union": 526,
+            "visibility_change": 75
+          },
+          "ept": 0.5913186813186814,
+          "receiver_table_lookups": 8716,
+          "point_attempts": 3720
+        }
+      }
+    },
+    "final_checks": {
+      "rhs": true,
+      "writes": true,
+      "resumes": true,
+      "events": true,
+      "runs": true,
+      "schedule": true,
+      "state_sha": true,
+      "ledger": true,
+      "commit_inputs": true
+    },
+    "audit": {
+      "exact_checks": 28665,
+      "gated_checks": 2642,
+      "matched_children": 685,
+      "matched_rejections": 1306,
+      "direct_stale_rejections": 281
+    },
+    "batch_skips": 148,
+    "visits_skipped": 5746,
+    "downstream_depths": {
+      "1": 67,
+      "2": 56,
+      "3": 15
+    },
+    "arity": {
+      "2": {
+        "templates": 104,
+        "successes": 508,
+        "rejections": 906
+      },
+      "3": {
+        "templates": 18,
+        "successes": 96,
+        "rejections": 168
+      },
+      "4": {
+        "templates": 9,
+        "successes": 33,
+        "rejections": 76
+      },
+      "5": {
+        "templates": 6,
+        "successes": 47,
+        "rejections": 156
+      },
+      "6": {
+        "templates": 2,
+        "successes": 0,
+        "rejections": 0
+      },
+      "8": {
+        "templates": 1,
+        "successes": 1,
+        "rejections": 0
+      }
+    }
+  },
+  "3mm": {
+    "ledger_sha256": "63a923887e958fe32e63821392e62a71a9a52e8a21058c94cdc3af49899af2d0",
+    "signed_effective_ops": {
+      "visible_birth": 111901,
+      "effective_write": 81136,
+      "effective_union": 11544,
+      "visibility_change": 0
+    },
+    "arms": {
+      "two_atoms": {
+        "paid": 383587,
+        "ept": 0.5333366354959892,
+        "licensed": 104,
+        "point_commits": 64418,
+        "point_rejections": 70448,
+        "point_checks": 147625,
+        "strict_changes": {
+          "gained": {},
+          "lost": {}
+        },
+        "source_rejection_delta": 0
+      },
+      "chain_without_inherited_paths": {
+        "paid": 371462,
+        "ept": 0.5507454329110381,
+        "licensed": 140,
+        "point_commits": 68637,
+        "point_rejections": 81340,
+        "point_checks": 394468,
+        "strict_changes": {
+          "gained": {
+            "143": 659
+          },
+          "lost": {
+            "137": 977,
+            "143": 1363,
+            "58": 1363
+          }
+        },
+        "source_rejection_delta": 58
+      },
+      "composed": {
+        "paid": 368476,
+        "ept": 0.5552084803352185,
+        "licensed": 140,
+        "point_commits": 68637,
+        "point_rejections": 81340,
+        "point_checks": 394468,
+        "strict_changes": {
+          "gained": {},
+          "lost": {}
+        },
+        "source_rejection_delta": 0
+      },
+      "batch": {
+        "paid": 368476,
+        "ept": 0.5552084803352185,
+        "licensed": 140,
+        "point_commits": 68637,
+        "point_rejections": 81340,
+        "point_checks": 394468,
+        "strict_changes": {
+          "gained": {},
+          "lost": {}
+        },
+        "source_rejection_delta": 0
+      },
+      "scalar": {
+        "paid": 368476,
+        "ept": 0.5552084803352185,
+        "licensed": 141,
+        "point_commits": 68637,
+        "point_rejections": 81340,
+        "point_checks": 399545,
+        "strict_changes": {
+          "gained": {},
+          "lost": {}
+        },
+        "source_rejection_delta": 0
+      }
+    },
+    "coarse_gate_timings": {
+      "projected": {
+        "native_ms": [
+          4275.227375,
+          4660.62975,
+          4224.702583
+        ],
+        "request_ms": [
+          10044.87062501721,
+          10531.653666170314,
+          10114.365791901946
+        ],
+        "counts": {
+          "paid": 383587,
+          "signed": {
+            "visible_birth": 111901,
+            "effective_write": 81136,
+            "effective_union": 11544,
+            "visibility_change": 0
+          },
+          "ept": 0.5333366354959892,
+          "receiver_table_lookups": 379845,
+          "point_attempts": 147625
+        }
+      },
+      "chain_unbatched": {
+        "native_ms": [
+          4531.3915,
+          4401.170042000001,
+          4194.1990000000005
+        ],
+        "request_ms": [
+          10380.256207892671,
+          10006.094832904637,
+          9227.027958957478
+        ],
+        "counts": {
+          "paid": 368476,
+          "signed": {
+            "visible_birth": 111901,
+            "effective_write": 81136,
+            "effective_union": 11544,
+            "visibility_change": 0
+          },
+          "ept": 0.5552084803352185,
+          "receiver_table_lookups": 833601,
+          "point_attempts": 394468
+        }
+      },
+      "chain": {
+        "native_ms": [
+          4466.798916,
+          4326.852917,
+          4421.666834
+        ],
+        "request_ms": [
+          10238.772416021675,
+          10031.001541065052,
+          13532.998749986291
+        ],
+        "counts": {
+          "paid": 368476,
+          "signed": {
+            "visible_birth": 111901,
+            "effective_write": 81136,
+            "effective_union": 11544,
+            "visibility_change": 0
+          },
+          "ept": 0.5552084803352185,
+          "receiver_table_lookups": 833601,
+          "point_attempts": 394468
+        }
+      }
+    },
+    "final_timings": {
+      "projected": {
+        "native_ms": [
+          3975.695041,
+          4144.516125,
+          4331.609334000001
+        ],
+        "request_ms": [
+          9524.967291858047,
+          9649.951708037406,
+          9827.922082971781
+        ],
+        "counts": {
+          "paid": 383587,
+          "signed": {
+            "visible_birth": 111901,
+            "effective_write": 81136,
+            "effective_union": 11544,
+            "visibility_change": 0
+          },
+          "ept": 0.5333366354959892,
+          "receiver_table_lookups": 379845,
+          "point_attempts": 147625
+        }
+      },
+      "chain": {
+        "native_ms": [
+          3972.951834,
+          3882.9779169999997,
+          4023.4619589999998
+        ],
+        "request_ms": [
+          9578.2009169925,
+          9218.953249976039,
+          9128.846209030598
+        ],
+        "counts": {
+          "paid": 368476,
+          "signed": {
+            "visible_birth": 111901,
+            "effective_write": 81136,
+            "effective_union": 11544,
+            "visibility_change": 0
+          },
+          "ept": 0.5552084803352185,
+          "receiver_table_lookups": 367959,
+          "point_attempts": 155411
+        }
+      },
+      "table_bounds": {
+        "native_ms": [
+          4110.7027499999995,
+          4072.226458,
+          4122.348042
+        ],
+        "request_ms": [
+          9549.903499893844,
+          9576.866791117936,
+          11952.834832947701
+        ],
+        "counts": {
+          "paid": 368476,
+          "signed": {
+            "visible_birth": 111901,
+            "effective_write": 81136,
+            "effective_union": 11544,
+            "visibility_change": 0
+          },
+          "ept": 0.5552084803352185,
+          "receiver_table_lookups": 833601,
+          "point_attempts": 394468
+        }
+      }
+    },
+    "final_checks": {
+      "rhs": true,
+      "writes": true,
+      "resumes": true,
+      "events": true,
+      "runs": true,
+      "schedule": true,
+      "state_sha": true,
+      "ledger": true,
+      "commit_inputs": true
+    },
+    "audit": {
+      "exact_checks": 5174492,
+      "gated_checks": 155411,
+      "matched_children": 68637,
+      "matched_rejections": 81340,
+      "direct_stale_rejections": 47770
+    },
+    "batch_skips": 788,
+    "visits_skipped": 506089,
+    "downstream_depths": {
+      "1": 2794,
+      "2": 2322,
+      "3": 659
+    },
+    "arity": {
+      "2": {
+        "templates": 104,
+        "successes": 64418,
+        "rejections": 70448
+      },
+      "3": {
+        "templates": 18,
+        "successes": 2206,
+        "rejections": 7100
+      },
+      "4": {
+        "templates": 9,
+        "successes": 563,
+        "rejections": 108
+      },
+      "5": {
+        "templates": 6,
+        "successes": 1450,
+        "rejections": 3684
+      },
+      "6": {
+        "templates": 2,
+        "successes": 0,
+        "rejections": 0
+      },
+      "8": {
+        "templates": 1,
+        "successes": 0,
+        "rejections": 0
+      }
+    }
+  }
+}

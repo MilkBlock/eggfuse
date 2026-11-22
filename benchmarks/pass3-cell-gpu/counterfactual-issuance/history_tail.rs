@@ -259,7 +259,7 @@ pub(crate) fn history_tail_recipe(
     owner: usize,
     depth: usize,
 ) -> Result<Recipe> {
-    let (serial, pivot) = STATE.with_borrow_mut(|s| -> Result<(u64, usize)> {
+    let (serial, pivot, code) = STATE.with_borrow_mut(|s| -> Result<(u64, usize, usize)> {
         let s = s.as_mut().ok_or("missing history issuer")?;
         let tail = s
             .history_issuer
@@ -269,7 +269,11 @@ pub(crate) fn history_tail_recipe(
         if let Some(&pivot) = tail.points.pivots.get(&rid) {
             s.serial += 1;
             tail.points.children.push((s.serial, owner));
-            return Ok((s.serial, pivot));
+            return Ok((
+                s.serial,
+                pivot,
+                tail.points.static_codes.get(&rid).copied().unwrap_or(0),
+            ));
         }
         if tail.rule != rid {
             return Err("wrong signed history child".into());
@@ -279,9 +283,9 @@ pub(crate) fn history_tail_recipe(
             tail.inherited.insert(s.serial, depth - 1);
         }
         tail.children.push((s.serial, owner));
-        Ok((s.serial, 1))
+        Ok((s.serial, 1, 0))
     })?;
-    internal_point(epoch, rid, pivot, row, version, serial)
+    signed_point(epoch, rid, pivot, row, version, serial, code)
 }
 
 pub(crate) fn history_tail_miss(

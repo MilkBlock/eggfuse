@@ -329,3 +329,52 @@ respectively. Native schedule medians were 4.151 s and 4.044 s over four
 alternating measurements each. This establishes improved signed EPT and a
 reduction in paid rejection traffic; native execution time increased on this
 workload. Dot-product and sum-bits also had higher native medians.
+
+### Signing a complete point-query plan
+
+Use `--point-family chain --compose-point-paths --point-batch-gate
+--point-project-later` with the history-addressed, fixed-depth, gated
+stale-ownership command above. A versioned constructor return can start any
+licensed semi-naive query with at least two table atoms for which the original
+native single-witness compiler finds a complete sequence of point reads and
+forward primitives. The normal source pivot must match. The optional
+`scalar-chain` catalog also admits a constructor followed solely by scalar
+steps. On the three programs this admits one additional template and yielded
+the same paid counts. The largest licensed query has eight atoms; sum-bits
+actually exercised it. A template's arity is distinct from the number of
+subsequent rule applications that its token can sign.
+
+The composed variant attaches the child's static strict program to the original
+signed claim when it needs no separate route, depth choice or Set admission.
+It retains the ordinary checker and the actual returned version. Each control
+accounts for changes in other strict paths by source ordinal and changes in
+independently verified source rejections. The path audit traces descendants
+back to their committed parent and actual input witness.
+
+The batch gate can discard a rule's retained group for one invocation when the
+largest registered pivot version and all relevant sealed table bounds are
+older than its watermark. Skipped slots include any already retired ports;
+their individual retirement check is deferred. Stale discharge at a paid lane
+still checks the actual version and owner. When a later table has fresh changes,
+the projected-key variant reads the named pivot and tests only the corresponding
+key histories where Bake can derive those keys. A key depending on an unknown
+intermediate result requires the usual check. No learned weights change across
+these arms. The ungated reference replays every signed claim and compares
+individual signed children and rejections, in addition to the Run ledger.
+
+With `--compare-point-families` on `chain`, three rotated repetitions compare
+the previous two-atom catalog, the expanded catalog and the freshness variant.
+Native times include audit instrumentation. [Ablations, counts and raw native times](chain-point-results.json)
+
+On 3mm the 140-template chain catalog paid 368,476 tokens against 383,587
+for the 104-template two-atom control. The reduction contained 4,219 successful
+proposals and 10,892 rejections. Signed EPT rose from 0.53334 to 0.55521.
+Enabling the inherited static program preserved every previously signed
+strict ordinal on all three workloads. The additional key-bound proof reduced
+3mm point attempts from 394,468 to 155,411 while preserving every signed
+receipt. Total single-witness table lookups fell from 379,845 on the two-atom
+control to 367,959. In this three-way rotation the median instrumented native
+times were 4.145 s and 3.973 s respectively; sum-bits had a higher native
+median despite using fewer tokens. This comparison measures a broader
+compiled action for an already signed token. It does not train a policy to
+choose a new independent parent or measure GPU performance.
