@@ -17,3 +17,16 @@ python "$D/transfer.py" "$OUT/plain.json" "$OUT/sum-bits.gz" "$OUT/dot-product.g
 python "$D/transfer.py" "$OUT/structured.json" "$OUT/sum-bits.gz" "$OUT/dot-product.gz" --structured
 python "$D/transfer.py" "$OUT/held-out.json" "$OUT/jacobi-1d.gz" "$OUT/conjugate-gradient.gz" --structured --checkpoint "$OUT/structured.pt"
 ```
+
+## Freeze and test the two read representations
+
+The root summary uses four categorical components of five bits each. With the original follower input, two unequal Eq values can have identical features. 3mm produced five extra ordered pairs and deriche four, corresponding to two unordered colliding value pairs in 3mm and three in deriche (including one value pair in both orientations). No alternative follower weights could distinguish identical inputs in the same state. The wider experiment preserves the trained weights, the root summary, the four-component overlap calculation and the number of parameters. It supplies four separate 32-bit components to confirm the pointer choice. The first four hash bytes form the original root input; the following sixteen bytes form the second input. Collisions are still possible, so final validation must test actual values and versions.
+
+The frozen reader computes each positive sender decision once per binary role/freshness state, reduces its component contributions and applies the learned conditional readout to all second-port addresses. A 2 × 4 × 5 threshold table exhausts the follower input domain. The packed-word specialization is used only when all overlap counts below four are rejected by the model. All candidate comparisons remain charged. check output equivalence on the original and wider inputs with:
+
+```sh
+python "$D/measure_read.py" "$OUT/structured.pt" "$OUT/narrow.json" "$OUT"/*.gz
+python "$D/measure_read.py" "$OUT/structured.pt" "$OUT/wide.json" "$OUT"/*.gz --wide
+```
+
+read-timings.json includes three interleaved single-thread rounds per workload on already-loaded snapshot data. Timing includes canonical serialization, feature encoding, model inference, and named-address materialization. The exact Python dictionary baseline includes its serialization and hash-table construction. Native graph capture, JSON decompression, training, interprocess transfer and downstream verification are outside these timings. Each arm compares the full ordered list of references and versions after every timed round. The wider model was selected after examining the narrow model's errors on 3mm and deriche; these two workloads are diagnostics for that intervention.
