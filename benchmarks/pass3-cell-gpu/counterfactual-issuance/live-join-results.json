@@ -1,0 +1,151 @@
+{
+  "weights": {
+    "first": [
+      5.517282009124756,
+      5.517282009124756,
+      -8.2845458984375
+    ],
+    "pair": [
+      2.9620957374572754,
+      2.9620957374572754,
+      2.9620957374572754,
+      -7.8876118659973145
+    ]
+  },
+  "cases": {
+    "dot-product": {
+      "prior_paid": 8420,
+      "paid": 8380,
+      "prior_ept": 0.6501187648456057,
+      "ept": 0.6532219570405728,
+      "prior_rule_paid": 50,
+      "rule_paid": 10,
+      "committed": 10,
+      "runs": 21,
+      "first_scores": 74,
+      "pair_scores": 10,
+      "signed_ops": {
+        "visible_birth": 2974,
+        "effective_write": 2159,
+        "effective_union": 341,
+        "visibility_change": 0
+      },
+      "ledger_sha256": "9e1a9f99f07770a2ce93a65e8d1ef1b542615a3caeb18d12ed50c524fc971b18",
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "events": true,
+        "runs": true,
+        "schedule": true,
+        "state_sha": true,
+        "ledger": true,
+        "commit_inputs": true
+      }
+    },
+    "sum-bits": {
+      "prior_paid": 7172,
+      "paid": 7126,
+      "prior_ept": 0.7502788622420524,
+      "ept": 0.755122088127982,
+      "prior_rule_paid": 49,
+      "rule_paid": 3,
+      "committed": 3,
+      "runs": 37,
+      "first_scores": 168,
+      "pair_scores": 3,
+      "signed_ops": {
+        "visible_birth": 3331,
+        "effective_write": 1449,
+        "effective_union": 526,
+        "visibility_change": 75
+      },
+      "ledger_sha256": "4cc4c1c34874ef596379c3218854655706eff5a13bb0c7e1e4a38fc0cd70e0fa",
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "events": true,
+        "runs": true,
+        "schedule": true,
+        "state_sha": true,
+        "ledger": true,
+        "commit_inputs": true
+      }
+    },
+    "3mm": {
+      "prior_paid": 261213,
+      "paid": 242673,
+      "prior_ept": 0.7831960890154778,
+      "ept": 0.8430315692310228,
+      "prior_rule_paid": 18823,
+      "rule_paid": 283,
+      "committed": 283,
+      "runs": 100,
+      "first_scores": 49328,
+      "pair_scores": 9056,
+      "signed_ops": {
+        "visible_birth": 111901,
+        "effective_write": 81136,
+        "effective_union": 11544,
+        "visibility_change": 0
+      },
+      "ledger_sha256": "63a923887e958fe32e63821392e62a71a9a52e8a21058c94cdc3af49899af2d0",
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "events": true,
+        "runs": true,
+        "schedule": true,
+        "state_sha": true,
+        "ledger": true,
+        "commit_inputs": true
+      },
+      "timing": {
+        "live": {
+          "native_ms": [
+            4612.779959,
+            4928.032917,
+            5000.18625,
+            4802.7167500000005
+          ],
+          "request_ms": [
+            10009.386165998876,
+            11062.302041100338,
+            10792.78429178521,
+            10261.702791089192
+          ]
+        },
+        "ordinary": {
+          "native_ms": [
+            4884.207458,
+            5037.367583,
+            4698.288958,
+            4446.806084000001
+          ],
+          "request_ms": [
+            10475.425041047856,
+            11192.263582954183,
+            10542.874207952991,
+            10047.212583012879
+          ]
+        }
+      },
+      "open_first": {
+        "runs": 100,
+        "first_scores": 49328,
+        "pair_scores": 1578496,
+        "issued": 283,
+        "paid": 242673
+      }
+    }
+  },
+  "invalid_version_dot_product": {
+    "reference_commits": 10,
+    "issued": 10,
+    "commits": 0,
+    "state_matches_reference": false,
+    "rhs_matches_reference": false
+  }
+}

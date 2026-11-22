@@ -70,6 +70,7 @@ pub(crate) fn pair_child(run: u64, rid: usize, p: ReturnedPair) -> Result<MultiP
             run,
             first_serial: serial,
             width: 2,
+            source_width: 2,
             count: 1,
             template: layout.template,
             layout,

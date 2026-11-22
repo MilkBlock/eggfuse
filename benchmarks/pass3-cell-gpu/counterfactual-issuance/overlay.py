@@ -404,6 +404,7 @@ pub(crate) fn trace_pair_return(op:usize,dep:Dependency,version:u64,reused:bool)
         if req["prefix_ports"]==true{eggfuse_cell_runtime::joint_root::enable_prefix_ports();}
         if req["paid_ranges"]==true{eggfuse_cell_runtime::joint_root::watch_paid_ranges();}
         if let Some(rid)=req["chain_watch"].as_u64(){eggfuse_cell_runtime::joint_root::watch_chain(rid as usize);}
+        if !req["live_join"].is_null(){eggfuse_cell_runtime::joint_root::configure_live_join(&program,&req["live_join"])?;}
         if !req["live_chain"].is_null(){eggfuse_cell_runtime::joint_root::configure_live_chain(&program,&req["live_chain"])?;}
         if !req["chain_checks"].is_null(){eggfuse_cell_runtime::joint_root::configure_chain_checks(&program,&req["chain_checks"],&req["chain_gate"])?;}
         if !req["chain_lifecycle"].is_null(){eggfuse_cell_runtime::joint_root::configure_chain_lifecycle(&program,&req["chain_lifecycle"])?;}
@@ -536,8 +537,8 @@ pub(crate) fn trace_pair_return(op:usize,dep:Dependency,version:u64,reused:bool)
 """+a)
 
     edit(witness,'if rule.query.iter().any(|a|matches!(a.call,Call::Table(t) if g.witness_count(t)==0))',
-         'if live_chain.is_none() && history_pairs.is_none() && rule.query.iter().any(|a|matches!(a.call,Call::Table(t) if g.witness_count(t)==0))')
-    edit(witness,'remaining.clone_from(&saved.remaining);} else {','remaining.clone_from(&saved.remaining);} else if live_chain.is_none() && history_pairs.is_none() {')
+         'if !takes_join && live_chain.is_none() && history_pairs.is_none() && rule.query.iter().any(|a|matches!(a.call,Call::Table(t) if g.witness_count(t)==0))')
+    edit(witness,'remaining.clone_from(&saved.remaining);} else {','remaining.clone_from(&saved.remaining);} else if !takes_join && live_chain.is_none() && history_pairs.is_none() {')
     edit(witness,'if deferred.is_some(){}else if s.accel>=4{','''if deferred.is_some(){}else if let Some(mut triples)=live_chain{
             if !s.page || !c.sealing || c.inst.len()!=3 || c.pick_count!=3 || s.residual {
                 return Err("live chain requires three explicit parents and no residual".into())
@@ -662,3 +663,35 @@ pub(crate) fn static_point_code(rid:usize)->Option<usize>{
     edit(crate/"src/history_issuer.rs","    Ok(())\n}\n\nimpl HistoryIssuer", '    configure_point_claims(g,&spec["point_claims"])\n}\n\nimpl HistoryIssuer')
 
     edit(g,"crate::joint_root::pair_union(hi,lo);","crate::joint_root::point_claim_union(hi,lo);\n        crate::joint_root::pair_union(hi,lo);")
+    copyfile(Path(__file__).with_name("live_join.rs"),crate/"src/live_join.rs")
+    with root.open("a") as f:
+        f.write('\ninclude!("live_join.rs");\n')
+    edit(root,"live_chain:Option<LiveChain>","live_join:Option<LiveJoin>,live_chain:Option<LiveChain>")
+    edit(root,"live_chain:None","live_join:None,live_chain:None")
+    edit(root,'"scheduled":s.chain_lifecycle','"join":s.live_join.as_ref().map(|j|j.counts),"scheduled":s.chain_lifecycle')
+    edit(root,"if let Some(chain)=&mut state.live_chain","if let Some(j)=&mut state.live_join{j.cite(rid,epoch,state.ordinal,&r.refs,inputs);}\n        if let Some(chain)=&mut state.live_chain")
+    edit(root,"if let Some(chain)=&mut s.live_chain &&","if let Some(j)=&mut s.live_join && let Some((owner,_,_,rid,_))=s.active{j.returned(rid,table,dep,version,epoch,(owner,op as i64),key,result);}\n        if let Some(chain)=&mut s.live_chain &&")
+    edit(witness,"let takes_chain=crate::joint_root::takes_chain(rid);","let takes_join=crate::joint_root::takes_join(rid);\n        let takes_chain=crate::joint_root::takes_chain(rid);")
+
+    edit(witness,"else if let Some(mut triples)=live_chain",'''else if takes_join {
+            if !s.page || !c.sealing || s.residual || c.pick_count!=2 || c.inst.len()!=4 ||
+                !matches!((c.inst[0].0,c.inst[1].0),(1,3)|(3,1)) {return Err("unexpected join verifier plan".into())}
+            let mut packets=crate::joint_root::live_join_packets(rid,g.epoch,mark)?;
+            packets.sort_by_key(|p|[p[c.inst[0].0],p[c.inst[1].0]]);
+            for packet in packets {
+                for &(atom,_,_) in c.inst{
+                    let (row,version,_)=packet[atom];
+                    s.page_refs.push(crate::joint_root::Ref{atom,row,version});
+                }
+            }
+        }else if let Some(mut triples)=live_chain''')
+    for receiver in ("let page=", "let bank="):
+        edit(witness,receiver+"crate::joint_root::multi_page(g.epoch,rid,c.pick_count,refs",receiver+"crate::joint_root::multi_page(g.epoch,rid,if takes_join{4}else{c.pick_count},refs")
+    edit(witness,"if takes_chain && (row.witness","if (takes_join || takes_chain) && (row.witness")
+    edit(witness,"exact.root_recipe=page.recipe(i);\n                    s.descend(&c,c.pick_count,exact,&mut out,&mut no_more)?;",
+         "exact.root_recipe=page.recipe(i);\n                    s.descend(&c,if takes_join{c.inst.len()}else{c.pick_count},exact,&mut out,&mut no_more)?;")
+    edit(pages,"    refs: Vec<Ref>,\n    withheld:","    refs: Vec<Ref>,\n    source_width: usize,\n    withheld:")
+    edit(pages,"let mut refs = self.slice(slot)?.to_vec();","let mut refs = self.slice(slot)?.get(..p.source_width)?.to_vec();")
+    edit(pages,"            first_serial,\n            width,","            first_serial,\n            source_width: if st.live_join.as_ref().is_some_and(|j|j.target==rid){2}else{width},\n            width,")
+    edit(witness,"exact.picks=parents.len();\n                    exact.anchors=parents.iter()",
+         "exact.picks=c.pick_count;\n                    exact.anchors=parents.iter().take(c.pick_count)")

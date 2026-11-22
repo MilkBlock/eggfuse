@@ -145,6 +145,9 @@ pub(crate) fn chain_function_result(g: &Graph, t: usize, i: usize, op: usize) {
 
 pub(crate) fn chain_updates(g: &Graph) -> Result<()> {
     STATE.with_borrow_mut(|s| {
+        if let Some(join) = s.as_mut().and_then(|s| s.live_join.as_mut()) {
+            join.publish(g)?;
+        }
         if let Some(chain) = s.as_mut().and_then(|s| s.live_chain.as_mut()) {
             chain.publish(g)?;
         }

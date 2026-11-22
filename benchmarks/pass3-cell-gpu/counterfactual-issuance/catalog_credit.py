@@ -12,6 +12,10 @@ here = Path(__file__).resolve().parent
 expand = run_path(str(here.parent / "filtered-explicit-parent/complete_library.py"))["extend"]
 
 
+def join_lanes(data):
+    return sum(n for _,n,rid in data["root_recipe"]["chain_audit"]["paid_ranges"] if rid==243)
+
+
 def fit(pairs):
     # Every pair starts at the same native decision in a randomly generated program.
     x = torch.tensor([p["x"] for p in pairs])
@@ -248,6 +252,7 @@ def main(a):
                 request = matrix["cfg"](req,cfg,True)
                 if a.prefix_ports:request["prefix_ports"]=True
                 if a.live_chain:request["chain_watch"]=312
+                if a.live_join:request["paid_ranges"]=True
                 if a.rank_paid and name=="sub_expected_guard":request["paid_ranges"]=True
                 if a.pair_owner and name=="sub_expected_guard":
                     target, column, pairs = wiring(recipe,a.pair_tables)
@@ -270,6 +275,7 @@ def main(a):
                     shadow_lanes=Counter(map(tuple,shadow["root_recipe"]["pair_external"]))
                     shadow_paid=study["packets"](shadow)
                     if a.live_chain:shadow_chain=shadow["root_recipe"]["chain_audit"]["lanes"][1]
+                    if a.live_join:shadow_join=join_lanes(shadow)
                     del shadow
                 if a.source_delta and name=="sub_expected_guard":
                     size_rule,=[i for i,r in enumerate(recipe["rules"])
@@ -301,6 +307,16 @@ def main(a):
                     layout = [[arg["slot"] for arg in atom["args"]] for atom in recipe["rules"][312]["query"]]
                     (left,m,i,j),(n,right,l,k) = train(layout, True)
                     request["live_chain"] = dict(rule=312,withhold=a.withhold_live_chain,corrupt_owner=a.corrupt_chain_owner,wires=[[left,m,i,j],[right,n,k,l]])
+                if a.live_join and name=="sub_expected_guard":
+                    from joined_port_policy import fit as fit_join
+                    if "live_join_weights" not in report:
+                        first=fit_join(2,lambda path,fresh:path and fresh)
+                        pair=fit_join(3,lambda same,path,fresh:same and path and fresh)
+                        report["live_join_weights"]={k:w.tolist()+[b.item()] for k,(w,b) in (("first",first),("pair",pair))}
+                    request["live_join"]=dict(rule=243,corrupt=a.corrupt_join,**report["live_join_weights"])
+                    if a.join_open_first:
+                        request["live_join"]["first"]=[0.,0.,1.]
+                        report["join_open_first"]=True
                 if a.chain_packets and name=="sub_expected_guard":
                     if a.chain_gate:
                         from chain_address_reader import release_gate
@@ -320,7 +336,19 @@ def main(a):
                 if a.joined_history is not None and name=="sub_expected_guard":
                     from joined_history import export
                     export(data,recipe,a.joined_history,a.out/(case+"-join.json"))
-                if a.live_chain and data.get("source_error"):
+                if a.corrupt_join:
+                    target_commits=sum(row[3]==243 for row in data["root_recipe"]["commits"])
+                    if name=="leaf":
+                        clean_target=target_commits
+                    elif name=="sub_expected_guard":
+                        issued=data["root_recipe"]["chain_audit"]["join"][3]
+                        fault=dict(reference_commits=clean_target,issued=issued,commits=target_commits,
+                                   rhs_matches_reference=data["rhs"]==exact["rhs"],
+                                   state_matches_reference=data["state_sha"]==exact["state_sha"])
+                        (a.out/(case+"-invalid-version.json")).write_text(json.dumps(fault,indent=2)+"\n")
+                        if not clean_target or not issued or target_commits:
+                            raise ValueError(("invalid named-port fault control",case,fault))
+                if (a.live_chain or a.live_join) and data.get("source_error"):
                     raise ValueError((case,name,data["source_error"]))
                 if a.point_catalog and name=="sub_expected_guard":
                     from point_catalog import rank
@@ -355,11 +383,15 @@ def main(a):
                     current_chain=data["root_recipe"]["chain_audit"]["lanes"][1]
                     if name=="leaf":leaf_chain=current_chain
                     chain_saved=leaf_chain-current_chain
+                if a.live_join:
+                    current_join=join_lanes(data)
+                    if name=="leaf":leaf_join=current_join
+                    chain_saved+=leaf_join-current_join
                 displaced_rejects=0
                 if a.pair_takeover and name=="sub_expected_guard":
                     from pair_owner import compare_residual
                     displaced_rejects=compare_residual(data,shadow_lanes)
-                    if shadow_paid-paid != len(pair_children)+displaced_rejects+skipped+(shadow_chain-current_chain if a.live_chain else 0):
+                    if shadow_paid-paid != len(pair_children)+displaced_rejects+skipped+(shadow_chain-current_chain if a.live_chain else 0)+(shadow_join-current_join if a.live_join else 0):
                         raise ValueError((case,"unexplained difference from guarded shadow",shadow_paid,paid,len(pair_children),displaced_rejects))
                 if saved != len(ledger[0])+len(pair_children)+displaced_rejects+skipped+chain_saved or paid != counts["packets"]:
                     raise ValueError((case,name,"unattributed packet"))
@@ -585,13 +617,15 @@ def main(a):
                             audit=takeover["root_recipe"]["chain_audit"]
                             arm["live_chain"] = dict(counts=audit["live"], lanes=audit["lanes"][1],
                                                      commits=sum(row[3] == 312 for row in actual), total_source=len(actual))
+                        if a.live_join:arm["live_join"]=takeover["root_recipe"]["chain_audit"]["join"]
                         if a.rank_paid:
                             from paid_roots import rank
                             arm["paid_roots"] = rank(takeover,recipe)
-                        if a.time_live_chain:
+                        for component,enabled in (("live_chain",a.time_live_chain),("live_join",a.time_live_join)):
+                            if not enabled:continue
                             from time import perf_counter
                             config=dict(request,history_head=head)
-                            controls={"live":config,"ordinary":{k:v for k,v in config.items() if k!="live_chain"}}
+                            controls={"live":config,"ordinary":{k:v for k,v in config.items() if k!=component}}
                             samples={key:dict(native_ms=[],request_ms=[]) for key in controls}
                             for order in (controls,reversed(controls),controls,reversed(controls)):
                                 for key in order:
@@ -603,7 +637,7 @@ def main(a):
                                     samples[key]["native_ms"].append(sample["ms"])
                                     samples[key]["request_ms"].append(elapsed)
                                     del sample
-                            arm["live_chain_timing"]=samples
+                            arm[component+"_timing"]=samples
                         results[name]["history_takeover"] = arm
                 print(case,name,paid,saved,flush=True)
         if a.depth_model and not a.parent_projection:
@@ -666,6 +700,10 @@ if __name__ == "__main__":
     p.add_argument("--rank-paid", action="store_true")
     p.add_argument("--time-live-chain", action="store_true")
     p.add_argument("--withhold-live-chain", action="store_true")
+    p.add_argument("--time-live-join", action="store_true")
+    p.add_argument("--join-open-first", action="store_true")
+    p.add_argument("--live-join", action="store_true")
+    p.add_argument("--corrupt-join", action="store_true")
     p.add_argument("--live-chain", action="store_true")
     p.add_argument("--chain-gate", action="store_true")
     p.add_argument("--chain-packets", type=Path)
@@ -706,6 +744,9 @@ if __name__ == "__main__":
         p.error("--chain-gate requires --chain-packets")
     args.chain_lifecycle |= args.chain_gate
     args.chain_returns |= args.chain_lifecycle
+    args.live_join |= args.corrupt_join or args.time_live_join or args.join_open_first
+    args.prefix_ports |= args.live_join
+    args.history_takeover |= args.live_join
     args.live_chain |= args.withhold_live_chain or args.time_live_chain or args.corrupt_chain_owner
     args.chain_history |= args.chain_returns
     args.history_ports |= (args.joined_history is not None) or args.live_chain or bool(args.chain_packets) or args.chain_history or args.export_reader_history or args.point_catalog
