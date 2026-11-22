@@ -64,13 +64,47 @@ def main(a):
         wide_paths.update((edge, tail) for edge in edges for tail in by_root.get(edge[2], []))
         wide = dict(combined,library=sorted(wide_paths))
         let_only = {k:v for k,v in wide.items() if k != "set_publication"}
+        guarded = []
+        if a.literal:
+            from route_credit import continuation_edges
+            _, sub = continuation_edges(recipe, spec)
+            first = (tuple(sub),)
+            guarded = [("guarded_union",dict(wide,library=sorted(wide_paths | {first}),
+                       literal_consumers=True,reuse_returns=True),"greedy")]
+            guarded_tables = {}
+            for consumer, rule in enumerate(recipe["rules"]):
+                q = rule["query"]
+                if not rule["metadata"]["seminaive"] or len(q) != 1 or q[0]["call"].get("table") not in ctors:
+                    continue
+                slots = [a["slot"] for a in q[0]["args"] if "slot" in a]
+                literals = {i:a for i,a in enumerate(q[0]["args"]) if "slot" not in a}
+                if (len(set(slots)) != len(slots) or not literals
+                        or any(a.get("sort",{}).get("kind") != "i64" or "literal" not in a for a in literals.values())):
+                    continue
+                guarded_tables.setdefault(q[0]["call"]["table"], []).append((consumer,literals))
+            eligible = set(edges)
+            for producer, rule in enumerate(recipe["rules"]):
+                for op, ins in enumerate(rule["effects"]):
+                    if ins.get("kind") != "construct":
+                        continue
+                    for consumer, literals in guarded_tables.get(ins["call"].get("table"), []):
+                        if all(i < len(ins["args"]) and ("slot" in ins["args"][i] or
+                               ins["args"][i].get("literal") == a["literal"]) for i,a in literals.items()):
+                            eligible.add((producer,op,consumer))
+            tails = {}
+            for edge in eligible:
+                tails.setdefault(edge[0], []).append(edge)
+            all_paths = wide_paths | {(e,) for e in eligible}
+            all_paths.update((e,t) for e in eligible for t in tails.get(e[2], []))
+            guarded.append(("all_literal",dict(wide,library=sorted(all_paths),
+                            literal_consumers=True,reuse_returns=True),"greedy"))
         baseline = None
         results = {}
         with study["src"].base.session(a.native,program,plans) as run:
             for name, cfg, mode in (("leaf",catalog["leaf"],None),("original",spec,"greedy"),
                                     ("union",catalog["union"],"greedy"),("expanded",combined,"greedy"),
                                     ("wide_let_only",let_only,None),("wide",wide,"greedy"),("fixed_full",wide,"full"),
-                                    *((("reuse_returns",dict(wide,reuse_returns=True),"greedy"),) if a.reuse_returns else ())):
+                                    *((("reuse_returns",dict(wide,reuse_returns=True),"greedy"),) if a.reuse_returns else ()), *guarded):
                 cfg = dict(cfg)
                 if mode:
                     cfg.update(issuance_actor=dict(mode=mode, weights=w, seed=0),
@@ -107,4 +141,5 @@ if __name__ == "__main__":
         p.add_argument(key,type=Path)
     p.add_argument("--cases",nargs="+",default=["sum-bits","3mm"])
     p.add_argument("--reuse-returns",action="store_true")
+    p.add_argument("--literal",action="store_true")
     main(p.parse_args())

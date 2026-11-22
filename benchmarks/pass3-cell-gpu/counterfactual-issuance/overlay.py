@@ -83,3 +83,29 @@ fn register_result(cell:u32, op:usize, f:FactRef, t:usize, epoch:u64, reused:boo
             }
             let owner = Owner {returned:''')
     edit(strict,'json!({"issuance_actor":','json!({"actual_reused_returns":s.reuse_log,"issuance_actor":')
+    # A producer can license an i64-literal consumer. Recheck the literal on
+    # the named physical row at release, including for a complete receipt bank.
+    edit(strict,'.all(|v| matches!(v,Arg::Slot(s) if slots.insert(*s)))',
+         '''.all(|v| match v {
+                        Arg::Slot(s) => slots.insert(*s),
+                        Arg::Literal(crate::value::Value::Int(_)) =>
+                            spec["literal_consumers"] == true,
+                        _ => false,
+                    })''')
+    edit(strict,'            let mut input = Slots::default();', '''            if atom.args.iter().zip(row.values.iter()).any(|(arg,value)|
+                matches!(arg, Arg::Literal(expected) if expected != value)) {
+                continue;
+            }
+            let mut input = Slots::default();''')
+    edit(strict,'struct State {reuse_log:', 'struct State {first_edges:Option<BTreeSet<E>>,reuse_log:')
+    edit(strict,'    s.reuse_returns=','''    s.first_edges=spec.get("first_edges").map(|x|
+        serde_json::from_value(x.clone()).map_err(|e|e.to_string())).transpose()?;
+    if s.first_edges.as_ref().is_some_and(|edges| edges.iter().any(|e|
+        s.library.as_ref().is_none_or(|lib|!lib.contains(&vec![*e])))){
+        return Err("action selected an unsigned edge".into());
+    }
+    s.reuse_returns=''')
+    edit(strict,'            if reused && (!a.block', '''            if a.prior.is_empty() && s.first_edges.as_ref().is_some_and(|edges|!edges.contains(&path[0])){
+                continue;
+            }
+            if reused && (!a.block''')
