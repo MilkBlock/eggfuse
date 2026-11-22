@@ -263,7 +263,12 @@ def main(a):
                              and r["effects"][-1].get("call",{}).get("table")=="Expr-size"]
                     request["size_reader"]=dict(local=a.source_delta in ("local","distinct"),tests=report["source_delta_training"]["tests"]["distinct" if a.source_delta=="distinct" else "ties"]["actions"],size_rule=size_rule,filter=True,only_size=a.source_delta=="size",
                         actions=report["source_delta_training"]["arms"]["mixed"]["actions"])
-                if a.history_ports and name=="sub_expected_guard":request["history_ports"]=True
+                if a.history_ports and name=="sub_expected_guard":
+                    from history_reader import fit_cutoff, target_rule
+                    request["history_ports"] = True
+                    request["history_head"] = dict(target=target_rule(recipe), initial=a.history_initial, refresh=a.history_updates, **fit_cutoff(True))
+                    if a.history_release:
+                        request["history_head"]["release"] = report["source_delta_training"]["arms"]["mixed"]["actions"]
                 if a.ept:request["ept"]=True
                 data = run(request)
                 counts, ledger = matrix["summarize"](data,exact,bool(mode))
@@ -364,6 +369,32 @@ def main(a):
                     results[name]["reuse_registered"]=len(captures)
                     results[name]["reuse_committed"]=sum(
                         (r[0],tuple(r[1:4]),tuple(r[5:])) in used for r in captures)
+                if a.history_takeover and name == "sub_expected_guard":
+                    head = dict(request["history_head"], takeover=True)
+                    takeover = run(dict(request, history_head=head))
+                    if takeover.get("source_error"):
+                        results[name]["history_takeover"] = dict(error=takeover["source_error"])
+                    else:
+                        checked, pending = takeover["root_recipe"]["history_online"]
+                        accepted = sum(valid for _,_,valid in checked)
+                        actual = takeover["root_recipe"]["commits"]
+                        applied = sum(row[3] == head["target"] for row in actual)
+                        checks = {key: takeover[key] == data[key] for key in
+                                  ("rhs","writes","resumes","events","runs","schedule","state_sha")}
+                        checks["ledger"] = ledger_digest(takeover) == reference
+                        commits = data["root_recipe"]["commits"]
+                        checks["commit_inputs"] = len(actual) == len(commits) and all(
+                            left[:2] == right[:2] and left[3:] == right[3:]
+                            for left,right in zip(actual,commits))
+                        # Accepted pages are included in the native packet count.
+                        # Count every rejected or outstanding history proposal too.
+                        paid_all = study["packets"](takeover) + len(checked) - accepted + len(pending)
+                        arm = dict(checks=checks, checked=len(checked), accepted=accepted,
+                                   suppressed=len(takeover["root_recipe"]["history_suppressed"]),
+                                   committed=applied, pending=len(pending), paid=paid_all)
+                        if all(checks.values()) and applied == accepted:
+                            arm["effective_ops"] = score(takeover,recipe,paid_all,reference)
+                        results[name]["history_takeover"] = arm
                 print(case,name,paid,saved,flush=True)
         if a.depth_model and not a.parent_projection:
             if results["sub_deep"]["paid"] != results["set8_reader"]["paid"]:
@@ -394,10 +425,19 @@ if __name__ == "__main__":
     p.add_argument("--pair-takeover",action="store_true")
     p.add_argument("--pair-ambiguous",action="store_true")
     p.add_argument("--pair-tables",nargs=2,default=("PotentialExtractedExpr","TCPair"))
+    p.add_argument("--history-release",action="store_true")
+    p.add_argument("--history-updates",action="store_true")
+    p.add_argument("--history-initial",action="store_true")
+    p.add_argument("--history-takeover",action="store_true")
     p.add_argument("--history-ports", action="store_true")
     p.add_argument("--ept",action="store_true")
     p.add_argument("--source-delta",choices=("size","all","local","distinct"))
     args=p.parse_args()
+    if args.history_release and not args.source_delta:p.error("--history-release requires the trained --source-delta head")
+    args.history_updates |= args.history_release
+    args.history_ports |= args.history_takeover or args.history_initial or args.history_updates
+    args.ept |= args.history_takeover
+    args.pair_takeover |= args.history_takeover
     if args.source_delta:
         args.pair_takeover=True
         args.ept=True

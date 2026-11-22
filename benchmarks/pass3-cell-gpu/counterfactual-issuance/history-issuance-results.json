@@ -1,0 +1,297 @@
+{
+  "dot-product": {
+    "baseline_paid": 12865,
+    "baseline_ept": 0.4254955305091333,
+    "signed_operations": 5474,
+    "ledger_sha256": "9e1a9f99f07770a2ce93a65e8d1ef1b542615a3caeb18d12ed50c524fc971b18",
+    "citations": {
+      "shadow": {
+        "initial_ports": 0,
+        "checked": 150,
+        "pending": 0,
+        "accepted": 125,
+        "committed_at_check": 125,
+        "missed": {}
+      },
+      "exclusive": {
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "events": true,
+          "runs": true,
+          "schedule": true,
+          "state_sha": true,
+          "ledger": true,
+          "commit_inputs": true
+        },
+        "checked": 150,
+        "accepted": 125,
+        "committed": 125,
+        "pending": 0,
+        "paid": 12890,
+        "ept": 0.42467028704422033
+      }
+    },
+    "version_receipts": {
+      "shadow": {
+        "initial_ports": 0,
+        "updated_ports": 36,
+        "checked": 150,
+        "pending": 0,
+        "accepted": 125,
+        "committed_at_check": 125,
+        "missed": {}
+      },
+      "exclusive": {
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "events": true,
+          "runs": true,
+          "schedule": true,
+          "state_sha": true,
+          "ledger": true,
+          "commit_inputs": true
+        },
+        "checked": 150,
+        "accepted": 125,
+        "committed": 125,
+        "pending": 0,
+        "paid": 12890,
+        "ept": 0.42467028704422033
+      }
+    },
+    "learned_release": {
+      "shadow": {
+        "suppressed": 25,
+        "initial_ports": 0,
+        "updated_ports": 36,
+        "checked": 125,
+        "pending": 0,
+        "accepted": 125,
+        "committed_at_check": 125,
+        "missed": {}
+      },
+      "exclusive": {
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "events": true,
+          "runs": true,
+          "schedule": true,
+          "state_sha": true,
+          "ledger": true,
+          "commit_inputs": true
+        },
+        "checked": 125,
+        "accepted": 125,
+        "suppressed": 25,
+        "committed": 125,
+        "pending": 0,
+        "paid": 12865,
+        "ept": 0.4254955305091333
+      }
+    }
+  },
+  "sum-bits": {
+    "baseline_paid": 11125,
+    "baseline_ept": 0.48368539325842697,
+    "signed_operations": 5381,
+    "ledger_sha256": "4cc4c1c34874ef596379c3218854655706eff5a13bb0c7e1e4a38fc0cd70e0fa",
+    "citations": {
+      "shadow": {
+        "initial_ports": 0,
+        "checked": 264,
+        "pending": 0,
+        "accepted": 148,
+        "committed_at_check": 148,
+        "missed": {
+          "Get_other_version": 23,
+          "HasArgType_other_version": 4
+        }
+      },
+      "exclusive": {
+        "checks": {
+          "rhs": false,
+          "writes": false,
+          "resumes": false,
+          "events": false,
+          "runs": false,
+          "schedule": false,
+          "state_sha": false,
+          "ledger": false,
+          "commit_inputs": false
+        },
+        "checked": 262,
+        "accepted": 150,
+        "committed": 150,
+        "pending": 0,
+        "paid": 11210
+      }
+    },
+    "version_receipts": {
+      "shadow": {
+        "initial_ports": 0,
+        "updated_ports": 96,
+        "checked": 264,
+        "pending": 0,
+        "accepted": 175,
+        "committed_at_check": 175,
+        "missed": {}
+      },
+      "exclusive": {
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "events": true,
+          "runs": true,
+          "schedule": true,
+          "state_sha": true,
+          "ledger": true,
+          "commit_inputs": true
+        },
+        "checked": 264,
+        "accepted": 175,
+        "committed": 175,
+        "pending": 0,
+        "paid": 11214,
+        "ept": 0.4798466202960585
+      }
+    },
+    "learned_release": {
+      "shadow": {
+        "suppressed": 89,
+        "initial_ports": 0,
+        "updated_ports": 96,
+        "checked": 175,
+        "pending": 0,
+        "accepted": 175,
+        "committed_at_check": 175,
+        "missed": {}
+      },
+      "exclusive": {
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "events": true,
+          "runs": true,
+          "schedule": true,
+          "state_sha": true,
+          "ledger": true,
+          "commit_inputs": true
+        },
+        "checked": 175,
+        "accepted": 175,
+        "suppressed": 89,
+        "committed": 175,
+        "pending": 0,
+        "paid": 11125,
+        "ept": 0.48368539325842697
+      }
+    }
+  },
+  "3mm": {
+    "baseline_paid": 519987,
+    "baseline_ept": 0.3934348358708968,
+    "signed_operations": 204581,
+    "ledger_sha256": "63a923887e958fe32e63821392e62a71a9a52e8a21058c94cdc3af49899af2d0",
+    "citations": {
+      "shadow": {
+        "initial_ports": 0,
+        "checked": 5782,
+        "pending": 0,
+        "accepted": 4644,
+        "committed_at_check": 4644,
+        "missed": {
+          "HasArgType_other_version": 10,
+          "Get_other_version": 13
+        }
+      },
+      "exclusive": {
+        "checks": {
+          "rhs": false,
+          "writes": false,
+          "resumes": false,
+          "events": false,
+          "runs": true,
+          "schedule": false,
+          "state_sha": false,
+          "ledger": false,
+          "commit_inputs": false
+        },
+        "checked": 5782,
+        "accepted": 4644,
+        "committed": 4644,
+        "pending": 0,
+        "paid": 520207
+      }
+    },
+    "version_receipts": {
+      "shadow": {
+        "initial_ports": 0,
+        "updated_ports": 1706,
+        "checked": 5782,
+        "pending": 0,
+        "accepted": 4667,
+        "committed_at_check": 4667,
+        "missed": {}
+      },
+      "exclusive": {
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "events": true,
+          "runs": true,
+          "schedule": true,
+          "state_sha": true,
+          "ledger": true,
+          "commit_inputs": true
+        },
+        "checked": 5782,
+        "accepted": 4667,
+        "committed": 4667,
+        "pending": 0,
+        "paid": 521091,
+        "ept": 0.39260129228867896
+      }
+    },
+    "learned_release": {
+      "shadow": {
+        "suppressed": 1115,
+        "initial_ports": 0,
+        "updated_ports": 1706,
+        "checked": 4667,
+        "pending": 0,
+        "accepted": 4667,
+        "committed_at_check": 4667,
+        "missed": {}
+      },
+      "exclusive": {
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "events": true,
+          "runs": true,
+          "schedule": true,
+          "state_sha": true,
+          "ledger": true,
+          "commit_inputs": true
+        },
+        "checked": 4667,
+        "accepted": 4667,
+        "suppressed": 1115,
+        "committed": 4667,
+        "pending": 0,
+        "paid": 519976,
+        "ept": 0.39344315891502685
+      }
+    }
+  }
+}
