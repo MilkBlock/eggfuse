@@ -130,3 +130,39 @@ def replay(data, target, pairs, policies):
         counts["unmatched"]=counts["issued"]-counts["matched_once"]
         results[name]=dict(counts)
     return results
+
+
+def validate_children(data,target,children,other_internal):
+    roots = data["root_recipe"]
+    by_serial = {r[2]:r for r in roots["commits"]}
+    authorized = {(ordinal,tuple(map(tuple,refs))) for ordinal,refs in roots["pair_proposals"]}
+    seen=set()
+    for serial, owner in children:
+        row=by_serial[serial]
+        pair=tuple((p["row"]["Fact"]["cell"],p["row"]["Fact"]["op"],p["version"])
+                   for p in row[6])
+        if (row[0] in seen or row[0] in other_internal or row[0]<=owner or row[3]!=target
+                or [p["atom"] for p in row[6]]!=[0,1] or (owner,pair) not in authorized):
+            raise ValueError("pair continuation lacks a unique committed owner or ordered witness")
+        seen.add(row[0])
+
+
+def compare_residual(data, shadow_lanes):
+    roots=data["root_recipe"]
+    by_serial={r[2]:r for r in roots["commits"]}
+    private=Counter()
+    for serial,_ in roots["pair_children"]:
+        row=by_serial[serial]
+        fact=row[6][0]["row"]["Fact"]
+        private[row[5],fact["cell"],fact["op"]]+=1
+    if any(n!=1 for n in private.values()):
+        raise ValueError("multiple protected outcomes for one source pivot")
+    residual=Counter(map(tuple,roots["pair_external"]))
+    if residual.keys() & private.keys() or not private.keys()<=shadow_lanes.keys():
+        raise ValueError("protected pivot overlap or missing reference")
+    counts=shadow_lanes.copy()
+    for k in private:
+        del counts[k]
+    if residual!=counts:
+        raise ValueError("uncovered external lane changed")
+    return sum(shadow_lanes[k]-1 for k in private)

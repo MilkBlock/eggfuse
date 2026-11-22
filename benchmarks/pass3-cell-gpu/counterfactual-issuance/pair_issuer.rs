@@ -3,6 +3,10 @@ type VersionedPort = [u64; 3];
 
 #[derive(Deserialize)]
 pub struct PairPolicy {
+    #[serde(default)]
+    takeover: bool,
+    #[serde(default)]
+    ambiguous_control: bool,
     target: usize,
     wiring: BTreeMap<usize, Vec<[usize; 2]>>,
     actions: [bool; 32],
@@ -11,23 +15,37 @@ struct PairIssuer {
     policy: PairPolicy,
     frame: BTreeMap<usize, (VersionedPort, bool)>,
     claimed: std::collections::BTreeSet<[VersionedPort; 2]>,
+    ready: BTreeMap<Dependency, ReturnedPair>,
+    children: Vec<(u64, usize)>,
+    external: Vec<[u64; 3]>,
     checked: usize,
     verified: usize,
     proposals: Vec<(usize, [VersionedPort; 2])>,
 }
-pub fn configure_pair_policy(policy: PairPolicy) {
+pub fn configure_pair_policy(policy: PairPolicy, program: &Program, source: &[u8]) -> Result<()> {
+    if policy.takeover {
+        validate_pair_wiring(&policy, program, source)?;
+    }
+
     STATE.with_borrow_mut(|state| {
         if let Some(state) = state {
+            for &rid in policy.wiring.keys() {
+                Rc::make_mut(&mut state.layout[rid]).pair_program = policy.takeover;
+            }
             state.pair_issuer = Some(PairIssuer {
                 policy,
                 frame: Default::default(),
                 claimed: Default::default(),
+                ready: Default::default(),
+                children: vec![],
+                external: vec![],
                 checked: 0,
                 verified: 0,
                 proposals: vec![],
             });
         }
     });
+    Ok(())
 }
 pub(crate) fn finish_pair(epoch: u64, success: bool) {
     STATE.with_borrow_mut(|state| {
@@ -75,6 +93,8 @@ pub(crate) fn check_pairs(g: &Graph, rid: usize, watermark: u64) -> Result<()> {
         if rid != issuer.policy.target {
             return Ok(());
         }
+        // Any unused pivot belonged to the previous query snapshot.
+        issuer.ready.clear();
         let query = &g.program.rules[rid].query;
         let [outer, inner] = query.as_slice() else {
             return Err("expected two pair atoms".into());
@@ -82,7 +102,7 @@ pub(crate) fn check_pairs(g: &Graph, rid: usize, watermark: u64) -> Result<()> {
         let (Call::Table(a), Call::Table(b)) = (&outer.call, &inner.call) else {
             return Err("expected two pair tables".into());
         };
-        for &(_, [x, y]) in &issuer.proposals[issuer.checked..] {
+        for &(owner, [x, y]) in &issuer.proposals[issuer.checked..] {
             let read = |p: VersionedPort, table| -> Result<Option<crate::graph::Row>> {
                 let d = Dependency::Fact(crate::graph::FactRef {
                     cell: p[0] as u32,
@@ -99,6 +119,30 @@ pub(crate) fn check_pairs(g: &Graph, rid: usize, watermark: u64) -> Result<()> {
                     .is_some_and(|v| Some(v) == right.values.get(2))
             {
                 issuer.verified += 1;
+                if issuer.policy.takeover
+                    && !issuer.policy.ambiguous_control
+                    && unique_pair(right.values.last())
+                {
+                    let refs = [
+                        Ref {
+                            atom: 0,
+                            row: left.witness,
+                            version: x[2],
+                        },
+                        Ref {
+                            atom: 1,
+                            row: right.witness,
+                            version: y[2],
+                        },
+                    ];
+                    if issuer
+                        .ready
+                        .insert(left.witness, ReturnedPair { owner, refs })
+                        .is_some()
+                    {
+                        return Err("duplicate protected pivot".into());
+                    }
+                }
             }
         }
         issuer.checked = issuer.proposals.len();

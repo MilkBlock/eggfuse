@@ -334,7 +334,7 @@ pub(crate) fn trace_pair_return(op:usize,dep:Dependency,version:u64,reused:bool)
     anchor="eggfuse_cell_runtime::joint_root::configure(&program,root_config.as_deref(),audit)?;"
     edit(session,anchor,anchor+"""
         if !req["pair_policy"].is_null(){
-            eggfuse_cell_runtime::joint_root::configure_pair_policy(serde_json::from_value(req["pair_policy"].clone()).map_err(|e|e.to_string())?);
+            eggfuse_cell_runtime::joint_root::configure_pair_policy(serde_json::from_value(req["pair_policy"].clone()).map_err(|e|e.to_string())?,&program,&program_bytes)?;
         }
         if let Some(rules)=req["pair_trace_rules"].as_array(){
             let rules=rules.iter().map(|r|r.as_u64().map(|x|x as usize).ok_or("invalid trace rule")).collect::<std::result::Result<Vec<_>,_>>()?;
@@ -347,3 +347,62 @@ pub(crate) fn trace_pair_return(op:usize,dep:Dependency,version:u64,reused:bool)
         crate::joint_root::trace_pair_return(op,Dependency::Fact(FactRef{cell,op:op as u32}),self.epoch,false);""")
     edit(crate/"src/ordinary_witness.rs","let rule=&g.program.rules[rid];\n        let plan=s.plans",
          "crate::joint_root::check_pairs(g,rid,mark)?;\n        let rule=&g.program.rules[rid];\n        let plan=s.plans")
+    copyfile(Path(__file__).with_name("pair_takeover.rs"),crate/"src/pair_takeover.rs")
+    with root.open("a") as f:
+        f.write('\ninclude!("pair_takeover.rs");\n')
+    edit(root,'struct Layout{rid:','struct Layout{pair_program:bool,rid:')
+    edit(root,'Layout{rid,template:','Layout{pair_program:false,rid,template:')
+    edit(root,'pair_issuer:Option<PairIssuer>,pair_trace:', 'pair_authorized:bool,pair_issuer:Option<PairIssuer>,pair_trace:')
+    edit(root,'State{pair_issuer:None,','State{pair_authorized:false,pair_issuer:None,')
+    edit(root,'state.active=Some((state.ordinal,r.origin','state.pair_authorized=r.layout.pair_program && !r.refs.is_empty();\n        state.active=Some((state.ordinal,r.origin')
+    edit(root,'if let Some(p)=&mut s.pair_issuer && p.policy.wiring.contains_key(&rule)',
+         'if let Some(p)=&mut s.pair_issuer && (!p.policy.takeover || s.pair_authorized) && p.policy.wiring.contains_key(&rule)')
+    edit(root,'"pair_checks":s.pair_issuer','"pair_external":s.pair_issuer.as_ref().map(|p|&p.external),"pair_children":s.pair_issuer.as_ref().map(|p|&p.children),"pair_checks":s.pair_issuer')
+    edit(session,'        let ingest_start=Instant::now();','        eggfuse_cell_runtime::joint_root::prepare_pair_degree(&program,req["pair_policy"]["takeover"]==true)?;\n        let ingest_start=Instant::now();')
+    g=crate/"src/graph.rs"
+    edit(g,'        self.stats.logical_facts_created += 1;', '        crate::joint_root::pair_birth(self,t,&v);\n        self.stats.logical_facts_created += 1;')
+    edit(g,'        self.parents.insert(hi, lo);','        crate::joint_root::pair_union(hi,lo);\n        self.parents.insert(hi, lo);')
+    witness=crate/"src/ordinary_witness.rs"
+    edit(witness,'struct Store {wave:', 'struct Store {pair_queue:Vec<(usize,crate::joint_root::ReturnedPair)>,wave:')
+    edit(witness,'let s=Store{wave:', 'let s=Store{pair_queue:vec![],wave:')
+    edit(witness,'            for refs in groups{\n                let bank=', '''            let mut direct=std::mem::take(&mut s.pair_queue).into_iter().peekable();
+            let count=groups.len();let mut groups=groups.into_iter();
+            for j in 0..=count{
+                while direct.peek().is_some_and(|x|x.0==j){
+                    let (_,pair)=direct.next().unwrap();
+                    pages.push(crate::joint_root::pair_child(g.epoch,rid,pair)?);
+                    tuples+=1;
+                }
+                let Some(refs)=groups.next() else{continue};
+                let bank=''')
+    pairs=crate/"src/incremental_raw.rs"
+    a='        let full_left = left.frame.rows.len();'
+    edit(pairs,a,'''        let mut protected=BTreeMap::new();
+        if self.wave.preparing{
+            for (pivot, pair) in crate::joint_root::take_pair_pivots(self.rule){
+                if left.atom!=0 || right.atom!=1{return Err("unsupported protected pair ordering".into())}
+                let pos=left.frame.rows.binary_search_by_key(&pivot,|r|r.witness)
+                    .map_err(|_|"missing verified pivot position")?;
+                protected.insert(pos,pair);
+            }
+        }
+'''+a)
+    a='                            for &l in indices {'
+    edit(pairs,a,a+'\n                                if protected.contains_key(&l){continue;}')
+    edit(pairs,'            active.sort_unstable();','            active.extend(protected.keys().copied());active.sort_unstable();active.dedup();')
+    a='            let l = if selective { active[pos] } else { pos };'
+    edit(pairs,a,a+'''
+            if let Some(pair)=protected.remove(&l){
+                if !self.page_refs.is_empty(){self.pending_pages.push(std::mem::take(&mut self.page_refs));}
+                self.pair_queue.push((self.pending_pages.len(),pair));continue;
+            }''')
+    a='        self.flat_offsets.clear();\n        Ok(())\n    }\n}'
+    edit(pairs,a,'        if !protected.is_empty(){return Err("unplaced pair continuation".into())}\n'+a)
+    pages=crate/"src/multi_root_pages.rs"
+    anchor="        for entry in refs.chunks_exact(width) {"
+    edit(pages,anchor,anchor+"""
+            if st.audit && let Some(p)=&mut st.pair_issuer && p.policy.target==rid {
+                let a=entry.first().filter(|r|r.atom==0).ok_or("missing residual pivot")?;
+                let Dependency::Fact(f)=a.row else{return Err("invalid residual pivot".into())};
+                p.external.push([run,u64::from(f.cell),u64::from(f.op)]);
+            }""")

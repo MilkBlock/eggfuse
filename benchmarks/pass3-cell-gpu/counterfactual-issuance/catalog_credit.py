@@ -233,17 +233,41 @@ def main(a):
                 if a.pair_owner and name=="sub_expected_guard":
                     target, pairs = wiring(recipe)
                     request["pair_trace_rules"] = sorted(pairs)
-                    request["pair_policy"] = dict(target=target, wiring=pairs, actions=list(action_table(policies["mixed"]).values()))
+                    request["pair_policy"] = dict(ambiguous_control=a.pair_ambiguous,takeover=a.pair_takeover,target=target, wiring=pairs, actions=list(action_table(policies["mixed"]).values()))
+                if a.pair_takeover and name=="sub_expected_guard":
+                    shadow=run(dict(request,pair_policy=dict(request["pair_policy"],takeover=False)))
+                    shadow_lanes=Counter(map(tuple,shadow["root_recipe"]["pair_external"]))
+                    shadow_paid=study["packets"](shadow)
+                    del shadow
                 data = run(request)
                 counts, ledger = matrix["summarize"](data,exact,bool(mode))
                 if baseline is None:
                     baseline = counts
+                if a.pair_takeover:
+                    commits=data["root_recipe"]["commits"]
+                    if name=="leaf":
+                        reference_serials={r[0]:r[2] for r in commits}
+                    # Compare full commit and allocation records after translating only
+                    # private packet serials to the same source ordinal in the leaf arm.
+                    counts["commits"]=matrix["digest"]([[*r[:2],reference_serials[r[0]],*r[3:]] for r in commits])
+                    serials={r[2]:reference_serials[r[0]] for r in commits}
+                    counts["physical"]=matrix["digest"]([[*r[:5],serials[r[5]]] for r in data["root_recipe"]["fresh"]])
                 for key in matrix["FIXED"]:
                     if counts[key] != baseline[key]:
                         raise ValueError((case,name,key))
                 paid = study["packets"](data)
                 saved = baseline["packets"] - paid
-                if saved != len(ledger[0]) or paid != counts["packets"]:
+                pair_children = data["root_recipe"].get("pair_children") or []
+                if pair_children:
+                    from pair_owner import validate_children
+                    validate_children(data,target,pair_children,ledger[0])
+                displaced_rejects=0
+                if a.pair_takeover and name=="sub_expected_guard":
+                    from pair_owner import compare_residual
+                    displaced_rejects=compare_residual(data,shadow_lanes)
+                    if shadow_paid-paid != len(pair_children)+displaced_rejects:
+                        raise ValueError((case,"unexplained difference from guarded shadow",shadow_paid,paid,len(pair_children),displaced_rejects))
+                if saved != len(ledger[0])+len(pair_children)+displaced_rejects or paid != counts["packets"]:
                     raise ValueError((case,name,"unattributed packet"))
                 results[name] = dict(paid=paid, saved=saved, visible=counts["visible"], fept=counts["fept"],
                                      terminal=counts["set_internal"], checks=counts["checks"],
@@ -255,6 +279,8 @@ def main(a):
                     results[name]["guards"]=data["strict_named"]["row_guard_checks"]
                     if a.pair_owner:
                         results[name]["pair_issuance"] = replay(data,target,pairs,policies)
+                        results[name]["pair_displaced_extra_lanes"] = displaced_rejects
+                        results[name]["pair_committed"] = len(pair_children)
                         results[name]["pair_checks"] = data["root_recipe"]["pair_checks"]
                     if a.parent_projection:
                         from parent_projection import projection_profile
@@ -315,7 +341,11 @@ if __name__ == "__main__":
     p.add_argument("--parent-projection", action="store_true")
     p.add_argument("--pair-owner",action="store_true")
     p.add_argument("--pair-device",choices=("mps","cpu"),default="mps")
+    p.add_argument("--pair-takeover",action="store_true")
+    p.add_argument("--pair-ambiguous",action="store_true")
     args=p.parse_args()
+    args.pair_takeover |= args.pair_ambiguous
+    args.pair_owner |= args.pair_takeover
     args.parent_projection |= args.pair_owner
     if args.parent_projection and not args.row_guards:
         p.error("--parent-projection evaluates the guarded policy")

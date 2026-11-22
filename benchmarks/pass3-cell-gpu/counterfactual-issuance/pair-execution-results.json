@@ -1,0 +1,83 @@
+{
+  "dot-product": {
+    "source_checks": {
+      "rhs": true,
+      "writes": true,
+      "resumes": true,
+      "state_sha": true,
+      "schedule": true,
+      "runs": true,
+      "unions": true
+    },
+    "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+    "visible": 2689,
+    "target_source": 206,
+    "pair_checks": [
+      195,
+      195
+    ],
+    "committed": 195,
+    "extra_lanes_removed": 0,
+    "paid": 13260,
+    "fept": 0.20279034690799397,
+    "ambiguous": {
+      "paid": 13455,
+      "fept": 0.1998513563730955,
+      "committed": 0
+    }
+  },
+  "sum-bits": {
+    "source_checks": {
+      "rhs": true,
+      "writes": true,
+      "resumes": true,
+      "state_sha": true,
+      "schedule": true,
+      "runs": true,
+      "unions": true
+    },
+    "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "visible": 2691,
+    "target_source": 193,
+    "pair_checks": [
+      192,
+      192
+    ],
+    "committed": 192,
+    "extra_lanes_removed": 0,
+    "paid": 11671,
+    "fept": 0.23057150201353782,
+    "ambiguous": {
+      "paid": 11863,
+      "fept": 0.22683975385652871,
+      "committed": 0
+    }
+  },
+  "3mm": {
+    "source_checks": {
+      "rhs": true,
+      "writes": true,
+      "resumes": true,
+      "state_sha": true,
+      "schedule": true,
+      "runs": true,
+      "unions": true
+    },
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "visible": 92658,
+    "target_source": 4114,
+    "pair_checks": [
+      4058,
+      4058
+    ],
+    "committed": 4058,
+    "extra_lanes_removed": 1,
+    "paid": 532621,
+    "fept": 0.1739661034769564,
+    "ambiguous": {
+      "paid": 536680,
+      "fept": 0.1726503689349333,
+      "committed": 0
+    }
+  }
+}
