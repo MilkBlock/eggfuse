@@ -1,0 +1,117 @@
+{
+  "training_device": "cpu",
+  "steps": 500,
+  "evaluation_device": "cpu",
+  "runs": {
+    "1703": {
+      "metrics": {
+        "blind": {
+          "exact": 64,
+          "proposals": 512,
+          "duplicates": 0,
+          "missed": 0,
+          "extra": 256,
+          "trials": 256,
+          "scores": 0
+        },
+        "context": {
+          "exact": 112,
+          "proposals": 373,
+          "duplicates": 0,
+          "missed": 28,
+          "extra": 145,
+          "trials": 256,
+          "scores": 3060
+        },
+        "wrong_context": {
+          "exact": 29,
+          "proposals": 373,
+          "duplicates": 0,
+          "missed": 100,
+          "extra": 217,
+          "trials": 256,
+          "scores": 3060
+        }
+      },
+      "native": {
+        "blind": {
+          "passed": 32,
+          "proposals": 64,
+          "accepted": 32,
+          "rejected": 32,
+          "named_reads": 128
+        },
+        "context": {
+          "passed": 27,
+          "proposals": 46,
+          "accepted": 27,
+          "rejected": 19,
+          "named_reads": 92
+        },
+        "wrong_context": {
+          "passed": 17,
+          "proposals": 45,
+          "accepted": 17,
+          "rejected": 28,
+          "named_reads": 90
+        }
+      },
+      "native_cases": 32
+    },
+    "1709": {
+      "metrics": {
+        "blind": {
+          "exact": 64,
+          "proposals": 512,
+          "duplicates": 0,
+          "missed": 0,
+          "extra": 256,
+          "trials": 256,
+          "scores": 0
+        },
+        "context": {
+          "exact": 152,
+          "proposals": 369,
+          "duplicates": 0,
+          "missed": 0,
+          "extra": 113,
+          "trials": 256,
+          "scores": 3060
+        },
+        "wrong_context": {
+          "exact": 9,
+          "proposals": 369,
+          "duplicates": 0,
+          "missed": 112,
+          "extra": 225,
+          "trials": 256,
+          "scores": 3060
+        }
+      },
+      "native": {
+        "blind": {
+          "passed": 32,
+          "proposals": 64,
+          "accepted": 32,
+          "rejected": 32,
+          "named_reads": 128
+        },
+        "context": {
+          "passed": 32,
+          "proposals": 48,
+          "accepted": 32,
+          "rejected": 16,
+          "named_reads": 96
+        },
+        "wrong_context": {
+          "passed": 22,
+          "proposals": 46,
+          "accepted": 18,
+          "rejected": 28,
+          "named_reads": 92
+        }
+      },
+      "native_cases": 32
+    }
+  }
+}

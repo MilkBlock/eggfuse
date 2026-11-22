@@ -20,8 +20,7 @@ class Actor(nn.Module):
         self.abstain=matrix(HIDDEN+1)
         self.register_buffer('scale',torch.tensor([32.,32.,2.,16.,32.,16.]),persistent=False)
 
-    def step(self,observations,previous,intervention='intact',context_adjust=None,score_adjust=None,forbidden=None):
-        batch=observations.shape[0]
+    def proposal_queries(self, observations, previous, intervention='intact'):
         latent=previous[:,:,:HIDDEN]
         if intervention=='zero-latent':latent=torch.zeros_like(latent)
         if intervention=='swap-latent':latent=latent.flip(1)
@@ -30,6 +29,13 @@ class Actor(nn.Module):
         stage=observations[:,0,1].long()%SETS
         state=(latent@self.recurrent.T+prev_values@self.previous.T+
                self.templates[leaf]+self.stages[stage,None,:]+self.rows)
+        return state
+
+    def step(self,observations,previous,intervention='intact',context_adjust=None,score_adjust=None,forbidden=None):
+        state=self.proposal_queries(observations,previous,intervention)
+        return self._emit(observations,state,context_adjust,score_adjust,forbidden)
+
+    def _emit(self, observations, state, context_adjust, score_adjust, forbidden):
         if context_adjust is not None:state=state+context_adjust
         state=state.tanh()
         features=observations[:,:,2:].float()/self.scale
