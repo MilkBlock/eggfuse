@@ -285,3 +285,47 @@ cap and 4.553 s with the reader. Depth two exposed 82 additional external
 SubTuple roots and paid 306 additional tokens. On sum-bits the policies paid
 10,476 tokens, including when all seven roots were shallow. Dot-product had
 no eligible roots. These cases measure one root family on the specified stack.
+
+### Compiling determined keys and discharging stale proposals
+
+Use the guarded history-address command with `--fixed-subtuple-depth 8
+--point-claims gated --point-family determined --own-stale-points`. This
+extends the two-atom action catalog from 14 to 104 licensed consumers on the
+three measured EggCC programs. The native compiler admits a constructor pivot
+only if the original plan can form every remaining key input from its slots
+and constants. It can project any returned field, including the actual result
+of constructor reuse. The receiver still checks the complete source query,
+including multiple key columns, repeated variables, types and visibility.
+Known prefixes bound the newest possible matching suffix. A scalar, literal
+or absent prefix uses a conservative table-wide bound. Unsealed updates go
+through the ordinary point check.
+
+The mixed synthetic policy can skip a point check when both operands are too
+old for a semi-naive match. With stale ownership enabled, an ordinary lane
+that would still issue a paid proposal can use the same proof, its previously
+signed versioned port and its live owner to discharge it. The certificate
+requires the same current table generation and union state. No per-rejected-lane
+subscription is created. A separate ungated replay checks every signed
+continuation and requires identical individual child and rejection receipts.
+Credit counts changes in ownership of pre-existing strict paths by distinct
+source ordinal, including paths the new owner displaces.
+
+Use `--compare-point-families` to alternate the original first-field catalog
+and the expanded policy four times each with source-addressed reads and
+fixed depth held constant. The native time includes audit instrumentation.
+Request time also includes report serialization and transport. The receiver
+table-lookup counter covers the single-witness path. The effective-operations
+numerator, paid rejections, exact point checks and elapsed times describe
+different quantities. [Native comparisons and signed-receipt audit](projected-point-results.json)
+
+On 3mm the expanded catalog with stale ownership paid 383,587 tokens against
+450,049 for the first-field catalog. Of the 66,462 displaced proposals, 3,943
+were successful and 62,519 would have failed. Both arms earned 204,581 signed
+effective operations. Clearing the freshness gate verified the same 64,418
+child receipts and 70,448 rejection receipts in order, with 4,763,237 exact
+point attempts against 147,625. Across the entire single-witness receiver
+the lookup counts were 379,845 and 380,445 for the final and first-field arms
+respectively. Native schedule medians were 4.151 s and 4.044 s over four
+alternating measurements each. This establishes improved signed EPT and a
+reduction in paid rejection traffic; native execution time increased on this
+workload. Dot-product and sum-bits also had higher native medians.

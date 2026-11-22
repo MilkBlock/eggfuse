@@ -3,9 +3,12 @@
 #[derive(Default)]
 struct PointClaims {
     retained: bool,
+    own_stale: bool,
+    stale_omissions: usize,
     gate: Option<[bool; 8]>,
     suffixes: BTreeMap<usize, usize>,
     epochs: BTreeMap<usize, BTreeMap<u64, u64>>,
+    table_epochs: BTreeMap<usize, u64>,
     initial_epoch: u64,
     unions: u64,
     generations: BTreeMap<usize, u64>,
@@ -27,12 +30,13 @@ fn configure_point_claims(g: &Graph, spec: &J) -> Result<()> {
     let program = &g.program;
     let consumers: Vec<(usize, usize)> =
         serde_json::from_value(spec["consumers"].clone()).map_err(|e| e.to_string())?;
-    let mut by_table: BTreeMap<usize, Vec<usize>> = Default::default();
+    let mut by_table: BTreeMap<usize, Vec<(usize, Option<usize>)>> = Default::default();
     let mut claims = PointClaims {
         initial_epoch: g.epoch,
         unions: g.stats.unions,
         delta_unions: spec["delta_unions"] == true,
         retained: spec["retained"] == true,
+        own_stale: spec["own_stale"] == true,
         gate: serde_json::from_value(spec["gate"].clone()).map_err(|e| e.to_string())?,
         ..Default::default()
     };
@@ -50,17 +54,25 @@ fn configure_point_claims(g: &Graph, spec: &J) -> Result<()> {
             return Err("expected two table atoms".into());
         };
         let (_, keys) = suffix.args.split_last().ok_or("missing point result")?;
-        if !program.tables[*src].constructor || keys.iter().any(|arg|matches!(arg,Arg::Slot(i) if !source.args.iter().any(|v|matches!(v,Arg::Slot(j) if j==i)))) {
-            return Err("independent point suffix".into())
+        let position = |slot| {
+            source
+                .args
+                .iter()
+                .position(|arg| matches!(arg, Arg::Slot(i) if *i == slot))
+        };
+        if !program.tables[*src].constructor
+            || keys
+                .iter()
+                .any(|arg| matches!(arg, Arg::Slot(i) if position(*i).is_none()))
+        {
+            return Err("independent point suffix".into());
         }
+        // A prefix bounds freshness. The receiver checks every suffix input.
+        let projection = match keys.first() {
+            Some(Arg::Slot(i)) => position(*i),
+            _ => None,
+        };
         if claims.gate.is_some() {
-            if keys.len() != 1
-                || !matches!((source.args.first(),keys.first()),(Some(Arg::Slot(a)),Some(Arg::Slot(b))) if a==b)
-            {
-                return Err(
-                    "history gate requires the first returned field as its sole key".into(),
-                );
-            }
             claims.generations.insert(*other, g.query_versions[*other]);
             claims.suffixes.insert(rid, *other);
             claims.epochs.entry(*other).or_default();
@@ -68,7 +80,7 @@ fn configure_point_claims(g: &Graph, spec: &J) -> Result<()> {
         if claims.pivots.insert(rid, pivot).is_some() {
             return Err("duplicate point pivot".into());
         }
-        by_table.entry(*src).or_default().push(rid);
+        by_table.entry(*src).or_default().push((rid, projection));
     }
     STATE.with_borrow_mut(|s| -> Result<()> {
         let s = s.as_mut().ok_or("missing history context")?;
@@ -126,8 +138,12 @@ impl PointClaims {
                 if let Some(row) = g.row(dep)?
                     && row.table == table
                     && !row.hidden
-                    && let Some(Value::Eq(key)) = row.values.first()
                 {
+                    let upper = self.table_epochs.entry(table).or_default();
+                    *upper = (*upper).max(row.epoch);
+                    let Some(Value::Eq(key)) = row.values.first() else {
+                        continue;
+                    };
                     let Value::Eq(key) = crate::value::canon(&Value::Eq(*key), &g.parents) else {
                         unreachable!()
                     };
@@ -141,18 +157,53 @@ impl PointClaims {
         Ok(())
     }
 
+    fn stale_test<'a>(
+        &'a self,
+        g: &'a Graph,
+        rid: usize,
+        mark: u64,
+    ) -> Option<impl Fn(u64, Option<u64>) -> bool + 'a> {
+        let actions = self.gate?;
+        let table = self.suffixes[&rid];
+        if actions[4]
+            || self.unions != g.stats.unions
+            || self.generations[&table] != g.query_versions[table]
+        {
+            return None;
+        }
+        let keys = &self.epochs[&table];
+        let fallback = self.table_epochs.get(&table);
+        let initial = self.initial_epoch;
+        Some(move |version, key| {
+            if version >= mark {
+                return false;
+            }
+            let upper = match key {
+                Some(key) => {
+                    let Value::Eq(key) = crate::value::canon(&Value::Eq(key), &g.parents) else {
+                        unreachable!()
+                    };
+                    keys.get(&key)
+                }
+                None => fallback,
+            };
+            upper.copied().unwrap_or(0).max(initial) < mark
+        })
+    }
+
     fn drain(
         &mut self,
         g: &Graph,
         rid: usize,
         mark: u64,
     ) -> Vec<(Dependency, u64, usize, usize, usize)> {
-        let Some(pending) = self.pending.get_mut(&rid) else {
+        let Some(mut pending) = self.pending.remove(&rid) else {
             return vec![];
         };
         let pivot = self.pivots[&rid];
         let mut claims = Vec::new();
         let mut skipped = 0;
+        let stale = self.stale_test(g, rid, mark);
         pending.retain(|&[cell, op, version], &mut (owner, birth, key)| {
             if birth >= g.epoch {
                 return true;
@@ -164,29 +215,17 @@ impl PointClaims {
             if g.visible_epoch(d) != Some(version) {
                 return false;
             }
-            if let Some(actions) = self.gate
-                && let Some(key) = key
-            {
-                let table = self.suffixes[&rid];
-                let Value::Eq(key) = crate::value::canon(&Value::Eq(key), &g.parents) else {
-                    unreachable!()
-                };
-                let e = self.epochs[&table]
-                    .get(&key)
-                    .copied()
-                    .unwrap_or(0)
-                    .max(self.initial_epoch);
-                if self.unions == g.stats.unions
-                    && self.generations[&table] == g.query_versions[table]
-                    && !actions[4 + 2 * usize::from(version >= mark) + usize::from(e >= mark)]
-                {
-                    skipped += 1;
-                    return self.retained;
-                }
+            if stale.as_ref().is_some_and(|test| test(version, key)) {
+                skipped += 1;
+                return self.retained;
             }
             claims.push((d, version, owner, 1, pivot));
             self.retained
         });
+        drop(stale);
+        if !pending.is_empty() {
+            self.pending.insert(rid, pending);
+        }
         *self.skipped.entry(rid).or_default() += skipped;
         *self.attempts.entry(rid).or_default() += claims.len();
         claims
@@ -218,4 +257,35 @@ pub(crate) fn point_claim_union(hi: u64, lo: u64) {
             }
         }
     });
+}
+
+// Called only for a lane that passed all earlier filters and would pay for a
+// packet. Its old pivot and the suffix upper bound prove semi-naive rejection.
+pub(crate) fn owned_stale_point(
+    g: &Graph,
+    rid: usize,
+    mark: u64,
+    row: Dependency,
+    version: u64,
+) -> Option<usize> {
+    STATE.with_borrow_mut(|s| {
+        let t = s.as_mut()?.history_issuer.as_mut()?.tail.as_mut()?;
+        let points = &mut t.points;
+        if !t.own_misses || !points.own_stale || version >= mark {
+            return None;
+        }
+        let Dependency::Fact(f) = row else {
+            return None;
+        };
+        let port = [u64::from(f.cell), u64::from(f.op), version];
+        let &(owner, birth, key) = points.pending.get(&rid)?.get(&port)?;
+        if birth >= g.epoch
+            || !points.stale_test(g, rid, mark)?(version, key)
+            || g.visible_epoch(row) != Some(version)
+        {
+            return None;
+        }
+        points.stale_omissions += 1;
+        Some(owner)
+    })
 }

@@ -45,7 +45,7 @@ def rank(data, recipe):
 
 
 def point_consumers(recipe, family):
-    """Use a returned constructor's first slot as the entire suffix key."""
+    """Select wired constructor pivots whose suffix inputs are all known."""
     constructors = {table["name"] for table in recipe["tables"] if table["kind"] == "constructor"}
     result = []
     for rid, rule in enumerate(recipe["rules"]):
@@ -56,6 +56,12 @@ def point_consumers(recipe, family):
             table = source["call"].get("table")
             suffix = query[1-pivot]
             other = suffix["call"].get("table")
+            if family == "determined":
+                if table in constructors and other and suffix["args"] and all(
+                    "literal" in key or key in source["args"] for key in suffix["args"][:-1]
+                ):
+                    result.append((rid, pivot))
+                continue
             if (table not in constructors or not other or len(suffix["args"]) != 2
                     or "slot" not in source["args"][0] or source["args"][0] != suffix["args"][0]):
                 continue
@@ -65,6 +71,16 @@ def point_consumers(recipe, family):
                 continue
             result.append((rid,pivot))
     return result
+
+
+def strict_ordinals(data):
+    """Identify legacy signed commits by source ordinal across distinct issuers."""
+    serials = {r[2]: (r[0], r[3]) for r in data["root_recipe"]["commits"]}
+    links = data["strict_named"]["signed_commits"]
+    found = {serials[serial] for serial, *_ in links}
+    if len(found) != len(links):
+        raise ValueError("duplicate signed source ordinal")
+    return found
 
 
 def validate(data, recipe, consumers):
@@ -117,5 +133,70 @@ def validate(data, recipe, consumers):
         for kind,ordinal,*_ in batch:
             if ordinal in claimed:
                 effective[claimed[ordinal]][KINDS[kind]]+=1
-    return dict(owners=len(owner_epochs), owners_used_across_epochs=sum(len(v)>1 for v in owner_epochs.values()),
-                producer_counts=dict(producer_counts),attempts=attempts, union_probes=roots.get("point_union_probes"), rekeyed_entries=roots.get("point_rekeyed"), skipped=roots.get("point_skips",{}), committed=success, misses=len(failed),effective=dict(effective))
+    return dict(stale_omissions=roots.get("point_stale_omissions"), owners=len(owner_epochs), owners_used_across_epochs=sum(len(v)>1 for v in owner_epochs.values()),
+                producer_counts=dict(producer_counts),attempts=attempts, union_probes=roots.get("point_union_probes"), rekeyed_entries=roots.get("point_rekeyed"), skipped=roots.get("point_skips",{}), committed=success, misses=len(failed),
+                misses_by_rule=dict(Counter(rid for rid, _, _ in failed)),effective=dict(effective))
+
+
+def compare_families(run, request, recipe, control, reference, packets):
+    from time import perf_counter
+    from ept import score
+
+    old = set(point_consumers(recipe, "all"))
+    head = request["history_head"]
+    spec = head["point_claims"]
+    families = {"projected": spec["consumers"],
+                "first_field": [entry for entry in spec["consumers"] if tuple(entry) in old]}
+    stats = {name: dict(native_ms=[], request_ms=[]) for name in families}
+    for turn in range(4):
+        for name in (families if turn % 2 == 0 else reversed(families)):
+            config = dict(head, point_claims=dict(spec, consumers=families[name],
+                                                  own_stale=name == "projected" and spec.get("own_stale", False)))
+            start = perf_counter()
+            data = run(dict(request, history_head=config))
+            duration = 1000 * (perf_counter() - start)
+            for field in ("rhs", "writes", "resumes", "events", "runs", "schedule", "state_sha"):
+                if data.get(field) != control[field]:
+                    raise ValueError((name, field))
+            root = data["root_recipe"]
+            for field in ("history_online", "history_suppressed", "history_access"):
+                if root[field] != control["root_recipe"][field]:
+                    raise ValueError((name, field))
+            checks, pending = root["history_online"]
+            paid = packets(data) + sum(not valid for _, _, valid in checks) + len(pending)
+            ledger = score(data, recipe, paid, reference)
+            counts = dict(paid=paid, signed=ledger["signed"], ept=ledger["ept"],
+                          receiver_table_lookups=data["single"]["work"][3],
+                          point_attempts=sum(root["point_claims"][0].values()))
+            row = stats[name]
+            if "counts" in row and row["counts"] != counts:
+                raise ValueError("unstable family counters")
+            row["counts"] = counts
+            row["native_ms"].append(data["ms"])
+            row["request_ms"].append(duration)
+            del data
+    return stats
+
+
+def audit_stale_proof(run, request, treatment):
+    """Clear the freshness filter and explicitly check every signed continuation."""
+    head = request["history_head"]
+    options = dict(head["point_claims"], gate=None, own_stale=False)
+    exact = run(dict(request, history_head=dict(head, point_claims=options)))
+    if exact.get("source_error"):
+        raise ValueError(exact["source_error"])
+    for field in ("rhs", "writes", "resumes", "events", "schedule", "runs", "state_sha", "ept"):
+        if exact[field] != treatment[field]:
+            raise ValueError(("ungated reference changed", field))
+    a = exact["root_recipe"]
+    b = treatment["root_recipe"]
+    for field in ("commits", "emitted", "history_online", "history_suppressed"):
+        if a[field] != b[field]:
+            raise ValueError(("stale proof changed issuance or commits", field))
+    attempts, children, misses = a["point_claims"]
+    reduced, signed, omitted = b["point_claims"]
+    if children != signed or misses != omitted:
+        raise ValueError("stale proof changed a signed child or a paid rejection receipt")
+    return dict(exact_checks=sum(attempts.values()), gated_checks=sum(reduced.values()),
+                matched_children=len(signed), matched_rejections=len(omitted),
+                direct_stale_rejections=b["point_stale_omissions"])

@@ -403,6 +403,9 @@ def main(a):
                             raise ValueError("signed-tail control diverged")
                         seen,waiting=control["root_recipe"]["history_online"]
                         leaf_paid=study["packets"](control)+sum(not valid for _,_,valid in seen)+len(waiting)
+                        if a.point_claims and a.point_family == "determined":
+                            from point_catalog import strict_ordinals
+                            control_strict = strict_ordinals(control)
                         del control,seen,waiting
                         successor, = [rid for rid,r in enumerate(recipe["rules"])
                                          if [atom["call"].get("table") for atom in r["query"]] == ["Single","HasArgType"]
@@ -415,7 +418,7 @@ def main(a):
                                      if rid != successor and plans[rid] is not None
                                      and plans[rid]["pivot"] == pivot and plans[rid]["order"] == [1-pivot]]
                         if not consumers:raise ValueError("empty point consumer catalog")
-                        head["point_claims"] = dict(consumers=consumers,retained=a.point_claims!="once",delta_unions=a.point_unions=="delta")
+                        head["point_claims"] = dict(consumers=consumers,own_stale=a.own_stale_points,retained=a.point_claims!="once",delta_unions=a.point_unions=="delta")
                         if a.point_claims=="gated":
                             head["point_claims"]["gate"]=report["source_delta_training"]["arms"][a.point_training]["actions"]
                     if a.history_address:
@@ -482,13 +485,34 @@ def main(a):
                                 points["templates"] = consumers
                                 arm["point_claims"] = points
                                 extra = sum(points["committed"].values()) + points["misses"]
+                            if a.point_claims and a.point_family == "determined":
+                                from walk_credit import validate as validate_paths
+                                validate_paths(takeover, cfg)
+                                current = strict_ordinals(takeover)
+                                gained = Counter(rid for _, rid in current - control_strict)
+                                lost = Counter(rid for _, rid in control_strict - current)
+                                arm["changed_strict_ownership"] = dict(gained=gained, lost=lost)
+                                extra += sum(gained.values()) - sum(lost.values())
                             if leaf_paid - paid_all != tail["committed"] + tail["omitted_paid_misses"] + extra:
-                                raise ValueError("unattributed difference in signed-tail paid proposals")
+                                raise ValueError(("unattributed signed proposal", case,
+                                    leaf_paid - paid_all, tail["committed"], tail["omitted_paid_misses"], extra))
                             arm["tail"]["control_paid"] = leaf_paid
                         if all(checks.values()) and applied == accepted:
                             arm["effective_ops"] = score(takeover,recipe,paid_all,reference)
                             if a.point_claims and arm["effective_ops"]["signed"] != results[name]["effective_ops"]["signed"]:
                                 raise ValueError("signed operation attribution changed")
+                        if a.own_stale_points:
+                            from point_catalog import audit_stale_proof
+                            if not all(checks.values()) or "effective_ops" not in arm:
+                                raise ValueError("unverified stale ownership baseline")
+                            arm["stale_proof_audit"] = audit_stale_proof(
+                                run, dict(request, history_head=head), takeover)
+                        if a.compare_point_families:
+                            from point_catalog import compare_families
+                            if not all(checks.values()) or "effective_ops" not in arm:
+                                raise ValueError("unverified family baseline")
+                            arm["family_comparison"] = compare_families(run, dict(request, history_head=head),
+                                recipe, takeover, reference, study["packets"])
                         if a.scale_comparison:
                             from scale_comparison import compare
                             if not all(checks.values()) or "effective_ops" not in arm:
@@ -535,7 +559,9 @@ if __name__ == "__main__":
     p.add_argument("--history-initial",action="store_true")
     p.add_argument("--history-tail-negative",action="store_true")
     p.add_argument("--point-unions",choices=("batch","delta"),default="delta")
-    p.add_argument("--point-family",choices=("size","get-single","all"),default="size")
+    p.add_argument("--own-stale-points", action="store_true")
+    p.add_argument("--compare-point-families", action="store_true")
+    p.add_argument("--point-family",choices=("size","get-single","all","determined"),default="size")
     p.add_argument("--point-training",choices=("only_new","short","small","mixed","wide"),default="mixed")
     p.add_argument("--point-claims",choices=("once","retained","gated"))
     p.add_argument("--point-catalog",action="store_true")
@@ -547,6 +573,10 @@ if __name__ == "__main__":
     p.add_argument("--ept",action="store_true")
     p.add_argument("--source-delta",choices=("size","all","local","distinct"))
     args=p.parse_args()
+    if args.own_stale_points and args.point_claims != "gated":
+        p.error("--own-stale-points requires gated point claims")
+    if args.compare_point_families and not (args.point_claims and args.point_family == "determined"):
+        p.error("--compare-point-families requires the determined point catalog")
     if args.fixed_subtuple_depth and (not args.row_guards or not args.depth_model or args.scale_comparison):
         p.error("--fixed-subtuple-depth requires the guarded depth policy outside the three-arm comparison")
     args.history_address |= args.address_renaming or args.scale_comparison
