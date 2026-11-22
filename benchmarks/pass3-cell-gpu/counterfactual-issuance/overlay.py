@@ -15,8 +15,13 @@ def install(crate):
     edit(actor,'    force: Option<(u64,bool)>,','''    force: Option<(u64,bool)>,
     #[serde(default)]
     signed_pair: Option<[u64;2]>,''')
-    edit(actor,'"sample" | "greedy" | "leaf" | "full"', '"sample" | "greedy" | "leaf" | "full" | "pair"')
-    edit(actor,'            "leaf" => false,','''            "pair" => {
+    edit(actor,'"sample" | "greedy" | "leaf" | "full"', '"sample" | "greedy" | "leaf" | "full" | "pair" | "first_context"')
+    edit(actor,'            "leaf" => false,','''            "first_context" => {
+                let take = self.tokens == [0, 0] && logit >= 0.;
+                self.decisions.push((serial, x, take));
+                take
+            }
+            "pair" => {
                 let take=self.config.signed_pair.is_some_and(|ids|ids.contains(&serial));
                 self.decisions.push((serial,x,take));
                 take

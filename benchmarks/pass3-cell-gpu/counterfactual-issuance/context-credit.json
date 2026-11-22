@@ -1,0 +1,46 @@
+{
+  "old": {
+    "parameters": 4,
+    "paid": 1596,
+    "signed": 64,
+    "correct_gain": 0,
+    "mae": 1.0
+  },
+  "old_wide": {
+    "parameters": 321,
+    "paid": 1596,
+    "signed": 64,
+    "correct_gain": 0,
+    "mae": 1.0
+  },
+  "context": {
+    "parameters": 5,
+    "paid": 1596,
+    "signed": 32,
+    "correct_gain": 64,
+    "mae": 5.960464477539063e-08
+  },
+  "context_wide": {
+    "parameters": 385,
+    "paid": 1596,
+    "signed": 32,
+    "correct_gain": 64,
+    "mae": 7.450580596923828e-09
+  },
+  "learned_token_read": {
+    "parameters": 73,
+    "paid": 1596,
+    "signed": 32,
+    "correct_gain": 64,
+    "mae": 0.002851937897503376,
+    "live_paid": 1596,
+    "live_signed": 32
+  },
+  "generated_per_split": 64,
+  "leaf_paid": 1660,
+  "full_paid": 1596,
+  "test_outcomes": {
+    "context=0,gain=2": 32,
+    "context=1,gain=0": 32
+  }
+}
