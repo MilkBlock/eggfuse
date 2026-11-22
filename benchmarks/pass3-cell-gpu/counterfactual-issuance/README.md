@@ -216,3 +216,25 @@ gate runs on CPU. It still visits retained claims and maintains version upper bo
 family, `--point-unions batch` visited 2,601,337 entries on 3mm. The default incremental variant
 rekeyed 4,006 entries and made 281,420 union probes. EPT measures signed semantic output per paid
 token. These experiments do not establish end-to-end latency. [Paired native results](point-claims-results.json)
+
+## Addressing the second history read
+
+Add `--history-address` to the gated signed-continuation experiment above.
+For the rule 518 issuer, a new receipt supplies the first port. Its role selects
+a learned read instruction. The instruction names one of two memory banks and
+projects one of four fields (subject, Cell id, operation or version) from the
+first port. The generator owns an index from role and subject to versioned
+ports; a read returns every alias at that address in stable order. A matching
+pair still needs the release decision and two named checks. Template selection,
+first-receipt dispatch and the storage key schema remain fixed.
+
+The offline PyTorch policy trains on 512 synthetic receipts with randomized
+fields, optimizing the total probability of actions that reach the labelled
+partner address. The frozen argmax for each role becomes the two-instruction
+native policy. Source runs only evaluate it. The dense control compares every
+opposite-role address. The native study compares its entire issued, pending
+and suppressed streams with conditional reads, then checks the source commits,
+ordered effects, final state and signed ledger. It also evaluates the distinct
+undertrained route on the same native history with commits provided by the
+control. This measures access work, with no claim about process latency.
+[Checkpoint, ablations and native access counts](history-address-results.json)

@@ -271,6 +271,15 @@ def main(a):
                     from history_reader import fit_cutoff, target_rule
                     request["history_ports"] = True
                     request["history_head"] = dict(target=target_rule(recipe), initial=a.history_initial, refresh=a.history_updates, **fit_cutoff(True))
+                    if a.history_address:
+                        from history_address import fit_address
+                        model = fit_address()
+                        report["history_address"] = model
+                        report["address_controls"] = {
+                            "correlated": fit_address(correlated=True),
+                            "two_steps": fit_address(steps=2),
+                            "wide": fit_address(width=32),
+                        }
                     if a.history_release:
                         request["history_head"]["release"] = report["source_delta_training"]["arms"]["mixed"]["actions"]
                 if a.ept:request["ept"]=True
@@ -399,6 +408,30 @@ def main(a):
                         head["point_claims"] = dict(consumers=consumers,retained=a.point_claims!="once",delta_unions=a.point_unions=="delta")
                         if a.point_claims=="gated":
                             head["point_claims"]["gate"]=report["source_delta_training"]["arms"][a.point_training]["actions"]
+                    if a.history_address:
+                        # Evaluate genuinely different learned routes on the same
+                        # history. Weak checkpoints may not run the whole graph.
+                        alternate = {}
+                        for label, checkpoint in report["address_controls"].items():
+                            route = checkpoint["routes"]
+                            if route == report["history_address"]["routes"]:
+                                continue
+                            probe_head = dict(request["history_head"], routes=route)
+                            shadow = run(dict(request, history_head=probe_head))
+                            if shadow["rhs"] != data["rhs"] or shadow["state_sha"] != data["state_sha"]:
+                                raise ValueError("address shadow changed reference trajectory")
+                            def accepted_refs(record):
+                                seen, _ = record["root_recipe"]["history_online"]
+                                return {(epoch, tuple(map(tuple, p["refs"])))
+                                        for epoch, p, valid in seen if valid}
+                            expected = accepted_refs(data)
+                            predicted = accepted_refs(shadow)
+                            alternate[label] = dict(missing=len(expected - predicted),
+                                                    extra=len(predicted - expected),
+                                                    retained=len(expected & predicted))
+                            del shadow
+                        results[name]["address_ablation"] = alternate
+                        head["routes"] = report["history_address"]["routes"]
                     takeover = run(dict(request, history_head=head))
                     if takeover.get("source_error"):
                         results[name]["history_takeover"] = dict(error=takeover["source_error"])
@@ -420,6 +453,14 @@ def main(a):
                         arm = dict(checks=checks, checked=len(checked), accepted=accepted,
                                    suppressed=len(takeover["root_recipe"]["history_suppressed"]),
                                    committed=applied, pending=len(pending), paid=paid_all)
+                        if a.history_address:
+                            dense = data["root_recipe"]
+                            sparse = takeover["root_recipe"]
+                            for field in ("history_online", "history_suppressed"):
+                                if dense[field] != sparse[field]:
+                                    raise ValueError(f"history address changed {field}")
+                            arm["scan_visits"] = dense["history_access"][1]
+                            arm["address_probes"], arm["port_visits"] = takeover["root_recipe"]["history_access"]
                         if a.history_tail:
                             from history_successors import validate_tail
                             arm["tail"] = validate_tail(takeover,head["target"],head["tail"]["rule"],a.history_tail_depth)
@@ -469,6 +510,7 @@ if __name__ == "__main__":
     p.add_argument("--pair-takeover",action="store_true")
     p.add_argument("--pair-ambiguous",action="store_true")
     p.add_argument("--pair-tables",nargs=2,default=("PotentialExtractedExpr","TCPair"))
+    p.add_argument("--history-address", action="store_true")
     p.add_argument("--history-release",action="store_true")
     p.add_argument("--history-updates",action="store_true")
     p.add_argument("--history-initial",action="store_true")
@@ -492,7 +534,7 @@ if __name__ == "__main__":
     if args.point_claims=="gated" and not args.source_delta:p.error("gated ownership requires trained --source-delta")
     args.history_tail_negative |= bool(args.point_claims)
     args.history_tail |= args.history_tail_depth > 1 or args.history_tail_context or args.history_tail_negative
-    args.history_takeover |= args.history_tail
+    args.history_takeover |= args.history_tail or args.history_address
     args.history_ports |= args.point_catalog
     args.history_ports |= args.history_takeover or args.history_initial or args.history_updates
     args.ept |= args.history_takeover

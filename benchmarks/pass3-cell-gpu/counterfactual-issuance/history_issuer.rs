@@ -13,6 +13,10 @@ struct HistoryIssuer {
     weight: f32,
     bias: f32,
     banks: [BTreeMap<VersionedPort, (u64, usize, i64)>; 2],
+    routes: Option<[[usize; 2]; 2]>,
+    memory: BTreeMap<(usize, u64), std::collections::BTreeSet<VersionedPort>>,
+    probes: u64,
+    visits: u64,
     proposed: std::collections::BTreeSet<[VersionedPort; 2]>,
     pending: Vec<HistoryProposal>,
     seeds: Vec<[u64; 8]>,
@@ -72,6 +76,11 @@ pub fn configure_history_issuer(g: &Graph, spec: &J) -> Result<()> {
             .filter(|v| v.is_finite())
             .ok_or("invalid history parameter")
     };
+    let routes: Option<[[usize; 2]; 2]> =
+        serde_json::from_value(spec["routes"].clone()).map_err(|e| e.to_string())?;
+    if routes.is_some_and(|r| r.iter().any(|&[bank, field]| bank >= 2 || field >= 4)) {
+        return Err("invalid history read address".into());
+    }
     let mut issuer = HistoryIssuer {
         target,
         tail: HistoryTail::compile(program, target, *r, &spec["tail"])?,
@@ -86,6 +95,10 @@ pub fn configure_history_issuer(g: &Graph, spec: &J) -> Result<()> {
         weight: param("weight")?,
         bias: param("bias")?,
         banks: Default::default(),
+        routes,
+        memory: Default::default(),
+        probes: 0,
+        visits: 0,
         proposed: Default::default(),
         pending: vec![],
         seeds: vec![],
@@ -133,10 +146,12 @@ impl HistoryIssuer {
         {
             return;
         }
-        for (&other, &(other_key, ord, slot)) in &self.banks[1 - role] {
+        let opposite = &self.banks[1 - role];
+        let mut consider = |other: VersionedPort, other_key: u64, ord, slot| {
+            self.visits += 1;
             let distance = (key ^ other_key).count_ones() as f32;
             if distance * self.weight + self.bias < 0.0 {
-                continue;
+                return;
             }
             let mut refs = [port, other];
             let mut owners = [owner, (ord, slot)];
@@ -150,6 +165,37 @@ impl HistoryIssuer {
                     refs,
                     owners,
                 });
+            }
+        };
+        if let Some(routes) = self.routes {
+            let [bank, field] = routes[role];
+            let subject = [key, port[0], port[1], port[2]][field];
+            self.probes += 1;
+            if let Some(ports) = self.memory.get(&(bank, subject)) {
+                for &other in ports {
+                    if bank == role {
+                        self.visits += ports.len() as u64;
+                        break;
+                    }
+                    let (other_key, ord, slot) = opposite[&other];
+                    consider(other, other_key, ord, slot);
+                }
+            }
+            if let Some(&(old_key, _, _)) = self.banks[role].get(&port) {
+                let address = (role, old_key);
+                let old = self
+                    .memory
+                    .get_mut(&address)
+                    .expect("registered history port");
+                old.remove(&port);
+                if old.is_empty() {
+                    self.memory.remove(&address);
+                }
+            }
+            self.memory.entry((role, key)).or_default().insert(port);
+        } else {
+            for (&other, &(other_key, ord, slot)) in opposite {
+                consider(other, other_key, ord, slot);
             }
         }
         self.banks[role].insert(port, (key, owner.0, owner.1));
