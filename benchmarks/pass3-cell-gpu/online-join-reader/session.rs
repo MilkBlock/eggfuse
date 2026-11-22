@@ -10,6 +10,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
     let p = Program::parse(serde_json::from_slice(&std::fs::read(program)?)?)?;
     let mut engine = Executor::new(Graph::new(p)?, false);
+    if std::env::var_os("EGGFUSE_SIGN_SAME_QUERY").is_some() {
+        engine.issued.families = eggfuse_cell_runtime::named_only::Families::compile(
+            &engine.graph.program,
+            std::env::var_os("EGGFUSE_CARRY_SAME_QUERY").is_some(),
+        )?;
+    }
     live_issuer::init(
         &engine.graph,
         serde_json::from_slice(&std::fs::read(model)?)?,
@@ -59,7 +65,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!(
         "{}",
         json!({"failure":failure,"state_sha":format!("{:x}",Sha256::digest(state)),
-        "issuer":live_issuer::finish(),"accepted":engine.issued.accepted,"rejected":engine.issued.rejected,"primitive_rejects":engine.issued.primitive_rejects,"named_reads":engine.issued.reads,
+        "issuer":live_issuer::finish(),"cross_run":engine.issued.families.cross_run,"family_fanout":engine.issued.families.fanout(),"projected_commits":engine.issued.families.projected_commits,"internal_matches":engine.issued.families.internal,"family_packets":engine.issued.families.signed,"accepted":engine.issued.accepted,"rejected":engine.issued.rejected,"primitive_rejects":engine.issued.primitive_rejects,"named_reads":engine.issued.reads,
         "schedule":engine.steps.iter().map(|s|json!([s.ruleset,s.epoch,s.path,s.iterations,s.executed_bindings,s.changed])).collect::<Vec<_>>(),
         "visible_births":visible.len(),"visible_sha":format!("{:x}",Sha256::digest(serde_json::to_vec(&visible)?)), "events":events,"rhs":audit::take_digests(),"resumes":audit::take_resume_digests(),"writes":audit::take_write_digests()})
     );

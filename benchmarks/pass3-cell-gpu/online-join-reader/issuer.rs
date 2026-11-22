@@ -399,7 +399,14 @@ pub fn finish() -> Counts {
     ACTIVE.take().unwrap().counts
 }
 
-pub fn submit(g: &Graph, run: usize, rid: usize, wm: u64, inbox: &mut Inbox) -> Result<()> {
+pub fn submit(
+    g: &Graph,
+    run: usize,
+    rid: usize,
+    wm: u64,
+    inbox: &mut Inbox,
+    family: Option<usize>,
+) -> Result<bool> {
     ACTIVE.with_borrow_mut(|active| {
         let a = active.as_mut().ok_or("missing issuer")?;
         a.counts.rule_calls += 1;
@@ -410,7 +417,7 @@ pub fn submit(g: &Graph, run: usize, rid: usize, wm: u64, inbox: &mut Inbox) -> 
         }
         let Some(plan) = &a.plans[rid] else {
             a.counts.abstained += 1;
-            return Ok(());
+            return Ok(false);
         };
         let mut memory = vec![];
         for read in &plan.reads {
@@ -439,7 +446,7 @@ pub fn submit(g: &Graph, run: usize, rid: usize, wm: u64, inbox: &mut Inbox) -> 
             memory.push(a.bank[&read.table].clone());
         }
         if memory.iter().any(|m| m.is_empty()) {
-            return Ok(());
+            return Ok(true);
         }
         let semi = g.program.rules[rid].seminaive && !memory.is_empty();
         let mut later_fresh = vec![false; memory.len() + 1];
@@ -456,7 +463,7 @@ pub fn submit(g: &Graph, run: usize, rid: usize, wm: u64, inbox: &mut Inbox) -> 
                 later_fresh[i] = later_fresh[i + 1] || !fresh_rows[i].is_empty();
             }
             if !later_fresh[0] {
-                return Ok(());
+                return Ok(true);
             }
         }
         let mut plan = plan;
@@ -532,6 +539,7 @@ pub fn submit(g: &Graph, run: usize, rid: usize, wm: u64, inbox: &mut Inbox) -> 
                     let mut ordered = parents;
                     ordered.sort_unstable_by_key(|p| p.0);
                     inbox.submit(Packet::issue(
+                        family,
                         run,
                         rid,
                         ordered.into_iter().map(|(_, w, e)| (w, e)).collect(),
@@ -583,7 +591,7 @@ pub fn submit(g: &Graph, run: usize, rid: usize, wm: u64, inbox: &mut Inbox) -> 
                 if budget == 0 {
                     a.counts.denied_budget += 1;
                     *a.counts.denied_rules.entry(rid).or_default() += 1;
-                    return Ok(());
+                    return Ok(false);
                 }
                 budget -= 1;
                 a.counts.candidate_visits += 1;
@@ -638,6 +646,6 @@ pub fn submit(g: &Graph, run: usize, rid: usize, wm: u64, inbox: &mut Inbox) -> 
                 stack.push((next, bound, fresh || current == 1));
             }
         }
-        Ok(())
+        Ok(true)
     })
 }
