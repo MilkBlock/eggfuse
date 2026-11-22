@@ -38,6 +38,7 @@ class Memory:
         self.keys={}
         self.choices={}
         self.stats=Counter()
+        self.first_scores=None
 
     def install(self,items):
         for owner,slot,version,table,values in items:
@@ -51,23 +52,33 @@ class Memory:
     def encode(self,key):
         self.keys[key]=self.policy.keys(torch.tensor(self.rows[key][1]))
         self.stats["encodings"]+=1
+        self.first_scores=None
 
     def read(self,role,selected=None,used=()):
         ids=sorted(self.rows)
         if not ids:
             return None
-        keys=torch.stack([self.keys[i] for i in ids])
-        q=torch.tensor(self.rows[selected][1] if selected else [0.]*WIDTH)
-        query=self.policy.roles.weight[ROLES.index(role)]+self.policy.condition(q)
-        scores=self.policy.score_keys(keys[None],query[None])[0]
+        if role=='left' and hasattr(self.policy,'first_reader'):
+            if self.first_scores is None:
+                bank=torch.tensor([self.rows[i][1] for i in ids])
+                self.first_scores=self.policy.first_reader(bank[None])[0]
+                self.stats['first_encoded']+=len(ids)
+            scores=self.first_scores.clone()
+        else:
+            scores=self.conditional_scores(ids,role,selected)
         self.stats['scores']+=len(ids)
         self.stats['reads']+=1
-        # Mask only addresses the policy itself has already tried in this Run.
         for i,key in enumerate(ids):
             if key in used:
                 scores[i+1]=-torch.inf
         j=scores.argmax().item()
         return ids[j-1] if j else None
+
+    def conditional_scores(self,ids,role,selected):
+        keys=torch.stack([self.keys[i] for i in ids])
+        q=torch.tensor(self.rows[selected][1] if selected else [0.]*WIDTH)
+        query=self.policy.roles.weight[ROLES.index(role)]+self.policy.condition(q)
+        return self.policy.score_keys(keys[None],query[None])[0]
 
 
 @torch.no_grad()
@@ -159,7 +170,7 @@ def rollout(binary,program,policy,mode,force_skip=None):
             raise RuntimeError('native receiver failed')
     return dict(source=result,paid=packets,receiver_reads=stage_reads[-1],rejected=boundary['rejected'],
                 pointer_scores=mem.stats['scores'],queries=mem.stats['reads'],uses=uses,
-                encodings=mem.stats['encodings'],skip_feature=skip_feature,root_features=root_key,transfers=transfers,internal=result['internal'])
+                first_encoded=mem.stats['first_encoded'],encodings=mem.stats['encodings'],skip_feature=skip_feature,root_features=root_key,transfers=transfers,internal=result['internal'])
 
 
 def exact(binary,program,plans):

@@ -1,0 +1,292 @@
+{
+  "native_cases": 48,
+  "bank_cases": 4096,
+  "arms": {
+    "original": [
+      {
+        "seed": 1703,
+        "first_correct": 851,
+        "model_parameters": 1382,
+        "ok": 48,
+        "strict": 16,
+        "paid": 96,
+        "pointer_scores": 3164,
+        "queries": 382,
+        "receiver_reads": 160,
+        "first_encoded": 0,
+        "rejected": 0,
+        "internal": 32
+      }
+    ],
+    "local": [
+      {
+        "seed": 1703,
+        "first_correct": 1839,
+        "model_parameters": 4169,
+        "ok": 16,
+        "strict": 16,
+        "paid": 64,
+        "pointer_scores": 1584,
+        "queries": 192,
+        "receiver_reads": 64,
+        "first_encoded": 384,
+        "rejected": 0,
+        "internal": 0
+      },
+      {
+        "seed": 1709,
+        "first_correct": 1839,
+        "model_parameters": 4169,
+        "ok": 16,
+        "strict": 16,
+        "paid": 64,
+        "pointer_scores": 1584,
+        "queries": 192,
+        "receiver_reads": 64,
+        "first_encoded": 384,
+        "rejected": 0,
+        "internal": 0
+      }
+    ],
+    "short": [
+      {
+        "seed": 1703,
+        "first_correct": 1839,
+        "model_parameters": 4169,
+        "ok": 16,
+        "strict": 16,
+        "paid": 64,
+        "pointer_scores": 1584,
+        "queries": 192,
+        "receiver_reads": 64,
+        "first_encoded": 384,
+        "rejected": 0,
+        "internal": 0
+      },
+      {
+        "seed": 1709,
+        "first_correct": 1839,
+        "model_parameters": 4169,
+        "ok": 18,
+        "strict": 16,
+        "paid": 64,
+        "pointer_scores": 1630,
+        "queries": 196,
+        "receiver_reads": 68,
+        "first_encoded": 384,
+        "rejected": 0,
+        "internal": 2
+      }
+    ],
+    "sparse": [
+      {
+        "seed": 1703,
+        "first_correct": 2033,
+        "model_parameters": 4169,
+        "ok": 22,
+        "strict": 16,
+        "paid": 72,
+        "pointer_scores": 1673,
+        "queries": 200,
+        "receiver_reads": 84,
+        "first_encoded": 384,
+        "rejected": 0,
+        "internal": 6
+      },
+      {
+        "seed": 1709,
+        "first_correct": 1990,
+        "model_parameters": 4169,
+        "ok": 18,
+        "strict": 16,
+        "paid": 68,
+        "pointer_scores": 1607,
+        "queries": 194,
+        "receiver_reads": 72,
+        "first_encoded": 384,
+        "rejected": 0,
+        "internal": 2
+      }
+    ],
+    "any-left": [
+      {
+        "seed": 1703,
+        "first_correct": 799,
+        "model_parameters": 4169,
+        "ok": 48,
+        "strict": 16,
+        "paid": 96,
+        "pointer_scores": 3216,
+        "queries": 390,
+        "receiver_reads": 160,
+        "first_encoded": 384,
+        "rejected": 0,
+        "internal": 32
+      },
+      {
+        "seed": 1709,
+        "first_correct": 873,
+        "model_parameters": 4169,
+        "ok": 48,
+        "strict": 16,
+        "paid": 96,
+        "pointer_scores": 3090,
+        "queries": 374,
+        "receiver_reads": 160,
+        "first_encoded": 384,
+        "rejected": 0,
+        "internal": 32
+      }
+    ],
+    "narrow": [
+      {
+        "seed": 1703,
+        "first_correct": 2330,
+        "model_parameters": 1697,
+        "ok": 40,
+        "strict": 16,
+        "paid": 94,
+        "pointer_scores": 2288,
+        "queries": 270,
+        "receiver_reads": 142,
+        "first_encoded": 384,
+        "rejected": 0,
+        "internal": 24
+      },
+      {
+        "seed": 1709,
+        "first_correct": 2507,
+        "model_parameters": 1697,
+        "ok": 28,
+        "strict": 16,
+        "paid": 76,
+        "pointer_scores": 1866,
+        "queries": 222,
+        "receiver_reads": 100,
+        "first_encoded": 384,
+        "rejected": 0,
+        "internal": 12
+      }
+    ],
+    "wide": [
+      {
+        "seed": 1703,
+        "first_correct": 4096,
+        "model_parameters": 22025,
+        "ok": 45,
+        "strict": 16,
+        "paid": 96,
+        "pointer_scores": 1935,
+        "queries": 221,
+        "receiver_reads": 154,
+        "first_encoded": 384,
+        "rejected": 0,
+        "internal": 29
+      },
+      {
+        "seed": 1709,
+        "first_correct": 4096,
+        "model_parameters": 22025,
+        "ok": 48,
+        "strict": 16,
+        "paid": 96,
+        "pointer_scores": 1974,
+        "queries": 224,
+        "receiver_reads": 160,
+        "first_encoded": 384,
+        "rejected": 0,
+        "internal": 32
+      }
+    ],
+    "context": [
+      {
+        "seed": 1703,
+        "first_correct": 4053,
+        "model_parameters": 4169,
+        "ok": 44,
+        "strict": 16,
+        "paid": 99,
+        "pointer_scores": 1993,
+        "queries": 229,
+        "receiver_reads": 155,
+        "first_encoded": 384,
+        "rejected": 5,
+        "internal": 28
+      },
+      {
+        "seed": 1709,
+        "first_correct": 4093,
+        "model_parameters": 4169,
+        "ok": 42,
+        "strict": 16,
+        "paid": 93,
+        "pointer_scores": 1920,
+        "queries": 221,
+        "receiver_reads": 145,
+        "first_encoded": 384,
+        "rejected": 1,
+        "internal": 26
+      }
+    ],
+    "diverse": [
+      {
+        "seed": 1703,
+        "first_correct": 4055,
+        "model_parameters": 4169,
+        "ok": 41,
+        "strict": 16,
+        "paid": 88,
+        "pointer_scores": 1889,
+        "queries": 217,
+        "receiver_reads": 138,
+        "first_encoded": 384,
+        "rejected": 0,
+        "internal": 25
+      },
+      {
+        "seed": 1709,
+        "first_correct": 4085,
+        "model_parameters": 4169,
+        "ok": 44,
+        "strict": 16,
+        "paid": 90,
+        "pointer_scores": 1927,
+        "queries": 220,
+        "receiver_reads": 146,
+        "first_encoded": 384,
+        "rejected": 0,
+        "internal": 28
+      }
+    ],
+    "shared": [
+      {
+        "seed": 1703,
+        "first_correct": 4096,
+        "model_parameters": 1417,
+        "ok": 48,
+        "strict": 16,
+        "paid": 96,
+        "pointer_scores": 1974,
+        "queries": 224,
+        "receiver_reads": 160,
+        "first_encoded": 384,
+        "rejected": 0,
+        "internal": 32
+      },
+      {
+        "seed": 1709,
+        "first_correct": 4096,
+        "model_parameters": 1417,
+        "ok": 48,
+        "strict": 16,
+        "paid": 96,
+        "pointer_scores": 1974,
+        "queries": 224,
+        "receiver_reads": 160,
+        "first_encoded": 384,
+        "rejected": 0,
+        "internal": 32
+      }
+    ]
+  }
+}
