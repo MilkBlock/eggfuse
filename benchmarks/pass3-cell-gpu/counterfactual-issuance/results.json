@@ -1,0 +1,384 @@
+{
+  "training": {
+    "training_device": "cpu",
+    "weights": [
+      4.318165302276611,
+      4.087374687194824,
+      4.318161964416504
+    ],
+    "input_groups": [
+      {
+        "features": [
+          1.0,
+          0.08664339780807495,
+          0.08664339780807495
+        ],
+        "positive": 0,
+        "negative": 7,
+        "gain": -0.875
+      },
+      {
+        "features": [
+          1.0,
+          0.13732653856277466,
+          0.08664339780807495
+        ],
+        "positive": 5,
+        "negative": 8,
+        "gain": 13.25
+      },
+      {
+        "features": [
+          1.0,
+          0.1732867956161499,
+          0.08664339780807495
+        ],
+        "positive": 2,
+        "negative": 9,
+        "gain": 4.625
+      },
+      {
+        "features": [
+          1.0,
+          0.20117974281311035,
+          0.08664339780807495
+        ],
+        "positive": 3,
+        "negative": 2,
+        "gain": 8.375
+      },
+      {
+        "features": [
+          1.0,
+          0.2239699363708496,
+          0.08664339780807495
+        ],
+        "positive": 1,
+        "negative": 5,
+        "gain": 2.25
+      },
+      {
+        "features": [
+          1.0,
+          0.24323876202106476,
+          0.08664339780807495
+        ],
+        "positive": 3,
+        "negative": 4,
+        "gain": 8.125
+      },
+      {
+        "features": [
+          1.0,
+          0.25993019342422485,
+          0.08664339780807495
+        ],
+        "positive": 3,
+        "negative": 2,
+        "gain": 8.375
+      },
+      {
+        "features": [
+          1.0,
+          0.2746530771255493,
+          0.08664339780807495
+        ],
+        "positive": 5,
+        "negative": 4,
+        "gain": 13.875
+      },
+      {
+        "features": [
+          1.0,
+          0.2878231406211853,
+          0.08664339780807495
+        ],
+        "positive": 2,
+        "negative": 4,
+        "gain": 5.25
+      },
+      {
+        "features": [
+          1.0,
+          0.2997369170188904,
+          0.08664339780807495
+        ],
+        "positive": 2,
+        "negative": 3,
+        "gain": 5.375
+      },
+      {
+        "features": [
+          1.0,
+          0.31061333417892456,
+          0.08664339780807495
+        ],
+        "positive": 4,
+        "negative": 3,
+        "gain": 11.125
+      },
+      {
+        "features": [
+          1.0,
+          0.3206186592578888,
+          0.08664339780807495
+        ],
+        "positive": 5,
+        "negative": 1,
+        "gain": 14.125
+      },
+      {
+        "features": [
+          1.0,
+          0.3298821747303009,
+          0.08664339780807495
+        ],
+        "positive": 6,
+        "negative": 5,
+        "gain": 16.5
+      },
+      {
+        "features": [
+          1.0,
+          0.338506281375885,
+          0.08664339780807495
+        ],
+        "positive": 8,
+        "negative": 2,
+        "gain": 22.75
+      },
+      {
+        "features": [
+          1.0,
+          0.3465735912322998,
+          0.08664339780807495
+        ],
+        "positive": 4,
+        "negative": 3,
+        "gain": 11.125
+      },
+      {
+        "features": [
+          1.0,
+          0.3541516661643982,
+          0.08664339780807495
+        ],
+        "positive": 3,
+        "negative": 2,
+        "gain": 8.375
+      },
+      {
+        "features": [
+          1.0,
+          0.36129647493362427,
+          0.08664339780807495
+        ],
+        "positive": 0,
+        "negative": 5,
+        "gain": -0.625
+      },
+      {
+        "features": [
+          1.0,
+          0.3680548667907715,
+          0.08664339780807495
+        ],
+        "positive": 1,
+        "negative": 1,
+        "gain": 2.75
+      },
+      {
+        "features": [
+          1.0,
+          0.37446653842926025,
+          0.08664339780807495
+        ],
+        "positive": 0,
+        "negative": 1,
+        "gain": -0.125
+      }
+    ]
+  },
+  "evaluation": {
+    "sum-bits": {
+      "leaf": {
+        "paid": 12662,
+        "headers": 50745,
+        "capture_reads": 0,
+        "admissions": 0,
+        "checked_internal": 0,
+        "completed": 0,
+        "fept": 0.21252566735112938,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "token_actions": [
+          220,
+          0
+        ]
+      },
+      "full": {
+        "paid": 12601,
+        "headers": 50536,
+        "capture_reads": 0,
+        "admissions": 194,
+        "checked_internal": 61,
+        "completed": 26,
+        "fept": 0.21355447980319023,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "token_actions": [
+          0,
+          194
+        ]
+      },
+      "previous": {
+        "paid": 12601,
+        "headers": 50536,
+        "capture_reads": 0,
+        "admissions": 194,
+        "checked_internal": 61,
+        "completed": 26,
+        "fept": 0.21355447980319023,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "token_actions": [
+          0,
+          194
+        ]
+      },
+      "paired": {
+        "paid": 12601,
+        "headers": 50536,
+        "capture_reads": 0,
+        "admissions": 194,
+        "checked_internal": 61,
+        "completed": 26,
+        "fept": 0.21355447980319023,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "token_actions": [
+          0,
+          194
+        ]
+      }
+    },
+    "3mm": {
+      "leaf": {
+        "paid": 558074,
+        "headers": 2031145,
+        "capture_reads": 0,
+        "admissions": 0,
+        "checked_internal": 0,
+        "completed": 0,
+        "fept": 0.16603174489404632,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "token_actions": [
+          6345,
+          0
+        ]
+      },
+      "full": {
+        "paid": 555913,
+        "headers": 2023730,
+        "capture_reads": 0,
+        "admissions": 5413,
+        "checked_internal": 2161,
+        "completed": 932,
+        "fept": 0.16667715991531049,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "token_actions": [
+          0,
+          5413
+        ]
+      },
+      "previous": {
+        "paid": 555913,
+        "headers": 2023730,
+        "capture_reads": 0,
+        "admissions": 5413,
+        "checked_internal": 2161,
+        "completed": 932,
+        "fept": 0.16667715991531049,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "token_actions": [
+          0,
+          5413
+        ]
+      },
+      "paired": {
+        "paid": 555913,
+        "headers": 2023730,
+        "capture_reads": 0,
+        "admissions": 5413,
+        "checked_internal": 2161,
+        "completed": 932,
+        "fept": 0.16667715991531049,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "token_actions": [
+          0,
+          5413
+        ]
+      }
+    }
+  }
+}
