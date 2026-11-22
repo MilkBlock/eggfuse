@@ -65,6 +65,10 @@ def main(a):
         x, y = generated(9317,4096,False)
         report["pair_training"] = dict(device=a.pair_device, test_rows=len(y),
             correct={k:int(((m(x).flatten()>=0)==y.bool()).sum()) for k,m in policies.items()})
+    if a.address_renaming:
+        from history_address import fit_renaming_study
+        routes, checkpoints = fit_renaming_study()
+        report["renaming_seeds"] = routes
     for case in a.cases:
         program, plans, req, spec = study["setup"](a, case)
         matrix = study["matrix"]
@@ -280,6 +284,10 @@ def main(a):
                             "two_steps": fit_address(steps=2),
                             "wide": fit_address(width=32),
                         }
+                        if a.address_renaming:
+                            selected = routes["shared_two_renamed"][0]
+                            report["history_address"] = checkpoints[selected]
+                            report["address_controls"] = checkpoints
                     if a.history_release:
                         request["history_head"]["release"] = report["source_delta_training"]["arms"]["mixed"]["actions"]
                 if a.ept:request["ept"]=True
@@ -510,6 +518,7 @@ if __name__ == "__main__":
     p.add_argument("--pair-takeover",action="store_true")
     p.add_argument("--pair-ambiguous",action="store_true")
     p.add_argument("--pair-tables",nargs=2,default=("PotentialExtractedExpr","TCPair"))
+    p.add_argument("--address-renaming", action="store_true")
     p.add_argument("--history-address", action="store_true")
     p.add_argument("--history-release",action="store_true")
     p.add_argument("--history-updates",action="store_true")
@@ -528,6 +537,7 @@ if __name__ == "__main__":
     p.add_argument("--ept",action="store_true")
     p.add_argument("--source-delta",choices=("size","all","local","distinct"))
     args=p.parse_args()
+    args.history_address |= args.address_renaming
     if args.history_release and not args.source_delta:p.error("--history-release requires the trained --source-delta head")
     args.history_updates |= args.history_release
     if args.history_tail_depth < 1:p.error("signed tail depth must be positive")

@@ -238,3 +238,21 @@ ordered effects, final state and signed ledger. It also evaluates the distinct
 undertrained route on the same native history with commits provided by the
 control. This measures access work, with no claim about process latency.
 [Checkpoint, ablations and native access counts](history-address-results.json)
+
+### Identifying a shared read instruction under correlated training data
+
+Use `--address-renaming` in place of `--history-address` with the same native
+binary. Keep 512 synthetic receipts fixed across 16 initialization seeds. In
+the aliased fixture the Cell id always equals the subject. In the renaming
+fixture exactly one receipt per role has its Cell id changed; its intended
+partner address stays the same. The shared-route objective trains on the
+intersection of valid actions for each role, as the deployed decoder emits
+one instruction per role. This objective requires known role sharing and a
+nonempty intersection. Every distinct decoded route is run on the same native
+trajectory, with the selected checkpoint also exercised in exclusive mode.
+
+The schema of rule 518 already determines the join column. A compiler can
+emit the same two instructions directly. This experiment measures how training
+recovers the addressing program and what an ambiguous program loses. It
+establishes no advantage over static compilation and has no GPU timing.
+[Routes by seed and native binding audit](history-renaming-results.json)

@@ -1,0 +1,270 @@
+{
+  "seeds": {
+    "aliased": [
+      "5-1",
+      "4-1",
+      "4-0",
+      "4-0",
+      "4-1",
+      "4-1",
+      "5-1",
+      "5-0",
+      "4-1",
+      "4-0",
+      "4-0",
+      "5-0",
+      "4-1",
+      "5-0",
+      "5-1",
+      "5-0"
+    ],
+    "wide_aliased": [
+      "4-1",
+      "4-1",
+      "4-1",
+      "5-0",
+      "5-1",
+      "4-0",
+      "5-1",
+      "5-1",
+      "4-1",
+      "4-0",
+      "4-0",
+      "4-0",
+      "5-1",
+      "4-1",
+      "4-1",
+      "5-1"
+    ],
+    "long_aliased": [
+      "5-1",
+      "4-1",
+      "4-0",
+      "5-0",
+      "4-1",
+      "4-1",
+      "5-1",
+      "5-0",
+      "4-1",
+      "4-0",
+      "4-0",
+      "5-0",
+      "4-1",
+      "5-0",
+      "5-1",
+      "5-0"
+    ],
+    "two_renamed": [
+      "5-1",
+      "4-1",
+      "4-0",
+      "4-0",
+      "4-0",
+      "4-0",
+      "4-0",
+      "5-0",
+      "4-0",
+      "4-0",
+      "4-0",
+      "5-0",
+      "4-1",
+      "5-0",
+      "4-1",
+      "4-0"
+    ],
+    "shared_aliased": [
+      "5-1",
+      "4-1",
+      "4-0",
+      "4-0",
+      "4-1",
+      "4-1",
+      "5-1",
+      "5-0",
+      "4-1",
+      "4-0",
+      "4-0",
+      "5-0",
+      "4-1",
+      "5-0",
+      "5-1",
+      "5-0"
+    ],
+    "shared_two_renamed": [
+      "4-0",
+      "4-0",
+      "4-0",
+      "4-0",
+      "4-0",
+      "4-0",
+      "4-0",
+      "4-0",
+      "4-0",
+      "4-0",
+      "4-0",
+      "4-0",
+      "4-0",
+      "4-0",
+      "4-0",
+      "4-0"
+    ]
+  },
+  "actions": {
+    "5-1": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "4-1": [
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "4-0": [
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    "5-0": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        0
+      ]
+    ]
+  },
+  "cases": {
+    "dot-product": {
+      "exclusive": {
+        "committed": 125,
+        "accepted": 125,
+        "paid": 11848,
+        "suppressed": 25,
+        "port_visits": 150,
+        "scan_visits": 33495,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "events": true,
+          "runs": true,
+          "schedule": true,
+          "state_sha": true,
+          "ledger": true,
+          "commit_inputs": true
+        }
+      },
+      "alternative_routes": {
+        "5-1": {
+          "missing": 125,
+          "extra": 0,
+          "retained": 0
+        },
+        "4-1": {
+          "missing": 54,
+          "extra": 0,
+          "retained": 71
+        },
+        "5-0": {
+          "missing": 71,
+          "extra": 0,
+          "retained": 54
+        }
+      }
+    },
+    "sum-bits": {
+      "exclusive": {
+        "committed": 175,
+        "accepted": 175,
+        "paid": 10476,
+        "suppressed": 89,
+        "port_visits": 264,
+        "scan_visits": 55475,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "events": true,
+          "runs": true,
+          "schedule": true,
+          "state_sha": true,
+          "ledger": true,
+          "commit_inputs": true
+        }
+      },
+      "alternative_routes": {
+        "5-1": {
+          "missing": 175,
+          "extra": 0,
+          "retained": 0
+        },
+        "4-1": {
+          "missing": 111,
+          "extra": 0,
+          "retained": 64
+        },
+        "5-0": {
+          "missing": 64,
+          "extra": 0,
+          "retained": 111
+        }
+      }
+    },
+    "3mm": {
+      "exclusive": {
+        "committed": 4667,
+        "accepted": 4667,
+        "paid": 450049,
+        "suppressed": 1115,
+        "port_visits": 5782,
+        "scan_visits": 46021965,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "events": true,
+          "runs": true,
+          "schedule": true,
+          "state_sha": true,
+          "ledger": true,
+          "commit_inputs": true
+        }
+      },
+      "alternative_routes": {
+        "5-1": {
+          "missing": 4667,
+          "extra": 0,
+          "retained": 0
+        },
+        "4-1": {
+          "missing": 1593,
+          "extra": 0,
+          "retained": 3074
+        },
+        "5-0": {
+          "missing": 3074,
+          "extra": 0,
+          "retained": 1593
+        }
+      }
+    }
+  }
+}
