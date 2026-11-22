@@ -1,0 +1,33 @@
+{
+  "guarded_long_rejections": 1,
+  "train_programs": 12,
+  "finish_forks": 36,
+  "root_forks": 12,
+  "test_programs": 48,
+  "totals": {
+    "leaf": {
+      "final_births": 96,
+      "paid": 128,
+      "internal": 0,
+      "strict": 16
+    },
+    "previous": {
+      "final_births": 96,
+      "paid": 96,
+      "internal": 32,
+      "strict": 16
+    },
+    "fixed_three": {
+      "final_births": 96,
+      "paid": 64,
+      "internal": 64,
+      "strict": 16
+    },
+    "learned": {
+      "final_births": 96,
+      "paid": 64,
+      "internal": 64,
+      "strict": 16
+    }
+  }
+}

@@ -26,3 +26,17 @@ python "$D/check.py" "$OUT/results.json"
 ```
 
 The external results retain per-case checks and counterfactual returns. The tracked summary includes all paid proposals, full-bank scores and physical named reads. Both root policies reached the same states and ordered RHS on held-out inputs. On productive paths, the historical native executor records query-resume events that explicit verification does not reproduce. The strict trajectory comparison consequently remains a difference even when every graph event, write, RHS, and Run agrees.
+
+### Three-step issuance and terminal proposal credit
+
+The depth study adds a root action that signs both existing static wires Both → C → Use at once. The receiver advances each wire with the preceding operation's actual returned reference at the original Run. Tag → D remains independent. The finish policy observes the chosen C export's slot and whether it belongs to an owner that signed the third step. It decides whether to issue Use independently. Original two-step packets remain supported.
+
+On 12 random native training programs, compare send/skip at identical finish decisions for each issuance depth. Next freeze the finish decision and fork root issuance across lengths 1, 2 and 3. Fit two linear softmax policies to these action returns by backpropagation. Correct native graph, ordered RHS, write, non-resume events and schedule outcomes with zero rejected packets receive minus the number of paid proposals. A failed contract receives −32, below every legal return in this family. Port readers and the previous stage's skip policy are held fixed.
+
+Use the same compiler, interactive session built from this revision, exact session and pointer checkpoint as above:
+
+```sh
+python depth_returns.py COMPILER NATIVE_SESSION EXACT_SESSION POINTER_PT RESULT_JSON
+```
+
+On 48 held-out programs, leaf, two-step and learned three-step policies paid 128, 96 and 64 external packets respectively. Each produced 96 distinct new constructors still visible at the final boundary with their original physical witnesses. In this constructor-only family, the separate exact source's birth identifiers give an independent count. The three FEPT values are 0.75, 1.00 and 1.50. Strict resume-inclusive traces matched on 16 of 48 programs in each arm. A negative control adds an extra guard to the finish rule. Two-step issuance preserves the source result, while a forced three-step request is rejected. The always-three control ties the trained policy on the main family. These results demonstrate the action-space ceiling and actual internal takeover on this fixture; they do not measure adaptive choice across competing legal large templates or full EggCC FEPT.

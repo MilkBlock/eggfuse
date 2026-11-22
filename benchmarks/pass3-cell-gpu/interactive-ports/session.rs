@@ -19,6 +19,8 @@ struct Issue {
     rule: usize,
     parents: Vec<(u64, usize, u64)>,
     compound: bool,
+    #[serde(default)]
+    through_finish: bool,
 }
 
 fn send(v: Value) -> Result<(), Box<dyn std::error::Error>> {
@@ -71,6 +73,31 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     {
         return Err("missing compiled Bake route for internal child".into());
     }
+    let terminal = p.sets["finish"]
+        .iter()
+        .copied()
+        .filter(|&rid| {
+            let q = &p.rules[rid].query;
+            q.len() == 1 && matches!(q[0].call,Call::Table(t) if t==effects[child])
+        })
+        .collect::<Vec<_>>();
+    let child_template = p.rules[*child].template;
+    let child_op = p.templates[child_template]
+        .ops
+        .iter()
+        .position(|op| matches!(op, Op::Let(_, Call::Table(_), _)))
+        .ok_or("missing child result")?;
+    let terminal = match terminal.as_slice() {
+        [rid]
+            if p.multi_stage
+                .routes
+                .contains_key(&(child_template, child_op, *rid, 0)) =>
+        {
+            Some(*rid)
+        }
+        _ => None,
+    };
+    let mut births = BTreeSet::new();
     let mut current_owner = BTreeMap::new();
     let mut engine = Executor::new(Graph::new(p.clone())?, false);
     let mut ports = BTreeMap::new();
@@ -104,17 +131,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let issues: Vec<Issue> =
             serde_json::from_str(&lines.next().ok_or("missing Run proposals")??)?;
         let mut routes = BTreeMap::new();
-        if let Some((owner, w, version)) = pending.take() {
+        if let Some((rid, owner, slot, w, version, next)) = pending.take() {
             engine.issued.submit(serde_json::from_value(
-                json!({"rule":child,"run":run,"parents":[[w,version]]}),
+                json!({"rule":rid,"run":run,"parents":[[w,version]]}),
             )?);
-            routes.insert(*child, (owner, 1, false));
+            routes.insert(rid, (owner, slot, next, false));
             admitted += 1;
         }
         for a in issues {
             if !owners.insert(a.owner)
                 || !p.sets[*stage].contains(&a.rule)
                 || a.compound && a.rule != root
+                || a.through_finish && (!a.compound || terminal.is_none())
                 || routes.contains_key(&a.rule)
             {
                 rejections += 1;
@@ -137,7 +165,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             engine.issued.submit(serde_json::from_value(
                 json!({"rule":a.rule,"run":run,"parents":refs}),
             )?);
-            routes.insert(a.rule, (a.owner, 0, a.compound));
+            routes.insert(a.rule, (a.owner, 0, a.compound, a.through_finish));
         }
         audit::enable_events();
         engine.execute_until(Some(run))?;
@@ -168,7 +196,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             let Some(rid) = src[1].as_u64().map(|n| n as usize) else {
                 continue;
             };
-            let &(owner, slot, compound) = routes.get(&rid).ok_or("unissued commit")?;
+            let &(owner, slot, continues, through_finish) =
+                routes.get(&rid).ok_or("unissued commit")?;
             let Some(row) = engine.graph.row(w)? else {
                 continue;
             };
@@ -189,8 +218,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 p.tables[row.table].name,
                 &*row.values
             ]));
-            if compound {
-                pending = Some((owner, w, row.epoch));
+            if e[0] == "birth" {
+                births.insert(w);
+            }
+            if continues {
+                let next_rule = if slot == 0 {
+                    *child
+                } else {
+                    terminal.ok_or("missing finish route")?
+                };
+                pending = Some((next_rule, owner, slot + 1, w, row.epoch, through_finish));
             }
         }
         all_events.push(
@@ -211,8 +248,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     use sha2::{Digest, Sha256};
     let mut state = vec![];
     engine.graph.write_export(&mut state)?;
+    let mut final_births = 0;
+    for original in &births {
+        if let Some(row) = engine.graph.row(*original)?
+            && !row.hidden
+            && row.witness == *original
+        {
+            final_births += 1;
+        }
+    }
     send(
-        json!({"internal":admitted,"state_sha":format!("{:x}",Sha256::digest(state)),
+        json!({"final_births": final_births, "internal":admitted,"state_sha":format!("{:x}",Sha256::digest(state)),
         "events":all_events,"rhs":audit::take_digests(),"writes":audit::take_write_digests(),"resumes":audit::take_resume_digests(),
         "schedule":engine.steps.iter().map(|s|json!([s.ruleset,s.epoch,s.path,s.iterations,s.executed_bindings,s.changed])).collect::<Vec<_>>() }),
     )

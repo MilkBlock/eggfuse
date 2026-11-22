@@ -82,7 +82,7 @@ class Memory:
 
 
 @torch.no_grad()
-def rollout(binary,program,policy,mode,force_skip=None,read_trace=None):
+def rollout(binary,program,policy,mode,force_skip=None,read_trace=None,depth=None,finish_skip=None):
     with subprocess.Popen([binary,program],stdin=subprocess.PIPE,stdout=subprocess.PIPE,text=True) as proc:
         def read():
             line=proc.stdout.readline()
@@ -102,6 +102,8 @@ def rollout(binary,program,policy,mode,force_skip=None,read_trace=None):
         retired_c=None
         transfers=0
         root_key=None
+        long_owners=set()
+        finish_features=None
         def issue(rule,parents,compound=False):
             nonlocal serial,packets
             serial+=1
@@ -126,6 +128,11 @@ def rollout(binary,program,policy,mode,force_skip=None,read_trace=None):
                         continue
                     root_key=mem.rows[left][1]
                     full=mode in ('full','old-owner') or (mode in ('learned','unconditioned') and policy.macro_logit(torch.tensor(root_key)).item()>=0)
+                    if depth is not None:
+                        span = depth(torch.tensor(root_key)) if callable(depth) else depth
+                        if span not in (1, 2, 3):
+                            raise ValueError("unsupported template depth")
+                        full = span >= 2
                     if mode=='bad-owner':
                         pkt=issue('Both',[left,right])
                         pkt['parents'][1][0]=serial+1000
@@ -134,6 +141,9 @@ def rollout(binary,program,policy,mode,force_skip=None,read_trace=None):
                         pkt['parents'][1][2]+=1
                     else:
                         pkt=issue('Both',[left,right],full)
+                    if depth is not None and span == 3:
+                        pkt["through_finish"] = True
+                        long_owners.add(pkt["owner"])
                     batch.append(pkt)
                     break
             if stage==1:
@@ -155,7 +165,11 @@ def rollout(binary,program,policy,mode,force_skip=None,read_trace=None):
                     if mode=='old-owner' and retired_c is not None:
                         selected=retired_c
                     uses.append([selected[1],mem.choices.get(selected[0],False)])
-                    batch.append(issue('Use',[selected]))
+                    finish_features = [float(selected[0] in long_owners), float(selected[1])]
+                    suppress = (finish_skip(torch.tensor(finish_features)) if callable(finish_skip)
+                                else finish_skip)
+                    if not suppress:
+                        batch.append(issue('Use',[selected]))
             proc.stdin.write(json.dumps(batch)+'\n')
             proc.stdin.flush()
             boundary=read()
@@ -172,7 +186,7 @@ def rollout(binary,program,policy,mode,force_skip=None,read_trace=None):
         proc.stdin.close()
         if proc.wait():
             raise RuntimeError('native receiver failed')
-    return dict(source=result,paid=packets,receiver_reads=stage_reads[-1],rejected=boundary['rejected'],
+    return dict(source=result,finish_features=finish_features,paid=packets,receiver_reads=stage_reads[-1],rejected=boundary['rejected'],
                 pointer_scores=mem.stats['scores'],queries=mem.stats['reads'],uses=uses,
                 first_encoded=mem.stats['first_encoded'],encodings=mem.stats['encodings'],skip_feature=skip_feature,root_features=root_key,transfers=transfers,internal=result['internal'])
 
