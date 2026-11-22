@@ -303,7 +303,7 @@ pub(crate) fn finish_set_edges(success:bool){
     root=crate/"src/joint_root.rs"
     edit(root,"audit:bool,emitted:", "history_issuer:Option<HistoryIssuer>,history:Option<([usize;2],Vec<[u64;8]>)>,pair_issuer:Option<PairIssuer>,pair_trace:Option<(Vec<usize>,Vec<[u64;7]>)>,audit:bool,emitted:")
     edit(root,"State{stage_watch:false,", "State{pair_issuer:None,history_issuer:None,history:None,pair_trace:None,stage_watch:false,")
-    edit(root,'"root_row_decodes":s.decodes', '"pair_checks":s.pair_issuer.as_ref().map(|p|[p.checked,p.verified]),"pair_proposals":s.pair_issuer.as_ref().map(|p|&p.proposals),"history_suppressed":s.history_issuer.as_ref().map(|h|&h.suppressed),"history_updates":s.history_issuer.as_ref().map(|h|&h.updates),"history_initial":s.history_issuer.as_ref().map(|h|&h.seeds),"history_online":s.history_issuer.as_ref().map(|h|(&h.checked,&h.pending)),"history_returns":s.history.as_ref().map(|h|&h.1),"pair_returns":s.pair_trace.as_ref().map(|(_,rows)|rows),"root_row_decodes":s.decodes')
+    edit(root,'"root_row_decodes":s.decodes', '"pair_checks":s.pair_issuer.as_ref().map(|p|[p.checked,p.verified]),"pair_proposals":s.pair_issuer.as_ref().map(|p|&p.proposals),"history_tail_misses":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|&t.omitted),"history_scale":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|t.scale),"history_tail":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|(t.attempts,&t.children)),"history_suppressed":s.history_issuer.as_ref().map(|h|&h.suppressed),"history_updates":s.history_issuer.as_ref().map(|h|&h.updates),"history_initial":s.history_issuer.as_ref().map(|h|&h.seeds),"history_online":s.history_issuer.as_ref().map(|h|(&h.checked,&h.pending)),"history_returns":s.history.as_ref().map(|h|&h.1),"pair_returns":s.pair_trace.as_ref().map(|(_,rows)|rows),"root_row_decodes":s.decodes')
     with root.open("a") as f:
         f.write("""
 pub fn enable_return_history(program:&Program)->Result<()> {
@@ -312,14 +312,18 @@ pub fn enable_return_history(program:&Program)->Result<()> {
     STATE.with_borrow_mut(|s|if let Some(s)=s{s.history=Some((tables,Vec::new()))});
     Ok(())
 }
-pub(crate) fn history_return(table:usize,key:&[Value],op:usize,dep:Dependency,version:u64,epoch:u64){
+pub(crate) fn history_return(table:usize,key:&[Value],result:&Value,op:usize,dep:Dependency,version:u64,epoch:u64){
     STATE.with_borrow_mut(|s|{
         let Some(s)=s else{return};
+        if s.active.is_some() && let Some(t)=s.history_issuer.as_mut().and_then(|h|h.tail.as_mut())
+            && let Dependency::Fact(f)=dep {t.returned(table,key,result,[f.cell as u64,f.op as u64,version]);}
         let Some((tables,rows))=&mut s.history else{return};
         let Some(role)=tables.iter().position(|t|*t==table) else{return};
         let Some((ordinal,_,_,_,_))=s.active else{return};
         if let (Some(Value::Eq(subject)),Dependency::Fact(f))=(key.first(),dep){
-            if let Some(h)=&mut s.history_issuer {h.observe(epoch,role,(ordinal,op as i64),[f.cell as u64,f.op as u64,version],*subject);}
+            if let Some(h)=&mut s.history_issuer {
+                if let Some(t)=&mut h.tail && role==1 && let Some((owner,effect,depth))=t.active && owner==ordinal && effect==op {t.pending.entry([f.cell as u64,f.op as u64,version]).or_insert((ordinal,epoch,depth));}
+                h.observe(epoch,role,(ordinal,op as i64),[f.cell as u64,f.op as u64,version],*subject);}
             rows.push([epoch,ordinal as u64,op as u64,role as u64,f.cell as u64,f.op as u64,version,*subject]);
         }
     })
@@ -343,10 +347,13 @@ pub(crate) fn trace_pair_return(op:usize,dep:Dependency,version:u64,reused:bool)
     });
 }
 """)
+    copyfile(Path(__file__).with_name("history_tail.rs"),crate/"src/history_tail.rs")
+    with root.open("a") as f:
+        f.write('\ninclude!("history_tail.rs");\n')
     copyfile(Path(__file__).with_name("history_issuer.rs"),crate/"src/history_issuer.rs")
     with root.open("a") as f:
         f.write('\ninclude!("history_issuer.rs");\n')
-    edit(root,'if state.audit{state.commits.push','if let Some(h)=&mut state.history_issuer{h.cite(epoch,state.ordinal,rid,&r.refs,inputs);}\n        if state.audit{state.commits.push')
+    edit(root,'if state.audit{state.commits.push','if let Some(h)=&mut state.history_issuer{h.cite(epoch,state.ordinal,r.serial,rid,&r.refs,inputs);}\n        if state.audit{state.commits.push')
     copyfile(Path(__file__).with_name("pair_issuer.rs"),crate/"src/pair_issuer.rs")
     with root.open("a") as f:
         f.write('\ninclude!("pair_issuer.rs");\n')
@@ -365,10 +372,10 @@ pub(crate) fn trace_pair_return(op:usize,dep:Dependency,version:u64,reused:bool)
             eggfuse_cell_runtime::joint_root::trace_pair_rules(rules);
         }""")
     edit(crate/"src/graph.rs","crate::strict_named::returned(cell,op,row.witness,t,row.epoch);",
-         "crate::joint_root::history_return(t,&row.values,op,row.witness,row.epoch,self.epoch);\n                crate::joint_root::trace_pair_return(op,row.witness,row.epoch,true);\n                crate::strict_named::returned(cell,op,row.witness,t,row.epoch);")
+         "crate::joint_root::history_return(t,&row.values,row.values.last().unwrap(),op,row.witness,row.epoch,self.epoch);\n                crate::joint_root::trace_pair_return(op,row.witness,row.epoch,true);\n                crate::strict_named::returned(cell,op,row.witness,t,row.epoch);")
     edit(crate/"src/graph.rs","let value = self.insert_constructor(cell, op, t, &key, dst)?;",
          """let value = self.insert_constructor(cell, op, t, &key, dst)?;
-        crate::joint_root::history_return(t,&key,op,Dependency::Fact(FactRef{cell,op:op as u32}),self.epoch,self.epoch);
+        crate::joint_root::history_return(t,&key,&value,op,Dependency::Fact(FactRef{cell,op:op as u32}),self.epoch,self.epoch);
         crate::joint_root::trace_pair_return(op,Dependency::Fact(FactRef{cell,op:op as u32}),self.epoch,false);""")
     edit(crate/"src/ordinary_witness.rs","let rule=&g.program.rules[rid];\n        let plan=s.plans",
          "crate::joint_root::check_pairs(g,rid,mark)?;\n        let history_pairs=crate::joint_root::check_history_issuer(g,rid,mark)?;\n        let rule=&g.program.rules[rid];\n        let plan=s.plans")
@@ -501,3 +508,44 @@ pub(crate) fn trace_pair_return(op:usize,dep:Dependency,version:u64,reused:bool)
     completion = crate/"src/runtime_completion.rs"
     edit(completion,'crate::ordinary_witness::changed_frame_rows(&self.graph);',
          'crate::joint_root::history_updates(&self.graph)?;\n        crate::ordinary_witness::changed_frame_rows(&self.graph);')
+
+    edit(single,'pub(crate) struct Trial{','pub(crate) struct Trial{tail_bindings:BTreeMap<(usize,Dependency,u64),Instance>,')
+    edit(single,'Ok(Self{waiting_wave:', 'Ok(Self{tail_bindings:BTreeMap::new(),waiting_wave:')
+    anchor='let matched=if self.rows.verify.mode==0'
+    edit(single,anchor,'let prior=token.w.and_then(|w|self.tail_bindings.remove(&(rid,w,token.version)));\n            let matched=if prior.is_some(){prior}else if self.rows.verify.mode==0')
+    rows=crate/"src/adaptive_rows.rs"
+    anchor='        let model = self\n            .policy'
+    edit(rows,anchor,'''        let claims=crate::joint_root::history_tail_claims(rid,g.epoch);
+        let mut inherited=BTreeMap::new();
+        let mut failed_tail=BTreeMap::new();
+        for (w,version,owner,depth) in claims {
+            if p.pivot!=Some(1) || p.order.as_slice()!=[0] || self.residual || !self.rows.batch {
+                return Err("incompatible signed point plan".into())
+            }
+            let token=Token{recipe:None,id:0,rid,w:Some(w),guarded:false,version,initial:false,score:0.};
+            if let Some(binding)=self.check(g,r,p,&token,wm)?{
+                inherited.insert((w,version),(owner,depth,binding));
+            } else {failed_tail.insert((w,version),owner);}
+        }
+'''+anchor)
+    anchor='            if send && self.rows.batch && self.rows.scalar.enabled'
+    edit(rows,anchor,'''            if let Some((w,(owner,depth,binding)))=h.source.and_then(|w|inherited.remove(&(w,h.version)).map(|v|(w,v))) {
+                if !send{return Err("signed child lost source ownership".into())}
+                let recipe=crate::joint_root::history_tail_recipe(g.epoch,rid,w,h.version,owner,depth)?;
+                if self.tail_bindings.insert((rid,w,h.version),binding).is_some(){return Err("duplicate signed child".into())}
+                result.push((Token{recipe:Some(recipe),id:self.serial,rid,w:h.source,version:h.version,initial:h.initial,score,guarded:false},base,true));
+                emitted+=1;
+                continue
+            }
+'''+anchor)
+    edit(rows,'        if self.rows.batch && !result.is_empty() {','        if !inherited.is_empty(){return Err("source missed a signed child".into())}\n        if self.rows.batch && !result.is_empty() {')
+    for prefix in ('.iter()\n                    ', 'shard.iter_mut()'):
+        edit(rows,prefix+'.filter(|(_, _, send)| *send)',prefix+'.filter(|(t, _, send)| *send && t.recipe.is_none())')
+
+    anchor='            let recipe = if send && !self.rows.batch {'
+    edit(rows,anchor,'''            if send && let Some((w,owner))=h.source.and_then(|w|failed_tail.remove(&(w,h.version)).map(|o|(w,o)))
+                && crate::joint_root::history_tail_miss(g.epoch,w,h.version,owner) {
+                omitted+=1;
+                continue
+            }
+'''+anchor)

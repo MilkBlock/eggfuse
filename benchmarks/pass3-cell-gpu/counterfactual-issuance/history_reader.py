@@ -223,4 +223,6 @@ def study(data, recipe):
                 accepted=len(accepted), committed_at_check=len(accepted & committed),
                 missed=missed_sources(data["root_recipe"]["commits"],target,
                                       (*seeds,*receipts,*citations,*revisions),accepted))
+            from history_successors import profile
+            results[name]["successors"] = profile(data,target,accepted,(*seeds,*receipts,*citations,*revisions))
     return results

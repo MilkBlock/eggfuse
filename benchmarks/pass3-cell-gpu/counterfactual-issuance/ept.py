@@ -49,7 +49,9 @@ def score(data, recipe, paid, reference):
     commits=roots["commits"]
     ordinal={r[2]:r[0] for r in commits}
     parents={ordinal[serial]:ordinal[root] for serial,root,*_ in strict.get("signed_commits",[])}
-    for serial,root in roots.get("pair_children") or []:
+    tail = roots.get("history_tail")
+    children = [*(roots.get("pair_children") or []), *(tail[1] if tail else [])]
+    for serial,root in children:
         child=ordinal[serial]
         if child in parents:raise ValueError("duplicate signed owner")
         parents[child]=root

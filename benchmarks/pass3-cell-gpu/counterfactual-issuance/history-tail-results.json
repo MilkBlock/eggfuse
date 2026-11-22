@@ -1,0 +1,326 @@
+{
+  "dot-product": {
+    "ledger_sha256": "9e1a9f99f07770a2ce93a65e8d1ef1b542615a3caeb18d12ed50c524fc971b18",
+    "signed_effective_ops": 5474,
+    "positive_only": {
+      "paid": 12836,
+      "ept": 0.4264568401371144,
+      "tail": {
+        "attempted": 94,
+        "committed": 29
+      },
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "events": true,
+        "runs": true,
+        "schedule": true,
+        "state_sha": true,
+        "ledger": true,
+        "commit_inputs": true
+      }
+    },
+    "depth8": {
+      "paid": 12836,
+      "ept": 0.4264568401371144,
+      "tail": {
+        "attempted": 123,
+        "committed": 29,
+        "by_depth": {
+          "1": 29
+        }
+      },
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "events": true,
+        "runs": true,
+        "schedule": true,
+        "state_sha": true,
+        "ledger": true,
+        "commit_inputs": true
+      }
+    },
+    "depth8_context": {
+      "paid": 12836,
+      "ept": 0.4264568401371144,
+      "tail": {
+        "scale": [
+          125,
+          125,
+          111
+        ],
+        "attempted": 109,
+        "committed": 29,
+        "by_depth": {
+          "1": 29
+        }
+      },
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "events": true,
+        "runs": true,
+        "schedule": true,
+        "state_sha": true,
+        "ledger": true,
+        "commit_inputs": true
+      }
+    },
+    "full_conditional": {
+      "paid": 12822,
+      "ept": 0.42692247699266883,
+      "tail": {
+        "omitted_paid_misses": 14,
+        "scale": [
+          125,
+          0,
+          125
+        ],
+        "attempted": 94,
+        "committed": 29,
+        "by_depth": {
+          "1": 29
+        },
+        "children_changing_state": 29,
+        "child_effective_ops": {
+          "visible_birth": 29,
+          "effective_write": 0,
+          "effective_union": 0,
+          "visibility_change": 0
+        },
+        "control_paid": 12865
+      },
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "events": true,
+        "runs": true,
+        "schedule": true,
+        "state_sha": true,
+        "ledger": true,
+        "commit_inputs": true
+      }
+    }
+  },
+  "sum-bits": {
+    "ledger_sha256": "4cc4c1c34874ef596379c3218854655706eff5a13bb0c7e1e4a38fc0cd70e0fa",
+    "signed_effective_ops": 5381,
+    "positive_only": {
+      "paid": 11100,
+      "ept": 0.48477477477477476,
+      "tail": {
+        "attempted": 114,
+        "committed": 25
+      },
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "events": true,
+        "runs": true,
+        "schedule": true,
+        "state_sha": true,
+        "ledger": true,
+        "commit_inputs": true
+      }
+    },
+    "depth8": {
+      "paid": 11100,
+      "ept": 0.48477477477477476,
+      "tail": {
+        "attempted": 139,
+        "committed": 25,
+        "by_depth": {
+          "1": 25
+        }
+      },
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "events": true,
+        "runs": true,
+        "schedule": true,
+        "state_sha": true,
+        "ledger": true,
+        "commit_inputs": true
+      }
+    },
+    "depth8_context": {
+      "paid": 11103,
+      "ept": 0.4846437899666757,
+      "tail": {
+        "scale": [
+          175,
+          152,
+          143
+        ],
+        "attempted": 110,
+        "committed": 22,
+        "by_depth": {
+          "1": 22
+        }
+      },
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "events": true,
+        "runs": true,
+        "schedule": true,
+        "state_sha": true,
+        "ledger": true,
+        "commit_inputs": true
+      }
+    },
+    "full_conditional": {
+      "paid": 11091,
+      "ept": 0.4851681543593905,
+      "tail": {
+        "omitted_paid_misses": 9,
+        "scale": [
+          175,
+          0,
+          175
+        ],
+        "attempted": 114,
+        "committed": 25,
+        "by_depth": {
+          "1": 25
+        },
+        "children_changing_state": 25,
+        "child_effective_ops": {
+          "visible_birth": 25,
+          "effective_write": 0,
+          "effective_union": 0,
+          "visibility_change": 0
+        },
+        "control_paid": 11125
+      },
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "events": true,
+        "runs": true,
+        "schedule": true,
+        "state_sha": true,
+        "ledger": true,
+        "commit_inputs": true
+      }
+    }
+  },
+  "3mm": {
+    "ledger_sha256": "63a923887e958fe32e63821392e62a71a9a52e8a21058c94cdc3af49899af2d0",
+    "signed_effective_ops": 204581,
+    "positive_only": {
+      "paid": 518684,
+      "ept": 0.3944231940834882,
+      "tail": {
+        "attempted": 3103,
+        "committed": 1292
+      },
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "events": true,
+        "runs": true,
+        "schedule": true,
+        "state_sha": true,
+        "ledger": true,
+        "commit_inputs": true
+      }
+    },
+    "depth8": {
+      "paid": 518684,
+      "ept": 0.3944231940834882,
+      "tail": {
+        "attempted": 4395,
+        "committed": 1292,
+        "by_depth": {
+          "1": 1292
+        }
+      },
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "events": true,
+        "runs": true,
+        "schedule": true,
+        "state_sha": true,
+        "ledger": true,
+        "commit_inputs": true
+      }
+    },
+    "depth8_context": {
+      "paid": 518684,
+      "ept": 0.3944231940834882,
+      "tail": {
+        "scale": [
+          4667,
+          4654,
+          4423
+        ],
+        "attempted": 4157,
+        "committed": 1292,
+        "by_depth": {
+          "1": 1292
+        }
+      },
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "events": true,
+        "runs": true,
+        "schedule": true,
+        "state_sha": true,
+        "ledger": true,
+        "commit_inputs": true
+      }
+    },
+    "full_conditional": {
+      "paid": 518453,
+      "ept": 0.394598931822171,
+      "tail": {
+        "omitted_paid_misses": 231,
+        "scale": [
+          4667,
+          0,
+          4667
+        ],
+        "attempted": 3103,
+        "committed": 1292,
+        "by_depth": {
+          "1": 1292
+        },
+        "children_changing_state": 1291,
+        "child_effective_ops": {
+          "visible_birth": 1291,
+          "effective_write": 0,
+          "effective_union": 0,
+          "visibility_change": 0
+        },
+        "control_paid": 519976
+      },
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "events": true,
+        "runs": true,
+        "schedule": true,
+        "state_sha": true,
+        "ledger": true,
+        "commit_inputs": true
+      }
+    }
+  }
+}

@@ -371,6 +371,17 @@ def main(a):
                         (r[0],tuple(r[1:4]),tuple(r[5:])) in used for r in captures)
                 if a.history_takeover and name == "sub_expected_guard":
                     head = dict(request["history_head"], takeover=True)
+                    if a.history_tail:
+                        control = run(dict(request,history_head=head))
+                        if any(control[k] != data[k] for k in ("events","schedule","rhs","writes","resumes","state_sha","runs")) or ledger_digest(control)!=reference:
+                            raise ValueError("signed-tail control diverged")
+                        seen,waiting=control["root_recipe"]["history_online"]
+                        leaf_paid=study["packets"](control)+sum(not valid for _,_,valid in seen)+len(waiting)
+                        del control,seen,waiting
+                        successor, = [rid for rid,r in enumerate(recipe["rules"])
+                                         if [atom["call"].get("table") for atom in r["query"]] == ["Single","HasArgType"]
+                                         and r["query"][0]["args"][0] == r["query"][1]["args"][0]]
+                        head["tail"] = dict(rule=successor,depth=a.history_tail_depth,context=a.history_tail_context,own_misses=a.history_tail_negative)
                     takeover = run(dict(request, history_head=head))
                     if takeover.get("source_error"):
                         results[name]["history_takeover"] = dict(error=takeover["source_error"])
@@ -392,6 +403,13 @@ def main(a):
                         arm = dict(checks=checks, checked=len(checked), accepted=accepted,
                                    suppressed=len(takeover["root_recipe"]["history_suppressed"]),
                                    committed=applied, pending=len(pending), paid=paid_all)
+                        if a.history_tail:
+                            from history_successors import validate_tail
+                            arm["tail"] = validate_tail(takeover,head["target"],head["tail"]["rule"],a.history_tail_depth)
+                            tail = arm["tail"]
+                            if leaf_paid - paid_all != tail["committed"] + tail["omitted_paid_misses"]:
+                                raise ValueError("unattributed difference in signed-tail paid proposals")
+                            arm["tail"]["control_paid"] = leaf_paid
                         if all(checks.values()) and applied == accepted:
                             arm["effective_ops"] = score(takeover,recipe,paid_all,reference)
                         results[name]["history_takeover"] = arm
@@ -428,6 +446,10 @@ if __name__ == "__main__":
     p.add_argument("--history-release",action="store_true")
     p.add_argument("--history-updates",action="store_true")
     p.add_argument("--history-initial",action="store_true")
+    p.add_argument("--history-tail-negative",action="store_true")
+    p.add_argument("--history-tail-context",action="store_true")
+    p.add_argument("--history-tail-depth",type=int,default=1)
+    p.add_argument("--history-tail",action="store_true")
     p.add_argument("--history-takeover",action="store_true")
     p.add_argument("--history-ports", action="store_true")
     p.add_argument("--ept",action="store_true")
@@ -435,6 +457,9 @@ if __name__ == "__main__":
     args=p.parse_args()
     if args.history_release and not args.source_delta:p.error("--history-release requires the trained --source-delta head")
     args.history_updates |= args.history_release
+    if args.history_tail_depth < 1:p.error("signed tail depth must be positive")
+    args.history_tail |= args.history_tail_depth > 1 or args.history_tail_context or args.history_tail_negative
+    args.history_takeover |= args.history_tail
     args.history_ports |= args.history_takeover or args.history_initial or args.history_updates
     args.ept |= args.history_takeover
     args.pair_takeover |= args.history_takeover

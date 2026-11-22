@@ -1,6 +1,7 @@
 // One history-driven binary Cell issuer, optionally authoritative for its rule.
 struct HistoryIssuer {
     target: usize,
+    tail: Option<HistoryTail>,
     takeover: bool,
     refresh: bool,
     release: Option<[bool; 8]>,
@@ -73,6 +74,7 @@ pub fn configure_history_issuer(g: &Graph, spec: &J) -> Result<()> {
     };
     let mut issuer = HistoryIssuer {
         target,
+        tail: HistoryTail::compile(program, target, *r, &spec["tail"])?,
         release: serde_json::from_value(spec["release"].clone()).map_err(|e| e.to_string())?,
         retired: Default::default(),
         suppressed: Vec::new(),
@@ -153,7 +155,19 @@ impl HistoryIssuer {
         self.banks[role].insert(port, (key, owner.0, owner.1));
     }
 
-    fn cite(&mut self, epoch: u64, ordinal: usize, rule: usize, refs: &[Ref], slots: &Slots) {
+    fn cite(
+        &mut self,
+        epoch: u64,
+        ordinal: usize,
+        serial: u64,
+        rule: usize,
+        refs: &[Ref],
+        slots: &Slots,
+    ) {
+        if let Some(t) = &mut self.tail {
+            t.inputs(rule, refs, slots);
+            t.enter(epoch, ordinal, serial, rule, rule == self.target, refs);
+        }
         if rule == self.target {
             return;
         }
@@ -233,6 +247,9 @@ pub(crate) fn check_history_issuer(
                 continue;
             }
             if matched && let Some(refs) = &mut ready {
+                if let Some(t) = &mut h.tail {
+                    t.select(g.epoch, p.refs, h.weight, h.bias);
+                }
                 refs.push(p.refs);
             }
             h.checked.push((g.epoch, p, matched));
