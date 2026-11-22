@@ -77,6 +77,29 @@ fn layout(rule: &crate::program::Rule) -> Result<Option<Layout>> {
             atoms.push((atoms.len(), t, &atom.args));
         }
     }
+    // A connecting fact supplies both endpoints before two aliases of the same
+    // table are expanded. Shared columns common to both aliases cannot select
+    // an endpoint, so require a separate slot for each side.
+    let bridge = (atoms.len() == 3)
+        .then(|| {
+            (0..3).find(|&i| {
+                let (_, ta, a) = atoms[(i + 1) % 3];
+                let (_, tb, b) = atoms[(i + 2) % 3];
+                let (_, tc, c) = atoms[i];
+                let contains = |args: &[Arg], slot: usize| {
+                    args.iter()
+                        .any(|arg| matches!(arg, Arg::Slot(s) if *s == slot))
+                };
+                let links = |first: &[Arg], second: &[Arg]| {
+                    c.iter().any(|arg| {
+                        matches!(arg, Arg::Slot(s)
+                    if contains(first, *s) && !contains(second, *s))
+                    })
+                };
+                ta == tb && ta != tc && links(a, b) && links(b, a)
+            })
+        })
+        .flatten();
     let mut seen = BTreeMap::new();
     let mut reads = vec![];
     while !atoms.is_empty() {
@@ -86,9 +109,8 @@ fn layout(rule: &crate::program::Rule) -> Result<Option<Layout>> {
                 .count()
         };
         let i = if reads.is_empty() {
-            atoms
-                .iter()
-                .position(|(_, _, args)| args.len() > 1)
+            bridge
+                .or_else(|| atoms.iter().position(|(_, _, args)| args.len() > 1))
                 .unwrap_or(0)
         } else {
             let i = (0..atoms.len())
