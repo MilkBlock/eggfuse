@@ -1,0 +1,243 @@
+{
+  "pair_training": {
+    "device": "cpu",
+    "test_rows": 4096,
+    "correct": {
+      "clean": 2891,
+      "small_data": 3672,
+      "short": 3063,
+      "mixed": 4096,
+      "wide": 4096
+    }
+  },
+  "cases": {
+    "dot-product": {
+      "paid": 13455,
+      "visible": 2689,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "state_sha": true,
+        "schedule": true,
+        "runs": true,
+        "unions": true
+      },
+      "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+      "pair_issuance": {
+        "clean": {
+          "returned_pairs": 255,
+          "issued": 195,
+          "external_target_commits": 206,
+          "matched_once": 195,
+          "unmatched": 0
+        },
+        "small_data": {
+          "returned_pairs": 255,
+          "issued": 195,
+          "external_target_commits": 206,
+          "matched_once": 195,
+          "unmatched": 0
+        },
+        "short": {
+          "returned_pairs": 255,
+          "issued": 195,
+          "external_target_commits": 206,
+          "matched_once": 195,
+          "unmatched": 0
+        },
+        "mixed": {
+          "returned_pairs": 255,
+          "issued": 195,
+          "external_target_commits": 206,
+          "matched_once": 195,
+          "unmatched": 0
+        },
+        "wide": {
+          "returned_pairs": 255,
+          "issued": 195,
+          "external_target_commits": 206,
+          "matched_once": 195,
+          "unmatched": 0
+        },
+        "issue_all": {
+          "returned_pairs": 255,
+          "issued": 255,
+          "external_target_commits": 206,
+          "matched_once": 195,
+          "unmatched": 60
+        },
+        "first_versioned_pair": {
+          "returned_pairs": 255,
+          "issued": 203,
+          "external_target_commits": 206,
+          "matched_once": 195,
+          "unmatched": 8
+        },
+        "fresh_unclaimed": {
+          "returned_pairs": 255,
+          "issued": 195,
+          "external_target_commits": 206,
+          "matched_once": 195,
+          "unmatched": 0
+        }
+      },
+      "pair_checks": [
+        195,
+        195
+      ]
+    },
+    "sum-bits": {
+      "paid": 11863,
+      "visible": 2691,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "state_sha": true,
+        "schedule": true,
+        "runs": true,
+        "unions": true
+      },
+      "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "pair_issuance": {
+        "clean": {
+          "returned_pairs": 236,
+          "issued": 192,
+          "external_target_commits": 193,
+          "matched_once": 192,
+          "unmatched": 0
+        },
+        "small_data": {
+          "returned_pairs": 236,
+          "issued": 192,
+          "external_target_commits": 193,
+          "matched_once": 192,
+          "unmatched": 0
+        },
+        "short": {
+          "returned_pairs": 236,
+          "issued": 192,
+          "external_target_commits": 193,
+          "matched_once": 192,
+          "unmatched": 0
+        },
+        "mixed": {
+          "returned_pairs": 236,
+          "issued": 192,
+          "external_target_commits": 193,
+          "matched_once": 192,
+          "unmatched": 0
+        },
+        "wide": {
+          "returned_pairs": 236,
+          "issued": 192,
+          "external_target_commits": 193,
+          "matched_once": 192,
+          "unmatched": 0
+        },
+        "issue_all": {
+          "returned_pairs": 236,
+          "issued": 236,
+          "external_target_commits": 193,
+          "matched_once": 192,
+          "unmatched": 44
+        },
+        "first_versioned_pair": {
+          "returned_pairs": 236,
+          "issued": 193,
+          "external_target_commits": 193,
+          "matched_once": 192,
+          "unmatched": 1
+        },
+        "fresh_unclaimed": {
+          "returned_pairs": 236,
+          "issued": 192,
+          "external_target_commits": 193,
+          "matched_once": 192,
+          "unmatched": 0
+        }
+      },
+      "pair_checks": [
+        192,
+        192
+      ]
+    },
+    "3mm": {
+      "paid": 536680,
+      "visible": 92658,
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "state_sha": true,
+        "schedule": true,
+        "runs": true,
+        "unions": true
+      },
+      "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+      "pair_issuance": {
+        "clean": {
+          "returned_pairs": 5060,
+          "issued": 4058,
+          "external_target_commits": 4114,
+          "matched_once": 4058,
+          "unmatched": 0
+        },
+        "small_data": {
+          "returned_pairs": 5060,
+          "issued": 4058,
+          "external_target_commits": 4114,
+          "matched_once": 4058,
+          "unmatched": 0
+        },
+        "short": {
+          "returned_pairs": 5060,
+          "issued": 4058,
+          "external_target_commits": 4114,
+          "matched_once": 4058,
+          "unmatched": 0
+        },
+        "mixed": {
+          "returned_pairs": 5060,
+          "issued": 4058,
+          "external_target_commits": 4114,
+          "matched_once": 4058,
+          "unmatched": 0
+        },
+        "wide": {
+          "returned_pairs": 5060,
+          "issued": 4058,
+          "external_target_commits": 4114,
+          "matched_once": 4058,
+          "unmatched": 0
+        },
+        "issue_all": {
+          "returned_pairs": 5060,
+          "issued": 5060,
+          "external_target_commits": 4114,
+          "matched_once": 4058,
+          "unmatched": 1002
+        },
+        "first_versioned_pair": {
+          "returned_pairs": 5060,
+          "issued": 4087,
+          "external_target_commits": 4114,
+          "matched_once": 4058,
+          "unmatched": 29
+        },
+        "fresh_unclaimed": {
+          "returned_pairs": 5060,
+          "issued": 4058,
+          "external_target_commits": 4114,
+          "matched_once": 4058,
+          "unmatched": 0
+        }
+      },
+      "pair_checks": [
+        4058,
+        4058
+      ]
+    }
+  }
+}

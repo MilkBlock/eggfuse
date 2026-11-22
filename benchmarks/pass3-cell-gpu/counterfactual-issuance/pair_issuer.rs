@@ -1,0 +1,107 @@
+// The two witnesses in a claim are always in consumer atom order.
+type VersionedPort = [u64; 3];
+
+#[derive(Deserialize)]
+pub struct PairPolicy {
+    target: usize,
+    wiring: BTreeMap<usize, Vec<[usize; 2]>>,
+    actions: [bool; 32],
+}
+struct PairIssuer {
+    policy: PairPolicy,
+    frame: BTreeMap<usize, (VersionedPort, bool)>,
+    claimed: std::collections::BTreeSet<[VersionedPort; 2]>,
+    checked: usize,
+    verified: usize,
+    proposals: Vec<(usize, [VersionedPort; 2])>,
+}
+pub fn configure_pair_policy(policy: PairPolicy) {
+    STATE.with_borrow_mut(|state| {
+        if let Some(state) = state {
+            state.pair_issuer = Some(PairIssuer {
+                policy,
+                frame: Default::default(),
+                claimed: Default::default(),
+                checked: 0,
+                verified: 0,
+                proposals: vec![],
+            });
+        }
+    });
+}
+pub(crate) fn finish_pair(epoch: u64, success: bool) {
+    STATE.with_borrow_mut(|state| {
+        let Some(state) = state else { return };
+        let Some(issuer) = &mut state.pair_issuer else {
+            return;
+        };
+        if success
+            && let Some((ordinal, _, _, rule, _)) = state.active
+            && let Some(pairs) = issuer.policy.wiring.get(&rule)
+        {
+            for [outer, inner] in pairs {
+                let (Some(&(a, reused_a)), Some(&(b, reused_b))) =
+                    (issuer.frame.get(outer), issuer.frame.get(inner))
+                else {
+                    continue;
+                };
+                let key = [a, b];
+                let flags = [
+                    reused_a,
+                    reused_b,
+                    a[2] == epoch,
+                    b[2] == epoch,
+                    issuer.claimed.contains(&key),
+                ];
+                let lane = flags
+                    .into_iter()
+                    .fold(0, |i, flag| i * 2 + usize::from(flag));
+                if issuer.policy.actions[lane] {
+                    issuer.proposals.push((ordinal, key));
+                    issuer.claimed.insert(key);
+                }
+            }
+        }
+        issuer.frame.clear();
+    });
+}
+
+/// Check each proposed pair at the first consumer query boundary after issuance.
+pub(crate) fn check_pairs(g: &Graph, rid: usize, watermark: u64) -> Result<()> {
+    STATE.with_borrow_mut(|state| {
+        let Some(issuer) = state.as_mut().and_then(|s| s.pair_issuer.as_mut()) else {
+            return Ok(());
+        };
+        if rid != issuer.policy.target {
+            return Ok(());
+        }
+        let query = &g.program.rules[rid].query;
+        let [outer, inner] = query.as_slice() else {
+            return Err("expected two pair atoms".into());
+        };
+        let (Call::Table(a), Call::Table(b)) = (&outer.call, &inner.call) else {
+            return Err("expected two pair tables".into());
+        };
+        for &(_, [x, y]) in &issuer.proposals[issuer.checked..] {
+            let read = |p: VersionedPort, table| -> Result<Option<crate::graph::Row>> {
+                let d = Dependency::Fact(crate::graph::FactRef {
+                    cell: p[0] as u32,
+                    op: p[1] as u32,
+                });
+                Ok(g.row(d)?
+                    .filter(|r| r.table == table && !r.hidden && r.epoch == p[2]))
+            };
+            if let (Some(left), Some(right)) = (read(x, *a)?, read(y, *b)?)
+                && left.epoch.max(right.epoch) >= watermark
+                && left
+                    .values
+                    .get(1)
+                    .is_some_and(|v| Some(v) == right.values.get(2))
+            {
+                issuer.verified += 1;
+            }
+        }
+        issuer.checked = issuer.proposals.len();
+        Ok(())
+    })
+}

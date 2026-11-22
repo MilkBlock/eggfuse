@@ -52,6 +52,16 @@ def main(a):
             report["generated_interventions"]=evidence
             (a.out/"recurrent-model.json").write_text(json.dumps(recurrent)+"\n")
         (a.out/"route-model.json").write_text(json.dumps(reader)+"\n")
+    if a.pair_owner:
+        from pair_owner import action_table, fit as fit_pair, generated, replay, wiring
+        policies = {name:fit_pair(9203,count,clean,width,steps,a.pair_device)
+                    for name,count,clean,width,steps in (
+                        ("clean",2048,True,8,240),("small_data",32,False,8,240),
+                        ("short",2048,False,8,4),("mixed",2048,False,8,240),
+                        ("wide",2048,False,32,240))}
+        x, y = generated(9317,4096,False)
+        report["pair_training"] = dict(device=a.pair_device, test_rows=len(y),
+            correct={k:int(((m(x).flatten()>=0)==y.bool()).sum()) for k,m in policies.items()})
     for case in a.cases:
         program, plans, req, spec = study["setup"](a, case)
         matrix = study["matrix"]
@@ -219,7 +229,12 @@ def main(a):
                 if mode:
                     cfg.update(issuance_actor=dict(mode=mode, weights=w, seed=0),
                                block_verifier=True, receipt_scan=2)
-                data = run(matrix["cfg"](req,cfg,True))
+                request = matrix["cfg"](req,cfg,True)
+                if a.pair_owner and name=="sub_expected_guard":
+                    target, pairs = wiring(recipe)
+                    request["pair_trace_rules"] = sorted(pairs)
+                    request["pair_policy"] = dict(target=target, wiring=pairs, actions=list(action_table(policies["mixed"]).values()))
+                data = run(request)
                 counts, ledger = matrix["summarize"](data,exact,bool(mode))
                 if baseline is None:
                     baseline = counts
@@ -238,6 +253,9 @@ def main(a):
                     results[name].update(validate(data,cfg))
                 if cfg.get("row_guards"):
                     results[name]["guards"]=data["strict_named"]["row_guard_checks"]
+                    if a.pair_owner:
+                        results[name]["pair_issuance"] = replay(data,target,pairs,policies)
+                        results[name]["pair_checks"] = data["root_recipe"]["pair_checks"]
                     if a.parent_projection:
                         from parent_projection import projection_profile
                         results[name]["projection"] = projection_profile(data)
@@ -295,7 +313,10 @@ if __name__ == "__main__":
     p.add_argument("--depth-variants",type=Path)
     p.add_argument("--row-guards",action="store_true")
     p.add_argument("--parent-projection", action="store_true")
+    p.add_argument("--pair-owner",action="store_true")
+    p.add_argument("--pair-device",choices=("mps","cpu"),default="mps")
     args=p.parse_args()
+    args.parent_projection |= args.pair_owner
     if args.parent_projection and not args.row_guards:
         p.error("--parent-projection evaluates the guarded policy")
     if args.row_guards and not args.depth_model:
