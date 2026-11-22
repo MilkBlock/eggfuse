@@ -1,0 +1,269 @@
+{
+  "training_paid_gain": {
+    "0": 71,
+    "2": 57
+  },
+  "weights": [
+    4.17172908782959,
+    4.096371173858643,
+    4.17172384262085
+  ],
+  "cases": {
+    "sum-bits": {
+      "leaf": {
+        "paid": 12662,
+        "saved": 0,
+        "visible": 2691,
+        "fept": 0.21252566735112938,
+        "terminal": 0,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 0,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "original": {
+        "paid": 12601,
+        "saved": 61,
+        "visible": 2691,
+        "fept": 0.21355447980319023,
+        "terminal": 26,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 1,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "union": {
+        "paid": 12534,
+        "saved": 128,
+        "visible": 2691,
+        "fept": 0.21469602680708472,
+        "terminal": 26,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 20,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "expanded": {
+        "paid": 12409,
+        "saved": 253,
+        "visible": 2691,
+        "fept": 0.21685873156579902,
+        "terminal": 26,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 37,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "wide_let_only": {
+        "paid": 12251,
+        "saved": 411,
+        "visible": 2691,
+        "fept": 0.21965553832340218,
+        "terminal": 0,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 2443,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "wide": {
+        "paid": 12243,
+        "saved": 419,
+        "visible": 2691,
+        "fept": 0.21979906885567263,
+        "terminal": 8,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 2443,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "fixed_full": {
+        "paid": 12243,
+        "saved": 419,
+        "visible": 2691,
+        "fept": 0.21979906885567263,
+        "terminal": 8,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 2443,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      }
+    },
+    "3mm": {
+      "leaf": {
+        "paid": 558074,
+        "saved": 0,
+        "visible": 92658,
+        "fept": 0.16603174489404632,
+        "terminal": 0,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 0,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+      },
+      "original": {
+        "paid": 555913,
+        "saved": 2161,
+        "visible": 92658,
+        "fept": 0.16667715991531049,
+        "terminal": 932,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 1,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+      },
+      "union": {
+        "paid": 554339,
+        "saved": 3735,
+        "visible": 92658,
+        "fept": 0.16715042600286106,
+        "terminal": 932,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 19,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+      },
+      "expanded": {
+        "paid": 551855,
+        "saved": 6219,
+        "visible": 92658,
+        "fept": 0.16790280055449347,
+        "terminal": 932,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 37,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+      },
+      "wide_let_only": {
+        "paid": 547519,
+        "saved": 10555,
+        "visible": 92658,
+        "fept": 0.1692324832562888,
+        "terminal": 0,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 10569,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+      },
+      "wide": {
+        "paid": 547316,
+        "saved": 10758,
+        "visible": 92658,
+        "fept": 0.16929525173757026,
+        "terminal": 203,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 10569,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+      },
+      "fixed_full": {
+        "paid": 547316,
+        "saved": 10758,
+        "visible": 92658,
+        "fept": 0.16929525173757026,
+        "terminal": 203,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 10569,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+      }
+    }
+  }
+}
