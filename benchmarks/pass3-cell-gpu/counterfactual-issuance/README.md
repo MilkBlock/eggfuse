@@ -256,3 +256,32 @@ emit the same two instructions directly. This experiment measures how training
 recovers the addressing program and what an ambiguous program loses. It
 establishes no advantage over static compilation and has no GPU timing.
 [Routes by seed and native binding audit](history-renaming-results.json)
+
+### Matched whole-Cell scale comparison
+
+Add `--scale-comparison` to the gated `--point-family all --history-release
+--history-initial --source-delta local` study with the frozen mixed anchored
+depth model and the history-address native overlay rebuilt from this revision.
+This also enables the conditional parent reads. Only the maximum signed
+depth on an external rule-138 SubTuple root varies (two, eight or a learned
+choice). The fixed controls bypass encoding and pooling the depth context.
+The Get route policy, returned-port authorities, version receipts, private
+point receiver and history-addressed 518 issuer remain active in every arm.
+
+Three rotated native runs per policy capture schedule execution time and
+caller-observed request time including audit transport. Each run must reproduce
+the reference operation ledger, ordered effects, schedule, final state, and
+the same rule-518 address counts, signed pairs and suppressions. Source
+ordinals identify scale decisions that become internal to other tokens.
+Header checks and the Set path's internal checks are separate counters.
+Those Set counters cover only that path. Timings include audit instrumentation
+and do not measure production GPU latency. [Counts and raw timings](scale-comparison-results.json)
+
+Use `--fixed-subtuple-depth 8` on the guarded depth policy to select the baked
+cap directly outside the comparison. On 3mm both this cap and the learned
+reader signed deep on all 181 eligible roots, paid 450,049 tokens and achieved
+0.454575 EPT. The median instrumented native run took 4.018 s with the baked
+cap and 4.553 s with the reader. Depth two exposed 82 additional external
+SubTuple roots and paid 306 additional tokens. On sum-bits the policies paid
+10,476 tokens, including when all seven roots were shallow. Dot-product had
+no eligible roots. These cases measure one root family on the specified stack.

@@ -1,0 +1,323 @@
+{
+  "dot-product": {
+    "ledger": "9e1a9f99f07770a2ce93a65e8d1ef1b542615a3caeb18d12ed50c524fc971b18",
+    "arms": {
+      "depth2": {
+        "native_ms": [
+          57.722666,
+          55.729124999999996,
+          54.614250000000006
+        ],
+        "request_ms": [
+          267.4794171471149,
+          250.9184170048684,
+          248.42816591262817
+        ],
+        "counts": {
+          "paid": 11848,
+          "headers": 47960,
+          "capture_reads": 0,
+          "admissions": 91,
+          "checked_internal": 26,
+          "completed": 13,
+          "ept": 0.462018906144497,
+          "signed": {
+            "visible_birth": 2974,
+            "effective_write": 2159,
+            "effective_union": 341,
+            "visibility_change": 0
+          },
+          "choices": [
+            0,
+            0,
+            0
+          ],
+          "extra_external": 0,
+          "displaced_external": 0
+        }
+      },
+      "model": {
+        "native_ms": [
+          56.547542,
+          59.056042000000005,
+          55.963666
+        ],
+        "request_ms": [
+          242.18979198485613,
+          259.0119999367744,
+          248.33279103040695
+        ],
+        "counts": {
+          "paid": 11848,
+          "headers": 47960,
+          "capture_reads": 0,
+          "admissions": 91,
+          "checked_internal": 26,
+          "completed": 13,
+          "ept": 0.462018906144497,
+          "signed": {
+            "visible_birth": 2974,
+            "effective_write": 2159,
+            "effective_union": 341,
+            "visibility_change": 0
+          },
+          "choices": [
+            0,
+            0,
+            0
+          ],
+          "extra_external": 0,
+          "displaced_external": 0
+        }
+      },
+      "depth8": {
+        "native_ms": [
+          56.848625,
+          56.757625,
+          55.211583000000005
+        ],
+        "request_ms": [
+          263.1848328746855,
+          253.28533304855227,
+          255.35966688767076
+        ],
+        "counts": {
+          "paid": 11848,
+          "headers": 47960,
+          "capture_reads": 0,
+          "admissions": 91,
+          "checked_internal": 26,
+          "completed": 13,
+          "ept": 0.462018906144497,
+          "signed": {
+            "visible_birth": 2974,
+            "effective_write": 2159,
+            "effective_union": 341,
+            "visibility_change": 0
+          },
+          "choices": [
+            0,
+            0,
+            0
+          ],
+          "extra_external": 0,
+          "displaced_external": 0
+        }
+      }
+    }
+  },
+  "sum-bits": {
+    "ledger": "4cc4c1c34874ef596379c3218854655706eff5a13bb0c7e1e4a38fc0cd70e0fa",
+    "arms": {
+      "depth2": {
+        "native_ms": [
+          59.589875,
+          58.861458999999996,
+          59.419875
+        ],
+        "request_ms": [
+          259.2288749292493,
+          256.9647920317948,
+          255.39987487718463
+        ],
+        "counts": {
+          "paid": 10476,
+          "headers": 50689,
+          "capture_reads": 0,
+          "admissions": 129,
+          "checked_internal": 16,
+          "completed": 8,
+          "ept": 0.5136502481863306,
+          "signed": {
+            "visible_birth": 3331,
+            "effective_write": 1449,
+            "effective_union": 526,
+            "visibility_change": 75
+          },
+          "choices": [
+            0,
+            7,
+            0
+          ],
+          "extra_external": 0,
+          "displaced_external": 0
+        }
+      },
+      "model": {
+        "native_ms": [
+          61.235375000000005,
+          59.636541,
+          60.361583
+        ],
+        "request_ms": [
+          261.0628749243915,
+          261.24820788390934,
+          257.59812514297664
+        ],
+        "counts": {
+          "paid": 10476,
+          "headers": 50689,
+          "capture_reads": 0,
+          "admissions": 129,
+          "checked_internal": 16,
+          "completed": 8,
+          "ept": 0.5136502481863306,
+          "signed": {
+            "visible_birth": 3331,
+            "effective_write": 1449,
+            "effective_union": 526,
+            "visibility_change": 75
+          },
+          "choices": [
+            0,
+            3,
+            4
+          ],
+          "extra_external": 0,
+          "displaced_external": 0
+        }
+      },
+      "depth8": {
+        "native_ms": [
+          66.45791600000001,
+          59.176458000000004,
+          59.023958
+        ],
+        "request_ms": [
+          278.220540843904,
+          254.59362496621907,
+          256.0908750165254
+        ],
+        "counts": {
+          "paid": 10476,
+          "headers": 50689,
+          "capture_reads": 0,
+          "admissions": 129,
+          "checked_internal": 16,
+          "completed": 8,
+          "ept": 0.5136502481863306,
+          "signed": {
+            "visible_birth": 3331,
+            "effective_write": 1449,
+            "effective_union": 526,
+            "visibility_change": 75
+          },
+          "choices": [
+            0,
+            0,
+            7
+          ],
+          "extra_external": 0,
+          "displaced_external": 0
+        }
+      }
+    }
+  },
+  "3mm": {
+    "ledger": "63a923887e958fe32e63821392e62a71a9a52e8a21058c94cdc3af49899af2d0",
+    "arms": {
+      "depth2": {
+        "native_ms": [
+          4022.5676249999997,
+          4072.2529999999997,
+          4063.2650000000003
+        ],
+        "request_ms": [
+          9363.478708080947,
+          9400.37062508054,
+          9257.475999882445
+        ],
+        "counts": {
+          "paid": 450355,
+          "headers": 2029724,
+          "capture_reads": 0,
+          "admissions": 3391,
+          "checked_internal": 406,
+          "completed": 203,
+          "ept": 0.45426607898213633,
+          "signed": {
+            "visible_birth": 111901,
+            "effective_write": 81136,
+            "effective_union": 11544,
+            "visibility_change": 0
+          },
+          "choices": [
+            0,
+            263,
+            0
+          ],
+          "extra_external": 82,
+          "displaced_external": 0
+        }
+      },
+      "model": {
+        "native_ms": [
+          4514.4824579999995,
+          4552.941750000001,
+          4780.9691250000005
+        ],
+        "request_ms": [
+          10267.414249945432,
+          9797.226333990693,
+          9942.362708970904
+        ],
+        "counts": {
+          "paid": 450049,
+          "headers": 2029724,
+          "capture_reads": 0,
+          "admissions": 3281,
+          "checked_internal": 406,
+          "completed": 203,
+          "ept": 0.4545749462836269,
+          "signed": {
+            "visible_birth": 111901,
+            "effective_write": 81136,
+            "effective_union": 11544,
+            "visibility_change": 0
+          },
+          "choices": [
+            0,
+            0,
+            181
+          ],
+          "extra_external": 0,
+          "displaced_external": 0
+        }
+      },
+      "depth8": {
+        "native_ms": [
+          4018.126917,
+          3984.595166,
+          4058.6589999999997
+        ],
+        "request_ms": [
+          9448.026292026043,
+          9252.908708993345,
+          11841.608666814864
+        ],
+        "counts": {
+          "paid": 450049,
+          "headers": 2029724,
+          "capture_reads": 0,
+          "admissions": 3281,
+          "checked_internal": 406,
+          "completed": 203,
+          "ept": 0.4545749462836269,
+          "signed": {
+            "visible_birth": 111901,
+            "effective_write": 81136,
+            "effective_union": 11544,
+            "visibility_change": 0
+          },
+          "choices": [
+            0,
+            0,
+            181
+          ],
+          "extra_external": 0,
+          "displaced_external": 0
+        }
+      }
+    }
+  }
+}

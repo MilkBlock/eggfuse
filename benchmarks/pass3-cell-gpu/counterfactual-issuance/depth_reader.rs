@@ -2,6 +2,8 @@
 #[derive(serde::Deserialize)]
 struct DepthReader {
     rule: usize,
+    #[serde(default)]
+    fixed_depth: Option<usize>,
     encoder: Vec<Vec<f32>>,
     bias: Vec<f32>,
     head: Vec<f32>,
@@ -32,7 +34,8 @@ impl DepthReader {
             return Ok(None);
         }
         let mut m: Self = serde_json::from_value(config.clone()).map_err(|e| e.to_string())?;
-        if depth != 8
+        if m.fixed_depth.is_some_and(|d| !matches!(d, 2 | 8))
+            || depth != 8
             || m.head.is_empty()
             || m.attention
                 .as_ref()
@@ -80,6 +83,9 @@ pub(crate) fn depth_page(g: &Graph, rid: usize) -> Option<Vec<DepthRow>> {
         let m = v.as_ref()?.depth_reader.as_ref()?;
         if m.rule != rid {
             return None;
+        }
+        if m.fixed_depth.is_some() {
+            return Some(Vec::new());
         }
         let mut counts = BTreeMap::<u64, [usize; 12]>::new();
         let mut rows = Vec::new();
@@ -129,6 +135,9 @@ pub(crate) fn depth_page(g: &Graph, rid: usize) -> Option<Vec<DepthRow>> {
 pub(crate) fn depth_bits(g: &Graph, rows: &[DepthRow], dep: Option<Dependency>) -> u64 {
     S.with_borrow(|v| {
         let m = v.as_ref().unwrap().depth_reader.as_ref().unwrap();
+        if let Some(depth) = m.fixed_depth {
+            return (if depth == 8 { 2 } else { 1 }) << 54;
+        }
         let Some(subject) = dep.and_then(|d| g.row(d).expect("depth subject read")) else {
             return 0;
         };

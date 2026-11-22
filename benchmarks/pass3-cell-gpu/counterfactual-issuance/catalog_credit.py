@@ -243,6 +243,8 @@ def main(a):
                 if mode:
                     cfg.update(issuance_actor=dict(mode=mode, weights=w, seed=0),
                                block_verifier=True, receipt_scan=2)
+                if a.fixed_subtuple_depth and name == "sub_expected_guard":
+                    cfg["depth_reader"] = dict(cfg["depth_reader"], fixed_depth=a.fixed_subtuple_depth)
                 request = matrix["cfg"](req,cfg,True)
                 if a.pair_owner and name=="sub_expected_guard":
                     target, column, pairs = wiring(recipe,a.pair_tables)
@@ -487,6 +489,12 @@ def main(a):
                             arm["effective_ops"] = score(takeover,recipe,paid_all,reference)
                             if a.point_claims and arm["effective_ops"]["signed"] != results[name]["effective_ops"]["signed"]:
                                 raise ValueError("signed operation attribution changed")
+                        if a.scale_comparison:
+                            from scale_comparison import compare
+                            if not all(checks.values()) or "effective_ops" not in arm:
+                                raise ValueError("scale comparison needs verified history baseline")
+                            arm["scale_comparison"] = compare(run, dict(request, history_head=head),
+                                takeover, recipe, reference, study["packets"])
                         results[name]["history_takeover"] = arm
                 print(case,name,paid,saved,flush=True)
         if a.depth_model and not a.parent_projection:
@@ -518,6 +526,8 @@ if __name__ == "__main__":
     p.add_argument("--pair-takeover",action="store_true")
     p.add_argument("--pair-ambiguous",action="store_true")
     p.add_argument("--pair-tables",nargs=2,default=("PotentialExtractedExpr","TCPair"))
+    p.add_argument("--fixed-subtuple-depth", type=int, choices=(2, 8))
+    p.add_argument("--scale-comparison", action="store_true")
     p.add_argument("--address-renaming", action="store_true")
     p.add_argument("--history-address", action="store_true")
     p.add_argument("--history-release",action="store_true")
@@ -537,7 +547,11 @@ if __name__ == "__main__":
     p.add_argument("--ept",action="store_true")
     p.add_argument("--source-delta",choices=("size","all","local","distinct"))
     args=p.parse_args()
-    args.history_address |= args.address_renaming
+    if args.fixed_subtuple_depth and (not args.row_guards or not args.depth_model or args.scale_comparison):
+        p.error("--fixed-subtuple-depth requires the guarded depth policy outside the three-arm comparison")
+    args.history_address |= args.address_renaming or args.scale_comparison
+    if args.scale_comparison and not (args.depth_model and args.point_claims):
+        p.error("--scale-comparison requires a depth model and signed point claims")
     if args.history_release and not args.source_delta:p.error("--history-release requires the trained --source-delta head")
     args.history_updates |= args.history_release
     if args.history_tail_depth < 1:p.error("signed tail depth must be positive")
