@@ -301,9 +301,9 @@ pub(crate) fn finish_set_edges(success:bool){
                 continue;''')
     # Audit output coordinates at the actual constructor return, including reused rows.
     root=crate/"src/joint_root.rs"
-    edit(root,"audit:bool,emitted:", "chain_rows:Option<(BTreeMap<usize,usize>,Vec<J>)>,history_issuer:Option<HistoryIssuer>,history:Option<([usize;2],Vec<[u64;8]>)>,pair_issuer:Option<PairIssuer>,pair_trace:Option<(Vec<usize>,Vec<[u64;7]>)>,audit:bool,emitted:")
-    edit(root,"State{stage_watch:false,", "State{pair_issuer:None,chain_rows:None,history_issuer:None,history:None,pair_trace:None,stage_watch:false,")
-    edit(root,'"root_row_decodes":s.decodes', '"chain_rows":s.chain_rows.as_ref().map(|(_,rows)|rows),"pair_checks":s.pair_issuer.as_ref().map(|p|[p.checked,p.verified]),"pair_proposals":s.pair_issuer.as_ref().map(|p|&p.proposals),"history_tail_misses":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|&t.omitted),"distinct_point_ports":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|[t.points.duplicate_ports,t.points.skipped_registrations,t.points.seen_ports.len()]),"point_batch_gate":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|[t.points.batch_skips,t.points.avoided_visits]),"point_stale_omissions":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|t.points.stale_omissions),"point_union_probes":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|t.points.union_probes),"point_rekeyed":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|t.points.rekeyed),"point_skips":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|&t.points.skipped),"point_claims":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|(&t.points.attempts,&t.points.children,&t.points.misses)),"history_scale":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|t.scale),"history_tail":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|(t.attempts,&t.children)),"history_suppressed":s.history_issuer.as_ref().map(|h|&h.suppressed),"history_updates":s.history_issuer.as_ref().map(|h|&h.updates),"history_initial":s.history_issuer.as_ref().map(|h|&h.seeds),"history_access":s.history_issuer.as_ref().map(|h|[h.probes,h.visits]),"history_online":s.history_issuer.as_ref().map(|h|(&h.checked,&h.pending)),"history_returns":s.history.as_ref().map(|h|&h.1),"pair_returns":s.pair_trace.as_ref().map(|(_,rows)|rows),"root_row_decodes":s.decodes')
+    edit(root,"audit:bool,emitted:", "chain_checks:Option<ChainChecks>,chain_lifecycle:Option<ChainLifecycle>,chain_rows:Option<(BTreeMap<usize,usize>,Vec<J>)>,history_issuer:Option<HistoryIssuer>,history:Option<([usize;2],Vec<[u64;8]>)>,pair_issuer:Option<PairIssuer>,pair_trace:Option<(Vec<usize>,Vec<[u64;7]>)>,audit:bool,emitted:")
+    edit(root,"State{stage_watch:false,", "State{pair_issuer:None,chain_checks:None,chain_lifecycle:None,chain_rows:None,history_issuer:None,history:None,pair_trace:None,stage_watch:false,")
+    edit(root,'"root_row_decodes":s.decodes', '"chain_audit":json!({"publication_cost":s.chain_lifecycle.as_ref().map(|c|[c.publish_changes,c.publish_reads,c.owners.len() as u64]),"checked":s.chain_checks.as_ref().map(|c|&c.checked),"writes":s.chain_lifecycle.as_ref().map(|c|&c.writes),"updates":s.chain_lifecycle.as_ref().map(|c|&c.updates)}),"chain_rows":s.chain_rows.as_ref().map(|(_,rows)|rows),"pair_checks":s.pair_issuer.as_ref().map(|p|[p.checked,p.verified]),"pair_proposals":s.pair_issuer.as_ref().map(|p|&p.proposals),"history_tail_misses":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|&t.omitted),"distinct_point_ports":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|[t.points.duplicate_ports,t.points.skipped_registrations,t.points.seen_ports.len()]),"point_batch_gate":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|[t.points.batch_skips,t.points.avoided_visits]),"point_stale_omissions":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|t.points.stale_omissions),"point_union_probes":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|t.points.union_probes),"point_rekeyed":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|t.points.rekeyed),"point_skips":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|&t.points.skipped),"point_claims":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|(&t.points.attempts,&t.points.children,&t.points.misses)),"history_scale":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|t.scale),"history_tail":s.history_issuer.as_ref().and_then(|h|h.tail.as_ref()).map(|t|(t.attempts,&t.children)),"history_suppressed":s.history_issuer.as_ref().map(|h|&h.suppressed),"history_updates":s.history_issuer.as_ref().map(|h|&h.updates),"history_initial":s.history_issuer.as_ref().map(|h|&h.seeds),"history_access":s.history_issuer.as_ref().map(|h|[h.probes,h.visits]),"history_online":s.history_issuer.as_ref().map(|h|(&h.checked,&h.pending)),"history_returns":s.history.as_ref().map(|h|&h.1),"pair_returns":s.pair_trace.as_ref().map(|(_,rows)|rows),"root_row_decodes":s.decodes')
     with root.open("a") as f:
         f.write("""
 pub fn enable_chain_rows(program:&Program, spec:&J)->Result<()> {
@@ -324,6 +324,9 @@ pub fn enable_return_history(program:&Program)->Result<()> {
 pub(crate) fn history_return(table:usize,key:&[Value],result:&Value,op:usize,dep:Dependency,version:u64,epoch:u64){
     STATE.with_borrow_mut(|s|{
         let Some(s)=s else{return};
+        if let Some(trace)=&mut s.chain_lifecycle && let Some((owner,_,_,rid,_))=s.active {
+            trace.observe(rid,owner,op as i64,table,dep,version);
+        }
         if let Some((tables, rows)) = &mut s.chain_rows
             && let Some(&arity) = tables.get(&table)
             && let Some((owner,_,_,rid,_)) = s.active
@@ -375,10 +378,15 @@ pub(crate) fn trace_pair_return(op:usize,dep:Dependency,version:u64,reused:bool)
     copyfile(Path(__file__).with_name("history_tail.rs"),crate/"src/history_tail.rs")
     with root.open("a") as f:
         f.write('\ninclude!("history_tail.rs");\n')
+    copyfile(Path(__file__).with_name("chain_lifecycle.rs"),crate/"src/chain_lifecycle.rs")
+    with root.open("a") as f:
+        f.write('\ninclude!("chain_lifecycle.rs");\n')
+    edit(crate/"src/graph.rs",'let index = self.set_function_from(t, &key, value, Some((cell, op, source)))?;',
+         'let index = self.set_function_from(t, &key, value, Some((cell, op, source)))?;\n            crate::joint_root::chain_function_result(self,t,index,op);')
     copyfile(Path(__file__).with_name("history_issuer.rs"),crate/"src/history_issuer.rs")
     with root.open("a") as f:
         f.write('\ninclude!("history_issuer.rs");\n')
-    edit(root,'if state.audit{state.commits.push','if let Some(h)=&mut state.history_issuer{h.cite(epoch,state.ordinal,r.serial,rid,&r.refs,inputs);}\n        if state.audit{state.commits.push')
+    edit(root,'if state.audit{state.commits.push','if let Some(trace)=&mut state.chain_lifecycle{trace.cite(rid,state.ordinal,&r.refs);}\n        if let Some(h)=&mut state.history_issuer{h.cite(epoch,state.ordinal,r.serial,rid,&r.refs,inputs);}\n        if state.audit{state.commits.push')
     copyfile(Path(__file__).with_name("pair_issuer.rs"),crate/"src/pair_issuer.rs")
     with root.open("a") as f:
         f.write('\ninclude!("pair_issuer.rs");\n')
@@ -387,6 +395,8 @@ pub(crate) fn trace_pair_return(op:usize,dep:Dependency,version:u64,reused:bool)
     session=crate/"examples/joint_witness_session.rs"
     anchor="eggfuse_cell_runtime::joint_root::configure(&program,root_config.as_deref(),audit)?;"
     edit(session,anchor,anchor+"""
+        if !req["chain_checks"].is_null(){eggfuse_cell_runtime::joint_root::configure_chain_checks(&program,&req["chain_checks"],&req["chain_gate"])?;}
+        if !req["chain_lifecycle"].is_null(){eggfuse_cell_runtime::joint_root::configure_chain_lifecycle(&program,&req["chain_lifecycle"])?;}
         if !req["chain_rows"].is_null(){eggfuse_cell_runtime::joint_root::enable_chain_rows(&program,&req["chain_rows"])?;}
         if !req["history_head"].is_null(){eggfuse_cell_runtime::joint_root::configure_history_issuer(&runtime.graph,&req["history_head"])?;}
         if req["history_ports"].as_bool()==Some(true){eggfuse_cell_runtime::joint_root::enable_return_history(&program)?;}
@@ -404,7 +414,7 @@ pub(crate) fn trace_pair_return(op:usize,dep:Dependency,version:u64,reused:bool)
         crate::joint_root::history_return(t,&key,&value,op,Dependency::Fact(FactRef{cell,op:op as u32}),self.epoch,self.epoch);
         crate::joint_root::trace_pair_return(op,Dependency::Fact(FactRef{cell,op:op as u32}),self.epoch,false);""")
     edit(crate/"src/ordinary_witness.rs","let rule=&g.program.rules[rid];\n        let plan=s.plans",
-         "crate::joint_root::check_pairs(g,rid,mark)?;\n        let history_pairs=crate::joint_root::check_history_issuer(g,rid,mark)?;\n        let rule=&g.program.rules[rid];\n        let plan=s.plans")
+         "crate::joint_root::check_chain_packets(g,rid,mark)?;\n        crate::joint_root::check_pairs(g,rid,mark)?;\n        let history_pairs=crate::joint_root::check_history_issuer(g,rid,mark)?;\n        let rule=&g.program.rules[rid];\n        let plan=s.plans")
     copyfile(Path(__file__).with_name("pair_takeover.rs"),crate/"src/pair_takeover.rs")
     with root.open("a") as f:
         f.write('\ninclude!("pair_takeover.rs");\n')
@@ -533,7 +543,7 @@ pub(crate) fn trace_pair_return(op:usize,dep:Dependency,version:u64,reused:bool)
 
     completion = crate/"src/runtime_completion.rs"
     edit(completion,'crate::ordinary_witness::changed_frame_rows(&self.graph);',
-         'crate::joint_root::history_updates(&self.graph)?;\n        crate::ordinary_witness::changed_frame_rows(&self.graph);')
+         'crate::joint_root::chain_updates(&self.graph)?;\n        crate::joint_root::history_updates(&self.graph)?;\n        crate::ordinary_witness::changed_frame_rows(&self.graph);')
 
     edit(single,'pub(crate) struct Trial{','pub(crate) struct Trial{tail_bindings:BTreeMap<(usize,Dependency,u64),Instance>,')
     edit(single,'Ok(Self{waiting_wave:', 'Ok(Self{tail_bindings:BTreeMap::new(),waiting_wave:')

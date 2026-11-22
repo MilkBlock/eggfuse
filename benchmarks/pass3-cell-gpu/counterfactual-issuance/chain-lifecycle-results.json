@@ -1,0 +1,294 @@
+{
+  "dot-product": {
+    "rules": {
+      "312": {
+        "source": 116,
+        "prior_citations_and_returns": 94,
+        "including_set": 94,
+        "including_publications": 116,
+        "missing": {},
+        "receipt_counts": {
+          "writes": 326,
+          "publications": 221
+        },
+        "ungated": {
+          "proposed": 262,
+          "checked": 262,
+          "pending": 0,
+          "source": 116,
+          "matches": 116,
+          "missing": 0,
+          "non_source": 0,
+          "version_or_binding_rejections": 146,
+          "watermark_rejections": 0,
+          "direct_reads": 640,
+          "withheld": 0,
+          "released": 262
+        },
+        "gated": {
+          "proposed": 262,
+          "checked": 116,
+          "pending": 0,
+          "source": 116,
+          "matches": 116,
+          "missing": 0,
+          "non_source": 0,
+          "version_or_binding_rejections": 0,
+          "watermark_rejections": 0,
+          "direct_reads": 348,
+          "withheld": 146,
+          "released": 116
+        }
+      },
+      "538": {
+        "source": 125,
+        "prior_citations_and_returns": 121,
+        "including_set": 121,
+        "including_publications": 125,
+        "missing": {},
+        "receipt_counts": {
+          "writes": 0,
+          "publications": 95
+        },
+        "ungated": {
+          "proposed": 157,
+          "checked": 157,
+          "pending": 0,
+          "source": 125,
+          "matches": 125,
+          "missing": 0,
+          "non_source": 0,
+          "version_or_binding_rejections": 32,
+          "watermark_rejections": 0,
+          "direct_reads": 414,
+          "withheld": 0,
+          "released": 157
+        },
+        "gated": {
+          "proposed": 157,
+          "checked": 125,
+          "pending": 0,
+          "source": 125,
+          "matches": 125,
+          "missing": 0,
+          "non_source": 0,
+          "version_or_binding_rejections": 0,
+          "watermark_rejections": 0,
+          "direct_reads": 375,
+          "withheld": 32,
+          "released": 125
+        }
+      }
+    },
+    "publication_changes": 1373,
+    "publication_row_reads": 1182,
+    "final_named_ports": 723,
+    "reference_checks": {
+      "rhs": true,
+      "writes": true,
+      "resumes": true,
+      "events": true,
+      "runs": true,
+      "schedule": true,
+      "state_sha": true,
+      "ledger": true,
+      "commit_inputs": true
+    }
+  },
+  "sum-bits": {
+    "rules": {
+      "312": {
+        "source": 101,
+        "prior_citations_and_returns": 99,
+        "including_set": 99,
+        "including_publications": 101,
+        "missing": {},
+        "receipt_counts": {
+          "writes": 295,
+          "publications": 188
+        },
+        "ungated": {
+          "proposed": 200,
+          "checked": 200,
+          "pending": 0,
+          "source": 101,
+          "matches": 101,
+          "missing": 0,
+          "non_source": 0,
+          "version_or_binding_rejections": 99,
+          "watermark_rejections": 0,
+          "direct_reads": 501,
+          "withheld": 0,
+          "released": 200
+        },
+        "gated": {
+          "proposed": 200,
+          "checked": 101,
+          "pending": 0,
+          "source": 101,
+          "matches": 101,
+          "missing": 0,
+          "non_source": 0,
+          "version_or_binding_rejections": 0,
+          "watermark_rejections": 0,
+          "direct_reads": 303,
+          "withheld": 99,
+          "released": 101
+        }
+      },
+      "538": {
+        "source": 148,
+        "prior_citations_and_returns": 138,
+        "including_set": 138,
+        "including_publications": 143,
+        "missing": {
+          "HasType/unseen": 5
+        },
+        "receipt_counts": {
+          "writes": 0,
+          "publications": 199
+        },
+        "ungated": {
+          "proposed": 183,
+          "checked": 183,
+          "pending": 0,
+          "source": 148,
+          "matches": 143,
+          "missing": 5,
+          "non_source": 0,
+          "version_or_binding_rejections": 34,
+          "watermark_rejections": 6,
+          "direct_reads": 466,
+          "withheld": 0,
+          "released": 183
+        },
+        "gated": {
+          "proposed": 183,
+          "checked": 143,
+          "pending": 0,
+          "source": 148,
+          "matches": 143,
+          "missing": 5,
+          "non_source": 0,
+          "version_or_binding_rejections": 0,
+          "watermark_rejections": 0,
+          "direct_reads": 429,
+          "withheld": 40,
+          "released": 143
+        }
+      }
+    },
+    "publication_changes": 1439,
+    "publication_row_reads": 1161,
+    "final_named_ports": 660,
+    "reference_checks": {
+      "rhs": true,
+      "writes": true,
+      "resumes": true,
+      "events": true,
+      "runs": true,
+      "schedule": true,
+      "state_sha": true,
+      "ledger": true,
+      "commit_inputs": true
+    }
+  },
+  "3mm": {
+    "rules": {
+      "312": {
+        "source": 2366,
+        "prior_citations_and_returns": 1999,
+        "including_set": 2000,
+        "including_publications": 2366,
+        "missing": {},
+        "receipt_counts": {
+          "writes": 6594,
+          "publications": 5371
+        },
+        "ungated": {
+          "proposed": 5273,
+          "checked": 5273,
+          "pending": 0,
+          "source": 2366,
+          "matches": 2366,
+          "missing": 0,
+          "non_source": 0,
+          "version_or_binding_rejections": 2907,
+          "watermark_rejections": 0,
+          "direct_reads": 12912,
+          "withheld": 0,
+          "released": 5273
+        },
+        "gated": {
+          "proposed": 5273,
+          "checked": 2366,
+          "pending": 0,
+          "source": 2366,
+          "matches": 2366,
+          "missing": 0,
+          "non_source": 0,
+          "version_or_binding_rejections": 0,
+          "watermark_rejections": 0,
+          "direct_reads": 7098,
+          "withheld": 2907,
+          "released": 2366
+        }
+      },
+      "538": {
+        "source": 4667,
+        "prior_citations_and_returns": 4459,
+        "including_set": 4459,
+        "including_publications": 4539,
+        "missing": {
+          "HasType/unseen": 128
+        },
+        "receipt_counts": {
+          "writes": 0,
+          "publications": 5566
+        },
+        "ungated": {
+          "proposed": 5712,
+          "checked": 5712,
+          "pending": 0,
+          "source": 4667,
+          "matches": 4539,
+          "missing": 128,
+          "non_source": 0,
+          "version_or_binding_rejections": 1045,
+          "watermark_rejections": 128,
+          "direct_reads": 14729,
+          "withheld": 0,
+          "released": 5712
+        },
+        "gated": {
+          "proposed": 5712,
+          "checked": 4539,
+          "pending": 0,
+          "source": 4667,
+          "matches": 4539,
+          "missing": 128,
+          "non_source": 0,
+          "version_or_binding_rejections": 0,
+          "watermark_rejections": 0,
+          "direct_reads": 13617,
+          "withheld": 1173,
+          "released": 4539
+        }
+      }
+    },
+    "publication_changes": 40535,
+    "publication_row_reads": 32300,
+    "final_named_ports": 17955,
+    "reference_checks": {
+      "rhs": true,
+      "writes": true,
+      "resumes": true,
+      "events": true,
+      "runs": true,
+      "schedule": true,
+      "state_sha": true,
+      "ledger": true,
+      "commit_inputs": true
+    }
+  }
+}

@@ -46,7 +46,31 @@ def train(layout, varied):
     return learned
 
 
-def replay(data, edges, with_returns=False, latest_only=False):
+def release_gate():
+    """Fit the finite release truth table on generated active/stale histories."""
+    rng = torch.Generator().manual_seed(701)
+    bits = ((torch.arange(16)[:,None] >> torch.arange(3,-1,-1)) & 1)
+    versions = torch.randint(2, 10000, (16,3), generator=rng)
+    current = versions + (1-bits[:,1:])*torch.randint(1,10,(16,3),generator=rng)
+    mark = versions.amax(1) + (1-bits[:,0])
+    labels = ((versions == current).all(1) & (versions.amax(1) >= mark)).float()
+    head = torch.nn.Linear(4,1)
+    with torch.no_grad():
+        head.weight.zero_()
+        head.bias.zero_()
+    opt = torch.optim.Adam(head.parameters(), lr=.1)
+    for _ in range(200):
+        opt.zero_grad()
+        loss = torch.nn.functional.binary_cross_entropy_with_logits(head(bits.float()).flatten(), labels, pos_weight=labels.new_tensor(15.))
+        loss.backward()
+        opt.step()
+    policy = head(bits.float()).detach().flatten() > 0
+    if not torch.equal(policy, labels.bool()):
+        raise ValueError("policy failed a generated release configuration")
+    return policy.tolist()
+
+
+def replay(data, edges, with_returns=False, latest_only=False, writes=False, revisions=False, packets=None):
     adjacent = [[] for _ in range(3)]
     for a, b, i, j in edges:
         adjacent[a].append((b, i, j))
@@ -86,6 +110,12 @@ def replay(data, edges, with_returns=False, latest_only=False):
     history = data['events']
     if with_returns:
         history = sorted([*history, *data['returns']], key=lambda r: (r[0], r[3], r[4] >= 0, r[4]))
+    if writes:
+        history = sorted([*history, *data['writes']], key=lambda r: (r[0], r[3], r[4] >= 0, r[4]))
+    if revisions:
+        # Publication receipts follow source effects; all arms become eligible
+        # strictly after the epoch at which the generator received the data.
+        history = sorted([*history, *data['updates']], key=lambda r: r[0])
     events = {ep:list(rows) for ep, rows in groupby(history, key=lambda x:x[0])}
     labels = defaultdict(list)
     for ep, refs in data['labels']:
@@ -111,6 +141,16 @@ def replay(data, edges, with_returns=False, latest_only=False):
                     raise ValueError('fully observable join lost by incremental reader')
         for _, role, raw, owner, atom, fields in events.get(epoch, ()):
             addr = tuple(raw)
+            if fields is None:
+                old = bank[role].pop(addr, None)
+                if old is not None:
+                    for _, col, _ in adjacent[role]:
+                        if old[0][col] is not None:
+                            index[role,col,old[0][col]].discard(addr)
+                    if current[role].get(addr[:-1]) == addr:
+                        del current[role][addr[:-1]]
+                    counts['retired'] += 1
+                continue
             seen_physical[role].add(addr[:-1])
             if latest_only:
                 previous = current[role].get(addr[:-1])
@@ -137,6 +177,10 @@ def replay(data, edges, with_returns=False, latest_only=False):
             extend({role:addr}, role)
     if len(matched) + sum(diagnoses.values()) != len(data['labels']):
         raise ValueError('source occurrences are not distinct three-port witnesses')
+    if packets is not None:
+        for refs, (birth, _) in sorted(issued.items()):
+            ports = [[{"Fact":{"cell":p[1],"op":p[2]}} if p[0]=="fact" else {"Function":p[1]},p[-1]] for p in refs]
+            packets.append(dict(birth=birth, refs=ports))
     return dict(source=data['source'], fully_named=len(data['labels']), matched=len(matched),
                 proposed=len(issued), extra=len(issued)-len(matched), misses=dict(diagnoses), missing_ports=dict(missing_ports), **counts)
 
@@ -145,12 +189,13 @@ if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('history', type=Path)
     p.add_argument('out', type=Path)
+    p.add_argument("--packets", type=Path)
     args = p.parse_args()
     torch.set_num_threads(1)
     result = {}
     for path in sorted(args.history.glob('*-chain-history.json')):
         case = path.name.removesuffix('-chain-history.json')
-        rows = {}
+        rows, packets = {}, {}
         for rule, data in json.loads(path.read_text()).items():
             learned = train(data['layout'], True)
             compiler = routes(data['layout'])
@@ -160,7 +205,14 @@ if __name__ == '__main__':
                               aliased=train(data['layout'], False), citations=replay(data, learned),
                               with_returns=replay(data, learned, True),
                               latest=replay(data, learned, True, True))
+            if data.get('writes') or data.get('updates'):
+                rows[rule]['writes'] = replay(data, learned, True, True, writes=True)
+                packets[rule] = []
+                rows[rule]['publications'] = replay(data, learned, True, True, writes=True, revisions=True, packets=packets[rule])
+                rows[rule]['received'] = dict(writes=len(data['writes']), publications=len(data['updates']))
         result[case] = rows
+        if args.packets:
+            (args.packets / (case + "-packets.json")).write_text(json.dumps(packets, separators=(",", ":")))
     if set(result) != {'dot-product','sum-bits','3mm'}:
         raise ValueError('incomplete workload export')
     args.out.write_text(json.dumps(result, indent=2)+'\n')

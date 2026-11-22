@@ -88,5 +88,80 @@ def export_chains(data, recipe, path):
             if effect["call"].get("table") != name or len(fields) != len(layout[role]):
                 raise ValueError("typed return disagrees with source operation")
             returns.append([epoch, role, ("fact",cell,field,version), owner, op, fields])
-        result[target] = dict(layout=layout,tables=tables,events=events,returns=returns,labels=labels,source=count)
+        writes, updates = [], []
+        by_owner = {c[0]: (c[3],c[5]) for c in roots["commits"]}
+        for owner,rid,epoch,table,op,index,version,fields in roots.get("chain_audit",{}).get("writes") or ():
+            name = recipe["tables"][table]["name"]
+            if rid == target or name not in tables:
+                continue
+            role = tables.index(name)
+            if (by_owner.get(owner) != (rid,epoch) or rules[rid]["effects"][op]["call"].get("table") != name
+                    or len(fields) != len(layout[role]) or version > epoch):
+                raise ValueError("function receipt does not belong to its named writer")
+            writes.append([epoch,role,("function",index,version),owner,op,fields])
+
+        # An update extends only a version already associated with this very
+        # owner port. Native emission checks liveness at the publication hook.
+        evidence = {}
+        for epoch,role,addr,owner,slot,_ in [*events,*returns,*writes]:
+            k = role,tuple(addr),owner,slot
+            evidence[k] = min(evidence.get(k,epoch),epoch)
+        for epoch,table,dep,owner,slot,old,new,fields in roots.get("chain_audit",{}).get("updates") or ():
+            name = recipe["tables"][table]["name"]
+            if name not in tables:
+                continue
+            role = tables.index(name)
+            prior = identity(dict(row=dep,version=old))
+            if evidence.get((role,prior,owner,slot),epoch+1) > epoch:
+                raise ValueError("publication lacks earlier named owner and revision")
+            if new is None:
+                updates.append([epoch,role,prior,owner,slot,None])
+                continue
+            if not old < new <= epoch or len(fields) != len(layout[role]):
+                raise ValueError("invalid published revision")
+            addr = (*prior[:-1],new)
+            evidence[role,addr,owner,slot] = min(evidence.get((role,addr,owner,slot),epoch),epoch)
+            updates.append([epoch,role,addr,owner,slot,fields])
+        result[target] = dict(layout=layout,tables=tables,events=events,returns=returns,
+                              writes=writes,updates=updates,labels=labels,source=count)
     path.write_text(json.dumps(result, separators=(",", ":")))
+
+
+def check_packets(data, proposals):
+    roots = data["root_recipe"]
+    if roots.get("chain_audit",{}).get("checked") is None:
+        raise ValueError("missing native scheduled checks")
+    result = {}
+    for key, packets in proposals.items():
+        rid = int(key)
+        def triple(refs):
+            return tuple(identity(dict(row=dep,version=ver)) for dep,ver in refs)
+        all_packets = {triple(p["refs"]):p["birth"] for p in packets}
+        if len(all_packets) != len(packets):
+            raise ValueError("duplicate three-parent packet")
+        source = {(epoch,tuple(identity(r) for r in sorted(refs,key=lambda r:r['atom'])))
+                  for _,_,_,rule,_,epoch,refs,_ in roots['commits'] if rule==rid}
+        seen, accepted = set(), set()
+        reads = stale = expired = withheld = 0
+        for rule,epoch,birth,refs,mark,fresh,valid,n,*release in roots['chain_audit']['checked']:
+            if rule != rid:
+                continue
+            ports = triple(refs)
+            if ports in seen or all_packets.get(ports) != birth or birth >= epoch:
+                raise ValueError("packet release disagrees with causal issue")
+            seen.add(ports)
+            reads += n
+            if release == [False]:
+                withheld += 1
+                continue
+            if valid:
+                accepted.add((epoch,ports))
+            elif fresh:
+                expired += 1
+            else:
+                stale += 1
+        result[key] = dict(proposed=len(packets), checked=len(seen)-withheld, pending=len(packets)-len(seen),
+                           source=len(source), matches=len(source & accepted), missing=len(source-accepted),
+                           non_source=len(accepted-source), version_or_binding_rejections=expired,
+                           watermark_rejections=stale, direct_reads=reads, withheld=withheld, released=len(seen)-withheld)
+    return result

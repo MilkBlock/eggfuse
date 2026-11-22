@@ -292,6 +292,13 @@ def main(a):
                             report["address_controls"] = checkpoints
                     if a.history_release:
                         request["history_head"]["release"] = report["source_delta_training"]["arms"]["mixed"]["actions"]
+                if a.chain_packets and name=="sub_expected_guard":
+                    if a.chain_gate:
+                        from chain_address_reader import release_gate
+                        request["chain_gate"] = release_gate()
+                    request["chain_checks"] = json.loads((a.chain_packets / (case+"-packets.json")).read_text())
+                if a.chain_lifecycle and name=="sub_expected_guard":
+                    request["chain_lifecycle"] = [312,538]
                 if a.chain_returns and name=="sub_expected_guard":
                     request["chain_rows"] = {atom["call"]["table"]:len(atom["args"]) for rid in (312,538)
                                              for atom in recipe["rules"][rid]["query"]}
@@ -369,6 +376,10 @@ def main(a):
                             if a.export_reader_history:
                                 from history_reader import export_history
                                 export_history(data, recipe, a.out / (case + "-reader-history.json"))
+                            if a.chain_packets:
+                                from independent_history import check_packets
+                                results[name]["chain_checked"] = check_packets(data,request["chain_checks"])
+                                results[name]["chain_publication_cost"] = data["root_recipe"]["chain_audit"].get("publication_cost")
                             if a.chain_history:
                                 from independent_history import export_chains, profile
                                 if a.chain_returns and not data["root_recipe"].get("chain_rows"):
@@ -598,6 +609,9 @@ if __name__ == "__main__":
     p.add_argument("--history-tail",action="store_true")
     p.add_argument("--history-takeover",action="store_true")
     p.add_argument("--chain-history", action="store_true")
+    p.add_argument("--chain-gate", action="store_true")
+    p.add_argument("--chain-packets", type=Path)
+    p.add_argument("--chain-lifecycle", action="store_true")
     p.add_argument("--chain-returns", action="store_true")
     p.add_argument("--export-reader-history", action="store_true")
     p.add_argument("--history-ports", action="store_true")
@@ -630,8 +644,12 @@ if __name__ == "__main__":
     args.history_tail_negative |= bool(args.point_claims)
     args.history_tail |= args.history_tail_depth > 1 or args.history_tail_context or args.history_tail_negative
     args.history_takeover |= args.history_tail or args.history_address
+    if args.chain_gate and not args.chain_packets:
+        p.error("--chain-gate requires --chain-packets")
+    args.chain_lifecycle |= args.chain_gate
+    args.chain_returns |= args.chain_lifecycle
     args.chain_history |= args.chain_returns
-    args.history_ports |= args.chain_history or args.export_reader_history or args.point_catalog
+    args.history_ports |= bool(args.chain_packets) or args.chain_history or args.export_reader_history or args.point_catalog
     args.history_ports |= args.history_takeover or args.history_initial or args.history_updates
     args.ept |= args.history_takeover
     args.pair_takeover |= args.history_takeover
