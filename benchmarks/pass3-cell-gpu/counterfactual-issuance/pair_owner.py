@@ -6,18 +6,18 @@ import random
 import torch
 
 
-def wiring(recipe):
-    # Resolve by the query shape, preserving atom order and the shared result slot.
+def wiring(recipe, tables=("PotentialExtractedExpr","TCPair")):
     targets = []
-    for rid, r in enumerate(recipe["rules"]):
-        q = r["query"]
-        if ([a["call"].get("table") for a in q] == ["PotentialExtractedExpr", "TCPair"]
-                and [len(a["args"]) for a in q] == [3, 3]
-                and q[0]["args"][1] == q[1]["args"][2]
-                and all("slot" in a for atom in q for a in atom["args"])
-                and len({a["slot"] for atom in q for a in atom["args"]}) == 5):
-            targets.append(rid)
-    target, = targets
+    for rid, rule in enumerate(recipe["rules"]):
+        q = rule["query"]
+        if (tuple(a["call"].get("table") for a in q) != tuple(tables)
+                or not rule["metadata"]["seminaive"]
+                or not all("slot" in arg for atom in q for arg in atom["args"])):
+            continue
+        left,right = ([x["slot"] for x in atom["args"]] for atom in q)
+        if (right[-1] in left[:-1] and len(set(left+right))==len(left)+len(right)-1):
+            targets.append((rid,left.index(right[-1])))
+    (target,column), = targets
     pairs = {}
     for rid, r in enumerate(recipe["rules"]):
         definitions = {}
@@ -27,12 +27,12 @@ def wiring(recipe):
             if op.get("kind") != "construct":
                 continue
             table = op["call"]["table"]
-            if table == "PotentialExtractedExpr":
-                inner = definitions.get(op["args"][1].get("slot"))
-                if inner is not None and inner[0] == "TCPair":
+            if table == tables[0]:
+                inner = definitions.get(op["args"][column].get("slot"))
+                if inner is not None and inner[0] == tables[1]:
                     pairs.setdefault(rid, []).append((i, inner[1]))
             definitions[op["dst"]] = (table, i)
-    return target, pairs
+    return target, column, pairs
 
 
 def features(reused, versions, epoch, claimed):
@@ -76,7 +76,7 @@ def action_table(model):
     return dict(zip(bits,actions.tolist()))
 
 
-def replay(data, target, pairs, policies):
+def replay(data, target, pairs, policies, takeover=False, axioms=()):
     roots = data["root_recipe"]
     returns = defaultdict(dict)
     for ordinal, _, op, cell, field, version, reused in roots["pair_returns"]:
@@ -110,7 +110,7 @@ def replay(data, target, pairs, policies):
                 if pending[key] and pending[key][0]<epoch:
                     counts["matched_once"]+=1
                     pending[key].popleft()
-            if rule not in pairs:
+            if rule not in pairs or (takeover and not refs and rule not in axioms):
                 continue
             frame=returns.get(ordinal,{})
             for outer,inner in pairs[rule]:

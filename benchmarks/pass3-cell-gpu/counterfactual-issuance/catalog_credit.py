@@ -231,9 +231,9 @@ def main(a):
                                block_verifier=True, receipt_scan=2)
                 request = matrix["cfg"](req,cfg,True)
                 if a.pair_owner and name=="sub_expected_guard":
-                    target, pairs = wiring(recipe)
+                    target, column, pairs = wiring(recipe,a.pair_tables)
                     request["pair_trace_rules"] = sorted(pairs)
-                    request["pair_policy"] = dict(ambiguous_control=a.pair_ambiguous,takeover=a.pair_takeover,target=target, wiring=pairs, actions=list(action_table(policies["mixed"]).values()))
+                    request["pair_policy"] = dict(ambiguous_control=a.pair_ambiguous,takeover=a.pair_takeover,column=column,target=target, wiring=pairs, actions=list(action_table(policies["mixed"]).values()))
                 if a.pair_takeover and name=="sub_expected_guard":
                     shadow=run(dict(request,pair_policy=dict(request["pair_policy"],takeover=False)))
                     shadow_lanes=Counter(map(tuple,shadow["root_recipe"]["pair_external"]))
@@ -278,7 +278,8 @@ def main(a):
                 if cfg.get("row_guards"):
                     results[name]["guards"]=data["strict_named"]["row_guard_checks"]
                     if a.pair_owner:
-                        results[name]["pair_issuance"] = replay(data,target,pairs,policies)
+                        axioms={i for i,r in enumerate(recipe["rules"]) if not r["query"] and all(slot["definition"]!="query" for slot in r["slots"])}
+                        results[name]["pair_issuance"] = replay(data,target,pairs,policies,a.pair_takeover,axioms)
                         results[name]["pair_displaced_extra_lanes"] = displaced_rejects
                         results[name]["pair_committed"] = len(pair_children)
                         results[name]["pair_checks"] = data["root_recipe"]["pair_checks"]
@@ -343,6 +344,7 @@ if __name__ == "__main__":
     p.add_argument("--pair-device",choices=("mps","cpu"),default="mps")
     p.add_argument("--pair-takeover",action="store_true")
     p.add_argument("--pair-ambiguous",action="store_true")
+    p.add_argument("--pair-tables",nargs=2,default=("PotentialExtractedExpr","TCPair"))
     args=p.parse_args()
     args.pair_takeover |= args.pair_ambiguous
     args.pair_owner |= args.pair_takeover

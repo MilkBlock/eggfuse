@@ -1,0 +1,179 @@
+{
+  "axiom-int": {
+    "dot-product": {
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "state_sha": true,
+        "schedule": true,
+        "runs": true,
+        "unions": true
+      },
+      "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+      "paid": 13441,
+      "pair_committed": 14,
+      "pair_checks": [
+        14,
+        14
+      ],
+      "pair_displaced_extra_lanes": 0
+    },
+    "sum-bits": {
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "state_sha": true,
+        "schedule": true,
+        "runs": true,
+        "unions": true
+      },
+      "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "paid": 11859,
+      "pair_committed": 4,
+      "pair_checks": [
+        4,
+        4
+      ],
+      "pair_displaced_extra_lanes": 0
+    },
+    "3mm": {
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "state_sha": true,
+        "schedule": true,
+        "runs": true,
+        "unions": true
+      },
+      "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+      "paid": 536659,
+      "pair_committed": 21,
+      "pair_checks": [
+        21,
+        21
+      ],
+      "pair_displaced_extra_lanes": 0
+    }
+  },
+  "axiom-bool": {
+    "dot-product": {
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "state_sha": true,
+        "schedule": true,
+        "runs": true,
+        "unions": true
+      },
+      "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+      "paid": 13455,
+      "pair_committed": 0,
+      "pair_checks": [
+        0,
+        0
+      ],
+      "pair_displaced_extra_lanes": 0
+    },
+    "sum-bits": {
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "state_sha": true,
+        "schedule": true,
+        "runs": true,
+        "unions": true
+      },
+      "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "paid": 11863,
+      "pair_committed": 0,
+      "pair_checks": [
+        0,
+        0
+      ],
+      "pair_displaced_extra_lanes": 0
+    },
+    "3mm": {
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "state_sha": true,
+        "schedule": true,
+        "runs": true,
+        "unions": true
+      },
+      "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+      "paid": 536680,
+      "pair_committed": 0,
+      "pair_checks": [
+        0,
+        0
+      ],
+      "pair_displaced_extra_lanes": 0
+    }
+  },
+  "INT-v2": {
+    "dot-product": {
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "state_sha": true,
+        "schedule": true,
+        "runs": true,
+        "unions": true
+      },
+      "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+      "paid": 13455,
+      "pair_committed": 0,
+      "pair_checks": [
+        0,
+        0
+      ],
+      "pair_displaced_extra_lanes": 0
+    },
+    "sum-bits": {
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "state_sha": true,
+        "schedule": true,
+        "runs": true,
+        "unions": true
+      },
+      "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+      "paid": 11863,
+      "pair_committed": 0,
+      "pair_checks": [
+        0,
+        0
+      ],
+      "pair_displaced_extra_lanes": 0
+    },
+    "3mm": {
+      "checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "state_sha": true,
+        "schedule": true,
+        "runs": true,
+        "unions": true
+      },
+      "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+      "paid": 536680,
+      "pair_committed": 0,
+      "pair_checks": [
+        0,
+        0
+      ],
+      "pair_displaced_extra_lanes": 0
+    }
+  }
+}

@@ -7,6 +7,7 @@ pub struct PairPolicy {
     takeover: bool,
     #[serde(default)]
     ambiguous_control: bool,
+    column: usize,
     target: usize,
     wiring: BTreeMap<usize, Vec<[usize; 2]>>,
     actions: [bool; 32],
@@ -23,9 +24,7 @@ struct PairIssuer {
     proposals: Vec<(usize, [VersionedPort; 2])>,
 }
 pub fn configure_pair_policy(policy: PairPolicy, program: &Program, source: &[u8]) -> Result<()> {
-    if policy.takeover {
-        validate_pair_wiring(&policy, program, source)?;
-    }
+    validate_pair_wiring(&policy, program, source)?;
 
     STATE.with_borrow_mut(|state| {
         if let Some(state) = state {
@@ -115,8 +114,8 @@ pub(crate) fn check_pairs(g: &Graph, rid: usize, watermark: u64) -> Result<()> {
                 && left.epoch.max(right.epoch) >= watermark
                 && left
                     .values
-                    .get(1)
-                    .is_some_and(|v| Some(v) == right.values.get(2))
+                    .get(issuer.policy.column)
+                    .is_some_and(|v| Some(v) == right.values.last())
             {
                 issuer.verified += 1;
                 if issuer.policy.takeover

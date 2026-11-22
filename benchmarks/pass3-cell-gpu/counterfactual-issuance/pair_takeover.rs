@@ -1,17 +1,20 @@
-// A conservative upper bound on visible TCPair facts sharing a result class.
+// A conservative upper bound on visible inner constructor facts sharing a result class.
 // Initialize before graph ingestion; retirement never lowers the upper bound.
 thread_local! {
     static PAIR_DEGREE: RefCell<Option<(usize, BTreeMap<u64,u8>)>> = const {RefCell::new(None)};
 }
-pub fn prepare_pair_degree(program: &Program, enabled: bool) -> Result<()> {
-    let table = if enabled {
-        Some(
-            program
-                .tables
-                .iter()
-                .position(|t| t.name == "TCPair" && t.constructor)
-                .ok_or("missing TCPair constructor")?,
-        )
+pub fn prepare_pair_degree(program: &Program, policy: &J) -> Result<()> {
+    let table = if policy["takeover"] == true {
+        let rid = policy["target"].as_u64().ok_or("missing pair target")? as usize;
+        let atom = program
+            .rules
+            .get(rid)
+            .and_then(|r| r.query.get(1))
+            .ok_or("missing second atom")?;
+        let Call::Table(table) = atom.call else {
+            return Err("expected constructor atom".into());
+        };
+        Some(table)
     } else {
         None
     };
@@ -95,33 +98,47 @@ fn validate_pair_wiring(policy: &PairPolicy, program: &Program, source: &[u8]) -
     let (Call::Table(a), Call::Table(b)) = (&outer.call, &inner.call) else {
         return Err("invalid pair tables".into());
     };
-    if !rule.seminaive
-        || !program.tables[*a].constructor
-        || !program.tables[*b].constructor
-        || program.tables[*a].name != "PotentialExtractedExpr"
-        || program.tables[*b].name != "TCPair"
-    {
+    if !rule.seminaive || !program.tables[*a].constructor || !program.tables[*b].constructor {
         return Err("unsupported pair consumer".into());
     }
-    let (
-        [Arg::Slot(x), Arg::Slot(y), Arg::Slot(z)],
-        [Arg::Slot(t), Arg::Slot(c), Arg::Slot(shared)],
-    ) = (outer.args.as_slice(), inner.args.as_slice())
+    let mut slots = std::collections::BTreeSet::new();
+    let mut keys = std::collections::BTreeSet::new();
+    for atom in [outer, inner] {
+        let Some((_, inputs)) = atom.args.split_last() else {
+            return Err("missing constructor result".into());
+        };
+        for arg in inputs {
+            let Arg::Slot(slot) = arg else {
+                return Err("literal in pair key".into());
+            };
+            keys.insert(*slot);
+        }
+    }
+    let (Some(Arg::Slot(shared)), Some(Arg::Slot(reference))) =
+        (inner.args.last(), outer.args.get(policy.column))
     else {
-        return Err("unsupported pair projection".into());
+        return Err("missing shared pair slot".into());
     };
+    if policy.column >= outer.args.len() - 1 || shared != reference {
+        return Err("wrong shared column".into());
+    }
+    for arg in outer
+        .args
+        .iter()
+        .chain(inner.args.iter().take(inner.args.len() - 1))
+    {
+        let Arg::Slot(s) = arg else {
+            return Err("literal in pair atom".into());
+        };
+        if !slots.insert(s) {
+            return Err("unexpected repeated pair slot".into());
+        }
+    }
     let artifact: J = serde_json::from_slice(source).map_err(|e| e.to_string())?;
     let dedup: std::collections::BTreeSet<usize> =
         serde_json::from_value(artifact["physical_plan"]["dedup"][policy.target].clone())
             .map_err(|e| e.to_string())?;
-    if y != shared
-        || [x, y, z, t, c]
-            .into_iter()
-            .collect::<std::collections::BTreeSet<_>>()
-            .len()
-            != 5
-        || [x, y, t, c].into_iter().any(|s| !dedup.contains(s))
-    {
+    if !keys.is_subset(&dedup) {
         return Err("ambiguous pair key".into());
     }
     for (&rid, pairs) in &policy.wiring {
@@ -143,7 +160,7 @@ fn validate_pair_wiring(policy: &PairPolicy, program: &Program, source: &[u8]) -
                 }
                 Op::Let(dst, call, args) => {
                     if matches!(call,Call::Table(table) if table==a)
-                        && let Some(Arg::Slot(s)) = args.get(1)
+                        && let Some(Arg::Slot(s)) = args.get(policy.column)
                         && let Some(&j) = defs.get(s)
                     {
                         proven.insert([i, j]);
