@@ -52,6 +52,9 @@ def main(a):
             report["generated_interventions"]=evidence
             (a.out/"recurrent-model.json").write_text(json.dumps(recurrent)+"\n")
         (a.out/"route-model.json").write_text(json.dumps(reader)+"\n")
+    if a.source_delta:
+        from source_delta import train as train_delta
+        report["source_delta_training"]=train_delta(a.pair_device)
     if a.pair_owner:
         from pair_owner import action_table, fit as fit_pair, generated, replay, wiring
         policies = {name:fit_pair(9203,count,clean,width,steps,a.pair_device)
@@ -246,6 +249,12 @@ def main(a):
                     shadow_lanes=Counter(map(tuple,shadow["root_recipe"]["pair_external"]))
                     shadow_paid=study["packets"](shadow)
                     del shadow
+                if a.source_delta and name=="sub_expected_guard":
+                    size_rule,=[i for i,r in enumerate(recipe["rules"])
+                             if r["metadata"]["name"].startswith("(rule ((= expr (Get tup i))")
+                             and r["effects"][-1].get("call",{}).get("table")=="Expr-size"]
+                    request["size_reader"]=dict(local=a.source_delta in ("local","distinct"),tests=report["source_delta_training"]["tests"]["distinct" if a.source_delta=="distinct" else "ties"]["actions"],size_rule=size_rule,filter=True,only_size=a.source_delta=="size",
+                        actions=report["source_delta_training"]["arms"]["mixed"]["actions"])
                 if a.ept:request["ept"]=True
                 data = run(request)
                 counts, ledger = matrix["summarize"](data,exact,bool(mode))
@@ -269,17 +278,34 @@ def main(a):
                 if pair_children:
                     from pair_owner import validate_children
                     validate_children(data,target,pair_children,ledger[0])
+                delta_counts=data.get("size_reader") or {}
+                skipped=sum(c[0]+c[1] for c in delta_counts.values())
+                if skipped!=data.get("size_omission_checks",0):
+                    raise ValueError("source omissions lack independent rejection receipts")
                 displaced_rejects=0
                 if a.pair_takeover and name=="sub_expected_guard":
                     from pair_owner import compare_residual
                     displaced_rejects=compare_residual(data,shadow_lanes)
-                    if shadow_paid-paid != len(pair_children)+displaced_rejects:
+                    if shadow_paid-paid != len(pair_children)+displaced_rejects+skipped:
                         raise ValueError((case,"unexplained difference from guarded shadow",shadow_paid,paid,len(pair_children),displaced_rejects))
-                if saved != len(ledger[0])+len(pair_children)+displaced_rejects or paid != counts["packets"]:
+                if saved != len(ledger[0])+len(pair_children)+displaced_rejects+skipped or paid != counts["packets"]:
                     raise ValueError((case,name,"unattributed packet"))
                 results[name] = dict(paid=paid, saved=saved, visible=counts["visible"], fept=counts["fept"],
                                      terminal=counts["set_internal"], checks=counts["checks"],
                                      paths=len(cfg.get("library",[])), state_sha=counts["state_sha"])
+                if delta_counts:
+                    votes=data["size_predictions"]
+                    if votes:
+                        prediction=dict(votes)
+                        writes={n for run in data["ept"] for kind,n,*_ in run if kind==1}
+                        confusion=Counter()
+                        for n,_,rid,_,_,_,_,_,ticket,*_ in data["single"]["committed"]:
+                            if rid==size_rule:
+                                if ticket not in prediction:raise ValueError("missing size forecast")
+                                confusion[int(prediction[ticket]),int(n in writes)]+=1
+                        results[name]["size_forecast"]=[[confusion[a,b] for b in range(2)] for a in range(2)]
+                    results[name]["source_delta"]=delta_counts
+                    results[name]["source_delta_omitted"]=skipped
                 if a.ept:results[name]["effective_ops"]=score(data,recipe,paid,reference)
                 if a.walk and name != "leaf":
                     from walk_credit import validate
@@ -355,7 +381,11 @@ if __name__ == "__main__":
     p.add_argument("--pair-ambiguous",action="store_true")
     p.add_argument("--pair-tables",nargs=2,default=("PotentialExtractedExpr","TCPair"))
     p.add_argument("--ept",action="store_true")
+    p.add_argument("--source-delta",choices=("size","all","local","distinct"))
     args=p.parse_args()
+    if args.source_delta:
+        args.pair_takeover=True
+        args.ept=True
     args.pair_takeover |= args.pair_ambiguous
     args.pair_owner |= args.pair_takeover
     args.parent_projection |= args.pair_owner

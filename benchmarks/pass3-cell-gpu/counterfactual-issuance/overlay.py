@@ -431,3 +431,28 @@ pub(crate) fn trace_pair_return(op:usize,dep:Dependency,version:u64,reused:bool)
     edit(g,a,'        if existing && !row.hidden {crate::ept::hide(t,row.witness);}\n'+a)
     audit=crate/"src/transfer_audit.rs"
     edit(audit,'    event(|| serde_json::json!(["write",', '    crate::ept::write(table,index);\n    event(|| serde_json::json!(["write",')
+    copyfile(Path(__file__).with_name("size_reader.rs"),crate/"src/size_reader.rs")
+    with (crate/"src/lib.rs").open("a") as f:
+        f.write('\npub mod size_reader;\n')
+    edit(session,'        let initial_graph_ms=', '        eggfuse_cell_runtime::size_reader::configure(&runtime.graph,&req["size_reader"],audit)?;\n        let initial_graph_ms=')
+    edit(session,'        report["ept"]=', '        report["size_omission_checks"]=json!(eggfuse_cell_runtime::size_reader::audit_count());report["size_predictions"]=eggfuse_cell_runtime::size_reader::forecasts(); report["size_reader"]=eggfuse_cell_runtime::size_reader::report();\n        report["ept"]=')
+    a='            let recipe = if send && !self.rows.batch {'
+    edit(crate/"src/adaptive_rows.rs",a,'''            if send && self.rows.batch && !self.residual
+                && crate::size_reader::reject(g,rid,p.pivot,h.source,wm,self.serial)? {
+                crate::size_reader::omitted(rid,(self.serial,h.source,h.version,h.initial,score));
+                omitted+=1;
+                continue;
+            }
+'''+a)
+    single=crate/"src/single_witness.rs"
+    a="        if let Some(omitted)=self.rows.scalar.skipped.remove(&rid){"
+    edit(single,a,"""        if let Some(batch)=crate::size_reader::audit_batch(rid){
+            let saved=self.work;
+            for &(id,w,version,initial,score) in &batch{
+                let token=Token{recipe:None,id,rid,w,version,initial,score,guarded:false};
+                if self.check(g,r,&p,&token,wm)?.is_some(){return Err("omitted a valid source binding".into())}
+            }
+            crate::size_reader::audited(batch.len());
+            self.work=saved;
+        }
+"""+a)
