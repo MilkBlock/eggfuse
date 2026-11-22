@@ -172,6 +172,15 @@ def main(a):
                     if variant in ("mixed_max","mixed_anchored"):
                         guarded.append(("sub_"+variant+"_expected",dict(cfg,depth=8,
                                          depth_reader=dict(weights,rule=rid,threshold=0.)),"full"))
+        if a.row_guards:
+            from guard_catalog import extend
+            for name,cfg,mode in guarded.copy():
+                if name in ("sub_deep","sub_learned"):
+                    updated=extend(recipe,cfg,typed_set)
+                    guarded.append((name+"_guard",updated,mode))
+                    if name=="sub_learned":
+                        guarded.append(("sub_expected_guard",dict(updated,depth_reader=dict(
+                            cfg["depth_reader"],threshold=0.)),mode))
         if a.live:
             _, cfg, _ = guarded[-1]
             from route_credit import continuation_edges
@@ -198,6 +207,8 @@ def main(a):
                     continue
                 if a.depth_model and name not in ("leaf","set8_reader") and not name.startswith("sub_"):
                     continue
+                if a.row_guards and name not in ("leaf","set8_reader","sub_deep","sub_learned","sub_deep_guard","sub_learned_guard","sub_expected_guard"):
+                    continue
                 if a.live and name not in ("leaf","all_literal","live_one","live_both","live_first_extra","live_equal_mixed","live_recurrent","expected_gain"):
                     continue
                 if a.expected and name not in ("leaf","all_literal","live_recurrent","expected_gain"):
@@ -223,11 +234,23 @@ def main(a):
                 if a.walk and name != "leaf":
                     from walk_credit import validate
                     results[name].update(validate(data,cfg))
+                if cfg.get("row_guards"):
+                    results[name]["guards"]=data["strict_named"]["row_guard_checks"]
+                    commits=Counter(
+                        link[2][-1][-1] for link in data["strict_named"]["signed_commits"]
+                        if len(recipe["rules"][link[2][-1][-1]]["query"])>1)
+                    results[name]["guarded_commits"]=dict(commits)
                 if "depth_reader" in cfg:
                     choices,runs=data["strict_named"]["depth_choices"]
-                    if not runs or choices[0] or (name=="sub_shallow" and choices[2]) or (name=="sub_deep" and choices[1]):
+                    target=cfg["depth_reader"]["rule"]
+                    source={row[2] for row in data["root_recipe"]["commits"] if row[3]==target}
+                    internal={link[0] for link in data["strict_named"]["signed_commits"]}
+                    external=source-internal
+                    if sum(choices)!=len(external):
+                        raise ValueError((case,name,"unaccounted depth subject",len(external),choices))
+                    if (not runs and external) or choices[0] or (name=="sub_shallow" and choices[2]) or (name=="sub_deep" and choices[1]):
                         raise ValueError((case,name,"missing or unexpected depth decision",choices,runs))
-                    results[name].update(depth_choices=choices,depth_runs=runs)
+                    results[name].update(depth_choices=choices,depth_runs=runs,depth_source=len(source),depth_internal=len(source)-len(external))
                 if "route_reader" in cfg:
                     choices, runs = data["strict_named"]["route_choices"]
                     if not sum(choices) or runs < 2:
@@ -265,7 +288,10 @@ if __name__ == "__main__":
     p.add_argument("--set-reader",type=Path)
     p.add_argument("--depth-model",type=Path)
     p.add_argument("--depth-variants",type=Path)
+    p.add_argument("--row-guards",action="store_true")
     args=p.parse_args()
+    if args.row_guards and not args.depth_model:
+        p.error("--row-guards compares the frozen depth policy")
     if args.depth_variants and not args.depth_model:
         p.error("--depth-variants needs the clean --depth-model control")
     if args.depth_model and not args.set_reader:

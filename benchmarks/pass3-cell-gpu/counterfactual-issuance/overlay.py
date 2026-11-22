@@ -260,3 +260,42 @@ pub(crate) fn finish_set_edges(success:bool){
             words.extend([tag|action|route|depth, addr, v]);""")
     text=page.read_text().replace("!((1u64<<63)|(7u64<<56))","!((1u64<<63)|(7u64<<56)|(3u64<<54))")
     page.write_text(text.replace("(((w[i]>>56)&7)<<32)", "(((w[i]>>56)&7)<<32) | (((w[i]>>54)&3)<<36)"))
+    copyfile(Path(__file__).with_name("row_guards.rs"),crate/"src/row_guards.rs")
+    with strict.open("a") as f:
+        f.write('\ninclude!("row_guards.rs");\n')
+    edit(strict,"struct State {depth_reader:","struct State {row_guards:BTreeMap<usize,Vec<RowGuard>>,guard_pass:u64,guard_fail:u64,depth_reader:")
+    edit(strict,"if !r.seminaive || r.query.len() != 1 {", """if !r.seminaive || r.query.is_empty()
+                || r.query.len()>1 && spec["row_guards"]!=true {""")
+    edit(strict,"|| !r.inputs.iter().all(|v| slots.contains(v))","|| r.query.len()==1 && !r.inputs.iter().all(|v| slots.contains(v))")
+    edit(strict,"            s.targets.entry(t).or_default().push(rid);","""            if r.query.len()>1 {
+                let Some(guards)=RowGuard::compile(&r.query) else {continue};
+                if !guards.iter().all(|test|slots.insert(test.dst)) ||
+                    !r.inputs.iter().all(|v|slots.contains(v)){continue;}
+                s.row_guards.insert(rid,guards);
+            }
+            s.targets.entry(t).or_default().push(rid);""")
+    edit(strict,"            let mut input = Slots::default();","""            let mut input = Slots::default();
+            if let Some(guards)=s.row_guards.get(&rid) {
+                let mut passed=true;
+                for test in guards {
+                    let Some(value)=test.accepts(g,&row.values)? else {passed=false;break;};
+                    input.insert(test.dst,value);
+                }
+                if !passed {
+                    s.guard_fail+=1;
+                    live-=1;
+                    continue;
+                }
+                s.guard_pass+=1;
+            }""")
+    edit(strict,"            for &slot in rule.inputs.iter() {","            for &slot in rule.inputs.iter() {\n                if input.get(&slot).is_some(){continue;}")
+    edit(strict,'json!({"depth_caps":','json!({"row_guard_checks":[s.guard_pass,s.guard_fail],"depth_caps":')
+    edit(crate/"src/strict_partial.rs","|| p.order.len() != 0","|| !p.order.is_empty() && !crate::strict_named::row_guarded(rid)")
+    with strict.open("a") as f:
+        f.write('pub(crate) fn row_guarded(rid:usize)->bool{S.with_borrow(|s|s.as_ref().is_some_and(|v|v.row_guards.contains_key(&rid)))}\n')
+    edit(crate/"src/stage_spine.rs",'if rule.query.len()!=1{return Err("strict Spine needs a sole pivot".into())}',
+         'if rule.query.len()!=1 && !crate::strict_named::row_guarded(rid){return Err("strict Spine needs a sole table pivot".into())}')
+    edit(strict,'matches!(arg, Arg::Literal(expected) if expected != value)) {\n                continue;',
+         '''matches!(arg, Arg::Literal(expected) if expected != value)) {
+                if s.row_guards.contains_key(&rid) { live-=1; }
+                continue;''')

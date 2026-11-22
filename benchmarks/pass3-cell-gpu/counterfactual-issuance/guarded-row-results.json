@@ -1,0 +1,363 @@
+{
+  "frozen_depth_sha256": "919c8c6aebbc334d579ebcde6b7c0d20e6fe8c87e39c7bf91322698091a6a58d",
+  "frozen_get_sha256": "a2c4e7a74ddb83e0c0db6fca7d57286a30041d650fc2cc505b496ad95c663787",
+  "cases": {
+    "dot-product": {
+      "sub_learned": {
+        "paid": 13501,
+        "saved": 712,
+        "visible": 2689,
+        "fept": 0.19917043181986518,
+        "depth_choices": [
+          0,
+          34,
+          12
+        ],
+        "depth_runs": 14,
+        "depth_source": 46,
+        "depth_internal": 0,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+      },
+      "sub_learned_guard": {
+        "paid": 13455,
+        "saved": 758,
+        "visible": 2689,
+        "fept": 0.1998513563730955,
+        "depth_choices": [
+          0,
+          0,
+          0
+        ],
+        "depth_runs": 0,
+        "depth_source": 46,
+        "depth_internal": 46,
+        "guards": [
+          46,
+          103
+        ],
+        "guarded_commits": {
+          "138": 46
+        },
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+      },
+      "sub_expected_guard": {
+        "paid": 13455,
+        "saved": 758,
+        "visible": 2689,
+        "fept": 0.1998513563730955,
+        "depth_choices": [
+          0,
+          0,
+          0
+        ],
+        "depth_runs": 0,
+        "depth_source": 46,
+        "depth_internal": 46,
+        "guards": [
+          46,
+          103
+        ],
+        "guarded_commits": {
+          "138": 46
+        },
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+      },
+      "sub_deep_guard": {
+        "paid": 13455,
+        "saved": 758,
+        "visible": 2689,
+        "fept": 0.1998513563730955,
+        "depth_choices": [
+          0,
+          0,
+          0
+        ],
+        "depth_runs": 0,
+        "depth_source": 46,
+        "depth_internal": 46,
+        "guards": [
+          46,
+          103
+        ],
+        "guarded_commits": {
+          "138": 46
+        },
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+      }
+    },
+    "sum-bits": {
+      "sub_learned": {
+        "paid": 11950,
+        "saved": 712,
+        "visible": 2691,
+        "fept": 0.22518828451882844,
+        "depth_choices": [
+          0,
+          59,
+          35
+        ],
+        "depth_runs": 32,
+        "depth_source": 94,
+        "depth_internal": 0,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "sub_learned_guard": {
+        "paid": 11863,
+        "saved": 799,
+        "visible": 2691,
+        "fept": 0.22683975385652871,
+        "depth_choices": [
+          0,
+          4,
+          3
+        ],
+        "depth_runs": 5,
+        "depth_source": 94,
+        "depth_internal": 87,
+        "guards": [
+          87,
+          159
+        ],
+        "guarded_commits": {
+          "138": 87
+        },
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "sub_expected_guard": {
+        "paid": 11863,
+        "saved": 799,
+        "visible": 2691,
+        "fept": 0.22683975385652871,
+        "depth_choices": [
+          0,
+          3,
+          4
+        ],
+        "depth_runs": 5,
+        "depth_source": 94,
+        "depth_internal": 87,
+        "guards": [
+          87,
+          159
+        ],
+        "guarded_commits": {
+          "138": 87
+        },
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "sub_deep_guard": {
+        "paid": 11863,
+        "saved": 799,
+        "visible": 2691,
+        "fept": 0.22683975385652871,
+        "depth_choices": [
+          0,
+          0,
+          7
+        ],
+        "depth_runs": 5,
+        "depth_source": 94,
+        "depth_internal": 87,
+        "guards": [
+          87,
+          159
+        ],
+        "guarded_commits": {
+          "138": 87
+        },
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      }
+    },
+    "3mm": {
+      "sub_learned": {
+        "paid": 539418,
+        "saved": 18656,
+        "visible": 92658,
+        "fept": 0.17177402311380044,
+        "depth_choices": [
+          0,
+          1019,
+          2058
+        ],
+        "depth_runs": 65,
+        "depth_source": 3077,
+        "depth_internal": 0,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+      },
+      "sub_learned_guard": {
+        "paid": 536688,
+        "saved": 21386,
+        "visible": 92658,
+        "fept": 0.17264779536714067,
+        "depth_choices": [
+          0,
+          60,
+          129
+        ],
+        "depth_runs": 11,
+        "depth_source": 3077,
+        "depth_internal": 2888,
+        "guards": [
+          2888,
+          3954
+        ],
+        "guarded_commits": {
+          "138": 2888
+        },
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+      },
+      "sub_expected_guard": {
+        "paid": 536680,
+        "saved": 21394,
+        "visible": 92658,
+        "fept": 0.1726503689349333,
+        "depth_choices": [
+          0,
+          0,
+          181
+        ],
+        "depth_runs": 9,
+        "depth_source": 3077,
+        "depth_internal": 2896,
+        "guards": [
+          2896,
+          3954
+        ],
+        "guarded_commits": {
+          "138": 2896
+        },
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+      },
+      "sub_deep_guard": {
+        "paid": 536680,
+        "saved": 21394,
+        "visible": 92658,
+        "fept": 0.1726503689349333,
+        "depth_choices": [
+          0,
+          0,
+          181
+        ],
+        "depth_runs": 9,
+        "depth_source": 3077,
+        "depth_internal": 2896,
+        "guards": [
+          2896,
+          3954
+        ],
+        "guarded_commits": {
+          "138": 2896
+        },
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+      }
+    }
+  }
+}
