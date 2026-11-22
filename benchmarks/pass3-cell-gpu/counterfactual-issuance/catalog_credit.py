@@ -363,6 +363,9 @@ def main(a):
                             results[name]["prior_ports"] = prior_port_coverage(data,history_targets)
                             from history_reader import study as history_study
                             results[name]["history_reader"] = history_study(data,recipe)
+                            if a.export_reader_history:
+                                from history_reader import export_history
+                                export_history(data, recipe, a.out / (case + "-reader-history.json"))
                     if a.parent_projection:
                         from parent_projection import projection_profile
                         results[name]["projection"] = projection_profile(data)
@@ -585,6 +588,7 @@ if __name__ == "__main__":
     p.add_argument("--history-tail-depth",type=int,default=1)
     p.add_argument("--history-tail",action="store_true")
     p.add_argument("--history-takeover",action="store_true")
+    p.add_argument("--export-reader-history", action="store_true")
     p.add_argument("--history-ports", action="store_true")
     p.add_argument("--ept",action="store_true")
     p.add_argument("--source-delta",choices=("size","all","local","distinct"))
@@ -615,7 +619,7 @@ if __name__ == "__main__":
     args.history_tail_negative |= bool(args.point_claims)
     args.history_tail |= args.history_tail_depth > 1 or args.history_tail_context or args.history_tail_negative
     args.history_takeover |= args.history_tail or args.history_address
-    args.history_ports |= args.point_catalog
+    args.history_ports |= args.export_reader_history or args.point_catalog
     args.history_ports |= args.history_takeover or args.history_initial or args.history_updates
     args.ept |= args.history_takeover
     args.pair_takeover |= args.history_takeover

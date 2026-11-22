@@ -226,3 +226,22 @@ def study(data, recipe):
             from history_successors import profile
             results[name]["successors"] = profile(data,target,accepted,(*seeds,*receipts,*citations,*revisions))
     return results
+
+def export_history(data, recipe, path):
+    """Export signed receipt observations and a separate held-out source ledger."""
+    import json
+    from parent_projection import identity
+
+    target = target_rule(recipe)
+    roots = data["root_recipe"]
+    citations = cited_ports(roots["commits"], recipe, target)
+    initial = merge(roots["history_initial"], roots["history_returns"], citations,
+                    key=lambda row: (row[0], row[1]))
+    events = merge(initial, (row[:8] for row in roots["history_updates"]), key=lambda row: row[0])
+    labels = [[epoch, [identity(ref)[1:] for ref in sorted(refs, key=lambda ref: ref["atom"])]]
+              for _, _, _, rid, _, epoch, refs, _ in roots["commits"] if rid == target]
+    checked, pending = roots["history_online"]
+    packets = [p for _, p, _ in [*checked, *roots["history_suppressed"]]] + pending
+    births = [[p["refs"], p["epoch"]] for p in packets]
+    path.write_text(json.dumps(dict(events=list(events), labels=labels, native_births=births),
+                               separators=(",", ":")))

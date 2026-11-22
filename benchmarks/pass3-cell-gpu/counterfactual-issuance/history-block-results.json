@@ -1,0 +1,188 @@
+{
+  "dot-product": {
+    "all": {
+      "source": 125,
+      "matched": 125,
+      "proposed": 150,
+      "extra": 25,
+      "same_receipts_as_all": true,
+      "pair_scores": 33495
+    },
+    "pooled12": {
+      "source": 125,
+      "matched": 111,
+      "proposed": 134,
+      "extra": 23,
+      "same_receipts_as_all": false,
+      "pair_scores": 25417
+    },
+    "block_random": {
+      "source": 125,
+      "matched": 125,
+      "proposed": 150,
+      "extra": 25,
+      "same_receipts_as_all": true,
+      "parent_block_scores": 1282,
+      "pair_scores": 6965
+    },
+    "block_trained": {
+      "source": 125,
+      "matched": 125,
+      "proposed": 150,
+      "extra": 25,
+      "same_receipts_as_all": true,
+      "parent_block_scores": 1282,
+      "pair_scores": 6933
+    },
+    "block_narrow": {
+      "source": 125,
+      "matched": 125,
+      "proposed": 150,
+      "extra": 25,
+      "same_receipts_as_all": true,
+      "parent_block_scores": 1282,
+      "pair_scores": 19184
+    },
+    "block_wide": {
+      "source": 125,
+      "matched": 125,
+      "proposed": 150,
+      "extra": 25,
+      "same_receipts_as_all": true,
+      "parent_block_scores": 1282,
+      "pair_scores": 4309
+    },
+    "pooled12_per32": {
+      "source": 125,
+      "matched": 111,
+      "proposed": 134,
+      "extra": 23,
+      "same_receipts_as_all": false,
+      "pair_scores": 26309
+    }
+  },
+  "sum-bits": {
+    "all": {
+      "source": 175,
+      "matched": 175,
+      "proposed": 264,
+      "extra": 89,
+      "same_receipts_as_all": true,
+      "pair_scores": 55475
+    },
+    "pooled12": {
+      "source": 175,
+      "matched": 175,
+      "proposed": 263,
+      "extra": 88,
+      "same_receipts_as_all": false,
+      "pair_scores": 46672
+    },
+    "block_random": {
+      "source": 175,
+      "matched": 175,
+      "proposed": 264,
+      "extra": 89,
+      "same_receipts_as_all": true,
+      "parent_block_scores": 2080,
+      "pair_scores": 12072
+    },
+    "block_trained": {
+      "source": 175,
+      "matched": 175,
+      "proposed": 264,
+      "extra": 89,
+      "same_receipts_as_all": true,
+      "parent_block_scores": 2080,
+      "pair_scores": 10888
+    },
+    "block_narrow": {
+      "source": 175,
+      "matched": 175,
+      "proposed": 264,
+      "extra": 89,
+      "same_receipts_as_all": true,
+      "parent_block_scores": 2080,
+      "pair_scores": 32761
+    },
+    "block_wide": {
+      "source": 175,
+      "matched": 175,
+      "proposed": 264,
+      "extra": 89,
+      "same_receipts_as_all": true,
+      "parent_block_scores": 2080,
+      "pair_scores": 5064
+    },
+    "pooled12_per32": {
+      "source": 175,
+      "matched": 175,
+      "proposed": 263,
+      "extra": 88,
+      "same_receipts_as_all": false,
+      "pair_scores": 47884
+    }
+  },
+  "3mm": {
+    "all": {
+      "source": 4667,
+      "matched": 4667,
+      "proposed": 5782,
+      "extra": 1115,
+      "same_receipts_as_all": true,
+      "pair_scores": 46021965
+    },
+    "pooled12": {
+      "source": 4667,
+      "matched": 629,
+      "proposed": 696,
+      "extra": 67,
+      "same_receipts_as_all": false,
+      "pair_scores": 3787269
+    },
+    "block_random": {
+      "source": 4667,
+      "matched": 4667,
+      "proposed": 5782,
+      "extra": 1115,
+      "same_receipts_as_all": true,
+      "parent_block_scores": 1442477,
+      "pair_scores": 8168282
+    },
+    "block_trained": {
+      "source": 4667,
+      "matched": 4667,
+      "proposed": 5782,
+      "extra": 1115,
+      "same_receipts_as_all": true,
+      "parent_block_scores": 1442477,
+      "pair_scores": 6491301
+    },
+    "block_narrow": {
+      "source": 4667,
+      "matched": 4667,
+      "proposed": 5782,
+      "extra": 1115,
+      "same_receipts_as_all": true,
+      "parent_block_scores": 1442477,
+      "pair_scores": 27172874
+    },
+    "block_wide": {
+      "source": 4667,
+      "matched": 4667,
+      "proposed": 5782,
+      "extra": 1115,
+      "same_receipts_as_all": true,
+      "parent_block_scores": 1442477,
+      "pair_scores": 1058691
+    },
+    "pooled12_per32": {
+      "source": 4667,
+      "matched": 2166,
+      "proposed": 2627,
+      "extra": 461,
+      "same_receipts_as_all": false,
+      "pair_scores": 18541781
+    }
+  }
+}

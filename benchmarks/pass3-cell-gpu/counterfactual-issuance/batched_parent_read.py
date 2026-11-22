@@ -41,8 +41,8 @@ def presence(lhs, rhs, bucketed):
     return contributions.sum(-1)
 
 
-def experiment(device, width, steps, seed, bucketed=False):
-    vocab, ports, beam = 128, 32, 12
+def train_encoder(device, width, steps, seed, bucketed=False, ports=32):
+    vocab = 128
     torch.manual_seed(seed)
     embed = (BucketEncoder(width) if bucketed else nn.Embedding(2 * vocab, width)).to(device)
     optimizer = torch.optim.Adam(embed.parameters(), lr=.025)
@@ -60,6 +60,12 @@ def experiment(device, width, steps, seed, bucketed=False):
         loss.backward()
         optimizer.step()
 
+    return embed
+
+
+def experiment(device, width, steps, seed, bucketed=False):
+    vocab, ports, beam = 128, 32, 12
+    embed = train_encoder(device, width, steps, seed, bucketed)
     left, right = [x.to(device) for x in histories(torch.Generator().manual_seed(225), 256, ports, vocab)]
     target = left[:, :, None] == right[:, None, :]
     with torch.no_grad():
