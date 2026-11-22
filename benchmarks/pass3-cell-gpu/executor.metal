@@ -436,6 +436,19 @@ inline void publish_anchor(device const int *rom,device int *state,device int *m
         c.ordinal=state[9];c.row=row;c.ticket=h[4];c.status=2;
         meta[COM_QUEUE+state[75]++]=id;
     }
+#ifdef COM_TAIL_BASE
+    if(state[77]){
+        int origin=state[77]-1;
+        int tail=compound_tails[claims(meta)[origin].join];
+        constant int *link=compound_joins+4*tail;
+        int id=COM_TAIL_BASE+origin;
+        device CompoundClaim &c=claims(meta)[id];
+        if(!c.status && link[2]==effect && neural_catalog[4*link[3]+3]==t){
+            c.join=tail;c.parent=origin;c.ordinal=state[9];c.row=row;c.ticket=h[4];c.status=2;
+            meta[COM_QUEUE+state[75]++]=id;
+        }
+    }
+#endif
 #endif
 #if BLOCK_STUDY
     refresh_cursor(meta,state,t,row,state[3]);
@@ -977,11 +990,19 @@ inline void do_commit(device const int *rom,device const long *lits,device int *
 #endif
 #if COMPOUND
             state[76]=0;
+#ifdef COM_TAIL_BASE
+            state[77]=0;
+#endif
             if(values[width]>=0){
                 device const int *index=meta+COM_HEAD+2*int(values[width]);
                 if(index[0]==run)for(int id=index[1]-1;id>=0;id=claims(meta)[id].next-1){
                     device CompoundClaim &c=claims(meta)[id];
-                    if(neural_catalog[4*compound_joins[4*c.join+3]]==rid && c.bank==pos){c.winner=state[9];c.status=6;}
+                    if(neural_catalog[4*compound_joins[4*c.join+3]]==rid && c.bank==pos){
+                        c.winner=state[9];c.status=6;
+#ifdef COM_TAIL_BASE
+                        if(compound_tails[c.join]>=0)state[77]=id+1;
+#endif
+                    }
                 }
             }
 #endif

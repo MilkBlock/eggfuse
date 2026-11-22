@@ -31,8 +31,8 @@ def pointer(weight,physical,dev):
 
 
 @torch.inference_mode()
-def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='learned',union='fenced',directory='published',spine=True,lookup='hash',batch_runs=0,tiles=32,token_layout='packed',arena='shared',router=None,export_only=False,token_cap=256,scalars='integer',profile_prims=False,prune=False,row_audit=False,measure_resident=None,hot_filter=4,index_repair=False,count_work=False,block_study=None,neural=None,maintenance_repeat=1,maintenance_control=False):
-    if os.environ.get('PYTORCH_ENABLE_MPS_FALLBACK','0')!='0' or not torch.backends.mps.is_available():
+def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='learned',union='fenced',directory='published',spine=True,lookup='hash',batch_runs=0,tiles=32,token_layout='packed',arena='shared',router=None,export_only=False,token_cap=256,scalars='integer',profile_prims=False,prune=False,row_audit=False,measure_resident=None,hot_filter=4,index_repair=False,count_work=False,block_study=None,neural=None,maintenance_repeat=1,maintenance_control=False,serial_compile=None):
+    if serial_compile is None and (os.environ.get('PYTORCH_ENABLE_MPS_FALLBACK','0')!='0' or not torch.backends.mps.is_available()):
         raise RuntimeError('Metal GPU required')
     if steps<0 or steps>4096:raise ValueError('Run budget outside trace capacity')
     if lookup not in ('scan','point','hash') or batch_runs<0 or batch_runs>32:raise ValueError('lookup or batch budget')
@@ -47,7 +47,8 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
     with np.load(image_path,allow_pickle=False) as f:image=dict(f)
     layout,sets,strings=p['layout'],p['sets'],p['strings']
     rom,lits=image['rom'],image['lits']
-    dev=torch.device('mps')
+    dev=torch.device('mps' if serial_compile is None else 'cpu')
+    synchronize=torch.mps.synchronize if serial_compile is None else lambda: None
     if router and lanes!=2:raise ValueError('trained router requires two rows')
     limits = dict(
         COUNT_WORK=int(count_work), INDEX_REPAIR=int(index_repair), PHASE_TIMING=int(measure_resident is not None), HOT_FILTER=int(hot_filter), AUDIT_ROWS=int(row_audit), RUN_CAP=max(steps, 1), PRUNE_ROUTED=int(prune),
@@ -160,10 +161,26 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
         if len(compound['child'])!=24*len(joins)+18:
             raise ValueError('invalid compound policy weight size')
         records=nbase+(4+steps)*per_run
-        queue=records+11*nr*steps
+        tails=compound.get('tails',[-1]*len(joins))
+        wires=compound.get('wires',[j[2] for j in joins])
+        if len(tails)!=len(joins) or len(wires)!=len(joins):
+            raise ValueError("compound action metadata length mismatch")
+        if any(t < -1 or t >= len(joins) or
+               (t >= 0 and (tails[t]!=-1 or joins[t][1]!=joins[i][3]))
+               for i,t in enumerate(tails)):
+            raise ValueError("invalid compound continuation")
+        if len({(j[1],w,j[3]) for j,w in zip(joins,wires)})!=len(joins) or any(w<0 for w in wires):
+            raise ValueError("ambiguous compound token encoding")
+        chained=any(t>=0 for t in tails)
+        if chained:
+            from catalog import validate_join_ports
+            validate_join_ports(packet.parent,neural['catalog'],joins)
+            limits['COM_TAIL_BASE']=nr*steps
+        claim_slots=nr*steps*(2 if chained else 1)
+        queue=records+11*claim_slots
         limits.update(COMPOUND=1,COM_JOINS=len(joins),COM_BATCH=int(compound['batch']),
                       COM_MASK_PARENT=int(compound.get('mask_parent',False)),
-                      COM_RECORDS=records,COM_QUEUE=queue,COM_HEAD=queue+nr*steps)
+                      COM_RECORDS=records,COM_QUEUE=queue,COM_HEAD=queue+claim_slots)
     if compound and compound.get('audit_claim_time'):
         limits['COM_FAILURE_RUN']=limits['COM_HEAD']+2*limits['ROW_CAP']
     constants='\n'.join(f'#define {k} {v}' for k,v in {**layout,**limits}.items())
@@ -194,6 +211,8 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
         catalog=','.join(str(int(i)) for row in neural['catalog'] for i in row)
         constants+='\nconstant int neural_catalog[]={'+catalog+'};'
         if compound is not None:
+            for name,values in (('compound_tails',tails),('compound_wires',wires)):
+                constants+='\nconstant int '+name+'[]={'+','.join(map(str,values))+'};'
             constants+='\nconstant int compound_joins[]={'+','.join(str(int(v)) for j in joins for v in j)+'};'
         module=HERE/'recurrent-generator'
         kernels=(module/'features.metal').read_text()
@@ -201,14 +220,15 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
         if compound is not None:kernels+='\n'+(module/'compound.metal').read_text()
         if external_tokens:kernels+='\n'+(module/'compound_replay.metal').read_text()
         shader=shader.replace('// NEURAL_DEVICE_KERNELS',kernels)
-    lib=torch.mps.compile_shader(constants+'\n'+shader)
+    compile_shader=torch.mps.compile_shader if serial_compile is None else serial_compile
+    lib=compile_shader(constants+'\n'+shader)
     def ints(v):return torch.tensor(v,dtype=torch.int32,device=dev)
     def zeros(n,t=torch.int32):return torch.zeros(n,device=dev,dtype=t)
     prog=ints(rom);literal=torch.tensor(lits,device=dev,dtype=torch.int64)
     cap=limits['ROW_CAP'];uf_size=cap+layout['NSYMBOLS']+2
     union_log=6*cap+2*uf_size+2*limits['TRACE_CAP']
     birth_run=union_log+4*uf_size
-    state=zeros(77 if compound is not None else 75 if neural is not None else reg_counter+7 if region else group_counter+16 if grouping else 88+3*len(block_study['ids'])+2*(1+max(block_study['shapes'])) if block_study else 69 if sets_enabled else 56);regs=zeros(layout['REGS'])
+    state=zeros(78 if compound is not None and chained else 77 if compound is not None else 75 if neural is not None else reg_counter+7 if region else group_counter+16 if grouping else 88+3*len(block_study['ids'])+2*(1+max(block_study['shapes'])) if block_study else 69 if sets_enabled else 56);regs=zeros(layout['REGS'])
     meta_words=birth_run+(10*cap if router else 9*cap if tiles>1 else (6+2*int(lookup=='hash'))*cap)
     if sets_enabled:meta_words=set_base+126
     if neural is not None:
@@ -216,7 +236,7 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
         if capture_receipts:meta_words+=steps*leaves*ranks
         if capture_edges:meta_words+=cap+5*limits['TRACE_CAP']
     if compound is not None:meta_words=limits['COM_HEAD']+2*cap
-    if 'COM_FAILURE_RUN' in limits:meta_words+=steps*nr
+    if 'COM_FAILURE_RUN' in limits:meta_words+=claim_slots
     if block_study:meta_words=limits['BLOCK_BASE']+3*cap+layout["TABLES"]*lanes*tiles
     if region:
         region_windows=steps//window+1
@@ -256,7 +276,7 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
     lib.inject(prog,selected,state,meta,head,order,literal,dyn,threads=1)
     if directory=='published':lib.seed_keys(prog,literal,state,meta,dyn,threads=len(image['members']))
     if lookup=='hash':lib.seed_index(prog,meta,dyn,head,threads=layout['TABLES'])
-    torch.mps.synchronize();after_init=perf_counter_ns()
+    synchronize();after_init=perf_counter_ns()
     width=p['max_set']*lanes*tiles
     if capture and steps>64:raise ValueError('prefix trace capacity is 64 Runs')
     snapshots=[]
@@ -341,10 +361,10 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
         measure_resident(infer,buffers,constants,width,steps,lanes)
         after_init=perf_counter_ns()
     infer()
-    torch.mps.synchronize();after_exec=perf_counter_ns()
+    synchronize();after_exec=perf_counter_ns()
     out=torch.empty_like(dyn)
     lib.export_rows(prog,literal,state,meta,dyn,out,threads=limits['ROW_CAP'])
-    torch.mps.synchronize()
+    synchronize()
     st=state.cpu().tolist();n=st[0]
     root.mkdir(parents=True,exist_ok=True)
     def take(t,stop):return t[:stop].cpu().numpy()
@@ -388,8 +408,14 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
                     failure_offset=limits['COM_FAILURE_RUN']
                     failure_run=meta.view(-1)[failure_offset:failure_offset+st[11]*nr].reshape(st[11],nr).cpu().numpy()
                     np.savez_compressed(root/'claim-failure-times.npz',failure_run=failure_run)
-                np.savez_compressed(root/'compound-output.npz',claims=claims)
+                extra_claims={}
+                if chained:
+                    tail_offset=offset+11*limits['COM_TAIL_BASE']
+                    extra_claims['tails']=meta.view(-1)[tail_offset:tail_offset+st[11]*nr*11].reshape(st[11],nr,11).cpu().numpy()
+                np.savez_compressed(root/'compound-output.npz',claims=claims,**extra_claims)
                 child_wins=int((claims[:,:,7]>0).sum())
+                tail_wins=int((extra_claims['tails'][:,:,7]>0).sum()) if chained else 0
+                child_wins+=tail_wins
                 neural_wins+=child_wins
             np.savez_compressed(root/'neural-output.npz',raw=raw_trace[:st[11]].cpu().numpy(),
                                 verdict=verdict[:st[11]].cpu().numpy(),committed=(flags!=0).cpu().numpy(),
@@ -455,7 +481,7 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
             rhs_inputs_from_exact_search=st[9]-neural_wins,rhs_inputs_from_recurrent_neural_proposals=neural_wins,
             next_run_state='generated_device_token_and_committed_graph',recurrent_neural_token_input=True)
     if compound is not None:
-        record['execution_roles'].update(root_rhs=neural_wins-child_wins,child_rhs=child_wins,
+        record['execution_roles'].update(root_rhs=neural_wins-child_wins,child_rhs=child_wins,terminal_rhs=tail_wins,
                                          verification='pending_parent_batch' if compound['batch'] else 'per_wave')
     if replay is not None:
         record['execution_roles'].update(binding_generator='frozen_neural_proposal_replay_with_gpu_verification',
@@ -466,6 +492,12 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
     if host_actor is not None:
         record['execution_roles'].update(binding_generator='cpu_recurrent_neural_proposals_with_gpu_verification',
                                          next_run_state='cpu_generated_latent_and_committed_device_graph')
+    if serial_compile is not None:
+        record['backend']='serial_cpp_kernel_diagnostic'
+        roles=record['execution_roles']
+        for key,value in list(roles.items()):
+            if isinstance(value,str):
+                roles[key]=value.replace('metal','serial_cpp').replace('gpu','serial_cpp')
     (root/'run.json').write_text(json.dumps(record,indent=1)+'\n')
     print({k:record[k] for k in ('lanes','completed','fault','fault_rule','finished')},flush=True)
     if st[5]:raise SystemExit(2)

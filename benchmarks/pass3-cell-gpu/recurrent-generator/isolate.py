@@ -33,9 +33,11 @@ if __name__=='__main__':
                     shutil.copyfile(path,root/name)
                 entries=load_catalog(image,program,a.ref/'sum-bits/program.json')
                 static=dict(schema='eggfuse.leaf-catalog/v1',entries=entries,image_sha256=sha(image/'device.json'))
-                if read(root/'actor.json')['schema']=='eggfuse.compound-pair/v1':
-                    from compound_model import pair_joins
-                    static.update(schema='eggfuse.compound-catalog/v1',joins=pair_joins(read(a.ref/'sum-bits/program.json')))
+                model=read(root/'actor.json')
+                if model['schema'] in ('eggfuse.compound-pair/v1','eggfuse.compound-chain/v1'):
+                    from compound_model import compiled_actions
+                    joins,tails,wires=compiled_actions(read(a.ref/'sum-bits/program.json'),model.get('three_step',[]))
+                    static.update(schema='eggfuse.compound-catalog/v1',joins=joins,tails=tails,wires=wires)
                 (root/'catalog.json').write_text(json.dumps(static))
                 subprocess.run([sys.executable,__file__,root,a.ref.parent,'unused','unused','unused','--worker',*([] if residual else ['--no-exact'])],check=True)
                 seen=read(root/'opened.json');assert set(seen)=={'device.json','device.npz','reader.pt','ports.pt','catalog.json','actor.json'}

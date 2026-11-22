@@ -47,3 +47,42 @@ python "$dir/isolate.py" "$corpus" "$ref" "$reader" "$out" "$out/isolated"
 ```
 
 Timing includes proposal, verification and exact completion over the same static GPU budget; state reset and oracle comparison are outside the timed interval. Ten resident repetitions per timed arm rotate order. The isolation worker copies six input files and denies access to the experiment directory. CPU verification is post-run. Frozen native weight arrays are in [seed 1703](actor-1703.json) and [seed 1709](actor-1709.json).
+
+### Issuing a three-step Bake Cell
+
+The opt-in action bank adds donor unit 41 (143 → 55 → 143) alongside
+its pair prefix. Each consumer here has a single query atom bound by the
+previous effect. The existing actor scores both actions. Their wire selectors
+differ so a frozen token uniquely identifies the chosen recipe. The train
+split contains 161 positive paths for unit 41. At a given root a full path
+supersedes its matching prefix target. Other outgoing paths remain eligible.
+Training uses the existing supervised set loss on the CPU.
+
+The verifier queues the first consumer on the actual producer return. A winning
+middle RHS can enqueue its own return for the terminal consumer. Both claims
+check the returned row, publication ticket, scheduled rule and winning binding.
+The terminal uses a second claim slot with no additional generator row. This
+implementation reserves a second claim and queue bank when chains are enabled.
+
+The six paired runs used the checked-in policy, the ordinary source schedule
+and the full exact residual. The serial C++ diagnostic executes the grid kernel
+bodies on CPU. It does not measure device timing or GPU concurrency. In each
+workload one generated token with a committed terminal was shortened during
+frozen replay. All root and middle winners and all other terminal winners
+survived. Each shortened token cost exactly one additional exact RHS match.
+Both arms matched the reference schedule, ordered RHS inputs, effective writes,
+Spine resumes, unions and final visible row contents. The paired artifacts
+separate evidence available before the consumer Run from the later target.
+The actor has not been trained on these counterfactual stop/continue labels.
+
+[Policy](three-step-policy.json) · [Six workload results](three-step-comparisons.json)
+
+Reproduce with the shared compute queue and external worktree launcher.
+Here `e` is the experiment root and `d` is this directory. Use a fresh output
+directory. Omit `--serial-cpu` to request Metal execution.
+
+```sh
+python "$d/chain_check.py" "$e/repair-bake-families-20261120" \
+  "$e/pass3-release-reproduction-20261120" "$e/rotary-axes-20261119/packed-1703/final.pt" \
+  "$d/three-step-policy.json" "$e/new-three-step-sum" --case sum-bits --serial-cpu
+```

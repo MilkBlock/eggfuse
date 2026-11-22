@@ -1,0 +1,116 @@
+[
+  {
+    "case": "affine-twins",
+    "backend": "serial CPU",
+    "runs": 1058,
+    "baked_unit": 41,
+    "issue_run": 93,
+    "root_middle_terminal": [
+      457,
+      492,
+      739
+    ],
+    "root_rhs": 32,
+    "middle_rhs": 20,
+    "terminal_rhs": 4,
+    "residual_rhs_full_prefix": [
+      4159,
+      4160
+    ]
+  },
+  {
+    "case": "clamped-ramp",
+    "backend": "serial CPU",
+    "runs": 1544,
+    "baked_unit": 41,
+    "issue_run": 111,
+    "root_middle_terminal": [
+      671,
+      722,
+      1121
+    ],
+    "root_rhs": 45,
+    "middle_rhs": 18,
+    "terminal_rhs": 2,
+    "residual_rhs_full_prefix": [
+      9406,
+      9407
+    ]
+  },
+  {
+    "case": "histogram-scatter",
+    "backend": "serial CPU",
+    "runs": 1195,
+    "baked_unit": 41,
+    "issue_run": 104,
+    "root_middle_terminal": [
+      711,
+      765,
+      1181
+    ],
+    "root_rhs": 35,
+    "middle_rhs": 17,
+    "terminal_rhs": 3,
+    "residual_rhs_full_prefix": [
+      6687,
+      6688
+    ]
+  },
+  {
+    "case": "segmented-prefix",
+    "backend": "serial CPU",
+    "runs": 1228,
+    "baked_unit": 41,
+    "issue_run": 117,
+    "root_middle_terminal": [
+      634,
+      684,
+      1058
+    ],
+    "root_rhs": 37,
+    "middle_rhs": 17,
+    "terminal_rhs": 2,
+    "residual_rhs_full_prefix": [
+      7369,
+      7370
+    ]
+  },
+  {
+    "case": "sum-bits",
+    "backend": "serial CPU",
+    "runs": 1428,
+    "baked_unit": 41,
+    "issue_run": 98,
+    "root_middle_terminal": [
+      413,
+      450,
+      706
+    ],
+    "root_rhs": 55,
+    "middle_rhs": 25,
+    "terminal_rhs": 6,
+    "residual_rhs_full_prefix": [
+      7179,
+      7180
+    ]
+  },
+  {
+    "case": "window-laplacian",
+    "backend": "serial CPU",
+    "runs": 1387,
+    "baked_unit": 41,
+    "issue_run": 100,
+    "root_middle_terminal": [
+      746,
+      803,
+      1242
+    ],
+    "root_rhs": 45,
+    "middle_rhs": 17,
+    "terminal_rhs": 3,
+    "residual_rhs_full_prefix": [
+      7940,
+      7941
+    ]
+  }
+]

@@ -17,11 +17,48 @@ def pair_joins(program):
             if j['left']<leaves and j['right']<leaves]
 
 
+def compiled_actions(program, units):
+    """Extend the pair action bank with checked two-edge recipes."""
+    joins = pair_joins(program)
+    leaves = len(program["spine_blocks"]["entries"])
+    by_id = {row[0]: row for row in joins}
+    by_edge = {tuple(row[1:]): i for i, row in enumerate(joins)}
+    tails = [-1] * len(joins)
+    wires = [row[2] for row in joins]
+    first_free = max(wires) + 1
+    for unit in units:
+        if not leaves <= unit < leaves + len(program["iterative_bake"]["joins"]) or unit in {j[0] for j in joins}:
+            raise ValueError(f"invalid three-step unit {unit}")
+        link = program["iterative_bake"]["joins"][unit - leaves]
+        left, port, right = (link[k] for k in ("left", "output", "right"))
+        if left in by_id and right < leaves:
+            first = by_id[left][1:]
+            second = (first[-1], port, right)
+        elif left < leaves and right in by_id:
+            second = by_id[right][1:]
+            first = (left, port, second[0])
+        else:
+            raise ValueError(f"unit {unit} is not a three-step recipe")
+        for leaf in (first[-1],second[-1]):
+            entry=program["spine_blocks"]["entries"][leaf]
+            query=program["recipe"]["rules"][entry["consumer"]]["query"]
+            if entry["pivot"]!=0 or len(query)!=1:
+                raise ValueError(f"unit {unit} requires an independent consumer input")
+        if tuple(first) not in by_edge or tuple(second) not in by_edge:
+            raise ValueError(f"unit {unit} has an uncertified edge")
+        joins.append((unit, *first))
+        tails.append(by_edge[tuple(second)])
+        wires.append(first_free)
+        first_free += 1
+    return joins, tails, wires
+
+
 class CompoundActor(nn.Module):
-    def __init__(self,joins):
+    def __init__(self,joins,wires=None):
         super().__init__()
         self.root=Actor()
         self.register_buffer('joins',torch.tensor(joins),persistent=False)
+        self.register_buffer('wires',torch.tensor(wires if wires is not None else [j[2] for j in joins]),persistent=False)
         self.score=nn.Parameter(torch.randn(len(joins),14)*.04)
         self.row_score=nn.Parameter(torch.zeros(ROWS,len(joins)))
         self.embedding=nn.Parameter(torch.randn(len(joins),HIDDEN)*.08)
@@ -48,15 +85,15 @@ class CompoundActor(nn.Module):
         latent=hidden.gather(1,parent[:,:,None].expand(-1,-1,HIDDEN))
         latent=(latent+self.row_latent+active[:,:,None]*self.embedding[join]).tanh()
         address=(run[:,None]-1)*ROWS+parent+1
-        fields=torch.stack([self.joins[join,3]+1,address,self.joins[join,2]+1,active],-1)*active[:,:,None]
+        fields=torch.stack([self.joins[join,3]+1,address,self.wires[join]+1,active],-1)*active[:,:,None]
         return logits,torch.cat([latent,fields.float()],-1),action
 
 
 def train(a,seed):
     torch.manual_seed(seed);torch.set_num_threads(1)
     rng=np.random.default_rng(seed)
-    joins=pair_joins(json.loads(a.donor.read_bytes()))
-    actor=CompoundActor(joins)
+    joins,tails,wires=compiled_actions(json.loads(a.donor.read_bytes()),a.three_step)
+    actor=CompoundActor(joins,wires)
     donor_ids={j[0]:i for i,j in enumerate(joins)}
     datasets=[]
     names=sorted(p.stem for p in (a.targets/'train').glob('*.npz'))
@@ -67,7 +104,11 @@ def train(a,seed):
         paths=torch.zeros(len(positive),positive.shape[1],len(joins),dtype=torch.bool)
         with np.load(a.targets/'train'/f'{n}.npz') as z:
             for run,leaf,rank,unit,depth,*_ in z['targets']:
-                if depth==2:paths[run-1,leaf*RANKS+rank,donor_ids[unit]]=True
+                if depth in (2,3) and unit in donor_ids:paths[run-1,leaf*RANKS+rank,donor_ids[unit]]=True
+        for action,tail in enumerate(tails):
+            if tail >= 0:
+                prefix=next(i for i,j in enumerate(joins) if tails[i]<0 and j[1:]==joins[action][1:])
+                paths[:,:,prefix] &= ~paths[:,:,action]
         datasets.append((features,positive,receipt,paths,np.flatnonzero(paths.any((1,2)).numpy())))
     opt=torch.optim.Adam(actor.parameters(),lr=.006)
     losses=[]
@@ -97,7 +138,7 @@ def train(a,seed):
     out=a.out/f'train-{seed}';out.mkdir(parents=True,exist_ok=False)
     torch.save(actor.state_dict(),out/'actor.pt')
     native=torch.cat([p.detach().flatten() for p in (actor.score,actor.row_score,actor.embedding,actor.null,actor.row_latent)]).tolist()
-    (out/'policy.json').write_text(json.dumps(dict(schema='eggfuse.compound-pair/v1',joins=joins,
+    (out/'policy.json').write_text(json.dumps(dict(schema='eggfuse.compound-chain/v1' if a.three_step else 'eggfuse.compound-pair/v1',joins=joins,three_step=a.three_step,tails=tails,wires=wires,
         roots=actor.root.metal_weights(),child=native,seed=seed,root_target=a.root_target,train=names,updates=a.updates,loss=losses),separators=(',',':'))+'\n')
     print(seed,len(joins),losses,flush=True)
 
@@ -106,6 +147,7 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     for k in ('donor','data','targets','out'):p.add_argument(k,type=Path)
     p.add_argument('--seeds',type=int,nargs='+',default=[1703,1709])
+    p.add_argument('--three-step',type=int,nargs='+',default=[])
     p.add_argument('--updates',type=int,default=480)
     p.add_argument('--root-target',choices=('leaf','continuation'),default='continuation')
     a=p.parse_args()
