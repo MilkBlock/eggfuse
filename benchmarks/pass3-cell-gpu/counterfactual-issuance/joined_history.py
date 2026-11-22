@@ -9,15 +9,18 @@ from parent_projection import identity
 def export(data, recipe, target, path: Path):
     roots=data['root_recipe']
     rule=recipe['rules'][target]
-    names=[a['call']['table'] for a in rule['query']]
-    if len(set(names))!=len(names):
-        raise ValueError("study requires distinct role tables")
+    names=[a['call'].get('table') for a in rule['query']]
+    # Record each physical table once, even when a template reads two roles from it.
+    table_roles={name:names.index(name) for name in names if name is not None}
     layout=[[a['slot'] for a in atom['args']] for atom in rule['query']]
     sources={(rid,i):(names.index(a['call']['table']),a['args']) for rid,r in enumerate(recipe['rules'])
-             if rid!=target for i,a in enumerate(r['query']) if a['call'].get('table') in names}
+             if rid!=target for i,a in enumerate(r['query']) if a['call'].get('table') in table_roles}
     commits=[]
     events=[]
     owners={}
+    for slot,table,dep,version,values in roots['chain_audit'].get('initial') or []:
+        role=table_roles[recipe['tables'][table]['name']]
+        events.append([0,0,slot,role,identity(dict(row=dep,version=version)),values,'initial'])
     for ordinal,_,_,rid,_,epoch,refs,slots in roots['commits']:
         owners[ordinal]=rid,epoch
         if rid==target:
@@ -31,7 +34,7 @@ def export(data, recipe, target, path: Path):
                 events.append([epoch,ordinal,~ref['atom'],role,identity(ref),fields,'input'])
     for owner,rid,epoch,table,op,cell,field,version,fields in roots['chain_rows']:
         name=recipe['tables'][table]['name']
-        if name not in names:
+        if name not in table_roles:
             continue
         role=names.index(name)
         if owners.get(owner)!=(rid,epoch) or recipe['rules'][rid]['effects'][op]['call'].get('table')!=name or len(fields)!=len(layout[role]):
@@ -39,11 +42,18 @@ def export(data, recipe, target, path: Path):
         events.append([epoch,owner,op,role,('fact',cell,field,version),fields,'self' if rid==target else 'return'])
     for epoch,table,dep,owner,slot,old,new,fields in roots['chain_audit']['updates']:
         name=recipe['tables'][table]['name']
-        if name not in names:
+        if name not in table_roles:
             continue
         events.append([epoch,owner,slot,names.index(name),identity(dict(row=dep,version=new or old)),
                        fields,'revision' if new is not None else 'retire'])
+    proof_rows=roots['chain_audit'].get('proofs') or {}
+    proof={}
     allocations={row[0]:(row[1],row[2]) for row in roots['fresh']}
+    for ordinal,_,serial,rid,_,_,_,_ in roots['commits']:
+        if rid==target and str(serial) in proof_rows:
+            proof[ordinal]=[[atom,identity(dict(row=dep,version=v)),values,
+                            allocations.get(dep['Fact']['cell'],(None,None))[1] if 'Fact' in dep else None]
+                            for atom,dep,v,values in proof_rows[str(serial)]]
     earliest={}
     for ep,_,_,role,dep,_,kind in events:
         if kind!='retire':
@@ -52,11 +62,11 @@ def export(data, recipe, target, path: Path):
     missing=Counter()
     for ep,_,refs in commits:
         for role,dep in refs:
-            if earliest.get((role,tuple(dep)),ep)>=ep:
+            if earliest.get((table_roles[names[role]],tuple(dep)),ep)>=ep:
                 a=allocations.get(dep[1]) if dep[0]=='fact' else None
                 missing[str(a[1]) if a else 'unknown']+=1
     origins=dict(missing)
-    path.write_text(json.dumps(dict(target=target,tables=names,layout=layout,schedule=[(ep,mark) for rid,ep,mark in roots["chain_audit"]["scheduled"] if rid==target],commits=commits,events=events,missing_allocators=origins),
+    path.write_text(json.dumps(dict(target=target,tables=names,layout=layout,schedule=[(ep,mark) for rid,ep,mark in roots["chain_audit"]["scheduled"] if rid==target],commits=commits,events=events,missing_allocators=origins,proof=proof,aliases=roots["chain_audit"].get("aliases") or []),
                                separators=(',',':')))
 
 

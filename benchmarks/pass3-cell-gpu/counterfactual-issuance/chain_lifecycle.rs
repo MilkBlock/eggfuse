@@ -1,5 +1,9 @@
 // Optional observation of writes and later publications on already named ports.
 struct ChainLifecycle {
+    allow_set_ports: bool,
+    initial: Vec<J>,
+    aliases: Vec<[u64; 3]>,
+    proofs: BTreeMap<u64, Vec<J>>,
     scheduled: Vec<[u64; 3]>,
     targets: BTreeMap<usize, usize>,
     inputs: Vec<Vec<Option<usize>>>,
@@ -10,7 +14,7 @@ struct ChainLifecycle {
     updates: Vec<J>,
 }
 
-pub fn configure_chain_lifecycle(program: &Program, spec: &J) -> Result<()> {
+pub fn configure_chain_lifecycle(program: &Program, spec: &J, allow_set_ports: bool) -> Result<()> {
     let mut targets = BTreeMap::new();
     for rid in serde_json::from_value::<Vec<usize>>(spec.clone()).map_err(|e| e.to_string())? {
         for atom in program
@@ -41,6 +45,10 @@ pub fn configure_chain_lifecycle(program: &Program, spec: &J) -> Result<()> {
         })
         .collect();
     let trace = ChainLifecycle {
+        allow_set_ports,
+        initial: vec![],
+        aliases: vec![],
+        proofs: Default::default(),
         scheduled: vec![],
         targets,
         inputs,
@@ -71,7 +79,7 @@ impl ChainLifecycle {
         if self
             .targets
             .get(&table)
-            .is_some_and(|target| *target != rid)
+            .is_some_and(|target| *target != rid || self.allow_set_ports)
         {
             let known = self
                 .owners
@@ -321,6 +329,106 @@ pub(crate) fn observe_chain_run(rid: usize, epoch: u64, watermark: u64) {
             && trace.targets.values().any(|&target| target == rid)
         {
             trace.scheduled.push([rid as u64, epoch, watermark]);
+        }
+    });
+}
+
+// A committed Set can create or reuse a constructor owned by another token.
+// Resolve the named witness only; release later Runs against publication versions.
+pub(crate) fn trace_set_port(g: &Graph, table: usize, op: usize, dep: Dependency) -> Result<()> {
+    STATE.with_borrow_mut(|s| {
+        let Some(s) = s else { return Ok(()) };
+        let Some(trace) = &mut s.chain_lifecycle else {
+            return Ok(());
+        };
+        if !trace.allow_set_ports || !trace.targets.contains_key(&table) {
+            return Ok(());
+        }
+        let Some((owner, _, _, rid, _)) = s.active else {
+            return Ok(());
+        };
+        let Dependency::Fact(f) = dep else {
+            return Ok(());
+        };
+        let Some(row) = g
+            .row(dep)?
+            .filter(|r| r.table == table && r.witness == dep && !r.hidden)
+        else {
+            return Ok(());
+        };
+        trace.observe(rid, owner, op as i64, table, dep, row.epoch);
+        if let Some((_, rows)) = &mut s.chain_rows {
+            rows.push(json!([
+                owner,
+                rid,
+                g.epoch,
+                table,
+                op,
+                f.cell,
+                f.op,
+                row.epoch,
+                &*row.values
+            ]));
+        }
+        Ok(())
+    })
+}
+
+pub fn trace_initial_ports(g: &Graph) -> Result<()> {
+    STATE.with_borrow_mut(|s| {
+        let Some(trace) = s.as_mut().and_then(|s| s.chain_lifecycle.as_mut()) else {
+            return Ok(());
+        };
+        for &table in trace.targets.keys() {
+            for dep in g.witnesses(table) {
+                if let Some(row) = g
+                    .row(dep)?
+                    .filter(|r| r.table == table && r.witness == dep && !r.hidden)
+                {
+                    let slot = trace.initial.len() as i64;
+                    trace.owners.insert((table, dep), (0, slot, row.epoch));
+                    trace
+                        .initial
+                        .push(json!([slot, table, dep, row.epoch, &*row.values]));
+                }
+            }
+        }
+        Ok(())
+    })
+}
+
+// Held-out labels for diagnosis. Only source-committed serials are exported.
+fn trace_join_proof(
+    g: &Graph,
+    rid: usize,
+    serial: u64,
+    known: &[Option<Dependency>],
+) -> Result<()> {
+    STATE.with_borrow_mut(|s| {
+        let Some(trace) = s.as_mut().and_then(|s| s.chain_lifecycle.as_mut()) else {
+            return Ok(());
+        };
+        if !trace.allow_set_ports || !trace.targets.values().any(|&rule| rule == rid) {
+            return Ok(());
+        }
+        let mut proof = Vec::new();
+        for (atom, w) in known.iter().enumerate() {
+            if let Some(dep) = *w {
+                let row = g.row(dep)?.ok_or("verified port disappeared")?;
+                proof.push(json!([atom, dep, row.epoch, &*row.values]));
+            }
+        }
+        trace.proofs.insert(serial, proof);
+        Ok(())
+    })
+}
+
+pub(crate) fn trace_port_union(epoch: u64, hi: u64, lo: u64) {
+    STATE.with_borrow_mut(|s| {
+        if let Some(trace) = s.as_mut().and_then(|s| s.chain_lifecycle.as_mut())
+            && trace.allow_set_ports
+        {
+            trace.aliases.push([epoch, hi, lo]);
         }
     });
 }

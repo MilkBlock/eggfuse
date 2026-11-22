@@ -329,8 +329,10 @@ def main(a):
                                              for atom in recipe["rules"][rid]["query"]}
                 if a.joined_history is not None and name=="sub_expected_guard":
                     request["chain_lifecycle"]=[a.joined_history]
+                    request["trace_set_ports"]=a.trace_set_ports
+                    request["trace_initial_ports"]=a.trace_initial_ports
                     request["chain_rows"]={atom["call"]["table"]:len(atom["args"])
-                                            for atom in recipe["rules"][a.joined_history]["query"]}
+                                            for atom in recipe["rules"][a.joined_history]["query"] if "table" in atom["call"]}
                 if a.ept:request["ept"]=True
                 data = run(request)
                 if a.joined_history is not None and name=="sub_expected_guard":
@@ -702,6 +704,8 @@ if __name__ == "__main__":
     p.add_argument("--withhold-live-chain", action="store_true")
     p.add_argument("--time-live-join", action="store_true")
     p.add_argument("--join-open-first", action="store_true")
+    p.add_argument("--trace-initial-ports", action="store_true")
+    p.add_argument("--trace-set-ports", action="store_true")
     p.add_argument("--live-join", action="store_true")
     p.add_argument("--corrupt-join", action="store_true")
     p.add_argument("--live-chain", action="store_true")

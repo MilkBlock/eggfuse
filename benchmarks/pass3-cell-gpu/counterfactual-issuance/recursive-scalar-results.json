@@ -1,0 +1,357 @@
+{
+  "address_routes": {
+    "varied": [
+      0,
+      3,
+      5
+    ],
+    "correlated": [
+      0,
+      0,
+      4
+    ]
+  },
+  "cases": {
+    "dot-product": {
+      "pre_set_ports": {
+        "runs": 19,
+        "expected": 51,
+        "issued": 9,
+        "missing": 42,
+        "extra": 0,
+        "missing_concat": 22,
+        "pair_scores": 1937,
+        "missing_subtuple": 20
+      },
+      "arms": {
+        "independent": {
+          "runs": 19,
+          "expected": 51,
+          "issued": 29,
+          "missing": 22,
+          "extra": 0,
+          "missing_concat": 2,
+          "pair_scores": 1985,
+          "missing_subtuple": 20,
+          "concat_origins": {
+            "375/different_fields": 2
+          }
+        },
+        "feedback": {
+          "runs": 19,
+          "expected": 51,
+          "issued": 41,
+          "missing": 10,
+          "extra": 0,
+          "missing_concat": 2,
+          "pair_scores": 2019,
+          "missing_subtuple": 8,
+          "own_returns": 41,
+          "concat_origins": {
+            "375/different_fields": 2
+          }
+        },
+        "conditional": {
+          "runs": 19,
+          "expected": 51,
+          "issued": 41,
+          "missing": 10,
+          "extra": 0,
+          "missing_concat": 2,
+          "conditional_reads": 1651,
+          "pair_scores": 506,
+          "missing_subtuple": 8,
+          "own_returns": 41,
+          "concat_origins": {
+            "375/different_fields": 2
+          }
+        },
+        "correlated": {
+          "runs": 19,
+          "expected": 51,
+          "issued": 0,
+          "missing": 51,
+          "extra": 0,
+          "missing_concat": 2,
+          "conditional_reads": 1651,
+          "missing_subtuple": 20,
+          "failed_guard_or_watermark": 29,
+          "concat_origins": {
+            "375/different_fields": 2
+          }
+        },
+        "conditional_with_transfers": {
+          "runs": 19,
+          "expected": 51,
+          "issued": 51,
+          "missing": 0,
+          "extra": 0,
+          "conditional_reads": 1699,
+          "pair_scores": 516,
+          "own_returns": 51,
+          "concat_origins": {}
+        },
+        "delta_routed": {
+          "runs": 19,
+          "expected": 51,
+          "issued": 51,
+          "missing": 0,
+          "extra": 0,
+          "conditional_reads": 223,
+          "pair_scores": 51,
+          "own_returns": 51,
+          "concat_origins": {}
+        }
+      },
+      "initial_ports": 0,
+      "union_events": 611,
+      "native_checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "events": true,
+        "runs": true,
+        "schedule": true,
+        "state_sha": true,
+        "ledger": true,
+        "commit_inputs": true
+      },
+      "native_paid": 8380,
+      "native_ept": 0.6532219570405728
+    },
+    "sum-bits": {
+      "pre_set_ports": {
+        "runs": 48,
+        "expected": 101,
+        "issued": 20,
+        "missing": 81,
+        "extra": 0,
+        "missing_concat": 35,
+        "pair_scores": 18681,
+        "missing_subtuple": 46
+      },
+      "arms": {
+        "independent": {
+          "runs": 48,
+          "expected": 101,
+          "issued": 31,
+          "missing": 70,
+          "extra": 0,
+          "missing_concat": 24,
+          "pair_scores": 18745,
+          "missing_subtuple": 46,
+          "concat_origins": {
+            "375/different_fields": 1,
+            "138/different_fields": 7,
+            "344/different_fields": 14,
+            "328/different_fields": 2
+          }
+        },
+        "feedback": {
+          "runs": 48,
+          "expected": 101,
+          "issued": 46,
+          "missing": 55,
+          "extra": 0,
+          "missing_concat": 24,
+          "pair_scores": 18824,
+          "own_returns": 46,
+          "missing_subtuple": 31,
+          "concat_origins": {
+            "375/different_fields": 1,
+            "138/different_fields": 7,
+            "344/different_fields": 14,
+            "328/different_fields": 2
+          }
+        },
+        "conditional": {
+          "runs": 48,
+          "expected": 101,
+          "issued": 46,
+          "missing": 55,
+          "extra": 0,
+          "missing_concat": 24,
+          "conditional_reads": 5744,
+          "pair_scores": 2011,
+          "own_returns": 46,
+          "missing_subtuple": 31,
+          "concat_origins": {
+            "375/different_fields": 1,
+            "138/different_fields": 7,
+            "344/different_fields": 14,
+            "328/different_fields": 2
+          }
+        },
+        "correlated": {
+          "runs": 48,
+          "expected": 101,
+          "issued": 0,
+          "missing": 101,
+          "extra": 0,
+          "missing_concat": 24,
+          "conditional_reads": 5744,
+          "failed_guard_or_watermark": 31,
+          "missing_subtuple": 46,
+          "concat_origins": {
+            "375/different_fields": 1,
+            "138/different_fields": 7,
+            "344/different_fields": 14,
+            "328/different_fields": 2
+          }
+        },
+        "conditional_with_transfers": {
+          "runs": 48,
+          "expected": 101,
+          "issued": 101,
+          "missing": 0,
+          "extra": 0,
+          "conditional_reads": 5916,
+          "pair_scores": 2066,
+          "own_returns": 101,
+          "concat_origins": {}
+        },
+        "delta_routed": {
+          "runs": 48,
+          "expected": 101,
+          "issued": 101,
+          "missing": 0,
+          "extra": 0,
+          "conditional_reads": 643,
+          "pair_scores": 101,
+          "own_returns": 101,
+          "concat_origins": {}
+        }
+      },
+      "initial_ports": 0,
+      "union_events": 1039,
+      "native_checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "events": true,
+        "runs": true,
+        "schedule": true,
+        "state_sha": true,
+        "ledger": true,
+        "commit_inputs": true
+      },
+      "native_paid": 7126,
+      "native_ept": 0.755122088127982
+    },
+    "3mm": {
+      "pre_set_ports": {
+        "runs": 72,
+        "expected": 4287,
+        "issued": 764,
+        "missing": 3523,
+        "extra": 0,
+        "missing_concat": 1214,
+        "pair_scores": 926846,
+        "missing_subtuple": 2309
+      },
+      "arms": {
+        "independent": {
+          "runs": 72,
+          "expected": 4287,
+          "issued": 1375,
+          "missing": 2912,
+          "extra": 0,
+          "missing_concat": 603,
+          "pair_scores": 928486,
+          "missing_subtuple": 2309,
+          "concat_origins": {
+            "375/different_fields": 139,
+            "133/different_fields": 64,
+            "138/different_fields": 400
+          }
+        },
+        "feedback": {
+          "runs": 72,
+          "expected": 4287,
+          "issued": 2593,
+          "missing": 1694,
+          "extra": 0,
+          "missing_concat": 603,
+          "pair_scores": 932678,
+          "missing_subtuple": 1091,
+          "own_returns": 2593,
+          "concat_origins": {
+            "375/different_fields": 139,
+            "133/different_fields": 64,
+            "138/different_fields": 400
+          }
+        },
+        "conditional": {
+          "runs": 72,
+          "expected": 4287,
+          "issued": 2593,
+          "missing": 1694,
+          "extra": 0,
+          "missing_concat": 603,
+          "conditional_reads": 565120,
+          "pair_scores": 208211,
+          "missing_subtuple": 1091,
+          "own_returns": 2593,
+          "concat_origins": {
+            "375/different_fields": 139,
+            "133/different_fields": 64,
+            "138/different_fields": 400
+          }
+        },
+        "correlated": {
+          "runs": 72,
+          "expected": 4287,
+          "issued": 0,
+          "missing": 4287,
+          "extra": 0,
+          "missing_concat": 603,
+          "conditional_reads": 564778,
+          "missing_subtuple": 2309,
+          "failed_guard_or_watermark": 1375,
+          "concat_origins": {
+            "375/different_fields": 139,
+            "133/different_fields": 64,
+            "138/different_fields": 400
+          }
+        },
+        "conditional_with_transfers": {
+          "runs": 72,
+          "expected": 4287,
+          "issued": 4287,
+          "missing": 0,
+          "extra": 0,
+          "conditional_reads": 568686,
+          "pair_scores": 209905,
+          "own_returns": 4287,
+          "concat_origins": {}
+        },
+        "delta_routed": {
+          "runs": 72,
+          "expected": 4287,
+          "issued": 4287,
+          "missing": 0,
+          "extra": 0,
+          "conditional_reads": 20146,
+          "pair_scores": 4287,
+          "own_returns": 4287,
+          "concat_origins": {}
+        }
+      },
+      "initial_ports": 0,
+      "union_events": 28142,
+      "native_checks": {
+        "rhs": true,
+        "writes": true,
+        "resumes": true,
+        "events": true,
+        "runs": true,
+        "schedule": true,
+        "state_sha": true,
+        "ledger": true,
+        "commit_inputs": true
+      },
+      "native_paid": 242673,
+      "native_ept": 0.8430315692310228
+    }
+  }
+}
