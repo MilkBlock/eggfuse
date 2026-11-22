@@ -1,0 +1,730 @@
+{
+  "workloads": {
+    "sum-bits": {
+      "leaf": {
+        "paid": 12662,
+        "saved": 0,
+        "visible": 2691,
+        "fept": 0.21252566735112938,
+        "terminal": 0,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 0,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "all_literal": {
+        "paid": 12089,
+        "saved": 573,
+        "visible": 2691,
+        "fept": 0.22259905699396146,
+        "terminal": 8,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 2544,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+        "depth": {
+          "1": 504,
+          "2": 69
+        },
+        "reused_commits": 0,
+        "deep_roots": {}
+      },
+      "walk2_reuse1": {
+        "paid": 12084,
+        "saved": 578,
+        "visible": 2691,
+        "fept": 0.22269116186693147,
+        "terminal": 8,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 2544,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+        "depth": {
+          "1": 506,
+          "2": 72
+        },
+        "reused_commits": 5,
+        "deep_roots": {}
+      },
+      "set2": {
+        "paid": 11974,
+        "saved": 688,
+        "visible": 2691,
+        "fept": 0.22473693001503256,
+        "terminal": 8,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 3167,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+        "depth": {
+          "1": 558,
+          "2": 130
+        },
+        "reused_commits": 4,
+        "deep_roots": {}
+      },
+      "set8": {
+        "paid": 11950,
+        "saved": 712,
+        "visible": 2691,
+        "fept": 0.22518828451882844,
+        "terminal": 8,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 3167,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+        "depth": {
+          "1": 557,
+          "2": 130,
+          "3": 24,
+          "4": 1
+        },
+        "reused_commits": 4,
+        "deep_roots": {
+          "56": 4,
+          "57": 13,
+          "138": 7,
+          "546": 1
+        }
+      },
+      "set32": {
+        "paid": 11950,
+        "saved": 712,
+        "visible": 2691,
+        "fept": 0.22518828451882844,
+        "terminal": 8,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 3167,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+        "depth": {
+          "1": 557,
+          "2": 130,
+          "3": 24,
+          "4": 1
+        },
+        "reused_commits": 4,
+        "deep_roots": {
+          "56": 4,
+          "57": 13,
+          "138": 7,
+          "546": 1
+        }
+      },
+      "all_literal_reader": {
+        "paid": 12089,
+        "saved": 573,
+        "visible": 2691,
+        "fept": 0.22259905699396146,
+        "terminal": 8,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 2544,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+        "depth": {
+          "1": 504,
+          "2": 69
+        },
+        "reused_commits": 0,
+        "deep_roots": {},
+        "choices": [
+          42,
+          1,
+          125,
+          8
+        ],
+        "decision_runs": 22,
+        "fallback": 0
+      },
+      "set2_reader": {
+        "paid": 11974,
+        "saved": 688,
+        "visible": 2691,
+        "fept": 0.22473693001503256,
+        "terminal": 8,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 3167,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+        "depth": {
+          "1": 558,
+          "2": 130
+        },
+        "reused_commits": 4,
+        "deep_roots": {},
+        "choices": [
+          42,
+          1,
+          79,
+          8
+        ],
+        "decision_runs": 21,
+        "fallback": 0
+      },
+      "set8_reader": {
+        "paid": 11950,
+        "saved": 712,
+        "visible": 2691,
+        "fept": 0.22518828451882844,
+        "terminal": 8,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 3167,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+        "depth": {
+          "1": 557,
+          "2": 130,
+          "3": 24,
+          "4": 1
+        },
+        "reused_commits": 4,
+        "deep_roots": {
+          "56": 4,
+          "57": 13,
+          "138": 7,
+          "546": 1
+        },
+        "choices": [
+          42,
+          1,
+          78,
+          8
+        ],
+        "decision_runs": 21,
+        "fallback": 0
+      },
+      "walk8_reuse0": {
+        "paid": 12089,
+        "saved": 573,
+        "visible": 2691,
+        "fept": 0.22259905699396146,
+        "terminal": 8,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 2544,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+        "depth": {
+          "1": 504,
+          "2": 69
+        },
+        "reused_commits": 0
+      },
+      "walk4_reuse1": {
+        "paid": 12084,
+        "saved": 578,
+        "visible": 2691,
+        "fept": 0.22269116186693147,
+        "terminal": 8,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 2544,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+        "depth": {
+          "1": 506,
+          "2": 72
+        },
+        "reused_commits": 5
+      },
+      "walk8_reuse1": {
+        "paid": 12084,
+        "saved": 578,
+        "visible": 2691,
+        "fept": 0.22269116186693147,
+        "terminal": 8,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 2544,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+        "depth": {
+          "1": 506,
+          "2": 72
+        },
+        "reused_commits": 5
+      },
+      "walk32_reuse1": {
+        "paid": 12084,
+        "saved": 578,
+        "visible": 2691,
+        "fept": 0.22269116186693147,
+        "terminal": 8,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 2544,
+        "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+        "depth": {
+          "1": 506,
+          "2": 72
+        },
+        "reused_commits": 5
+      }
+    },
+    "3mm": {
+      "leaf": {
+        "paid": 558074,
+        "saved": 0,
+        "visible": 92658,
+        "fept": 0.16603174489404632,
+        "terminal": 0,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 0,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0"
+      },
+      "all_literal": {
+        "paid": 543316,
+        "saved": 14758,
+        "visible": 92658,
+        "fept": 0.17054163691111618,
+        "terminal": 203,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 11548,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+        "depth": {
+          "1": 11675,
+          "2": 3083
+        },
+        "reused_commits": 0,
+        "deep_roots": {}
+      },
+      "walk2_reuse1": {
+        "paid": 543197,
+        "saved": 14877,
+        "visible": 92658,
+        "fept": 0.17057899804306725,
+        "terminal": 203,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 11548,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+        "depth": {
+          "1": 11720,
+          "2": 3157
+        },
+        "reused_commits": 119,
+        "deep_roots": {}
+      },
+      "set2": {
+        "paid": 540603,
+        "saved": 17471,
+        "visible": 92658,
+        "fept": 0.1713974950194505,
+        "terminal": 203,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 13825,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+        "depth": {
+          "1": 12360,
+          "2": 5111
+        },
+        "reused_commits": 74,
+        "deep_roots": {}
+      },
+      "set8": {
+        "paid": 539418,
+        "saved": 18656,
+        "visible": 92658,
+        "fept": 0.17177402311380044,
+        "terminal": 203,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 13825,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+        "depth": {
+          "1": 12332,
+          "2": 5111,
+          "3": 1185,
+          "4": 28
+        },
+        "reused_commits": 74,
+        "deep_roots": {
+          "56": 44,
+          "57": 656,
+          "62": 1,
+          "138": 484,
+          "546": 28
+        }
+      },
+      "set32": {
+        "paid": 539418,
+        "saved": 18656,
+        "visible": 92658,
+        "fept": 0.17177402311380044,
+        "terminal": 203,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 13825,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+        "depth": {
+          "1": 12332,
+          "2": 5111,
+          "3": 1185,
+          "4": 28
+        },
+        "reused_commits": 74,
+        "deep_roots": {
+          "56": 44,
+          "57": 656,
+          "62": 1,
+          "138": 484,
+          "546": 28
+        }
+      },
+      "all_literal_reader": {
+        "paid": 543316,
+        "saved": 14758,
+        "visible": 92658,
+        "fept": 0.17054163691111618,
+        "terminal": 203,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 11548,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+        "depth": {
+          "1": 11675,
+          "2": 3083
+        },
+        "reused_commits": 0,
+        "deep_roots": {},
+        "choices": [
+          1581,
+          3,
+          2800,
+          203
+        ],
+        "decision_runs": 34,
+        "fallback": 0
+      },
+      "set2_reader": {
+        "paid": 540603,
+        "saved": 17471,
+        "visible": 92658,
+        "fept": 0.1713974950194505,
+        "terminal": 203,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 13825,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+        "depth": {
+          "1": 12360,
+          "2": 5111
+        },
+        "reused_commits": 74,
+        "deep_roots": {},
+        "choices": [
+          1581,
+          3,
+          1449,
+          203
+        ],
+        "decision_runs": 32,
+        "fallback": 0
+      },
+      "set8_reader": {
+        "paid": 539418,
+        "saved": 18656,
+        "visible": 92658,
+        "fept": 0.17177402311380044,
+        "terminal": 203,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 13825,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+        "depth": {
+          "1": 12332,
+          "2": 5111,
+          "3": 1185,
+          "4": 28
+        },
+        "reused_commits": 74,
+        "deep_roots": {
+          "56": 44,
+          "57": 656,
+          "62": 1,
+          "138": 484,
+          "546": 28
+        },
+        "choices": [
+          1581,
+          3,
+          1421,
+          203
+        ],
+        "decision_runs": 31,
+        "fallback": 0
+      },
+      "walk8_reuse0": {
+        "paid": 543316,
+        "saved": 14758,
+        "visible": 92658,
+        "fept": 0.17054163691111618,
+        "terminal": 203,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 11548,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+        "depth": {
+          "1": 11675,
+          "2": 3083
+        },
+        "reused_commits": 0
+      },
+      "walk4_reuse1": {
+        "paid": 543197,
+        "saved": 14877,
+        "visible": 92658,
+        "fept": 0.17057899804306725,
+        "terminal": 203,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 11548,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+        "depth": {
+          "1": 11720,
+          "2": 3157
+        },
+        "reused_commits": 119
+      },
+      "walk8_reuse1": {
+        "paid": 543197,
+        "saved": 14877,
+        "visible": 92658,
+        "fept": 0.17057899804306725,
+        "terminal": 203,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 11548,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+        "depth": {
+          "1": 11720,
+          "2": 3157
+        },
+        "reused_commits": 119
+      },
+      "walk32_reuse1": {
+        "paid": 543197,
+        "saved": 14877,
+        "visible": 92658,
+        "fept": 0.17057899804306725,
+        "terminal": 203,
+        "checks": {
+          "rhs": true,
+          "writes": true,
+          "resumes": true,
+          "state_sha": true,
+          "schedule": true,
+          "runs": true,
+          "unions": true
+        },
+        "paths": 11548,
+        "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+        "depth": {
+          "1": 11720,
+          "2": 3157
+        },
+        "reused_commits": 119
+      }
+    }
+  },
+  "generated": {
+    "training_device": "cpu",
+    "inference_device": "cpu",
+    "samples": 64,
+    "ablations": {
+      "local64": 1469,
+      "local256": 1469,
+      "links64": 1464,
+      "local256_wide": 1469
+    },
+    "train_gains": {
+      "1": 162,
+      "0": 49,
+      "2": 45
+    },
+    "test_gains": {
+      "1": 40,
+      "0": 12,
+      "2": 12
+    },
+    "deep_selections": 52,
+    "shallow": 1528,
+    "deep": 1464,
+    "learned": 1464
+  }
+}

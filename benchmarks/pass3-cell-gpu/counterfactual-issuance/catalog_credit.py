@@ -118,6 +118,46 @@ def main(a):
             all_paths.update((e,t) for e in eligible for t in tails.get(e[2], []))
             guarded.append(("all_literal",dict(wide,library=sorted(all_paths),
                             literal_consumers=True,reuse_returns=True),"greedy"))
+        if a.walk:
+            _, base_cfg, _ = guarded[-1]
+            for depth, reuse in ((8,False),(2,True),(4,True),(8,True),(32,True)):
+                guarded.append((f"walk{depth}_reuse{int(reuse)}",
+                                dict(base_cfg,depth=depth,pair_walk=True,reuse_let=reuse),"full"))
+        if a.set_edges:
+            typed_set = tuple(map(tuple,spec["set_publication"]["path"]))
+            set_targets = {table:{consumer for consumer,_ in consumers}
+                           for table,consumers in guarded_tables.items()}
+            for signature in targets:
+                consumer = index[signature]
+                table = recipe["rules"][consumer]["query"][0]["call"]["table"]
+                set_targets.setdefault(table,set()).add(consumer)
+            set_edges = set()
+            for rid, rule in enumerate(recipe["rules"]):
+                for op, ins in enumerate(rule["effects"]):
+                    if ins["op"] != "set":
+                        continue
+                    for target in set_targets.get(ins["call"].get("table"),()):
+                        fields = [*ins["args"],ins["value"]]
+                        patterns = recipe["rules"][target]["query"][0]["args"]
+                        if len(fields)==len(patterns) and all("slot" in p or "slot" in f or
+                                p["literal"]==f["literal"] for p,f in zip(patterns,fields)):
+                            set_edges.add((rid,op,target))
+            outgoing = {}
+            for e in eligible | set_edges:
+                outgoing.setdefault(e[0],[]).append(e)
+            combined_paths = all_paths | {(e,) for e in set_edges}
+            combined_paths.update((e,t) for e in eligible | set_edges for t in outgoing.get(e[2],())
+                                  if (e,t)!=typed_set)
+            for depth in ((2,8,32) if a.set_reader else (2,8)):
+                guarded.append((f"set{depth}",dict(base_cfg,depth=depth,pair_walk=True,reuse_let=True,
+                                set_edges=True,library=sorted(combined_paths)),"full"))
+            if a.set_reader:
+                from route_credit import continuation_edges
+                learned = json.loads(a.set_reader.read_bytes())
+                m = dict(learned,edges=continuation_edges(recipe,spec),expected_gain=True)
+                for name,cfg,mode in guarded.copy():
+                    if name in ("all_literal","set2","set8"):
+                        guarded.append((name+"_reader",dict(cfg,route_reader=m),"full"))
         if a.live:
             _, cfg, _ = guarded[-1]
             from route_credit import continuation_edges
@@ -138,6 +178,10 @@ def main(a):
                                     ("union",catalog["union"],"greedy"),("expanded",combined,"greedy"),
                                     ("wide_let_only",let_only,None),("wide",wide,"greedy"),("fixed_full",wide,"full"),
                                     *((("reuse_returns",dict(wide,reuse_returns=True),"greedy"),) if a.reuse_returns else ()), *guarded):
+                if a.walk and name not in ("leaf","all_literal","all_literal_reader") and not name.startswith(("walk","set")):
+                    continue
+                if a.set_edges and name not in ("leaf","all_literal","walk2_reuse1","set2","set8","set32","set2_reader","set8_reader","all_literal_reader"):
+                    continue
                 if a.live and name not in ("leaf","all_literal","live_one","live_both","live_first_extra","live_equal_mixed","live_recurrent","expected_gain"):
                     continue
                 if a.expected and name not in ("leaf","all_literal","live_recurrent","expected_gain"):
@@ -160,6 +204,9 @@ def main(a):
                 results[name] = dict(paid=paid, saved=saved, visible=counts["visible"], fept=counts["fept"],
                                      terminal=counts["set_internal"], checks=counts["checks"],
                                      paths=len(cfg.get("library",[])), state_sha=counts["state_sha"])
+                if a.walk and name != "leaf":
+                    from walk_credit import validate
+                    results[name].update(validate(data,cfg))
                 if "route_reader" in cfg:
                     choices, runs = data["strict_named"]["route_choices"]
                     if not sum(choices) or runs < 2:
@@ -189,8 +236,15 @@ if __name__ == "__main__":
     p.add_argument("--live",action="store_true")
     p.add_argument("--recurrent",action="store_true")
     p.add_argument("--expected",action="store_true")
+    p.add_argument("--walk",action="store_true")
+    p.add_argument("--set-edges",action="store_true")
+    p.add_argument("--set-reader",type=Path)
     args=p.parse_args()
+    args.set_edges |= bool(args.set_reader)
+    args.walk |= args.set_edges
+    if args.walk and (args.live or args.recurrent or args.expected):
+        p.error("--walk uses fixed route admission")
     args.recurrent |= args.expected
     args.live |= args.recurrent
-    args.literal |= args.live
+    args.literal |= args.live or args.walk
     main(args)

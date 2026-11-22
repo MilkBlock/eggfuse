@@ -137,3 +137,102 @@ fn register_result(cell:u32, op:usize, f:FactRef, t:usize, epoch:u64, reused:boo
     # Bits 56..58 carry the learned route; the original strict code is 32 bits.
     text=page.read_text().replace("!(1u64<<63)","!((1u64<<63)|(7u64<<56))")
     page.write_text(text.replace("(w[4]>>32) as usize","((w[4]>>32) | (((w[i]>>56)&7)<<32)) as usize"))
+    # The root licenses a bounded walk through the compiled Let edge pairs.
+    # A Set receipt has its own proof and ends its path.
+    edit(strict,"struct State {reader:", "struct State {walk:bool,reuse_let:bool,reader:")
+    edit(strict,"    if depth > 2 {",'''    let walk = spec["pair_walk"] == true;
+    if walk && (spec["library"].is_null() || spec["explore_second"]==true) {
+        return Err("pair walk requires an explicit library".into());
+    }
+    if depth > 2 && !walk {''')
+    edit(strict,"    s.reader=RouteReader::load","""    s.walk=walk;
+    s.reuse_let=spec["reuse_let"]==true;
+    s.reader=RouteReader::load""")
+    edit(strict,"p.is_empty()\n                || p.len() > depth",
+         "p.is_empty() || p.len()>2\n                || p.len() > depth")
+    edit(strict,"if internal.path.len() < s.depth {","if internal.path.len() < s.depth && internal.set_data.is_none() {")
+    edit(strict,"&& s.library.as_ref().is_some_and(|lib| !lib.contains(&path))",
+         """&& s.library.as_ref().is_some_and(|lib| {
+                        let start=if s.walk {path.len().saturating_sub(2)} else {0};
+                        !lib.contains(&path[start..])
+                    })""")
+    edit(strict,"if reused && (!a.block || a.prior.len()!=0 ||\n                !s.set_plan.as_ref().is_some_and(|p|path.as_slice()==[p.first]) ||",
+         """if reused && (!s.reuse_let && (!a.block || !a.prior.is_empty() ||
+                !s.set_plan.as_ref().is_some_and(|p|path.as_slice()==[p.first])) ||""")
+    edit(crate/"src/ripsat_set_publication.rs","|| s.depth != 2","|| s.depth < 2")
+    edit(strict,"struct State {walk:",'''struct State {set_ops:BTreeSet<(usize,usize,usize)>,
+        staged_sets:Vec<(u32,usize,FactRef,usize,u64,bool)>,walk:''')
+    edit(strict,"let crate::program::Op::Let(_, Call::Table(t), _) = ins else {\n                    continue;",
+         '''let t = match ins {
+                    crate::program::Op::Let(_, Call::Table(t), _) => t,
+                    crate::program::Op::Set(t,_,_) if spec["set_edges"]==true
+                        && g.program.tables[*t].constructor && g.program.tables[*t].virtual_fact => {
+                        s.set_ops.insert((rid,op,*t));
+                        t
+                    }
+                    _ => continue,''')
+    edit(strict,"    register_result(f.cell, f.op as usize, f, t, epoch, false);",
+         """    if !stage_set_edge(f.cell,f.op as usize,f,t,epoch,false) {
+        register_result(f.cell, f.op as usize, f, t, epoch, false);
+    }""")
+    with strict.open("a") as f:
+        f.write('''
+pub(crate) fn stage_set_edge(cell:u32,op:usize,f:FactRef,t:usize,epoch:u64,reused:bool)->bool{
+    S.with_borrow_mut(|v|{
+        let Some(s)=v else{return false};
+        let Some(a)=&s.active else{return false};
+        if s.physical!=Some(cell) || !s.set_ops.contains(&(a.rule,op,t)){return false;}
+        s.staged_sets.push((cell,op,f,t,epoch,reused));
+        true
+    })
+}
+pub(crate) fn finish_set_edges(success:bool){
+    let rows=S.with_borrow_mut(|v|v.as_mut().map(|s|std::mem::take(&mut s.staged_sets)));
+    if success && let Some(rows)=rows {
+        for (cell,op,f,t,epoch,reused) in rows {register_result(cell,op,f,t,epoch,reused);}
+    }
+}
+''')
+    # Leave the certified Set terminal to its typed receipt, including fault tests.
+    edit(strict,"            if path.len() > s.depth",'''            if s.set_plan.as_ref().is_some_and(|p|path.as_slice()==[p.first,p.second]) {
+                continue;
+            }
+            if path.len() > s.depth''')
+    edit(crate/"src/graph.rs","            if signed_set{crate::strict_named::set_existing();}",
+         """            if !old.hidden && let Dependency::Fact(f)=old.witness {
+                crate::strict_named::stage_set_edge(cell,op,f,t,old.epoch,true);
+            }
+            if signed_set{crate::strict_named::set_existing();}""")
+    edit(crate/"src/runtime.rs","        crate::strict_named::finish_set(result.is_ok())?;",
+         """        crate::strict_named::finish_set(result.is_ok())?;
+        crate::strict_named::finish_set_edges(result.is_ok());""")
+    edit(strict,"struct State {set_ops:", "struct State {root_limit:Option<[usize;3]>,set_ops:")
+    edit(strict,"    s.walk=walk;",'''    s.root_limit=spec.get("root_limit").map(|v|
+        serde_json::from_value(v.clone()).map_err(|e|e.to_string())).transpose()?;
+    if s.root_limit.is_some_and(|[rid,run,limit]|rid>=g.program.rules.len() || run==0 ||
+        limit==0 || limit>depth){return Err("invalid signed root depth".into());}
+    s.walk=walk;''')
+    edit(strict,"struct Permit {block:", "struct Permit {limit:usize,block:")
+    edit(strict,"struct Owner {returned:", "struct Owner {limit:usize,returned:")
+    edit(strict,"if internal.path.len() < s.depth", "if internal.path.len() < internal.limit")
+    edit(strict,"                    root: internal.root,", "                    limit:internal.limit,root: internal.root,")
+    edit(strict,"                root: serial,",'''                limit:s.root_limit.filter(|p|p[0]==rid && p[1]==s.run).map_or(s.depth,|p|p[2]),
+                root: serial,''')
+    edit(strict,"let owner = Owner {returned:", "let owner = Owner {limit:a.limit,returned:")
+    edit(strict,"if path.len() > s.depth","if path.len() > a.limit")
+    edit(crate/"src/ripsat_set_publication.rs","let o = Owner {returned:", "let o = Owner {limit:2,returned:")
+    edit(strict,"struct State {root_limit:","struct State {limited_roots:Vec<u64>,root_limit:")
+    edit(strict,"            s.stats.external_roots += 1;",'''            if s.root_limit.is_some_and(|p|p[0]==rid && p[1]==s.run) && s.record_links {
+                s.limited_roots.push(serial);
+            }
+            s.stats.external_roots += 1;''')
+    edit(strict,'json!({"route_fallback":','json!({"limited_roots":s.limited_roots,"route_fallback":')
+    edit(strict,"            if path.len() > a.limit",'''            // Keep the typed Set receipt reserved until RHS success. A deferred
+            // Set also leaves any already registered owner of this witness intact.
+            if s.pending_set.as_ref().is_some_and(|p|p.fact==f &&
+                s.set_plan.as_ref().is_some_and(|plan|plan.second[2]==rid)) ||
+                s.set_ops.contains(&(a.rule,op,t)) && s.ports.get(&rid)
+                    .is_some_and(|ports|ports.contains_key(&Dependency::Fact(f))) {
+                continue;
+            }
+            if path.len() > a.limit''')
