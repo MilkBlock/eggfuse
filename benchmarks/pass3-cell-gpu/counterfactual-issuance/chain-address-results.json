@@ -1,0 +1,594 @@
+{
+  "3mm": {
+    "312": {
+      "tables": [
+        "TCPair",
+        "ExtractedExpr",
+        "ContextOf"
+      ],
+      "learned": [
+        [
+          0,
+          1,
+          2,
+          1
+        ],
+        [
+          1,
+          2,
+          0,
+          0
+        ]
+      ],
+      "compiler": [
+        [
+          0,
+          1,
+          2,
+          1
+        ],
+        [
+          1,
+          2,
+          0,
+          0
+        ]
+      ],
+      "aliased": [
+        [
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          2,
+          0,
+          0
+        ]
+      ],
+      "citations": {
+        "source": 2366,
+        "fully_named": 2366,
+        "matched": 1999,
+        "proposed": 4808,
+        "extra": 2809,
+        "misses": {
+          "unseen_version": 367
+        },
+        "missing_ports": {
+          "ExtractedExpr/other_version": 241,
+          "ExtractedExpr/other_version + ContextOf/unseen": 126
+        },
+        "reads": 18819,
+        "addresses_read": 9927
+      },
+      "with_returns": {
+        "source": 2366,
+        "fully_named": 2366,
+        "matched": 1999,
+        "proposed": 4933,
+        "extra": 2934,
+        "misses": {
+          "unseen_version": 367
+        },
+        "missing_ports": {
+          "ExtractedExpr/other_version": 367
+        },
+        "reads": 19225,
+        "addresses_read": 9846
+      },
+      "latest": {
+        "source": 2366,
+        "fully_named": 2366,
+        "matched": 1999,
+        "proposed": 4912,
+        "extra": 2913,
+        "misses": {
+          "unseen_version": 367
+        },
+        "missing_ports": {
+          "ExtractedExpr/other_version": 367
+        },
+        "reads": 19224,
+        "superseded": 2708,
+        "addresses_read": 9824
+      }
+    },
+    "538": {
+      "tables": [
+        "Get",
+        "TupleT",
+        "HasType"
+      ],
+      "learned": [
+        [
+          0,
+          2,
+          0,
+          0
+        ],
+        [
+          1,
+          2,
+          1,
+          1
+        ]
+      ],
+      "compiler": [
+        [
+          0,
+          2,
+          0,
+          0
+        ],
+        [
+          1,
+          2,
+          1,
+          1
+        ]
+      ],
+      "aliased": [
+        [
+          0,
+          2,
+          0,
+          0
+        ],
+        [
+          1,
+          2,
+          0,
+          0
+        ]
+      ],
+      "citations": {
+        "source": 4667,
+        "fully_named": 4667,
+        "matched": 3071,
+        "proposed": 5645,
+        "extra": 2574,
+        "misses": {
+          "unseen_version": 1596
+        },
+        "missing_ports": {
+          "TupleT/unseen + HasType/unseen": 591,
+          "HasType/unseen": 992,
+          "Get/other_version": 13
+        },
+        "reads": 19175,
+        "addresses_read": 11539
+      },
+      "with_returns": {
+        "source": 4667,
+        "fully_named": 4667,
+        "matched": 4459,
+        "proposed": 6338,
+        "extra": 1879,
+        "misses": {
+          "unseen_version": 208
+        },
+        "missing_ports": {
+          "HasType/other_version": 67,
+          "HasType/unseen": 128,
+          "Get/other_version": 13
+        },
+        "reads": 21022,
+        "addresses_read": 13132
+      },
+      "latest": {
+        "source": 4667,
+        "fully_named": 4667,
+        "matched": 4459,
+        "proposed": 5712,
+        "extra": 1253,
+        "misses": {
+          "unseen_version": 208
+        },
+        "missing_ports": {
+          "HasType/other_version": 67,
+          "HasType/unseen": 128,
+          "Get/other_version": 13
+        },
+        "reads": 20384,
+        "addresses_read": 11856,
+        "superseded": 1958
+      }
+    }
+  },
+  "dot-product": {
+    "312": {
+      "tables": [
+        "TCPair",
+        "ExtractedExpr",
+        "ContextOf"
+      ],
+      "learned": [
+        [
+          0,
+          1,
+          2,
+          1
+        ],
+        [
+          1,
+          2,
+          0,
+          0
+        ]
+      ],
+      "compiler": [
+        [
+          0,
+          1,
+          2,
+          1
+        ],
+        [
+          1,
+          2,
+          0,
+          0
+        ]
+      ],
+      "aliased": [
+        [
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          2,
+          0,
+          0
+        ]
+      ],
+      "citations": {
+        "source": 116,
+        "fully_named": 116,
+        "matched": 94,
+        "proposed": 238,
+        "extra": 144,
+        "misses": {
+          "unseen_version": 22
+        },
+        "missing_ports": {
+          "ExtractedExpr/other_version": 22
+        },
+        "reads": 854,
+        "addresses_read": 487
+      },
+      "with_returns": {
+        "source": 116,
+        "fully_named": 116,
+        "matched": 94,
+        "proposed": 238,
+        "extra": 144,
+        "misses": {
+          "unseen_version": 22
+        },
+        "missing_ports": {
+          "ExtractedExpr/other_version": 22
+        },
+        "reads": 854,
+        "addresses_read": 475
+      },
+      "latest": {
+        "source": 116,
+        "fully_named": 116,
+        "matched": 94,
+        "proposed": 236,
+        "extra": 142,
+        "misses": {
+          "unseen_version": 22
+        },
+        "missing_ports": {
+          "ExtractedExpr/other_version": 22
+        },
+        "reads": 853,
+        "addresses_read": 472,
+        "superseded": 131
+      }
+    },
+    "538": {
+      "tables": [
+        "Get",
+        "TupleT",
+        "HasType"
+      ],
+      "learned": [
+        [
+          0,
+          2,
+          0,
+          0
+        ],
+        [
+          1,
+          2,
+          1,
+          1
+        ]
+      ],
+      "compiler": [
+        [
+          0,
+          2,
+          0,
+          0
+        ],
+        [
+          1,
+          2,
+          1,
+          1
+        ]
+      ],
+      "aliased": [
+        [
+          0,
+          2,
+          0,
+          0
+        ],
+        [
+          1,
+          2,
+          0,
+          0
+        ]
+      ],
+      "citations": {
+        "source": 125,
+        "fully_named": 125,
+        "matched": 71,
+        "proposed": 150,
+        "extra": 79,
+        "misses": {
+          "unseen_version": 54
+        },
+        "missing_ports": {
+          "TupleT/unseen + HasType/unseen": 21,
+          "Get/unseen + TupleT/unseen + HasType/unseen": 6,
+          "HasType/unseen": 27
+        },
+        "reads": 511,
+        "addresses_read": 310
+      },
+      "with_returns": {
+        "source": 125,
+        "fully_named": 125,
+        "matched": 121,
+        "proposed": 175,
+        "extra": 54,
+        "misses": {
+          "unseen_version": 4
+        },
+        "missing_ports": {
+          "HasType/other_version": 4
+        },
+        "reads": 575,
+        "addresses_read": 360
+      },
+      "latest": {
+        "source": 125,
+        "fully_named": 125,
+        "matched": 121,
+        "proposed": 157,
+        "extra": 36,
+        "misses": {
+          "unseen_version": 4
+        },
+        "missing_ports": {
+          "HasType/other_version": 4
+        },
+        "reads": 557,
+        "addresses_read": 324,
+        "superseded": 45
+      }
+    }
+  },
+  "sum-bits": {
+    "312": {
+      "tables": [
+        "TCPair",
+        "ExtractedExpr",
+        "ContextOf"
+      ],
+      "learned": [
+        [
+          0,
+          1,
+          2,
+          1
+        ],
+        [
+          1,
+          2,
+          0,
+          0
+        ]
+      ],
+      "compiler": [
+        [
+          0,
+          1,
+          2,
+          1
+        ],
+        [
+          1,
+          2,
+          0,
+          0
+        ]
+      ],
+      "aliased": [
+        [
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          2,
+          0,
+          0
+        ]
+      ],
+      "citations": {
+        "source": 101,
+        "fully_named": 101,
+        "matched": 99,
+        "proposed": 229,
+        "extra": 130,
+        "misses": {
+          "unseen_version": 2
+        },
+        "missing_ports": {
+          "ExtractedExpr/other_version + ContextOf/unseen": 1,
+          "ExtractedExpr/other_version": 1
+        },
+        "reads": 842,
+        "addresses_read": 511
+      },
+      "with_returns": {
+        "source": 101,
+        "fully_named": 101,
+        "matched": 99,
+        "proposed": 230,
+        "extra": 131,
+        "misses": {
+          "unseen_version": 2
+        },
+        "missing_ports": {
+          "ExtractedExpr/other_version": 2
+        },
+        "reads": 866,
+        "addresses_read": 512
+      },
+      "latest": {
+        "source": 101,
+        "fully_named": 101,
+        "matched": 99,
+        "proposed": 200,
+        "extra": 101,
+        "misses": {
+          "unseen_version": 2
+        },
+        "missing_ports": {
+          "ExtractedExpr/other_version": 2
+        },
+        "reads": 837,
+        "addresses_read": 453,
+        "superseded": 129
+      }
+    },
+    "538": {
+      "tables": [
+        "Get",
+        "TupleT",
+        "HasType"
+      ],
+      "learned": [
+        [
+          0,
+          2,
+          0,
+          0
+        ],
+        [
+          1,
+          2,
+          1,
+          1
+        ]
+      ],
+      "compiler": [
+        [
+          0,
+          2,
+          0,
+          0
+        ],
+        [
+          1,
+          2,
+          1,
+          1
+        ]
+      ],
+      "aliased": [
+        [
+          0,
+          2,
+          0,
+          0
+        ],
+        [
+          1,
+          2,
+          0,
+          0
+        ]
+      ],
+      "citations": {
+        "source": 148,
+        "fully_named": 148,
+        "matched": 68,
+        "proposed": 183,
+        "extra": 115,
+        "misses": {
+          "unseen_version": 80
+        },
+        "missing_ports": {
+          "TupleT/unseen + HasType/unseen": 14,
+          "HasType/unseen": 64,
+          "Get/unseen + HasType/unseen": 2
+        },
+        "reads": 603,
+        "addresses_read": 374
+      },
+      "with_returns": {
+        "source": 148,
+        "fully_named": 148,
+        "matched": 138,
+        "proposed": 306,
+        "extra": 168,
+        "misses": {
+          "unseen_version": 10
+        },
+        "missing_ports": {
+          "HasType/other_version": 3,
+          "Get/other_version": 2,
+          "HasType/unseen": 5
+        },
+        "reads": 724,
+        "addresses_read": 558
+      },
+      "latest": {
+        "source": 148,
+        "fully_named": 148,
+        "matched": 138,
+        "proposed": 185,
+        "extra": 47,
+        "misses": {
+          "unseen_version": 10
+        },
+        "missing_ports": {
+          "HasType/other_version": 3,
+          "Get/other_version": 2,
+          "HasType/unseen": 5
+        },
+        "reads": 660,
+        "addresses_read": 373,
+        "superseded": 101
+      }
+    }
+  }
+}
