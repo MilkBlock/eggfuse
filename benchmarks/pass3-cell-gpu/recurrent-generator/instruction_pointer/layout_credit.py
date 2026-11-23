@@ -1,6 +1,6 @@
 """Collect the realized work of model-issued graphs from their sealed native receipts."""
 import argparse
-from collections import Counter
+from collections import Counter, defaultdict
 import gzip
 import json
 from pathlib import Path
@@ -179,9 +179,10 @@ def rollout(root,donor,binary,weights,baked,out,name,seed,omit,explore,policy=No
             if req['run']!=frame['run']-1 or req['token'] in seen:
                 raise ValueError('invalid sealed commit receipt')
             seen.add(req['token'])
-            committed[req['run']]+=1
+            key=req['run'],req['rule']
+            committed[key]+=1
             if req['token']<RESIDUAL:
-                accepted[req['run']]+=1
+                accepted[key]+=1
     with TemporaryDirectory() as tmp:
         spec=Path(tmp)/'layouts.json'
         spec.write_text(json.dumps(issuer.receiver_layouts(),separators=(',',':')))
@@ -239,16 +240,23 @@ def rollout(root,donor,binary,weights,baked,out,name,seed,omit,explore,policy=No
         if not issuer.counts['routed_reads']:
             raise ValueError('loaded field reader never ran')
         report['field_reader']=field_reader.checkpoint
+    if prefix is not None and prefix.read_order!='source':
+        report['read_order']=prefix.read_order
     ordinary=ref.get('residual_candidates')
     live=result['residual_candidates']
     if ordinary is not None and live is not None:
         report['candidate_work']=dict(reference=ordinary,assist=live,avoided=ordinary-live,
                                       fraction_saved=(ordinary-live)/ordinary if ordinary else None)
     if run_recall:
-        reference=Counter(req['run'] for req in read(folder/'tape.json')['requests'])
+        reference=Counter((req['run'],req['rule']) for req in read(folder/'tape.json')['requests'])
         if reference!=committed or sum(accepted.values())!=result['counts']['accepted']:
             raise ValueError('per-Run commit attribution differs from reference')
-        report['recall_by_nonempty_run']=[(r,accepted[r],reference[r]) for r in sorted(reference)]
+        report['recall_by_rule_run']=[(r,rid,accepted[r,rid],n) for (r,rid),n in sorted(reference.items())]
+        by_run=defaultdict(Counter)
+        for (r,rid),n in reference.items():
+            by_run[r]['signed']+=accepted[r,rid]
+            by_run[r]['required']+=n
+        report['recall_by_nonempty_run']=[(r,v['signed'],v['required']) for r,v in sorted(by_run.items())]
     (out/(stem+'.json')).write_text(json.dumps(report,indent=2)+'\n')
 
 
@@ -263,6 +271,7 @@ if __name__=='__main__':
     p.add_argument('--field-reader',type=Path)
     p.add_argument('--training-bake',type=Path)
     p.add_argument('--recovery',type=Path)
+    p.add_argument('--read-order',choices=('source','connected'))
     p.add_argument('--margin-only',action='store_true')
     p.add_argument('--run-recall',action='store_true')
     p.add_argument('--exclusive',action='store_true')
@@ -278,9 +287,11 @@ if __name__=='__main__':
     prefix=None
     if args.recovery:
         from prefix_recovery import Recovery
-        prefix=Policy(32,recovery=Recovery(args.recovery,args.weights,margin_only=args.margin_only))
+        prefix=Policy(32,recovery=Recovery(args.recovery,args.weights,margin_only=args.margin_only),read_order=args.read_order)
     elif args.margin_only:
         p.error('--margin-only requires a recovery head')
+    elif args.read_order:
+        prefix=Policy(32,read_order=args.read_order)
     if args.policy:
         if args.explore: raise ValueError('frozen deployment requires a separate exploration arm')
         policy=load_policy(args.policy,args.baked,args.training_bake)

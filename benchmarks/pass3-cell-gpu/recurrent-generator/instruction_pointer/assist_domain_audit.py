@@ -51,6 +51,7 @@ def audit(folder, binary, packets, audit_mode):
             or counts['accepted']+report['assist']['residual_commits'] != reference['matches']):
         raise ValueError('receipt ledger differs')
     return dict(frames=frames,context=context.hexdigest(),state_sha=report['state_sha'],issued=len(packets),
+                residual_candidates=report.get('residual_candidates'),
                 counts=counts,commits=reference['matches'],assist=report['assist'],native_seconds=report['seconds'],
                 verify_seconds=report['verify_seconds'],repair_seconds=report['repair_phase_seconds'])
 

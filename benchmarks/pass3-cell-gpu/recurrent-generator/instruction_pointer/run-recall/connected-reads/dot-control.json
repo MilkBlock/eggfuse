@@ -1,0 +1,49 @@
+{
+  "mode": "teacher control",
+  "binary": "9baee8273937950f151f9f640ff325254ad4a4556fd994db7a6a26665472499d",
+  "program": "c0d1da51c3aca3e61c945b39dc7da9e3ed135d77c57330ffd34dbbed8adc1159",
+  "tape": "7f8cd9a9904f160448d8639f61b3486b47bf3a83a736d815dea884572e13df97",
+  "required": 6704,
+  "nonempty_rule_runs": 1396,
+  "exact_candidates": 8022,
+  "exclusive_teacher_candidates": 0,
+  "assist": {
+    "frames": 1535,
+    "context": "63a79722165cd29dbf26603904a60ab4044c37eec6ed1abea7cc89f8be722fb3",
+    "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+    "issued": 6704,
+    "residual_candidates": 7988,
+    "counts": {
+      "accepted": 6704,
+      "calls": 6099,
+      "duplicates": 0,
+      "reads": 15577,
+      "reads_by_kind": {
+        "generated": 15446,
+        "initial": 113,
+        "repair": 18
+      },
+      "rejected": {}
+    },
+    "commits": 6704,
+    "assist": {
+      "certified_bindings": 1339,
+      "delta_domain_skips": 147,
+      "delta_members_checked": 2302,
+      "duplicate_reads": 0,
+      "duplicate_seconds": 0.0,
+      "exact_candidates": 7988,
+      "exact_rows": 5365,
+      "exact_rule_calls": 5905,
+      "exact_seconds": 0.019281204999999888,
+      "point_domain_skips": 14,
+      "rejected_reads": 0,
+      "rejected_seconds": 0.0,
+      "residual_commits": 0,
+      "skipped_rule_calls": 194
+    },
+    "native_seconds": 4.406845792,
+    "verify_seconds": 0.006773622,
+    "repair_seconds": 0.0031492619999999895
+  }
+}

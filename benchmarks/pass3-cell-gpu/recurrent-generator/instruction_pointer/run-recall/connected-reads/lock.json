@@ -1,0 +1,165 @@
+{
+  "protocol": "72e29399c952b84d31a1cd1a8f64d2d74199288a5507bbbea4a4e02211c4fa90",
+  "selected": "source",
+  "eligible": [
+    "source"
+  ],
+  "programs": {
+    "source": {
+      "affine-twins": {
+        "checkpoint": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+        "signed": 3345,
+        "reference": 4215,
+        "paid": 11291,
+        "duplicates": 7570,
+        "missed": 870,
+        "complete": 731,
+        "total": 1004,
+        "complete_runs": 189,
+        "changed_positions": 0,
+        "common": 14,
+        "final_equal": false,
+        "held_issued": 427,
+        "held_complete": 2,
+        "candidate_work": {
+          "reference": 5370,
+          "assist": 5355,
+          "avoided": 15,
+          "fraction_saved": 0.002793296089385475
+        },
+        "signed_ops": 2355,
+        "assist_sha": "7595166894c6d79e4cd6d50511ede21c00e0b2c53233aec14bda4ad2a184cc02",
+        "exclusive_sha": "85d62e743a474c0e78fccac87bd0eb116926627ce331ea4e6bbe68159bc37cdd"
+      },
+      "gated-state": {
+        "checkpoint": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+        "signed": 4490,
+        "reference": 6118,
+        "paid": 14098,
+        "duplicates": 9214,
+        "missed": 1628,
+        "complete": 704,
+        "total": 1066,
+        "complete_runs": 205,
+        "changed_positions": 0,
+        "common": 10,
+        "final_equal": false,
+        "held_issued": 564,
+        "held_complete": 3,
+        "candidate_work": {
+          "reference": 7689,
+          "assist": 7678,
+          "avoided": 11,
+          "fraction_saved": 0.001430615164520744
+        },
+        "signed_ops": 3023,
+        "assist_sha": "2a48bb73c1665484780722cead17a63338d924008c133822baa33cd5817441b8",
+        "exclusive_sha": "54fc8b71a306d2a93d75749a79ee16f3036792e4cbced74b2099adde02963506"
+      }
+    },
+    "connected": {
+      "affine-twins": {
+        "checkpoint": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+        "signed": 3416,
+        "reference": 4215,
+        "paid": 12265,
+        "duplicates": 8189,
+        "missed": 799,
+        "complete": 742,
+        "total": 1004,
+        "complete_runs": 196,
+        "changed_positions": 1727,
+        "common": 14,
+        "final_equal": false,
+        "held_issued": 526,
+        "held_complete": 4,
+        "candidate_work": {
+          "reference": 5370,
+          "assist": 5355,
+          "avoided": 15,
+          "fraction_saved": 0.002793296089385475
+        },
+        "signed_ops": 2564,
+        "assist_sha": "a3b6993cce29aa1cbd1bed059b295363f3bd73ba70c061740aaec5c44d6740fd",
+        "exclusive_sha": "f0e3e3442a026d7889b185d482b07a718ab192cb47b7de382d5df1b9c8afd3b5"
+      },
+      "gated-state": {
+        "checkpoint": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+        "signed": 4523,
+        "reference": 6118,
+        "paid": 15035,
+        "duplicates": 9843,
+        "missed": 1595,
+        "complete": 716,
+        "total": 1066,
+        "complete_runs": 213,
+        "changed_positions": 1817,
+        "common": 10,
+        "final_equal": false,
+        "held_issued": 685,
+        "held_complete": 5,
+        "candidate_work": {
+          "reference": 7689,
+          "assist": 7678,
+          "avoided": 11,
+          "fraction_saved": 0.001430615164520744
+        },
+        "signed_ops": 3207,
+        "assist_sha": "2105a28a14648e435fcd6bbe5396932bc3c77c0952ca297c9e29cac2976accce",
+        "exclusive_sha": "929f95068dfe3df55790549c4ffc1d5e09c9e99f1573055b0d5f9aef6adb4649"
+      }
+    },
+    "refit": {
+      "affine-twins": {
+        "checkpoint": "7b07a50fb2170992c619ecea7ce83e9f11b1c634304c85814f39aa7767103a95",
+        "signed": 3372,
+        "reference": 4215,
+        "paid": 11911,
+        "duplicates": 7843,
+        "missed": 843,
+        "complete": 744,
+        "total": 1004,
+        "complete_runs": 193,
+        "changed_positions": 1648,
+        "common": 14,
+        "final_equal": false,
+        "held_issued": 460,
+        "held_complete": 1,
+        "candidate_work": {
+          "reference": 5370,
+          "assist": 5360,
+          "avoided": 10,
+          "fraction_saved": 0.00186219739292365
+        },
+        "signed_ops": 2531,
+        "assist_sha": "1d1cddfee822a5c590871f1e1e42afdabedeb31fe17d31d19369b62170cb4008",
+        "exclusive_sha": "7c40088667cdb28cdbd185fb0fd755de2526a3580b5022cc901ce509e64a2038"
+      },
+      "gated-state": {
+        "checkpoint": "7b07a50fb2170992c619ecea7ce83e9f11b1c634304c85814f39aa7767103a95",
+        "signed": 4503,
+        "reference": 6118,
+        "paid": 14836,
+        "duplicates": 9634,
+        "missed": 1615,
+        "complete": 712,
+        "total": 1066,
+        "complete_runs": 206,
+        "changed_positions": 1744,
+        "common": 10,
+        "final_equal": false,
+        "held_issued": 567,
+        "held_complete": 3,
+        "candidate_work": {
+          "reference": 7689,
+          "assist": 7678,
+          "avoided": 11,
+          "fraction_saved": 0.001430615164520744
+        },
+        "signed_ops": 3186,
+        "assist_sha": "a2c0714bb50750280bd1f0d0ff9ac8290cf93274e04acb89fe80a1a42e5dba38",
+        "exclusive_sha": "f715d35ee805eaa50df1d63d6ea714efc34b525cbabc175cd16f5cb48d581d87"
+      }
+    }
+  }
+}

@@ -265,10 +265,12 @@ def evaluate(root,donor,binary,weights,baked,name,out,control,native,exclusive=F
                 break
             common+=1
         field_audit={}
+        if prefix is not None and prefix.recovery is not None:
+            field_audit.update(read_order=prefix.read_order,recovery=prefix.recovery.checkpoint)
         if getattr(issuer,'field_reader',None) is not None:
             if not issuer.counts['routed_reads']:
                 raise ValueError('loaded field reader never ran on exclusive prefix')
-            field_audit=dict(field_reader=issuer.field_reader.checkpoint,issuer=issuer.report())
+            field_audit.update(field_reader=issuer.field_reader.checkpoint,issuer=issuer.report())
         out.write_text(json.dumps(dict(case=name,mode='exclusive',binary=digest(binary),actor=digest(weights),
             catalog=digest(baked/'catalog.json'),common_runs=common,reference_runs=ref['runs'],
             final_equal=failure is None and run['state_sha']==ref['state_sha'],failure=failure,

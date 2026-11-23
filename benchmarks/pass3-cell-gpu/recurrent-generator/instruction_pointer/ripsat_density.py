@@ -68,7 +68,7 @@ def compare(folder,donor,binary,weights,baked,audits,seed,learned=None,base_bake
                 recovery=Recovery(recovery_dir,weights,margin_only=settings['margin_only'])
                 if (recovery.checkpoint,recovery.cut,recovery.budget)!=(settings['checkpoint'],settings['cut'],settings['budget']):
                     raise ValueError('recovery head differs from audited execution')
-                prefix=Policy(32,recovery=recovery)
+                prefix=Policy(32,recovery=recovery,read_order=records[arm].get('read_order','source'))
             with TemporaryDirectory() as tmp:
                 layout_file=None
                 if issuer:
