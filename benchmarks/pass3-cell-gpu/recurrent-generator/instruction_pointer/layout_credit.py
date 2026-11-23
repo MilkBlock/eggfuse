@@ -239,6 +239,11 @@ def rollout(root,donor,binary,weights,baked,out,name,seed,omit,explore,policy=No
         if not issuer.counts['routed_reads']:
             raise ValueError('loaded field reader never ran')
         report['field_reader']=field_reader.checkpoint
+    ordinary=ref.get('residual_candidates')
+    live=result['residual_candidates']
+    if ordinary is not None and live is not None:
+        report['candidate_work']=dict(reference=ordinary,assist=live,avoided=ordinary-live,
+                                      fraction_saved=(ordinary-live)/ordinary if ordinary else None)
     if run_recall:
         reference=Counter(req['run'] for req in read(folder/'tape.json')['requests'])
         if reference!=committed or sum(accepted.values())!=result['counts']['accepted']:
