@@ -1,0 +1,9 @@
+{
+  "train": ["sum","dot"],
+  "validation": ["affine-twins","gated-state"],
+  "training_rule_holdout": "first 32 hash bits modulo 8 equal zero",
+  "frontier": 64, "issued_per_anchor": 32, "first_batch": 16,
+  "controls": ["one ranked batch", "learned second batch without first-parent features", "learned second batch with first-parent features"],
+  "seed": 1703, "epochs": 40,
+  "gate": "Consider a locked test only if the contextual arm increases total validation signed commits over both controls, keeps or lowers paid per signed commit, and preserves the source prefix on each program relative to the deployed width-32 policy."
+}

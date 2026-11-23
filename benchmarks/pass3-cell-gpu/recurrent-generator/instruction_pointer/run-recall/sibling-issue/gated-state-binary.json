@@ -1,0 +1,52 @@
+{
+  "mode": "binary root shadow on sealed teacher Runs",
+  "binary": "9baee8273937950f151f9f640ff325254ad4a4556fd994db7a6a26665472499d",
+  "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+  "recovery": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+  "tape": "fa37f28bbfeb5f669357796c07c9dda663c28cefbb44aa5789ce0d3de43cd65d",
+  "memory": "71428813cc7aae9c719150c9e52c76369eef1a013ba6e232bd02af01488a257a",
+  "seed": 3434,
+  "source_runs": 1163,
+  "required": 3776,
+  "all_commits": 6118,
+  "work": {
+    "legal_pairs": 6331040,
+    "pairs_after_prefix": 4917408,
+    "groups": 1667,
+    "no_matched_slots": 25
+  },
+  "arms": {
+    "retained_anchors": {
+      "distinct": 3039,
+      "duplicates": 8389,
+      "counts": {
+        "paid": 45470,
+        "binding": 33110,
+        "valid_proofs": 11428,
+        "guard": 932
+      }
+    },
+    "all_anchors_matched": {
+      "distinct": 3177,
+      "duplicates": 8760,
+      "counts": {
+        "paid": 45470,
+        "binding": 32551,
+        "valid_proofs": 11937,
+        "guard": 982
+      }
+    },
+    "all_anchors_full": {
+      "distinct": 3178,
+      "duplicates": 8765,
+      "counts": {
+        "paid": 45954,
+        "binding": 32997,
+        "valid_proofs": 11943,
+        "guard": 1014
+      }
+    }
+  },
+  "only_retained": 28,
+  "only_joint": 166
+}

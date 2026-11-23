@@ -1,0 +1,63 @@
+{
+  "mode": "contested root pools on teacher snapshots",
+  "corpus": {
+    "case": "affine-twins",
+    "split": "validation",
+    "program": "93b519c9b2220e6ff479fc01733043a080717e301404c660b4824b35fb55d69c",
+    "tape": "404b4c6fed6e424f98ff67432912aa263896a495f3ce3beae1eb556c1571780e",
+    "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+    "recovery": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+    "binary": "9baee8273937950f151f9f640ff325254ad4a4556fd994db7a6a26665472499d",
+    "data": "6e76db97dbcdb7bf5c816f075a4ee346c105885923be751b044fde2c248e21f3",
+    "requests": 6592,
+    "groups": 122,
+    "runs": 1058,
+    "cap": 32,
+    "frontier": 64
+  },
+  "results": {
+    "plain": {
+      "counts": {
+        "first_paid": 1829,
+        "second_paid": 1991
+      },
+      "first": 673,
+      "second_new": 169,
+      "distinct": 842,
+      "reachable": 906
+    },
+    "blind": {
+      "counts": {
+        "boundary_ties": 30,
+        "first_paid": 1829,
+        "second_paid": 1991
+      },
+      "first": 673,
+      "second_new": 173,
+      "distinct": 846,
+      "reachable": 906
+    },
+    "context": {
+      "counts": {
+        "boundary_ties": 14,
+        "first_paid": 1829,
+        "second_paid": 1991
+      },
+      "first": 673,
+      "second_new": 190,
+      "distinct": 863,
+      "reachable": 906
+    },
+    "masked": {
+      "counts": {
+        "boundary_ties": 29,
+        "first_paid": 1829,
+        "second_paid": 1991
+      },
+      "first": 673,
+      "second_new": 172,
+      "distinct": 845,
+      "reachable": 906
+    }
+  }
+}
