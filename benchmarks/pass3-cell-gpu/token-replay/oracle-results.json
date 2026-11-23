@@ -1,0 +1,572 @@
+{
+  "local": {
+    "mode": "exclusive",
+    "provider": "offline_teacher",
+    "build_sha256": "9ecafc3913e9f53acfcd918aa448081519c22b27e267e8b2b639646adcb0b354",
+    "weights_sha256": null,
+    "program_sha256": "f66f1aed117a6daa934ca8cb013d71de921e58aca55b932099de23f0b763061a",
+    "tape_sha256": "a980b758707cab3b3e3d9d93e0a03b546b90a65d680626c4be82e09128b289f0",
+    "run_limit": null,
+    "source_runs_observed": 2,
+    "neural_waves": 0,
+    "reference_commits": 5,
+    "accepted_unique": 5,
+    "coverage": 1,
+    "model_wins": 0,
+    "duplicates": 0,
+    "rejected_by_reason": {},
+    "unused": 0,
+    "state_sha": "f78390694ec0351a8f8516b011cdc280eb85afe8c461e8ba58187887f32d2a6a",
+    "runtime_issued_events": 0,
+    "runtime_exported_results": 0,
+    "runtime_event_proposals_charged_to_model": 0,
+    "parent_refs_by_kind": {
+      "initial": {
+        "correct_teacher_reads": 2,
+        "required": 2
+      },
+      "generated": {
+        "correct_teacher_reads": 3,
+        "required": 3
+      },
+      "repair": {
+        "correct_teacher_reads": 0,
+        "required": 0
+      }
+    },
+    "resume_events": 3,
+    "receiver": {
+      "loaded": true,
+      "invocations": 3,
+      "accepted": 5,
+      "rejected": 0,
+      "named_reads": 5
+    },
+    "network": {
+      "loaded": false,
+      "invocations": 0,
+      "accepted": 0,
+      "rejected": 0
+    },
+    "remaining_independent_search": 0,
+    "timing_ms": {
+      "reference": 0.158438,
+      "replay": 0.140042,
+      "verification_ms": 0.00725,
+      "event_registration_ms": 0.0,
+      "native_repair_phase_ms": 0.001834,
+      "remaining_native_ms": 0.132792
+    },
+    "network_ms": 0,
+    "pairs": [
+      {
+        "order": [
+          "reference",
+          "replay"
+        ],
+        "reference": 0.207708,
+        "replay": 0.15875,
+        "native_repair_phase_ms": 0.0018759999999999998,
+        "event_registration_ms": 0.0,
+        "verification_ms": 0.009625,
+        "remaining_native_ms": 0.149125,
+        "oracle_faster": true
+      },
+      {
+        "order": [
+          "replay",
+          "reference"
+        ],
+        "replay": 0.1295,
+        "native_repair_phase_ms": 0.001792,
+        "event_registration_ms": 0.0,
+        "verification_ms": 0.006917,
+        "remaining_native_ms": 0.122583,
+        "reference": 0.146917,
+        "oracle_faster": true
+      },
+      {
+        "order": [
+          "reference",
+          "replay"
+        ],
+        "reference": 0.169959,
+        "replay": 0.150584,
+        "native_repair_phase_ms": 0.0019990000000000003,
+        "event_registration_ms": 0.0,
+        "verification_ms": 0.007583,
+        "remaining_native_ms": 0.143001,
+        "oracle_faster": true
+      },
+      {
+        "order": [
+          "replay",
+          "reference"
+        ],
+        "replay": 0.117167,
+        "native_repair_phase_ms": 0.001792,
+        "event_registration_ms": 0.0,
+        "verification_ms": 0.006709,
+        "remaining_native_ms": 0.110458,
+        "reference": 0.14091700000000001,
+        "oracle_faster": true
+      }
+    ]
+  },
+  "join": {
+    "mode": "exclusive",
+    "provider": "offline_teacher",
+    "build_sha256": "9ecafc3913e9f53acfcd918aa448081519c22b27e267e8b2b639646adcb0b354",
+    "weights_sha256": null,
+    "program_sha256": "18d93a38c346eba99413b15863c42c2e99ec49f9e24993c652385bfbe9b1b70d",
+    "tape_sha256": "0dbc72def3bb08e061429ade17756b7ad336f26ef1aac69ce9eab88623f09679",
+    "run_limit": null,
+    "source_runs_observed": 1,
+    "neural_waves": 0,
+    "reference_commits": 1,
+    "accepted_unique": 1,
+    "coverage": 1,
+    "model_wins": 0,
+    "duplicates": 0,
+    "rejected_by_reason": {},
+    "unused": 0,
+    "state_sha": "3b2bea07f340fa8a406ac442b7e51557295016a69840a75ed5b057cee2a775d3",
+    "runtime_issued_events": 0,
+    "runtime_exported_results": 0,
+    "runtime_event_proposals_charged_to_model": 0,
+    "parent_refs_by_kind": {
+      "initial": {
+        "correct_teacher_reads": 2,
+        "required": 2
+      },
+      "generated": {
+        "correct_teacher_reads": 0,
+        "required": 0
+      },
+      "repair": {
+        "correct_teacher_reads": 0,
+        "required": 0
+      }
+    },
+    "resume_events": 0,
+    "receiver": {
+      "loaded": true,
+      "invocations": 1,
+      "accepted": 1,
+      "rejected": 0,
+      "named_reads": 2
+    },
+    "network": {
+      "loaded": false,
+      "invocations": 0,
+      "accepted": 0,
+      "rejected": 0
+    },
+    "remaining_independent_search": 0,
+    "timing_ms": {
+      "reference": 0.0756665,
+      "replay": 0.0676875,
+      "verification_ms": 0.002396,
+      "event_registration_ms": 0.0,
+      "native_repair_phase_ms": 0.000875,
+      "remaining_native_ms": 0.06554099999999999
+    },
+    "network_ms": 0,
+    "pairs": [
+      {
+        "order": [
+          "reference",
+          "replay"
+        ],
+        "reference": 0.081209,
+        "replay": 0.068792,
+        "native_repair_phase_ms": 0.001,
+        "event_registration_ms": 0.0,
+        "verification_ms": 0.002334,
+        "remaining_native_ms": 0.066458,
+        "oracle_faster": true
+      },
+      {
+        "order": [
+          "replay",
+          "reference"
+        ],
+        "replay": 0.06658299999999999,
+        "native_repair_phase_ms": 0.000875,
+        "event_registration_ms": 0.0,
+        "verification_ms": 0.001959,
+        "remaining_native_ms": 0.06462399999999999,
+        "reference": 0.07133300000000001,
+        "oracle_faster": true
+      },
+      {
+        "order": [
+          "reference",
+          "replay"
+        ],
+        "reference": 0.06870799999999999,
+        "replay": 0.063,
+        "native_repair_phase_ms": 0.000875,
+        "event_registration_ms": 0.0,
+        "verification_ms": 0.0025,
+        "remaining_native_ms": 0.0605,
+        "oracle_faster": true
+      },
+      {
+        "order": [
+          "replay",
+          "reference"
+        ],
+        "replay": 0.08075,
+        "native_repair_phase_ms": 0.000875,
+        "event_registration_ms": 0.0,
+        "verification_ms": 0.002458,
+        "remaining_native_ms": 0.078292,
+        "reference": 0.08,
+        "oracle_faster": false
+      }
+    ]
+  },
+  "recursive": {
+    "mode": "exclusive",
+    "provider": "offline_teacher",
+    "build_sha256": "9ecafc3913e9f53acfcd918aa448081519c22b27e267e8b2b639646adcb0b354",
+    "weights_sha256": null,
+    "program_sha256": "0f687c827bc8366f3a1406c27998380b99b36134d516604db02e39816bdbb5d3",
+    "tape_sha256": "b4942557b348ad02e929c74c835f4745af6d38164070d2dec761b41c61fec9ad",
+    "run_limit": null,
+    "source_runs_observed": 3,
+    "neural_waves": 0,
+    "reference_commits": 5,
+    "accepted_unique": 5,
+    "coverage": 1,
+    "model_wins": 0,
+    "duplicates": 0,
+    "rejected_by_reason": {},
+    "unused": 0,
+    "state_sha": "aa53d8cbcf0d1e2e2b93b40d445b7d32bbdd9b22bae7e58f997e310337416c4a",
+    "runtime_issued_events": 0,
+    "runtime_exported_results": 0,
+    "runtime_event_proposals_charged_to_model": 0,
+    "parent_refs_by_kind": {
+      "initial": {
+        "correct_teacher_reads": 3,
+        "required": 3
+      },
+      "generated": {
+        "correct_teacher_reads": 3,
+        "required": 3
+      },
+      "repair": {
+        "correct_teacher_reads": 0,
+        "required": 0
+      }
+    },
+    "resume_events": 2,
+    "receiver": {
+      "loaded": true,
+      "invocations": 4,
+      "accepted": 5,
+      "rejected": 0,
+      "named_reads": 6
+    },
+    "network": {
+      "loaded": false,
+      "invocations": 0,
+      "accepted": 0,
+      "rejected": 0
+    },
+    "remaining_independent_search": 0,
+    "timing_ms": {
+      "reference": 0.096396,
+      "replay": 0.092979,
+      "verification_ms": 0.0040425,
+      "event_registration_ms": 0.0,
+      "native_repair_phase_ms": 0.001355,
+      "remaining_native_ms": 0.0891245
+    },
+    "network_ms": 0,
+    "pairs": [
+      {
+        "order": [
+          "reference",
+          "replay"
+        ],
+        "reference": 0.096542,
+        "replay": 0.096209,
+        "native_repair_phase_ms": 0.001499,
+        "event_registration_ms": 0.0,
+        "verification_ms": 0.003834,
+        "remaining_native_ms": 0.092375,
+        "oracle_faster": true
+      },
+      {
+        "order": [
+          "replay",
+          "reference"
+        ],
+        "replay": 0.086583,
+        "native_repair_phase_ms": 0.001333,
+        "event_registration_ms": 0.0,
+        "verification_ms": 0.004916,
+        "remaining_native_ms": 0.08166699999999999,
+        "reference": 0.08875,
+        "oracle_faster": true
+      },
+      {
+        "order": [
+          "reference",
+          "replay"
+        ],
+        "reference": 0.10875,
+        "replay": 0.09325,
+        "native_repair_phase_ms": 0.0013340000000000001,
+        "event_registration_ms": 0.0,
+        "verification_ms": 0.004251,
+        "remaining_native_ms": 0.088999,
+        "oracle_faster": true
+      },
+      {
+        "order": [
+          "replay",
+          "reference"
+        ],
+        "replay": 0.092708,
+        "native_repair_phase_ms": 0.001376,
+        "event_registration_ms": 0.0,
+        "verification_ms": 0.003458,
+        "remaining_native_ms": 0.08925,
+        "reference": 0.09624999999999999,
+        "oracle_faster": true
+      }
+    ]
+  },
+  "sum": {
+    "mode": "exclusive",
+    "provider": "offline_teacher",
+    "build_sha256": "9ecafc3913e9f53acfcd918aa448081519c22b27e267e8b2b639646adcb0b354",
+    "weights_sha256": null,
+    "program_sha256": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+    "tape_sha256": "2b09a7fb06df2a9a4801d295f714b340c1d00a827213bb71cd864f0a8514defd",
+    "run_limit": null,
+    "source_runs_observed": 1428,
+    "neural_waves": 0,
+    "reference_commits": 7265,
+    "accepted_unique": 7265,
+    "coverage": 1,
+    "model_wins": 0,
+    "duplicates": 0,
+    "rejected_by_reason": {},
+    "unused": 0,
+    "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "runtime_issued_events": 1,
+    "runtime_exported_results": 1,
+    "runtime_event_proposals_charged_to_model": 0,
+    "parent_refs_by_kind": {
+      "initial": {
+        "correct_teacher_reads": 140,
+        "required": 140
+      },
+      "generated": {
+        "correct_teacher_reads": 15301,
+        "required": 15301
+      },
+      "repair": {
+        "correct_teacher_reads": 2,
+        "required": 2
+      }
+    },
+    "resume_events": 2098,
+    "receiver": {
+      "loaded": true,
+      "invocations": 7653,
+      "accepted": 7265,
+      "rejected": 0,
+      "named_reads": 15443
+    },
+    "network": {
+      "loaded": false,
+      "invocations": 0,
+      "accepted": 0,
+      "rejected": 0
+    },
+    "remaining_independent_search": 0,
+    "timing_ms": {
+      "reference": 25.317895999999998,
+      "replay": 20.722354,
+      "verification_ms": 3.6694645,
+      "event_registration_ms": 0.000583,
+      "native_repair_phase_ms": 2.317679500000025,
+      "remaining_native_ms": 17.0522855
+    },
+    "network_ms": 0,
+    "pairs": [
+      {
+        "order": [
+          "reference",
+          "replay"
+        ],
+        "reference": 24.992834,
+        "replay": 21.073999999999998,
+        "native_repair_phase_ms": 2.3291420000000254,
+        "event_registration_ms": 0.000625,
+        "verification_ms": 3.707624,
+        "remaining_native_ms": 17.365751,
+        "oracle_faster": true
+      },
+      {
+        "order": [
+          "replay",
+          "reference"
+        ],
+        "replay": 20.370708,
+        "native_repair_phase_ms": 2.3062170000000246,
+        "event_registration_ms": 0.000583,
+        "verification_ms": 3.6313050000000002,
+        "remaining_native_ms": 16.73882,
+        "reference": 26.049708000000003,
+        "oracle_faster": true
+      },
+      {
+        "order": [
+          "reference",
+          "replay"
+        ],
+        "reference": 25.642958,
+        "replay": 20.197042,
+        "native_repair_phase_ms": 2.2836810000000245,
+        "event_registration_ms": 0.0005,
+        "verification_ms": 3.61219,
+        "remaining_native_ms": 16.584352,
+        "oracle_faster": true
+      },
+      {
+        "order": [
+          "replay",
+          "reference"
+        ],
+        "replay": 21.850583,
+        "native_repair_phase_ms": 2.3448780000000253,
+        "event_registration_ms": 0.000583,
+        "verification_ms": 3.8060289999999997,
+        "remaining_native_ms": 18.043971000000003,
+        "reference": 24.462958,
+        "oracle_faster": true
+      }
+    ]
+  },
+  "dot": {
+    "mode": "exclusive",
+    "provider": "offline_teacher",
+    "build_sha256": "9ecafc3913e9f53acfcd918aa448081519c22b27e267e8b2b639646adcb0b354",
+    "weights_sha256": null,
+    "program_sha256": "c0d1da51c3aca3e61c945b39dc7da9e3ed135d77c57330ffd34dbbed8adc1159",
+    "tape_sha256": "5416a7bba6b7ef34c47c20b6a278ac84c33964b0d635fd08296ce915ddbd3b18",
+    "run_limit": null,
+    "source_runs_observed": 1535,
+    "neural_waves": 0,
+    "reference_commits": 6704,
+    "accepted_unique": 6704,
+    "coverage": 1,
+    "model_wins": 0,
+    "duplicates": 0,
+    "rejected_by_reason": {},
+    "unused": 0,
+    "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+    "runtime_issued_events": 8,
+    "runtime_exported_results": 8,
+    "runtime_event_proposals_charged_to_model": 0,
+    "parent_refs_by_kind": {
+      "initial": {
+        "correct_teacher_reads": 113,
+        "required": 113
+      },
+      "generated": {
+        "correct_teacher_reads": 15446,
+        "required": 15446
+      },
+      "repair": {
+        "correct_teacher_reads": 18,
+        "required": 18
+      }
+    },
+    "resume_events": 1835,
+    "receiver": {
+      "loaded": true,
+      "invocations": 6099,
+      "accepted": 6704,
+      "rejected": 0,
+      "named_reads": 15577
+    },
+    "network": {
+      "loaded": false,
+      "invocations": 0,
+      "accepted": 0,
+      "rejected": 0
+    },
+    "remaining_independent_search": 0,
+    "timing_ms": {
+      "reference": 21.930916500000002,
+      "replay": 17.187479000000003,
+      "verification_ms": 3.3491795,
+      "event_registration_ms": 0.002458,
+      "native_repair_phase_ms": 1.199018000000018,
+      "remaining_native_ms": 13.835592000000002
+    },
+    "network_ms": 0,
+    "pairs": [
+      {
+        "order": [
+          "reference",
+          "replay"
+        ],
+        "reference": 22.337208,
+        "replay": 16.948916,
+        "native_repair_phase_ms": 1.198285000000018,
+        "event_registration_ms": 0.002542,
+        "verification_ms": 3.339321,
+        "remaining_native_ms": 13.607053,
+        "oracle_faster": true
+      },
+      {
+        "order": [
+          "replay",
+          "reference"
+        ],
+        "replay": 17.111833,
+        "native_repair_phase_ms": 1.1952180000000174,
+        "event_registration_ms": 0.0023740000000000002,
+        "verification_ms": 3.346978,
+        "remaining_native_ms": 13.762481000000001,
+        "reference": 22.524209,
+        "oracle_faster": true
+      },
+      {
+        "order": [
+          "reference",
+          "replay"
+        ],
+        "reference": 21.524625,
+        "replay": 17.263125000000002,
+        "native_repair_phase_ms": 1.1997510000000178,
+        "event_registration_ms": 0.0030410000000000003,
+        "verification_ms": 3.351381,
+        "remaining_native_ms": 13.908703000000003,
+        "oracle_faster": true
+      },
+      {
+        "order": [
+          "replay",
+          "reference"
+        ],
+        "replay": 17.475,
+        "native_repair_phase_ms": 1.2516610000000201,
+        "event_registration_ms": 0.002084,
+        "verification_ms": 3.403129,
+        "remaining_native_ms": 14.069787000000002,
+        "reference": 20.862292,
+        "oracle_faster": true
+      }
+    ]
+  }
+}

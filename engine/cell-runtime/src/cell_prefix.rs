@@ -31,7 +31,7 @@ impl<'a> SourcePrefix<'a> {
 impl Prefix for SourcePrefix<'_> {
     #[cfg(feature = "sparse-cells")]
     const SEALED_INPUTS: bool = true;
-    const RECORD_RECEIPTS: bool = cfg!(feature = "structural-depth");
+    const RECORD_RECEIPTS: bool = cfg!(any(feature = "structural-depth", feature = "cell-token-replay"));
     fn next(&mut self, known: &mut crate::known_results::Stats) -> Option<usize> {
         for op in self.positions.by_ref() {
             if known.elide_static(self.aliases, op) { known.lazy_prefix_eliminated += 1; }

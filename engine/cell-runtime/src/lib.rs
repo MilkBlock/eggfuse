@@ -1,6 +1,8 @@
 mod change_batch;
 mod read_epoch;
 pub mod checksum;
+#[cfg(feature = "cell-token-replay")]
+pub mod cell_tokens;
 pub mod cell;
 pub mod completion_plan;
 pub mod table_set;

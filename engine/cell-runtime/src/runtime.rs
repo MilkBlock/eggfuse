@@ -131,6 +131,8 @@ impl CellResultObserver {
 }
 
 pub struct Executor {
+    #[cfg(feature = "cell-token-replay")]
+    token_history: Option<crate::cell_tokens::History>,
     #[cfg(feature = "gpu-bindings")]
     pub gpu_bindings: Option<crate::gpu_bindings::Producer>,
     #[cfg(feature="slot-transfer-audit")]
@@ -402,6 +404,8 @@ impl Executor {
             gpu_bindings: None,
             gpu_selector: None,
             binding_observer: None,
+            #[cfg(feature = "cell-token-replay")]
+            token_history: None,
             result_observer: None,
             initial_audit,
             tasks,
@@ -1183,7 +1187,32 @@ impl Executor {
         }
         Ok(empty)
     }
+    #[cfg(feature = "cell-token-replay")]
+    pub fn start_tokens(&mut self, packets: Option<Vec<crate::cell_tokens::Request>>) -> Result<()> {
+        if !self.steps.is_empty() || self.token_history.is_some() { return Err("token history already started".into()); }
+        self.token_history = Some(match packets {
+            Some(packets) => crate::cell_tokens::History::replay(&self.graph, packets)?,
+            None => crate::cell_tokens::History::capture(&self.graph)?,
+        });
+        self.graph.token_merge=Some(Default::default());
+        self.stage_spine.token_history = true;
+        Ok(())
+    }
+    #[cfg(feature = "cell-token-replay")]
+    pub fn tokens(&self) -> Option<&crate::cell_tokens::History> { self.token_history.as_ref() }
+
     fn matches(&mut self, rid: usize, probe: bool) -> Result<Vec<Binding>> {
+        #[cfg(feature = "cell-token-replay")]
+        if let Some(history) = &mut self.token_history && !history.is_teacher() {
+            if probe { return Err("schedule probe requires its own named proof".into()); }
+            let mut rows=history.verify(&self.graph,self.steps.len()+1,rid,self.watermarks[rid])?;
+            let facts=self.stage_spine.alias_query_facts(&self.graph,rid);
+            let mut routed=self.stage_spine.resume_named(&mut self.graph,&self.entry_schedule,rid,self.watermarks[rid],&rows,&facts)?;
+            routed.append(&mut rows);
+            self.pending[rid].clear();
+            if self.graph.program.rules[rid].seminaive {self.dirty[rid]=false;}
+            return self.dedup_bindings(rid,routed);
+        }
         if !probe
             && self.graph.program.rules[rid].seminaive
             && !std::mem::replace(&mut self.dirty[rid], false)
@@ -2101,8 +2130,14 @@ impl Executor {
             let anchors=self.graph.program.cell_ownership.entries[rid].iter().map(|&a|b.known.receipt(a)).collect::<smallvec::SmallVec<[_;4]>>();
             self.graph.begin_owner_entry(rid,&anchors);
         }
+        #[cfg(feature = "cell-token-replay")]
+        if let Some(history) = &mut self.token_history { history.begin_rhs(&self.graph,rid,&b)?; }
         let result=self.apply_owned(rid,b,#[cfg(feature="structural-depth")] evidence);
         self.graph.end_owner_entry();
+        #[cfg(feature = "cell-token-replay")]
+        if result.is_ok() && let Some(history)=&mut self.token_history {
+            history.finish_rhs(rid,self.graph.token_merge.as_mut().expect("active output capture"))?;
+        }
         #[cfg(feature="slot-transfer-audit")]
         if let (Some(rows),Some((cells,facts)))=(&mut self.allocation_audit,before) {
             rows.push([self.graph.epoch,rid as u64,self.graph.stats.cells_created-cells,self.graph.stats.logical_facts_created-facts]);
@@ -2161,6 +2196,8 @@ impl Executor {
         #[cfg(not(feature = "structural-depth"))]
         let full_effects = false;
 
+        #[cfg(feature = "cell-token-replay")]
+        let full_effects = full_effects || self.token_history.is_some();
         if origin.is_none()
             && let Some(write) = self.graph.program.writes[rid].clone()
         {
@@ -2190,6 +2227,8 @@ impl Executor {
                     |slot| self.graph.slot(cell, slot));
             }
             let receipts = crate::cell::SingleEffect(write.op, Dependency::Function(index));
+            #[cfg(feature = "cell-token-replay")]
+            if let Some(history)=&mut self.token_history { history.output(&self.graph,rid,&b.known,&receipts,write.op+1); }
             #[cfg(feature = "structural-depth")]
             if self.stage_spine.structural.capture_rule(rid) {
                 self.stage_spine
@@ -2270,6 +2309,8 @@ impl Executor {
                 let (start, unions) = self.graph.start_completion(rid, &mut b.values, b.parent, selected, &mut receipts)?;
                 match start {
                     Start::Complete { cell, frame } => {
+            #[cfg(feature = "cell-token-replay")]
+            if let Some(history)=&mut self.token_history { history.output(&self.graph,rid,&b.known,&receipts,self.graph.program.templates[template].ops.len()); }
                         if let Some(observer) = self.result_observer.as_mut() {
                             observer.capture(self.steps.len()+1, rid, true, &self.graph,
                                 |slot| self.graph.argument_in(cell, &frame, Some(&b.values), &crate::program::Arg::Slot(slot)));
@@ -2396,6 +2437,8 @@ impl Executor {
         let (cell, first_op) = match start {
             Start::Resume { cell, next_op } => (cell, next_op),
             Start::Complete { cell, frame } => {
+                #[cfg(feature = "cell-token-replay")]
+                if let Some(history)=&mut self.token_history { history.output(&self.graph,rid,&b.known,&effect_receipts,self.graph.program.templates[template].ops.len()); }
                 if let Some(observer) = self.result_observer.as_mut() {
                     observer.capture(self.steps.len()+1, rid, true, &self.graph,
                         |slot| self.graph.argument_in(cell, &frame, None, &crate::program::Arg::Slot(slot)));
@@ -2491,6 +2534,8 @@ impl Executor {
                 &effect_receipts,
             );
         }
+        #[cfg(feature = "cell-token-replay")]
+        if let Some(history)=&mut self.token_history { history.output(&self.graph,rid,&b.known,&effect_receipts,completed_prefix); }
         if completed && let Some(cursor) = stage_cursor {
             self.stage_spine.complete(
                 &self.graph,
@@ -2568,6 +2613,8 @@ impl Executor {
         {
             self.stage_spine.training.run = self.steps.len() + 1;
         }
+        #[cfg(feature = "cell-token-replay")]
+        if let Some(history)=&mut self.token_history { history.advance(&self.graph); }
         if self.completion.is_none() { self.graph.receipt_forwards.clear(); }
         self.graph.epoch = self.graph.epoch.checked_add(1).ok_or("epoch exhausted")?;
         self.graph.changed = false;
@@ -2791,6 +2838,10 @@ impl Executor {
         crate::transfer_audit::record_run(patch.iter().map(|(rid, b)| (rid, &b.values)))?;
         #[cfg(feature = "slot-transfer-audit")]
         crate::transfer_audit::observation::matched(self.graph.epoch, patch.iter());
+        #[cfg(feature = "cell-token-replay")]
+        if let Some(history)=&mut self.token_history && history.is_teacher() {
+            for (rid,b) in patch.iter() { history.capture_binding(&self.graph,self.steps.len()+1,*rid,b)?; }
+        }
         let matches = patch.len;
         #[cfg(feature = "cell-absorption")]
         let matches = matches + absorbed_matches;
@@ -2920,6 +2971,10 @@ impl Executor {
             .proof
             .before_repair(&self.graph.parents, &self.graph.pending_unions);
         self.complete_source_run(independent_rhs)?;
+        #[cfg(feature = "cell-token-replay")]
+        if let Some(history)=&mut self.token_history {
+            history.release_events(self.steps.len()+1,self.graph.token_merge.as_mut().expect("active event capture"))?;
+        }
         #[cfg(feature = "rhs-work-audit")]
         {
             let mut births = std::mem::take(&mut self.graph.rhs_births);

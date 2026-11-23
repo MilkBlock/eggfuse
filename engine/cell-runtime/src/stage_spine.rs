@@ -776,6 +776,8 @@ pub struct Programs {
     #[cfg(feature = "structural-depth")]
     full_effect_plans: Vec<OnceCell<Rc<crate::cell::EffectPlan>>>,
     alias_query_facts: Vec<QueryFacts>,
+    #[cfg(feature = "cell-token-replay")]
+    pub(crate) token_history: bool,
     owner_queries: bool,
     // All anchors of one application share this slot, including after key coalescence.
     pending_steps: Vec<Completion>,
@@ -1087,6 +1089,8 @@ impl Programs {
             #[cfg(feature = "structural-depth")]
             full_effect_plans: vec![OnceCell::new(); p.rules.len()],
             alias_query_facts: vec![],
+            #[cfg(feature = "cell-token-replay")]
+            token_history: false,
             owner_queries: false,
             pending_steps: vec![],
             #[cfg(feature = "sparse-cells")]
@@ -1353,6 +1357,8 @@ impl Programs {
         // the ownership Entry receipts. Keep the original Spine alias plan
         // intact: unrelated rules must not clone a full query-width packet.
         // Check at consumption, since training can start after Executor::new.
+        #[cfg(feature = "cell-token-replay")]
+        if self.token_history { return QueryFacts::Ports(vec![None; g.program.rules[rid].query.len()]); }
         let base = if self.owner_queries && g.needs_ownership_entry(rid) {
             QueryFacts::Ports(vec![None; g.program.rules[rid].query.len()])
         } else if self.receipts || self.owner_queries {
@@ -2292,7 +2298,7 @@ impl Programs {
             complete,
             watermark,
             facts,
-            #[cfg(feature="gpu-bindings")] None,
+            #[cfg(any(feature="gpu-bindings", feature="cell-token-replay"))] None,
             #[cfg(feature = "sparse-cells")] workers,
         )
     }
@@ -2353,6 +2359,41 @@ impl Programs {
         .then_some(&self.entries)
     }
 
+    /// Look up only the publications of the premises already checked by the receiver.
+    #[cfg(feature = "cell-token-replay")]
+    pub(crate) fn resume_named(&mut self, g: &mut Graph, entries: &crate::entry_schedule::Scheduler,
+        rid: usize, watermark: u64, rows: &[Matched], facts: &QueryFacts) -> Result<Vec<Matched>> {
+        if rows.is_empty() || !self.active_for_rule(rid) { return Ok(Vec::new()); }
+        let mut by_port: BTreeMap<(usize,Dependency),usize> = BTreeMap::new();
+        let mut routes = Vec::new();
+        for (index, answer) in rows.iter().enumerate() {
+            for (pivot, atom) in g.program.rules[rid].query.iter().enumerate() {
+                let Call::Table(table) = atom.call else { continue };
+                if self.queries.get(rid, pivot).is_none() { continue; }
+                let Some(w) = answer.known.receipt(pivot) else { continue };
+                if let Some(&previous) = by_port.get(&(pivot,w)) {
+                    let other: &Matched = &rows[previous];
+                    if other.values != answer.values { return Err("ambiguous certified projection".into()); }
+                    continue;
+                }
+                #[cfg(feature = "sparse-cells")]
+                let owned = entries.named_publication(table,w);
+                #[cfg(not(feature = "sparse-cells"))]
+                let owned: Option<&Published> = { let _ = entries; None };
+                let Some(cursor) = owned.or_else(|| self.scheduled_cursors(rid,pivot,table)?.get(&w)) else { continue };
+                let Some(row) = g.row(w)? else { continue };
+                if row.epoch < watermark || row.hidden { continue; }
+                by_port.insert((pivot,w), index);
+                routes.push((pivot, Rc::new(row), cursor.expand()));
+            }
+        }
+        routes.sort_unstable_by_key(|(pivot,row,_)| (row.witness,*pivot));
+        let count = routes.len();
+        // A list of successful certificates alone does not prove exhaustive Entry coverage.
+        let found = self.finish_answers(g, rid, routes.into_iter(), BTreeSet::new(), count, false,
+            watermark, facts, Some((&by_port,rows)), #[cfg(feature = "sparse-cells")] None)?;
+        Ok(found.map_or_else(Vec::new, |coverage|coverage.answers))
+    }
     /// Reattach original cursor priority to already verified two-atom bindings.
     /// Each routed pivot has its own exhaustive compiler certificate. Delta
     /// ownership and ties follow the ordinary Entry scheduler.
@@ -2443,7 +2484,7 @@ impl Programs {
         routes.sort_unstable_by_key(|(pivot,row,_)|(row.witness,*pivot));
         let count=routes.len();
         let result=self.finish_answers(g,rid,routes.into_iter(),BTreeSet::new(),count,true,watermark,facts,
-            #[cfg(feature="gpu-bindings")] None,
+            #[cfg(any(feature="gpu-bindings", feature="cell-token-replay"))] None,
             #[cfg(feature="sparse-cells")] None)?;
         Ok(result.map_or_else(Vec::new,|x|x.answers))
     }
@@ -2466,7 +2507,7 @@ impl Programs {
         routes.sort_unstable_by_key(|(pivot,row,_)|(row.witness,*pivot));
         let count=routes.len();
         let result=self.finish_answers(g,rid,routes.into_iter(),BTreeSet::new(),count,true,watermark,facts,
-            #[cfg(feature="gpu-bindings")] None,
+            #[cfg(any(feature="gpu-bindings", feature="cell-token-replay"))] None,
             #[cfg(feature="sparse-cells")] None)?;
         Ok(result.map_or_else(Vec::new,|v|v.answers))
     }
@@ -2509,7 +2550,7 @@ impl Programs {
         }
         let covered_count = routes.len();
         let result = self.finish_answers(g, rid, routes.into_iter(), covered, covered_count, complete, watermark, facts,
-            #[cfg(feature="gpu-bindings")] None,
+            #[cfg(any(feature="gpu-bindings", feature="cell-token-replay"))] None,
             #[cfg(feature = "sparse-cells")] workers);
         self.stats.query_seconds += clock.elapsed().as_secs_f64();
         result
@@ -2524,7 +2565,7 @@ impl Programs {
         complete: bool,
         watermark: u64,
         facts: &QueryFacts,
-        #[cfg(feature="gpu-bindings")] verified: Option<(&BTreeMap<(usize,Dependency),usize>, &[Matched])>,
+        #[cfg(any(feature="gpu-bindings", feature="cell-token-replay"))] verified: Option<(&BTreeMap<(usize,Dependency),usize>, &[Matched])>,
         #[cfg(feature = "sparse-cells")] workers: Option<&mut crate::executor::query_workers::Workers>,
     ) -> Result<Option<Coverage>> {
         if !complete && covered_count == 0 {
@@ -2603,6 +2644,13 @@ impl Programs {
                 cursor.via_block = selected;
                 self.stats.block_entries += u64::from(selected);
             }
+            #[cfg(any(feature="gpu-bindings", feature="cell-token-replay"))]
+            if let Some((by_port,matched))=verified {
+                let supplied=&matched[by_port[&(pivot,row.witness)]];
+                let projected=facts.with_rows((0..g.program.rules[rid].query.len()).filter_map(|i| supplied.known.receipt(i).map(|w|(i,w))));
+                record_answer(&mut results,supplied.values.clone(),projected,supplied.epoch,cursor);
+                continue;
+            }
             #[cfg(feature="action-units")]
             let mut unit_verified=None;
             #[cfg(feature="action-units")]
@@ -2665,13 +2713,6 @@ impl Programs {
                     record_answer(&mut results,slots,facts.with_rows(known),epoch,cursor);
                 }
                 continue 'answer;
-            }
-            #[cfg(feature="gpu-bindings")]
-            if let Some((by_port,matched))=verified {
-                let supplied=&matched[by_port[&(pivot,row.witness)]];
-                let projected=facts.with_rows((0..2).map(|i|(i,supplied.known.receipt(i).expect("verified witness"))));
-                record_answer(&mut results,supplied.values.clone(),projected,supplied.epoch,cursor);
-                continue;
             }
             #[cfg(feature = "iterative-bake")]
             let local_results = if local.is_some() {

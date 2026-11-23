@@ -820,6 +820,14 @@ impl Scheduler {
         self.stats.staged_root_winners += winners;
         winners
     }
+    #[cfg(all(feature = "sparse-cells", feature = "cell-token-replay"))]
+    pub(crate) fn named_publication(&self, table: usize, witness: Dependency)
+        -> Option<&crate::stage_spine::Published> {
+        let state = &self.states[self.publication_nodes[table]?];
+        let Entries::Owned(rows) = &state.rows else { return None };
+        let id = rows.get(&witness)?.publication?;
+        Some(&self.publications[id.get()-1].as_ref()?.published)
+    }
     #[cfg(feature = "sparse-cells")]
     pub(crate) fn publication_count(&self, table: usize) -> usize {
         self.publication_nodes[table].map_or(0, |id| self.states[id].publications)

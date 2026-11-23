@@ -146,10 +146,15 @@ impl CellFrame for MergeFrame {
     }
 }
 impl CallFrame for MergeFrame {
-    fn construct(&mut self, g: &mut Graph, _: usize, table: usize, args: &[Arg], dst: usize) -> Result<()> {
+    fn construct(&mut self, g: &mut Graph, _op: usize, table: usize, args: &[Arg], dst: usize) -> Result<()> {
         let args = self.arguments(g, args)?;
         g.stats.merge_program_constructs += 1;
-        let value = g.dynamic_construct(table, args)?;
+        let (value, _witness) = g.dynamic_result(table, args)?;
+        #[cfg(feature = "cell-token-replay")]
+        if let Some(m) = &mut g.token_merge {
+            if m.repairing { m.event_ports.push((_op,_witness)); }
+            else if let Some(set)=m.set_op { m.rows.push((set,_op,_witness)); }
+        }
         self.assign(g, dst, value)
     }
     fn read(&mut self, g: &mut Graph, _: usize, table: usize, args: &[Value]) -> Result<Value> {

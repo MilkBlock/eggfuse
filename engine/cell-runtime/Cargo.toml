@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [features]
+cell-token-replay = ["iterative-bake"]
 late-merge-ports = ["action-units"]
 action-units = ["precomputed-forest"]
 precomputed-forest = ["iterative-bake"]
@@ -89,3 +90,7 @@ required-features = ["precomputed-forest"]
 name = "actual_parent_ports"
 path = "../../benchmarks/pass3-cell-gpu/online-storage/parent_observer.rs"
 required-features = ["slot-transfer-audit"]
+
+[[example]]
+name = "cell_token_replay"
+required-features = ["cell-token-replay", "slot-transfer-audit"]

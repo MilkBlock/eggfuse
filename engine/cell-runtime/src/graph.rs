@@ -270,6 +270,8 @@ pub struct Graph {
     pub(crate) rhs_births: crate::rhs_work::Births,
     units: unit_ports::Units,
     pub known_stats: crate::known_results::Stats,
+    #[cfg(feature = "cell-token-replay")]
+    pub(crate) token_merge: Option<crate::cell_tokens::MergeOutputs>,
     pub merge_programs_enabled: bool,
     scalar_merge: bool,
     merge_kinds: Vec<Option<String>>,
@@ -539,6 +541,8 @@ impl Graph {
 
             known_stats: Default::default(),
             scalar_merge: cfg!(feature = "sparse-cells"),
+            #[cfg(feature = "cell-token-replay")]
+            token_merge: None,
             merge_programs_enabled: true,
             pending_unions: vec![],
             union_digest,
@@ -750,6 +754,8 @@ impl Graph {
         #[cfg(feature="sparse-cells")]
         if parent.is_none() && let Some(ports)=&write.ports {
             let (key,value,dst)=ports.project(&values,&self.parents)?;
+            #[cfg(feature = "cell-token-replay")]
+            if let Some(m) = &mut self.token_merge { m.set_op = Some(write.op); }
             let i=self.set_function_canonical(write.table,std::slice::from_ref(&key),Value::Int(value))?;
             let changed=self.stats.function_updates!=before;
             if changed{
@@ -772,6 +778,8 @@ impl Graph {
             .map(|a| self.argument_in(id, &frame, None, a))
             .collect::<Result<Vec<_>>>()?;
         let value = self.argument_in(id, &frame, None, &write.value)?;
+        #[cfg(feature = "cell-token-replay")]
+        if let Some(m) = &mut self.token_merge { m.set_op = Some(write.op); }
         let i=self.set_function_canonical(write.table,&key,value)?;
         let changed=self.stats.function_updates!=before;
         if changed {
@@ -1695,6 +1703,9 @@ impl Graph {
     }
 
     pub fn dynamic_construct(&mut self, t: usize, args: impl AsRef<[Value]> + IntoIterator<Item = Value>) -> Result<Value> {
+        self.dynamic_result(t, args).map(|(value, _)| value)
+    }
+    pub(crate) fn dynamic_result(&mut self, t: usize, args: impl AsRef<[Value]> + IntoIterator<Item = Value>) -> Result<(Value, Dependency)> {
         let key = args.as_ref()
             .iter()
             .map(|v| canon(v, &self.parents))
@@ -1702,7 +1713,7 @@ impl Graph {
         #[cfg(feature="late-merge-ports")]
         crate::late_merge_ports::constructing(t,&key);
         if let Some(row) = self.lookup_canonical(t, &key)? {
-            return Ok(row.values.last().unwrap().clone());
+            return Ok((row.values.last().unwrap().clone(),row.witness));
         }
         let dst = args.as_ref().len();
         let cell = self.linked_slots(
@@ -1715,7 +1726,8 @@ impl Graph {
         // absent; do not repeat the (potentially expensive) port-domain lookup.
         // As before, dynamic hits do not enter the RHS constructor path.
         self.stats.constructor_requests += 1;
-        self.insert_constructor(cell, 0, t, &key, dst)
+        let value = self.insert_constructor(cell, 0, t, &key, dst)?;
+        Ok((value,Dependency::Fact(FactRef {cell, op:0})))
     }
     pub fn enqueue_union(&mut self, a: Value, b: Value) -> Result<()> {
         self.stats.union_requests += 1;
@@ -1917,6 +1929,8 @@ impl Graph {
             let before = self.stats.function_updates;
             #[cfg(feature="late-merge-ports")]
             crate::late_merge_ports::enter(self,cell,op,t,&key,&value)?;
+            #[cfg(feature = "cell-token-replay")]
+            if let Some(m) = &mut self.token_merge { m.set_op = Some(op); }
             let index = self.set_function_from(t, &key, value, Some((cell, op, source)))?;
             #[cfg(feature="late-merge-ports")]
             crate::late_merge_ports::finish(self,index)?;
@@ -2570,11 +2584,28 @@ impl Graph {
                                 let old = canon(&self.functions[j].value, &self.parents);
                                 #[cfg(feature = "slot-transfer-audit")]
                                 let before = old.clone();
+                                #[cfg(feature = "cell-token-replay")]
+                                if let Some(m)=&mut self.token_merge { m.repairing=true; }
                                 let next = self.merge_value(
                                     row.table,
                                     old.clone(),
                                     row.values.last().unwrap().clone(),
-                                )?;
+                                );
+                                #[cfg(feature = "cell-token-replay")]
+                                if let Some(m)=&mut self.token_merge {
+                                    m.repairing=false;
+                                    if !m.event_ports.is_empty() {
+                                        let ports=std::mem::take(&mut m.event_ports);
+                                        if next.is_ok() {
+                                            m.events.push(crate::cell_tokens::CollisionResult {
+                                                table:row.table,
+                                                inputs:[(j,self.functions[j].epoch),(i,row.epoch)],
+                                                ports,
+                                            });
+                                        }
+                                    }
+                                }
+                                let next=next?;
                                 #[cfg(feature = "slot-transfer-audit")]
                                 if before != next {
                                     crate::transfer_audit::effective(
