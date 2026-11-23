@@ -1,5 +1,6 @@
 """One CPU Actor and one exclusive native verifier process, synchronized at actual Run boundaries."""
 import argparse
+from collections import Counter, defaultdict
 import json
 from pathlib import Path
 import subprocess
@@ -63,7 +64,7 @@ def propose(actor, catalog, snapshot, nodes):
 
 
 @torch.no_grad()
-def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=None, live_receipts=None, teacher_tape=None, observe_packets=None, mask_receipts=False):
+def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=None, live_receipts=None, teacher_tape=None, observe_packets=None, mask_receipts=False, prefix_policy=None, shadow_runs=None):
     if wave_limit is None:
         wave_limit = getattr(actor,'default_waves',1)
     if live_receipts is None:
@@ -80,7 +81,15 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
     endings = {}
     receipt_counts = {}
     receipt_seconds = 0.
-    if live_receipts and not hasattr(actor, 'decisions'):
+    prefix_counts = defaultdict(Counter)
+    if prefix_policy is not None:
+        from prefix_policy import generate, native_probe
+        if not hasattr(actor, 'pair_components') or wave_limit != 1:
+            raise ValueError('bounded prefix decoding needs a one-batch anchor Actor')
+        live_receipts = bool(teacher_tape or prefix_policy.verify or prefix_policy.audit)
+    if shadow_runs is not None and (not teacher_tape or prefix_policy is None):
+        raise ValueError('selective inference is a teacher-shadow diagnostic')
+    if live_receipts and prefix_policy is None and not hasattr(actor, 'decisions'):
         raise ValueError('wave receipts require a sequence actor')
     if teacher_tape and not live_receipts:
         raise ValueError('shadow waves require live receipts')
@@ -130,7 +139,23 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
 
                 before = perf_counter()
                 old_wait = receipt_seconds
-                if live_receipts:
+                if prefix_policy is not None:
+                    if shadow_runs is None or snapshot.run in shadow_runs:
+                        mem = actor.memory(catalog,snapshot,nodes)
+                        def read_prefix(rid, roles, rows):
+                            nonlocal receipt_seconds
+                            start = perf_counter()
+                            probe = native_probe(history,snapshot,send,lambda: json.loads(p.stdout.readline()))
+                            flags = probe(rid, roles, rows)
+                            receipt_seconds += perf_counter()-start
+                            return flags
+                        proposals = list(generate(actor,catalog,mem,prefix_policy,read_prefix,prefix_counts))
+                        if live_receipts and proposals:
+                            receive(proposals)
+                        waves,reason = 1,'single_batch'
+                    else:
+                        proposals,waves,reason = [],0,'outside_shadow_diagnostic'
+                elif live_receipts:
                     proposals,waves,reason = actor.decode(catalog,snapshot,nodes,wave_limit,receive)
                 else:
                     proposals,waves,reason = issue_run(actor,catalog,snapshot,nodes,wave_limit)
@@ -156,7 +181,10 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
             or receipt_counts.get('duplicate',0) != counts['duplicates']
             or {r:n for r,n in receipt_counts.items() if r not in ('accepted','duplicate')} != counts['rejected']):
         raise ValueError('wave receipts differ from final verifier ledger')
-    return dict(shadow_report=report if teacher_tape else None,live_receipts=live_receipts,receipt_counts=receipt_counts,wave_receipt_seconds=receipt_seconds,
+    return dict(partial_proof_counts={f'{kind}_{depth}': dict(c) for (kind,depth),c in prefix_counts.items()},
+                native_partial_reads=report.get('prefix_reads',0),native_partial_probes=report.get('prefixes_checked',0),
+                native_partial_seconds=report.get('prefix_verify_seconds',0),
+                shadow_report=report if teacher_tape else None,live_receipts=live_receipts,receipt_counts=receipt_counts,wave_receipt_seconds=receipt_seconds,
                 receipt_batches=report.get('wave_batches',0),mode='shadow' if teacher_tape else 'exclusive',wave_limit=wave_limit,wave_endings=endings,state_sha=report['state_sha'],runs=report['runs'],neural_waves=calls,
                 issued=issued,counts=report['counts'],native_runtime_events=len(report['runtime_events']),
                 independent_search_calls=0,network_seconds=inference+encoding,
@@ -175,8 +203,12 @@ if __name__=='__main__':
     parser.add_argument('--field-pointer',action='store_true')
     parser.add_argument('--wave-limit',type=int)
     parser.add_argument('--live-receipts',action='store_true',default=None)
+    parser.add_argument('--top-k', type=int, help='cap the frontier for each rule and owner at every depth')
+    parser.add_argument('--verify-prefix',action='store_true',help='check proposed partial proofs before extension')
     a=parser.parse_args()
+    from prefix_policy import Policy
+    policy=Policy(a.top_k,a.verify_prefix) if a.top_k is not None or a.verify_prefix else None
     torch.set_num_threads(1)
     torch.manual_seed(a.seed)
     model = load_actor(a.weights, a.field_pointer)
-    print(json.dumps(execute(a.binary.resolve(),a.program.resolve(),model,a.seed,a.wave_limit,live_receipts=a.live_receipts)))
+    print(json.dumps(execute(a.binary.resolve(),a.program.resolve(),model,a.seed,a.wave_limit,live_receipts=a.live_receipts,prefix_policy=policy)))
