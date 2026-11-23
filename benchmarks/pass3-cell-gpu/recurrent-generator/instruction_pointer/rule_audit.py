@@ -70,7 +70,7 @@ def audit(root,weights,output,samples,seed,field):
     torch.set_num_threads(1)
     actor = load_actor(weights, field)
     manifest=json.loads((root/'manifest.json').read_bytes())
-    report=dict(mode='shadow',wave_limit=getattr(actor,"default_waves",1),seed=seed,field_pointer=field,
+    report=dict(mode='shadow',snapshot_receipts='unavailable',wave_limit=getattr(actor,"default_waves",1),seed=seed,field_pointer=field,
                 weights_sha256=hashlib.sha256(weights.read_bytes()).hexdigest(),cases={})
     for rec in (r for r in manifest if r['origin']=='eggcc'):
         busy=set(rec['busy_runs'])
@@ -100,7 +100,7 @@ def held_rule_census(root, weights, output, seed, field):
     """Score only the free rule/Stop decision on every Run of each native holdout."""
     torch.set_num_threads(1)
     actor = load_actor(weights, field)
-    report = dict(mode='shadow', decision='rule before any parent read', wave_limit=getattr(actor,"default_waves",1),
+    report = dict(mode='shadow', snapshot_receipts='unavailable', decision='rule before any parent read', wave_limit=getattr(actor,"default_waves",1),
                   seed=seed, field_pointer=field,
                   weights_sha256=hashlib.sha256(weights.read_bytes()).hexdigest(), cases={})
     for rec in json.loads((root/'manifest.json').read_bytes()):
