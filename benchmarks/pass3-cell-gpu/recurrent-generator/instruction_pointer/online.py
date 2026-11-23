@@ -31,7 +31,9 @@ def execute(binary, program, actor, seed):
     start = perf_counter()
     catalog = Catalog(json.loads(program.read_bytes()))
     history = History(catalog,seed)
+    before = perf_counter()
     nodes = actor.template_graph(catalog)
+    encoding = perf_counter()-before
     next_token = 1
     inference = 0.
     calls = issued = 0
@@ -68,9 +70,14 @@ def execute(binary, program, actor, seed):
                 p.kill()
         if p.wait() or not calls or not report['counts']['calls']:
             raise RuntimeError('empty or unsuccessful online run')
+    counts = report['counts']
+    if report['unused'] or issued != counts['accepted'] + counts['duplicates'] + sum(counts['rejected'].values()):
+        raise RuntimeError('unaccounted online proposals')
     return dict(mode='exclusive',state_sha=report['state_sha'],runs=report['runs'],neural_waves=calls,
                 issued=issued,counts=report['counts'],native_runtime_events=len(report['runtime_events']),
-                independent_search_calls=0,network_seconds=inference,
+                independent_search_calls=0,network_seconds=inference+encoding,
+                rhs_by_run=report['rhs'],writes_by_run=report['writes'],source_schedule=report['schedule'],
+                remaining_process_seconds_including_ipc=report['seconds']-report['verify_seconds']-inference,
                 native_verify_seconds=report['verify_seconds'],native_repair_seconds=report['repair_phase_seconds'],
                 wall_seconds=perf_counter()-start)
 

@@ -188,6 +188,11 @@ impl History {
     pub fn unused(&self) -> usize {
         self.queue.values().map(Vec::len).sum()
     }
+    pub(crate) fn reject_untriggered(&mut self, run: usize, rid: usize) {
+        if let Some(packets) = self.queue.remove(&(run, rid)) {
+            *self.counts.rejected.entry("untriggered_rule").or_default() += packets.len();
+        }
+    }
     pub(crate) fn observing(&self) -> bool {
         self.memory.is_some()
     }

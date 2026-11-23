@@ -2714,6 +2714,10 @@ impl Executor {
             // source occurrence still advances its own watermark.
             #[cfg(not(any(feature = "family-survey", feature = "family-overlap")))]
             if !self.dirty[rid] && !self.profile_queries {
+                #[cfg(feature = "cell-token-replay")]
+                if let Some(history) = &mut self.token_history {
+                    history.reject_untriggered(self.steps.len()+1, rid);
+                }
                 if let Some(sets) = &mut self.ready_sets { sets.clean(rid); }
                 self.watermarks[rid] = self.graph.epoch;
                 continue;
