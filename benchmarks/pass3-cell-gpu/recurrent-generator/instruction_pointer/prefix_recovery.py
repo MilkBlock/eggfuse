@@ -52,6 +52,7 @@ class Recovery:
         self.cut=meta['margin_cut'] if margin_only else meta['cut']
         self.budget=meta['budget']
         self.checkpoint=meta['head']
+        self.read_order=meta.get('read_order','source')
 
     def scores(self,cat,mem,rid,order,depth,prefix,ids,margin):
         if self.margin_only:

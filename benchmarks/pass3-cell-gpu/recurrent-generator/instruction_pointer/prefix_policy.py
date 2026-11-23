@@ -12,10 +12,15 @@ class Policy:
     verify: bool = False
     audit: bool = False
     recovery: object = None
+    read_order: str | None = None
 
     def __post_init__(self):
         if self.top_k is not None and self.top_k < 1:
             raise ValueError('top-k must be positive')
+        mode=self.read_order or getattr(self.recovery,'read_order','source')
+        if mode not in ('source','connected'):
+            raise ValueError('unknown pointer read order')
+        object.__setattr__(self,'read_order',mode)
 
 
 def score_tiles(model, cat, mem, dom, rid, anchor, order, depth, frontier):
@@ -122,10 +127,13 @@ def generate(model, cat, mem, policy, probe=None, counts=None, field_audit=False
                 yield rid, ()
             continue
         for anchor in range(len(atoms) if cat.seminaive[rid] else 1):
-            order = [anchor] + [role for role in range(len(atoms)) if role != anchor]
+            order = cat.read_order(rid,anchor,policy.read_order)
             frontier = dom.empty.reshape(1,0)
             for depth in range(len(order)):
                 count = counts['partial' if depth+1 < len(order) else 'complete', depth+1]
+                if depth and policy.read_order=='connected':
+                    source_role=depth-1 if depth<=anchor else depth
+                    count['changed_read_position']+=int(order[depth]!=source_role)
                 frontier = select_frontier(model,cat,mem,dom,rid,anchor,order,depth,frontier,policy,probe,count,field_audit)
                 if not len(frontier):
                     break

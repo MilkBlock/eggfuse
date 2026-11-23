@@ -1,6 +1,7 @@
 """Bake a tensorizable instruction graph from the actual runtime program."""
 import hashlib
 import json
+from functools import cached_property
 
 KINDS = ('initial', 'generated', 'repair')
 
@@ -11,6 +12,30 @@ def symbol(value):
 
 
 class Catalog:
+    @cached_property
+    def connected_orders(self):
+        orders={}
+        for rid,atoms in self.atoms.items():
+            for anchor in range(len(atoms)):
+                picked=[anchor]
+                remaining=[i for i in range(len(atoms)) if i!=anchor]
+                while remaining:
+                    # Keep source order among atoms linked to the named prefix.
+                    # A disconnected component starts in source order as well.
+                    nxt=next((i for i in remaining if any(self.field_links[rid,j,i] for j in picked)),
+                             remaining[0])
+                    remaining.remove(nxt)
+                    picked.append(nxt)
+                orders[rid,anchor]=tuple(picked)
+        return orders
+
+    def read_order(self,rid,anchor,mode):
+        if mode=='connected':
+            return self.connected_orders[rid,anchor]
+        if mode=='source':
+            return (anchor,*(i for i in range(len(self.atoms[rid])) if i!=anchor))
+        raise ValueError('unknown pointer read order')
+
     def __init__(self, program):
         recipe = program['recipe']
         self.tables = {t['name']: i for i, t in enumerate(recipe['tables'])}
