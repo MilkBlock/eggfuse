@@ -1,0 +1,2050 @@
+{
+  "private_training": {
+    "device": "mps",
+    "steps": 64,
+    "horizon": 20,
+    "training": {
+      "sum": {
+        "first_gap": 9,
+        "required": 20,
+        "actual": 19,
+        "labeled_distinct": 20,
+        "newly_reachable": 1,
+        "native_requests": 158,
+        "anchors": 22,
+        "verdicts": {
+          "match": 21,
+          "binding": 137
+        }
+      },
+      "dot": {
+        "first_gap": 11,
+        "required": 43,
+        "actual": 33,
+        "labeled_distinct": 43,
+        "newly_reachable": 10,
+        "native_requests": 1236,
+        "anchors": 69,
+        "verdicts": {
+          "binding": 1193,
+          "match": 43
+        }
+      }
+    },
+    "receiver": "0775fd27f5c3051328e2e6611cc0bd5d23b77b3e408da547f022f4e1bed1dc8e",
+    "initial": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+    "weights": "950f8c853852f32c98892b578af536455d9063d668543a1ca280351d44a6d841",
+    "changed": [
+      "anchor_bias.weight",
+      "anchor_bias.bias",
+      "final_query.weight",
+      "final_query.bias"
+    ]
+  },
+  "private_rollout": {
+    "sum": {
+      "before": 9,
+      "after": 7
+    },
+    "dot": {
+      "before": 11,
+      "after": 9
+    }
+  },
+  "held": {
+    "fact": {
+      "prior": {
+        "sha256": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+        "required": 1668,
+        "issued": 3745,
+        "distinct": 1248,
+        "complete_busy": 67,
+        "common_exclusive_runs": 6,
+        "equal_final": false,
+        "exclusive_failure": null
+      },
+      "gap_trained": {
+        "sha256": "950f8c853852f32c98892b578af536455d9063d668543a1ca280351d44a6d841",
+        "required": 1668,
+        "issued": 3388,
+        "distinct": 1154,
+        "complete_busy": 61,
+        "common_exclusive_runs": 8,
+        "equal_final": false,
+        "exclusive_failure": null
+      }
+    },
+    "loopfact": {
+      "prior": {
+        "sha256": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+        "required": 1419,
+        "issued": 3677,
+        "distinct": 1031,
+        "complete_busy": 80,
+        "common_exclusive_runs": 7,
+        "equal_final": false,
+        "exclusive_failure": null
+      },
+      "gap_trained": {
+        "sha256": "950f8c853852f32c98892b578af536455d9063d668543a1ca280351d44a6d841",
+        "required": 1419,
+        "issued": 3380,
+        "distinct": 982,
+        "complete_busy": 72,
+        "common_exclusive_runs": 3,
+        "equal_final": false,
+        "exclusive_failure": null
+      }
+    },
+    "sum-divisors": {
+      "prior": {
+        "sha256": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+        "required": 17341,
+        "issued": 24634,
+        "distinct": 8545,
+        "complete_busy": 200,
+        "common_exclusive_runs": 10,
+        "equal_final": false,
+        "exclusive_failure": {
+          "kind": "source_panic",
+          "run": 85,
+          "charged": {
+            "issued": 1908,
+            "neural_waves": 85,
+            "wall_seconds": 1.5884095000001253,
+            "network_seconds": 1.1717635410041112
+          }
+        }
+      },
+      "gap_trained": {
+        "sha256": "950f8c853852f32c98892b578af536455d9063d668543a1ca280351d44a6d841",
+        "required": 17341,
+        "issued": 21783,
+        "distinct": 7995,
+        "complete_busy": 188,
+        "common_exclusive_runs": 8,
+        "equal_final": false,
+        "exclusive_failure": null
+      }
+    }
+  },
+  "prefix_verification": {
+    "loopfact": {
+      "run": 79,
+      "required": 74,
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "partial": {
+        "native_inconsistent_scored": 6517,
+        "native_inconsistent_above_threshold": 6,
+        "native_inconsistent_after_cap": 6,
+        "verifier_checked": 1462,
+        "verifier_pruned": 6,
+        "recovered_without": 65,
+        "recovered_with": 65,
+        "lost": 0,
+        "gained": 0
+      },
+      "layers": {
+        "complete_1": {
+          "scored": 49,
+          "above_threshold": 47,
+          "shared_hash_conflicts_scored": 0,
+          "shared_hash_conflicts_above_threshold": 0,
+          "native_inconsistent_scored": 0,
+          "native_inconsistent_above_threshold": 0,
+          "after_cap": 47,
+          "native_inconsistent_after_cap": 0
+        },
+        "partial_1": {
+          "scored": 962,
+          "above_threshold": 926,
+          "shared_hash_conflicts_scored": 0,
+          "shared_hash_conflicts_above_threshold": 0,
+          "native_inconsistent_scored": 9,
+          "native_inconsistent_above_threshold": 6,
+          "after_cap": 926,
+          "native_inconsistent_after_cap": 6,
+          "verifier_checked": 926,
+          "verifier_pruned": 6
+        },
+        "partial_2": {
+          "scored": 4643,
+          "above_threshold": 304,
+          "shared_hash_conflicts_scored": 3921,
+          "shared_hash_conflicts_above_threshold": 0,
+          "native_inconsistent_scored": 3923,
+          "native_inconsistent_above_threshold": 0,
+          "after_cap": 304,
+          "native_inconsistent_after_cap": 0,
+          "verifier_checked": 304,
+          "verifier_pruned": 0
+        },
+        "complete_2": {
+          "scored": 15061,
+          "above_threshold": 240,
+          "shared_hash_conflicts_scored": 14815,
+          "shared_hash_conflicts_above_threshold": 0,
+          "native_inconsistent_scored": 14815,
+          "native_inconsistent_above_threshold": 0,
+          "after_cap": 196,
+          "native_inconsistent_after_cap": 0
+        },
+        "complete_3": {
+          "scored": 220,
+          "above_threshold": 5,
+          "shared_hash_conflicts_scored": 215,
+          "shared_hash_conflicts_above_threshold": 0,
+          "native_inconsistent_scored": 215,
+          "native_inconsistent_above_threshold": 0,
+          "after_cap": 5,
+          "native_inconsistent_after_cap": 0
+        },
+        "partial_3": {
+          "scored": 1793,
+          "above_threshold": 230,
+          "shared_hash_conflicts_scored": 1226,
+          "shared_hash_conflicts_above_threshold": 0,
+          "native_inconsistent_scored": 1226,
+          "native_inconsistent_above_threshold": 0,
+          "after_cap": 230,
+          "native_inconsistent_after_cap": 0,
+          "verifier_checked": 230,
+          "verifier_pruned": 0
+        },
+        "partial_4": {
+          "scored": 1336,
+          "above_threshold": 1,
+          "shared_hash_conflicts_scored": 1332,
+          "shared_hash_conflicts_above_threshold": 0,
+          "native_inconsistent_scored": 1332,
+          "native_inconsistent_above_threshold": 0,
+          "after_cap": 1,
+          "native_inconsistent_after_cap": 0,
+          "verifier_checked": 1,
+          "verifier_pruned": 0
+        },
+        "partial_5": {
+          "scored": 28,
+          "above_threshold": 1,
+          "shared_hash_conflicts_scored": 27,
+          "shared_hash_conflicts_above_threshold": 0,
+          "native_inconsistent_scored": 27,
+          "native_inconsistent_above_threshold": 0,
+          "after_cap": 1,
+          "native_inconsistent_after_cap": 0,
+          "verifier_checked": 1,
+          "verifier_pruned": 0
+        },
+        "complete_6": {
+          "scored": 2,
+          "above_threshold": 1,
+          "shared_hash_conflicts_scored": 2,
+          "shared_hash_conflicts_above_threshold": 1,
+          "native_inconsistent_scored": 2,
+          "native_inconsistent_above_threshold": 1,
+          "after_cap": 1,
+          "native_inconsistent_after_cap": 1
+        },
+        "complete_4": {
+          "scored": 4175,
+          "above_threshold": 0,
+          "shared_hash_conflicts_scored": 4175,
+          "shared_hash_conflicts_above_threshold": 0,
+          "native_inconsistent_scored": 4175,
+          "native_inconsistent_above_threshold": 0,
+          "after_cap": 0
+        }
+      }
+    },
+    "sum-divisors": {
+      "run": 709,
+      "required": 26,
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "partial": {
+        "native_inconsistent_scored": 102113,
+        "native_inconsistent_above_threshold": 0,
+        "native_inconsistent_after_cap": 0,
+        "verifier_checked": 629,
+        "verifier_pruned": 0,
+        "recovered_without": 14,
+        "recovered_with": 14,
+        "lost": 0,
+        "gained": 0
+      },
+      "layers": {
+        "partial_1": {
+          "scored": 374,
+          "above_threshold": 374,
+          "shared_hash_conflicts_scored": 0,
+          "shared_hash_conflicts_above_threshold": 0,
+          "native_inconsistent_scored": 0,
+          "native_inconsistent_above_threshold": 0,
+          "after_cap": 374,
+          "native_inconsistent_after_cap": 0,
+          "verifier_checked": 374,
+          "verifier_pruned": 0
+        },
+        "complete_1": {},
+        "partial_2": {
+          "scored": 63646,
+          "above_threshold": 1063,
+          "shared_hash_conflicts_scored": 61808,
+          "shared_hash_conflicts_above_threshold": 0,
+          "native_inconsistent_scored": 61808,
+          "native_inconsistent_above_threshold": 0,
+          "after_cap": 213,
+          "native_inconsistent_after_cap": 0,
+          "verifier_checked": 213,
+          "verifier_pruned": 0
+        },
+        "partial_3": {
+          "scored": 43942,
+          "above_threshold": 42,
+          "shared_hash_conflicts_scored": 32593,
+          "shared_hash_conflicts_above_threshold": 0,
+          "native_inconsistent_scored": 32593,
+          "native_inconsistent_above_threshold": 0,
+          "after_cap": 42,
+          "native_inconsistent_after_cap": 0,
+          "verifier_checked": 42,
+          "verifier_pruned": 0
+        },
+        "complete_3": {
+          "scored": 3262,
+          "above_threshold": 28,
+          "shared_hash_conflicts_scored": 2682,
+          "shared_hash_conflicts_above_threshold": 0,
+          "native_inconsistent_scored": 2682,
+          "native_inconsistent_above_threshold": 0,
+          "after_cap": 28,
+          "native_inconsistent_after_cap": 0
+        },
+        "partial_4": {
+          "scored": 18330,
+          "above_threshold": 0,
+          "shared_hash_conflicts_scored": 7712,
+          "shared_hash_conflicts_above_threshold": 0,
+          "native_inconsistent_scored": 7712,
+          "native_inconsistent_above_threshold": 0,
+          "after_cap": 0
+        }
+      }
+    }
+  },
+  "screen_training": {
+    "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+    "binary": "3982b0c163470cdb7d0966409379b2a486d470b7ebb7ec70612f05361115fb12",
+    "weights": "514d37cfd563cb193b6e6eca4ebbf27fd9a419e14427ef781487aaf9a0d90022",
+    "mode": "assist training",
+    "horizon": 128,
+    "training_reads": 6952,
+    "training_productive": 484,
+    "calibration_reads": 1688,
+    "calibration_productive": 71,
+    "calibration_selected": 825,
+    "calibration_productive_kept": 71,
+    "cut": -3.6949636936187744,
+    "device": "mps",
+    "exposure": {
+      "sum": {
+        "1": {
+          "split": "fit",
+          "rules": 1,
+          "commits": 1
+        },
+        "2": {
+          "split": "calibration",
+          "rules": 10,
+          "commits": 1
+        },
+        "3": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 2
+        },
+        "4": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 2
+        },
+        "5": {
+          "split": "calibration",
+          "rules": 10,
+          "commits": 2
+        },
+        "6": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 1
+        },
+        "7": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 1
+        },
+        "8": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "9": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 20
+        },
+        "10": {
+          "split": "calibration",
+          "rules": 34,
+          "commits": 10
+        },
+        "11": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "12": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 24
+        },
+        "13": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "14": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "15": {
+          "split": "calibration",
+          "rules": 60,
+          "commits": 27
+        },
+        "16": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 10
+        },
+        "17": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 10
+        },
+        "18": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 8
+        },
+        "19": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 5
+        },
+        "20": {
+          "split": "calibration",
+          "rules": 10,
+          "commits": 5
+        },
+        "21": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 5
+        },
+        "22": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "23": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 33
+        },
+        "24": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 1
+        },
+        "25": {
+          "split": "calibration",
+          "rules": 10,
+          "commits": 1
+        },
+        "26": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 2
+        },
+        "27": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "28": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 25
+        },
+        "29": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 2
+        },
+        "30": {
+          "split": "calibration",
+          "rules": 10,
+          "commits": 2
+        },
+        "31": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 4
+        },
+        "32": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "33": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 20
+        },
+        "34": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 3
+        },
+        "35": {
+          "split": "calibration",
+          "rules": 10,
+          "commits": 2
+        },
+        "36": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 4
+        },
+        "37": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "38": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 19
+        },
+        "39": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 1
+        },
+        "40": {
+          "split": "calibration",
+          "rules": 10,
+          "commits": 1
+        },
+        "41": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 2
+        },
+        "42": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "43": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 11
+        },
+        "44": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "45": {
+          "split": "calibration",
+          "rules": 34,
+          "commits": 0
+        },
+        "46": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 3
+        },
+        "47": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "48": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "49": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 1
+        },
+        "50": {
+          "split": "calibration",
+          "rules": 10,
+          "commits": 0
+        },
+        "51": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "52": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 1
+        },
+        "53": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "54": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "55": {
+          "split": "calibration",
+          "rules": 60,
+          "commits": 1
+        },
+        "56": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "57": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "58": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 2
+        },
+        "59": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "60": {
+          "split": "calibration",
+          "rules": 34,
+          "commits": 0
+        },
+        "61": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 2
+        },
+        "62": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "63": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "64": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 1
+        },
+        "65": {
+          "split": "calibration",
+          "rules": 10,
+          "commits": 0
+        },
+        "66": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "67": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 1
+        },
+        "68": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "69": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "70": {
+          "split": "calibration",
+          "rules": 60,
+          "commits": 1
+        },
+        "71": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "72": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "73": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 1
+        },
+        "74": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "75": {
+          "split": "calibration",
+          "rules": 34,
+          "commits": 0
+        },
+        "76": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 1
+        },
+        "77": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 1
+        },
+        "78": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 1
+        },
+        "79": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 2
+        },
+        "80": {
+          "split": "calibration",
+          "rules": 10,
+          "commits": 0
+        },
+        "81": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "82": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 2
+        },
+        "83": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 1
+        },
+        "84": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 1
+        },
+        "85": {
+          "split": "calibration",
+          "rules": 34,
+          "commits": 0
+        },
+        "86": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 2
+        },
+        "87": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "88": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "89": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 1
+        },
+        "90": {
+          "split": "calibration",
+          "rules": 10,
+          "commits": 0
+        },
+        "91": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "92": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 1
+        },
+        "93": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "94": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "95": {
+          "split": "calibration",
+          "rules": 60,
+          "commits": 0
+        },
+        "96": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "97": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "98": {
+          "split": "fit",
+          "rules": 222,
+          "commits": 138
+        },
+        "99": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "100": {
+          "split": "calibration",
+          "rules": 34,
+          "commits": 9
+        },
+        "101": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "102": {
+          "split": "fit",
+          "rules": 222,
+          "commits": 135
+        },
+        "103": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "104": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 3
+        },
+        "105": {
+          "split": "calibration",
+          "rules": 34,
+          "commits": 0
+        },
+        "106": {
+          "split": "fit",
+          "rules": 222,
+          "commits": 170
+        },
+        "107": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "108": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 1
+        },
+        "109": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "110": {
+          "split": "calibration",
+          "rules": 222,
+          "commits": 160
+        },
+        "111": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "112": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 3
+        },
+        "113": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "114": {
+          "split": "fit",
+          "rules": 222,
+          "commits": 163
+        },
+        "115": {
+          "split": "calibration",
+          "rules": 10,
+          "commits": 0
+        },
+        "116": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 2
+        },
+        "117": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "118": {
+          "split": "fit",
+          "rules": 222,
+          "commits": 144
+        },
+        "119": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "120": {
+          "split": "calibration",
+          "rules": 34,
+          "commits": 1
+        },
+        "121": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "122": {
+          "split": "fit",
+          "rules": 222,
+          "commits": 126
+        },
+        "123": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "124": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 1
+        },
+        "125": {
+          "split": "calibration",
+          "rules": 34,
+          "commits": 0
+        },
+        "126": {
+          "split": "fit",
+          "rules": 222,
+          "commits": 93
+        },
+        "127": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "128": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 4
+        }
+      },
+      "dot": {
+        "1": {
+          "split": "fit",
+          "rules": 1,
+          "commits": 1
+        },
+        "2": {
+          "split": "calibration",
+          "rules": 10,
+          "commits": 1
+        },
+        "3": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 2
+        },
+        "4": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 2
+        },
+        "5": {
+          "split": "calibration",
+          "rules": 10,
+          "commits": 3
+        },
+        "6": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 2
+        },
+        "7": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 1
+        },
+        "8": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 1
+        },
+        "9": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 1
+        },
+        "10": {
+          "split": "calibration",
+          "rules": 10,
+          "commits": 0
+        },
+        "11": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 43
+        },
+        "12": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 14
+        },
+        "13": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "14": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 31
+        },
+        "15": {
+          "split": "calibration",
+          "rules": 10,
+          "commits": 0
+        },
+        "16": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "17": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 61
+        },
+        "18": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 16
+        },
+        "19": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 14
+        },
+        "20": {
+          "split": "calibration",
+          "rules": 10,
+          "commits": 16
+        },
+        "21": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 12
+        },
+        "22": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 7
+        },
+        "23": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 7
+        },
+        "24": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 7
+        },
+        "25": {
+          "split": "calibration",
+          "rules": 10,
+          "commits": 7
+        },
+        "26": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "27": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 72
+        },
+        "28": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 2
+        },
+        "29": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 2
+        },
+        "30": {
+          "split": "calibration",
+          "rules": 34,
+          "commits": 0
+        },
+        "31": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 47
+        },
+        "32": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 1
+        },
+        "33": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 1
+        },
+        "34": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 2
+        },
+        "35": {
+          "split": "calibration",
+          "rules": 34,
+          "commits": 0
+        },
+        "36": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 34
+        },
+        "37": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 2
+        },
+        "38": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 1
+        },
+        "39": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 2
+        },
+        "40": {
+          "split": "calibration",
+          "rules": 34,
+          "commits": 0
+        },
+        "41": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 25
+        },
+        "42": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 1
+        },
+        "43": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 1
+        },
+        "44": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 2
+        },
+        "45": {
+          "split": "calibration",
+          "rules": 34,
+          "commits": 0
+        },
+        "46": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 20
+        },
+        "47": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 1
+        },
+        "48": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 1
+        },
+        "49": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 2
+        },
+        "50": {
+          "split": "calibration",
+          "rules": 34,
+          "commits": 0
+        },
+        "51": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 16
+        },
+        "52": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 1
+        },
+        "53": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 1
+        },
+        "54": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 2
+        },
+        "55": {
+          "split": "calibration",
+          "rules": 34,
+          "commits": 0
+        },
+        "56": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 9
+        },
+        "57": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 1
+        },
+        "58": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 1
+        },
+        "59": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 2
+        },
+        "60": {
+          "split": "calibration",
+          "rules": 34,
+          "commits": 0
+        },
+        "61": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 5
+        },
+        "62": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "63": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "64": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 2
+        },
+        "65": {
+          "split": "calibration",
+          "rules": 10,
+          "commits": 2
+        },
+        "66": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 2
+        },
+        "67": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 4
+        },
+        "68": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "69": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "70": {
+          "split": "calibration",
+          "rules": 60,
+          "commits": 3
+        },
+        "71": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 2
+        },
+        "72": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 2
+        },
+        "73": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 2
+        },
+        "74": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "75": {
+          "split": "calibration",
+          "rules": 60,
+          "commits": 3
+        },
+        "76": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 1
+        },
+        "77": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 1
+        },
+        "78": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 2
+        },
+        "79": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "80": {
+          "split": "calibration",
+          "rules": 60,
+          "commits": 6
+        },
+        "81": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "82": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "83": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 5
+        },
+        "84": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "85": {
+          "split": "calibration",
+          "rules": 34,
+          "commits": 0
+        },
+        "86": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 1
+        },
+        "87": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "88": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "89": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 1
+        },
+        "90": {
+          "split": "calibration",
+          "rules": 10,
+          "commits": 0
+        },
+        "91": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "92": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 1
+        },
+        "93": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "94": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "95": {
+          "split": "calibration",
+          "rules": 60,
+          "commits": 1
+        },
+        "96": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "97": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "98": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 1
+        },
+        "99": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "100": {
+          "split": "calibration",
+          "rules": 34,
+          "commits": 0
+        },
+        "101": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 1
+        },
+        "102": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "103": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "104": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 2
+        },
+        "105": {
+          "split": "calibration",
+          "rules": 10,
+          "commits": 0
+        },
+        "106": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "107": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 2
+        },
+        "108": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "109": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "110": {
+          "split": "calibration",
+          "rules": 60,
+          "commits": 2
+        },
+        "111": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "112": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "113": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 1
+        },
+        "114": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "115": {
+          "split": "calibration",
+          "rules": 34,
+          "commits": 0
+        },
+        "116": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 2
+        },
+        "117": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "118": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "119": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 1
+        },
+        "120": {
+          "split": "calibration",
+          "rules": 10,
+          "commits": 0
+        },
+        "121": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "122": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 1
+        },
+        "123": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "124": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "125": {
+          "split": "calibration",
+          "rules": 60,
+          "commits": 1
+        },
+        "126": {
+          "split": "fit",
+          "rules": 10,
+          "commits": 0
+        },
+        "127": {
+          "split": "fit",
+          "rules": 34,
+          "commits": 0
+        },
+        "128": {
+          "split": "fit",
+          "rules": 60,
+          "commits": 0
+        }
+      }
+    }
+  },
+  "screen_128_run_control": {
+    "fact": {
+      "frozen": {
+        "case": "fact",
+        "binary": "3982b0c163470cdb7d0966409379b2a486d470b7ebb7ec70612f05361115fb12",
+        "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+        "gate": null,
+        "activations": {
+          "active": 1483,
+          "productive": 257,
+          "productive_active": 257
+        },
+        "execution": {
+          "assist": {
+            "duplicate_reads": 1703,
+            "duplicate_seconds": 0.0003462269999999988,
+            "exact_candidates": 910,
+            "exact_rows": 938,
+            "exact_rule_calls": 1644,
+            "exact_seconds": 0.003105017000000014,
+            "rejected_reads": 196,
+            "rejected_seconds": 5.716700000000004e-05,
+            "residual_commits": 175,
+            "skipped_rule_calls": 18
+          },
+          "native_partial_reads": 0,
+          "native_partial_probes": 0,
+          "native_partial_seconds": 0,
+          "shadow_report": null,
+          "live_receipts": false,
+          "receipt_counts": {},
+          "wave_receipt_seconds": 0.0,
+          "receipt_batches": 0,
+          "mode": "assist",
+          "wave_limit": 1,
+          "wave_endings": {
+            "single_batch": 128
+          },
+          "state_sha": "db1d243e14609f6be527db34af92341c8f5ba1e7c20c9d6ad68e733966882ccd",
+          "runs": 128,
+          "neural_waves": 128,
+          "issued": 1867,
+          "counts": {
+            "accepted": 845,
+            "calls": 1662,
+            "duplicates": 870,
+            "reads": 3340,
+            "reads_by_kind": {
+              "generated": 3326,
+              "initial": 14
+            },
+            "rejected": {
+              "binding": 51,
+              "guard": 101
+            }
+          },
+          "native_runtime_events": 0,
+          "independent_search_calls": 1644,
+          "network_seconds": 1.3345647130026919,
+          "remaining_process_seconds_including_ipc": 0.1912619709974186,
+          "native_verify_seconds": 0.001154983,
+          "native_repair_seconds": 0.0003876720000000001,
+          "wall_seconds": 1.749104291000549
+        }
+      },
+      "learned": {
+        "case": "fact",
+        "binary": "3982b0c163470cdb7d0966409379b2a486d470b7ebb7ec70612f05361115fb12",
+        "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+        "gate": "514d37cfd563cb193b6e6eca4ebbf27fd9a419e14427ef781487aaf9a0d90022",
+        "activations": {
+          "active": 1415,
+          "productive": 257,
+          "productive_active": 257
+        },
+        "execution": {
+          "assist": {
+            "duplicate_reads": 1703,
+            "duplicate_seconds": 0.00034960099999999897,
+            "exact_candidates": 910,
+            "exact_rows": 938,
+            "exact_rule_calls": 1644,
+            "exact_seconds": 0.0031610220000000172,
+            "rejected_reads": 196,
+            "rejected_seconds": 5.796200000000005e-05,
+            "residual_commits": 175,
+            "skipped_rule_calls": 18
+          },
+          "native_partial_reads": 0,
+          "native_partial_probes": 0,
+          "native_partial_seconds": 0,
+          "shadow_report": null,
+          "live_receipts": false,
+          "receipt_counts": {},
+          "wave_receipt_seconds": 0.0,
+          "receipt_batches": 0,
+          "mode": "assist",
+          "wave_limit": 1,
+          "wave_endings": {
+            "single_batch": 128
+          },
+          "state_sha": "db1d243e14609f6be527db34af92341c8f5ba1e7c20c9d6ad68e733966882ccd",
+          "runs": 128,
+          "neural_waves": 128,
+          "issued": 1867,
+          "counts": {
+            "accepted": 845,
+            "calls": 1662,
+            "duplicates": 870,
+            "reads": 3340,
+            "reads_by_kind": {
+              "generated": 3326,
+              "initial": 14
+            },
+            "rejected": {
+              "binding": 51,
+              "guard": 101
+            }
+          },
+          "native_runtime_events": 0,
+          "independent_search_calls": 1644,
+          "network_seconds": 1.3272482980064524,
+          "remaining_process_seconds_including_ipc": 0.19196347199322394,
+          "native_verify_seconds": 0.001146688,
+          "native_repair_seconds": 0.00036683600000000005,
+          "wall_seconds": 1.7358841659988684
+        }
+      }
+    },
+    "loopfact": {
+      "frozen": {
+        "case": "loopfact",
+        "binary": "3982b0c163470cdb7d0966409379b2a486d470b7ebb7ec70612f05361115fb12",
+        "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+        "gate": null,
+        "activations": {
+          "active": 1522,
+          "productive": 319,
+          "productive_active": 318
+        },
+        "execution": {
+          "assist": {
+            "duplicate_reads": 2356,
+            "duplicate_seconds": 0.0004719909999999963,
+            "exact_candidates": 1026,
+            "exact_rows": 858,
+            "exact_rule_calls": 1680,
+            "exact_seconds": 0.003992101000000019,
+            "rejected_reads": 237,
+            "rejected_seconds": 9.532900000000002e-05,
+            "residual_commits": 179,
+            "skipped_rule_calls": 22
+          },
+          "native_partial_reads": 0,
+          "native_partial_probes": 0,
+          "native_partial_seconds": 0,
+          "shadow_report": null,
+          "live_receipts": false,
+          "receipt_counts": {},
+          "wave_receipt_seconds": 0.0,
+          "receipt_batches": 0,
+          "mode": "assist",
+          "wave_limit": 1,
+          "wave_endings": {
+            "single_batch": 128
+          },
+          "state_sha": "1bdf265a21b94cbf10a2f0019b08ec036cbae635145656401db94c966183b327",
+          "runs": 128,
+          "neural_waves": 128,
+          "issued": 2054,
+          "counts": {
+            "accepted": 737,
+            "calls": 1702,
+            "duplicates": 1174,
+            "reads": 3920,
+            "reads_by_kind": {
+              "generated": 3909,
+              "initial": 11
+            },
+            "rejected": {
+              "binding": 33,
+              "guard": 110
+            }
+          },
+          "native_runtime_events": 0,
+          "independent_search_calls": 1680,
+          "network_seconds": 1.4094862529909733,
+          "remaining_process_seconds_including_ipc": 0.19618910000923595,
+          "native_verify_seconds": 0.001428938,
+          "native_repair_seconds": 0.00040570600000000004,
+          "wall_seconds": 1.8245299589998467
+        }
+      },
+      "learned": {
+        "case": "loopfact",
+        "binary": "3982b0c163470cdb7d0966409379b2a486d470b7ebb7ec70612f05361115fb12",
+        "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+        "gate": "514d37cfd563cb193b6e6eca4ebbf27fd9a419e14427ef781487aaf9a0d90022",
+        "activations": {
+          "active": 1484,
+          "productive": 319,
+          "productive_active": 318
+        },
+        "execution": {
+          "assist": {
+            "duplicate_reads": 2356,
+            "duplicate_seconds": 0.00046670299999999724,
+            "exact_candidates": 1026,
+            "exact_rows": 858,
+            "exact_rule_calls": 1680,
+            "exact_seconds": 0.0036782330000000164,
+            "rejected_reads": 237,
+            "rejected_seconds": 8.045300000000004e-05,
+            "residual_commits": 179,
+            "skipped_rule_calls": 22
+          },
+          "native_partial_reads": 0,
+          "native_partial_probes": 0,
+          "native_partial_seconds": 0,
+          "shadow_report": null,
+          "live_receipts": false,
+          "receipt_counts": {},
+          "wave_receipt_seconds": 0.0,
+          "receipt_batches": 0,
+          "mode": "assist",
+          "wave_limit": 1,
+          "wave_endings": {
+            "single_batch": 128
+          },
+          "state_sha": "1bdf265a21b94cbf10a2f0019b08ec036cbae635145656401db94c966183b327",
+          "runs": 128,
+          "neural_waves": 128,
+          "issued": 2054,
+          "counts": {
+            "accepted": 737,
+            "calls": 1702,
+            "duplicates": 1174,
+            "reads": 3920,
+            "reads_by_kind": {
+              "generated": 3909,
+              "initial": 11
+            },
+            "rejected": {
+              "binding": 33,
+              "guard": 110
+            }
+          },
+          "native_runtime_events": 0,
+          "independent_search_calls": 1680,
+          "network_seconds": 1.3909450020000804,
+          "remaining_process_seconds_including_ipc": 0.1960957870006963,
+          "native_verify_seconds": 0.001379836,
+          "native_repair_seconds": 0.0003995010000000002,
+          "wall_seconds": 1.8051343329989322
+        }
+      }
+    },
+    "sum-divisors": {
+      "frozen": {
+        "case": "sum-divisors",
+        "binary": "3982b0c163470cdb7d0966409379b2a486d470b7ebb7ec70612f05361115fb12",
+        "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+        "gate": null,
+        "activations": {
+          "active": 1221,
+          "productive": 265,
+          "productive_active": 258
+        },
+        "execution": {
+          "assist": {
+            "duplicate_reads": 2764,
+            "duplicate_seconds": 0.0005941550000000014,
+            "exact_candidates": 2124,
+            "exact_rows": 1670,
+            "exact_rule_calls": 1383,
+            "exact_seconds": 0.005191084999999995,
+            "rejected_reads": 430,
+            "rejected_seconds": 0.0001166380000000002,
+            "residual_commits": 659,
+            "skipped_rule_calls": 14
+          },
+          "native_partial_reads": 0,
+          "native_partial_probes": 0,
+          "native_partial_seconds": 0,
+          "shadow_report": null,
+          "live_receipts": false,
+          "receipt_counts": {},
+          "wave_receipt_seconds": 0.0,
+          "receipt_batches": 0,
+          "mode": "assist",
+          "wave_limit": 1,
+          "wave_endings": {
+            "single_batch": 128
+          },
+          "state_sha": "6e2bdcd75a1d156f3ab09ee8d4698f079041b483e28aeed76514d44ec98d4519",
+          "runs": 128,
+          "neural_waves": 128,
+          "issued": 2534,
+          "counts": {
+            "accepted": 1051,
+            "calls": 1397,
+            "duplicates": 1242,
+            "reads": 5082,
+            "reads_by_kind": {
+              "generated": 5026,
+              "initial": 56
+            },
+            "rejected": {
+              "binding": 101,
+              "guard": 140
+            }
+          },
+          "native_runtime_events": 0,
+          "independent_search_calls": 1383,
+          "network_seconds": 1.945797001997562,
+          "remaining_process_seconds_including_ipc": 0.2969345050034664,
+          "native_verify_seconds": 0.001788577,
+          "native_repair_seconds": 0.0007481250000000001,
+          "wall_seconds": 2.4800437499998225
+        }
+      },
+      "learned": {
+        "case": "sum-divisors",
+        "binary": "3982b0c163470cdb7d0966409379b2a486d470b7ebb7ec70612f05361115fb12",
+        "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+        "gate": "514d37cfd563cb193b6e6eca4ebbf27fd9a419e14427ef781487aaf9a0d90022",
+        "activations": {
+          "active": 1157,
+          "productive": 265,
+          "productive_active": 258
+        },
+        "execution": {
+          "assist": {
+            "duplicate_reads": 2764,
+            "duplicate_seconds": 0.0005302819999999982,
+            "exact_candidates": 2124,
+            "exact_rows": 1670,
+            "exact_rule_calls": 1383,
+            "exact_seconds": 0.005726721999999967,
+            "rejected_reads": 430,
+            "rejected_seconds": 0.00013433999999999994,
+            "residual_commits": 659,
+            "skipped_rule_calls": 14
+          },
+          "native_partial_reads": 0,
+          "native_partial_probes": 0,
+          "native_partial_seconds": 0,
+          "shadow_report": null,
+          "live_receipts": false,
+          "receipt_counts": {},
+          "wave_receipt_seconds": 0.0,
+          "receipt_batches": 0,
+          "mode": "assist",
+          "wave_limit": 1,
+          "wave_endings": {
+            "single_batch": 128
+          },
+          "state_sha": "6e2bdcd75a1d156f3ab09ee8d4698f079041b483e28aeed76514d44ec98d4519",
+          "runs": 128,
+          "neural_waves": 128,
+          "issued": 2534,
+          "counts": {
+            "accepted": 1051,
+            "calls": 1397,
+            "duplicates": 1242,
+            "reads": 5082,
+            "reads_by_kind": {
+              "generated": 5026,
+              "initial": 56
+            },
+            "rejected": {
+              "binding": 101,
+              "guard": 140
+            }
+          },
+          "native_runtime_events": 0,
+          "independent_search_calls": 1383,
+          "network_seconds": 1.9878732949928235,
+          "remaining_process_seconds_including_ipc": 0.30661037600712415,
+          "native_verify_seconds": 0.001897412,
+          "native_repair_seconds": 0.0008158749999999998,
+          "wall_seconds": 2.5384815000015806
+        }
+      }
+    }
+  },
+  "screen_generated_finals": {
+    "held_program": {
+      "programs": 48,
+      "neural": 360,
+      "exact": 0,
+      "issued": 360,
+      "active": 144,
+      "productive": 144,
+      "productive_active": 144
+    },
+    "held_merge": {
+      "programs": 48,
+      "neural": 359,
+      "exact": 1,
+      "issued": 359,
+      "active": 144,
+      "productive": 144,
+      "productive_active": 144
+    },
+    "held_result_pc": {
+      "programs": 48,
+      "neural": 360,
+      "exact": 0,
+      "issued": 360,
+      "active": 144,
+      "productive": 144,
+      "productive_active": 144
+    }
+  }
+}

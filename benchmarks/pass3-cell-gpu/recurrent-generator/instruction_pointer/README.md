@@ -474,3 +474,69 @@ results to corresponding teacher commits to audit the first exclusive failure.
 `boundary_gates.py` varies the root threshold, parent threshold or frontier
 size on that same reached snapshot. All these proof-correspondence and
 counterfactual checks run offline.
+
+### Live neural assistance and the cost of residual matching
+
+The evaluated checkpoint is the recalibrated opaque Actor (weight SHA beginning
+`13e209c6`). Both root-offset sweeps used the same 50 reserved Runs of 21
+training programs. The terminal heads used the two training EggCC programs
+and 48 random training programs. Of 221,770 receiver-labelled extensions per
+treatment, 100,599 came from sum-bits, 120,502 from dot-product and 669 from
+random training programs. [The split audit](run-recall/assist-cost/training-split.json)
+checks compiled and source identities, tape digests, checkpoint ancestry and
+snapshot membership. Fact, loopfact and sum-divisors have been consulted
+throughout architecture development. They measure development holdout performance.
+
+In the live `assist` receiver a wave issues complete named proofs on the
+pre-write snapshot. The receiver verifies their actual premises. The source
+executor retains rule order and orders the RHS bindings. For rules with at
+most one table atom, the number of distinct verified projections can prove
+that all possible outputs are covered. A nonempty certified frontier skips
+the exact query and resumes the usual Cell continuations. Other rules perform
+ordinary matching and retain source continuations, with named certificates
+supplying the witnesses for overlapping bindings. Exact-only bindings receive
+separate token IDs and actual result receipts. Both kinds of completed token
+are visible to the following Run. This treatment uses the real native graph,
+a single CPU policy thread and no teacher tape during assist execution.
+
+On the three full programs the receiver accepted 10,840 distinct neural
+requests and the residual contributed 9,588 commits. There were 18,833
+duplicate proposals, 2,752 rejections and 4,763 named reads on the rejected
+requests. Exact queries still returned 20,100 bindings. Only 73 rule
+invocations certified complete coverage. The exact residual-candidate
+counter totaled 26,167 in both native paths. A signed commit and an avoided
+search have different denominators. Each program passed comparison of its
+ordered schedule, RHS, writes, resumes, events and final state.
+
+`assist_cost.py ROOT BINARY WEIGHTS OUT --cases fact loopfact sum-divisors`
+runs full semantic audits followed by alternating end-to-end comparisons.
+The process wall includes native startup, parsing, final export and transport.
+The Python service and PyTorch runtime are warm, and the model is loaded
+anew for each trial. The inference column covers model encoding and proposal
+generation. The assist search timer covers calls to the native matcher.
+Costs outside those intervals include the pre-write memory export, Python
+snapshot maintenance, IPC and ordinary execution. The receiver also times
+duplicate and rejected requests inside verification. The native oracle series
+uses the original `token-replay/study.py` in-memory timer, which excludes
+program and tape decoding and final export.
+
+The [training controls](run-recall/assist-cost/policy-ablations.json) use the
+policy's own history. A first experiment fitted the existing root bias and
+final pointer on the first incomplete private snapshot of each training EggCC
+program. The native receiver labelled 1,394 named requests across 91 possible
+anchors. These included alternatives for all 11 missing commits. After 64 MPS
+updates, full held snapshot recall fell from 10,824 to 10,131 of 20,428.
+Exclusive execution also diverged earlier on two of the three programs.
+The cost comparison retains the original checkpoint.
+
+A second experiment collected live assist receipts on the first 128 Runs of
+each EggCC training program. Each rule uses its frozen template embedding,
+typed visible and fresh port counts, and the time since its previous confirmed
+commit. The following Run supplies labels for the preceding predictions.
+A shared MPS-trained head screens scheduled rules before parent decoding.
+Across the first 128 Runs of each held EggCC program, productive activations
+were 833/4,226 without the screen and 833/4,056 with it. The exact checked
+proposals, duplicates, rejections and signed commit counts by workload stayed
+the same. All 144 generated holdouts passed complete native assist comparison.
+This one round of training on actual assisted states excluded 170 fruitless
+starts and provided no reduction in verifier traffic on the measured prefix.
