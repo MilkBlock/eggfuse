@@ -4,6 +4,7 @@ from collections import Counter
 import hashlib
 from itertools import permutations
 import json
+import random
 from pathlib import Path
 import subprocess
 from time import perf_counter
@@ -11,7 +12,7 @@ from time import perf_counter
 import torch
 from actor import InstructionActor
 from catalog import KINDS
-from history import load
+from history import stream
 from online import execute,propose
 
 
@@ -22,12 +23,26 @@ def sha(data):
 def align(targets,proposals):
     """One-to-one maximum exact token credit, then match individual parent roles."""
     n=max(len(proposals),len(targets))
-    if n>6:
-        raise ValueError('exact lane assignment for this small ablation supports at most six targets')
     def credit(t,p):
         if t is None or p is None or t[0]!=p[0]:
             return 0,0
         return int(t==p),sum(a==b for a,b in zip(t[1],p[1],strict=True))
+    if n>6:
+        # Offline metric only. One exact certificate outweighs all possible
+        # individual-role matches in the whole alignment.
+        import networkx as nx
+        graph=nx.Graph()
+        bonus=1+sum(len(t[1]) for t in targets)
+        for i,t in enumerate(targets):
+            for j,p in enumerate(proposals):
+                exact,roles=credit(t,p)
+                if exact or roles:
+                    graph.add_edge(i,len(targets)+j,weight=bonus*exact+roles)
+        paired={}
+        for u,v in nx.max_weight_matching(graph):
+            i,j=sorted((u,v))
+            paired[i]=proposals[j-len(targets)]
+        return [(t,paired.get(i)) for i,t in enumerate(targets)]
     pred=proposals+[None]*(n-len(proposals))
     target=targets+[None]*(n-len(targets))
     def score(order):
@@ -37,7 +52,7 @@ def align(targets,proposals):
     return [(t,pred[j]) for t,j in zip(target,order) if t is not None]
 
 
-def assess(root,binary,weights,seed, field_pointer=False):
+def assess(root,binary,weights,seed, field_pointer=False, splits=None, snapshot_count=None):
     torch.manual_seed(seed)
     torch.set_num_threads(1)
     actor=InstructionActor(field_pointer=field_pointer).eval()
@@ -49,16 +64,28 @@ def assess(root,binary,weights,seed, field_pointer=False):
                 snapshot_metric='address equality to one reference certificate; each proposal used at most once',
                 exclusive_credit='common complete Run prefix lower bound; divergent suffix is uncredited',splits={})
     manifest=json.loads((root/'manifest.json').read_bytes())
-    for split in dict.fromkeys(r['split'] for r in manifest):
+    known=set(r['split'] for r in manifest)
+    if splits and set(splits)-known:
+        raise ValueError('unknown evaluation split')
+    if snapshot_count is not None and snapshot_count<1:
+        raise ValueError('snapshot budget must be positive')
+    result['snapshot_budget_per_case']=snapshot_count
+    for split in dict.fromkeys(splits or [r['split'] for r in manifest]):
         cases=[]
         totals=Counter()
         correct,required=Counter(),Counter()
         for case in (c for c in manifest if c['split']==split):
             path=root/case['directory']
-            cat,frames=load(path,seed+case['seed'])
+            case_seed=seed+case['seed']
+            selected=None
+            if snapshot_count is not None:
+                runs=case['runs']
+                selected=set(random.Random(case_seed).sample(range(1,runs+1),min(snapshot_count,runs)))
             with torch.no_grad():
-                nodes=actor.template_graph(cat)
-                for s in frames:
+                nodes=None
+                for cat,s in stream(path,case_seed,selected):
+                    if nodes is None:
+                        nodes=actor.template_graph(cat)
                     start=perf_counter()
                     proposed=propose(actor,cat,s,nodes)
                     totals['snapshot_network_seconds']+=perf_counter()-start
@@ -89,11 +116,9 @@ def assess(root,binary,weights,seed, field_pointer=False):
                        reference_state_equal=run['state_sha']==native['state_sha'],
                        certified_reference_prefix_commits=prefix)
             cases.append(run)
-        if not all(required[k]>0 for k in KINDS):
-            raise ValueError('empty class in the reference set')
-        result['splits'][split]=dict(programs=len(cases),families=sorted({c['merge_family'] for c in manifest if c['split']==split}),
+        result['splits'][split]=dict(programs=len(cases),families=sorted({c['merge_family'] for c in manifest if c['split']==split and 'merge_family' in c}),
             shadow=dict(mode='shadow',**totals,
-                        complete_coverage=totals['correct_complete']/totals['teacher_commits'],
+                        complete_coverage=totals['correct_complete']/totals['teacher_commits'] if totals['teacher_commits'] else None,
                         by_parent_kind={k:{'correct':correct[k],'required':required[k]} for k in KINDS}),
             exclusive=dict(mode='exclusive',complete_programs=sum(c['reference_state_equal'] for c in cases),
                            accepted=sum(c['counts']['accepted'] for c in cases),
@@ -111,5 +136,7 @@ if __name__=='__main__':
     parser.add_argument('--weights',type=Path)
     parser.add_argument('--seed',type=int,default=1703)
     parser.add_argument('--field-pointer',action='store_true')
+    parser.add_argument('--split',action='append')
+    parser.add_argument('--snapshot-count',type=int)
     a=parser.parse_args()
-    a.output.write_text(json.dumps(assess(a.corpus,a.receiver.resolve(),a.weights,a.seed,a.field_pointer),indent=2)+'\n')
+    a.output.write_text(json.dumps(assess(a.corpus,a.receiver.resolve(),a.weights,a.seed,a.field_pointer,a.split,a.snapshot_count),indent=2)+'\n')

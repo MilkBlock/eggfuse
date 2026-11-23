@@ -17,10 +17,17 @@ def score(actor,cat,frame,nodes):
     rules={rid for rid,_ in good}
     mem=actor.memory(cat,frame,nodes)
     n=Counter(runs=1,teacher_rules=len(rules),teacher_bindings=len(good))
+    oracle=Counter()
     chosen=set()
     exact=set()
     for lane in range(actor.lanes.num_embeddings):
         state=actor.actions(cat,mem,lane)
+        for teacher_rule in sorted(rules):
+            if cat.atoms[teacher_rule]:
+                oracle['required_rule_lane_trials']+=1
+                decoded,_=actor.references(cat,mem,state[0],teacher_rule)
+                oracle['complete_tuple']+=int(decoded is not None)
+                oracle['exact_teacher_tuple']+=int((teacher_rule,decoded) in good)
         rid,refs=lane_choice(actor,cat,mem,state)
         n['lanes']+=1
         if rid is None:
@@ -46,7 +53,7 @@ def score(actor,cat,frame,nodes):
             n['correct_rule_other_parents']+=1
     n.update(covered_distinct_rules=len(chosen&rules),exact_distinct_requests=len(exact),
              empty_runs=int(not rules),empty_correct_stop=int(not rules and not chosen))
-    return n
+    return n,oracle
 
 
 @torch.no_grad()
@@ -67,13 +74,17 @@ def audit(root,weights,output,samples,seed,field):
         for label,runs in strata.items():
             selected=sorted(rng.sample(runs,min(samples,len(runs))))
             totals=Counter()
+            given_rule=Counter()
             # Keep only a few materialized snapshots resident.
             for i in range(0,len(selected),4):
                 cat,frames=load(root/rec['directory'],seed,set(selected[i:i+4]))
                 nodes=actor.template_graph(cat)
                 for frame in frames:
-                    totals+=score(actor,cat,frame,nodes)
-            case[label]=dict(population=len(runs),sample=selected,counts=totals)
+                    ordinary,oracle=score(actor,cat,frame,nodes)
+                    totals+=ordinary
+                    given_rule+=oracle
+            case[label]=dict(population=len(runs),sample=selected,counts=totals,
+                oracle_rule=dict(mode="assist",**given_rule))
         report['cases'][rec['workload']]=dict(split=rec['split'],**case)
         output.write_text(json.dumps(report,indent=2)+'\n')
 
