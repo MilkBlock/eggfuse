@@ -16,7 +16,13 @@ from train_layout_bandit import fixed_features
 from train_ripsat import layout_id
 
 
-COUNTS = ('uncontested_effects', 'owned_valid', 'failed_steps')
+PRICES = (1., .25, -.0625)
+
+
+def outcome_counts(target):
+    first = {'effects': 'uncontested_effects', 'commits': 'uncontested'}[target]
+    return (first, 'owned_valid', 'failed_steps')
+
 BAKE_FILES = ('codes.pt', 'catalog.json', 'shared.pt', 'boundary.pt')
 
 
@@ -39,14 +45,14 @@ class ReceiptValue(nn.Module):
         super().__init__()
         self.key = nn.Sequential(nn.Linear(graph_width, 48), nn.Tanh(), nn.Linear(48, 48))
         self.query = nn.Sequential(nn.Linear(context_width, 32), nn.Tanh(), nn.Linear(32, 48))
-        self.bias = nn.Linear(48, len(COUNTS))
+        self.bias = nn.Linear(48, len(PRICES))
 
     def forward(self, context, key):
-        q = self.query(context).reshape(-1, len(COUNTS), 16)
-        return ((q * key.reshape(-1, len(COUNTS), 16)).sum(-1) / 4 + self.bias(key)).clamp(-14, 8)
+        q = self.query(context).reshape(-1, len(PRICES), 16)
+        return ((q * key.reshape(-1, len(PRICES), 16)).sum(-1) / 4 + self.bias(key)).clamp(-14, 8)
 
 
-def load_rows(logs, baked):
+def load_rows(logs, baked, outcomes):
     study = read(baked/'study.json')
     sha = {k: digest(baked/k) for k in BAKE_FILES}
     held = {u for u, g in enumerate(unpack(read(baked/'catalog.json')))
@@ -81,9 +87,9 @@ def load_rows(logs, baked):
                 continue
             if not 0 < propensity <= 1 or u not in log['menus'][menu]:
                 raise ValueError('invalid graph action')
-            rows.append((x, u, [counts.get(k, 0) for k in COUNTS]))
+            rows.append((x, u, [counts.get(k, 0) for k in outcomes]))
             sums.update(counts)
-        if any(sums[k] != report['credit'].get(k, 0) for k in COUNTS):
+        if any(sums[k] != report['credit'].get(k, 0) for k in outcomes):
             raise ValueError('training targets differ from native aggregate')
         files[key] = rows
     seeds = sorted({s for _, s in files})
@@ -98,8 +104,11 @@ def load_rows(logs, baked):
             pack([k for k in files if k[1] == seeds[-1]]), seeds, sha, provenance, common.pop())
 
 
-def fit(logs, baked, out, epochs):
-    train, valid, seeds, sha, provenance, (binary, recovery) = load_rows(logs, baked)
+def fit(logs, baked, out, epochs, target):
+    if epochs < 1:
+        raise ValueError("training needs a positive epoch count")
+    outcomes = outcome_counts(target)
+    train, valid, seeds, sha, provenance, (binary, recovery) = load_rows(logs, baked, outcomes)
     device = 'mps'
     graphs = graph_inputs(baked).to(device)
     torch.manual_seed(1703)
@@ -140,7 +149,7 @@ def fit(logs, baked, out, epochs):
         torch.save(dict(keys=keys, bias=frozen.bias(keys)), out/'values.pt')
     torch.save(state, out/'policy.pt')
     report = dict(objective='native_receipt_value', bake=sha, policy=digest(out/'policy.pt'),
-                  compiled=digest(out/'values.pt'), counts=COUNTS, prices=[1., .25, -.0625], device=device, selected_epoch=selected,
+                  compiled=digest(out/'values.pt'), counts=outcomes, target=target, prices=PRICES, device=device, selected_epoch=selected,
                   validation_loss=history, training_seeds=seeds[:-1], validation_seed=seeds[-1],
                   training_actions=len(train[0]), validation_actions=len(valid[0]), binary=binary,
                   recovery=json.loads(recovery), training_counts=train[2].sum(0).cpu().tolist(),
@@ -153,7 +162,7 @@ class ReceiptChoice:
 
     def __init__(self, folder, baked):
         info = read(folder/'training.json')
-        if (info['objective'] != 'native_receipt_value' or tuple(info['counts']) != COUNTS or
+        if (info['objective'] != 'native_receipt_value' or tuple(info['counts']) != outcome_counts(info.get('target', 'effects')) or
                 any(info['bake'][k] != digest(baked/k) for k in BAKE_FILES) or
                 info['policy'] != digest(folder/'policy.pt')):
             raise ValueError('incompatible receipt policy')
@@ -165,11 +174,11 @@ class ReceiptChoice:
         self.model.load_state_dict(weights)
         self.prices = torch.tensor(info['prices'])
         fixed = torch.load(folder/'values.pt', weights_only=True)
-        self.keys = fixed['keys'].reshape(-1, len(COUNTS), 16)
+        self.keys = fixed['keys'].reshape(-1, len(PRICES), 16)
         self.bias = fixed['bias']
 
     def select(self, req, options, context, issuer):
-        q = self.model.query(context).view(len(COUNTS), 16)
+        q = self.model.query(context).view(len(PRICES), 16)
         ids = torch.as_tensor(options)
         rates = ((self.keys[ids] * q).sum(-1) / 4 + self.bias[ids]).clamp(-14, 8).exp()
         values = rates @ self.prices
@@ -183,6 +192,7 @@ if __name__ == '__main__':
     for key in ('logs', 'baked', 'out'):
         p.add_argument(key, type=Path)
     p.add_argument('--epochs', type=int, default=24)
+    p.add_argument('--target', choices=['effects', 'commits'], default='effects')
     a = p.parse_args()
     torch.set_num_threads(1)
-    fit(a.logs, a.baked, a.out, a.epochs)
+    fit(a.logs, a.baked, a.out, a.epochs, a.target)
