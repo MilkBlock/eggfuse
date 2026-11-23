@@ -1,0 +1,85 @@
+{
+  "protocol": "5dc431e724500494e10492f434a7312eaba1aa44f95d508ee0eedfccbd187c31",
+  "selected": "base",
+  "policy": "6d108e18db6c13addb99ae066ed5a3cfac5081593b0f52d1c1d461889b7a5d7c",
+  "candidates": {
+    "base": {
+      "strength": 0,
+      "policy": "6d108e18db6c13addb99ae066ed5a3cfac5081593b0f52d1c1d461889b7a5d7c",
+      "programs": {
+        "affine-twins": {
+          "signed": 3337,
+          "required": 4215,
+          "paid": 11352,
+          "ops": 2338,
+          "audit": "09de32b1173f525b99a109d80e80ac3c10c5f4c5b4db01ad150f3878a5172e37"
+        },
+        "gated-state": {
+          "signed": 4448,
+          "required": 6118,
+          "paid": 14005,
+          "ops": 2997,
+          "audit": "bc24e1a480d07306ab82af69f04ca9b028eb9706e7a85a43c1c902a96fb8b3fb"
+        }
+      },
+      "ranking": [
+        0.7270349787512259,
+        0.7593656507042013,
+        0.21039555152423395,
+        0
+      ]
+    },
+    "cal-0.25": {
+      "strength": 0.25,
+      "policy": "4eafb08ef61e276a81fda4672e1c840e8d664a8527cf44b1709459fd7be3e24d",
+      "programs": {
+        "affine-twins": {
+          "signed": 3313,
+          "required": 4215,
+          "paid": 11246,
+          "ops": 2297,
+          "audit": "38d2c10d08c66b7b10e7d31f40a036ce8ca975d2826e4fe2c28a9975cf8911d4"
+        },
+        "gated-state": {
+          "signed": 4391,
+          "required": 6118,
+          "paid": 13728,
+          "ops": 2915,
+          "audit": "acbc0827e382213da1c72ce054b2fb702c8e6b2a9721749a5994b5f26b97f4cc"
+        }
+      },
+      "ranking": [
+        0.7177182085648904,
+        0.7518602905220656,
+        0.20869704492672378,
+        -0.25
+      ]
+    },
+    "cal-1": {
+      "strength": 1.0,
+      "policy": "92a9c7aff35962de7f687e3130255ae995e5f7adebce4c1ee94d77d196c5682b",
+      "programs": {
+        "affine-twins": {
+          "signed": 3284,
+          "required": 4215,
+          "paid": 11284,
+          "ops": 2234,
+          "audit": "cac24e17e95665fd66f3517018ac19af5bb44ea30882a56427c180f47eb80039"
+        },
+        "gated-state": {
+          "signed": 4347,
+          "required": 6118,
+          "paid": 13820,
+          "ops": 2831,
+          "audit": "22771deb9038b1c8dcf0a99f4b72145e7b6058a9a3b1a6aff33a37fef2ea8749"
+        }
+      },
+      "ranking": [
+        0.7105263157894737,
+        0.7448242492351875,
+        0.2017606755895475,
+        -1.0
+      ]
+    }
+  }
+}
