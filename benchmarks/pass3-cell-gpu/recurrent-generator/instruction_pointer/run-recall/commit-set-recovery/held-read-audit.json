@@ -1,0 +1,38 @@
+{
+  "sum": {
+    "original": {
+      "complete_examples": 16115,
+      "selected": 1135,
+      "invalid": 90,
+      "distinct_uncovered": 268,
+      "available_uncovered": 269,
+      "extra_proofs": 777
+    },
+    "candidate": {
+      "complete_examples": 16115,
+      "selected": 953,
+      "invalid": 48,
+      "distinct_uncovered": 256,
+      "available_uncovered": 269,
+      "extra_proofs": 649
+    }
+  },
+  "dot": {
+    "original": {
+      "complete_examples": 14508,
+      "selected": 1203,
+      "invalid": 100,
+      "distinct_uncovered": 163,
+      "available_uncovered": 167,
+      "extra_proofs": 940
+    },
+    "candidate": {
+      "complete_examples": 14508,
+      "selected": 1001,
+      "invalid": 54,
+      "distinct_uncovered": 152,
+      "available_uncovered": 167,
+      "extra_proofs": 795
+    }
+  }
+}

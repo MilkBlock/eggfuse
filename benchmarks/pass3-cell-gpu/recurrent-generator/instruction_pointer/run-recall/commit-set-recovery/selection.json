@@ -1,0 +1,65 @@
+{
+  "base": {
+    "programs": {
+      "affine-twins": {
+        "required": 4215,
+        "signed": 3337,
+        "paid": 11352,
+        "duplicates": 7506,
+        "signed_ops": 2338,
+        "complete_runs": 188,
+        "held_complete": 1,
+        "held_issued": 428,
+        "exclusive_common_runs": 14,
+        "exclusive_equal": false
+      },
+      "gated-state": {
+        "required": 6118,
+        "signed": 4448,
+        "paid": 14005,
+        "duplicates": 9062,
+        "signed_ops": 2997,
+        "complete_runs": 200,
+        "held_complete": 3,
+        "held_issued": 560,
+        "exclusive_common_runs": 10,
+        "exclusive_equal": false
+      }
+    },
+    "min_recall": 0.7270349787512259,
+    "macro_recall": 0.7593656507042013,
+    "paid_per_signed": 3.257161207450225
+  },
+  "candidate": {
+    "programs": {
+      "affine-twins": {
+        "required": 4215,
+        "signed": 3318,
+        "paid": 11233,
+        "duplicates": 7443,
+        "signed_ops": 2320,
+        "complete_runs": 186,
+        "held_complete": 1,
+        "held_issued": 420,
+        "exclusive_common_runs": 14,
+        "exclusive_equal": false
+      },
+      "gated-state": {
+        "required": 6118,
+        "signed": 4425,
+        "paid": 13932,
+        "duplicates": 9046,
+        "signed_ops": 2984,
+        "complete_runs": 198,
+        "held_complete": 3,
+        "held_issued": 558,
+        "exclusive_common_runs": 10,
+        "exclusive_equal": false
+      }
+    },
+    "min_recall": 0.7232755802549853,
+    "macro_recall": 0.7552320961773147,
+    "paid_per_signed": 3.2500322872271727
+  },
+  "selected": "base"
+}
