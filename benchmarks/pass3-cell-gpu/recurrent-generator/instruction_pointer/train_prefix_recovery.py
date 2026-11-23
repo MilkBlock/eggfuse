@@ -21,7 +21,7 @@ from side_boundary import address
 
 
 @torch.no_grad()
-def collect(root,name,weights,binary,out,*,commit_sets=False):
+def collect(root,name,weights,binary,out,*,commit_sets=False,read_order='source'):
     training={r['directory']:r['seed'] for r in read(root/'manifest.json') if
               r['origin']=='eggcc' and r['split']=='train'}
     if name not in training:
@@ -54,7 +54,7 @@ def collect(root,name,weights,binary,out,*,commit_sets=False):
             dom=Domains(mem)
             index={p.address:j for j,p in enumerate(mem.ports)}
             if commit_sets:
-                for rid,refs in generate(model,cat,mem,Policy(32),selected_rules=set(snap.rules)-held):
+                for rid,refs in generate(model,cat,mem,Policy(32,read_order=read_order),selected_rules=set(snap.rules)-held):
                     parents=[dict(address=dict(token=hist.inverse[a],op=pc),
                                   version=mem.ports[index[a,pc]].version) for a,pc in refs]
                     baseline.append(dict(token=len(baseline)+1,run=snap.run,rule=rid,parents=parents))
@@ -64,7 +64,7 @@ def collect(root,name,weights,binary,out,*,commit_sets=False):
                 if rid in held or not req['parents']:continue
                 js=[index[hist.rename(address(p))] for p in req['parents']]
                 anchor=next(i for i,j in enumerate(js) if not cat.seminaive[rid] or mem.ports[j].version>=mem.rules[rid])
-                order=(anchor,*(i for i in range(len(js)) if i!=anchor))
+                order=cat.read_order(rid,anchor,read_order)
                 path=tuple(js[i] for i in order)
                 truth[rid,order].add(path)
             groups=list(truth)
@@ -73,7 +73,7 @@ def collect(root,name,weights,binary,out,*,commit_sets=False):
                 if rid in held:continue
                 n=len(cat.atoms[rid])
                 for a in range(n if cat.seminaive[rid] else min(n,1)):
-                    order=(a,*(i for i in range(n) if i!=a))
+                    order=cat.read_order(rid,a,read_order)
                     if (rid,order) not in truth and len(dom.role(cat,mem,rid,a,a)):
                         absent.append((rid,order))
             groups+=rng.sample(absent,min(len(absent),max(2,len(groups))))
@@ -154,13 +154,16 @@ def collect(root,name,weights,binary,out,*,commit_sets=False):
     report=dict(data=digest(out/(name+'.pt')),program=digest(folder/'program.json'),
                 tape=digest(folder/'tape.json'),base=digest(weights),receiver=digest(binary),
                 holdout_rule_count=len(held),examples=len(labels),positive=sum(labels),
-                native_checked=len(requests),**stats)
+                native_checked=len(requests),read_order=read_order,**stats)
     (out/(name+'.json')).write_text(json.dumps(report,indent=2)+'\n')
 
 
 def fit(root,data,weights,out):
     names=sorted(r['directory'] for r in read(root/'manifest.json') if r['origin']=='eggcc' and r['split']=='train')
     reports={name:read(data/(name+'.json')) for name in names}
+    orders={report.get('read_order','source') for report in reports.values()}
+    if len(orders)!=1:
+        raise ValueError('mixed prefix orders in training corpus')
     parts=[]
     for name,report in reports.items():
         file=data/(name+'.pt')
@@ -209,17 +212,20 @@ def fit(root,data,weights,out):
     (out/'training.json').write_text(json.dumps(dict(width=width,base=digest(weights),budget=4,
         cut=cut,margin_cut=margin_cut,margin_f1=margin_f1,head=digest(out/'head.pt'),training=reports,valid_examples=int(valid.sum()),
         valid_positives=int(targets.sum()),valid_selected=issued,valid_hits=hits,valid_f1=f1,
-        training_positive=len(pos),training_negative=len(neg),device='mps',epochs=32),indent=2)+'\n')
+        training_positive=len(pos),training_negative=len(neg),device='mps',epochs=32,read_order=orders.pop()),indent=2)+'\n')
 
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     for key in ('root','weights','binary','data','out'):p.add_argument(key,type=Path)
     p.add_argument('--collect',nargs='+')
+    p.add_argument('--read-order',choices=['source','connected'],help='sample collection order; fit uses the order recorded in the data')
     p.add_argument('--commit-sets',action='store_true',help='record native proof equivalence and base-policy coverage for training')
     a=p.parse_args()
     torch.set_num_threads(1)
     if a.collect:
-        for name in a.collect:collect(a.root,name,a.weights,a.binary,a.data,commit_sets=a.commit_sets)
+        for name in a.collect:collect(a.root,name,a.weights,a.binary,a.data,commit_sets=a.commit_sets,read_order=a.read_order or 'source')
     else:
+        if a.read_order:
+            p.error('--read-order is used with --collect; fit reads it from the data')
         fit(a.root,a.data,a.weights,a.out)
