@@ -16,7 +16,11 @@ def program(seed, family, collision):
     outer = 'Envelope' + suffix
     expression = f'({name} old new)'
     extra_wants = ''
-    if family == 'held_merge':
+    if family == 'wrapped_new':
+        expression = f'({name} old ({outer} new))'
+    elif family == 'twice_wrapped_new':
+        expression = f'({name} old ({outer} ({outer} new)))'
+    elif family == 'held_merge':
         expression = f'({outer} {expression})'
     elif family == 'held_result_pc':
         expression = f'({name} ({outer} old) new)'
@@ -68,14 +72,14 @@ def merge_family(p):
     return hashlib.sha256(json.dumps(shapes,sort_keys=True).encode()).hexdigest()
 
 
-def generate(compiler, receiver, root, count, holdouts, extra_family):
+def generate(compiler, receiver, root, count, holdouts, extra_family, varied_positions=False, first_seed=100):
     if count < 4:
         raise ValueError('at least four training seeds required')
     if holdouts < 1:
         raise ValueError('empty holdout')
-    splits = [('train',100,count),('held_program',100+count,holdouts),('held_merge',100+count+holdouts,holdouts)]
+    splits = [('train',first_seed,count),('held_program',first_seed+count,holdouts),('held_merge',first_seed+count+holdouts,holdouts)]
     if extra_family:
-        splits.append(('held_result_pc',100+count+2*holdouts,holdouts))
+        splits.append(('held_result_pc',first_seed+count+2*holdouts,holdouts))
     cases = [(split, seed, collision)
              for split, base, n in splits
              for seed in range(base,base+n) for collision in (False,True)]
@@ -84,14 +88,23 @@ def generate(compiler, receiver, root, count, holdouts, extra_family):
         directory = root / f'{split}-{seed}-{int(collision)}'
         root.mkdir(parents=True,exist_ok=True)
         source = directory.with_suffix('.egg')
-        source.write_text(program(seed,split,collision))
+        family = split
+        if varied_positions and split in ('train','held_program'):
+            family = ('plain','wrapped_new','twice_wrapped_new')[seed % 3]
+        source.write_text(program(seed,family,collision))
         subprocess.run([compiler,'compile','--source',source,'--output',directory],check=True,stdout=subprocess.DEVNULL)
         cmd = [receiver,'capture',directory/'program.json',directory/'tape.json','audit','--memory',directory/'memory.jsonl']
         report = json.loads(subprocess.check_output(cmd))
         if bool(report['runtime_events']) != collision:
             raise ValueError(f'{directory}: native execution disagreed with expected collision arm')
         p = json.loads((directory/'program.json').read_bytes())
-        return dict(directory=directory.name,split=split,seed=seed,collision=collision,
+        tape = json.loads((directory/'tape.json').read_bytes())
+        event_ids = {e['token'] for e in tape['repair_events']}
+        consumed = [p['address']['op'] for r in tape['requests'] for p in r['parents']
+                    if p['address']['token'] in event_ids]
+        if collision and not consumed:
+            raise ValueError('collision did not reach any real consumer')
+        return dict(consumed_event_pcs=consumed,directory=directory.name,split=split,seed=seed,collision=collision,
                     merge_family=merge_family(p),state_sha=report['state_sha'])
     with ThreadPoolExecutor(max_workers=2) as pool:
         manifest = list(pool.map(one,cases))
@@ -103,6 +116,8 @@ def generate(compiler, receiver, root, count, holdouts, extra_family):
         raise ValueError('merge-template split leaked')
     if extra_family and families('held_result_pc') & (families('held_merge') | families('train')):
         raise ValueError('result PC holdout family leaked')
+    if varied_positions and len({pc for r in manifest if r['split']=='train' for pc in r['consumed_event_pcs']}) < 3:
+        raise ValueError('training did not consume three distinct merge positions')
     (root/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
 
 
@@ -114,5 +129,7 @@ if __name__=='__main__':
     ap.add_argument('--count',type=int,default=8)
     ap.add_argument('--held-count',type=int,default=3)
     ap.add_argument('--extra-family',action='store_true')
+    ap.add_argument('--varied-positions',action='store_true')
+    ap.add_argument('--first-seed',type=int,default=100)
     a=ap.parse_args()
-    generate(a.compiler.resolve(),a.receiver.resolve(),a.output.resolve(),a.count,a.held_count,a.extra_family)
+    generate(a.compiler.resolve(),a.receiver.resolve(),a.output.resolve(),a.count,a.held_count,a.extra_family,a.varied_positions,a.first_seed)

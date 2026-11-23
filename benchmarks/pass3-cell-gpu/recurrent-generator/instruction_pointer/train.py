@@ -37,13 +37,13 @@ def set_objective(actor,catalog,snapshot):
     return -joint.logsumexp(0)/lanes
 
 
-def train(root, output, seed, steps, event_fraction):
+def train(root, output, seed, steps, event_fraction, field_pointer=False):
     if not (0 <= event_fraction <= 1) or steps<=0:
         raise ValueError('bad training options')
     torch.manual_seed(seed)
     rng=random.Random(seed)
     device='cuda' if torch.cuda.is_available() else 'mps'
-    actor=InstructionActor().to(device)
+    actor=InstructionActor(field_pointer=field_pointer).to(device)
     opt=torch.optim.AdamW(actor.parameters(),lr=.002)
     manifest=json.loads((root/'manifest.json').read_bytes())
     examples=[r for r in manifest if r['split']=='train']
@@ -82,7 +82,7 @@ def train(root, output, seed, steps, event_fraction):
             print(json.dumps(record),flush=True)
     output.parent.mkdir(parents=True,exist_ok=True)
     torch.save(actor.cpu().state_dict(),output)
-    output.with_suffix('.training.json').write_text(json.dumps(dict(device=device,steps=steps,seed=seed,
+    output.with_suffix('.training.json').write_text(json.dumps(dict(field_pointer=field_pointer,device=device,steps=steps,seed=seed,
         event_fraction=event_fraction,natural_event_frames=len(event_samples),train_frames=len(all_samples),
         templates=sorted({r['merge_family'] for r in examples}),trajectory=trajectory),indent=2)+'\n')
 
@@ -94,5 +94,6 @@ if __name__=='__main__':
     p.add_argument('--steps',type=int,default=500)
     p.add_argument('--seed',type=int,default=1703)
     p.add_argument('--event-fraction',type=float,default=.25)
+    p.add_argument('--field-pointer',action='store_true')
     a=p.parse_args()
-    train(a.corpus,a.weights,a.seed,a.steps,a.event_fraction)
+    train(a.corpus,a.weights,a.seed,a.steps,a.event_fraction,a.field_pointer)
