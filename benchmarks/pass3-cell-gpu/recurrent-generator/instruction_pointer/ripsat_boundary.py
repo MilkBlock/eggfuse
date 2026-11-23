@@ -68,7 +68,7 @@ def fields(prior,domain,width):
     return keys,torch.stack((best,mean,each[:,0],(each*present).sum(1)/present.sum(1).clamp_min(1)),dim=1)
 
 
-def make_steps(folder,donor,layouts,selected,seed,codes,roles,model=None,*,grow_consumers=False):
+def make_steps(folder,donor,layouts,selected,seed,codes,roles,model=None,*,grow_consumers=False,record_fields=None,field_reader=None):
     rng=random.Random(seed)
     refs,_,roots,_=capture(folder,donor,max(map(len,layouts)),grow_consumers=grow_consumers)
     ids={layouts[i]:i for i in selected}
@@ -128,10 +128,15 @@ def make_steps(folder,donor,layouts,selected,seed,codes,roles,model=None,*,grow_
                     keys,features=fields(prior,hashes,width)
                     ctx=torch.cat((codes[uid],role,root_context(prior,width)))
                     if model is None:
-                        samples.append((ctx,keys,features))
+                        if record_fields is None:
+                            samples.append((ctx,keys,features))
+                        else:
+                            record_fields(uid,slot,dict(zip(sorted(bound),prior)),hashes,ctx,keys,features)
                         bound[slot]=gold
                     else:
                         score=model(ctx[None],keys[None],features[None])[0]
+                        if field_reader is not None and field_reader.routes.has_links(uid,slot):
+                            score=score+field_reader.adjustment(uid,slot,dict(zip(sorted(bound),prior,strict=True)),hashes)
                         bound[slot]=domain[int(score.argmax())]
                         hit=bound[slot]==gold
                         counts['slots']+=1
