@@ -256,3 +256,61 @@ All nine exclusive EggCC trajectories first diverged on Run 3. The previous
 multi-wave receipt policy recovered 925 commits on those same teacher snapshots.
 The [per-Run counts and matched controls](run-recall/parallel-anchors/summary.json)
 include mode-specific receipts and diagnostic timings.
+
+### Native credit for alternate parent proofs
+
+The offline miner varied one named parent of a teacher packet at a time. Each
+substitution had to verify as the same distinct native commit at the same source
+Run. On the sampled training trajectories 1,098 of 1,827 commits admitted at
+least one such substitution, giving 38,701 verified alternatives. All retained
+their first fresh atom, and all changed the learned port key. Live decoding sees
+the ordinary sealed port memory. Mining and receiver verdicts provide training
+labels only.
+
+The following CPU single-batch shadow measurements cover every teacher Run of
+fact, loopfact and sum-divisors, with 20,428 total commits and 956 nonempty Runs.
+Training used MPS. A positive address can prove the same commit as many other
+addresses. Expanded BCE credits each positive. The grouped loss awards a
+commit its strongest verified positive. The last treatment starts from the
+expanded model, freezes all weights and thresholds, and fits one nonnegative
+coefficient on the worst shared-field discrepancy using exact verdicts on
+training-program substitutions. Its 10,784 supervised reads include 3,285
+positive reads, all with agreeing shared fields, and 925 rejected reads with
+agreeing fields. Field agreement alone cannot certify a packet.
+
+| Supervision or treatment | Distinct commits | All proposals | Complete nonempty Runs |
+|---|---:|---:|---:|
+| Canonical proof | 484 | 523 | 14 |
+| All verified addresses | 1,509 | 30,771,180 | 63 |
+| Grouped by committed binding | 1,054 | 22,889 | 71 |
+| Expanded model with learned field penalty | 1,509 | 64,604 | 63 |
+
+On sum-divisors Run 709, the expanded model issued 3,293,096 complete packets.
+The field penalty reduced issuance to 27, yielding 6 distinct commits and 21
+duplicate matches out of 26 required commits. On loopfact Run 79, giving the
+correct multi-parent anchors recovered 18/56 with either treatment. Natural
+issuance recovered 1/74. All three held EggCC exclusive rollouts of the
+corrected model diverged at Run 3. On generated exclusive holdouts the
+corrected model reproduced 46/48 program graphs, 47/48 merge graphs and 44/48
+result-position graphs.
+
+Two negative controls locate the remaining uncertainty. A linear-attention
+anchor read over sibling domains recovered 264 and 230 distinct commits on
+fact and loopfact, compared with 258 and 224 under the matched blind control.
+Training one positive path per observed template entry increased entry exposure
+from 145 to 372 but recovered only 609 held EggCC commits and reproduced zero
+of the 144 generated holdouts. A separate threshold calibration on 50 reserved
+training Runs raised calibration F1 from 0.138 to 0.203, recovering 50 of 332
+commits versus 72 before calibration. These controls have separate held
+measurements, thresholds, and costs in the [native report](run-recall/alternate-proofs/summary.json).
+Coverage measures distinct teacher commits. These runs supply no EPT or paired
+end-to-end speed result.
+
+Reproduce the labels with `alternate_proofs.py ROOT RECEIVER LABELS`. Train
+with `train_anchor_set.py --help` for the verified-alternative and grouped
+credit options. Run `train_disagreement.py ROOT RECEIVER EXPANDED_MODEL OUT`
+for the frozen-pointer treatment. Use `block_recall.py` for streamed native
+scoring of all requests, `anchor_set_audit.py` for supplied anchors,
+`prefix_fanout.py` for the per-layer widths and `anchor_audit.py` for exclusive
+execution. `alternate_results.py EXPERIMENT BASELINE OUT` checks weight and
+receiver hashes and combines the per-Run ledgers.
