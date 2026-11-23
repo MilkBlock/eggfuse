@@ -138,12 +138,18 @@ class LiveSide:
         self.run=None
         self.cache={}
 
-    def extend(self,units,rules):
+    def extend(self,units,recipe):
+        rules=recipe['rules']
+        tables={t['name']:i for i,t in enumerate(recipe['tables'])}
         for i,u in enumerate(self.spec['units']):
             deps=[u['root']]+[h['rule'] for h in u['hops']]
             if any(r>=len(rules) or fingerprint(rules[r])!=self.spec['fingerprints'][str(r)] for r in deps): continue
-            self.options[u['root']]=(i,len(units),u['side'][1])
-            units.append(dict(root=u['root'],side=u['side'],bake_id=u['unit'],
+            pivot=u['side'][0]
+            name=u['hops'][-1]['tables'][1-pivot]
+            if name not in tables: continue
+            table=tables[name]
+            self.options[u['root']]=(i,len(units),table)
+            units.append(dict(root=u['root'],side=[pivot,table],bake_id=u['unit'],
                               hops=[(h['pc'],h['rule']) for h in u['hops']]))
 
     def choose(self,req,history,snapshot):

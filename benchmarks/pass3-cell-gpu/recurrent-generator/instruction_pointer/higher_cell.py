@@ -92,7 +92,8 @@ def compile_catalog(donor, training):
 def run(folder, binary, weight, policy, seed, arm, ept, audit=True, exclusive=False, side_head=None, keep_closed=False):
     started = perf_counter()
     units = policy['units']
-    rules = read(folder/'program.json')['recipe']['rules']
+    recipe = read(folder/'program.json')['recipe']
+    rules = recipe['rules']
     compatible = {int(rid) for rid,sig in policy['fingerprints'].items()
                   if int(rid)<len(rules) and fingerprint(rules[int(rid)])==sig}
     units = [u for u in units if {u['root'], *(r for _,r in u['hops'])} <= compatible]
@@ -102,7 +103,7 @@ def run(folder, binary, weight, policy, seed, arm, ept, audit=True, exclusive=Fa
         if arm!='owned': raise ValueError('side head requires the owned higher-Cell arm')
         from side_pointer import LiveSide
         side_pointer=LiveSide(side_head,keep_closed)
-        side_pointer.extend(units,rules)
+        side_pointer.extend(units,recipe)
     omit = {r for u in units for _,r in u['hops']} - choices.keys()
     attach = arm in ('add','replace','owned')
     model = load_actor(weight,True)
