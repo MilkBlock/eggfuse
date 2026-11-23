@@ -1,0 +1,729 @@
+{
+  "training": {
+    "device": "mps",
+    "steps": 500,
+    "seed": 1703,
+    "event_fraction": 0.25,
+    "natural_event_frames": 8,
+    "train_frames": 48,
+    "templates": [
+      "7d67c32b87dc58c015f6051a1d85462c6a905f3645b7949e4d622c1f3308c196"
+    ],
+    "trajectory": [
+      {
+        "step": 1,
+        "loss": 0.8791983127593994
+      },
+      {
+        "step": 50,
+        "loss": 1.675762414932251
+      },
+      {
+        "step": 100,
+        "loss": 0.5530635118484497
+      },
+      {
+        "step": 150,
+        "loss": 0.7194316387176514
+      },
+      {
+        "step": 200,
+        "loss": 0.7129834890365601
+      },
+      {
+        "step": 250,
+        "loss": 0.5033987164497375
+      },
+      {
+        "step": 300,
+        "loss": 0.26765474677085876
+      },
+      {
+        "step": 350,
+        "loss": 0.5866590738296509
+      },
+      {
+        "step": 400,
+        "loss": 0.12112540006637573
+      },
+      {
+        "step": 450,
+        "loss": 0.2778342664241791
+      },
+      {
+        "step": 500,
+        "loss": 0.199072927236557
+      }
+    ]
+  },
+  "arms": {
+    "untrained": {
+      "provider": "random_initialization",
+      "seed": 1703,
+      "build_sha256": "4f776e000dd7bc14bfca72ea82f17dcf769f7e720c01fbe85c78bff04e2ae0ab",
+      "weights_sha256": "e7e20a8cee3b12c6ca436d12e55f68ad2fcd1dd69eff2084d9aac6b71c6f8c0b",
+      "device": "single-thread CPU",
+      "snapshot_metric": "address equality to one reference certificate; each proposal used at most once",
+      "exclusive_credit": "common complete Run prefix lower bound; divergent suffix is uncredited",
+      "splits": {
+        "train": {
+          "programs": 16,
+          "families": [
+            "7d67c32b87dc58c015f6051a1d85462c6a905f3645b7949e4d622c1f3308c196"
+          ],
+          "shadow": {
+            "mode": "shadow",
+            "snapshot_network_seconds": 0.038288622396066785,
+            "snapshot_calls": 48,
+            "teacher_commits": 120,
+            "proposed": 96,
+            "duplicates": 42,
+            "correct_complete": 23,
+            "off_reference_unique": 31,
+            "complete_coverage": 0.19166666666666668,
+            "by_parent_kind": {
+              "initial": {
+                "correct": 52,
+                "required": 136
+              },
+              "generated": {
+                "correct": 14,
+                "required": 64
+              },
+              "repair": {
+                "correct": 0,
+                "required": 8
+              }
+            }
+          },
+          "exclusive": {
+            "mode": "exclusive",
+            "complete_programs": 0,
+            "accepted": 24,
+            "reference_commits": 120,
+            "certified_reference_prefix_commits": 0,
+            "runtime_event_proposals_charged_to_model": 0,
+            "issued": 96,
+            "duplicates": 15,
+            "reject_reasons": {
+              "binding": 57
+            },
+            "source_runs": 48,
+            "neural_waves": 48,
+            "receiver_invocations": 48,
+            "remaining_search_calls": 0,
+            "native_event_tokens": 1,
+            "median_seconds": {
+              "network_seconds": 0.002767624333500862,
+              "native_verify_seconds": 7.021e-06,
+              "native_repair_seconds": 1.8745e-06,
+              "remaining_process_seconds_including_ipc": 0.0005619160205274818,
+              "wall_seconds": 0.01141512452159077
+            }
+          }
+        },
+        "held_program": {
+          "programs": 32,
+          "families": [
+            "7d67c32b87dc58c015f6051a1d85462c6a905f3645b7949e4d622c1f3308c196"
+          ],
+          "shadow": {
+            "mode": "shadow",
+            "snapshot_network_seconds": 0.07470325101166964,
+            "snapshot_calls": 96,
+            "teacher_commits": 240,
+            "proposed": 192,
+            "duplicates": 72,
+            "correct_complete": 49,
+            "off_reference_unique": 71,
+            "complete_coverage": 0.20416666666666666,
+            "by_parent_kind": {
+              "initial": {
+                "correct": 104,
+                "required": 272
+              },
+              "generated": {
+                "correct": 48,
+                "required": 128
+              },
+              "repair": {
+                "correct": 0,
+                "required": 16
+              }
+            }
+          },
+          "exclusive": {
+            "mode": "exclusive",
+            "complete_programs": 0,
+            "accepted": 54,
+            "reference_commits": 240,
+            "certified_reference_prefix_commits": 0,
+            "runtime_event_proposals_charged_to_model": 0,
+            "issued": 192,
+            "duplicates": 30,
+            "reject_reasons": {
+              "binding": 108
+            },
+            "source_runs": 96,
+            "neural_waves": 96,
+            "receiver_invocations": 96,
+            "remaining_search_calls": 0,
+            "native_event_tokens": 0,
+            "median_seconds": {
+              "network_seconds": 0.002760290866717696,
+              "native_verify_seconds": 7.229e-06,
+              "native_repair_seconds": 1.8125e-06,
+              "remaining_process_seconds_including_ipc": 0.0005931874505132437,
+              "wall_seconds": 0.011262333486229181
+            }
+          }
+        },
+        "held_merge": {
+          "programs": 32,
+          "families": [
+            "bcd1b19866768a0f2caeb7aa2f12ae3c9dee9afe6f4ae435faf1074b6f3922c6"
+          ],
+          "shadow": {
+            "mode": "shadow",
+            "snapshot_network_seconds": 0.07446346059441566,
+            "snapshot_calls": 96,
+            "teacher_commits": 240,
+            "proposed": 192,
+            "duplicates": 73,
+            "correct_complete": 44,
+            "off_reference_unique": 75,
+            "complete_coverage": 0.18333333333333332,
+            "by_parent_kind": {
+              "initial": {
+                "correct": 104,
+                "required": 272
+              },
+              "generated": {
+                "correct": 35,
+                "required": 128
+              },
+              "repair": {
+                "correct": 0,
+                "required": 16
+              }
+            }
+          },
+          "exclusive": {
+            "mode": "exclusive",
+            "complete_programs": 0,
+            "accepted": 59,
+            "reference_commits": 240,
+            "certified_reference_prefix_commits": 0,
+            "runtime_event_proposals_charged_to_model": 0,
+            "issued": 192,
+            "duplicates": 32,
+            "reject_reasons": {
+              "binding": 101
+            },
+            "source_runs": 96,
+            "neural_waves": 96,
+            "receiver_invocations": 96,
+            "remaining_search_calls": 0,
+            "native_event_tokens": 0,
+            "median_seconds": {
+              "network_seconds": 0.0027157909935340285,
+              "native_verify_seconds": 7.813499999999999e-06,
+              "native_repair_seconds": 2.1455e-06,
+              "remaining_process_seconds_including_ipc": 0.0005814585057294964,
+              "wall_seconds": 0.010982395499013364
+            }
+          }
+        },
+        "held_result_pc": {
+          "programs": 32,
+          "families": [
+            "4e48da126c83cb4ed15f6793d106ff4d95f176ca7756680306db584f48274532"
+          ],
+          "shadow": {
+            "mode": "shadow",
+            "snapshot_network_seconds": 0.0811237480957061,
+            "snapshot_calls": 96,
+            "teacher_commits": 240,
+            "proposed": 192,
+            "duplicates": 68,
+            "correct_complete": 47,
+            "off_reference_unique": 77,
+            "complete_coverage": 0.19583333333333333,
+            "by_parent_kind": {
+              "initial": {
+                "correct": 83,
+                "required": 272
+              },
+              "generated": {
+                "correct": 57,
+                "required": 128
+              },
+              "repair": {
+                "correct": 0,
+                "required": 16
+              }
+            }
+          },
+          "exclusive": {
+            "mode": "exclusive",
+            "complete_programs": 0,
+            "accepted": 45,
+            "reference_commits": 240,
+            "certified_reference_prefix_commits": 0,
+            "runtime_event_proposals_charged_to_model": 0,
+            "issued": 192,
+            "duplicates": 33,
+            "reject_reasons": {
+              "binding": 114
+            },
+            "source_runs": 96,
+            "neural_waves": 96,
+            "receiver_invocations": 96,
+            "remaining_search_calls": 0,
+            "native_event_tokens": 0,
+            "median_seconds": {
+              "network_seconds": 0.002849646145477891,
+              "native_verify_seconds": 7.916999999999999e-06,
+              "native_repair_seconds": 2.2085e-06,
+              "remaining_process_seconds_including_ipc": 0.0006458121173605323,
+              "wall_seconds": 0.011586270877160132
+            }
+          }
+        }
+      }
+    },
+    "trained": {
+      "provider": "trained",
+      "seed": 1703,
+      "build_sha256": "4f776e000dd7bc14bfca72ea82f17dcf769f7e720c01fbe85c78bff04e2ae0ab",
+      "weights_sha256": "ec84c44be9f72495dbbe3245bea12cf1e25fa6ea0737272f0a3913ff03deb1de",
+      "device": "single-thread CPU",
+      "snapshot_metric": "address equality to one reference certificate; each proposal used at most once",
+      "exclusive_credit": "common complete Run prefix lower bound; divergent suffix is uncredited",
+      "splits": {
+        "train": {
+          "programs": 16,
+          "families": [
+            "7d67c32b87dc58c015f6051a1d85462c6a905f3645b7949e4d622c1f3308c196"
+          ],
+          "shadow": {
+            "mode": "shadow",
+            "snapshot_network_seconds": 0.04054607939906418,
+            "snapshot_calls": 48,
+            "teacher_commits": 120,
+            "proposed": 128,
+            "duplicates": 10,
+            "correct_complete": 110,
+            "off_reference_unique": 8,
+            "complete_coverage": 0.9166666666666666,
+            "by_parent_kind": {
+              "initial": {
+                "correct": 134,
+                "required": 136
+              },
+              "generated": {
+                "correct": 55,
+                "required": 64
+              },
+              "repair": {
+                "correct": 7,
+                "required": 8
+              }
+            }
+          },
+          "exclusive": {
+            "mode": "exclusive",
+            "complete_programs": 8,
+            "accepted": 104,
+            "reference_commits": 120,
+            "certified_reference_prefix_commits": 80,
+            "runtime_event_proposals_charged_to_model": 0,
+            "issued": 128,
+            "duplicates": 16,
+            "reject_reasons": {
+              "binding": 8
+            },
+            "source_runs": 48,
+            "neural_waves": 48,
+            "receiver_invocations": 48,
+            "remaining_search_calls": 0,
+            "native_event_tokens": 0,
+            "median_seconds": {
+              "network_seconds": 0.003492582938633859,
+              "native_verify_seconds": 1.19375e-05,
+              "native_repair_seconds": 3.1255e-06,
+              "remaining_process_seconds_including_ipc": 0.0007063750488150715,
+              "wall_seconds": 0.012504708603955805
+            }
+          }
+        },
+        "held_program": {
+          "programs": 32,
+          "families": [
+            "7d67c32b87dc58c015f6051a1d85462c6a905f3645b7949e4d622c1f3308c196"
+          ],
+          "shadow": {
+            "mode": "shadow",
+            "snapshot_network_seconds": 0.08620720985345542,
+            "snapshot_calls": 96,
+            "teacher_commits": 240,
+            "proposed": 256,
+            "duplicates": 41,
+            "correct_complete": 191,
+            "off_reference_unique": 24,
+            "complete_coverage": 0.7958333333333333,
+            "by_parent_kind": {
+              "initial": {
+                "correct": 247,
+                "required": 272
+              },
+              "generated": {
+                "correct": 90,
+                "required": 128
+              },
+              "repair": {
+                "correct": 8,
+                "required": 16
+              }
+            }
+          },
+          "exclusive": {
+            "mode": "exclusive",
+            "complete_programs": 4,
+            "accepted": 173,
+            "reference_commits": 240,
+            "certified_reference_prefix_commits": 64,
+            "runtime_event_proposals_charged_to_model": 0,
+            "issued": 256,
+            "duplicates": 46,
+            "reject_reasons": {
+              "binding": 37
+            },
+            "source_runs": 96,
+            "neural_waves": 96,
+            "receiver_invocations": 96,
+            "remaining_search_calls": 0,
+            "native_event_tokens": 0,
+            "median_seconds": {
+              "network_seconds": 0.0034222289687022567,
+              "native_verify_seconds": 1.1479e-05,
+              "native_repair_seconds": 2.709e-06,
+              "remaining_process_seconds_including_ipc": 0.0007934995358607772,
+              "wall_seconds": 0.012957874918356538
+            }
+          }
+        },
+        "held_merge": {
+          "programs": 32,
+          "families": [
+            "bcd1b19866768a0f2caeb7aa2f12ae3c9dee9afe6f4ae435faf1074b6f3922c6"
+          ],
+          "shadow": {
+            "mode": "shadow",
+            "snapshot_network_seconds": 0.07849803823046386,
+            "snapshot_calls": 96,
+            "teacher_commits": 240,
+            "proposed": 256,
+            "duplicates": 40,
+            "correct_complete": 191,
+            "off_reference_unique": 25,
+            "complete_coverage": 0.7958333333333333,
+            "by_parent_kind": {
+              "initial": {
+                "correct": 248,
+                "required": 272
+              },
+              "generated": {
+                "correct": 86,
+                "required": 128
+              },
+              "repair": {
+                "correct": 10,
+                "required": 16
+              }
+            }
+          },
+          "exclusive": {
+            "mode": "exclusive",
+            "complete_programs": 4,
+            "accepted": 173,
+            "reference_commits": 240,
+            "certified_reference_prefix_commits": 65,
+            "runtime_event_proposals_charged_to_model": 0,
+            "issued": 256,
+            "duplicates": 42,
+            "reject_reasons": {
+              "binding": 41
+            },
+            "source_runs": 96,
+            "neural_waves": 96,
+            "receiver_invocations": 96,
+            "remaining_search_calls": 0,
+            "native_event_tokens": 2,
+            "median_seconds": {
+              "network_seconds": 0.0031950625125318766,
+              "native_verify_seconds": 1.0541e-05,
+              "native_repair_seconds": 2.4595e-06,
+              "remaining_process_seconds_including_ipc": 0.0007125414111688734,
+              "wall_seconds": 0.01215274992864579
+            }
+          }
+        },
+        "held_result_pc": {
+          "programs": 32,
+          "families": [
+            "4e48da126c83cb4ed15f6793d106ff4d95f176ca7756680306db584f48274532"
+          ],
+          "shadow": {
+            "mode": "shadow",
+            "snapshot_network_seconds": 0.08308874303475022,
+            "snapshot_calls": 96,
+            "teacher_commits": 240,
+            "proposed": 256,
+            "duplicates": 54,
+            "correct_complete": 173,
+            "off_reference_unique": 29,
+            "complete_coverage": 0.7208333333333333,
+            "by_parent_kind": {
+              "initial": {
+                "correct": 234,
+                "required": 272
+              },
+              "generated": {
+                "correct": 82,
+                "required": 128
+              },
+              "repair": {
+                "correct": 0,
+                "required": 16
+              }
+            }
+          },
+          "exclusive": {
+            "mode": "exclusive",
+            "complete_programs": 0,
+            "accepted": 152,
+            "reference_commits": 240,
+            "certified_reference_prefix_commits": 30,
+            "runtime_event_proposals_charged_to_model": 0,
+            "issued": 256,
+            "duplicates": 44,
+            "reject_reasons": {
+              "binding": 60
+            },
+            "source_runs": 96,
+            "neural_waves": 96,
+            "receiver_invocations": 96,
+            "remaining_search_calls": 0,
+            "native_event_tokens": 0,
+            "median_seconds": {
+              "network_seconds": 0.0033326668199151754,
+              "native_verify_seconds": 1.1334e-05,
+              "native_repair_seconds": 2.5420000000000004e-06,
+              "remaining_process_seconds_including_ipc": 0.0007528122598272563,
+              "wall_seconds": 0.012594562489539385
+            }
+          }
+        }
+      }
+    }
+  },
+  "prefix_assist": {
+    "held_merge": {
+      "1": {
+        "reference_current": 48,
+        "network_issued": 48,
+        "accepted_current": 40,
+        "duplicates": 8,
+        "addr_exact": 40,
+        "actual_new_events": 0,
+        "reference_new_events": 0,
+        "required_event_consumers": 0,
+        "verified_reference_event_consumers": 0,
+        "distinct_parents_collapsed": 0,
+        "rejected": {}
+      },
+      "2": {
+        "reference_current": 16,
+        "network_issued": 16,
+        "accepted_current": 1,
+        "duplicates": 0,
+        "addr_exact": 1,
+        "actual_new_events": 1,
+        "reference_new_events": 16,
+        "required_event_consumers": 0,
+        "verified_reference_event_consumers": 0,
+        "distinct_parents_collapsed": 14,
+        "rejected": {
+          "binding": 15
+        }
+      },
+      "3": {
+        "reference_current": 64,
+        "network_issued": 64,
+        "accepted_current": 56,
+        "duplicates": 8,
+        "addr_exact": 56,
+        "actual_new_events": 0,
+        "reference_new_events": 0,
+        "required_event_consumers": 16,
+        "verified_reference_event_consumers": 10,
+        "distinct_parents_collapsed": 0,
+        "rejected": {}
+      }
+    },
+    "held_program": {
+      "1": {
+        "reference_current": 48,
+        "network_issued": 48,
+        "accepted_current": 40,
+        "duplicates": 8,
+        "addr_exact": 40,
+        "actual_new_events": 0,
+        "reference_new_events": 0,
+        "required_event_consumers": 0,
+        "verified_reference_event_consumers": 0,
+        "distinct_parents_collapsed": 0,
+        "rejected": {}
+      },
+      "2": {
+        "reference_current": 16,
+        "network_issued": 16,
+        "accepted_current": 0,
+        "duplicates": 0,
+        "addr_exact": 0,
+        "actual_new_events": 0,
+        "reference_new_events": 16,
+        "required_event_consumers": 0,
+        "verified_reference_event_consumers": 0,
+        "distinct_parents_collapsed": 16,
+        "rejected": {
+          "binding": 16
+        }
+      },
+      "3": {
+        "reference_current": 64,
+        "network_issued": 64,
+        "accepted_current": 55,
+        "duplicates": 9,
+        "addr_exact": 55,
+        "actual_new_events": 0,
+        "reference_new_events": 0,
+        "required_event_consumers": 16,
+        "verified_reference_event_consumers": 8,
+        "distinct_parents_collapsed": 0,
+        "rejected": {}
+      }
+    },
+    "held_result_pc": {
+      "1": {
+        "reference_current": 48,
+        "network_issued": 48,
+        "accepted_current": 37,
+        "duplicates": 11,
+        "addr_exact": 37,
+        "actual_new_events": 0,
+        "reference_new_events": 0,
+        "required_event_consumers": 0,
+        "verified_reference_event_consumers": 0,
+        "distinct_parents_collapsed": 0,
+        "rejected": {}
+      },
+      "2": {
+        "reference_current": 16,
+        "network_issued": 16,
+        "accepted_current": 0,
+        "duplicates": 0,
+        "addr_exact": 0,
+        "actual_new_events": 0,
+        "reference_new_events": 16,
+        "required_event_consumers": 0,
+        "verified_reference_event_consumers": 0,
+        "distinct_parents_collapsed": 13,
+        "rejected": {
+          "binding": 16
+        }
+      },
+      "3": {
+        "reference_current": 64,
+        "network_issued": 64,
+        "accepted_current": 48,
+        "duplicates": 16,
+        "addr_exact": 48,
+        "actual_new_events": 0,
+        "reference_new_events": 0,
+        "required_event_consumers": 16,
+        "verified_reference_event_consumers": 0,
+        "distinct_parents_collapsed": 0,
+        "rejected": {}
+      }
+    }
+  },
+  "eggcc_exclusive": {
+    "sum": {
+      "mode": "exclusive",
+      "state_sha": "032b1ddbedd3231f8ed400a0535ceac258d61e1a885e186d3aefa2266add2c00",
+      "runs": 297,
+      "neural_waves": 297,
+      "issued": 130,
+      "counts": {
+        "accepted": 10,
+        "calls": 615,
+        "duplicates": 5,
+        "reads": 31,
+        "reads_by_kind": {
+          "generated": 26,
+          "initial": 5
+        },
+        "rejected": {
+          "binding": 8,
+          "guard": 2,
+          "untriggered_rule": 105
+        }
+      },
+      "native_runtime_events": 0,
+      "independent_search_calls": 0,
+      "network_seconds": 1.4388766712509096,
+      "remaining_process_seconds_including_ipc": 0.13160240477307505,
+      "native_verify_seconds": 7.4257e-05,
+      "native_repair_seconds": 8.666200000000021e-05,
+      "wall_seconds": 2.29524620808661,
+      "reference_commits": 7265,
+      "reference_runs": 1428,
+      "state_equal": false
+    },
+    "dot": {
+      "mode": "exclusive",
+      "state_sha": "e67e0deb23aac49fb6b4e569a02c961db6775d2ed050d643df2a6e5d1668d290",
+      "runs": 294,
+      "neural_waves": 294,
+      "issued": 126,
+      "counts": {
+        "accepted": 9,
+        "calls": 613,
+        "duplicates": 5,
+        "reads": 30,
+        "reads_by_kind": {
+          "generated": 26,
+          "initial": 4
+        },
+        "rejected": {
+          "binding": 8,
+          "guard": 2,
+          "untriggered_rule": 102
+        }
+      },
+      "native_runtime_events": 0,
+      "independent_search_calls": 0,
+      "network_seconds": 1.8747667064890265,
+      "remaining_process_seconds_including_ipc": 0.19481520753786574,
+      "native_verify_seconds": 8.2545e-05,
+      "native_repair_seconds": 0.00021754199999999985,
+      "wall_seconds": 2.2994074157904834,
+      "reference_commits": 6704,
+      "reference_runs": 1535,
+      "state_equal": false
+    }
+  },
+  "weights_file_sha256": "302d7240e731b9da2c9063586e952017f0de44181cfc522d63255155eeb82ad8"
+}
