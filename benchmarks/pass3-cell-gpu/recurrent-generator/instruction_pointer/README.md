@@ -535,8 +535,8 @@ typed visible and fresh port counts, and the time since its previous confirmed
 commit. The following Run supplies labels for the preceding predictions.
 A shared MPS-trained head screens scheduled rules before parent decoding.
 Across the first 128 Runs of each held EggCC program, productive activations
-were 833/4,226 without the screen and 833/4,056 with it. The exact checked
-proposals, duplicates, rejections and signed commit counts by workload stayed
-the same. All 144 generated holdouts passed complete native assist comparison.
+were 833/4,226 without the screen and 833/4,056 with it. The counts of checked
+proposals, duplicates, rejections and signed commits stayed the same on each
+workload. All 144 generated holdouts passed complete native assist comparison.
 This one round of training on actual assisted states excluded 170 fruitless
 starts and provided no reduction in verifier traffic on the measured prefix.

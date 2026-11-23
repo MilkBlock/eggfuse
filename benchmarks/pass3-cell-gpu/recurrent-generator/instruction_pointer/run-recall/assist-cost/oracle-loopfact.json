@@ -1,0 +1,114 @@
+{
+  "mode": "exclusive",
+  "provider": "offline_teacher",
+  "build_sha256": "3982b0c163470cdb7d0966409379b2a486d470b7ebb7ec70612f05361115fb12",
+  "weights_sha256": null,
+  "program_sha256": "8f6d2b1a5f5a593b73119d0bfded0aefee97315191cc5f3efcd6e35320beacba",
+  "tape_sha256": "d877d81138ba44674aace8d33c447075e5fd5c8c1e76eaac7b8bb64f00675a20",
+  "run_limit": null,
+  "source_runs_observed": 618,
+  "neural_waves": 0,
+  "reference_commits": 1419,
+  "accepted_unique": 1419,
+  "coverage": 1,
+  "model_wins": 0,
+  "duplicates": 0,
+  "rejected_by_reason": {},
+  "unused": 0,
+  "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724",
+  "runtime_issued_events": 0,
+  "runtime_exported_results": 0,
+  "runtime_event_proposals_charged_to_model": 0,
+  "parent_refs_by_kind": {
+    "initial": {
+      "correct_teacher_reads": 27,
+      "required": 27
+    },
+    "generated": {
+      "correct_teacher_reads": 2989,
+      "required": 2989
+    },
+    "repair": {
+      "correct_teacher_reads": 0,
+      "required": 0
+    }
+  },
+  "resume_events": 425,
+  "receiver": {
+    "loaded": true,
+    "invocations": 2432,
+    "accepted": 1419,
+    "rejected": 0,
+    "named_reads": 3016
+  },
+  "network": {
+    "loaded": false,
+    "invocations": 0,
+    "accepted": 0,
+    "rejected": 0
+  },
+  "remaining_independent_search": 0,
+  "timing_ms": {
+    "reference": 7.8625,
+    "replay": 6.568958,
+    "verification_ms": 0.7885985,
+    "event_registration_ms": 0.0,
+    "native_repair_phase_ms": 0.25168200000000196,
+    "remaining_native_ms": 5.789182
+  },
+  "network_ms": 0,
+  "pairs": [
+    {
+      "order": [
+        "reference",
+        "replay"
+      ],
+      "reference": 7.667709,
+      "replay": 6.47575,
+      "native_repair_phase_ms": 0.2564800000000017,
+      "event_registration_ms": 0.0,
+      "verification_ms": 0.771767,
+      "remaining_native_ms": 5.703983,
+      "oracle_faster": true
+    },
+    {
+      "order": [
+        "replay",
+        "reference"
+      ],
+      "replay": 6.4599590000000005,
+      "native_repair_phase_ms": 0.2448010000000018,
+      "event_registration_ms": 0.0,
+      "verification_ms": 0.789412,
+      "remaining_native_ms": 5.670547000000001,
+      "reference": 7.910749999999999,
+      "oracle_faster": true
+    },
+    {
+      "order": [
+        "reference",
+        "replay"
+      ],
+      "reference": 8.101084,
+      "replay": 8.408375,
+      "native_repair_phase_ms": 0.25149100000000185,
+      "event_registration_ms": 0.0,
+      "verification_ms": 0.9070079999999999,
+      "remaining_native_ms": 7.501366999999999,
+      "oracle_faster": false
+    },
+    {
+      "order": [
+        "replay",
+        "reference"
+      ],
+      "replay": 6.662166,
+      "native_repair_phase_ms": 0.251873000000002,
+      "event_registration_ms": 0.0,
+      "verification_ms": 0.7877850000000001,
+      "remaining_native_ms": 5.874381,
+      "reference": 7.81425,
+      "oracle_faster": true
+    }
+  ]
+}
