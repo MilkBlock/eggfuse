@@ -104,6 +104,10 @@ class GraphIssuer:
         u=self.choose_layout(req,options,context)
         if u is None:
             return None
+        return self.bind_layout(req,u,history,domains)
+
+    def bind_layout(self,req,u,history,domains):
+        refs=req['parents']
         layout=self.layouts[u]
         points={}
         for (_,slot),p in zip(layout[0][2],refs,strict=True):

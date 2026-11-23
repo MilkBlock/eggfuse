@@ -1,0 +1,515 @@
+{
+  "fact": {
+    "reachability": {
+      "original": {
+        "reach": {
+          "observed_subgraphs": 365,
+          "ready_subgraphs": 260,
+          "ready_internal_entry": 47,
+          "ready_external_entry": 239,
+          "catalog_external_entry": 130
+        },
+        "stages": {
+          "external_observed": 363,
+          "external_ready_versions": 239,
+          "external_first_schedule": 317,
+          "catalog_entire_boundary_in_root": 4
+        },
+        "residual_without_observed_ready_external": 168,
+        "new_layout_options": 143,
+        "per_root_oracle_upper_bound": 109,
+        "largest_uncovered_rules": [
+          [
+            504,
+            22
+          ],
+          [
+            312,
+            18
+          ],
+          [
+            538,
+            15
+          ],
+          [
+            287,
+            14
+          ],
+          [
+            505,
+            11
+          ],
+          [
+            137,
+            7
+          ],
+          [
+            425,
+            7
+          ],
+          [
+            144,
+            6
+          ]
+        ]
+      },
+      "expanded": {
+        "reach": {
+          "observed_subgraphs": 365,
+          "ready_subgraphs": 260,
+          "ready_internal_entry": 47,
+          "ready_external_entry": 239,
+          "catalog_external_entry": 195
+        },
+        "stages": {
+          "external_observed": 363,
+          "external_ready_versions": 239,
+          "external_first_schedule": 317,
+          "catalog_entire_boundary_in_root": 7
+        },
+        "residual_without_observed_ready_external": 168,
+        "new_layout_options": 114,
+        "per_root_oracle_upper_bound": 175,
+        "largest_uncovered_rules": [
+          [
+            504,
+            22
+          ],
+          [
+            312,
+            18
+          ],
+          [
+            538,
+            15
+          ],
+          [
+            287,
+            14
+          ],
+          [
+            505,
+            11
+          ],
+          [
+            137,
+            7
+          ],
+          [
+            425,
+            7
+          ],
+          [
+            144,
+            6
+          ]
+        ]
+      }
+    },
+    "live": {
+      "original": {
+        "policy": "e6c619b861d4990c49f296b9d188e4fe36c2fb8389a02f14e86f9d688b0a621b",
+        "paid": 3787,
+        "accepted": 1261,
+        "ops": 911,
+        "ept": 0.2405598098758912,
+        "reference": 1668,
+        "residual": 407,
+        "groups": {
+          "issued": {
+            "held_instances": 9
+          },
+          "completed": {
+            "held_instances": 5
+          }
+        }
+      },
+      "expanded": {
+        "policy": "e6c619b861d4990c49f296b9d188e4fe36c2fb8389a02f14e86f9d688b0a621b",
+        "paid": 3790,
+        "accepted": 1262,
+        "ops": 913,
+        "ept": 0.24089709762532982,
+        "reference": 1668,
+        "residual": 406,
+        "groups": {
+          "issued": {
+            "held_instances": 9,
+            "added_instances": 1,
+            "distinct_added": 1,
+            "held_added_instances": 0
+          },
+          "completed": {
+            "held_instances": 5,
+            "added_instances": 1,
+            "distinct_added": 1,
+            "held_added_instances": 0
+          }
+        }
+      },
+      "refit": {
+        "policy": "5eff0eedbebdd3d8347a3744843137ddd17380d9100db4f8bb9c8d022b41a47a",
+        "paid": 3789,
+        "accepted": 1268,
+        "ops": 917,
+        "ept": 0.24201636315650568,
+        "reference": 1668,
+        "residual": 400,
+        "groups": {
+          "issued": {
+            "held_instances": 165,
+            "added_instances": 17,
+            "distinct_added": 3,
+            "held_added_instances": 1
+          },
+          "completed": {
+            "held_instances": 5,
+            "added_instances": 1,
+            "distinct_added": 1,
+            "held_added_instances": 0
+          }
+        }
+      }
+    }
+  },
+  "loopfact": {
+    "reachability": {
+      "original": {
+        "reach": {
+          "observed_subgraphs": 315,
+          "ready_subgraphs": 187,
+          "ready_internal_entry": 50,
+          "ready_external_entry": 167,
+          "catalog_external_entry": 100
+        },
+        "stages": {
+          "external_observed": 315,
+          "external_ready_versions": 167,
+          "external_first_schedule": 261,
+          "catalog_entire_boundary_in_root": 4
+        },
+        "residual_without_observed_ready_external": 194,
+        "new_layout_options": 221,
+        "per_root_oracle_upper_bound": 100,
+        "largest_uncovered_rules": [
+          [
+            312,
+            25
+          ],
+          [
+            504,
+            23
+          ],
+          [
+            505,
+            16
+          ],
+          [
+            287,
+            16
+          ],
+          [
+            425,
+            11
+          ],
+          [
+            538,
+            10
+          ],
+          [
+            540,
+            8
+          ],
+          [
+            59,
+            8
+          ]
+        ]
+      },
+      "expanded": {
+        "reach": {
+          "observed_subgraphs": 315,
+          "ready_subgraphs": 187,
+          "ready_internal_entry": 50,
+          "ready_external_entry": 167,
+          "catalog_external_entry": 147
+        },
+        "stages": {
+          "external_observed": 315,
+          "external_ready_versions": 167,
+          "external_first_schedule": 261,
+          "catalog_entire_boundary_in_root": 5
+        },
+        "residual_without_observed_ready_external": 194,
+        "new_layout_options": 162,
+        "per_root_oracle_upper_bound": 147,
+        "largest_uncovered_rules": [
+          [
+            312,
+            25
+          ],
+          [
+            504,
+            23
+          ],
+          [
+            505,
+            16
+          ],
+          [
+            287,
+            16
+          ],
+          [
+            425,
+            11
+          ],
+          [
+            538,
+            10
+          ],
+          [
+            540,
+            8
+          ],
+          [
+            59,
+            8
+          ]
+        ]
+      }
+    },
+    "live": {
+      "original": {
+        "policy": "e6c619b861d4990c49f296b9d188e4fe36c2fb8389a02f14e86f9d688b0a621b",
+        "paid": 3755,
+        "accepted": 1058,
+        "ops": 831,
+        "ept": 0.22130492676431424,
+        "reference": 1419,
+        "residual": 361,
+        "groups": {
+          "issued": {
+            "held_instances": 10
+          },
+          "completed": {
+            "held_instances": 6
+          }
+        }
+      },
+      "expanded": {
+        "policy": "e6c619b861d4990c49f296b9d188e4fe36c2fb8389a02f14e86f9d688b0a621b",
+        "paid": 3752,
+        "accepted": 1058,
+        "ops": 831,
+        "ept": 0.2214818763326226,
+        "reference": 1419,
+        "residual": 361,
+        "groups": {
+          "issued": {
+            "held_instances": 10
+          },
+          "completed": {
+            "held_instances": 6
+          }
+        }
+      },
+      "refit": {
+        "policy": "5eff0eedbebdd3d8347a3744843137ddd17380d9100db4f8bb9c8d022b41a47a",
+        "paid": 3745,
+        "accepted": 1053,
+        "ops": 821,
+        "ept": 0.2192256341789052,
+        "reference": 1419,
+        "residual": 366,
+        "groups": {
+          "issued": {
+            "held_instances": 195,
+            "added_instances": 9,
+            "distinct_added": 3,
+            "held_added_instances": 1
+          },
+          "completed": {
+            "held_instances": 6,
+            "added_instances": 1,
+            "distinct_added": 1,
+            "held_added_instances": 0
+          }
+        }
+      }
+    }
+  },
+  "sum-divisors": {
+    "reachability": {
+      "original": {
+        "reach": {
+          "observed_subgraphs": 7762,
+          "ready_subgraphs": 3753,
+          "ready_internal_entry": 613,
+          "ready_external_entry": 3561,
+          "catalog_external_entry": 1929
+        },
+        "stages": {
+          "external_observed": 7711,
+          "external_ready_versions": 3561,
+          "external_first_schedule": 4474,
+          "catalog_entire_boundary_in_root": 182
+        },
+        "residual_without_observed_ready_external": 5022,
+        "new_layout_options": 1394,
+        "per_root_oracle_upper_bound": 1608,
+        "largest_uncovered_rules": [
+          [
+            324,
+            408
+          ],
+          [
+            317,
+            212
+          ],
+          [
+            504,
+            195
+          ],
+          [
+            144,
+            182
+          ],
+          [
+            59,
+            167
+          ],
+          [
+            58,
+            153
+          ],
+          [
+            286,
+            143
+          ],
+          [
+            538,
+            140
+          ]
+        ]
+      },
+      "expanded": {
+        "reach": {
+          "observed_subgraphs": 7762,
+          "ready_subgraphs": 3753,
+          "ready_internal_entry": 613,
+          "ready_external_entry": 3561,
+          "catalog_external_entry": 2900
+        },
+        "stages": {
+          "external_observed": 7711,
+          "external_ready_versions": 3561,
+          "external_first_schedule": 4474,
+          "catalog_entire_boundary_in_root": 195
+        },
+        "residual_without_observed_ready_external": 5022,
+        "new_layout_options": 1185,
+        "per_root_oracle_upper_bound": 2163,
+        "largest_uncovered_rules": [
+          [
+            324,
+            408
+          ],
+          [
+            317,
+            212
+          ],
+          [
+            504,
+            195
+          ],
+          [
+            144,
+            182
+          ],
+          [
+            59,
+            167
+          ],
+          [
+            58,
+            153
+          ],
+          [
+            286,
+            143
+          ],
+          [
+            538,
+            140
+          ]
+        ]
+      }
+    },
+    "live": {
+      "original": {
+        "policy": "e6c619b861d4990c49f296b9d188e4fe36c2fb8389a02f14e86f9d688b0a621b",
+        "paid": 24715,
+        "accepted": 8758,
+        "ops": 5167,
+        "ept": 0.20906332186931015,
+        "reference": 17341,
+        "residual": 8583,
+        "groups": {
+          "issued": {
+            "held_instances": 342
+          },
+          "completed": {
+            "held_instances": 21
+          }
+        }
+      },
+      "expanded": {
+        "policy": "e6c619b861d4990c49f296b9d188e4fe36c2fb8389a02f14e86f9d688b0a621b",
+        "paid": 24795,
+        "accepted": 8764,
+        "ops": 5151,
+        "ept": 0.20774349667271627,
+        "reference": 17341,
+        "residual": 8577,
+        "groups": {
+          "issued": {
+            "held_instances": 343,
+            "added_instances": 14,
+            "distinct_added": 5,
+            "held_added_instances": 2
+          },
+          "completed": {
+            "held_instances": 20,
+            "added_instances": 1,
+            "distinct_added": 1,
+            "held_added_instances": 0
+          }
+        }
+      },
+      "refit": {
+        "policy": "5eff0eedbebdd3d8347a3744843137ddd17380d9100db4f8bb9c8d022b41a47a",
+        "paid": 24744,
+        "accepted": 8794,
+        "ops": 5190,
+        "ept": 0.20974781765276432,
+        "reference": 17341,
+        "residual": 8547,
+        "groups": {
+          "issued": {
+            "held_instances": 1528,
+            "added_instances": 55,
+            "distinct_added": 9,
+            "held_added_instances": 0
+          },
+          "completed": {
+            "held_instances": 26,
+            "added_instances": 4,
+            "distinct_added": 2,
+            "held_added_instances": 0
+          }
+        }
+      }
+    }
+  }
+}

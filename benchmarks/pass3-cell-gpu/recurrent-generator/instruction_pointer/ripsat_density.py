@@ -17,19 +17,21 @@ from online import execute
 from prefix_policy import Policy
 
 
-def compare(folder,donor,binary,weights,baked,audits,seed,learned=None):
+def compare(folder,donor,binary,weights,baked,audits,seed,learned=None,base_bake=None,base_policy=None):
     results=[]
     if learned:
         from layout_credit import CreditIssuer
         from train_layout_bandit import LearnedChoice
-        arms=('attach','rl')
+        arms=('original','refit') if base_bake else ('attach','rl')
         records={arm:read(audits/arm/(folder.name+'.json')) for arm in arms}
     else:
         arms=('control','native')
         records={arm:read(audits/f'{folder.name}-{arm}.json') for arm in arms}
+    def catalog(arm):
+        return base_bake if arm=='original' else baked
     for arm,record in records.items():
         if any(record[k]!=digest(path) for k,path in [('binary',binary),('actor',weights),
-                ('scorer',baked/'shared.pt'),('reader',baked/'boundary.pt'),('catalog',baked/'catalog.json')]):
+                ('scorer',baked/'shared.pt'),('reader',baked/'boundary.pt'),('catalog',catalog(arm)/'catalog.json')]):
             raise ValueError('timing inputs differ from the work audit')
     for turn in range(4):
         pair={}
@@ -41,10 +43,11 @@ def compare(folder,donor,binary,weights,baked,audits,seed,learned=None):
             start=perf_counter()
             actor=load_actor(weights,True)
             if learned:
-                policy=LearnedChoice(learned,baked) if arm=='rl' else None
+                checkpoint=base_policy if arm=='original' else learned
+                policy=None if arm=='attach' else LearnedChoice(checkpoint,catalog(arm))
                 if records[arm]['policy']!=(policy.checkpoint if policy else None):
                     raise ValueError('timed layout policy differs from the audit')
-                issuer=CreditIssuer(actor,donor,read(folder/'program.json'),baked,omit=True,
+                issuer=CreditIssuer(actor,donor,read(folder/'program.json'),catalog(arm),omit=True,
                                     attach=True,seed=1703,explore=False,policy=policy)
             else:
                 issuer=None if arm=='control' else GraphIssuer(actor,donor,read(folder/'program.json'),baked,True)
@@ -75,12 +78,16 @@ if __name__=='__main__':
     for k in ('root','donor','binary','weights','baked','audits','out'):
         p.add_argument(k,type=Path)
     p.add_argument('--policy',type=Path)
+    p.add_argument('--base-bake',type=Path)
+    p.add_argument('--base-policy',type=Path)
     p.add_argument('--cases',required=True,nargs='+')
     a=p.parse_args()
+    if bool(a.base_bake)!=bool(a.base_policy) or (a.base_bake and not a.policy):
+        p.error('comparison across catalogs requires base and new checkpoints')
     torch.set_num_threads(1)
     seeds={s['directory']:s['seed'] for s in read(a.root/'manifest.json')}
     donor=read(a.donor/'program.json')
     reports={}
     for name in a.cases:
-        reports[name]=compare(a.root/name,donor,a.binary,a.weights,a.baked,a.audits,1703+seeds.get(name,0),a.policy)
+        reports[name]=compare(a.root/name,donor,a.binary,a.weights,a.baked,a.audits,1703+seeds.get(name,0),a.policy,a.base_bake,a.base_policy)
         a.out.write_text(json.dumps(reports,indent=2)+'\n')
