@@ -1,0 +1,1514 @@
+{
+  "training": {
+    "seed": 1703,
+    "epochs": 4,
+    "device": "mps",
+    "training_runs": {
+      "random": 3072,
+      "eggcc": 2963
+    },
+    "mask_audit": {
+      "scheduled": 103813,
+      "masked": 87566,
+      "teacher_bindings": 21649
+    },
+    "initial_weights_sha256": "ce08169aeb77c47275bc8bbbe6b909d9faca5919cf54fa66dcf2aa4e79cef2fe",
+    "arms": {
+      "uniform": {
+        "steps": 756,
+        "stratified_draws": {}
+      },
+      "stratified": {
+        "steps": 756,
+        "stratified_draws": {
+          "eggcc/8": 467,
+          "eggcc/3": 471,
+          "eggcc/1": 454,
+          "random/2": 464,
+          "eggcc/2": 430,
+          "eggcc/12": 474,
+          "random/1": 455,
+          "eggcc/7": 485,
+          "eggcc/5": 461,
+          "eggcc/6": 477,
+          "eggcc/0": 482,
+          "eggcc/4": 483,
+          "random/3": 433
+        }
+      }
+    },
+    "positive_runs_by_origin_and_arity": {
+      "random/1": 1024,
+      "random/3": 1024,
+      "random/2": 1024,
+      "eggcc/0": 4,
+      "eggcc/2": 756,
+      "eggcc/1": 167,
+      "eggcc/3": 379,
+      "eggcc/4": 92,
+      "eggcc/5": 130,
+      "eggcc/6": 23,
+      "eggcc/7": 9,
+      "eggcc/12": 1,
+      "eggcc/8": 11
+    }
+  },
+  "arms": {
+    "mask": {
+      "native": {
+        "mode": "exclusive",
+        "weights_sha256": "e7a92578b796a56dc77987b94ecb5e416a71ff528884393f73673e460c785a8e",
+        "verifier_sha256": "4f776e000dd7bc14bfca72ea82f17dcf769f7e720c01fbe85c78bff04e2ae0ab",
+        "cases": {
+          "fact": {
+            "first_difference": {
+              "run": 2,
+              "actual_commits": 0,
+              "teacher_by_rule": {
+                "574": 1
+              },
+              "teacher_parent_counts": {
+                "0": 1
+              },
+              "issued": {
+                "by_rule": {},
+                "distinct": 0
+              }
+            },
+            "common_runs": 1,
+            "exclusive": {
+              "counts": {
+                "programs": 1,
+                "correct_final_states": 0,
+                "reference_commits": 1668,
+                "reference_runs": 634,
+                "accepted": 15,
+                "duplicates": 14,
+                "verifier_calls": 605,
+                "issued": 47,
+                "source_runs": 287,
+                "neural_waves": 287,
+                "native_repair_events": 0,
+                "independent_search_calls": 0,
+                "certified_reference_prefix_commits": 1
+              },
+              "rejected": {
+                "binding": 17,
+                "guard": 1
+              },
+              "total_seconds": {
+                "network_seconds": 0.8066047160064045,
+                "native_verify_seconds": 0.000108544,
+                "native_repair_seconds": 0.00023621700000000002,
+                "remaining_process_seconds_including_ipc": 0.15417828199289008,
+                "wall_seconds": 1.2003845830004138,
+                "reference_seconds": 0.387846333
+              }
+            }
+          },
+          "loopfact": {
+            "first_difference": {
+              "run": 2,
+              "actual_commits": 0,
+              "teacher_by_rule": {
+                "574": 1
+              },
+              "teacher_parent_counts": {
+                "0": 1
+              },
+              "issued": {
+                "by_rule": {},
+                "distinct": 0
+              }
+            },
+            "common_runs": 1,
+            "exclusive": {
+              "counts": {
+                "programs": 1,
+                "correct_final_states": 0,
+                "reference_commits": 1419,
+                "reference_runs": 618,
+                "accepted": 16,
+                "duplicates": 12,
+                "verifier_calls": 649,
+                "issued": 56,
+                "source_runs": 291,
+                "neural_waves": 291,
+                "native_repair_events": 0,
+                "independent_search_calls": 0,
+                "certified_reference_prefix_commits": 1
+              },
+              "rejected": {
+                "binding": 26,
+                "guard": 2
+              },
+              "total_seconds": {
+                "network_seconds": 0.8565262540050753,
+                "native_verify_seconds": 0.000114258,
+                "native_repair_seconds": 0.00021679400000000008,
+                "remaining_process_seconds_including_ipc": 0.14399486299519537,
+                "wall_seconds": 1.2323984589993415,
+                "reference_seconds": 0.3739335
+              }
+            }
+          },
+          "sum-divisors": {
+            "first_difference": {
+              "run": 2,
+              "actual_commits": 0,
+              "teacher_by_rule": {
+                "574": 1
+              },
+              "teacher_parent_counts": {
+                "0": 1
+              },
+              "issued": {
+                "by_rule": {},
+                "distinct": 0
+              }
+            },
+            "common_runs": 1,
+            "exclusive": {
+              "counts": {
+                "programs": 1,
+                "correct_final_states": 0,
+                "reference_commits": 17341,
+                "reference_runs": 1644,
+                "accepted": 22,
+                "duplicates": 21,
+                "verifier_calls": 657,
+                "issued": 61,
+                "source_runs": 354,
+                "neural_waves": 354,
+                "native_repair_events": 0,
+                "independent_search_calls": 0,
+                "certified_reference_prefix_commits": 1
+              },
+              "rejected": {
+                "binding": 15,
+                "guard": 3
+              },
+              "total_seconds": {
+                "network_seconds": 1.3424297369965643,
+                "native_verify_seconds": 0.000153068,
+                "native_repair_seconds": 0.00027290900000000016,
+                "remaining_process_seconds_including_ipc": 0.2659735290031131,
+                "wall_seconds": 1.8431486659992515,
+                "reference_seconds": 10.296844959
+              }
+            }
+          }
+        }
+      },
+      "shadow_rule_census": {
+        "mode": "shadow",
+        "decision": "rule before any parent read",
+        "wave": 1,
+        "seed": 1967,
+        "field_pointer": true,
+        "weights_sha256": "e7a92578b796a56dc77987b94ecb5e416a71ff528884393f73673e460c785a8e",
+        "cases": {
+          "fact": {
+            "with_commits": {
+              "runs": 163,
+              "teacher_rule_run_pairs": 453,
+              "lane_decisions": 652,
+              "stop": 345,
+              "rule_chosen": 307,
+              "correct_rule_choices": 257,
+              "all_lanes_stopped": 67,
+              "correct_distinct_rule_run_pairs": 86,
+              "runs_with_a_correct_rule": 79
+            },
+            "without_commits": {
+              "runs": 471,
+              "teacher_rule_run_pairs": 0,
+              "lane_decisions": 1884,
+              "stop": 1871,
+              "rule_chosen": 13,
+              "correct_rule_choices": 0,
+              "all_lanes_stopped": 467,
+              "correct_distinct_rule_run_pairs": 0,
+              "runs_with_a_correct_rule": 0
+            },
+            "forced_issue": {
+              "mode": "assist",
+              "stopped_lanes_on_busy_runs": 345,
+              "best_rule_has_winner": 221
+            }
+          },
+          "loopfact": {
+            "with_commits": {
+              "runs": 166,
+              "teacher_rule_run_pairs": 476,
+              "lane_decisions": 664,
+              "stop": 298,
+              "rule_chosen": 366,
+              "correct_rule_choices": 330,
+              "all_lanes_stopped": 62,
+              "correct_distinct_rule_run_pairs": 101,
+              "runs_with_a_correct_rule": 93
+            },
+            "without_commits": {
+              "runs": 452,
+              "teacher_rule_run_pairs": 0,
+              "lane_decisions": 1808,
+              "stop": 1790,
+              "rule_chosen": 18,
+              "correct_rule_choices": 0,
+              "all_lanes_stopped": 445,
+              "correct_distinct_rule_run_pairs": 0,
+              "runs_with_a_correct_rule": 0
+            },
+            "forced_issue": {
+              "mode": "assist",
+              "stopped_lanes_on_busy_runs": 298,
+              "best_rule_has_winner": 183
+            }
+          }
+        }
+      },
+      "splits": {
+        "held_eggcc": {
+          "shadow": {
+            "mode": "shadow",
+            "snapshot_network_seconds": 0.7997750429999542,
+            "snapshot_calls": 32,
+            "teacher_commits": 23,
+            "proposed": 4,
+            "duplicates": 1,
+            "correct_complete": 1,
+            "off_reference_unique": 2,
+            "complete_coverage": 0.043478260869565216,
+            "by_parent_kind": {
+              "initial": {
+                "correct": 0,
+                "required": 1
+              },
+              "generated": {
+                "correct": 2,
+                "required": 53
+              },
+              "repair": {
+                "correct": 0,
+                "required": 0
+              }
+            }
+          },
+          "exclusive": {
+            "counts": {
+              "programs": 2,
+              "correct_final_states": 0,
+              "reference_commits": 3087,
+              "reference_runs": 1252,
+              "accepted": 31,
+              "duplicates": 26,
+              "verifier_calls": 1254,
+              "issued": 103,
+              "source_runs": 578,
+              "neural_waves": 578,
+              "native_repair_events": 0,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 2
+            },
+            "rejected": {
+              "binding": 43,
+              "guard": 3
+            },
+            "total_seconds": {
+              "network_seconds": 1.6203404220073025,
+              "native_verify_seconds": 0.000213602,
+              "native_repair_seconds": 0.00039703300000000025,
+              "remaining_process_seconds_including_ipc": 0.28654572599324835,
+              "wall_seconds": 2.373913791999712,
+              "reference_seconds": 0.019281292
+            }
+          }
+        },
+        "held_program": {
+          "shadow": {
+            "mode": "shadow",
+            "snapshot_network_seconds": 0.11953866899648347,
+            "snapshot_calls": 144,
+            "teacher_commits": 360,
+            "proposed": 361,
+            "duplicates": 1,
+            "correct_complete": 360,
+            "off_reference_unique": 0,
+            "complete_coverage": 1.0,
+            "by_parent_kind": {
+              "initial": {
+                "correct": 408,
+                "required": 408
+              },
+              "generated": {
+                "correct": 192,
+                "required": 192
+              },
+              "repair": {
+                "correct": 24,
+                "required": 24
+              }
+            }
+          },
+          "exclusive": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 48,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 360,
+              "duplicates": 1,
+              "verifier_calls": 144,
+              "issued": 361,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 24,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 360
+            },
+            "rejected": {},
+            "total_seconds": {
+              "network_seconds": 0.17485158300178227,
+              "native_verify_seconds": 0.0006409110000000001,
+              "native_repair_seconds": 0.00060533,
+              "remaining_process_seconds_including_ipc": 0.04102788499953287,
+              "wall_seconds": 0.6095758299993577,
+              "reference_seconds": 0.008984336
+            }
+          }
+        },
+        "held_merge": {
+          "shadow": {
+            "mode": "shadow",
+            "snapshot_network_seconds": 0.11845625100113466,
+            "snapshot_calls": 144,
+            "teacher_commits": 360,
+            "proposed": 360,
+            "duplicates": 2,
+            "correct_complete": 358,
+            "off_reference_unique": 0,
+            "complete_coverage": 0.9944444444444445,
+            "by_parent_kind": {
+              "initial": {
+                "correct": 406,
+                "required": 408
+              },
+              "generated": {
+                "correct": 192,
+                "required": 192
+              },
+              "repair": {
+                "correct": 24,
+                "required": 24
+              }
+            }
+          },
+          "exclusive": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 46,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 358,
+              "duplicates": 2,
+              "verifier_calls": 144,
+              "issued": 360,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 24,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 345
+            },
+            "rejected": {},
+            "total_seconds": {
+              "network_seconds": 0.17683858099690042,
+              "native_verify_seconds": 0.0006762450000000001,
+              "native_repair_seconds": 0.0006512050000000001,
+              "remaining_process_seconds_including_ipc": 0.043309504002063785,
+              "wall_seconds": 0.6240544600013891,
+              "reference_seconds": 0.008798334000000001
+            }
+          }
+        },
+        "held_result_pc": {
+          "shadow": {
+            "mode": "shadow",
+            "snapshot_network_seconds": 0.12325862600073378,
+            "snapshot_calls": 144,
+            "teacher_commits": 360,
+            "proposed": 379,
+            "duplicates": 65,
+            "correct_complete": 314,
+            "off_reference_unique": 0,
+            "complete_coverage": 0.8722222222222222,
+            "by_parent_kind": {
+              "initial": {
+                "correct": 362,
+                "required": 408
+              },
+              "generated": {
+                "correct": 192,
+                "required": 192
+              },
+              "repair": {
+                "correct": 0,
+                "required": 24
+              }
+            }
+          },
+          "exclusive": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 13,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 282,
+              "duplicates": 58,
+              "verifier_calls": 144,
+              "issued": 372,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 15,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 143
+            },
+            "rejected": {
+              "binding": 32
+            },
+            "total_seconds": {
+              "network_seconds": 0.17642303600223386,
+              "native_verify_seconds": 0.000621709,
+              "native_repair_seconds": 0.00042529399999999994,
+              "remaining_process_seconds_including_ipc": 0.04193388099763477,
+              "wall_seconds": 0.6298659179983588,
+              "reference_seconds": 0.009339334
+            }
+          }
+        }
+      }
+    },
+    "uniform": {
+      "native": {
+        "mode": "exclusive",
+        "weights_sha256": "94dc83fcff28e6ae234e3de9a8908610ddad46b17b835ce2812096af1e7506be",
+        "verifier_sha256": "4f776e000dd7bc14bfca72ea82f17dcf769f7e720c01fbe85c78bff04e2ae0ab",
+        "cases": {
+          "fact": {
+            "first_difference": {
+              "run": 2,
+              "actual_commits": 0,
+              "teacher_by_rule": {
+                "574": 1
+              },
+              "teacher_parent_counts": {
+                "0": 1
+              },
+              "issued": {
+                "by_rule": {},
+                "distinct": 0
+              }
+            },
+            "common_runs": 1,
+            "exclusive": {
+              "counts": {
+                "programs": 1,
+                "correct_final_states": 0,
+                "reference_commits": 1668,
+                "reference_runs": 634,
+                "accepted": 14,
+                "duplicates": 12,
+                "verifier_calls": 651,
+                "issued": 54,
+                "source_runs": 291,
+                "neural_waves": 291,
+                "native_repair_events": 0,
+                "independent_search_calls": 0,
+                "certified_reference_prefix_commits": 1
+              },
+              "rejected": {
+                "binding": 25,
+                "guard": 3
+              },
+              "total_seconds": {
+                "network_seconds": 0.841156012992542,
+                "native_verify_seconds": 0.000122453,
+                "native_repair_seconds": 0.0001871250000000001,
+                "remaining_process_seconds_including_ipc": 0.14093253300790676,
+                "wall_seconds": 1.242218542000046,
+                "reference_seconds": 0.387846333
+              }
+            }
+          },
+          "loopfact": {
+            "first_difference": {
+              "run": 2,
+              "actual_commits": 0,
+              "teacher_by_rule": {
+                "574": 1
+              },
+              "teacher_parent_counts": {
+                "0": 1
+              },
+              "issued": {
+                "by_rule": {},
+                "distinct": 0
+              }
+            },
+            "common_runs": 1,
+            "exclusive": {
+              "counts": {
+                "programs": 1,
+                "correct_final_states": 0,
+                "reference_commits": 1419,
+                "reference_runs": 618,
+                "accepted": 22,
+                "duplicates": 11,
+                "verifier_calls": 699,
+                "issued": 63,
+                "source_runs": 303,
+                "neural_waves": 303,
+                "native_repair_events": 0,
+                "independent_search_calls": 0,
+                "certified_reference_prefix_commits": 1
+              },
+              "rejected": {
+                "binding": 30
+              },
+              "total_seconds": {
+                "network_seconds": 0.7959211769984904,
+                "native_verify_seconds": 0.000115383,
+                "native_repair_seconds": 0.00019499399999999987,
+                "remaining_process_seconds_including_ipc": 0.1506756890014629,
+                "wall_seconds": 1.1903314170003796,
+                "reference_seconds": 0.3739335
+              }
+            }
+          },
+          "sum-divisors": {
+            "first_difference": {
+              "run": 2,
+              "actual_commits": 0,
+              "teacher_by_rule": {
+                "574": 1
+              },
+              "teacher_parent_counts": {
+                "0": 1
+              },
+              "issued": {
+                "by_rule": {},
+                "distinct": 0
+              }
+            },
+            "common_runs": 1,
+            "exclusive": {
+              "counts": {
+                "programs": 1,
+                "correct_final_states": 0,
+                "reference_commits": 17341,
+                "reference_runs": 1644,
+                "accepted": 26,
+                "duplicates": 19,
+                "verifier_calls": 665,
+                "issued": 68,
+                "source_runs": 302,
+                "neural_waves": 302,
+                "native_repair_events": 0,
+                "independent_search_calls": 0,
+                "certified_reference_prefix_commits": 1
+              },
+              "rejected": {
+                "binding": 21,
+                "guard": 2
+              },
+              "total_seconds": {
+                "network_seconds": 1.3574491280005532,
+                "native_verify_seconds": 0.000202172,
+                "native_repair_seconds": 0.00030366500000000016,
+                "remaining_process_seconds_including_ipc": 0.24578240899908188,
+                "wall_seconds": 1.8484862079994855,
+                "reference_seconds": 10.296844959
+              }
+            }
+          }
+        }
+      },
+      "shadow_rule_census": {
+        "mode": "shadow",
+        "decision": "rule before any parent read",
+        "wave": 1,
+        "seed": 1967,
+        "field_pointer": true,
+        "weights_sha256": "94dc83fcff28e6ae234e3de9a8908610ddad46b17b835ce2812096af1e7506be",
+        "cases": {
+          "fact": {
+            "with_commits": {
+              "runs": 163,
+              "teacher_rule_run_pairs": 453,
+              "lane_decisions": 652,
+              "stop": 235,
+              "rule_chosen": 417,
+              "correct_rule_choices": 334,
+              "all_lanes_stopped": 38,
+              "correct_distinct_rule_run_pairs": 116,
+              "runs_with_a_correct_rule": 100
+            },
+            "without_commits": {
+              "runs": 471,
+              "teacher_rule_run_pairs": 0,
+              "lane_decisions": 1884,
+              "stop": 1876,
+              "rule_chosen": 8,
+              "correct_rule_choices": 0,
+              "all_lanes_stopped": 467,
+              "correct_distinct_rule_run_pairs": 0,
+              "runs_with_a_correct_rule": 0
+            },
+            "forced_issue": {
+              "mode": "assist",
+              "stopped_lanes_on_busy_runs": 235,
+              "best_rule_has_winner": 166
+            }
+          },
+          "loopfact": {
+            "with_commits": {
+              "runs": 166,
+              "teacher_rule_run_pairs": 476,
+              "lane_decisions": 664,
+              "stop": 246,
+              "rule_chosen": 418,
+              "correct_rule_choices": 369,
+              "all_lanes_stopped": 43,
+              "correct_distinct_rule_run_pairs": 123,
+              "runs_with_a_correct_rule": 107
+            },
+            "without_commits": {
+              "runs": 452,
+              "teacher_rule_run_pairs": 0,
+              "lane_decisions": 1808,
+              "stop": 1789,
+              "rule_chosen": 19,
+              "correct_rule_choices": 0,
+              "all_lanes_stopped": 445,
+              "correct_distinct_rule_run_pairs": 0,
+              "runs_with_a_correct_rule": 0
+            },
+            "forced_issue": {
+              "mode": "assist",
+              "stopped_lanes_on_busy_runs": 246,
+              "best_rule_has_winner": 151
+            }
+          }
+        }
+      },
+      "splits": {
+        "held_eggcc": {
+          "shadow": {
+            "mode": "shadow",
+            "snapshot_network_seconds": 0.7933703779990537,
+            "snapshot_calls": 32,
+            "teacher_commits": 23,
+            "proposed": 18,
+            "duplicates": 8,
+            "correct_complete": 2,
+            "off_reference_unique": 8,
+            "complete_coverage": 0.08695652173913043,
+            "by_parent_kind": {
+              "initial": {
+                "correct": 0,
+                "required": 1
+              },
+              "generated": {
+                "correct": 5,
+                "required": 53
+              },
+              "repair": {
+                "correct": 0,
+                "required": 0
+              }
+            }
+          },
+          "exclusive": {
+            "counts": {
+              "programs": 2,
+              "correct_final_states": 0,
+              "reference_commits": 3087,
+              "reference_runs": 1252,
+              "accepted": 36,
+              "duplicates": 23,
+              "verifier_calls": 1350,
+              "issued": 117,
+              "source_runs": 594,
+              "neural_waves": 594,
+              "native_repair_events": 0,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 2
+            },
+            "rejected": {
+              "binding": 55,
+              "guard": 3
+            },
+            "total_seconds": {
+              "network_seconds": 1.671080423989224,
+              "native_verify_seconds": 0.000242073,
+              "native_repair_seconds": 0.00025383800000000026,
+              "remaining_process_seconds_including_ipc": 0.29513662901070836,
+              "wall_seconds": 2.4273910840001918,
+              "reference_seconds": 0.020324209000000003
+            }
+          }
+        },
+        "held_program": {
+          "shadow": {
+            "mode": "shadow",
+            "snapshot_network_seconds": 0.12140075200022693,
+            "snapshot_calls": 144,
+            "teacher_commits": 360,
+            "proposed": 361,
+            "duplicates": 1,
+            "correct_complete": 360,
+            "off_reference_unique": 0,
+            "complete_coverage": 1.0,
+            "by_parent_kind": {
+              "initial": {
+                "correct": 408,
+                "required": 408
+              },
+              "generated": {
+                "correct": 192,
+                "required": 192
+              },
+              "repair": {
+                "correct": 24,
+                "required": 24
+              }
+            }
+          },
+          "exclusive": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 48,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 360,
+              "duplicates": 1,
+              "verifier_calls": 144,
+              "issued": 361,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 24,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 360
+            },
+            "rejected": {},
+            "total_seconds": {
+              "network_seconds": 0.18296766500589,
+              "native_verify_seconds": 0.000577003,
+              "native_repair_seconds": 0.000549542,
+              "remaining_process_seconds_including_ipc": 0.04160036799727876,
+              "wall_seconds": 0.6151021670002592,
+              "reference_seconds": 0.008373291999999997
+            }
+          }
+        },
+        "held_merge": {
+          "shadow": {
+            "mode": "shadow",
+            "snapshot_network_seconds": 0.11849733300005028,
+            "snapshot_calls": 144,
+            "teacher_commits": 360,
+            "proposed": 360,
+            "duplicates": 2,
+            "correct_complete": 358,
+            "off_reference_unique": 0,
+            "complete_coverage": 0.9944444444444445,
+            "by_parent_kind": {
+              "initial": {
+                "correct": 406,
+                "required": 408
+              },
+              "generated": {
+                "correct": 192,
+                "required": 192
+              },
+              "repair": {
+                "correct": 24,
+                "required": 24
+              }
+            }
+          },
+          "exclusive": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 46,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 358,
+              "duplicates": 2,
+              "verifier_calls": 144,
+              "issued": 360,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 24,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 345
+            },
+            "rejected": {},
+            "total_seconds": {
+              "network_seconds": 0.17918558001019846,
+              "native_verify_seconds": 0.0006018740000000002,
+              "native_repair_seconds": 0.000482992,
+              "remaining_process_seconds_including_ipc": 0.040957588991045416,
+              "wall_seconds": 0.6062594589984656,
+              "reference_seconds": 0.008298748000000002
+            }
+          }
+        },
+        "held_result_pc": {
+          "shadow": {
+            "mode": "shadow",
+            "snapshot_network_seconds": 0.12797253499502403,
+            "snapshot_calls": 144,
+            "teacher_commits": 360,
+            "proposed": 384,
+            "duplicates": 70,
+            "correct_complete": 314,
+            "off_reference_unique": 0,
+            "complete_coverage": 0.8722222222222222,
+            "by_parent_kind": {
+              "initial": {
+                "correct": 362,
+                "required": 408
+              },
+              "generated": {
+                "correct": 192,
+                "required": 192
+              },
+              "repair": {
+                "correct": 0,
+                "required": 24
+              }
+            }
+          },
+          "exclusive": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 13,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 282,
+              "duplicates": 60,
+              "verifier_calls": 144,
+              "issued": 374,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 15,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 143
+            },
+            "rejected": {
+              "binding": 32
+            },
+            "total_seconds": {
+              "network_seconds": 0.18679924499792833,
+              "native_verify_seconds": 0.000544752,
+              "native_repair_seconds": 0.000393536,
+              "remaining_process_seconds_including_ipc": 0.043352920002284655,
+              "wall_seconds": 0.6296828740014462,
+              "reference_seconds": 0.008900206
+            }
+          }
+        }
+      }
+    },
+    "stratified": {
+      "native": {
+        "mode": "exclusive",
+        "weights_sha256": "59fda6c8ae51dc64809865a832846eba877eb631b8704714c3319e287187a4dc",
+        "verifier_sha256": "4f776e000dd7bc14bfca72ea82f17dcf769f7e720c01fbe85c78bff04e2ae0ab",
+        "cases": {
+          "fact": {
+            "first_difference": {
+              "run": 3,
+              "actual_commits": 1,
+              "teacher_by_rule": {
+                "575": 2
+              },
+              "teacher_parent_counts": {
+                "2": 2
+              },
+              "issued": {
+                "by_rule": {
+                  "575": 1
+                },
+                "distinct": 1
+              }
+            },
+            "common_runs": 2,
+            "exclusive": {
+              "counts": {
+                "programs": 1,
+                "correct_final_states": 0,
+                "reference_commits": 1668,
+                "reference_runs": 634,
+                "accepted": 18,
+                "duplicates": 10,
+                "verifier_calls": 679,
+                "issued": 47,
+                "source_runs": 295,
+                "neural_waves": 295,
+                "native_repair_events": 0,
+                "independent_search_calls": 0,
+                "certified_reference_prefix_commits": 2
+              },
+              "rejected": {
+                "binding": 19
+              },
+              "total_seconds": {
+                "network_seconds": 0.7824034600052983,
+                "native_verify_seconds": 0.000127891,
+                "native_repair_seconds": 0.00020553900000000024,
+                "remaining_process_seconds_including_ipc": 0.14890289899404296,
+                "wall_seconds": 1.1672886669994114,
+                "reference_seconds": 0.387846333
+              }
+            }
+          },
+          "loopfact": {
+            "first_difference": {
+              "run": 3,
+              "actual_commits": 1,
+              "teacher_by_rule": {
+                "575": 2
+              },
+              "teacher_parent_counts": {
+                "2": 2
+              },
+              "issued": {
+                "by_rule": {
+                  "575": 1
+                },
+                "distinct": 1
+              }
+            },
+            "common_runs": 2,
+            "exclusive": {
+              "counts": {
+                "programs": 1,
+                "correct_final_states": 0,
+                "reference_commits": 1419,
+                "reference_runs": 618,
+                "accepted": 25,
+                "duplicates": 8,
+                "verifier_calls": 729,
+                "issued": 50,
+                "source_runs": 309,
+                "neural_waves": 309,
+                "native_repair_events": 0,
+                "independent_search_calls": 0,
+                "certified_reference_prefix_commits": 2
+              },
+              "rejected": {
+                "binding": 17
+              },
+              "total_seconds": {
+                "network_seconds": 0.8433707020049042,
+                "native_verify_seconds": 0.000154169,
+                "native_repair_seconds": 0.0002439570000000001,
+                "remaining_process_seconds_including_ipc": 0.15997983699540885,
+                "wall_seconds": 1.2364850840003783,
+                "reference_seconds": 0.3739335
+              }
+            }
+          },
+          "sum-divisors": {
+            "first_difference": {
+              "run": 3,
+              "actual_commits": 1,
+              "teacher_by_rule": {
+                "575": 2
+              },
+              "teacher_parent_counts": {
+                "2": 2
+              },
+              "issued": {
+                "by_rule": {
+                  "575": 1
+                },
+                "distinct": 1
+              }
+            },
+            "common_runs": 2,
+            "exclusive": {
+              "counts": {
+                "programs": 1,
+                "correct_final_states": 0,
+                "reference_commits": 17341,
+                "reference_runs": 1644,
+                "accepted": 30,
+                "duplicates": 13,
+                "verifier_calls": 737,
+                "issued": 67,
+                "source_runs": 368,
+                "neural_waves": 368,
+                "native_repair_events": 0,
+                "independent_search_calls": 0,
+                "certified_reference_prefix_commits": 2
+              },
+              "rejected": {
+                "binding": 23,
+                "guard": 1
+              },
+              "total_seconds": {
+                "network_seconds": 1.4588483679908677,
+                "native_verify_seconds": 0.000152089,
+                "native_repair_seconds": 0.00021599300000000034,
+                "remaining_process_seconds_including_ipc": 0.29405937600909327,
+                "wall_seconds": 1.9880346249992726,
+                "reference_seconds": 10.296844959
+              }
+            }
+          }
+        }
+      },
+      "shadow_rule_census": {
+        "mode": "shadow",
+        "decision": "rule before any parent read",
+        "wave": 1,
+        "seed": 1967,
+        "field_pointer": true,
+        "weights_sha256": "59fda6c8ae51dc64809865a832846eba877eb631b8704714c3319e287187a4dc",
+        "cases": {
+          "fact": {
+            "with_commits": {
+              "runs": 163,
+              "teacher_rule_run_pairs": 453,
+              "lane_decisions": 652,
+              "stop": 287,
+              "rule_chosen": 365,
+              "correct_rule_choices": 305,
+              "all_lanes_stopped": 58,
+              "correct_distinct_rule_run_pairs": 103,
+              "runs_with_a_correct_rule": 92
+            },
+            "without_commits": {
+              "runs": 471,
+              "teacher_rule_run_pairs": 0,
+              "lane_decisions": 1884,
+              "stop": 1875,
+              "rule_chosen": 9,
+              "correct_rule_choices": 0,
+              "all_lanes_stopped": 467,
+              "correct_distinct_rule_run_pairs": 0,
+              "runs_with_a_correct_rule": 0
+            },
+            "forced_issue": {
+              "mode": "assist",
+              "stopped_lanes_on_busy_runs": 287,
+              "best_rule_has_winner": 198
+            }
+          },
+          "loopfact": {
+            "with_commits": {
+              "runs": 166,
+              "teacher_rule_run_pairs": 476,
+              "lane_decisions": 664,
+              "stop": 308,
+              "rule_chosen": 356,
+              "correct_rule_choices": 324,
+              "all_lanes_stopped": 62,
+              "correct_distinct_rule_run_pairs": 110,
+              "runs_with_a_correct_rule": 93
+            },
+            "without_commits": {
+              "runs": 452,
+              "teacher_rule_run_pairs": 0,
+              "lane_decisions": 1808,
+              "stop": 1785,
+              "rule_chosen": 23,
+              "correct_rule_choices": 0,
+              "all_lanes_stopped": 443,
+              "correct_distinct_rule_run_pairs": 0,
+              "runs_with_a_correct_rule": 0
+            },
+            "forced_issue": {
+              "mode": "assist",
+              "stopped_lanes_on_busy_runs": 308,
+              "best_rule_has_winner": 194
+            }
+          }
+        }
+      },
+      "splits": {
+        "held_eggcc": {
+          "shadow": {
+            "mode": "shadow",
+            "snapshot_network_seconds": 0.7925833319995945,
+            "snapshot_calls": 32,
+            "teacher_commits": 23,
+            "proposed": 10,
+            "duplicates": 3,
+            "correct_complete": 1,
+            "off_reference_unique": 6,
+            "complete_coverage": 0.043478260869565216,
+            "by_parent_kind": {
+              "initial": {
+                "correct": 0,
+                "required": 1
+              },
+              "generated": {
+                "correct": 2,
+                "required": 53
+              },
+              "repair": {
+                "correct": 0,
+                "required": 0
+              }
+            }
+          },
+          "exclusive": {
+            "counts": {
+              "programs": 2,
+              "correct_final_states": 0,
+              "reference_commits": 3087,
+              "reference_runs": 1252,
+              "accepted": 43,
+              "duplicates": 18,
+              "verifier_calls": 1408,
+              "issued": 97,
+              "source_runs": 604,
+              "neural_waves": 604,
+              "native_repair_events": 0,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 4
+            },
+            "rejected": {
+              "binding": 36
+            },
+            "total_seconds": {
+              "network_seconds": 1.6054663739996613,
+              "native_verify_seconds": 0.000221277,
+              "native_repair_seconds": 0.00025517200000000034,
+              "remaining_process_seconds_including_ipc": 0.30331334900067575,
+              "wall_seconds": 2.3663864580003064,
+              "reference_seconds": 0.020857792
+            }
+          }
+        },
+        "held_program": {
+          "shadow": {
+            "mode": "shadow",
+            "snapshot_network_seconds": 0.12217817600139824,
+            "snapshot_calls": 144,
+            "teacher_commits": 360,
+            "proposed": 361,
+            "duplicates": 1,
+            "correct_complete": 360,
+            "off_reference_unique": 0,
+            "complete_coverage": 1.0,
+            "by_parent_kind": {
+              "initial": {
+                "correct": 408,
+                "required": 408
+              },
+              "generated": {
+                "correct": 192,
+                "required": 192
+              },
+              "repair": {
+                "correct": 24,
+                "required": 24
+              }
+            }
+          },
+          "exclusive": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 48,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 360,
+              "duplicates": 1,
+              "verifier_calls": 144,
+              "issued": 361,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 24,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 360
+            },
+            "rejected": {},
+            "total_seconds": {
+              "network_seconds": 0.1809987530014041,
+              "native_verify_seconds": 0.0005548310000000001,
+              "native_repair_seconds": 0.0005438419999999999,
+              "remaining_process_seconds_including_ipc": 0.04082762300058197,
+              "wall_seconds": 0.6120989159999226,
+              "reference_seconds": 0.008549288
+            }
+          }
+        },
+        "held_merge": {
+          "shadow": {
+            "mode": "shadow",
+            "snapshot_network_seconds": 0.1192307039973457,
+            "snapshot_calls": 144,
+            "teacher_commits": 360,
+            "proposed": 360,
+            "duplicates": 2,
+            "correct_complete": 358,
+            "off_reference_unique": 0,
+            "complete_coverage": 0.9944444444444445,
+            "by_parent_kind": {
+              "initial": {
+                "correct": 406,
+                "required": 408
+              },
+              "generated": {
+                "correct": 192,
+                "required": 192
+              },
+              "repair": {
+                "correct": 24,
+                "required": 24
+              }
+            }
+          },
+          "exclusive": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 46,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 358,
+              "duplicates": 2,
+              "verifier_calls": 144,
+              "issued": 360,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 24,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 345
+            },
+            "rejected": {},
+            "total_seconds": {
+              "network_seconds": 0.17687300899615366,
+              "native_verify_seconds": 0.0005187070000000001,
+              "native_repair_seconds": 0.0005111590000000002,
+              "remaining_process_seconds_including_ipc": 0.04066045600388176,
+              "wall_seconds": 0.6077414590017725,
+              "reference_seconds": 0.008318665000000003
+            }
+          }
+        },
+        "held_result_pc": {
+          "shadow": {
+            "mode": "shadow",
+            "snapshot_network_seconds": 0.127052754001852,
+            "snapshot_calls": 144,
+            "teacher_commits": 360,
+            "proposed": 384,
+            "duplicates": 70,
+            "correct_complete": 314,
+            "off_reference_unique": 0,
+            "complete_coverage": 0.8722222222222222,
+            "by_parent_kind": {
+              "initial": {
+                "correct": 362,
+                "required": 408
+              },
+              "generated": {
+                "correct": 192,
+                "required": 192
+              },
+              "repair": {
+                "correct": 0,
+                "required": 24
+              }
+            }
+          },
+          "exclusive": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 13,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 282,
+              "duplicates": 60,
+              "verifier_calls": 144,
+              "issued": 374,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 15,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 143
+            },
+            "rejected": {
+              "binding": 32
+            },
+            "total_seconds": {
+              "network_seconds": 0.18527140899550432,
+              "native_verify_seconds": 0.0006317990000000002,
+              "native_repair_seconds": 0.000368869,
+              "remaining_process_seconds_including_ipc": 0.042399661003567374,
+              "wall_seconds": 0.6307412120004301,
+              "reference_seconds": 0.009026124000000002
+            }
+          }
+        }
+      }
+    }
+  },
+  "stratified_four_waves": {
+    "mode": "exclusive",
+    "wave_limit": 4,
+    "weights_sha256": "59fda6c8ae51dc64809865a832846eba877eb631b8704714c3319e287187a4dc",
+    "verifier_sha256": "4f776e000dd7bc14bfca72ea82f17dcf769f7e720c01fbe85c78bff04e2ae0ab",
+    "cases": {
+      "fact": {
+        "first_difference": {
+          "run": 3,
+          "actual_commits": 1,
+          "teacher_by_rule": {
+            "575": 2
+          },
+          "teacher_parent_counts": {
+            "2": 2
+          },
+          "issued": {
+            "by_rule": {
+              "575": 1
+            },
+            "distinct": 1
+          }
+        },
+        "common_runs": 2,
+        "exclusive": {
+          "counts": {
+            "programs": 1,
+            "correct_final_states": 0,
+            "reference_commits": 1668,
+            "reference_runs": 634,
+            "accepted": 25,
+            "duplicates": 27,
+            "verifier_calls": 680,
+            "issued": 123,
+            "source_runs": 289,
+            "neural_waves": 323,
+            "native_repair_events": 0,
+            "independent_search_calls": 0,
+            "certified_reference_prefix_commits": 2
+          },
+          "rejected": {
+            "binding": 67,
+            "guard": 4
+          },
+          "total_seconds": {
+            "network_seconds": 0.8749983410016284,
+            "native_verify_seconds": 0.000145544,
+            "native_repair_seconds": 0.00013258100000000008,
+            "remaining_process_seconds_including_ipc": 0.15762498999819785,
+            "wall_seconds": 1.2649323330006155,
+            "reference_seconds": 0.387846333
+          }
+        }
+      },
+      "loopfact": {
+        "first_difference": {
+          "run": 3,
+          "actual_commits": 1,
+          "teacher_by_rule": {
+            "575": 2
+          },
+          "teacher_parent_counts": {
+            "2": 2
+          },
+          "issued": {
+            "by_rule": {
+              "575": 1
+            },
+            "distinct": 1
+          }
+        },
+        "common_runs": 2,
+        "exclusive": {
+          "counts": {
+            "programs": 1,
+            "correct_final_states": 0,
+            "reference_commits": 1419,
+            "reference_runs": 618,
+            "accepted": 35,
+            "duplicates": 68,
+            "verifier_calls": 831,
+            "issued": 180,
+            "source_runs": 319,
+            "neural_waves": 364,
+            "native_repair_events": 0,
+            "independent_search_calls": 0,
+            "certified_reference_prefix_commits": 2
+          },
+          "rejected": {
+            "binding": 73,
+            "guard": 4
+          },
+          "total_seconds": {
+            "network_seconds": 1.0548257869959343,
+            "native_verify_seconds": 0.000184163,
+            "native_repair_seconds": 0.0001850750000000001,
+            "remaining_process_seconds_including_ipc": 0.18825200900372674,
+            "wall_seconds": 1.4724416250001013,
+            "reference_seconds": 0.3739335
+          }
+        }
+      },
+      "sum-divisors": {
+        "first_difference": {
+          "run": 3,
+          "actual_commits": 1,
+          "teacher_by_rule": {
+            "575": 2
+          },
+          "teacher_parent_counts": {
+            "2": 2
+          },
+          "issued": {
+            "by_rule": {
+              "575": 1
+            },
+            "distinct": 1
+          }
+        },
+        "common_runs": 2,
+        "exclusive": {
+          "counts": {
+            "programs": 1,
+            "correct_final_states": 0,
+            "reference_commits": 17341,
+            "reference_runs": 1644,
+            "accepted": 34,
+            "duplicates": 56,
+            "verifier_calls": 735,
+            "issued": 178,
+            "source_runs": 365,
+            "neural_waves": 408,
+            "native_repair_events": 0,
+            "independent_search_calls": 0,
+            "certified_reference_prefix_commits": 2
+          },
+          "rejected": {
+            "binding": 85,
+            "guard": 3
+          },
+          "total_seconds": {
+            "network_seconds": 1.5646680390000256,
+            "native_verify_seconds": 0.000217119,
+            "native_repair_seconds": 0.0002642540000000001,
+            "remaining_process_seconds_including_ipc": 0.3017498840005506,
+            "wall_seconds": 2.1005466659999,
+            "reference_seconds": 10.296844959
+          }
+        }
+      }
+    }
+  }
+}

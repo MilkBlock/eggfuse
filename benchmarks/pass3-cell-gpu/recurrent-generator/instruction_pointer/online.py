@@ -59,7 +59,7 @@ def propose(actor, catalog, snapshot, nodes):
 
 
 @torch.no_grad()
-def execute(binary, program, actor, seed, wave_limit=1):
+def execute(binary, program, actor, seed, wave_limit=1, observe_proposals=None):
     start = perf_counter()
     catalog = Catalog(json.loads(program.read_bytes()))
     history = History(catalog,seed)
@@ -93,6 +93,8 @@ def execute(binary, program, actor, seed, wave_limit=1):
                         parents.append(dict(address=dict(token=token,op=pc),version=row['version']))
                     out.append(dict(run=snapshot.run,rule=rid,parents=parents,token=next_token))
                     next_token += 1
+                if observe_proposals is not None:
+                    observe_proposals(snapshot.run, proposals)
                 issued += len(out)
                 p.stdin.write(json.dumps(out)+'\n')
                 p.stdin.flush()

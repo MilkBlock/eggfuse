@@ -4,7 +4,7 @@ from dataclasses import replace
 from pathlib import Path
 import torch
 
-from actor import InstructionActor
+from rule_read import load_actor
 from history import load
 
 
@@ -39,9 +39,7 @@ def check_live_fields(model,cat,frame,nodes):
 def check(directory, weights=None):
     torch.manual_seed(1703)
     torch.set_num_threads(1)
-    model = InstructionActor().eval()
-    if weights is not None:
-        model.load_state_dict(torch.load(weights, map_location="cpu", weights_only=True))
+    model = load_actor(weights, False)
     cat, snapshots = load(directory,19)
     _, renamed = load(directory,23)
     with torch.no_grad():
