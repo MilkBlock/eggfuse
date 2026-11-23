@@ -11,16 +11,11 @@ from alternate_proofs import digest
 from anchor_set_audit import load_actor
 from higher_cell import read
 from layout_credit import CreditIssuer
-from online import execute
+from online import INTERNAL, RESIDUAL, execute
 from prefix_policy import Policy
 from ripsat_layout import capture
 from ripsat_replay import unpack
 from train_layout_bandit import LearnedChoice
-
-# Mirrors native Request namespaces for external, signed internal, and residual RHS.
-INTERNAL=1<<61
-RESIDUAL=((1<<63)-1)//2
-
 
 def collect(folder,donor,binary,weights,baked,policy,seed,trace):
     actor=load_actor(weights,True)

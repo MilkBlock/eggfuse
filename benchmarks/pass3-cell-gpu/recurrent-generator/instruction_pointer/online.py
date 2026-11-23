@@ -14,6 +14,11 @@ from catalog import Catalog
 from history import History
 
 
+# Native Request namespaces, assigned by the graph receiver and the assist fallback.
+INTERNAL=1<<61
+RESIDUAL=((1<<63)-1)//2
+
+
 class SourcePanic(RuntimeError):
     def __init__(self,run,charged):
         super().__init__(f'native source panic after issuance in Run {run}')
