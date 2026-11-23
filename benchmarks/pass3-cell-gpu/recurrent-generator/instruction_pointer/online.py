@@ -4,6 +4,7 @@ from collections import Counter, defaultdict
 import json
 from pathlib import Path
 import subprocess
+from tempfile import TemporaryFile
 from time import perf_counter
 
 import torch
@@ -11,6 +12,13 @@ import torch
 from rule_read import load_actor
 from catalog import Catalog
 from history import History
+
+
+class SourcePanic(RuntimeError):
+    def __init__(self,run,charged):
+        super().__init__(f'native source panic after issuance in Run {run}')
+        self.run=run
+        self.charged=charged
 
 
 def lane_choice(actor,catalog,memory,state):
@@ -64,7 +72,7 @@ def propose(actor, catalog, snapshot, nodes):
 
 
 @torch.no_grad()
-def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=None, live_receipts=None, teacher_tape=None, observe_packets=None, mask_receipts=False, prefix_policy=None, shadow_runs=None):
+def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=None, live_receipts=None, teacher_tape=None, observe_packets=None, mask_receipts=False, prefix_policy=None, shadow_runs=None, run_limit=None, observe_snapshot=None):
     if wave_limit is None:
         wave_limit = getattr(actor,'default_waves',1)
     if live_receipts is None:
@@ -95,7 +103,10 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
         raise ValueError('shadow waves require live receipts')
     role = 'shadow-waves' if teacher_tape else 'online-waves' if live_receipts else 'online'
     cmd = [binary,role,program,teacher_tape or '-','audit']
-    with subprocess.Popen(cmd,stdin=subprocess.PIPE,stdout=subprocess.PIPE,text=True,bufsize=1) as p:
+    if run_limit is not None:
+        cmd.append(str(run_limit))
+    with TemporaryFile(mode='w+') as errors, subprocess.Popen(
+            cmd,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=errors,text=True,bufsize=1) as p:
         try:
             for line in p.stdout:
                 frame = json.loads(line)
@@ -103,6 +114,8 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
                     report = frame
                     break
                 snapshot = history.snapshot(frame)
+                if observe_snapshot is not None:
+                    observe_snapshot(catalog,history,snapshot)
                 def packets(actions):
                     nonlocal next_token, issued
                     out = []
@@ -166,7 +179,13 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
                     observe_proposals(snapshot.run, proposals)
                 send(dict(finish=True,requests=[]) if live_receipts else packets(proposals))
             else:
-                raise RuntimeError('native verifier exited without a final report')
+                code=p.wait()
+                errors.seek(0)
+                detail=errors.read().strip()
+                if code and detail=='Error: "source panic"':
+                    raise SourcePanic(history.run,dict(issued=issued,neural_waves=calls,
+                        wall_seconds=perf_counter()-start,network_seconds=inference+encoding))
+                raise RuntimeError(f'native verifier exited without a final report ({code}): {detail}')
         finally:
             p.stdin.close()
             if 'report' not in locals():
