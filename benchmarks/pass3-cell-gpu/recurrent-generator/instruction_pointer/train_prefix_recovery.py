@@ -15,7 +15,7 @@ from anchor_set_audit import check,load_actor
 from higher_cell import read
 from history import History
 from prefix_policy import Policy,generate
-from prefix_recovery import RecoveryHead,features
+from prefix_recovery import RecoveryHead,RecurrentRecoveryHead,features
 from ripsat_layout import signatures
 from side_boundary import address
 
@@ -158,7 +158,7 @@ def collect(root,name,weights,binary,out,*,commit_sets=False,read_order='source'
     (out/(name+'.json')).write_text(json.dumps(report,indent=2)+'\n')
 
 
-def fit(root,data,weights,out):
+def fit(root,data,weights,out,refinements=0):
     names=sorted(r['directory'] for r in read(root/'manifest.json') if r['origin']=='eggcc' and r['split']=='train')
     reports={name:read(data/(name+'.json')) for name in names}
     orders={report.get('read_order','source') for report in reports.values()}
@@ -176,7 +176,7 @@ def fit(root,data,weights,out):
     if not len(pos) or not len(neg) or not valid.any():raise ValueError('empty recovery split')
     width=ports.shape[1]
     torch.manual_seed(1703)
-    head=RecoveryHead(width).to('mps')
+    head=(RecurrentRecoveryHead(width,refinements) if refinements else RecoveryHead(width)).to('mps')
     opt=torch.optim.AdamW(head.parameters(),lr=.003)
     x,k,e,ys=[t.to('mps') for t in (ctx,ports,ev,y.float())]
     for epoch in range(32):
@@ -212,7 +212,8 @@ def fit(root,data,weights,out):
     (out/'training.json').write_text(json.dumps(dict(width=width,base=digest(weights),budget=4,
         cut=cut,margin_cut=margin_cut,margin_f1=margin_f1,head=digest(out/'head.pt'),training=reports,valid_examples=int(valid.sum()),
         valid_positives=int(targets.sum()),valid_selected=issued,valid_hits=hits,valid_f1=f1,
-        training_positive=len(pos),training_negative=len(neg),device='mps',epochs=32,read_order=orders.pop()),indent=2)+'\n')
+        training_positive=len(pos),training_negative=len(neg),device='mps',epochs=32,read_order=orders.pop(),
+        refinements=refinements,parameters=sum(p.numel() for p in head.parameters())),indent=2)+'\n')
 
 
 if __name__=='__main__':
@@ -220,12 +221,15 @@ if __name__=='__main__':
     for key in ('root','weights','binary','data','out'):p.add_argument(key,type=Path)
     p.add_argument('--collect',nargs='+')
     p.add_argument('--read-order',choices=['source','connected'],help='sample collection order; fit uses the order recorded in the data')
+    p.add_argument('--refinements',type=int,default=0,help='shared hidden updates during recovery read scoring')
     p.add_argument('--commit-sets',action='store_true',help='record native proof equivalence and base-policy coverage for training')
     a=p.parse_args()
     torch.set_num_threads(1)
+    if a.refinements<0 or (a.collect and a.refinements):
+        p.error('--refinements must be nonnegative and is only used for fit')
     if a.collect:
         for name in a.collect:collect(a.root,name,a.weights,a.binary,a.data,commit_sets=a.commit_sets,read_order=a.read_order or 'source')
     else:
         if a.read_order:
             p.error('--read-order is used with --collect; fit reads it from the data')
-        fit(a.root,a.data,a.weights,a.out)
+        fit(a.root,a.data,a.weights,a.out,a.refinements)
