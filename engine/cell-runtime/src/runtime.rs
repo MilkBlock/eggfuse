@@ -1213,6 +1213,9 @@ impl Executor {
         self.export_token_memory(None)
     }
     #[cfg(feature = "cell-token-replay")]
+    pub fn enable_layout_tokens(&mut self, layouts: Vec<crate::cell_tokens::Layout>) -> Result<()> {
+        self.token_history.as_mut().ok_or("missing token history")?.enable_layouts(&self.graph,layouts)
+    }
     pub fn enable_higher_tokens(&mut self, recipes: Vec<crate::cell_tokens::HigherRecipe>) -> Result<()> {
         self.token_history.as_mut().ok_or("missing token history")?.enable_higher(&self.graph, recipes)
     }

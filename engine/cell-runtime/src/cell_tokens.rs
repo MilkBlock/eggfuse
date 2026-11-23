@@ -2,6 +2,9 @@
 //! The inverse index used by the offline teacher is absent from the receiver.
 #[path = "higher_tokens.rs"]
 mod higher;
+#[path = "graph_tokens.rs"]
+mod graph_tokens;
+pub use graph_tokens::{Certificate,Layout};
 pub use higher::Recipe as HigherRecipe;
 use crate::{
     cell::{CompletedEffects, Instance, QueryFacts, Site, bind_query, query_operand},
@@ -40,6 +43,8 @@ pub struct Request {
     pub side: Option<Premise>,
     #[serde(default,skip_serializing_if="Option::is_none")]
     pub closed_branch: Option<usize>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub graph: Option<Certificate>,
     #[serde(skip)]
     step: usize,
 }
@@ -165,6 +170,7 @@ pub struct AssistCounts {
 pub struct History {
     pub assist: Option<AssistCounts>,
     higher: Option<higher::Higher>,
+    layouts:Option<graph_tokens::Receiver>,
     pub recall: Option<RecallAudit>,
     pub waves: Option<WaveReceiver>,
     memory: Option<MemoryExport>,
@@ -211,6 +217,7 @@ impl History {
         let mut history = Self {
             assist: None,
             higher: None,
+            layouts:None,
             memory: None,
             recall: None,
             waves: None,
@@ -252,6 +259,13 @@ impl History {
     pub(crate) fn enable_higher(&mut self, g: &Graph, recipes: Vec<HigherRecipe>) -> Result<()> {
         self.higher = Some(higher::Higher::new(&g.program, recipes)?);
         Ok(())
+    }
+    pub(crate) fn enable_layouts(&mut self,g:&Graph,layouts:Vec<Layout>)->Result<()> {
+        self.layouts=Some(graph_tokens::Receiver::new(&g.program,layouts)?);
+        Ok(())
+    }
+    pub fn layout_report(&self)->Option<serde_json::Value> {
+        self.layouts.as_ref().map(graph_tokens::Receiver::report)
     }
     pub fn higher_report(&self) -> Option<serde_json::Value> {
         self.higher.as_ref().map(|h| serde_json::json!({"counts":h.counts, "outstanding":h.remaining()}))
@@ -381,6 +395,9 @@ impl History {
         if let Some(higher) = &mut self.higher {
             higher.dispatch(&visible, run, rules, &mut self.queue)?;
         }
+        if let Some(layouts)=&mut self.layouts {
+            layouts.advance(&visible,&memory.accepted,run,rules,&mut self.queue)?;
+        }
         memory.previous = visible;
         memory.accepted.clear();
         if self.waves.is_some() {
@@ -391,12 +408,12 @@ impl History {
             std::io::stdin()
                 .read_line(&mut line)
                 .map_err(|e| e.to_string())?;
-            let proposals: Vec<Request> = serde_json::from_str(&line).map_err(|e| e.to_string())?;
-            for mut request in proposals {
-                if let Some(higher) = &mut self.higher { higher.issue(&mut request,&memory.previous)?; }
+            let mut proposals: Vec<Request> = serde_json::from_str(&line).map_err(|e| e.to_string())?;
+            for request in &mut proposals {
+                if let Some(higher) = &mut self.higher { higher.issue(request,&memory.previous)?; }
                 if (request.unit.is_some() || request.side.is_some() || request.closed_branch.is_some()) && self.higher.is_none() { return Err("missing higher catalog".into()); }
                 if request.run != run
-                    || (self.higher.is_some() && request.token >= higher::INTERNAL)
+                    || ((self.higher.is_some() || self.layouts.is_some()) && request.token >= higher::INTERNAL)
                     || (self.assist.is_some() && request.token >= i64::MAX / 2)
                     || !rules.iter().any(|&(rid, _)| rid == request.rule)
                     || request.token <= 0
@@ -404,6 +421,12 @@ impl History {
                 {
                     return Err("invalid online issue envelope".into());
                 }
+                if request.graph.is_some() {
+                    let layouts=self.layouts.as_mut().ok_or("missing graph catalog")?;
+                    layouts.issue(request,&memory.previous,rules,&mut self.queue)?;
+                }
+            }
+            for request in proposals {
                 self.queue
                     .entry((run, request.rule))
                     .or_default()
@@ -449,6 +472,7 @@ impl History {
             }
             let mut replies = Vec::new();
             for packet in wave.requests {
+                if packet.graph.is_some() {return Err("graph certificates require the sealed batch receiver".into());}
                 let rid = packet.rule;
                 let Some(&(_, wm)) = rules.iter().find(|&&(r, _)| r == rid) else {
                     return Err("unscheduled wave request".into());
@@ -610,7 +634,7 @@ impl History {
             (rid, b.input_values(&rule.inputs).cloned().collect()),
             token,
         );
-        let request = Request { token, rule: rid, run, parents, unit: None, side: None, closed_branch: None, step: 0 };
+        let request = Request { token, rule: rid, run, parents, unit: None, side: None, closed_branch: None, graph:None, step: 0 };
         if let Some(memory) = &mut self.memory {
             memory.accepted.push(request.clone());
         }

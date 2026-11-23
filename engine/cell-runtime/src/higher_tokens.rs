@@ -224,6 +224,7 @@ impl Higher {
                 queue.entry((run, rule)).or_default().push(Request {
                     token,
                     closed_branch: None,
+                    graph: None,
                     run,
                     rule,
                     parents,
@@ -260,6 +261,7 @@ mod tests {
         let mut root = Request {
             token: 4,
             closed_branch: None,
+            graph: None,
             side: None,
             run: 1,
             rule: 3,
@@ -345,6 +347,7 @@ mod tests {
                 step: 0,
                 side: Some(side.clone()),
                 closed_branch: Some(1),
+                graph: None,
             };
             state.issue(&mut root, &visible).unwrap();
             state.accepted(&root);
