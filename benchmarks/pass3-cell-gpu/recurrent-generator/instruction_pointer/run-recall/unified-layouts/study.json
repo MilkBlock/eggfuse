@@ -1,0 +1,126 @@
+{
+  "schema": "eggfuse-higher-layout-study/v1",
+  "mode": "teacher-snapshot ranking",
+  "root_weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+  "weights": "d8756ef211ba2f75596676d37a14947579cb0a43e99c68e50d63c68b54b93abb",
+  "catalog_sha": "ee476c5b73a7357fab4a18711a0dc59bbc705514ff1e8723850b70d7c45d8a39",
+  "updates": 386,
+  "epochs": 2,
+  "ready_training_layouts": 3044,
+  "ready_catalog_layouts": 3044,
+  "max_steps": 10,
+  "compiled": 4096,
+  "native_join_layouts": 32,
+  "observed_layouts": 49371,
+  "train_layouts_in_gradient": 3562,
+  "positive_gradient_layouts": 3552,
+  "held_layouts": 534,
+  "depths": {
+    "3": 929,
+    "4": 662,
+    "2": 805,
+    "5": 544,
+    "9": 130,
+    "10": 125,
+    "8": 181,
+    "6": 439,
+    "7": 281
+  },
+  "training_pairs": 49309,
+  "training": {
+    "sum": "856765e48910fe600548e17c7f18b7f3859c1355e5bc57420a15463e111ad792",
+    "dot": "7f8cd9a9904f160448d8639f61b3486b47bf3a83a736d815dea884572e13df97"
+  },
+  "programs": {
+    "fact": {
+      "all_observed": {
+        "decisions": 1404,
+        "roots_with_observed_target": 649,
+        "issued": 1190,
+        "selected_recorded_target": 212,
+        "steps_in_selected_targets": 468
+      },
+      "all_ready": {
+        "decisions": 1404,
+        "roots_with_observed_target": 510,
+        "issued": 661,
+        "selected_recorded_target": 148,
+        "steps_in_selected_targets": 312
+      },
+      "held_layout_observed": {
+        "decisions": 1159,
+        "issued": 967,
+        "roots_with_observed_target": 287,
+        "selected_recorded_target": 121,
+        "steps_in_selected_targets": 268
+      },
+      "held_layout_ready": {
+        "decisions": 1159,
+        "roots_with_observed_target": 123,
+        "issued": 298,
+        "selected_recorded_target": 28,
+        "steps_in_selected_targets": 60
+      }
+    },
+    "loopfact": {
+      "all_observed": {
+        "decisions": 1170,
+        "roots_with_observed_target": 548,
+        "issued": 966,
+        "selected_recorded_target": 195,
+        "steps_in_selected_targets": 431
+      },
+      "all_ready": {
+        "decisions": 1170,
+        "roots_with_observed_target": 427,
+        "issued": 447,
+        "selected_recorded_target": 105,
+        "steps_in_selected_targets": 214
+      },
+      "held_layout_observed": {
+        "decisions": 935,
+        "roots_with_observed_target": 285,
+        "issued": 766,
+        "selected_recorded_target": 109,
+        "steps_in_selected_targets": 249
+      },
+      "held_layout_ready": {
+        "decisions": 935,
+        "roots_with_observed_target": 116,
+        "issued": 194,
+        "selected_recorded_target": 22,
+        "steps_in_selected_targets": 46
+      }
+    },
+    "sum-divisors": {
+      "all_observed": {
+        "decisions": 14437,
+        "roots_with_observed_target": 6091,
+        "issued": 12500,
+        "selected_recorded_target": 1994,
+        "steps_in_selected_targets": 4235
+      },
+      "all_ready": {
+        "decisions": 14437,
+        "roots_with_observed_target": 4538,
+        "issued": 7748,
+        "selected_recorded_target": 1462,
+        "steps_in_selected_targets": 3008
+      },
+      "held_layout_observed": {
+        "decisions": 12203,
+        "roots_with_observed_target": 2741,
+        "issued": 10792,
+        "selected_recorded_target": 1119,
+        "steps_in_selected_targets": 2575
+      },
+      "held_layout_ready": {
+        "decisions": 12203,
+        "roots_with_observed_target": 1134,
+        "issued": 2962,
+        "selected_recorded_target": 256,
+        "steps_in_selected_targets": 558
+      }
+    }
+  }
+}

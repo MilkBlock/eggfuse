@@ -548,3 +548,5 @@ The [sealed-domain assist experiment](run-recall/assist-domains/README.md) compa
 The [higher Cell experiment](run-recall/higher-cell/README.md) signs typed iterative Bake continuations from neural roots, verifies them on the actual source boundary and measures settled effective operations per token.
 
 The [signed side-port experiment](run-recall/higher-side/README.md) measures a neural choice of independent side premises at root issuance, its native fork and an alias-aware teacher substitution control.
+
+[Variable-size higher Cells](run-recall/unified-layouts/README.md) uses one graph scorer, one boundary pointer and a native instruction-DAG receiver across 4,096 layouts. The report separates recorded paths, verified replay, live graph completions, signed effective operations and paired throughput.

@@ -1,0 +1,113 @@
+{
+  "fact": {
+    "issued_layouts": 45,
+    "complete_layouts": 17,
+    "issued_held": 5,
+    "completed_held": 2,
+    "instances_by_size": {
+      "2": 91,
+      "3": 1,
+      "9": 1
+    },
+    "complete_instances": 93,
+    "control": {
+      "paid": 3814,
+      "signed_ops": 904,
+      "ept": 0.2370214997378081,
+      "signed_commits": 1242,
+      "denominator": 1668,
+      "residual_visits": 1845
+    },
+    "expanded": {
+      "paid": 4504,
+      "signed_ops": 907,
+      "ept": 0.2013765541740675,
+      "signed_commits": 1263,
+      "denominator": 1668,
+      "residual_visits": 1845
+    },
+    "native": {
+      "paid": 3813,
+      "signed_ops": 907,
+      "ept": 0.23787044322056125,
+      "signed_commits": 1263,
+      "denominator": 1668,
+      "residual_visits": 1845
+    }
+  },
+  "loopfact": {
+    "issued_layouts": 50,
+    "complete_layouts": 19,
+    "issued_held": 5,
+    "completed_held": 2,
+    "instances_by_size": {
+      "2": 62,
+      "3": 1
+    },
+    "complete_instances": 63,
+    "control": {
+      "paid": 3756,
+      "signed_ops": 805,
+      "ept": 0.21432374866879658,
+      "signed_commits": 1040,
+      "denominator": 1419,
+      "residual_visits": 1626
+    },
+    "expanded": {
+      "paid": 4311,
+      "signed_ops": 815,
+      "ept": 0.1890512642078404,
+      "signed_commits": 1053,
+      "denominator": 1419,
+      "residual_visits": 1626
+    },
+    "native": {
+      "paid": 3752,
+      "signed_ops": 815,
+      "ept": 0.21721748400852878,
+      "signed_commits": 1053,
+      "denominator": 1419,
+      "residual_visits": 1626
+    }
+  },
+  "sum-divisors": {
+    "issued_layouts": 100,
+    "complete_layouts": 50,
+    "issued_held": 11,
+    "completed_held": 5,
+    "instances_by_size": {
+      "2": 580,
+      "3": 7
+    },
+    "complete_instances": 587,
+    "control": {
+      "paid": 24855,
+      "signed_ops": 4929,
+      "ept": 0.19831019915509956,
+      "signed_commits": 8558,
+      "denominator": 17341,
+      "residual_visits": 22677
+    },
+    "expanded": {
+      "paid": 30583,
+      "signed_ops": 5014,
+      "ept": 0.16394729097864827,
+      "signed_commits": 8702,
+      "denominator": 17341,
+      "residual_visits": 22677
+    },
+    "native": {
+      "paid": 24836,
+      "signed_ops": 5014,
+      "ept": 0.20188436141085522,
+      "signed_commits": 8702,
+      "denominator": 17341,
+      "residual_visits": 22677
+    }
+  },
+  "distinct_on_three_programs": {
+    "issued": 104,
+    "completed": 54,
+    "completed_held": 5
+  }
+}

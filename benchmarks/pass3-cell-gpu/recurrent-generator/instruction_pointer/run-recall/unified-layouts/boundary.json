@@ -1,0 +1,322 @@
+{
+  "training": {
+    "sum": {
+      "counts": {
+        "ready_layouts": 1752,
+        "all_slots_from_root": 757,
+        "needs_pointer": 995
+      },
+      "by_size": {}
+    },
+    "dot": {
+      "counts": {
+        "ready_layouts": 1276,
+        "needs_pointer": 1172,
+        "all_slots_from_root": 104
+      },
+      "by_size": {}
+    }
+  },
+  "training_slots": 5748,
+  "weights": "2cc8736ac5e5d5897bf69b26b6dad7c6a4b15aeb1b032910d94400fb6924d83c",
+  "catalog": "ee476c5b73a7357fab4a18711a0dc59bbc705514ff1e8723850b70d7c45d8a39",
+  "scorer": "d8756ef211ba2f75596676d37a14947579cb0a43e99c68e50d63c68b54b93abb",
+  "programs": {
+    "fact": {
+      "known": {
+        "counts": {
+          "ready_layouts": 375,
+          "needs_pointer": 312,
+          "slots": 539,
+          "literal_hits": 197,
+          "scored_ports": 22068,
+          "literal_complete": 104,
+          "all_slots_from_root": 63
+        },
+        "by_size": {
+          "2": {
+            "queries": 86,
+            "literal_complete": 29
+          },
+          "3": {
+            "queries": 102,
+            "literal_complete": 35
+          },
+          "4": {
+            "queries": 41,
+            "literal_complete": 17
+          },
+          "7": {
+            "queries": 12,
+            "literal_complete": 3
+          },
+          "9": {
+            "queries": 7,
+            "literal_complete": 1
+          },
+          "8": {
+            "queries": 10,
+            "literal_complete": 2
+          },
+          "5": {
+            "queries": 32,
+            "literal_complete": 12
+          },
+          "6": {
+            "queries": 19,
+            "literal_complete": 5
+          },
+          "10": {
+            "queries": 3,
+            "literal_complete": 0
+          }
+        }
+      },
+      "held": {
+        "counts": {
+          "ready_layouts": 59,
+          "needs_pointer": 52,
+          "slots": 100,
+          "literal_hits": 25,
+          "scored_ports": 3588,
+          "literal_complete": 13,
+          "all_slots_from_root": 7
+        },
+        "by_size": {
+          "3": {
+            "queries": 16,
+            "literal_complete": 4
+          },
+          "4": {
+            "queries": 7,
+            "literal_complete": 1
+          },
+          "9": {
+            "queries": 1,
+            "literal_complete": 0
+          },
+          "10": {
+            "queries": 1,
+            "literal_complete": 0
+          },
+          "2": {
+            "queries": 10,
+            "literal_complete": 0
+          },
+          "8": {
+            "queries": 3,
+            "literal_complete": 0
+          },
+          "5": {
+            "queries": 8,
+            "literal_complete": 4
+          },
+          "6": {
+            "queries": 4,
+            "literal_complete": 2
+          },
+          "7": {
+            "queries": 2,
+            "literal_complete": 2
+          }
+        }
+      }
+    },
+    "loopfact": {
+      "known": {
+        "counts": {
+          "ready_layouts": 463,
+          "needs_pointer": 376,
+          "slots": 754,
+          "literal_hits": 270,
+          "scored_ports": 21338,
+          "literal_complete": 98,
+          "all_slots_from_root": 87
+        },
+        "by_size": {
+          "2": {
+            "queries": 91,
+            "literal_complete": 34
+          },
+          "3": {
+            "queries": 119,
+            "literal_complete": 32
+          },
+          "4": {
+            "queries": 37,
+            "literal_complete": 11
+          },
+          "6": {
+            "queries": 37,
+            "literal_complete": 4
+          },
+          "7": {
+            "queries": 24,
+            "literal_complete": 3
+          },
+          "8": {
+            "queries": 14,
+            "literal_complete": 3
+          },
+          "9": {
+            "queries": 9,
+            "literal_complete": 2
+          },
+          "5": {
+            "queries": 37,
+            "literal_complete": 9
+          },
+          "10": {
+            "queries": 8,
+            "literal_complete": 0
+          }
+        }
+      },
+      "held": {
+        "counts": {
+          "ready_layouts": 73,
+          "needs_pointer": 62,
+          "slots": 125,
+          "literal_hits": 31,
+          "scored_ports": 3255,
+          "literal_complete": 11,
+          "all_slots_from_root": 11
+        },
+        "by_size": {
+          "4": {
+            "queries": 12,
+            "literal_complete": 4
+          },
+          "3": {
+            "queries": 22,
+            "literal_complete": 4
+          },
+          "6": {
+            "queries": 4,
+            "literal_complete": 1
+          },
+          "5": {
+            "queries": 8,
+            "literal_complete": 1
+          },
+          "9": {
+            "queries": 2,
+            "literal_complete": 1
+          },
+          "2": {
+            "queries": 9,
+            "literal_complete": 0
+          },
+          "8": {
+            "queries": 4,
+            "literal_complete": 0
+          },
+          "7": {
+            "queries": 1,
+            "literal_complete": 0
+          }
+        }
+      }
+    },
+    "sum-divisors": {
+      "known": {
+        "counts": {
+          "ready_layouts": 1180,
+          "needs_pointer": 1017,
+          "slots": 2273,
+          "literal_hits": 529,
+          "scored_ports": 627564,
+          "literal_complete": 217,
+          "all_slots_from_root": 163
+        },
+        "by_size": {
+          "2": {
+            "queries": 191,
+            "literal_complete": 53
+          },
+          "3": {
+            "queries": 255,
+            "literal_complete": 47
+          },
+          "6": {
+            "queries": 120,
+            "literal_complete": 23
+          },
+          "7": {
+            "queries": 81,
+            "literal_complete": 18
+          },
+          "8": {
+            "queries": 42,
+            "literal_complete": 13
+          },
+          "9": {
+            "queries": 34,
+            "literal_complete": 4
+          },
+          "10": {
+            "queries": 26,
+            "literal_complete": 0
+          },
+          "5": {
+            "queries": 137,
+            "literal_complete": 35
+          },
+          "4": {
+            "queries": 131,
+            "literal_complete": 24
+          }
+        }
+      },
+      "held": {
+        "counts": {
+          "ready_layouts": 196,
+          "needs_pointer": 169,
+          "slots": 376,
+          "literal_hits": 83,
+          "scored_ports": 98256,
+          "literal_complete": 34,
+          "all_slots_from_root": 27
+        },
+        "by_size": {
+          "4": {
+            "queries": 19,
+            "literal_complete": 5
+          },
+          "5": {
+            "queries": 21,
+            "literal_complete": 5
+          },
+          "8": {
+            "queries": 9,
+            "literal_complete": 0
+          },
+          "9": {
+            "queries": 6,
+            "literal_complete": 3
+          },
+          "6": {
+            "queries": 16,
+            "literal_complete": 5
+          },
+          "7": {
+            "queries": 13,
+            "literal_complete": 4
+          },
+          "10": {
+            "queries": 3,
+            "literal_complete": 0
+          },
+          "3": {
+            "queries": 54,
+            "literal_complete": 11
+          },
+          "2": {
+            "queries": 28,
+            "literal_complete": 1
+          }
+        }
+      }
+    }
+  }
+}
