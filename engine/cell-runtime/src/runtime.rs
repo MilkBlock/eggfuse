@@ -1213,6 +1213,10 @@ impl Executor {
         self.export_token_memory(None)
     }
     #[cfg(feature = "cell-token-replay")]
+    pub fn enable_higher_tokens(&mut self, recipes: Vec<crate::cell_tokens::HigherRecipe>) -> Result<()> {
+        self.token_history.as_mut().ok_or("missing token history")?.enable_higher(&self.graph, recipes)
+    }
+    #[cfg(feature = "cell-token-replay")]
     pub fn tokens(&self) -> Option<&crate::cell_tokens::History> { self.token_history.as_ref() }
     #[cfg(feature = "cell-token-replay")]
     pub fn audit_token_recall(&mut self, probes: Vec<crate::cell_tokens::Request>) -> Result<()> {

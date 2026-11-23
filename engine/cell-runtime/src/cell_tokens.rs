@@ -1,5 +1,8 @@
 //! Direct replay of certificates naming independent source premises by token and operation.
 //! The inverse index used by the offline teacher is absent from the receiver.
+#[path = "higher_tokens.rs"]
+mod higher;
+pub use higher::Recipe as HigherRecipe;
 use crate::{
     cell::{CompletedEffects, Instance, QueryFacts, Site, bind_query, query_operand},
     graph::{Dependency, Graph},
@@ -31,6 +34,10 @@ pub struct Request {
     pub run: usize,
     pub rule: usize,
     pub parents: Vec<Premise>,
+    #[serde(default, skip_serializing_if="Option::is_none")]
+    pub unit: Option<usize>,
+    #[serde(skip)]
+    step: usize,
 }
 
 #[derive(Default, Serialize)]
@@ -153,6 +160,7 @@ pub struct AssistCounts {
 
 pub struct History {
     pub assist: Option<AssistCounts>,
+    higher: Option<higher::Higher>,
     pub recall: Option<RecallAudit>,
     pub waves: Option<WaveReceiver>,
     memory: Option<MemoryExport>,
@@ -198,6 +206,7 @@ impl History {
             .collect();
         let mut history = Self {
             assist: None,
+            higher: None,
             memory: None,
             recall: None,
             waves: None,
@@ -236,6 +245,13 @@ impl History {
         }
         Ok(history)
     }
+    pub(crate) fn enable_higher(&mut self, g: &Graph, recipes: Vec<HigherRecipe>) -> Result<()> {
+        self.higher = Some(higher::Higher::new(&g.program, recipes)?);
+        Ok(())
+    }
+    pub fn higher_report(&self) -> Option<serde_json::Value> {
+        self.higher.as_ref().map(|h| serde_json::json!({"counts":h.counts, "outstanding":h.remaining()}))
+    }
     pub fn capture(g: &Graph) -> Result<Self> {
         Self::new(g, true)
     }
@@ -243,7 +259,7 @@ impl History {
         let mut h = Self::new(g, false)?;
         let mut ids = BTreeSet::new();
         for packet in tape {
-            if packet.token <= 0 || !ids.insert(packet.token) {
+            if packet.unit.is_some() || packet.token <= 0 || !ids.insert(packet.token) {
                 return Err("duplicate token or collision with seed namespace".into());
             }
             h.queue
@@ -355,6 +371,9 @@ impl History {
             .write_all(b"\n")
             .and_then(|_| memory.writer.flush())
             .map_err(|e| e.to_string())?;
+        if let Some(higher) = &mut self.higher {
+            higher.dispatch(&visible, run, rules, &mut self.queue)?;
+        }
         memory.previous = visible;
         memory.accepted.clear();
         if self.waves.is_some() {
@@ -367,7 +386,10 @@ impl History {
                 .map_err(|e| e.to_string())?;
             let proposals: Vec<Request> = serde_json::from_str(&line).map_err(|e| e.to_string())?;
             for request in proposals {
+                if let Some(higher) = &mut self.higher { higher.issue(&request)?; }
+                if request.unit.is_some() && self.higher.is_none() { return Err("missing higher catalog".into()); }
                 if request.run != run
+                    || (self.higher.is_some() && request.token >= higher::INTERNAL)
                     || (self.assist.is_some() && request.token >= i64::MAX / 2)
                     || !rules.iter().any(|&(rid, _)| rid == request.rule)
                     || request.token <= 0
@@ -581,7 +603,7 @@ impl History {
             (rid, b.input_values(&rule.inputs).cloned().collect()),
             token,
         );
-        let request = Request { token, rule: rid, run, parents };
+        let request = Request { token, rule: rid, run, parents, unit: None, step: 0 };
         if let Some(memory) = &mut self.memory {
             memory.accepted.push(request.clone());
         }
@@ -676,6 +698,7 @@ impl History {
                 }
                 if let Some(answer) = answer {
                     answers.push(answer);
+                    if let Some(higher) = &mut self.higher { higher.accepted(&packet); }
                     if let Some(memory) = &mut self.memory { memory.accepted.push(packet); }
                 }
             }

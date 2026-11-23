@@ -18,6 +18,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let [role, program, tape, audit, rest @ ..] = args.as_slice() else {
         return Err("expected reference|capture|replay|online PROGRAM TAPE audit|time".into());
     };
+    let (rest, higher_path) = match rest {
+        [rest @ .., flag, path] if flag == "--higher" && (role == "assist" || role == "online") => (rest, Some(path)),
+        _ => (rest,None),
+    };
     let (rest, recall_path) = match rest {
         [rest @ .., flag, path] if flag == "--recall" && role == "replay" => (rest, Some(path)),
         _ => (rest, None),
@@ -61,6 +65,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "reference" => (),
         _ => return Err("unknown execution mode".into()),
     }
+    if let Some(path) = higher_path {
+        engine.enable_higher_tokens(serde_json::from_slice(&fs::read(path)?)?)?;
+    }
     if let Some(path) = recall_path {
         let probes: Tape = serde_json::from_slice(&fs::read(path)?)?;
         if probes.schema != "cell-token-replay/v2" || probes.program_sha256 != digest {
@@ -98,6 +105,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     });
     report["residual_candidates"] = json!(engine.graph.stats.residual_candidates);
     if let Some(h) = engine.tokens() {
+        if let Some(counts) = h.higher_report() { report["higher"] = counts; }
         if let Some(a) = &h.assist { report["assist"] = json!(a); }
         if let Some(audit) = &h.recall {
             report["recall_verdicts"] = json!(audit.verdicts);
