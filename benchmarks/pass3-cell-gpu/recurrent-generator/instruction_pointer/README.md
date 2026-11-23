@@ -546,3 +546,5 @@ The [paired CPU timings and native work counts](run-recall/assist-cost/README.md
 The [sealed-domain assist experiment](run-recall/assist-domains/README.md) compares full-run signed streams, complete-domain checks, residual search costs and independent rollouts with the frozen Actor.
 
 The [higher Cell experiment](run-recall/higher-cell/README.md) signs typed iterative Bake continuations from neural roots, verifies them on the actual source boundary and measures settled effective operations per token.
+
+The [signed side-port experiment](run-recall/higher-side/README.md) measures a neural choice of independent side premises at root issuance, its native fork and an alias-aware teacher substitution control.

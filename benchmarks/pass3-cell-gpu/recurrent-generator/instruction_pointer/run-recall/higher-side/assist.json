@@ -1,0 +1,2034 @@
+{
+  "fact": {
+    "closed": {
+      "arm": "owned",
+      "keep_closed": false,
+      "side_weights": null,
+      "compatible_units": [
+        43,
+        62,
+        45
+      ],
+      "program": "f4da1650af5393f3f07d5d20d092e26270ae58090266dd197113dd295ffaf900",
+      "binary": "56098655b1b8eb83cbf41be619a11dd172d9acd780a3047f5be14ea9393e7430",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "reference_commits": 1668,
+      "omitted_standalone_rules": [],
+      "execution": {
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "eab7b3ced15fa4f043dbe761377891fed751dc31c6601a5cdf01f8f774e7de25",
+          "runs": 634,
+          "signed_external": [
+            579,
+            217,
+            55,
+            0
+          ],
+          "signed_internal": [
+            25,
+            0,
+            28,
+            0
+          ],
+          "uncredited": [
+            259,
+            144,
+            60,
+            0
+          ],
+          "per_external_request": 0.23764458464773922,
+          "per_decoded_request": 0.23677317967522263
+        },
+        "higher": {
+          "counts": {
+            "accepted_roots": 79,
+            "accepted_steps": 86,
+            "by_depth": {
+              "2": 58,
+              "3": 28
+            },
+            "forks_accepted": 0,
+            "forks_issued": 0,
+            "issued_roots": 133,
+            "issued_steps": 122,
+            "missing_exports": 12,
+            "side_invalid_at_issue": 0,
+            "side_reads_at_issue": 0,
+            "side_steps_accepted": 0,
+            "side_steps_issued": 0,
+            "side_verdicts": {},
+            "side_watermark_skips": 0
+          },
+          "outstanding": 0
+        },
+        "withheld_owned_requests": 14,
+        "visible_port_visits": 1769135,
+        "encoded_port_visits": 79060,
+        "assist": {
+          "certified_bindings": 374,
+          "delta_domain_skips": 36,
+          "delta_members_checked": 575,
+          "duplicate_reads": 4710,
+          "duplicate_seconds": 0.0009929820000000031,
+          "exact_candidates": 1845,
+          "exact_rows": 1294,
+          "exact_rule_calls": 2640,
+          "exact_seconds": 0.005375592000000009,
+          "point_domain_skips": 4,
+          "rejected_reads": 576,
+          "rejected_seconds": 0.00014703900000000037,
+          "residual_commits": 414,
+          "skipped_rule_calls": 63
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 634
+        },
+        "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d",
+        "runs": 634,
+        "neural_waves": 634,
+        "issued": 3804,
+        "counts": {
+          "accepted": 1254,
+          "calls": 2703,
+          "duplicates": 2334,
+          "reads": 7518,
+          "reads_by_kind": {
+            "generated": 7485,
+            "initial": 33
+          },
+          "rejected": {
+            "binding": 51,
+            "guard": 251,
+            "watermark": 36
+          }
+        },
+        "native_runtime_events": 0,
+        "independent_search_calls": 2640,
+        "network_seconds": 1.6674307989851513,
+        "remaining_process_seconds_including_ipc": 0.6748584420129964,
+        "native_verify_seconds": 0.002506842,
+        "native_repair_seconds": 0.0005941680000000046,
+        "wall_seconds": 2.558335666999483,
+        "policy_process_wall": 2.6090124580005067
+      }
+    },
+    "side_replacing_closed": {
+      "arm": "owned",
+      "keep_closed": false,
+      "side_weights": "a7ed6f00d545c9ac2725d8a2cb795fec9554f156a4f2e5f8cc4919bf309f9127",
+      "compatible_units": [
+        43,
+        62,
+        45,
+        33,
+        55,
+        58
+      ],
+      "program": "f4da1650af5393f3f07d5d20d092e26270ae58090266dd197113dd295ffaf900",
+      "binary": "02e3915e123244e91dcf2d633d8a176db6ce3085e57854e4c2261c65d7155a9e",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "reference_commits": 1668,
+      "omitted_standalone_rules": [],
+      "execution": {
+        "side_pointer": {
+          "decisions": 328,
+          "scored_addresses": 24194,
+          "named": 192
+        },
+        "side_seconds": 0.03641733793847379,
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "eab7b3ced15fa4f043dbe761377891fed751dc31c6601a5cdf01f8f774e7de25",
+          "runs": 634,
+          "signed_external": [
+            578,
+            206,
+            55,
+            0
+          ],
+          "signed_internal": [
+            26,
+            11,
+            28,
+            0
+          ],
+          "uncredited": [
+            259,
+            144,
+            60,
+            0
+          ],
+          "per_external_request": 0.2373326332370701,
+          "per_decoded_request": 0.23689727463312368
+        },
+        "higher": {
+          "counts": {
+            "accepted_roots": 126,
+            "accepted_steps": 79,
+            "by_depth": {
+              "2": 57,
+              "3": 22
+            },
+            "forks_accepted": 0,
+            "forks_issued": 0,
+            "issued_roots": 259,
+            "issued_steps": 152,
+            "missing_exports": 16,
+            "side_invalid_at_issue": 0,
+            "side_reads_at_issue": 192,
+            "side_steps_accepted": 12,
+            "side_steps_issued": 71
+          },
+          "outstanding": 0
+        },
+        "withheld_owned_requests": 7,
+        "visible_port_visits": 1769135,
+        "encoded_port_visits": 79060,
+        "assist": {
+          "certified_bindings": 368,
+          "delta_domain_skips": 35,
+          "delta_members_checked": 569,
+          "duplicate_reads": 4730,
+          "duplicate_seconds": 0.0010289069999999986,
+          "exact_candidates": 1845,
+          "exact_rows": 1300,
+          "exact_rule_calls": 2641,
+          "exact_seconds": 0.0072704519999999846,
+          "point_domain_skips": 4,
+          "rejected_reads": 654,
+          "rejected_seconds": 0.00018090500000000057,
+          "residual_commits": 423,
+          "skipped_rule_calls": 62
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 634
+        },
+        "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d",
+        "runs": 634,
+        "neural_waves": 634,
+        "issued": 3809,
+        "counts": {
+          "accepted": 1245,
+          "calls": 2703,
+          "duplicates": 2341,
+          "reads": 7604,
+          "reads_by_kind": {
+            "generated": 7571,
+            "initial": 33
+          },
+          "rejected": {
+            "binding": 79,
+            "guard": 251,
+            "untriggered_rule": 2,
+            "watermark": 43
+          }
+        },
+        "native_runtime_events": 0,
+        "independent_search_calls": 2641,
+        "network_seconds": 1.8320646319298248,
+        "remaining_process_seconds_including_ipc": 0.7405864370699127,
+        "native_verify_seconds": 0.00298389,
+        "native_repair_seconds": 0.0007490480000000029,
+        "wall_seconds": 2.800656291998166,
+        "policy_process_wall": 2.8542777080001542
+      }
+    },
+    "fork": {
+      "arm": "owned",
+      "keep_closed": true,
+      "side_weights": "a7ed6f00d545c9ac2725d8a2cb795fec9554f156a4f2e5f8cc4919bf309f9127",
+      "compatible_units": [
+        43,
+        62,
+        45,
+        33,
+        55,
+        58
+      ],
+      "program": "f4da1650af5393f3f07d5d20d092e26270ae58090266dd197113dd295ffaf900",
+      "binary": "56098655b1b8eb83cbf41be619a11dd172d9acd780a3047f5be14ea9393e7430",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "reference_commits": 1668,
+      "omitted_standalone_rules": [],
+      "execution": {
+        "side_pointer": {
+          "decisions": 328,
+          "scored_addresses": 24194,
+          "named": 192
+        },
+        "side_seconds": 0.03265894994547125,
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "eab7b3ced15fa4f043dbe761377891fed751dc31c6601a5cdf01f8f774e7de25",
+          "runs": 634,
+          "signed_external": [
+            578,
+            206,
+            55,
+            0
+          ],
+          "signed_internal": [
+            26,
+            11,
+            28,
+            0
+          ],
+          "uncredited": [
+            259,
+            144,
+            60,
+            0
+          ],
+          "per_external_request": 0.23783214943435937,
+          "per_decoded_request": 0.23695937090432503
+        },
+        "higher": {
+          "counts": {
+            "accepted_roots": 126,
+            "accepted_steps": 98,
+            "by_depth": {
+              "2": 70,
+              "3": 28
+            },
+            "forks_accepted": 28,
+            "forks_issued": 66,
+            "issued_roots": 259,
+            "issued_steps": 147,
+            "missing_exports": 16,
+            "side_invalid_at_issue": 0,
+            "side_reads_at_issue": 192,
+            "side_steps_accepted": 12,
+            "side_steps_issued": 25,
+            "side_verdicts": {
+              "accepted": 12,
+              "binding": 13
+            },
+            "side_watermark_skips": 46
+          },
+          "outstanding": 0
+        },
+        "withheld_owned_requests": 14,
+        "visible_port_visits": 1769135,
+        "encoded_port_visits": 79060,
+        "assist": {
+          "certified_bindings": 374,
+          "delta_domain_skips": 36,
+          "delta_members_checked": 575,
+          "duplicate_reads": 4734,
+          "duplicate_seconds": 0.0009686520000000017,
+          "exact_candidates": 1845,
+          "exact_rows": 1294,
+          "exact_rule_calls": 2640,
+          "exact_seconds": 0.005481802000000013,
+          "point_domain_skips": 4,
+          "rejected_reads": 596,
+          "rejected_seconds": 0.00014820500000000035,
+          "residual_commits": 417,
+          "skipped_rule_calls": 63
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 634
+        },
+        "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d",
+        "runs": 634,
+        "neural_waves": 634,
+        "issued": 3801,
+        "counts": {
+          "accepted": 1251,
+          "calls": 2703,
+          "duplicates": 2346,
+          "reads": 7556,
+          "reads_by_kind": {
+            "generated": 7523,
+            "initial": 33
+          },
+          "rejected": {
+            "binding": 64,
+            "guard": 251,
+            "watermark": 36
+          }
+        },
+        "native_runtime_events": 0,
+        "independent_search_calls": 2640,
+        "network_seconds": 1.7484744109206076,
+        "remaining_process_seconds_including_ipc": 0.6759822360780849,
+        "native_verify_seconds": 0.00239127,
+        "native_repair_seconds": 0.000660267000000006,
+        "wall_seconds": 3.024889707998227,
+        "policy_process_wall": 3.0766722920016036
+      }
+    },
+    "fork_before_watermark": {
+      "arm": "owned",
+      "keep_closed": true,
+      "side_weights": "a7ed6f00d545c9ac2725d8a2cb795fec9554f156a4f2e5f8cc4919bf309f9127",
+      "compatible_units": [
+        43,
+        62,
+        45,
+        33,
+        55,
+        58
+      ],
+      "program": "f4da1650af5393f3f07d5d20d092e26270ae58090266dd197113dd295ffaf900",
+      "binary": "be8d2238e0c9b79dd4c3a21d9f60567a47b84b59b5062e5c770b719701a73a93",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "reference_commits": 1668,
+      "omitted_standalone_rules": [],
+      "execution": {
+        "side_pointer": {
+          "decisions": 328,
+          "scored_addresses": 24194,
+          "named": 192
+        },
+        "side_seconds": 0.03471035503753228,
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "eab7b3ced15fa4f043dbe761377891fed751dc31c6601a5cdf01f8f774e7de25",
+          "runs": 634,
+          "signed_external": [
+            578,
+            206,
+            55,
+            0
+          ],
+          "signed_internal": [
+            26,
+            11,
+            28,
+            0
+          ],
+          "uncredited": [
+            259,
+            144,
+            60,
+            0
+          ],
+          "per_external_request": 0.23783214943435937,
+          "per_decoded_request": 0.23695937090432503
+        },
+        "higher": {
+          "counts": {
+            "accepted_roots": 126,
+            "accepted_steps": 98,
+            "by_depth": {
+              "2": 70,
+              "3": 28
+            },
+            "forks_accepted": 28,
+            "forks_issued": 66,
+            "issued_roots": 259,
+            "issued_steps": 193,
+            "missing_exports": 16,
+            "side_invalid_at_issue": 0,
+            "side_reads_at_issue": 192,
+            "side_steps_accepted": 12,
+            "side_steps_issued": 71,
+            "side_verdicts": {
+              "accepted": 12,
+              "binding": 28,
+              "untriggered_rule": 2,
+              "watermark": 29
+            }
+          },
+          "outstanding": 0
+        },
+        "withheld_owned_requests": 14,
+        "visible_port_visits": 1769135,
+        "encoded_port_visits": 79060,
+        "assist": {
+          "certified_bindings": 374,
+          "delta_domain_skips": 36,
+          "delta_members_checked": 575,
+          "duplicate_reads": 4734,
+          "duplicate_seconds": 0.001055346,
+          "exact_candidates": 1845,
+          "exact_rows": 1294,
+          "exact_rule_calls": 2640,
+          "exact_seconds": 0.006824597999999984,
+          "point_domain_skips": 4,
+          "rejected_reads": 676,
+          "rejected_seconds": 0.00018286200000000057,
+          "residual_commits": 417,
+          "skipped_rule_calls": 63
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 634
+        },
+        "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d",
+        "runs": 634,
+        "neural_waves": 634,
+        "issued": 3801,
+        "counts": {
+          "accepted": 1251,
+          "calls": 2703,
+          "duplicates": 2346,
+          "reads": 7636,
+          "reads_by_kind": {
+            "generated": 7603,
+            "initial": 33
+          },
+          "rejected": {
+            "binding": 79,
+            "guard": 251,
+            "untriggered_rule": 2,
+            "watermark": 65
+          }
+        },
+        "native_runtime_events": 0,
+        "independent_search_calls": 2640,
+        "network_seconds": 1.845511280978826,
+        "remaining_process_seconds_including_ipc": 0.7484742340189006,
+        "native_verify_seconds": 0.002946527,
+        "native_repair_seconds": 0.0008306050000000012,
+        "wall_seconds": 3.192085666996718,
+        "policy_process_wall": 3.24689650000073
+      }
+    },
+    "closed_before_watermark": {
+      "arm": "owned",
+      "keep_closed": false,
+      "side_weights": null,
+      "compatible_units": [
+        43,
+        62,
+        45
+      ],
+      "program": "f4da1650af5393f3f07d5d20d092e26270ae58090266dd197113dd295ffaf900",
+      "binary": "02e3915e123244e91dcf2d633d8a176db6ce3085e57854e4c2261c65d7155a9e",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "reference_commits": 1668,
+      "omitted_standalone_rules": [],
+      "execution": {
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "eab7b3ced15fa4f043dbe761377891fed751dc31c6601a5cdf01f8f774e7de25",
+          "runs": 634,
+          "signed_external": [
+            579,
+            217,
+            55,
+            0
+          ],
+          "signed_internal": [
+            25,
+            0,
+            28,
+            0
+          ],
+          "uncredited": [
+            259,
+            144,
+            60,
+            0
+          ],
+          "per_external_request": 0.23764458464773922,
+          "per_decoded_request": 0.23677317967522263
+        },
+        "higher": {
+          "counts": {
+            "accepted_roots": 79,
+            "accepted_steps": 86,
+            "by_depth": {
+              "2": 58,
+              "3": 28
+            },
+            "forks_accepted": 0,
+            "forks_issued": 0,
+            "issued_roots": 133,
+            "issued_steps": 122,
+            "missing_exports": 12,
+            "side_invalid_at_issue": 0,
+            "side_reads_at_issue": 0,
+            "side_steps_accepted": 0,
+            "side_steps_issued": 0
+          },
+          "outstanding": 0
+        },
+        "withheld_owned_requests": 14,
+        "visible_port_visits": 1769135,
+        "encoded_port_visits": 79060,
+        "assist": {
+          "certified_bindings": 374,
+          "delta_domain_skips": 36,
+          "delta_members_checked": 575,
+          "duplicate_reads": 4710,
+          "duplicate_seconds": 0.0009955590000000024,
+          "exact_candidates": 1845,
+          "exact_rows": 1294,
+          "exact_rule_calls": 2640,
+          "exact_seconds": 0.005979664000000011,
+          "point_domain_skips": 4,
+          "rejected_reads": 576,
+          "rejected_seconds": 0.0001546280000000002,
+          "residual_commits": 414,
+          "skipped_rule_calls": 63
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 634
+        },
+        "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d",
+        "runs": 634,
+        "neural_waves": 634,
+        "issued": 3804,
+        "counts": {
+          "accepted": 1254,
+          "calls": 2703,
+          "duplicates": 2334,
+          "reads": 7518,
+          "reads_by_kind": {
+            "generated": 7485,
+            "initial": 33
+          },
+          "rejected": {
+            "binding": 51,
+            "guard": 251,
+            "watermark": 36
+          }
+        },
+        "native_runtime_events": 0,
+        "independent_search_calls": 2640,
+        "network_seconds": 1.7414212570329255,
+        "remaining_process_seconds_including_ipc": 0.7388921529696693,
+        "native_verify_seconds": 0.002716215,
+        "native_repair_seconds": 0.0007082870000000026,
+        "wall_seconds": 2.713124624999182,
+        "policy_process_wall": 2.7688597920023312
+      }
+    }
+  },
+  "loopfact": {
+    "closed": {
+      "arm": "owned",
+      "keep_closed": false,
+      "side_weights": null,
+      "compatible_units": [
+        43,
+        62,
+        45,
+        56
+      ],
+      "program": "8f6d2b1a5f5a593b73119d0bfded0aefee97315191cc5f3efcd6e35320beacba",
+      "binary": "56098655b1b8eb83cbf41be619a11dd172d9acd780a3047f5be14ea9393e7430",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "reference_commits": 1419,
+      "omitted_standalone_rules": [],
+      "execution": {
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "da3eb13aeb22993cf38dbfa9356415bee92959ab1143f4ff46e65e55fc758703",
+          "runs": 618,
+          "signed_external": [
+            476,
+            217,
+            49,
+            0
+          ],
+          "signed_internal": [
+            22,
+            5,
+            19,
+            0
+          ],
+          "uncredited": [
+            298,
+            201,
+            58,
+            0
+          ],
+          "per_external_request": 0.21222730945327228,
+          "per_decoded_request": 0.21160042964554243
+        },
+        "higher": {
+          "counts": {
+            "accepted_roots": 55,
+            "accepted_steps": 63,
+            "by_depth": {
+              "2": 44,
+              "3": 19
+            },
+            "forks_accepted": 0,
+            "forks_issued": 0,
+            "issued_roots": 118,
+            "issued_steps": 85,
+            "missing_exports": 6,
+            "side_invalid_at_issue": 0,
+            "side_reads_at_issue": 0,
+            "side_steps_accepted": 0,
+            "side_steps_issued": 0,
+            "side_verdicts": {},
+            "side_watermark_skips": 0
+          },
+          "outstanding": 0
+        },
+        "withheld_owned_requests": 11,
+        "visible_port_visits": 1718698,
+        "encoded_port_visits": 70913,
+        "assist": {
+          "certified_bindings": 279,
+          "delta_domain_skips": 44,
+          "delta_members_checked": 513,
+          "duplicate_reads": 4959,
+          "duplicate_seconds": 0.0010161839999999972,
+          "exact_candidates": 1626,
+          "exact_rows": 1140,
+          "exact_rule_calls": 2352,
+          "exact_seconds": 0.005315289000000004,
+          "point_domain_skips": 8,
+          "rejected_reads": 599,
+          "rejected_seconds": 0.00014716000000000016,
+          "residual_commits": 375,
+          "skipped_rule_calls": 80
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 618
+        },
+        "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724",
+        "runs": 618,
+        "neural_waves": 618,
+        "issued": 3713,
+        "counts": {
+          "accepted": 1044,
+          "calls": 2432,
+          "duplicates": 2435,
+          "reads": 7446,
+          "reads_by_kind": {
+            "generated": 7430,
+            "initial": 16
+          },
+          "rejected": {
+            "binding": 32,
+            "guard": 265,
+            "watermark": 22
+          }
+        },
+        "native_runtime_events": 0,
+        "independent_search_calls": 2352,
+        "network_seconds": 1.5738233799638692,
+        "remaining_process_seconds_including_ipc": 0.6574525800345103,
+        "native_verify_seconds": 0.002342998,
+        "native_repair_seconds": 0.0006116190000000058,
+        "wall_seconds": 2.4462734170010663,
+        "policy_process_wall": 2.498093666999921
+      }
+    },
+    "side_replacing_closed": {
+      "arm": "owned",
+      "keep_closed": false,
+      "side_weights": "a7ed6f00d545c9ac2725d8a2cb795fec9554f156a4f2e5f8cc4919bf309f9127",
+      "compatible_units": [
+        43,
+        62,
+        45,
+        56,
+        33,
+        55,
+        58
+      ],
+      "program": "8f6d2b1a5f5a593b73119d0bfded0aefee97315191cc5f3efcd6e35320beacba",
+      "binary": "02e3915e123244e91dcf2d633d8a176db6ce3085e57854e4c2261c65d7155a9e",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "reference_commits": 1419,
+      "omitted_standalone_rules": [],
+      "execution": {
+        "side_pointer": {
+          "decisions": 252,
+          "scored_addresses": 13529,
+          "named": 158
+        },
+        "side_seconds": 0.021569591193838278,
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "da3eb13aeb22993cf38dbfa9356415bee92959ab1143f4ff46e65e55fc758703",
+          "runs": 618,
+          "signed_external": [
+            474,
+            209,
+            49,
+            0
+          ],
+          "signed_internal": [
+            23,
+            12,
+            19,
+            0
+          ],
+          "uncredited": [
+            299,
+            202,
+            58,
+            0
+          ],
+          "per_external_request": 0.2120312921499865,
+          "per_decoded_request": 0.21157469717362046
+        },
+        "higher": {
+          "counts": {
+            "accepted_roots": 89,
+            "accepted_steps": 59,
+            "by_depth": {
+              "2": 43,
+              "3": 16
+            },
+            "forks_accepted": 0,
+            "forks_issued": 0,
+            "issued_roots": 222,
+            "issued_steps": 108,
+            "missing_exports": 8,
+            "side_invalid_at_issue": 0,
+            "side_reads_at_issue": 158,
+            "side_steps_accepted": 8,
+            "side_steps_issued": 49
+          },
+          "outstanding": 0
+        },
+        "withheld_owned_requests": 8,
+        "visible_port_visits": 1718698,
+        "encoded_port_visits": 70913,
+        "assist": {
+          "certified_bindings": 270,
+          "delta_domain_skips": 43,
+          "delta_members_checked": 504,
+          "duplicate_reads": 4947,
+          "duplicate_seconds": 0.001006340999999997,
+          "exact_candidates": 1626,
+          "exact_rows": 1149,
+          "exact_rule_calls": 2353,
+          "exact_seconds": 0.00603304500000001,
+          "point_domain_skips": 8,
+          "rejected_reads": 654,
+          "rejected_seconds": 0.00017422300000000023,
+          "residual_commits": 384,
+          "skipped_rule_calls": 79
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 618
+        },
+        "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724",
+        "runs": 618,
+        "neural_waves": 618,
+        "issued": 3707,
+        "counts": {
+          "accepted": 1035,
+          "calls": 2432,
+          "duplicates": 2434,
+          "reads": 7473,
+          "reads_by_kind": {
+            "generated": 7457,
+            "initial": 16
+          },
+          "rejected": {
+            "binding": 50,
+            "guard": 265,
+            "watermark": 31
+          }
+        },
+        "native_runtime_events": 0,
+        "independent_search_calls": 2353,
+        "network_seconds": 1.6503756371566851,
+        "remaining_process_seconds_including_ipc": 0.6752630228442693,
+        "native_verify_seconds": 0.002486006,
+        "native_repair_seconds": 0.0007199190000000031,
+        "wall_seconds": 2.55315929200151,
+        "policy_process_wall": 2.605967583000165
+      }
+    },
+    "fork": {
+      "arm": "owned",
+      "keep_closed": true,
+      "side_weights": "a7ed6f00d545c9ac2725d8a2cb795fec9554f156a4f2e5f8cc4919bf309f9127",
+      "compatible_units": [
+        43,
+        62,
+        45,
+        56,
+        33,
+        55,
+        58
+      ],
+      "program": "8f6d2b1a5f5a593b73119d0bfded0aefee97315191cc5f3efcd6e35320beacba",
+      "binary": "56098655b1b8eb83cbf41be619a11dd172d9acd780a3047f5be14ea9393e7430",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "reference_commits": 1419,
+      "omitted_standalone_rules": [],
+      "execution": {
+        "side_pointer": {
+          "decisions": 253,
+          "scored_addresses": 13656,
+          "named": 159
+        },
+        "side_seconds": 0.022831466118077515,
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "da3eb13aeb22993cf38dbfa9356415bee92959ab1143f4ff46e65e55fc758703",
+          "runs": 618,
+          "signed_external": [
+            474,
+            209,
+            49,
+            0
+          ],
+          "signed_internal": [
+            23,
+            12,
+            19,
+            0
+          ],
+          "uncredited": [
+            299,
+            202,
+            58,
+            0
+          ],
+          "per_external_request": 0.21231766612641814,
+          "per_decoded_request": 0.21168866145973605
+        },
+        "higher": {
+          "counts": {
+            "accepted_roots": 89,
+            "accepted_steps": 71,
+            "by_depth": {
+              "2": 52,
+              "3": 19
+            },
+            "forks_accepted": 17,
+            "forks_issued": 54,
+            "issued_roots": 223,
+            "issued_steps": 103,
+            "missing_exports": 8,
+            "side_invalid_at_issue": 0,
+            "side_reads_at_issue": 159,
+            "side_steps_accepted": 8,
+            "side_steps_issued": 18,
+            "side_verdicts": {
+              "accepted": 8,
+              "binding": 10
+            },
+            "side_watermark_skips": 31
+          },
+          "outstanding": 0
+        },
+        "withheld_owned_requests": 11,
+        "visible_port_visits": 1718698,
+        "encoded_port_visits": 70913,
+        "assist": {
+          "certified_bindings": 279,
+          "delta_domain_skips": 44,
+          "delta_members_checked": 511,
+          "duplicate_reads": 4940,
+          "duplicate_seconds": 0.0010087999999999983,
+          "exact_candidates": 1626,
+          "exact_rows": 1140,
+          "exact_rule_calls": 2352,
+          "exact_seconds": 0.005526011000000008,
+          "point_domain_skips": 8,
+          "rejected_reads": 612,
+          "rejected_seconds": 0.00016320400000000026,
+          "residual_commits": 377,
+          "skipped_rule_calls": 80
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 618
+        },
+        "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724",
+        "runs": 618,
+        "neural_waves": 618,
+        "issued": 3702,
+        "counts": {
+          "accepted": 1042,
+          "calls": 2432,
+          "duplicates": 2434,
+          "reads": 7432,
+          "reads_by_kind": {
+            "generated": 7416,
+            "initial": 16
+          },
+          "rejected": {
+            "binding": 42,
+            "guard": 265,
+            "watermark": 22
+          }
+        },
+        "native_runtime_events": 0,
+        "independent_search_calls": 2352,
+        "network_seconds": 1.5806068900310493,
+        "remaining_process_seconds_including_ipc": 0.6460970839690248,
+        "native_verify_seconds": 0.002442443,
+        "native_repair_seconds": 0.0005854900000000051,
+        "wall_seconds": 2.4470999170007417,
+        "policy_process_wall": 2.4985460419993615
+      }
+    },
+    "fork_before_watermark": {
+      "arm": "owned",
+      "keep_closed": true,
+      "side_weights": "a7ed6f00d545c9ac2725d8a2cb795fec9554f156a4f2e5f8cc4919bf309f9127",
+      "compatible_units": [
+        43,
+        62,
+        45,
+        56,
+        33,
+        55,
+        58
+      ],
+      "program": "8f6d2b1a5f5a593b73119d0bfded0aefee97315191cc5f3efcd6e35320beacba",
+      "binary": "be8d2238e0c9b79dd4c3a21d9f60567a47b84b59b5062e5c770b719701a73a93",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "reference_commits": 1419,
+      "omitted_standalone_rules": [],
+      "execution": {
+        "side_pointer": {
+          "decisions": 253,
+          "scored_addresses": 13656,
+          "named": 159
+        },
+        "side_seconds": 0.021653635889379075,
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "da3eb13aeb22993cf38dbfa9356415bee92959ab1143f4ff46e65e55fc758703",
+          "runs": 618,
+          "signed_external": [
+            474,
+            209,
+            49,
+            0
+          ],
+          "signed_internal": [
+            23,
+            12,
+            19,
+            0
+          ],
+          "uncredited": [
+            299,
+            202,
+            58,
+            0
+          ],
+          "per_external_request": 0.21231766612641814,
+          "per_decoded_request": 0.21168866145973605
+        },
+        "higher": {
+          "counts": {
+            "accepted_roots": 89,
+            "accepted_steps": 71,
+            "by_depth": {
+              "2": 52,
+              "3": 19
+            },
+            "forks_accepted": 17,
+            "forks_issued": 54,
+            "issued_roots": 223,
+            "issued_steps": 134,
+            "missing_exports": 8,
+            "side_invalid_at_issue": 0,
+            "side_reads_at_issue": 159,
+            "side_steps_accepted": 8,
+            "side_steps_issued": 49,
+            "side_verdicts": {
+              "accepted": 8,
+              "binding": 18,
+              "watermark": 23
+            }
+          },
+          "outstanding": 0
+        },
+        "withheld_owned_requests": 11,
+        "visible_port_visits": 1718698,
+        "encoded_port_visits": 70913,
+        "assist": {
+          "certified_bindings": 279,
+          "delta_domain_skips": 44,
+          "delta_members_checked": 511,
+          "duplicate_reads": 4940,
+          "duplicate_seconds": 0.0011369419999999993,
+          "exact_candidates": 1626,
+          "exact_rows": 1140,
+          "exact_rule_calls": 2352,
+          "exact_seconds": 0.007012627000000008,
+          "point_domain_skips": 8,
+          "rejected_reads": 668,
+          "rejected_seconds": 0.00019367000000000017,
+          "residual_commits": 377,
+          "skipped_rule_calls": 80
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 618
+        },
+        "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724",
+        "runs": 618,
+        "neural_waves": 618,
+        "issued": 3702,
+        "counts": {
+          "accepted": 1042,
+          "calls": 2432,
+          "duplicates": 2434,
+          "reads": 7488,
+          "reads_by_kind": {
+            "generated": 7472,
+            "initial": 16
+          },
+          "rejected": {
+            "binding": 50,
+            "guard": 265,
+            "watermark": 45
+          }
+        },
+        "native_runtime_events": 0,
+        "independent_search_calls": 2352,
+        "network_seconds": 1.6983874069010199,
+        "remaining_process_seconds_including_ipc": 0.7116733881000736,
+        "native_verify_seconds": 0.002920538,
+        "native_repair_seconds": 0.0008232500000000019,
+        "wall_seconds": 2.6350659579984494,
+        "policy_process_wall": 2.6912276670009305
+      }
+    },
+    "closed_before_watermark": {
+      "arm": "owned",
+      "keep_closed": false,
+      "side_weights": null,
+      "compatible_units": [
+        43,
+        62,
+        45,
+        56
+      ],
+      "program": "8f6d2b1a5f5a593b73119d0bfded0aefee97315191cc5f3efcd6e35320beacba",
+      "binary": "02e3915e123244e91dcf2d633d8a176db6ce3085e57854e4c2261c65d7155a9e",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "reference_commits": 1419,
+      "omitted_standalone_rules": [],
+      "execution": {
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "da3eb13aeb22993cf38dbfa9356415bee92959ab1143f4ff46e65e55fc758703",
+          "runs": 618,
+          "signed_external": [
+            476,
+            217,
+            49,
+            0
+          ],
+          "signed_internal": [
+            22,
+            5,
+            19,
+            0
+          ],
+          "uncredited": [
+            298,
+            201,
+            58,
+            0
+          ],
+          "per_external_request": 0.21222730945327228,
+          "per_decoded_request": 0.21160042964554243
+        },
+        "higher": {
+          "counts": {
+            "accepted_roots": 55,
+            "accepted_steps": 63,
+            "by_depth": {
+              "2": 44,
+              "3": 19
+            },
+            "forks_accepted": 0,
+            "forks_issued": 0,
+            "issued_roots": 118,
+            "issued_steps": 85,
+            "missing_exports": 6,
+            "side_invalid_at_issue": 0,
+            "side_reads_at_issue": 0,
+            "side_steps_accepted": 0,
+            "side_steps_issued": 0
+          },
+          "outstanding": 0
+        },
+        "withheld_owned_requests": 11,
+        "visible_port_visits": 1718698,
+        "encoded_port_visits": 70913,
+        "assist": {
+          "certified_bindings": 279,
+          "delta_domain_skips": 44,
+          "delta_members_checked": 513,
+          "duplicate_reads": 4959,
+          "duplicate_seconds": 0.0010412440000000045,
+          "exact_candidates": 1626,
+          "exact_rows": 1140,
+          "exact_rule_calls": 2352,
+          "exact_seconds": 0.006463490000000013,
+          "point_domain_skips": 8,
+          "rejected_reads": 599,
+          "rejected_seconds": 0.00016058400000000024,
+          "residual_commits": 375,
+          "skipped_rule_calls": 80
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 618
+        },
+        "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724",
+        "runs": 618,
+        "neural_waves": 618,
+        "issued": 3713,
+        "counts": {
+          "accepted": 1044,
+          "calls": 2432,
+          "duplicates": 2435,
+          "reads": 7446,
+          "reads_by_kind": {
+            "generated": 7430,
+            "initial": 16
+          },
+          "rejected": {
+            "binding": 32,
+            "guard": 265,
+            "watermark": 22
+          }
+        },
+        "native_runtime_events": 0,
+        "independent_search_calls": 2352,
+        "network_seconds": 1.7435654569999315,
+        "remaining_process_seconds_including_ipc": 0.725484228001783,
+        "native_verify_seconds": 0.002587231,
+        "native_repair_seconds": 0.0007724630000000003,
+        "wall_seconds": 2.7043435420018795,
+        "policy_process_wall": 2.75738037499832
+      }
+    }
+  },
+  "sum-divisors": {
+    "closed": {
+      "arm": "owned",
+      "keep_closed": false,
+      "side_weights": null,
+      "compatible_units": [
+        43,
+        62,
+        45
+      ],
+      "program": "3b904063c8c7e580ec2030b452d831ee53478a28c3dfaecf17eeb7e853a0aaf8",
+      "binary": "56098655b1b8eb83cbf41be619a11dd172d9acd780a3047f5be14ea9393e7430",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "reference_commits": 17341,
+      "omitted_standalone_rules": [],
+      "execution": {
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "94510dbed2b574e97152cf38a32dd2308aee25aa3728fbc31e4ec946eb94ffe0",
+          "runs": 1644,
+          "signed_external": [
+            3292,
+            1063,
+            339,
+            40
+          ],
+          "signed_internal": [
+            73,
+            0,
+            144,
+            0
+          ],
+          "uncredited": [
+            4207,
+            1953,
+            2304,
+            94
+          ],
+          "per_external_request": 0.19977403865553,
+          "per_decoded_request": 0.19901117453171477
+        },
+        "higher": {
+          "counts": {
+            "accepted_roots": 448,
+            "accepted_steps": 376,
+            "by_depth": {
+              "2": 300,
+              "3": 76
+            },
+            "forks_accepted": 0,
+            "forks_issued": 0,
+            "issued_roots": 809,
+            "issued_steps": 644,
+            "missing_exports": 97,
+            "side_invalid_at_issue": 0,
+            "side_reads_at_issue": 0,
+            "side_steps_accepted": 0,
+            "side_steps_issued": 0,
+            "side_verdicts": {},
+            "side_watermark_skips": 0
+          },
+          "outstanding": 0
+        },
+        "withheld_owned_requests": 95,
+        "visible_port_visits": 36307164,
+        "encoded_port_visits": 2524397,
+        "assist": {
+          "certified_bindings": 1266,
+          "delta_domain_skips": 234,
+          "delta_members_checked": 2857,
+          "duplicate_reads": 29083,
+          "duplicate_seconds": 0.006549623000000245,
+          "exact_candidates": 22677,
+          "exact_rows": 16075,
+          "exact_rule_calls": 9442,
+          "exact_seconds": 0.04875795199999867,
+          "point_domain_skips": 13,
+          "rejected_reads": 3875,
+          "rejected_seconds": 0.0012054150000000007,
+          "residual_commits": 8692,
+          "skipped_rule_calls": 272
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 1644
+        },
+        "state_sha": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e",
+        "runs": 1644,
+        "neural_waves": 1644,
+        "issued": 24783,
+        "counts": {
+          "accepted": 8649,
+          "calls": 9714,
+          "duplicates": 14361,
+          "reads": 48449,
+          "reads_by_kind": {
+            "generated": 48148,
+            "initial": 280,
+            "repair": 21
+          },
+          "rejected": {
+            "binding": 978,
+            "guard": 1171,
+            "untriggered_rule": 32,
+            "watermark": 236
+          }
+        },
+        "native_runtime_events": 1,
+        "independent_search_calls": 9442,
+        "network_seconds": 31.696080809018895,
+        "remaining_process_seconds_including_ipc": 15.674258579982286,
+        "native_verify_seconds": 0.018779111,
+        "native_repair_seconds": 0.011384743000000004,
+        "wall_seconds": 47.65963424999791,
+        "policy_process_wall": 47.72375454199937
+      }
+    },
+    "side_replacing_closed": {
+      "arm": "owned",
+      "keep_closed": false,
+      "side_weights": "a7ed6f00d545c9ac2725d8a2cb795fec9554f156a4f2e5f8cc4919bf309f9127",
+      "compatible_units": [
+        43,
+        62,
+        45,
+        33,
+        55,
+        58
+      ],
+      "program": "3b904063c8c7e580ec2030b452d831ee53478a28c3dfaecf17eeb7e853a0aaf8",
+      "binary": "02e3915e123244e91dcf2d633d8a176db6ce3085e57854e4c2261c65d7155a9e",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "reference_commits": 17341,
+      "omitted_standalone_rules": [],
+      "execution": {
+        "side_pointer": {
+          "decisions": 2007,
+          "scored_addresses": 821689,
+          "named": 1243
+        },
+        "side_seconds": 0.5336255079346301,
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "94510dbed2b574e97152cf38a32dd2308aee25aa3728fbc31e4ec946eb94ffe0",
+          "runs": 1644,
+          "signed_external": [
+            3286,
+            1021,
+            339,
+            40
+          ],
+          "signed_internal": [
+            75,
+            53,
+            144,
+            0
+          ],
+          "uncredited": [
+            4211,
+            1942,
+            2304,
+            94
+          ],
+          "per_external_request": 0.1998307202450526,
+          "per_decoded_request": 0.19952513179604814
+        },
+        "higher": {
+          "counts": {
+            "accepted_roots": 754,
+            "accepted_steps": 335,
+            "by_depth": {
+              "2": 267,
+              "3": 68
+            },
+            "forks_accepted": 0,
+            "forks_issued": 0,
+            "issued_roots": 1655,
+            "issued_steps": 846,
+            "missing_exports": 103,
+            "side_invalid_at_issue": 0,
+            "side_reads_at_issue": 1243,
+            "side_steps_accepted": 65,
+            "side_steps_issued": 504
+          },
+          "outstanding": 0
+        },
+        "withheld_owned_requests": 38,
+        "visible_port_visits": 36307164,
+        "encoded_port_visits": 2524397,
+        "assist": {
+          "certified_bindings": 1230,
+          "delta_domain_skips": 229,
+          "delta_members_checked": 2862,
+          "duplicate_reads": 29080,
+          "duplicate_seconds": 0.007117053000000183,
+          "exact_candidates": 22677,
+          "exact_rows": 16111,
+          "exact_rule_calls": 9447,
+          "exact_seconds": 0.051448772999998775,
+          "point_domain_skips": 13,
+          "rejected_reads": 4382,
+          "rejected_seconds": 0.0014015150000000023,
+          "residual_commits": 8696,
+          "skipped_rule_calls": 267
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 1644
+        },
+        "state_sha": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e",
+        "runs": 1644,
+        "neural_waves": 1644,
+        "issued": 24811,
+        "counts": {
+          "accepted": 8645,
+          "calls": 9714,
+          "duplicates": 14353,
+          "reads": 48984,
+          "reads_by_kind": {
+            "generated": 48686,
+            "initial": 277,
+            "repair": 21
+          },
+          "rejected": {
+            "binding": 1174,
+            "guard": 1171,
+            "untriggered_rule": 38,
+            "watermark": 276
+          }
+        },
+        "native_runtime_events": 1,
+        "independent_search_calls": 9447,
+        "network_seconds": 34.368505703918345,
+        "remaining_process_seconds_including_ipc": 16.866418089080447,
+        "native_verify_seconds": 0.020150457,
+        "native_repair_seconds": 0.013147321999999987,
+        "wall_seconds": 51.53460258400082,
+        "policy_process_wall": 51.600441334001516
+      }
+    },
+    "fork": {
+      "arm": "owned",
+      "keep_closed": true,
+      "side_weights": "a7ed6f00d545c9ac2725d8a2cb795fec9554f156a4f2e5f8cc4919bf309f9127",
+      "compatible_units": [
+        43,
+        62,
+        45,
+        33,
+        55,
+        58
+      ],
+      "program": "3b904063c8c7e580ec2030b452d831ee53478a28c3dfaecf17eeb7e853a0aaf8",
+      "binary": "56098655b1b8eb83cbf41be619a11dd172d9acd780a3047f5be14ea9393e7430",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "reference_commits": 17341,
+      "omitted_standalone_rules": [],
+      "execution": {
+        "side_pointer": {
+          "decisions": 2007,
+          "scored_addresses": 822414,
+          "named": 1243
+        },
+        "side_seconds": 0.5003485368833935,
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "94510dbed2b574e97152cf38a32dd2308aee25aa3728fbc31e4ec946eb94ffe0",
+          "runs": 1644,
+          "signed_external": [
+            3294,
+            1022,
+            339,
+            40
+          ],
+          "signed_internal": [
+            75,
+            53,
+            144,
+            0
+          ],
+          "uncredited": [
+            4203,
+            1941,
+            2304,
+            94
+          ],
+          "per_external_request": 0.20032264569469652,
+          "per_decoded_request": 0.19955805544395339
+        },
+        "higher": {
+          "counts": {
+            "accepted_roots": 754,
+            "accepted_steps": 441,
+            "by_depth": {
+              "2": 365,
+              "3": 76
+            },
+            "forks_accepted": 206,
+            "forks_issued": 398,
+            "issued_roots": 1655,
+            "issued_steps": 799,
+            "missing_exports": 104,
+            "side_invalid_at_issue": 0,
+            "side_reads_at_issue": 1243,
+            "side_steps_accepted": 65,
+            "side_steps_issued": 154,
+            "side_verdicts": {
+              "accepted": 65,
+              "binding": 89
+            },
+            "side_watermark_skips": 350
+          },
+          "outstanding": 0
+        },
+        "withheld_owned_requests": 95,
+        "visible_port_visits": 36307164,
+        "encoded_port_visits": 2524397,
+        "assist": {
+          "certified_bindings": 1285,
+          "delta_domain_skips": 235,
+          "delta_members_checked": 2873,
+          "duplicate_reads": 29178,
+          "duplicate_seconds": 0.0065343760000001975,
+          "exact_candidates": 22677,
+          "exact_rows": 16056,
+          "exact_rule_calls": 9441,
+          "exact_seconds": 0.04800496699999883,
+          "point_domain_skips": 13,
+          "rejected_reads": 3977,
+          "rejected_seconds": 0.0012381789999999994,
+          "residual_commits": 8660,
+          "skipped_rule_calls": 273
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 1644
+        },
+        "state_sha": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e",
+        "runs": 1644,
+        "neural_waves": 1644,
+        "issued": 24795,
+        "counts": {
+          "accepted": 8681,
+          "calls": 9714,
+          "duplicates": 14408,
+          "reads": 48710,
+          "reads_by_kind": {
+            "generated": 48408,
+            "initial": 281,
+            "repair": 21
+          },
+          "rejected": {
+            "binding": 1065,
+            "guard": 1171,
+            "untriggered_rule": 33,
+            "watermark": 236
+          }
+        },
+        "native_runtime_events": 1,
+        "independent_search_calls": 9441,
+        "network_seconds": 31.8109081199691,
+        "remaining_process_seconds_including_ipc": 15.496560726031497,
+        "native_verify_seconds": 0.018844779,
+        "native_repair_seconds": 0.01147149999999998,
+        "wall_seconds": 47.584223416000896,
+        "policy_process_wall": 47.64808662500218
+      }
+    },
+    "fork_before_watermark": {
+      "arm": "owned",
+      "keep_closed": true,
+      "side_weights": "a7ed6f00d545c9ac2725d8a2cb795fec9554f156a4f2e5f8cc4919bf309f9127",
+      "compatible_units": [
+        43,
+        62,
+        45,
+        33,
+        55,
+        58
+      ],
+      "program": "3b904063c8c7e580ec2030b452d831ee53478a28c3dfaecf17eeb7e853a0aaf8",
+      "binary": "be8d2238e0c9b79dd4c3a21d9f60567a47b84b59b5062e5c770b719701a73a93",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "reference_commits": 17341,
+      "omitted_standalone_rules": [],
+      "execution": {
+        "side_pointer": {
+          "decisions": 2007,
+          "scored_addresses": 822414,
+          "named": 1243
+        },
+        "side_seconds": 0.4532231422672339,
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "94510dbed2b574e97152cf38a32dd2308aee25aa3728fbc31e4ec946eb94ffe0",
+          "runs": 1644,
+          "signed_external": [
+            3294,
+            1022,
+            339,
+            40
+          ],
+          "signed_internal": [
+            75,
+            53,
+            144,
+            0
+          ],
+          "uncredited": [
+            4203,
+            1941,
+            2304,
+            94
+          ],
+          "per_external_request": 0.20032264569469652,
+          "per_decoded_request": 0.19955805544395339
+        },
+        "higher": {
+          "counts": {
+            "accepted_roots": 754,
+            "accepted_steps": 441,
+            "by_depth": {
+              "2": 365,
+              "3": 76
+            },
+            "forks_accepted": 206,
+            "forks_issued": 398,
+            "issued_roots": 1655,
+            "issued_steps": 1149,
+            "missing_exports": 104,
+            "side_invalid_at_issue": 0,
+            "side_reads_at_issue": 1243,
+            "side_steps_accepted": 65,
+            "side_steps_issued": 504,
+            "side_verdicts": {
+              "accepted": 65,
+              "binding": 197,
+              "untriggered_rule": 5,
+              "watermark": 237
+            }
+          },
+          "outstanding": 0
+        },
+        "withheld_owned_requests": 95,
+        "visible_port_visits": 36307164,
+        "encoded_port_visits": 2524397,
+        "assist": {
+          "certified_bindings": 1285,
+          "delta_domain_skips": 235,
+          "delta_members_checked": 2873,
+          "duplicate_reads": 29178,
+          "duplicate_seconds": 0.006762902000000235,
+          "exact_candidates": 22677,
+          "exact_rows": 16056,
+          "exact_rule_calls": 9441,
+          "exact_seconds": 0.050172247999998705,
+          "point_domain_skips": 13,
+          "rejected_reads": 4578,
+          "rejected_seconds": 0.001539237999999991,
+          "residual_commits": 8660,
+          "skipped_rule_calls": 273
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 1644
+        },
+        "state_sha": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e",
+        "runs": 1644,
+        "neural_waves": 1644,
+        "issued": 24795,
+        "counts": {
+          "accepted": 8681,
+          "calls": 9714,
+          "duplicates": 14408,
+          "reads": 49311,
+          "reads_by_kind": {
+            "generated": 49009,
+            "initial": 281,
+            "repair": 21
+          },
+          "rejected": {
+            "binding": 1173,
+            "guard": 1171,
+            "untriggered_rule": 38,
+            "watermark": 473
+          }
+        },
+        "native_runtime_events": 1,
+        "independent_search_calls": 9441,
+        "network_seconds": 33.922296192245994,
+        "remaining_process_seconds_including_ipc": 16.488190872754238,
+        "native_verify_seconds": 0.01999006,
+        "native_repair_seconds": 0.012236616999999946,
+        "wall_seconds": 50.70068474999789,
+        "policy_process_wall": 50.76670504100184
+      }
+    },
+    "closed_before_watermark": {
+      "arm": "owned",
+      "keep_closed": false,
+      "side_weights": null,
+      "compatible_units": [
+        43,
+        62,
+        45
+      ],
+      "program": "3b904063c8c7e580ec2030b452d831ee53478a28c3dfaecf17eeb7e853a0aaf8",
+      "binary": "02e3915e123244e91dcf2d633d8a176db6ce3085e57854e4c2261c65d7155a9e",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "reference_commits": 17341,
+      "omitted_standalone_rules": [],
+      "execution": {
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "94510dbed2b574e97152cf38a32dd2308aee25aa3728fbc31e4ec946eb94ffe0",
+          "runs": 1644,
+          "signed_external": [
+            3292,
+            1063,
+            339,
+            40
+          ],
+          "signed_internal": [
+            73,
+            0,
+            144,
+            0
+          ],
+          "uncredited": [
+            4207,
+            1953,
+            2304,
+            94
+          ],
+          "per_external_request": 0.19977403865553,
+          "per_decoded_request": 0.19901117453171477
+        },
+        "higher": {
+          "counts": {
+            "accepted_roots": 448,
+            "accepted_steps": 376,
+            "by_depth": {
+              "2": 300,
+              "3": 76
+            },
+            "forks_accepted": 0,
+            "forks_issued": 0,
+            "issued_roots": 809,
+            "issued_steps": 644,
+            "missing_exports": 97,
+            "side_invalid_at_issue": 0,
+            "side_reads_at_issue": 0,
+            "side_steps_accepted": 0,
+            "side_steps_issued": 0
+          },
+          "outstanding": 0
+        },
+        "withheld_owned_requests": 95,
+        "visible_port_visits": 36307164,
+        "encoded_port_visits": 2524397,
+        "assist": {
+          "certified_bindings": 1266,
+          "delta_domain_skips": 234,
+          "delta_members_checked": 2857,
+          "duplicate_reads": 29083,
+          "duplicate_seconds": 0.006736827000000238,
+          "exact_candidates": 22677,
+          "exact_rows": 16075,
+          "exact_rule_calls": 9442,
+          "exact_seconds": 0.05159945599999877,
+          "point_domain_skips": 13,
+          "rejected_reads": 3875,
+          "rejected_seconds": 0.0012957119999999955,
+          "residual_commits": 8692,
+          "skipped_rule_calls": 272
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 1644
+        },
+        "state_sha": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e",
+        "runs": 1644,
+        "neural_waves": 1644,
+        "issued": 24783,
+        "counts": {
+          "accepted": 8649,
+          "calls": 9714,
+          "duplicates": 14361,
+          "reads": 48449,
+          "reads_by_kind": {
+            "generated": 48148,
+            "initial": 280,
+            "repair": 21
+          },
+          "rejected": {
+            "binding": 978,
+            "guard": 1171,
+            "untriggered_rule": 32,
+            "watermark": 236
+          }
+        },
+        "native_runtime_events": 1,
+        "independent_search_calls": 9442,
+        "network_seconds": 34.056105348063284,
+        "remaining_process_seconds_including_ipc": 16.474610699939234,
+        "native_verify_seconds": 0.019524077,
+        "native_repair_seconds": 0.011845912999999974,
+        "wall_seconds": 50.90427608399841,
+        "policy_process_wall": 50.972197250001045
+      }
+    }
+  }
+}

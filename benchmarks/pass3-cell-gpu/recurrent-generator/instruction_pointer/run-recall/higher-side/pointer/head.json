@@ -1,0 +1,80 @@
+{
+  "units": [
+    {
+      "unit": 33,
+      "root": 143,
+      "hops": [
+        {
+          "pc": 2,
+          "rule": 145,
+          "pivot": 0,
+          "tables": [
+            "SubTuple",
+            "tuple-length"
+          ]
+        }
+      ],
+      "side": [
+        0,
+        399
+      ]
+    },
+    {
+      "unit": 55,
+      "root": 153,
+      "hops": [
+        {
+          "pc": 2,
+          "rule": 155,
+          "pivot": 1,
+          "tables": [
+            "Single",
+            "Expr-size"
+          ]
+        }
+      ],
+      "side": [
+        1,
+        323
+      ]
+    },
+    {
+      "unit": 58,
+      "root": 58,
+      "hops": [
+        {
+          "pc": 0,
+          "rule": 61,
+          "pivot": 0,
+          "tables": [
+            "Add-Gets",
+            "Not-Just-Concat"
+          ]
+        }
+      ],
+      "side": [
+        0,
+        288
+      ]
+    }
+  ],
+  "root_width": 5,
+  "side_width": 2,
+  "weights": "a7ed6f00d545c9ac2725d8a2cb795fec9554f156a4f2e5f8cc4919bf309f9127",
+  "positive": 133,
+  "negative": 1027,
+  "device": "mps",
+  "updates": 320,
+  "fingerprints": {
+    "143": "d6d92eb692b7be1da98881e13e5a7ef4df59fe75448f3a5614094836c70557fc",
+    "145": "f62761645fd2d41c62011edc77a829de84bc2cc8116adb89d46d919b4af6f6fd",
+    "153": "0453ebc626832b532ccae405b3f61b448ca6b97fc67ba41adef918355f017fea",
+    "58": "ae59039827522df6ed1465783751361f167b9fbeed2a7e63e4f95ad8af40baa6",
+    "155": "6afc7ddac873f2166ffb6c52411f8c994fdd9328b44123afc69878b395bc20a4",
+    "61": "ac68395ec4da494401c7b4a8dde32ea4ee0c6fb4708c9fcdb5c0074f981ff0e1"
+  },
+  "training": {
+    "sum": "856765e48910fe600548e17c7f18b7f3859c1355e5bc57420a15463e111ad792",
+    "dot": "7f8cd9a9904f160448d8639f61b3486b47bf3a83a736d815dea884572e13df97"
+  }
+}

@@ -1,0 +1,470 @@
+{
+  "fact": {
+    "binary": "56098655b1b8eb83cbf41be619a11dd172d9acd780a3047f5be14ea9393e7430",
+    "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+    "program": "f4da1650af5393f3f07d5d20d092e26270ae58090266dd197113dd295ffaf900",
+    "mode": "complete native assist",
+    "pairs": [
+      {
+        "exact": {
+          "arm": "exact",
+          "wall": 0.14213558299888973,
+          "inference": 0,
+          "verify": 0,
+          "exact": 0.0026435930000000157,
+          "runs": 634,
+          "committed": 1668,
+          "phase_search": 0.0026435930000000157,
+          "residual_candidates": 1848,
+          "counts": null,
+          "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d"
+        },
+        "closed": {
+          "wall": 2.774836000000505,
+          "signed_operations": 904,
+          "ops_per_second": 325.78501936685103,
+          "actor": 1.7855289559774974,
+          "verify": 0.002751156,
+          "residual": 0.006654043999999988
+        },
+        "fork": {
+          "wall": 2.7400646659989434,
+          "signed_operations": 904,
+          "ops_per_second": 329.9192209649656,
+          "actor": 1.7612092049239436,
+          "verify": 0.002720907,
+          "residual": 0.0064860789999999936
+        },
+        "oracle": {
+          "arm": "oracle",
+          "wall": 0.14167100000122446,
+          "inference": 0,
+          "verify": 0.000927628,
+          "exact": 0,
+          "runs": 634,
+          "committed": 1668,
+          "phase_search": 0.0016139439999999854,
+          "residual_candidates": 0,
+          "counts": {
+            "accepted": 1668,
+            "calls": 2703,
+            "duplicates": 0,
+            "reads": 3442,
+            "reads_by_kind": {
+              "generated": 3396,
+              "initial": 46
+            },
+            "rejected": {}
+          },
+          "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d"
+        }
+      },
+      {
+        "oracle": {
+          "arm": "oracle",
+          "wall": 0.14019066599939833,
+          "inference": 0,
+          "verify": 0.000923062,
+          "exact": 0,
+          "runs": 634,
+          "committed": 1668,
+          "phase_search": 0.0015965279999999855,
+          "residual_candidates": 0,
+          "counts": {
+            "accepted": 1668,
+            "calls": 2703,
+            "duplicates": 0,
+            "reads": 3442,
+            "reads_by_kind": {
+              "generated": 3396,
+              "initial": 46
+            },
+            "rejected": {}
+          },
+          "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d"
+        },
+        "fork": {
+          "wall": 2.7768399580018013,
+          "signed_operations": 904,
+          "ops_per_second": 325.5499105719126,
+          "actor": 1.7694629577817977,
+          "verify": 0.002767376,
+          "residual": 0.00656776999999999
+        },
+        "closed": {
+          "wall": 2.7341150829997787,
+          "signed_operations": 904,
+          "ops_per_second": 330.63714311840954,
+          "actor": 1.7722631689430273,
+          "verify": 0.002788725,
+          "residual": 0.006561690999999986
+        },
+        "exact": {
+          "arm": "exact",
+          "wall": 0.14154591699843877,
+          "inference": 0,
+          "verify": 0,
+          "exact": 0.0025255330000000164,
+          "runs": 634,
+          "committed": 1668,
+          "phase_search": 0.0025255330000000164,
+          "residual_candidates": 1848,
+          "counts": null,
+          "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d"
+        }
+      },
+      {
+        "exact": {
+          "arm": "exact",
+          "wall": 0.1417890830016404,
+          "inference": 0,
+          "verify": 0,
+          "exact": 0.0025063780000000166,
+          "runs": 634,
+          "committed": 1668,
+          "phase_search": 0.0025063780000000166,
+          "residual_candidates": 1848,
+          "counts": null,
+          "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d"
+        },
+        "closed": {
+          "wall": 2.6877926660017692,
+          "signed_operations": 904,
+          "ops_per_second": 336.33546643489683,
+          "actor": 1.7308954189393262,
+          "verify": 0.002587082,
+          "residual": 0.005697393000000019
+        },
+        "fork": {
+          "wall": 2.696885999997903,
+          "signed_operations": 904,
+          "ops_per_second": 335.20141377896687,
+          "actor": 1.7198493061987392,
+          "verify": 0.002639326,
+          "residual": 0.005931979999999995
+        },
+        "oracle": {
+          "arm": "oracle",
+          "wall": 0.14043787500122562,
+          "inference": 0,
+          "verify": 0.000900592,
+          "exact": 0,
+          "runs": 634,
+          "committed": 1668,
+          "phase_search": 0.0015426529999999846,
+          "residual_candidates": 0,
+          "counts": {
+            "accepted": 1668,
+            "calls": 2703,
+            "duplicates": 0,
+            "reads": 3442,
+            "reads_by_kind": {
+              "generated": 3396,
+              "initial": 46
+            },
+            "rejected": {}
+          },
+          "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d"
+        }
+      },
+      {
+        "oracle": {
+          "arm": "oracle",
+          "wall": 0.1477401669981191,
+          "inference": 0,
+          "verify": 0.000899541,
+          "exact": 0,
+          "runs": 634,
+          "committed": 1668,
+          "phase_search": 0.0015962979999999839,
+          "residual_candidates": 0,
+          "counts": {
+            "accepted": 1668,
+            "calls": 2703,
+            "duplicates": 0,
+            "reads": 3442,
+            "reads_by_kind": {
+              "generated": 3396,
+              "initial": 46
+            },
+            "rejected": {}
+          },
+          "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d"
+        },
+        "fork": {
+          "wall": 2.706839124999533,
+          "signed_operations": 904,
+          "ops_per_second": 333.968868578459,
+          "actor": 1.7493273930085707,
+          "verify": 0.002569299,
+          "residual": 0.005986409999999989
+        },
+        "closed": {
+          "wall": 2.7559427919986774,
+          "signed_operations": 904,
+          "ops_per_second": 328.0184199122642,
+          "actor": 1.7658380939319613,
+          "verify": 0.002604246,
+          "residual": 0.0062126989999999995
+        },
+        "exact": {
+          "arm": "exact",
+          "wall": 0.15063229099905584,
+          "inference": 0,
+          "verify": 0,
+          "exact": 0.0027842200000000217,
+          "runs": 634,
+          "committed": 1668,
+          "phase_search": 0.0027842200000000217,
+          "residual_candidates": 1848,
+          "counts": null,
+          "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d"
+        }
+      }
+    ],
+    "median_wall": {
+      "exact": 0.14196233300026506,
+      "closed": 2.745028937499228,
+      "fork": 2.723451895499238,
+      "oracle": 0.14105443750122504
+    },
+    "median_signed_ops_per_second": {
+      "closed": 329.3277815153369,
+      "fork": 331.9440447717123
+    }
+  },
+  "loopfact": {
+    "binary": "56098655b1b8eb83cbf41be619a11dd172d9acd780a3047f5be14ea9393e7430",
+    "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+    "program": "8f6d2b1a5f5a593b73119d0bfded0aefee97315191cc5f3efcd6e35320beacba",
+    "mode": "complete native assist",
+    "pairs": [
+      {
+        "exact": {
+          "arm": "exact",
+          "wall": 0.14176366700121434,
+          "inference": 0,
+          "verify": 0,
+          "exact": 0.0025798380000000144,
+          "runs": 618,
+          "committed": 1419,
+          "phase_search": 0.0025798380000000144,
+          "residual_candidates": 1634,
+          "counts": null,
+          "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724"
+        },
+        "closed": {
+          "wall": 2.5832487080006103,
+          "signed_operations": 788,
+          "ops_per_second": 305.04225069753284,
+          "actor": 1.6296936020371504,
+          "verify": 0.002458095,
+          "residual": 0.00587849700000001
+        },
+        "fork": {
+          "wall": 2.5796545000011974,
+          "signed_operations": 786,
+          "ops_per_second": 304.6919655324522,
+          "actor": 1.6458653627269086,
+          "verify": 0.002519674,
+          "residual": 0.00586828200000001
+        },
+        "oracle": {
+          "arm": "oracle",
+          "wall": 0.14452479099782067,
+          "inference": 0,
+          "verify": 0.000824003,
+          "exact": 0,
+          "runs": 618,
+          "committed": 1419,
+          "phase_search": 0.0013713709999999873,
+          "residual_candidates": 0,
+          "counts": {
+            "accepted": 1419,
+            "calls": 2432,
+            "duplicates": 0,
+            "reads": 3016,
+            "reads_by_kind": {
+              "generated": 2989,
+              "initial": 27
+            },
+            "rejected": {}
+          },
+          "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724"
+        }
+      },
+      {
+        "oracle": {
+          "arm": "oracle",
+          "wall": 0.14475799999854644,
+          "inference": 0,
+          "verify": 0.000847427,
+          "exact": 0,
+          "runs": 618,
+          "committed": 1419,
+          "phase_search": 0.0014139069999999864,
+          "residual_candidates": 0,
+          "counts": {
+            "accepted": 1419,
+            "calls": 2432,
+            "duplicates": 0,
+            "reads": 3016,
+            "reads_by_kind": {
+              "generated": 2989,
+              "initial": 27
+            },
+            "rejected": {}
+          },
+          "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724"
+        },
+        "fork": {
+          "wall": 2.5898558750013763,
+          "signed_operations": 786,
+          "ops_per_second": 303.49179179694016,
+          "actor": 1.6579786781512666,
+          "verify": 0.002531109,
+          "residual": 0.006349479000000017
+        },
+        "closed": {
+          "wall": 2.6117101249983534,
+          "signed_operations": 788,
+          "ops_per_second": 301.71801704084476,
+          "actor": 1.6733343800078728,
+          "verify": 0.002683816,
+          "residual": 0.006509302999999995
+        },
+        "exact": {
+          "arm": "exact",
+          "wall": 0.1387958749983227,
+          "inference": 0,
+          "verify": 0,
+          "exact": 0.0026709100000000168,
+          "runs": 618,
+          "committed": 1419,
+          "phase_search": 0.0026709100000000168,
+          "residual_candidates": 1634,
+          "counts": null,
+          "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724"
+        }
+      },
+      {
+        "exact": {
+          "arm": "exact",
+          "wall": 0.13881779100120184,
+          "inference": 0,
+          "verify": 0,
+          "exact": 0.002588874000000015,
+          "runs": 618,
+          "committed": 1419,
+          "phase_search": 0.002588874000000015,
+          "residual_candidates": 1634,
+          "counts": null,
+          "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724"
+        },
+        "closed": {
+          "wall": 2.586023750001914,
+          "signed_operations": 788,
+          "ops_per_second": 304.7149122274754,
+          "actor": 1.657060201978311,
+          "verify": 0.00257743,
+          "residual": 0.006218543000000012
+        },
+        "fork": {
+          "wall": 2.5952615829992283,
+          "signed_operations": 786,
+          "ops_per_second": 302.85964434138265,
+          "actor": 1.6637388979142997,
+          "verify": 0.002575333,
+          "residual": 0.0062394850000000055
+        },
+        "oracle": {
+          "arm": "oracle",
+          "wall": 0.1407384580015787,
+          "inference": 0,
+          "verify": 0.000840675,
+          "exact": 0,
+          "runs": 618,
+          "committed": 1419,
+          "phase_search": 0.0014127399999999846,
+          "residual_candidates": 0,
+          "counts": {
+            "accepted": 1419,
+            "calls": 2432,
+            "duplicates": 0,
+            "reads": 3016,
+            "reads_by_kind": {
+              "generated": 2989,
+              "initial": 27
+            },
+            "rejected": {}
+          },
+          "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724"
+        }
+      },
+      {
+        "oracle": {
+          "arm": "oracle",
+          "wall": 0.14101654200203484,
+          "inference": 0,
+          "verify": 0.000865074,
+          "exact": 0,
+          "runs": 618,
+          "committed": 1419,
+          "phase_search": 0.0014368019999999836,
+          "residual_candidates": 0,
+          "counts": {
+            "accepted": 1419,
+            "calls": 2432,
+            "duplicates": 0,
+            "reads": 3016,
+            "reads_by_kind": {
+              "generated": 2989,
+              "initial": 27
+            },
+            "rejected": {}
+          },
+          "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724"
+        },
+        "fork": {
+          "wall": 2.6159912920011266,
+          "signed_operations": 786,
+          "ops_per_second": 300.45971575033116,
+          "actor": 1.6714306999419932,
+          "verify": 0.002555894,
+          "residual": 0.006369508000000004
+        },
+        "closed": {
+          "wall": 2.5957857909997983,
+          "signed_operations": 788,
+          "ops_per_second": 303.5689627134033,
+          "actor": 1.6560089879931184,
+          "verify": 0.002548674,
+          "residual": 0.006272540000000001
+        },
+        "exact": {
+          "arm": "exact",
+          "wall": 0.13824558299893397,
+          "inference": 0,
+          "verify": 0,
+          "exact": 0.002587569000000015,
+          "runs": 618,
+          "committed": 1419,
+          "phase_search": 0.002587569000000015,
+          "residual_candidates": 1634,
+          "counts": null,
+          "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724"
+        }
+      }
+    ],
+    "median_wall": {
+      "exact": 0.13880683299976226,
+      "closed": 2.590904770500856,
+      "fork": 2.5925587290003023,
+      "oracle": 0.14277066649992776
+    },
+    "median_signed_ops_per_second": {
+      "closed": 304.14193747043936,
+      "fork": 303.1757180691614
+    }
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "fact": {
+    "stats": {
+      "58": {
+        "given_teacher_roots": 70,
+        "labelled_roots": 1,
+        "roots_with_teacher_path": 7,
+        "issued": 2,
+        "matched_recorded_side": 1,
+        "native_match": 1,
+        "same_commit_roots": 1
+      },
+      "33": {
+        "given_teacher_roots": 70,
+        "labelled_roots": 14,
+        "roots_with_teacher_path": 14,
+        "issued": 42,
+        "matched_recorded_side": 14,
+        "native_match": 14,
+        "same_commit_roots": 14
+      },
+      "55": {
+        "given_teacher_roots": 52,
+        "labelled_roots": 8,
+        "roots_with_teacher_path": 14,
+        "issued": 46,
+        "matched_recorded_side": 1,
+        "abstained_on_label": 1,
+        "native_match": 12,
+        "same_commit_roots": 7,
+        "rescued_via_other_address": 5
+      }
+    },
+    "head": "a7ed6f00d545c9ac2725d8a2cb795fec9554f156a4f2e5f8cc4919bf309f9127"
+  },
+  "loopfact": {
+    "stats": {
+      "58": {
+        "given_teacher_roots": 44,
+        "labelled_roots": 1,
+        "roots_with_teacher_path": 4,
+        "issued": 3,
+        "matched_recorded_side": 1,
+        "native_match": 1,
+        "same_commit_roots": 1
+      },
+      "33": {
+        "given_teacher_roots": 44,
+        "labelled_roots": 8,
+        "roots_with_teacher_path": 8,
+        "issued": 25,
+        "matched_recorded_side": 8,
+        "native_match": 8,
+        "same_commit_roots": 8
+      },
+      "55": {
+        "given_teacher_roots": 36,
+        "labelled_roots": 6,
+        "roots_with_teacher_path": 11,
+        "issued": 33,
+        "matched_recorded_side": 1,
+        "native_match": 9,
+        "same_commit_roots": 6,
+        "rescued_via_other_address": 3
+      }
+    },
+    "head": "a7ed6f00d545c9ac2725d8a2cb795fec9554f156a4f2e5f8cc4919bf309f9127"
+  },
+  "sum-divisors": {
+    "stats": {
+      "58": {
+        "given_teacher_roots": 595,
+        "labelled_roots": 4,
+        "roots_with_teacher_path": 15,
+        "issued": 37,
+        "matched_recorded_side": 2,
+        "abstained_on_label": 2,
+        "native_match": 2,
+        "same_commit_roots": 2
+      },
+      "33": {
+        "given_teacher_roots": 595,
+        "labelled_roots": 43,
+        "roots_with_teacher_path": 62,
+        "issued": 308,
+        "matched_recorded_side": 42,
+        "abstained_on_label": 1,
+        "native_match": 42,
+        "same_commit_roots": 42
+      },
+      "55": {
+        "given_teacher_roots": 430,
+        "labelled_roots": 38,
+        "roots_with_teacher_path": 94,
+        "issued": 408,
+        "matched_recorded_side": 0,
+        "native_match": 87,
+        "rescued_via_other_address": 49,
+        "same_commit_roots": 38
+      }
+    },
+    "head": "a7ed6f00d545c9ac2725d8a2cb795fec9554f156a4f2e5f8cc4919bf309f9127"
+  }
+}

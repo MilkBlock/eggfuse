@@ -1,0 +1,123 @@
+{
+  "fact": {
+    "arm": "owned",
+    "mode": "exclusive",
+    "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+    "binary": "56098655b1b8eb83cbf41be619a11dd172d9acd780a3047f5be14ea9393e7430",
+    "program": "f4da1650af5393f3f07d5d20d092e26270ae58090266dd197113dd295ffaf900",
+    "common_runs": 6,
+    "reference_runs": 634,
+    "final_equal": false,
+    "failure": null,
+    "measured_runs": 372,
+    "paid": 1579,
+    "higher": {
+      "counts": {
+        "accepted_roots": 37,
+        "accepted_steps": 57,
+        "by_depth": {
+          "2": 37,
+          "3": 20
+        },
+        "forks_accepted": 0,
+        "forks_issued": 0,
+        "issued_roots": 57,
+        "issued_steps": 71,
+        "missing_exports": 0,
+        "side_invalid_at_issue": 0,
+        "side_reads_at_issue": 0,
+        "side_steps_accepted": 0,
+        "side_steps_issued": 0,
+        "side_verdicts": {},
+        "side_watermark_skips": 0
+      },
+      "outstanding": 0
+    },
+    "independent_search_calls": 0
+  },
+  "loopfact": {
+    "arm": "owned",
+    "mode": "exclusive",
+    "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+    "binary": "56098655b1b8eb83cbf41be619a11dd172d9acd780a3047f5be14ea9393e7430",
+    "program": "8f6d2b1a5f5a593b73119d0bfded0aefee97315191cc5f3efcd6e35320beacba",
+    "common_runs": 7,
+    "reference_runs": 618,
+    "final_equal": false,
+    "failure": null,
+    "measured_runs": 360,
+    "paid": 1143,
+    "higher": {
+      "counts": {
+        "accepted_roots": 35,
+        "accepted_steps": 44,
+        "by_depth": {
+          "2": 31,
+          "3": 13
+        },
+        "forks_accepted": 0,
+        "forks_issued": 0,
+        "issued_roots": 58,
+        "issued_steps": 53,
+        "missing_exports": 0,
+        "side_invalid_at_issue": 0,
+        "side_reads_at_issue": 8,
+        "side_steps_accepted": 2,
+        "side_steps_issued": 3,
+        "side_verdicts": {
+          "accepted": 2,
+          "binding": 1
+        },
+        "side_watermark_skips": 3
+      },
+      "outstanding": 0
+    },
+    "independent_search_calls": 0
+  },
+  "sum-divisors": {
+    "arm": "owned",
+    "mode": "exclusive",
+    "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+    "binary": "56098655b1b8eb83cbf41be619a11dd172d9acd780a3047f5be14ea9393e7430",
+    "program": "3b904063c8c7e580ec2030b452d831ee53478a28c3dfaecf17eeb7e853a0aaf8",
+    "common_runs": 10,
+    "reference_runs": 1644,
+    "final_equal": false,
+    "failure": {
+      "run": 85,
+      "charged": {
+        "issued": 1923,
+        "neural_waves": 85,
+        "wall_seconds": 0.7722320000029868,
+        "network_seconds": 0.48094213192598545
+      }
+    },
+    "measured_runs": 84,
+    "paid": 1900,
+    "higher": {
+      "counts": {
+        "accepted_roots": 90,
+        "accepted_steps": 116,
+        "by_depth": {
+          "2": 77,
+          "3": 39
+        },
+        "forks_accepted": 0,
+        "forks_issued": 3,
+        "issued_roots": 136,
+        "issued_steps": 147,
+        "missing_exports": 0,
+        "side_invalid_at_issue": 0,
+        "side_reads_at_issue": 25,
+        "side_steps_accepted": 7,
+        "side_steps_issued": 7,
+        "side_verdicts": {
+          "accepted": 7
+        },
+        "side_watermark_skips": 8
+      },
+      "outstanding": 5
+    },
+    "independent_search_calls": 0
+  }
+}
