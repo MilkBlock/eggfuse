@@ -274,7 +274,7 @@ if __name__=='__main__':
     p.add_argument('--training-bake',type=Path)
     p.add_argument('--recovery',type=Path)
     p.add_argument('--root-budget',type=int,default=32,help='maximum prefixes per rule, anchor role and depth')
-    p.add_argument('--read-order',choices=('source','connected'))
+    p.add_argument('--read-order',choices=('source','connected','delta'))
     p.add_argument('--margin-only',action='store_true')
     p.add_argument('--run-recall',action='store_true')
     p.add_argument('--exclusive',action='store_true')

@@ -21,5 +21,22 @@ class ConnectedReadTests(unittest.TestCase):
             self.assertCountEqual(order, catalog.atoms[0])
 
 
+class DeltaOrderTests(unittest.TestCase):
+    def test_point_after_ready_primitive_precedes_unconnected_scan(self):
+        catalog = Catalog.__new__(Catalog)
+        def atom(call, *slots):
+            return {'call': call, 'args': [{'slot': slot} for slot in slots]}
+        query = [atom({'table':'A'},0,1), atom({'table':'unrelated'},7,8),
+                 atom({'primitive':'abs'},1,2), atom({'table':'B'},2,3)]
+        catalog.atoms = {0: range(3)}
+        catalog.delta_recipe = [{'query': query}]
+        catalog.delta_kernels = None
+        self.assertEqual(catalog.read_order(0,0,'delta'), (0,2,1))
+        for anchor in range(3):
+            order = catalog.read_order(0,anchor,'delta')
+            self.assertEqual(order[0],anchor)
+            self.assertCountEqual(order,range(3))
+
+
 if __name__ == '__main__':
     unittest.main()

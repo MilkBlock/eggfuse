@@ -220,7 +220,7 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     for key in ('root','weights','binary','data','out'):p.add_argument(key,type=Path)
     p.add_argument('--collect',nargs='+')
-    p.add_argument('--read-order',choices=['source','connected'],help='sample collection order; fit uses the order recorded in the data')
+    p.add_argument('--read-order',choices=['source','connected','delta'],help='sample collection order; fit uses the order recorded in the data')
     p.add_argument('--refinements',type=int,default=0,help='shared hidden updates during recovery read scoring')
     p.add_argument('--commit-sets',action='store_true',help='record native proof equivalence and base-policy coverage for training')
     a=p.parse_args()

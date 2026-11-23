@@ -18,7 +18,7 @@ class Policy:
         if self.top_k is not None and self.top_k < 1:
             raise ValueError('top-k must be positive')
         mode=self.read_order or getattr(self.recovery,'read_order','source')
-        if mode not in ('source','connected'):
+        if mode not in ('source','connected','delta'):
             raise ValueError('unknown pointer read order')
         object.__setattr__(self,'read_order',mode)
 

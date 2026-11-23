@@ -29,7 +29,49 @@ class Catalog:
                 orders[rid,anchor]=tuple(picked)
         return orders
 
+    @cached_property
+    def delta_orders(self):
+        orders={}
+        for rid,rule in enumerate(self.delta_recipe):
+            query=rule['query']
+            positions=[i for i,a in enumerate(query) if 'table' in a['call']]
+            for anchor,pivot in enumerate(positions):
+                kernel=self.delta_kernels[rid][pivot] if self.delta_kernels else None
+                if kernel:
+                    plan=[pivot]+[s['atom'] for s in kernel['steps']]
+                    if set(plan)==set(range(len(query))) and len(plan)==len(query):
+                        orders[rid,anchor]=tuple(positions.index(i) for i in plan if i in positions)
+                        continue
+                # Lower missing kernels from the same key/output convention. Include
+                # ready primitives when establishing which later keys are bound.
+                known=set()
+                remaining=list(range(len(query)))
+                plan=[]
+                i=pivot
+                while remaining:
+                    remaining.remove(i)
+                    if i in positions: plan.append(positions.index(i))
+                    known.update(a['slot'] for a in query[i]['args'] if 'slot' in a)
+                    eligible=[]
+                    for j in remaining:
+                        atom=query[j]
+                        ready=['slot' not in a or a['slot'] in known for a in atom['args']]
+                        if all(ready[:-1]):
+                            rank=1 if j in positions else 0
+                        elif j in positions:
+                            rank=2 if any(ready) else 3
+                        else:
+                            continue
+                        eligible.append((rank,-sum(ready),j))
+                    if remaining:
+                        if not eligible: raise ValueError('unbound primitive cycle in delta plan')
+                        i=min(eligible)[2]
+                orders[rid,anchor]=tuple(plan)
+        return orders
+
     def read_order(self,rid,anchor,mode):
+        if mode=='delta':
+            return self.delta_orders[rid,anchor]
         if mode=='connected':
             return self.connected_orders[rid,anchor]
         if mode=='source':
@@ -38,6 +80,8 @@ class Catalog:
 
     def __init__(self, program):
         recipe = program['recipe']
+        self.delta_recipe=recipe['rules']
+        self.delta_kernels=program.get('row_kernels')
         self.tables = {t['name']: i for i, t in enumerate(recipe['tables'])}
         self.nodes, self.edges = [], []
         self.outputs, self.inputs, self.atoms, self.roots = {}, {}, {}, {}
