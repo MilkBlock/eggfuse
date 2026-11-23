@@ -7,7 +7,7 @@ from pathlib import Path
 import random
 
 import torch
-from actor import InstructionActor
+from rule_read import load_actor
 from history import load, stream
 from online import lane_choice
 
@@ -61,8 +61,7 @@ def audit(root,weights,output,samples,seed,field):
     if samples<1:
         raise ValueError('empty sample budget')
     torch.set_num_threads(1)
-    actor=InstructionActor(field_pointer=field).eval()
-    actor.load_state_dict(torch.load(weights,weights_only=True,map_location='cpu'))
+    actor = load_actor(weights, field)
     manifest=json.loads((root/'manifest.json').read_bytes())
     report=dict(mode='shadow',wave=1,seed=seed,field_pointer=field,
                 weights_sha256=hashlib.sha256(weights.read_bytes()).hexdigest(),cases={})
@@ -93,8 +92,7 @@ def audit(root,weights,output,samples,seed,field):
 def held_rule_census(root, weights, output, seed, field):
     """Score only the free rule/Stop decision on every Run of each native holdout."""
     torch.set_num_threads(1)
-    actor = InstructionActor(field_pointer=field).eval()
-    actor.load_state_dict(torch.load(weights, weights_only=True, map_location='cpu'))
+    actor = load_actor(weights, field)
     report = dict(mode='shadow', decision='rule before any parent read', wave=1,
                   seed=seed, field_pointer=field,
                   weights_sha256=hashlib.sha256(weights.read_bytes()).hexdigest(), cases={})

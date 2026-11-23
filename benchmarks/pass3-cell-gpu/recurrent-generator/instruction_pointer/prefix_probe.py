@@ -7,7 +7,7 @@ import subprocess
 from tempfile import TemporaryDirectory
 
 import torch
-from actor import InstructionActor
+from rule_read import load_actor
 from catalog import Catalog
 from history import History
 from online import propose
@@ -16,8 +16,7 @@ from online import propose
 @torch.no_grad()
 def study(root,binary,weights,seed, field_pointer=False):
     torch.set_num_threads(1)
-    actor=InstructionActor(field_pointer=field_pointer).eval()
-    actor.load_state_dict(torch.load(weights,map_location='cpu',weights_only=True))
+    actor = load_actor(weights, field_pointer)
     manifest=json.loads((root/'manifest.json').read_bytes())
     results=[]
     with TemporaryDirectory() as temp:

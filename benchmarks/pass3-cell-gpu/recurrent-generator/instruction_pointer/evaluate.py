@@ -10,7 +10,7 @@ import subprocess
 from time import perf_counter
 
 import torch
-from actor import InstructionActor
+from rule_read import load_actor
 from catalog import KINDS
 from history import stream
 from online import execute,propose
@@ -55,9 +55,7 @@ def align(targets,proposals):
 def assess(root,binary,weights,seed, field_pointer=False, splits=None, snapshot_count=None):
     torch.manual_seed(seed)
     torch.set_num_threads(1)
-    actor=InstructionActor(field_pointer=field_pointer).eval()
-    if weights:
-        actor.load_state_dict(torch.load(weights,map_location='cpu',weights_only=True))
+    actor = load_actor(weights, field_pointer)
     numbers = b''.join(t.detach().numpy().tobytes() for t in actor.state_dict().values())
     result=dict(field_pointer=field_pointer,provider='trained' if weights else 'random_initialization',seed=seed,
                 build_sha256=sha(binary.read_bytes()),weights_sha256=sha(numbers),device='single-thread CPU',

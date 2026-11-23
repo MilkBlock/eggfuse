@@ -7,7 +7,7 @@ from time import perf_counter
 
 import torch
 
-from actor import InstructionActor
+from rule_read import load_actor
 from catalog import Catalog
 from history import History
 
@@ -127,7 +127,5 @@ if __name__=='__main__':
     a=parser.parse_args()
     torch.set_num_threads(1)
     torch.manual_seed(a.seed)
-    model=InstructionActor(field_pointer=a.field_pointer).eval()
-    if a.weights:
-        model.load_state_dict(torch.load(a.weights,map_location='cpu',weights_only=True))
+    model = load_actor(a.weights, a.field_pointer)
     print(json.dumps(execute(a.binary.resolve(),a.program.resolve(),model,a.seed,a.wave_limit)))
