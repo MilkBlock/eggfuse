@@ -1,6 +1,7 @@
 """Choose two scalar root biases from complete named requests on reserved training Runs."""
 import argparse
 from collections import Counter, defaultdict
+from copy import deepcopy
 from itertools import product
 import json
 from pathlib import Path
@@ -20,11 +21,17 @@ from rule_read import load_actor
 def calibrate(root, binary, initial, out, seed):
     torch.set_num_threads(1)
     base = load_actor(initial, True)
-    model = CalibratedAnchorActor(base.vocabulary, base.name_mode).eval()
-    missing, extra = model.load_state_dict(base.state_dict(), strict=False)
-    if missing != ['root_offset'] or extra:
-        raise ValueError('a frozen field-disagreement policy is required')
-    offsets = [0., 1., 2., 3., 4., 6., 8.]
+    if isinstance(base,CalibratedAnchorActor):
+        model=deepcopy(base)
+        export_format=torch.load(initial,weights_only=True,map_location='cpu')['format']
+    else:
+        model=CalibratedAnchorActor(base.vocabulary,base.name_mode).eval()
+        missing,extra=model.load_state_dict(base.state_dict(),strict=False)
+        if missing!=['root_offset'] or extra:
+            raise ValueError('a frozen field-disagreement policy is required')
+        export_format='calibrated-anchor-v1'
+    starting=model.root_offset.tolist()
+    offsets=sorted(set([0.,1.,2.,3.,4.,6.,8.]+starting))
     ledger = {b: defaultdict(Counter) for b in offsets}
     selected, _, reserved = split_runs(root, seed)
     required = Counter()
@@ -98,14 +105,14 @@ def calibrate(root, binary, initial, out, seed):
     best = max(grid,key=order)
     shared = max((g for g in grid if g['offsets'][0]==g['offsets'][1]),key=order)
     model.root_offset.copy_(torch.tensor(best['offsets']))
-    if any(not torch.equal(v,model.state_dict()[n]) for n,v in base.state_dict().items()):
+    if any(not torch.equal(v,model.state_dict()[n]) for n,v in base.state_dict().items() if n!='root_offset'):
         raise ValueError('frozen parameters changed')
     out.mkdir(parents=True,exist_ok=True)
-    torch.save(dict(format='calibrated-anchor-v1',names=model.name_mode,vocabulary=list(model.vocabulary),
+    torch.save(dict(format=export_format,names=model.name_mode,vocabulary=list(model.vocabulary),
                     parameters=model.state_dict()),out/'model.pt')
     report = dict(seed=seed,initial_sha256=digest(initial),weights_sha256=digest(out/'model.pt'),
                   receiver_sha256=digest(binary),runs=used,required=required,calibration=ledger,
-                  grid=grid,baseline=grid[0],shared=shared,selected=best,top_k=32)
+                  grid=grid,baseline=next(row for row in grid if row['offsets']==starting),shared=shared,selected=best,top_k=32)
     (out/'training.json').write_text(json.dumps(report,indent=2)+'\n')
     print(report['baseline'],shared,best,flush=True)
 
