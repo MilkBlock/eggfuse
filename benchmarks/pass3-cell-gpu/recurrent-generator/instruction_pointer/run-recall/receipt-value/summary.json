@@ -1,0 +1,158 @@
+{
+  "baseline": {
+    "fact": {
+      "signed": 1422,
+      "required": 1668,
+      "paid": 4539,
+      "ops": 1047,
+      "owned": 54,
+      "uncontested_effects": 14,
+      "failed_steps": 1600,
+      "held_complete": 25,
+      "large_complete": 0,
+      "complete_runs": 106
+    },
+    "loopfact": {
+      "signed": 1204,
+      "required": 1419,
+      "paid": 4473,
+      "ops": 974,
+      "owned": 8,
+      "uncontested_effects": 15,
+      "failed_steps": 1542,
+      "held_complete": 22,
+      "large_complete": 0,
+      "complete_runs": 109
+    },
+    "sum-divisors": {
+      "signed": 9663,
+      "required": 17341,
+      "paid": 27943,
+      "ops": 5826,
+      "owned": 27,
+      "uncontested_effects": 224,
+      "failed_steps": 12486,
+      "held_complete": 116,
+      "large_complete": 0,
+      "complete_runs": 233
+    },
+    "total": {
+      "signed": 12289,
+      "required": 20428,
+      "paid": 36955,
+      "ops": 7847,
+      "owned": 89,
+      "uncontested_effects": 253,
+      "failed_steps": 15628,
+      "held_complete": 163,
+      "large_complete": 0,
+      "complete_runs": 448,
+      "ept": 0.21233933161953727,
+      "coverage": 0.6015762678676326
+    }
+  },
+  "learned": {
+    "fact": {
+      "signed": 1417,
+      "required": 1668,
+      "paid": 4550,
+      "ops": 1058,
+      "owned": 39,
+      "uncontested_effects": 21,
+      "failed_steps": 771,
+      "held_complete": 2,
+      "large_complete": 2,
+      "complete_runs": 107
+    },
+    "loopfact": {
+      "signed": 1165,
+      "required": 1419,
+      "paid": 4252,
+      "ops": 939,
+      "owned": 39,
+      "uncontested_effects": 51,
+      "failed_steps": 740,
+      "held_complete": 0,
+      "large_complete": 5,
+      "complete_runs": 100
+    },
+    "sum-divisors": {
+      "signed": 9720,
+      "required": 17341,
+      "paid": 27851,
+      "ops": 6273,
+      "owned": 110,
+      "uncontested_effects": 702,
+      "failed_steps": 6445,
+      "held_complete": 26,
+      "large_complete": 27,
+      "complete_runs": 252
+    },
+    "total": {
+      "signed": 12302,
+      "required": 20428,
+      "paid": 36653,
+      "ops": 8270,
+      "owned": 188,
+      "uncontested_effects": 774,
+      "failed_steps": 7956,
+      "held_complete": 28,
+      "large_complete": 34,
+      "complete_runs": 459,
+      "ept": 0.22562955283332878,
+      "coverage": 0.6022126493048756
+    }
+  },
+  "commits": {
+    "fact": {
+      "signed": 1407,
+      "required": 1668,
+      "paid": 4527,
+      "ops": 1048,
+      "owned": 51,
+      "uncontested_effects": 21,
+      "failed_steps": 1084,
+      "held_complete": 3,
+      "large_complete": 6,
+      "complete_runs": 106
+    },
+    "loopfact": {
+      "signed": 1176,
+      "required": 1419,
+      "paid": 4385,
+      "ops": 949,
+      "owned": 54,
+      "uncontested_effects": 34,
+      "failed_steps": 932,
+      "held_complete": 2,
+      "large_complete": 4,
+      "complete_runs": 106
+    },
+    "sum-divisors": {
+      "signed": 9762,
+      "required": 17341,
+      "paid": 27830,
+      "ops": 6236,
+      "owned": 184,
+      "uncontested_effects": 643,
+      "failed_steps": 8486,
+      "held_complete": 23,
+      "large_complete": 20,
+      "complete_runs": 250
+    },
+    "total": {
+      "signed": 12345,
+      "required": 20428,
+      "paid": 36742,
+      "ops": 8233,
+      "owned": 289,
+      "uncontested_effects": 698,
+      "failed_steps": 10502,
+      "held_complete": 28,
+      "large_complete": 30,
+      "complete_runs": 462,
+      "ept": 0.22407598933101083,
+      "coverage": 0.6043176032896025
+    }
+  }
+}

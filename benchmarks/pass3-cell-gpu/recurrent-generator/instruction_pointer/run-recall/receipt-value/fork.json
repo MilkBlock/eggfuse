@@ -1,0 +1,71 @@
+{
+  "mode": "native assist single-decision fork",
+  "program": "sum",
+  "binary": "3a825656d58f92c9be9914860c372428a37945919946842165e747988a25aa9d",
+  "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+  "catalog": "02496f372c3b9475ff569e60140ecc82b41dcd1a1d71c5360358aa77d4c3687d",
+  "policy": "6a39ded6bfb9ba75da10a07b225a661ff2ff2798c3dbd2ead33e1936f2481aec",
+  "recovery": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+  "original": {
+    "signed": 5444,
+    "paid": 19611,
+    "effective": 3591,
+    "omitted_valid": 162,
+    "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+  },
+  "forks": [
+    {
+      "token": 2653,
+      "run": 118,
+      "layout": 25455,
+      "size": 7,
+      "prefix": "81d223df8c2329d64914e9225a17c93ae63ad8d61fa6d548897068fbf3b26731",
+      "child_credit": {
+        "attempts": 6,
+        "accepted": 6,
+        "owned_valid": 4,
+        "externally_reproposed": 2
+      },
+      "standalone": {
+        "signed": 5444,
+        "paid": 19613,
+        "effective": 3593,
+        "omitted_valid": 162,
+        "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "graph_minus_standalone": {
+        "signed": 0,
+        "paid": -2,
+        "effective": -2,
+        "omitted_valid": 0
+      }
+    },
+    {
+      "token": 10564,
+      "run": 668,
+      "layout": 44854,
+      "size": 6,
+      "prefix": "1d5cbe3ec412ed3ed8865824d2ceb3653dbc648851358a3a704ecceeaaf45ecc",
+      "child_credit": {
+        "attempts": 5,
+        "accepted": 5,
+        "externally_reproposed": 3,
+        "uncontested": 2,
+        "uncontested_effects": 4
+      },
+      "standalone": {
+        "signed": 5444,
+        "paid": 19611,
+        "effective": 3591,
+        "omitted_valid": 162,
+        "state": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+      },
+      "graph_minus_standalone": {
+        "signed": 0,
+        "paid": 0,
+        "effective": 0,
+        "omitted_valid": 0
+      }
+    }
+  ]
+}
