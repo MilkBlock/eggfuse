@@ -1,0 +1,180 @@
+{
+  "host": "Apple M3 Max",
+  "runtime": "macOS 27.0.1 arm64",
+  "pytorch": "2.15.0",
+  "cpu_threads": 1,
+  "python": "3.14.3",
+  "cases": {
+    "fact": {
+      "required": 1668,
+      "runs": 634,
+      "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d",
+      "assist": {
+        "issued": 3814,
+        "accepted": 1242,
+        "duplicates": 2270,
+        "rejected": {
+          "binding": 51,
+          "guard": 251
+        },
+        "residual_commits": 426,
+        "exact_candidates": 1848,
+        "exact_rows": 1573,
+        "skipped_rule_calls": 22,
+        "exact_rule_calls": 2681,
+        "rejected_reads": 540,
+        "duplicate_reads": 4641,
+        "reads": 7402
+      },
+      "exact_residual_candidates": 1848,
+      "median_seconds": {
+        "exact": {
+          "wall": 0.15078674999949726,
+          "inference": 0.0,
+          "verify": 0.0,
+          "exact": 0.0026627295000000183
+        },
+        "assist": {
+          "wall": 22.31915241600018,
+          "inference": 18.95196218302226,
+          "verify": 0.0029488129999999998,
+          "exact": 0.008251786999999983,
+          "duplicate_seconds": 0.0010492789999999989,
+          "rejected_seconds": 0.00016716700000000005
+        },
+        "oracle": {
+          "wall": 0.15362985400042817,
+          "inference": 0.0,
+          "verify": 0.0009207255,
+          "exact": 0.0
+        }
+      },
+      "paired_wins": {
+        "assist_over_exact": 0,
+        "oracle_over_exact": 2
+      },
+      "oracle_in_memory_ms": {
+        "reference": 7.749874999999999,
+        "replay": 6.914270999999999,
+        "verification_ms": 0.8648275,
+        "event_registration_ms": 0.0,
+        "native_repair_phase_ms": 0.265391000000002,
+        "remaining_native_ms": 6.0483335
+      }
+    },
+    "loopfact": {
+      "required": 1419,
+      "runs": 618,
+      "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724",
+      "assist": {
+        "issued": 3756,
+        "accepted": 1040,
+        "duplicates": 2419,
+        "rejected": {
+          "binding": 33,
+          "guard": 264
+        },
+        "residual_commits": 379,
+        "exact_candidates": 1634,
+        "exact_rows": 1348,
+        "skipped_rule_calls": 26,
+        "exact_rule_calls": 2406,
+        "rejected_reads": 577,
+        "duplicate_reads": 4991,
+        "reads": 7466
+      },
+      "exact_residual_candidates": 1634,
+      "median_seconds": {
+        "exact": {
+          "wall": 0.13975418750032986,
+          "inference": 0.0,
+          "verify": 0.0,
+          "exact": 0.0026332045000000168
+        },
+        "assist": {
+          "wall": 20.815635978499813,
+          "inference": 17.777673041006892,
+          "verify": 0.0028545339999999997,
+          "exact": 0.007815824499999988,
+          "duplicate_seconds": 0.0010828159999999997,
+          "rejected_seconds": 0.00016919100000000023
+        },
+        "oracle": {
+          "wall": 0.14546974950008007,
+          "inference": 0.0,
+          "verify": 0.0007813480000000001,
+          "exact": 0.0
+        }
+      },
+      "paired_wins": {
+        "assist_over_exact": 0,
+        "oracle_over_exact": 0
+      },
+      "oracle_in_memory_ms": {
+        "reference": 7.8625,
+        "replay": 6.568958,
+        "verification_ms": 0.7885985,
+        "event_registration_ms": 0.0,
+        "native_repair_phase_ms": 0.25168200000000196,
+        "remaining_native_ms": 5.789182
+      }
+    },
+    "sum-divisors": {
+      "required": 17341,
+      "runs": 1644,
+      "state_sha": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e",
+      "assist": {
+        "issued": 24855,
+        "accepted": 8558,
+        "duplicates": 14144,
+        "rejected": {
+          "binding": 982,
+          "guard": 1171
+        },
+        "residual_commits": 8783,
+        "exact_candidates": 22685,
+        "exact_rows": 17179,
+        "skipped_rule_calls": 25,
+        "exact_rule_calls": 9689,
+        "rejected_reads": 3646,
+        "duplicate_reads": 28838,
+        "reads": 47887
+      },
+      "exact_residual_candidates": 22685,
+      "median_seconds": {
+        "exact": {
+          "wall": 0.21869772900026874,
+          "inference": 0.0,
+          "verify": 0.0,
+          "exact": 0.022049957500000196
+        },
+        "assist": {
+          "wall": 473.6113618749996,
+          "inference": 410.9741317700782,
+          "verify": 0.017720240999999998,
+          "exact": 0.052474005499998526,
+          "duplicate_seconds": 0.0064060355000001715,
+          "rejected_seconds": 0.0011500655000000017
+        },
+        "oracle": {
+          "wall": 0.2094504374999815,
+          "inference": 0.0,
+          "verify": 0.009181533,
+          "exact": 0.0
+        }
+      },
+      "paired_wins": {
+        "assist_over_exact": 0,
+        "oracle_over_exact": 3
+      },
+      "oracle_in_memory_ms": {
+        "reference": 62.44339600000001,
+        "replay": 51.09162500000001,
+        "verification_ms": 10.328289,
+        "event_registration_ms": 0.0006245,
+        "native_repair_phase_ms": 6.785533499999916,
+        "remaining_native_ms": 40.762648999999996
+      }
+    }
+  }
+}

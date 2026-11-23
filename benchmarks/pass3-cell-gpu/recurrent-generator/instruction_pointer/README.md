@@ -540,3 +540,5 @@ proposals, duplicates, rejections and signed commits stayed the same on each
 workload. All 144 generated holdouts passed complete native assist comparison.
 This one round of training on actual assisted states excluded 170 fruitless
 starts and provided no reduction in verifier traffic on the measured prefix.
+
+The [paired CPU timings and native work counts](run-recall/assist-cost/README.md) cover all three full EggCC workloads.

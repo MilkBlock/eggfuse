@@ -1,0 +1,340 @@
+{
+  "spec": {
+    "program": "8f6d2b1a5f5a593b73119d0bfded0aefee97315191cc5f3efcd6e35320beacba",
+    "binary": "3982b0c163470cdb7d0966409379b2a486d470b7ebb7ec70612f05361115fb12",
+    "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+    "seed": 2874
+  },
+  "audit": {
+    "exact": {
+      "arm": "exact",
+      "wall": 0.15252212500126916,
+      "inference": 0,
+      "verify": 0,
+      "exact": 0.0032965779999999554,
+      "runs": 618,
+      "committed": 1419,
+      "phase_search": 0.0032965779999999554,
+      "residual_candidates": 1634,
+      "counts": null,
+      "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724"
+    },
+    "oracle": {
+      "arm": "oracle",
+      "wall": 0.14840900000126567,
+      "inference": 0,
+      "verify": 0.000779849,
+      "exact": 0,
+      "runs": 618,
+      "committed": 1419,
+      "phase_search": 0.002052240999999974,
+      "residual_candidates": 0,
+      "counts": {
+        "accepted": 1419,
+        "calls": 2432,
+        "duplicates": 0,
+        "reads": 3016,
+        "reads_by_kind": {
+          "generated": 2989,
+          "initial": 27
+        },
+        "rejected": {}
+      },
+      "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724"
+    },
+    "assist": {
+      "arm": "assist",
+      "wall": 21.270803124998565,
+      "inference": 18.147845622994282,
+      "verify": 0.00295011,
+      "exact": 0.008135452999999989,
+      "duplicate_reads": 4991,
+      "duplicate_seconds": 0.0011318459999999986,
+      "exact_candidates": 1634,
+      "exact_rows": 1348,
+      "exact_rule_calls": 2406,
+      "exact_seconds": 0.008135452999999989,
+      "rejected_reads": 577,
+      "rejected_seconds": 0.00016599800000000018,
+      "residual_commits": 379,
+      "skipped_rule_calls": 26,
+      "issued": 3756,
+      "accepted": 1040,
+      "duplicates": 2419,
+      "rejected": {
+        "binding": 33,
+        "guard": 264
+      },
+      "reads": 7466,
+      "runs": 618,
+      "waves": 618,
+      "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724"
+    }
+  },
+  "pairs": [
+    [
+      {
+        "arm": "exact",
+        "wall": 0.14302262499950302,
+        "inference": 0,
+        "verify": 0,
+        "exact": 0.0030474330000000173,
+        "runs": 618,
+        "committed": 1419,
+        "phase_search": 0.0030474330000000173,
+        "residual_candidates": 1634,
+        "counts": null,
+        "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724"
+      },
+      {
+        "arm": "assist",
+        "wall": 21.24227616600001,
+        "inference": 18.180387212019923,
+        "verify": 0.002776399,
+        "exact": 0.007653052999999999,
+        "duplicate_reads": 4991,
+        "duplicate_seconds": 0.0010663969999999993,
+        "exact_candidates": 1634,
+        "exact_rows": 1348,
+        "exact_rule_calls": 2406,
+        "exact_seconds": 0.007653052999999999,
+        "rejected_reads": 577,
+        "rejected_seconds": 0.00016738900000000002,
+        "residual_commits": 379,
+        "skipped_rule_calls": 26,
+        "issued": 3756,
+        "accepted": 1040,
+        "duplicates": 2419,
+        "rejected": {
+          "binding": 33,
+          "guard": 264
+        },
+        "reads": 7466,
+        "runs": 618,
+        "waves": 618,
+        "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724"
+      },
+      {
+        "arm": "oracle",
+        "wall": 0.14582545799930813,
+        "inference": 0,
+        "verify": 0.000792845,
+        "exact": 0,
+        "runs": 618,
+        "committed": 1419,
+        "phase_search": 0.0013644949999999864,
+        "residual_candidates": 0,
+        "counts": {
+          "accepted": 1419,
+          "calls": 2432,
+          "duplicates": 0,
+          "reads": 3016,
+          "reads_by_kind": {
+            "generated": 2989,
+            "initial": 27
+          },
+          "rejected": {}
+        },
+        "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724"
+      }
+    ],
+    [
+      {
+        "arm": "oracle",
+        "wall": 0.145114041000852,
+        "inference": 0,
+        "verify": 0.000781071,
+        "exact": 0,
+        "runs": 618,
+        "committed": 1419,
+        "phase_search": 0.0013490799999999856,
+        "residual_candidates": 0,
+        "counts": {
+          "accepted": 1419,
+          "calls": 2432,
+          "duplicates": 0,
+          "reads": 3016,
+          "reads_by_kind": {
+            "generated": 2989,
+            "initial": 27
+          },
+          "rejected": {}
+        },
+        "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724"
+      },
+      {
+        "arm": "assist",
+        "wall": 20.963029165999615,
+        "inference": 17.895976715031793,
+        "verify": 0.002887981,
+        "exact": 0.007904713999999985,
+        "duplicate_reads": 4991,
+        "duplicate_seconds": 0.0010767799999999998,
+        "exact_candidates": 1634,
+        "exact_rows": 1348,
+        "exact_rule_calls": 2406,
+        "exact_seconds": 0.007904713999999985,
+        "rejected_reads": 577,
+        "rejected_seconds": 0.00017374700000000016,
+        "residual_commits": 379,
+        "skipped_rule_calls": 26,
+        "issued": 3756,
+        "accepted": 1040,
+        "duplicates": 2419,
+        "rejected": {
+          "binding": 33,
+          "guard": 264
+        },
+        "reads": 7466,
+        "runs": 618,
+        "waves": 618,
+        "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724"
+      },
+      {
+        "arm": "exact",
+        "wall": 0.1400827079996816,
+        "inference": 0,
+        "verify": 0,
+        "exact": 0.002654629000000018,
+        "runs": 618,
+        "committed": 1419,
+        "phase_search": 0.002654629000000018,
+        "residual_candidates": 1634,
+        "counts": null,
+        "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724"
+      }
+    ],
+    [
+      {
+        "arm": "exact",
+        "wall": 0.13898108299872547,
+        "inference": 0,
+        "verify": 0,
+        "exact": 0.0025981250000000167,
+        "runs": 618,
+        "committed": 1419,
+        "phase_search": 0.0025981250000000167,
+        "residual_candidates": 1634,
+        "counts": null,
+        "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724"
+      },
+      {
+        "arm": "assist",
+        "wall": 20.66824279100001,
+        "inference": 17.65843069800576,
+        "verify": 0.002821087,
+        "exact": 0.007726934999999991,
+        "duplicate_reads": 4991,
+        "duplicate_seconds": 0.0010888519999999995,
+        "exact_candidates": 1634,
+        "exact_rows": 1348,
+        "exact_rule_calls": 2406,
+        "exact_seconds": 0.007726934999999991,
+        "rejected_reads": 577,
+        "rejected_seconds": 0.0001645060000000004,
+        "residual_commits": 379,
+        "skipped_rule_calls": 26,
+        "issued": 3756,
+        "accepted": 1040,
+        "duplicates": 2419,
+        "rejected": {
+          "binding": 33,
+          "guard": 264
+        },
+        "reads": 7466,
+        "runs": 618,
+        "waves": 618,
+        "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724"
+      },
+      {
+        "arm": "oracle",
+        "wall": 0.14070362500024203,
+        "inference": 0,
+        "verify": 0.000781625,
+        "exact": 0,
+        "runs": 618,
+        "committed": 1419,
+        "phase_search": 0.0013421159999999872,
+        "residual_candidates": 0,
+        "counts": {
+          "accepted": 1419,
+          "calls": 2432,
+          "duplicates": 0,
+          "reads": 3016,
+          "reads_by_kind": {
+            "generated": 2989,
+            "initial": 27
+          },
+          "rejected": {}
+        },
+        "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724"
+      }
+    ],
+    [
+      {
+        "arm": "oracle",
+        "wall": 0.1485510839993367,
+        "inference": 0,
+        "verify": 0.000772887,
+        "exact": 0,
+        "runs": 618,
+        "committed": 1419,
+        "phase_search": 0.0013445419999999866,
+        "residual_candidates": 0,
+        "counts": {
+          "accepted": 1419,
+          "calls": 2432,
+          "duplicates": 0,
+          "reads": 3016,
+          "reads_by_kind": {
+            "generated": 2989,
+            "initial": 27
+          },
+          "rejected": {}
+        },
+        "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724"
+      },
+      {
+        "arm": "assist",
+        "wall": 20.639006207999046,
+        "inference": 17.65936936698199,
+        "verify": 0.002913927,
+        "exact": 0.00811459099999998,
+        "duplicate_reads": 4991,
+        "duplicate_seconds": 0.0011287659999999994,
+        "exact_candidates": 1634,
+        "exact_rows": 1348,
+        "exact_rule_calls": 2406,
+        "exact_seconds": 0.00811459099999998,
+        "rejected_reads": 577,
+        "rejected_seconds": 0.00017099300000000041,
+        "residual_commits": 379,
+        "skipped_rule_calls": 26,
+        "issued": 3756,
+        "accepted": 1040,
+        "duplicates": 2419,
+        "rejected": {
+          "binding": 33,
+          "guard": 264
+        },
+        "reads": 7466,
+        "runs": 618,
+        "waves": 618,
+        "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724"
+      },
+      {
+        "arm": "exact",
+        "wall": 0.13942566700097814,
+        "inference": 0,
+        "verify": 0,
+        "exact": 0.0026117800000000154,
+        "runs": 618,
+        "committed": 1419,
+        "phase_search": 0.0026117800000000154,
+        "residual_candidates": 1634,
+        "counts": null,
+        "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724"
+      }
+    ]
+  ]
+}
