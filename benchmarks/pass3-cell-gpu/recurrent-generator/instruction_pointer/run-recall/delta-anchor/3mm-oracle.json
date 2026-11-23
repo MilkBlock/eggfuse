@@ -1,0 +1,99 @@
+{
+  "samples": [
+    {
+      "role": "replay",
+      "round": 1,
+      "wall_seconds": 1.7889729589951457,
+      "source_search": 0.34926901499999924,
+      "verify": 0.274036434,
+      "residual_visits": 0
+    },
+    {
+      "role": "reference",
+      "round": 1,
+      "wall_seconds": 2.1651409580008476,
+      "source_search": 0.5788160020000086,
+      "verify": 0,
+      "residual_visits": 457798
+    },
+    {
+      "role": "reference",
+      "round": 2,
+      "wall_seconds": 2.0536468330028583,
+      "source_search": 0.5834937870000085,
+      "verify": 0,
+      "residual_visits": 457798
+    },
+    {
+      "role": "replay",
+      "round": 2,
+      "wall_seconds": 1.819763708001119,
+      "source_search": 0.35383175399999894,
+      "verify": 0.278821061,
+      "residual_visits": 0
+    },
+    {
+      "role": "replay",
+      "round": 3,
+      "wall_seconds": 2.0585763339986443,
+      "source_search": 0.38373182799999606,
+      "verify": 0.296896188,
+      "residual_visits": 0
+    },
+    {
+      "role": "reference",
+      "round": 3,
+      "wall_seconds": 1.9556438329964294,
+      "source_search": 0.5462237480000075,
+      "verify": 0,
+      "residual_visits": 457798
+    },
+    {
+      "role": "reference",
+      "round": 4,
+      "wall_seconds": 1.898206082994875,
+      "source_search": 0.5298275460000103,
+      "verify": 0,
+      "residual_visits": 457798
+    },
+    {
+      "role": "replay",
+      "round": 4,
+      "wall_seconds": 2.186250583996298,
+      "source_search": 0.34704798799999914,
+      "verify": 0.272879143,
+      "residual_visits": 0
+    }
+  ],
+  "mode": "time",
+  "program": "8d81462db16dcee0689b2e8dc11ac3e068c9dc976a2e69f5005a8acad06905af",
+  "binary": "6fc75a52edc03336f254102ea5b7ae88f0662a1c10b6dca3d0e07338654b1c46",
+  "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+  "arity": {
+    "0": 2,
+    "2": 175099,
+    "3": 65992,
+    "1": 31863,
+    "4": 2029,
+    "8": 50,
+    "5": 18858,
+    "7": 172,
+    "6": 700,
+    "12": 152
+  },
+  "reference_commits": 294917,
+  "runs": 4260,
+  "replay": {
+    "accepted": 294917,
+    "calls": 24093,
+    "duplicates": 0,
+    "reads": 690071,
+    "reads_by_kind": {
+      "generated": 688848,
+      "initial": 1155,
+      "repair": 68
+    },
+    "rejected": {}
+  },
+  "precision": "schedule and state digest, timing mode"
+}

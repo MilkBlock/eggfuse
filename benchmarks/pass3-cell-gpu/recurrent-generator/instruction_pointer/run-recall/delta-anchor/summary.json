@@ -1,0 +1,1610 @@
+{
+  "fact": {
+    "census": {
+      "physical": 29805,
+      "empty": 28310,
+      "proofs": 1666,
+      "candidate_visits": 2451,
+      "point_reads": 16422,
+      "discovery_ns": 6245873,
+      "expand_ns": 9763759,
+      "alias_scores": 63427,
+      "score_ns": 95932653,
+      "selector_ns": 256237654
+    },
+    "by_arity": {
+      "0": {
+        "physical": 0,
+        "empty": 0,
+        "proofs": 0,
+        "point_reads": 0,
+        "visits": 0,
+        "expand_ns": 0
+      },
+      "2": {
+        "physical": 7319,
+        "empty": 6485,
+        "proofs": 945,
+        "point_reads": 1066,
+        "visits": 1081,
+        "expand_ns": 2306253
+      },
+      "1": {
+        "physical": 478,
+        "empty": 117,
+        "proofs": 361,
+        "point_reads": 0,
+        "visits": 0,
+        "expand_ns": 125145
+      },
+      "3": {
+        "physical": 5804,
+        "empty": 5562,
+        "proofs": 297,
+        "point_reads": 1056,
+        "visits": 936,
+        "expand_ns": 1897040
+      },
+      "5": {
+        "physical": 3012,
+        "empty": 2976,
+        "proofs": 40,
+        "point_reads": 1334,
+        "visits": 250,
+        "expand_ns": 944373
+      },
+      "4": {
+        "physical": 4891,
+        "empty": 4872,
+        "proofs": 19,
+        "point_reads": 1995,
+        "visits": 101,
+        "expand_ns": 1347218
+      },
+      "8": {
+        "physical": 970,
+        "empty": 970,
+        "proofs": 0,
+        "point_reads": 1555,
+        "visits": 0,
+        "expand_ns": 366267
+      },
+      "6": {
+        "physical": 2107,
+        "empty": 2104,
+        "proofs": 4,
+        "point_reads": 1957,
+        "visits": 83,
+        "expand_ns": 745071
+      },
+      "7": {
+        "physical": 1485,
+        "empty": 1485,
+        "proofs": 0,
+        "point_reads": 2063,
+        "visits": 0,
+        "expand_ns": 521526
+      },
+      "12": {
+        "physical": 729,
+        "empty": 729,
+        "proofs": 0,
+        "point_reads": 976,
+        "visits": 0,
+        "expand_ns": 324412
+      },
+      "15": {
+        "physical": 216,
+        "empty": 216,
+        "proofs": 0,
+        "point_reads": 657,
+        "visits": 0,
+        "expand_ns": 116040
+      },
+      "9": {
+        "physical": 612,
+        "empty": 612,
+        "proofs": 0,
+        "point_reads": 571,
+        "visits": 0,
+        "expand_ns": 221715
+      },
+      "14": {
+        "physical": 233,
+        "empty": 233,
+        "proofs": 0,
+        "point_reads": 666,
+        "visits": 0,
+        "expand_ns": 108831
+      },
+      "21": {
+        "physical": 643,
+        "empty": 643,
+        "proofs": 0,
+        "point_reads": 535,
+        "visits": 0,
+        "expand_ns": 233132
+      },
+      "22": {
+        "physical": 667,
+        "empty": 667,
+        "proofs": 0,
+        "point_reads": 579,
+        "visits": 0,
+        "expand_ns": 229602
+      },
+      "13": {
+        "physical": 519,
+        "empty": 519,
+        "proofs": 0,
+        "point_reads": 1293,
+        "visits": 0,
+        "expand_ns": 231412
+      },
+      "11": {
+        "physical": 120,
+        "empty": 120,
+        "proofs": 0,
+        "point_reads": 119,
+        "visits": 0,
+        "expand_ns": 45722
+      }
+    },
+    "required": 1668,
+    "runs": 634,
+    "controls": {
+      "samples": [
+        {
+          "role": "replay",
+          "round": 1,
+          "wall_seconds": 0.1615924589932547,
+          "source_search": 0.0027636999999999723,
+          "verify": 0.001152938,
+          "residual_visits": 0
+        },
+        {
+          "role": "reference",
+          "round": 1,
+          "wall_seconds": 0.15944870800012723,
+          "source_search": 0.004103746000000012,
+          "verify": 0,
+          "residual_visits": 1848
+        },
+        {
+          "role": "reference",
+          "round": 2,
+          "wall_seconds": 0.16251470800489187,
+          "source_search": 0.0040029479999999975,
+          "verify": 0,
+          "residual_visits": 1848
+        },
+        {
+          "role": "replay",
+          "round": 2,
+          "wall_seconds": 0.1557358749996638,
+          "source_search": 0.002495871999999969,
+          "verify": 0.000970358,
+          "residual_visits": 0
+        },
+        {
+          "role": "replay",
+          "round": 3,
+          "wall_seconds": 0.1613530409958912,
+          "source_search": 0.002873744999999973,
+          "verify": 0.001181641,
+          "residual_visits": 0
+        },
+        {
+          "role": "reference",
+          "round": 3,
+          "wall_seconds": 0.15888125000492437,
+          "source_search": 0.003633610999999957,
+          "verify": 0,
+          "residual_visits": 1848
+        },
+        {
+          "role": "reference",
+          "round": 4,
+          "wall_seconds": 0.15638816600403516,
+          "source_search": 0.0038385009999999616,
+          "verify": 0,
+          "residual_visits": 1848
+        },
+        {
+          "role": "replay",
+          "round": 4,
+          "wall_seconds": 0.1561848330020439,
+          "source_search": 0.002763320999999978,
+          "verify": 0.001198682,
+          "residual_visits": 0
+        }
+      ],
+      "binary": "6fc75a52edc03336f254102ea5b7ae88f0662a1c10b6dca3d0e07338654b1c46",
+      "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d"
+    },
+    "semantics": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d",
+    "pointers": {
+      "historical-source": {
+        "mode": "source",
+        "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+        "recovery": null,
+        "binary": "9baee8273937950f151f9f640ff325254ad4a4556fd994db7a6a26665472499d",
+        "tape": "e34de3bf62e6a0c89bd95ec97838c12f306bffcc6930ed45b1f4da9f2a0c7c42",
+        "runs": 634,
+        "required": 1668,
+        "distinct": 1248,
+        "table_hits": 1246,
+        "paid": 3747,
+        "duplicates": 2194,
+        "rejected": {
+          "binding": 47,
+          "guard": 258
+        },
+        "loss": {
+          "parent/2/threshold": 249,
+          "anchor/1/threshold": 63,
+          "parent/4/threshold": 3,
+          "parent/3/threshold": 7,
+          "parent/2/cap/quota/tie": 28,
+          "anchor/1/cap/quota/tie": 57,
+          "rule/1/threshold": 13
+        },
+        "changed_routes": 0,
+        "work": {
+          "scored": 854353,
+          "above_threshold": 61252,
+          "after_cap": 36296
+        },
+        "original_paid": 3745,
+        "nonempty": 163,
+        "complete": 67,
+        "mean": 0.6560853722403849
+      },
+      "historical-delta": {
+        "mode": "delta",
+        "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+        "recovery": null,
+        "binary": "9baee8273937950f151f9f640ff325254ad4a4556fd994db7a6a26665472499d",
+        "tape": "e34de3bf62e6a0c89bd95ec97838c12f306bffcc6930ed45b1f4da9f2a0c7c42",
+        "runs": 634,
+        "required": 1668,
+        "distinct": 1245,
+        "table_hits": 1243,
+        "paid": 3893,
+        "duplicates": 2233,
+        "rejected": {
+          "binding": 47,
+          "guard": 368
+        },
+        "loss": {
+          "parent/2/threshold": 251,
+          "anchor/1/threshold": 69,
+          "parent/2/cap/quota/tie": 28,
+          "anchor/1/cap/quota/tie": 57,
+          "parent/3/threshold": 4,
+          "rule/1/threshold": 13,
+          "parent/4/threshold": 1
+        },
+        "changed_routes": 9483,
+        "work": {
+          "scored": 868374,
+          "above_threshold": 58142,
+          "after_cap": 37162
+        },
+        "nonempty": 163,
+        "complete": 69,
+        "mean": 0.6629296829523936
+      },
+      "historical-oracle-source": {
+        "mode": "oracle-source",
+        "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+        "recovery": null,
+        "binary": "9baee8273937950f151f9f640ff325254ad4a4556fd994db7a6a26665472499d",
+        "tape": "e34de3bf62e6a0c89bd95ec97838c12f306bffcc6930ed45b1f4da9f2a0c7c42",
+        "runs": 634,
+        "required": 1668,
+        "distinct": 1311,
+        "table_hits": 1309,
+        "paid": 3076,
+        "duplicates": 1765,
+        "rejected": {},
+        "loss": {
+          "parent/2/threshold": 318,
+          "parent/4/threshold": 3,
+          "parent/3/threshold": 10,
+          "parent/2/cap/quota/tie": 26
+        },
+        "changed_routes": 0,
+        "work": {
+          "scored": 139639,
+          "above_threshold": 4658,
+          "after_cap": 2953
+        },
+        "nonempty": 163,
+        "complete": 71,
+        "mean": 0.6720144315891122
+      },
+      "source": {
+        "mode": "source",
+        "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+        "recovery": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+        "binary": "9baee8273937950f151f9f640ff325254ad4a4556fd994db7a6a26665472499d",
+        "tape": "e34de3bf62e6a0c89bd95ec97838c12f306bffcc6930ed45b1f4da9f2a0c7c42",
+        "runs": 634,
+        "required": 1668,
+        "distinct": 1366,
+        "table_hits": 1364,
+        "paid": 4462,
+        "duplicates": 2705,
+        "rejected": {
+          "binding": 56,
+          "guard": 335
+        },
+        "loss": {
+          "parent/2/threshold": 88,
+          "anchor/1/threshold": 33,
+          "parent/3/threshold": 26,
+          "parent/4/threshold": 3,
+          "anchor/1/cap/quota/tie": 72,
+          "parent/2/cap/quota/tie": 77,
+          "parent/3/cap/quota/tie": 3
+        },
+        "changed_routes": 0,
+        "work": {
+          "scored": 878519,
+          "above_threshold": 61667,
+          "after_cap": 37491,
+          "recovery_scored": 849483,
+          "recovery_qualified": 10354,
+          "recovery_added": 828
+        },
+        "nonempty": 163,
+        "complete": 98,
+        "mean": 0.7637312179453565
+      },
+      "delta": {
+        "mode": "delta",
+        "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+        "recovery": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+        "binary": "9baee8273937950f151f9f640ff325254ad4a4556fd994db7a6a26665472499d",
+        "tape": "e34de3bf62e6a0c89bd95ec97838c12f306bffcc6930ed45b1f4da9f2a0c7c42",
+        "runs": 634,
+        "required": 1668,
+        "distinct": 1384,
+        "table_hits": 1382,
+        "paid": 4855,
+        "duplicates": 2956,
+        "rejected": {
+          "binding": 56,
+          "guard": 459
+        },
+        "loss": {
+          "parent/2/threshold": 55,
+          "anchor/1/threshold": 35,
+          "parent/3/threshold": 19,
+          "anchor/1/cap/quota/tie": 71,
+          "parent/2/cap/quota/tie": 102,
+          "parent/3/cap/quota/tie": 1,
+          "parent/4/threshold": 1
+        },
+        "changed_routes": 9483,
+        "work": {
+          "scored": 917630,
+          "above_threshold": 58824,
+          "after_cap": 38851,
+          "recovery_scored": 888593,
+          "recovery_qualified": 14052,
+          "recovery_added": 1127
+        },
+        "nonempty": 163,
+        "complete": 104,
+        "mean": 0.7816613698581653
+      },
+      "oracle": {
+        "mode": "oracle",
+        "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+        "recovery": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+        "binary": "9baee8273937950f151f9f640ff325254ad4a4556fd994db7a6a26665472499d",
+        "tape": "e34de3bf62e6a0c89bd95ec97838c12f306bffcc6930ed45b1f4da9f2a0c7c42",
+        "runs": 634,
+        "required": 1668,
+        "distinct": 1452,
+        "table_hits": 1450,
+        "paid": 4174,
+        "duplicates": 2706,
+        "rejected": {
+          "guard": 11,
+          "binding": 5
+        },
+        "loss": {
+          "parent/2/threshold": 91,
+          "parent/3/threshold": 19,
+          "parent/3/cap/quota/tie": 11,
+          "parent/2/cap/quota/tie": 94,
+          "parent/4/threshold": 1
+        },
+        "changed_routes": 9483,
+        "work": {
+          "scored": 166465,
+          "above_threshold": 5432,
+          "recovery_scored": 166460,
+          "recovery_qualified": 4999,
+          "recovery_added": 680,
+          "after_cap": 4347
+        },
+        "nonempty": 163,
+        "complete": 109,
+        "mean": 0.8194548089303493
+      }
+    },
+    "scoring": {
+      "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "recovery": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+      "seed": 3434,
+      "template_ns": 125230542,
+      "encode_ns": 17596424784,
+      "history_ns": 2429374650
+    },
+    "historical-partition": {
+      "mode": "model",
+      "program": "f4da1650af5393f3f07d5d20d092e26270ae58090266dd197113dd295ffaf900",
+      "binary": "6fc75a52edc03336f254102ea5b7ae88f0662a1c10b6dca3d0e07338654b1c46",
+      "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "recovery": null,
+      "wall_seconds": 20.234802040999057,
+      "network_seconds": 19.465878757975588,
+      "requests": 28130,
+      "verify_seconds": 0.009754791,
+      "completion_seconds": 0.009811659,
+      "residual_seconds": 0.003137476,
+      "discovery_seconds": 0.0026346520000000003,
+      "source_search_phase_seconds": 19.91188753400002,
+      "selected_point_reads": 8715,
+      "residual_point_reads": 7707,
+      "selected": 20120,
+      "anchors": 29805,
+      "selected_visits": 2128,
+      "residual_visits": 323,
+      "selected_commits": 1577,
+      "required": 1668,
+      "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d",
+      "source_runs": 634,
+      "nonempty": 163,
+      "complete": 148,
+      "mean": 0.9622973965521334
+    },
+    "final-empty": {
+      "mode": "empty",
+      "program": "f4da1650af5393f3f07d5d20d092e26270ae58090266dd197113dd295ffaf900",
+      "binary": "6fc75a52edc03336f254102ea5b7ae88f0662a1c10b6dca3d0e07338654b1c46",
+      "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "recovery": null,
+      "wall_seconds": 0.744670459003828,
+      "network_seconds": 0.14229523499670904,
+      "requests": 0,
+      "verify_seconds": 0.000117003,
+      "completion_seconds": 0.0,
+      "residual_seconds": 0.010488748,
+      "discovery_seconds": 0.00163276,
+      "source_search_phase_seconds": 0.41977286799999974,
+      "selected_point_reads": 0,
+      "residual_point_reads": 16422,
+      "selected": 0,
+      "anchors": 29805,
+      "selected_visits": 0,
+      "residual_visits": 2451,
+      "selected_commits": 0,
+      "required": 1668,
+      "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d",
+      "source_runs": 634,
+      "nonempty": 163,
+      "complete": 0,
+      "mean": 0.0
+    },
+    "model": {
+      "mode": "model",
+      "program": "f4da1650af5393f3f07d5d20d092e26270ae58090266dd197113dd295ffaf900",
+      "binary": "416c8f8c05ff3b71179e78fefb94b7b1c030f6c14f727659fd4d0c12267e8ac5",
+      "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "recovery": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+      "wall_seconds": 20.021259875000396,
+      "network_seconds": 19.273101591010345,
+      "requests": 28193,
+      "verify_seconds": 0.009772909,
+      "completion_seconds": 0.009583822,
+      "residual_seconds": 0.0031050830000000002,
+      "discovery_seconds": 0.0025040780000000003,
+      "selected": 20159,
+      "anchors": 29805,
+      "selected_visits": 2131,
+      "residual_visits": 320,
+      "selected_commits": 1603,
+      "required": 1668,
+      "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d",
+      "source_runs": 634,
+      "nonempty": 163,
+      "complete": 150,
+      "mean": 0.9721332513863165
+    },
+    "reference_wall_median": 0.1591649790025258,
+    "oracle_wall_median": 0.15876893699896755
+  },
+  "loopfact": {
+    "census": {
+      "physical": 25009,
+      "empty": 23711,
+      "proofs": 1417,
+      "candidate_visits": 2500,
+      "point_reads": 13620,
+      "discovery_ns": 5079283,
+      "expand_ns": 8969035,
+      "alias_scores": 51472,
+      "score_ns": 85592907,
+      "selector_ns": 232154240
+    },
+    "by_arity": {
+      "0": {
+        "physical": 0,
+        "empty": 0,
+        "proofs": 0,
+        "point_reads": 0,
+        "visits": 0,
+        "expand_ns": 0
+      },
+      "2": {
+        "physical": 6069,
+        "empty": 5330,
+        "proofs": 809,
+        "point_reads": 817,
+        "visits": 988,
+        "expand_ns": 2034238
+      },
+      "1": {
+        "physical": 372,
+        "empty": 101,
+        "proofs": 271,
+        "point_reads": 0,
+        "visits": 0,
+        "expand_ns": 105048
+      },
+      "3": {
+        "physical": 4860,
+        "empty": 4629,
+        "proofs": 274,
+        "point_reads": 780,
+        "visits": 873,
+        "expand_ns": 1744766
+      },
+      "5": {
+        "physical": 2669,
+        "empty": 2632,
+        "proofs": 42,
+        "point_reads": 1058,
+        "visits": 328,
+        "expand_ns": 943117
+      },
+      "4": {
+        "physical": 4060,
+        "empty": 4045,
+        "proofs": 16,
+        "point_reads": 1610,
+        "visits": 126,
+        "expand_ns": 1161131
+      },
+      "8": {
+        "physical": 771,
+        "empty": 771,
+        "proofs": 0,
+        "point_reads": 1263,
+        "visits": 0,
+        "expand_ns": 318357
+      },
+      "6": {
+        "physical": 1742,
+        "empty": 1738,
+        "proofs": 4,
+        "point_reads": 1572,
+        "visits": 137,
+        "expand_ns": 707989
+      },
+      "7": {
+        "physical": 1278,
+        "empty": 1277,
+        "proofs": 1,
+        "point_reads": 1636,
+        "visits": 48,
+        "expand_ns": 490009
+      },
+      "12": {
+        "physical": 633,
+        "empty": 633,
+        "proofs": 0,
+        "point_reads": 880,
+        "visits": 0,
+        "expand_ns": 355832
+      },
+      "15": {
+        "physical": 162,
+        "empty": 162,
+        "proofs": 0,
+        "point_reads": 493,
+        "visits": 0,
+        "expand_ns": 97494
+      },
+      "9": {
+        "physical": 498,
+        "empty": 498,
+        "proofs": 0,
+        "point_reads": 491,
+        "visits": 0,
+        "expand_ns": 172466
+      },
+      "14": {
+        "physical": 194,
+        "empty": 194,
+        "proofs": 0,
+        "point_reads": 564,
+        "visits": 0,
+        "expand_ns": 105253
+      },
+      "21": {
+        "physical": 597,
+        "empty": 597,
+        "proofs": 0,
+        "point_reads": 661,
+        "visits": 0,
+        "expand_ns": 269971
+      },
+      "22": {
+        "physical": 609,
+        "empty": 609,
+        "proofs": 0,
+        "point_reads": 693,
+        "visits": 0,
+        "expand_ns": 246319
+      },
+      "13": {
+        "physical": 409,
+        "empty": 409,
+        "proofs": 0,
+        "point_reads": 1017,
+        "visits": 0,
+        "expand_ns": 183873
+      },
+      "11": {
+        "physical": 86,
+        "empty": 86,
+        "proofs": 0,
+        "point_reads": 85,
+        "visits": 0,
+        "expand_ns": 33172
+      }
+    },
+    "required": 1419,
+    "runs": 618,
+    "controls": {
+      "samples": [
+        {
+          "role": "replay",
+          "round": 1,
+          "wall_seconds": 0.1612702909988002,
+          "source_search": 0.002212432999999971,
+          "verify": 0.000904381,
+          "residual_visits": 0
+        },
+        {
+          "role": "reference",
+          "round": 1,
+          "wall_seconds": 0.16134329200576758,
+          "source_search": 0.003344153999999954,
+          "verify": 0,
+          "residual_visits": 1634
+        },
+        {
+          "role": "reference",
+          "round": 2,
+          "wall_seconds": 0.16726337499858346,
+          "source_search": 0.003467621999999954,
+          "verify": 0,
+          "residual_visits": 1634
+        },
+        {
+          "role": "replay",
+          "round": 2,
+          "wall_seconds": 0.16334554100467358,
+          "source_search": 0.002230388999999972,
+          "verify": 0.000925711,
+          "residual_visits": 0
+        },
+        {
+          "role": "replay",
+          "round": 3,
+          "wall_seconds": 0.17039829200075474,
+          "source_search": 0.0021478869999999703,
+          "verify": 0.00086204,
+          "residual_visits": 0
+        },
+        {
+          "role": "reference",
+          "round": 3,
+          "wall_seconds": 0.164511124996352,
+          "source_search": 0.0035639949999999583,
+          "verify": 0,
+          "residual_visits": 1634
+        },
+        {
+          "role": "reference",
+          "round": 4,
+          "wall_seconds": 0.16306641700066393,
+          "source_search": 0.003583501999999958,
+          "verify": 0,
+          "residual_visits": 1634
+        },
+        {
+          "role": "replay",
+          "round": 4,
+          "wall_seconds": 0.16477025000494905,
+          "source_search": 0.0025611359999999726,
+          "verify": 0.001108736,
+          "residual_visits": 0
+        }
+      ],
+      "binary": "6fc75a52edc03336f254102ea5b7ae88f0662a1c10b6dca3d0e07338654b1c46",
+      "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724"
+    },
+    "semantics": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724",
+    "pointers": {
+      "historical-source": {
+        "mode": "source",
+        "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+        "recovery": null,
+        "binary": "9baee8273937950f151f9f640ff325254ad4a4556fd994db7a6a26665472499d",
+        "tape": "d877d81138ba44674aace8d33c447075e5fd5c8c1e76eaac7b8bb64f00675a20",
+        "runs": 618,
+        "required": 1419,
+        "distinct": 1031,
+        "table_hits": 1029,
+        "paid": 3677,
+        "duplicates": 2347,
+        "rejected": {
+          "binding": 30,
+          "guard": 269
+        },
+        "loss": {
+          "parent/2/threshold": 224,
+          "anchor/1/threshold": 49,
+          "parent/3/threshold": 22,
+          "rule/1/threshold": 10,
+          "parent/2/cap/quota/tie": 20,
+          "anchor/1/cap/quota/tie": 61,
+          "parent/4/threshold": 2
+        },
+        "changed_routes": 0,
+        "work": {
+          "scored": 861232,
+          "above_threshold": 61684,
+          "after_cap": 34719
+        },
+        "original_paid": 3677,
+        "nonempty": 166,
+        "complete": 80,
+        "mean": 0.6762820510605829
+      },
+      "historical-delta": {
+        "mode": "delta",
+        "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+        "recovery": null,
+        "binary": "9baee8273937950f151f9f640ff325254ad4a4556fd994db7a6a26665472499d",
+        "tape": "d877d81138ba44674aace8d33c447075e5fd5c8c1e76eaac7b8bb64f00675a20",
+        "runs": 618,
+        "required": 1419,
+        "distinct": 1030,
+        "table_hits": 1028,
+        "paid": 3802,
+        "duplicates": 2350,
+        "rejected": {
+          "binding": 29,
+          "guard": 393
+        },
+        "loss": {
+          "parent/2/threshold": 230,
+          "anchor/1/threshold": 51,
+          "parent/3/threshold": 15,
+          "rule/1/threshold": 10,
+          "parent/2/cap/quota/tie": 20,
+          "anchor/1/cap/quota/tie": 61,
+          "parent/4/threshold": 2
+        },
+        "changed_routes": 8392,
+        "work": {
+          "scored": 875941,
+          "above_threshold": 55106,
+          "after_cap": 34547
+        },
+        "nonempty": 166,
+        "complete": 80,
+        "mean": 0.6812842654318525
+      },
+      "historical-oracle-source": {
+        "mode": "oracle-source",
+        "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+        "recovery": null,
+        "binary": "9baee8273937950f151f9f640ff325254ad4a4556fd994db7a6a26665472499d",
+        "tape": "d877d81138ba44674aace8d33c447075e5fd5c8c1e76eaac7b8bb64f00675a20",
+        "runs": 618,
+        "required": 1419,
+        "distinct": 1074,
+        "table_hits": 1072,
+        "paid": 3023,
+        "duplicates": 1949,
+        "rejected": {},
+        "loss": {
+          "parent/2/threshold": 297,
+          "parent/3/threshold": 24,
+          "parent/2/cap/quota/tie": 22,
+          "parent/4/threshold": 2
+        },
+        "changed_routes": 0,
+        "work": {
+          "scored": 144001,
+          "above_threshold": 5229,
+          "after_cap": 3093
+        },
+        "nonempty": 166,
+        "complete": 85,
+        "mean": 0.6919735848009333
+      },
+      "source": {
+        "mode": "source",
+        "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+        "recovery": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+        "binary": "9baee8273937950f151f9f640ff325254ad4a4556fd994db7a6a26665472499d",
+        "tape": "d877d81138ba44674aace8d33c447075e5fd5c8c1e76eaac7b8bb64f00675a20",
+        "runs": 618,
+        "required": 1419,
+        "distinct": 1144,
+        "table_hits": 1142,
+        "paid": 4304,
+        "duplicates": 2743,
+        "rejected": {
+          "binding": 62,
+          "guard": 355
+        },
+        "loss": {
+          "parent/2/threshold": 75,
+          "anchor/1/threshold": 22,
+          "parent/3/threshold": 28,
+          "anchor/1/cap/quota/tie": 60,
+          "parent/2/cap/quota/tie": 84,
+          "parent/3/cap/quota/tie": 3,
+          "parent/4/threshold": 3
+        },
+        "changed_routes": 0,
+        "work": {
+          "scored": 902400,
+          "above_threshold": 62120,
+          "after_cap": 36173,
+          "recovery_scored": 877438,
+          "recovery_qualified": 15171,
+          "recovery_added": 1055
+        },
+        "nonempty": 166,
+        "complete": 96,
+        "mean": 0.7456385687543375
+      },
+      "delta": {
+        "mode": "delta",
+        "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+        "recovery": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+        "binary": "9baee8273937950f151f9f640ff325254ad4a4556fd994db7a6a26665472499d",
+        "tape": "d877d81138ba44674aace8d33c447075e5fd5c8c1e76eaac7b8bb64f00675a20",
+        "runs": 618,
+        "required": 1419,
+        "distinct": 1169,
+        "table_hits": 1167,
+        "paid": 4816,
+        "duplicates": 3054,
+        "rejected": {
+          "binding": 61,
+          "guard": 532
+        },
+        "loss": {
+          "parent/2/threshold": 46,
+          "anchor/1/threshold": 23,
+          "parent/3/cap/quota/tie": 3,
+          "parent/3/threshold": 15,
+          "anchor/1/cap/quota/tie": 58,
+          "parent/2/cap/quota/tie": 101,
+          "parent/4/threshold": 3,
+          "parent/5/threshold": 1
+        },
+        "changed_routes": 8392,
+        "work": {
+          "scored": 952450,
+          "above_threshold": 56074,
+          "after_cap": 36654,
+          "recovery_scored": 927389,
+          "recovery_qualified": 19100,
+          "recovery_added": 1326
+        },
+        "nonempty": 166,
+        "complete": 105,
+        "mean": 0.7786003880771271
+      },
+      "oracle": {
+        "mode": "oracle",
+        "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+        "recovery": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+        "binary": "9baee8273937950f151f9f640ff325254ad4a4556fd994db7a6a26665472499d",
+        "tape": "d877d81138ba44674aace8d33c447075e5fd5c8c1e76eaac7b8bb64f00675a20",
+        "runs": 618,
+        "required": 1419,
+        "distinct": 1204,
+        "table_hits": 1202,
+        "paid": 4027,
+        "duplicates": 2816,
+        "rejected": {
+          "guard": 5,
+          "binding": 2
+        },
+        "loss": {
+          "parent/2/threshold": 68,
+          "parent/3/cap/quota/tie": 4,
+          "parent/3/threshold": 18,
+          "parent/2/cap/quota/tie": 121,
+          "parent/4/threshold": 3,
+          "parent/5/threshold": 1
+        },
+        "changed_routes": 8392,
+        "work": {
+          "scored": 176634,
+          "above_threshold": 5953,
+          "recovery_scored": 176586,
+          "recovery_qualified": 6994,
+          "recovery_added": 612,
+          "after_cap": 4397
+        },
+        "nonempty": 166,
+        "complete": 108,
+        "mean": 0.7930175002658094
+      }
+    },
+    "scoring": {
+      "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "recovery": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+      "seed": 3434,
+      "template_ns": 124519875,
+      "encode_ns": 17236570040,
+      "history_ns": 2352682989
+    },
+    "historical-partition": {
+      "mode": "model",
+      "program": "8f6d2b1a5f5a593b73119d0bfded0aefee97315191cc5f3efcd6e35320beacba",
+      "binary": "6fc75a52edc03336f254102ea5b7ae88f0662a1c10b6dca3d0e07338654b1c46",
+      "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "recovery": null,
+      "wall_seconds": 19.734352916995704,
+      "network_seconds": 18.997063907932898,
+      "requests": 25442,
+      "verify_seconds": 0.009446655,
+      "completion_seconds": 0.009400932,
+      "residual_seconds": 0.0025030020000000003,
+      "discovery_seconds": 0.0021191820000000003,
+      "source_search_phase_seconds": 19.420151874000013,
+      "selected_point_reads": 8097,
+      "residual_point_reads": 5523,
+      "selected": 18116,
+      "anchors": 25009,
+      "selected_visits": 2159,
+      "residual_visits": 341,
+      "selected_commits": 1345,
+      "required": 1419,
+      "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724",
+      "source_runs": 618,
+      "nonempty": 166,
+      "complete": 148,
+      "mean": 0.9658116374565532
+    },
+    "final-empty": {
+      "mode": "empty",
+      "program": "8f6d2b1a5f5a593b73119d0bfded0aefee97315191cc5f3efcd6e35320beacba",
+      "binary": "6fc75a52edc03336f254102ea5b7ae88f0662a1c10b6dca3d0e07338654b1c46",
+      "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "recovery": null,
+      "wall_seconds": 0.7082494589994894,
+      "network_seconds": 0.13609839107084554,
+      "requests": 0,
+      "verify_seconds": 0.000108181,
+      "completion_seconds": 0.0,
+      "residual_seconds": 0.009747265,
+      "discovery_seconds": 0.0013735680000000001,
+      "source_search_phase_seconds": 0.40467541699999965,
+      "selected_point_reads": 0,
+      "residual_point_reads": 13620,
+      "selected": 0,
+      "anchors": 25009,
+      "selected_visits": 0,
+      "residual_visits": 2500,
+      "selected_commits": 0,
+      "required": 1419,
+      "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724",
+      "source_runs": 618,
+      "nonempty": 166,
+      "complete": 0,
+      "mean": 0.0
+    },
+    "model": {
+      "mode": "model",
+      "program": "8f6d2b1a5f5a593b73119d0bfded0aefee97315191cc5f3efcd6e35320beacba",
+      "binary": "416c8f8c05ff3b71179e78fefb94b7b1c030f6c14f727659fd4d0c12267e8ac5",
+      "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "recovery": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+      "wall_seconds": 19.599821875002817,
+      "network_seconds": 18.87434912697063,
+      "requests": 25541,
+      "verify_seconds": 0.00907016,
+      "completion_seconds": 0.009491259,
+      "residual_seconds": 0.002390522,
+      "discovery_seconds": 0.002043343,
+      "selected": 18158,
+      "anchors": 25009,
+      "selected_visits": 2163,
+      "residual_visits": 337,
+      "selected_commits": 1372,
+      "required": 1419,
+      "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724",
+      "source_runs": 618,
+      "nonempty": 166,
+      "complete": 154,
+      "mean": 0.9761947150644044
+    },
+    "reference_wall_median": 0.16378877099850797,
+    "oracle_wall_median": 0.1640578955048113
+  },
+  "sum-divisors": {
+    "census": {
+      "physical": 209367,
+      "empty": 194978,
+      "proofs": 17339,
+      "candidate_visits": 26587,
+      "point_reads": 102596,
+      "discovery_ns": 87054474,
+      "expand_ns": 75900366,
+      "alias_scores": 536352,
+      "score_ns": 385432163,
+      "selector_ns": 971811672
+    },
+    "by_arity": {
+      "0": {
+        "physical": 0,
+        "empty": 0,
+        "proofs": 0,
+        "point_reads": 0,
+        "visits": 0,
+        "expand_ns": 0
+      },
+      "2": {
+        "physical": 65720,
+        "empty": 57574,
+        "proofs": 10295,
+        "point_reads": 8187,
+        "visits": 11602,
+        "expand_ns": 21486857
+      },
+      "1": {
+        "physical": 4350,
+        "empty": 1211,
+        "proofs": 3139,
+        "point_reads": 0,
+        "visits": 0,
+        "expand_ns": 1076567
+      },
+      "3": {
+        "physical": 39567,
+        "empty": 37034,
+        "proofs": 3217,
+        "point_reads": 8405,
+        "visits": 7914,
+        "expand_ns": 15094066
+      },
+      "5": {
+        "physical": 21984,
+        "empty": 21673,
+        "proofs": 360,
+        "point_reads": 8458,
+        "visits": 2084,
+        "expand_ns": 7223096
+      },
+      "4": {
+        "physical": 29846,
+        "empty": 29657,
+        "proofs": 208,
+        "point_reads": 11267,
+        "visits": 621,
+        "expand_ns": 8635086
+      },
+      "8": {
+        "physical": 4944,
+        "empty": 4944,
+        "proofs": 0,
+        "point_reads": 8123,
+        "visits": 0,
+        "expand_ns": 1990537
+      },
+      "6": {
+        "physical": 12263,
+        "empty": 12232,
+        "proofs": 55,
+        "point_reads": 10617,
+        "visits": 707,
+        "expand_ns": 4796929
+      },
+      "7": {
+        "physical": 8754,
+        "empty": 8720,
+        "proofs": 34,
+        "point_reads": 11724,
+        "visits": 207,
+        "expand_ns": 3218972
+      },
+      "12": {
+        "physical": 5193,
+        "empty": 5187,
+        "proofs": 31,
+        "point_reads": 8284,
+        "visits": 3452,
+        "expand_ns": 4143926
+      },
+      "15": {
+        "physical": 1324,
+        "empty": 1324,
+        "proofs": 0,
+        "point_reads": 3817,
+        "visits": 0,
+        "expand_ns": 676394
+      },
+      "9": {
+        "physical": 3223,
+        "empty": 3223,
+        "proofs": 0,
+        "point_reads": 2794,
+        "visits": 0,
+        "expand_ns": 1025587
+      },
+      "14": {
+        "physical": 1192,
+        "empty": 1192,
+        "proofs": 0,
+        "point_reads": 3477,
+        "visits": 0,
+        "expand_ns": 689872
+      },
+      "21": {
+        "physical": 3513,
+        "empty": 3513,
+        "proofs": 0,
+        "point_reads": 4778,
+        "visits": 0,
+        "expand_ns": 2107002
+      },
+      "22": {
+        "physical": 3603,
+        "empty": 3603,
+        "proofs": 0,
+        "point_reads": 5044,
+        "visits": 0,
+        "expand_ns": 2003787
+      },
+      "13": {
+        "physical": 3093,
+        "empty": 3093,
+        "proofs": 0,
+        "point_reads": 6824,
+        "visits": 0,
+        "expand_ns": 1423089
+      },
+      "11": {
+        "physical": 798,
+        "empty": 798,
+        "proofs": 0,
+        "point_reads": 797,
+        "visits": 0,
+        "expand_ns": 308599
+      }
+    },
+    "required": 17341,
+    "runs": 1644,
+    "controls": {
+      "samples": [
+        {
+          "role": "replay",
+          "round": 1,
+          "wall_seconds": 0.2795638749958016,
+          "source_search": 0.024620744000000066,
+          "verify": 0.011733872,
+          "residual_visits": 0
+        },
+        {
+          "role": "reference",
+          "round": 1,
+          "wall_seconds": 0.286792584003706,
+          "source_search": 0.034881198999999814,
+          "verify": 0,
+          "residual_visits": 22685
+        },
+        {
+          "role": "reference",
+          "round": 2,
+          "wall_seconds": 0.2789847500025644,
+          "source_search": 0.033259482999999784,
+          "verify": 0,
+          "residual_visits": 22685
+        },
+        {
+          "role": "replay",
+          "round": 2,
+          "wall_seconds": 0.26797999999689637,
+          "source_search": 0.024774056000000044,
+          "verify": 0.011981063,
+          "residual_visits": 0
+        },
+        {
+          "role": "replay",
+          "round": 3,
+          "wall_seconds": 0.2710163340016152,
+          "source_search": 0.024806570999999954,
+          "verify": 0.011641531,
+          "residual_visits": 0
+        },
+        {
+          "role": "reference",
+          "round": 3,
+          "wall_seconds": 0.2775656669982709,
+          "source_search": 0.03518024299999977,
+          "verify": 0,
+          "residual_visits": 22685
+        },
+        {
+          "role": "reference",
+          "round": 4,
+          "wall_seconds": 0.2904100000014296,
+          "source_search": 0.03634873499999979,
+          "verify": 0,
+          "residual_visits": 22685
+        },
+        {
+          "role": "replay",
+          "round": 4,
+          "wall_seconds": 0.2759939169991412,
+          "source_search": 0.023951748000000057,
+          "verify": 0.01135098,
+          "residual_visits": 0
+        }
+      ],
+      "binary": "6fc75a52edc03336f254102ea5b7ae88f0662a1c10b6dca3d0e07338654b1c46",
+      "state_sha": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e"
+    },
+    "semantics": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e",
+    "pointers": {
+      "historical-source": {
+        "mode": "source",
+        "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+        "recovery": null,
+        "binary": "9baee8273937950f151f9f640ff325254ad4a4556fd994db7a6a26665472499d",
+        "tape": "30da140008a764b2a6931777ee359bc657ce201a9667f1cf3d71ceb6cb6b484f",
+        "runs": 1644,
+        "required": 17341,
+        "distinct": 8545,
+        "table_hits": 8543,
+        "paid": 24621,
+        "duplicates": 14015,
+        "rejected": {
+          "binding": 969,
+          "guard": 1092
+        },
+        "loss": {
+          "anchor/1/threshold": 612,
+          "parent/2/threshold": 2457,
+          "rule/1/threshold": 276,
+          "parent/2/cap/quota/tie": 1085,
+          "anchor/1/cap/quota/tie": 4249,
+          "parent/3/cap/quota/tie": 8,
+          "parent/3/threshold": 105,
+          "parent/4/threshold": 2,
+          "rule/1/cap/quota/tie": 2
+        },
+        "changed_routes": 0,
+        "work": {
+          "scored": 45048754,
+          "above_threshold": 1070098,
+          "after_cap": 196461
+        },
+        "original_paid": 24634,
+        "nonempty": 627,
+        "complete": 200,
+        "mean": 0.5191496551362829
+      },
+      "historical-delta": {
+        "mode": "delta",
+        "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+        "recovery": null,
+        "binary": "9baee8273937950f151f9f640ff325254ad4a4556fd994db7a6a26665472499d",
+        "tape": "30da140008a764b2a6931777ee359bc657ce201a9667f1cf3d71ceb6cb6b484f",
+        "runs": 1644,
+        "required": 17341,
+        "distinct": 8459,
+        "table_hits": 8457,
+        "paid": 25110,
+        "duplicates": 14222,
+        "rejected": {
+          "binding": 978,
+          "guard": 1451
+        },
+        "loss": {
+          "anchor/1/threshold": 625,
+          "parent/2/threshold": 2562,
+          "rule/1/threshold": 276,
+          "parent/2/cap/quota/tie": 1061,
+          "anchor/1/cap/quota/tie": 4252,
+          "parent/3/cap/quota/tie": 5,
+          "parent/3/threshold": 92,
+          "parent/4/cap/quota/tie": 5,
+          "rule/1/cap/quota/tie": 2,
+          "parent/4/threshold": 2
+        },
+        "changed_routes": 21463,
+        "work": {
+          "scored": 46525487,
+          "above_threshold": 721791,
+          "after_cap": 199305
+        },
+        "nonempty": 627,
+        "complete": 202,
+        "mean": 0.5151694914016419
+      },
+      "historical-oracle-source": {
+        "mode": "oracle-source",
+        "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+        "recovery": null,
+        "binary": "9baee8273937950f151f9f640ff325254ad4a4556fd994db7a6a26665472499d",
+        "tape": "30da140008a764b2a6931777ee359bc657ce201a9667f1cf3d71ceb6cb6b484f",
+        "runs": 1644,
+        "required": 17341,
+        "distinct": 10912,
+        "table_hits": 10910,
+        "paid": 21856,
+        "duplicates": 10881,
+        "rejected": {
+          "binding": 57,
+          "guard": 6
+        },
+        "loss": {
+          "parent/2/threshold": 3799,
+          "parent/3/cap/quota/tie": 9,
+          "parent/3/threshold": 133,
+          "parent/4/threshold": 2,
+          "parent/2/cap/quota/tie": 2486
+        },
+        "changed_routes": 0,
+        "work": {
+          "scored": 10329985,
+          "above_threshold": 191368,
+          "after_cap": 21544
+        },
+        "nonempty": 627,
+        "complete": 229,
+        "mean": 0.5618622602715807
+      },
+      "source": {
+        "mode": "source",
+        "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+        "recovery": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+        "binary": "9baee8273937950f151f9f640ff325254ad4a4556fd994db7a6a26665472499d",
+        "tape": "30da140008a764b2a6931777ee359bc657ce201a9667f1cf3d71ceb6cb6b484f",
+        "runs": 1644,
+        "required": 17341,
+        "distinct": 9303,
+        "table_hits": 9301,
+        "paid": 27860,
+        "duplicates": 15972,
+        "rejected": {
+          "binding": 1101,
+          "guard": 1484
+        },
+        "loss": {
+          "anchor/1/threshold": 324,
+          "parent/2/cap/quota/tie": 1826,
+          "parent/2/threshold": 1005,
+          "anchor/1/cap/quota/tie": 4645,
+          "parent/3/threshold": 132,
+          "parent/3/cap/quota/tie": 43,
+          "parent/4/threshold": 3,
+          "rule/1/cap/quota/tie": 2,
+          "rule/1/threshold": 58
+        },
+        "changed_routes": 0,
+        "work": {
+          "scored": 46545042,
+          "above_threshold": 1073542,
+          "after_cap": 203580,
+          "recovery_scored": 46324171,
+          "recovery_qualified": 514598,
+          "recovery_added": 4989
+        },
+        "nonempty": 627,
+        "complete": 249,
+        "mean": 0.6546892558019799
+      },
+      "delta": {
+        "mode": "delta",
+        "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+        "recovery": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+        "binary": "9baee8273937950f151f9f640ff325254ad4a4556fd994db7a6a26665472499d",
+        "tape": "30da140008a764b2a6931777ee359bc657ce201a9667f1cf3d71ceb6cb6b484f",
+        "runs": 1644,
+        "required": 17341,
+        "distinct": 9309,
+        "table_hits": 9307,
+        "paid": 29292,
+        "duplicates": 16939,
+        "rejected": {
+          "binding": 1110,
+          "guard": 1934
+        },
+        "loss": {
+          "anchor/1/threshold": 333,
+          "parent/2/cap/quota/tie": 1852,
+          "parent/2/threshold": 989,
+          "anchor/1/cap/quota/tie": 4631,
+          "parent/3/threshold": 90,
+          "parent/3/cap/quota/tie": 56,
+          "parent/4/cap/quota/tie": 11,
+          "parent/4/threshold": 10,
+          "rule/1/cap/quota/tie": 2,
+          "rule/1/threshold": 58
+        },
+        "changed_routes": 21463,
+        "work": {
+          "scored": 48678726,
+          "above_threshold": 726768,
+          "after_cap": 208038,
+          "recovery_scored": 48457923,
+          "recovery_qualified": 509397,
+          "recovery_added": 5760
+        },
+        "nonempty": 627,
+        "complete": 250,
+        "mean": 0.664116141750496
+      },
+      "oracle": {
+        "mode": "oracle",
+        "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+        "recovery": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+        "binary": "9baee8273937950f151f9f640ff325254ad4a4556fd994db7a6a26665472499d",
+        "tape": "30da140008a764b2a6931777ee359bc657ce201a9667f1cf3d71ceb6cb6b484f",
+        "runs": 1644,
+        "required": 17341,
+        "distinct": 11727,
+        "table_hits": 11725,
+        "paid": 25552,
+        "duplicates": 13738,
+        "rejected": {
+          "binding": 63,
+          "guard": 24
+        },
+        "loss": {
+          "parent/2/cap/quota/tie": 3766,
+          "parent/2/threshold": 1575,
+          "parent/3/threshold": 144,
+          "parent/3/cap/quota/tie": 102,
+          "parent/4/cap/quota/tie": 10,
+          "parent/4/threshold": 15,
+          "parent/5/threshold": 2
+        },
+        "changed_routes": 21463,
+        "work": {
+          "scored": 10893327,
+          "above_threshold": 161301,
+          "recovery_scored": 10893095,
+          "recovery_qualified": 212110,
+          "recovery_added": 2568,
+          "after_cap": 26154
+        },
+        "nonempty": 627,
+        "complete": 289,
+        "mean": 0.7137473017982083
+      }
+    },
+    "scoring": {
+      "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "recovery": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+      "seed": 3434,
+      "template_ns": 127837708,
+      "encode_ns": 422607343979,
+      "history_ns": 52748918193
+    },
+    "historical-partition": {
+      "mode": "model",
+      "program": "3b904063c8c7e580ec2030b452d831ee53478a28c3dfaecf17eeb7e853a0aaf8",
+      "binary": "6fc75a52edc03336f254102ea5b7ae88f0662a1c10b6dca3d0e07338654b1c46",
+      "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "recovery": null,
+      "wall_seconds": 490.6980800409947,
+      "network_seconds": 479.16045760803536,
+      "requests": 150422,
+      "verify_seconds": 0.052503207,
+      "completion_seconds": 0.056736226,
+      "residual_seconds": 0.034953881,
+      "discovery_seconds": 0.047095802000000006,
+      "source_search_phase_seconds": 490.2293862060003,
+      "selected_point_reads": 37614,
+      "residual_point_reads": 64982,
+      "selected": 112461,
+      "anchors": 209367,
+      "selected_visits": 17515,
+      "residual_visits": 9072,
+      "selected_commits": 13120,
+      "required": 17341,
+      "state_sha": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e",
+      "source_runs": 1644,
+      "nonempty": 627,
+      "complete": 522,
+      "mean": 0.9338345999446298
+    },
+    "final-empty": {
+      "mode": "empty",
+      "program": "3b904063c8c7e580ec2030b452d831ee53478a28c3dfaecf17eeb7e853a0aaf8",
+      "binary": "6fc75a52edc03336f254102ea5b7ae88f0662a1c10b6dca3d0e07338654b1c46",
+      "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "recovery": null,
+      "wall_seconds": 11.439730332996987,
+      "network_seconds": 0.13992185186361894,
+      "requests": 0,
+      "verify_seconds": 0.001439257,
+      "completion_seconds": 0.0,
+      "residual_seconds": 0.08484140200000001,
+      "discovery_seconds": 0.03999941,
+      "source_search_phase_seconds": 10.987118566999994,
+      "selected_point_reads": 0,
+      "residual_point_reads": 102596,
+      "selected": 0,
+      "anchors": 209367,
+      "selected_visits": 0,
+      "residual_visits": 26587,
+      "selected_commits": 0,
+      "required": 17341,
+      "state_sha": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e",
+      "source_runs": 1644,
+      "nonempty": 627,
+      "complete": 0,
+      "mean": 0.0
+    },
+    "model": {
+      "mode": "model",
+      "program": "3b904063c8c7e580ec2030b452d831ee53478a28c3dfaecf17eeb7e853a0aaf8",
+      "binary": "416c8f8c05ff3b71179e78fefb94b7b1c030f6c14f727659fd4d0c12267e8ac5",
+      "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "recovery": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+      "wall_seconds": 446.6164903340032,
+      "network_seconds": 435.6473063869198,
+      "requests": 150692,
+      "verify_seconds": 0.050109535,
+      "completion_seconds": 0.053255962000000004,
+      "residual_seconds": 0.033342974000000004,
+      "discovery_seconds": 0.043245058,
+      "selected": 112631,
+      "anchors": 209367,
+      "selected_visits": 17536,
+      "residual_visits": 9051,
+      "selected_commits": 13208,
+      "required": 17341,
+      "state_sha": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e",
+      "source_runs": 1644,
+      "nonempty": 627,
+      "complete": 529,
+      "mean": 0.941415937846495
+    },
+    "reference_wall_median": 0.2828886670031352,
+    "oracle_wall_median": 0.2735051255003782
+  }
+}

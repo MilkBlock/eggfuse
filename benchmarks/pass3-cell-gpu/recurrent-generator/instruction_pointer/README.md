@@ -550,3 +550,5 @@ The [higher Cell experiment](run-recall/higher-cell/README.md) signs typed itera
 The [signed side-port experiment](run-recall/higher-side/README.md) measures a neural choice of independent side premises at root issuance, its native fork and an alias-aware teacher substitution control.
 
 [Variable-size higher Cells](run-recall/unified-layouts/README.md) uses one graph scorer, one boundary pointer and a native instruction-DAG receiver across 4,096 layouts. The report separates recorded paths, verified replay, live graph completions, signed effective operations and paired throughput.
+
+The [EggCC delta-anchor study](run-recall/delta-anchor/README.md) attributes the historical pointer's missed submissions, compares supplied anchors with native parent completion, and measures the work transferred out of residual search. It includes physical anchor counts by Run and rule, live phase timings, and a larger 3mm native oracle control.
