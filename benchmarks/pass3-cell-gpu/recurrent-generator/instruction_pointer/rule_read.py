@@ -111,7 +111,11 @@ class RuleReadActor(InstructionActor):
 
 def load_actor(weights, field_pointer):
     state = torch.load(weights, map_location='cpu', weights_only=True) if weights else None
-    if state is not None and state.get('format') == 'parent-history-v1':
+    if state is not None and state.get('format') == 'parallel-anchor-v1':
+        from anchor_set import AnchorSetActor
+        actor = AnchorSetActor(state['vocabulary'],state['names'])
+        actor.load_state_dict(state['parameters'])
+    elif state is not None and state.get('format') == 'parent-history-v1':
         from parent_actor import ParentActor
         actor = ParentActor(field_pointer)
         actor.load_state_dict(state['parameters'])

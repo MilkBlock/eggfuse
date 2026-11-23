@@ -69,7 +69,7 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
     if live_receipts is None:
         live_receipts = getattr(actor,'requires_receipts',False)
     start = perf_counter()
-    catalog = Catalog(json.loads(program.read_bytes()))
+    catalog = getattr(actor,'catalog_type',Catalog)(json.loads(program.read_bytes()))
     history = History(catalog,seed)
     before = perf_counter()
     nodes = actor.template_graph(catalog)

@@ -109,12 +109,12 @@ class History:
         return Snapshot(run,frame['epoch'],dict(frame['rules']),ports,[])
 
 
-def stream(directory, seed, runs=None):
+def stream(directory, seed, runs=None, catalog_type=Catalog):
     raw = (directory/'program.json').read_bytes()
     tape = json.loads((directory/'tape.json').read_bytes())
     if hashlib.sha256(raw).hexdigest() != tape['program_sha256']:
         raise ValueError('compiled program differs from captured history')
-    catalog = Catalog(json.loads(raw))
+    catalog = catalog_type(json.loads(raw))
     history = History(catalog,seed)
     actions = defaultdict(list)
     for req in tape['requests']:

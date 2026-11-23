@@ -23,7 +23,7 @@ def read(path):
 
 @torch.no_grad()
 def proposals(folder, model, seed, waves, oracle_rules=None):
-    cat = Catalog(read(folder/'program.json'))
+    cat = getattr(model,'catalog_type',Catalog)(read(folder/'program.json'))
     history = History(cat,seed)
     nodes = model.template_graph(cat)
     packets = []
@@ -163,7 +163,7 @@ if __name__=='__main__':
     model = load_actor(a.weights,True)
     if a.live_receipts is None:
         a.live_receipts = getattr(model,'requires_receipts',False) and not (a.teacher_control or a.oracle_rules)
-    if a.oracle_rules and getattr(model,'conditioned_parents',False):
+    if a.oracle_rules and (getattr(model,'conditioned_parents',False) or hasattr(model,'generate')):
         p.error('fixed-parent ceiling requires a history-independent parent decoder')
     if a.oracle_rules and a.live_receipts:
         p.error('oracle rules use fixed-snapshot diagnostics')

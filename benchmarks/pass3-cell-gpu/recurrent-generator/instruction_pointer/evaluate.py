@@ -11,7 +11,7 @@ from time import perf_counter
 
 import torch
 from rule_read import load_actor
-from catalog import KINDS
+from catalog import KINDS, Catalog
 from history import stream
 from online import execute,propose
 
@@ -82,7 +82,7 @@ def assess(root,binary,weights,seed, field_pointer=False, splits=None, snapshot_
                 selected=set(random.Random(case_seed).sample(range(1,runs+1),min(snapshot_count,runs)))
             with torch.no_grad():
                 nodes=None
-                for cat,s in stream(path,case_seed,selected):
+                for cat,s in stream(path,case_seed,selected,getattr(actor,'catalog_type',Catalog)):
                     if nodes is None:
                         nodes=actor.template_graph(cat)
                     start=perf_counter()
