@@ -72,14 +72,24 @@ def propose(actor, catalog, snapshot, nodes):
 
 
 @torch.no_grad()
-def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=None, live_receipts=None, teacher_tape=None, observe_packets=None, mask_receipts=False, prefix_policy=None, shadow_runs=None, run_limit=None, observe_snapshot=None, assist=False, audit=True, frame_observer=None, rule_screen=None, activation_observer=None):
+def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=None, live_receipts=None, teacher_tape=None, observe_packets=None, mask_receipts=False, prefix_policy=None, shadow_runs=None, run_limit=None, observe_snapshot=None, assist=False, audit=True, frame_observer=None, rule_screen=None, activation_observer=None, project_ports=None):
     if wave_limit is None:
         wave_limit = getattr(actor,'default_waves',1)
     if live_receipts is None:
         live_receipts = getattr(actor,'requires_receipts',False)
     start = perf_counter()
     catalog = getattr(actor,'catalog_type',Catalog)(json.loads(program.read_bytes()))
-    history = History(catalog,seed)
+    port_projection = None
+    if project_ports is None and prefix_policy is not None:
+        from anchor_set import OpaqueParentActor
+        project_ports = type(actor) is OpaqueParentActor
+    if project_ports:
+        from addressable_ports import AddressablePorts
+        from anchor_set import OpaqueParentActor
+        if type(actor) is not OpaqueParentActor or prefix_policy is None:
+            raise ValueError('projected encoding requires a bounded port-local pointer model')
+        port_projection = AddressablePorts(catalog)
+    history = History(catalog,seed,cache_ports=project_ports)
     before = perf_counter()
     nodes = actor.template_graph(catalog)
     encoding = perf_counter()-before
@@ -163,11 +173,12 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
                 if prefix_policy is not None:
                     if shadow_runs is None or snapshot.run in shadow_runs:
                         selected = rule_screen.select(catalog,snapshot,nodes) if rule_screen is not None else None
-                        mem = actor.memory(catalog,snapshot,nodes) if selected is None or selected else None
+                        query_snapshot = port_projection.project(snapshot) if port_projection else snapshot
+                        mem = actor.memory(catalog,query_snapshot,nodes) if selected is None or selected else None
                         def read_prefix(rid, roles, rows):
                             nonlocal receipt_seconds
                             start = perf_counter()
-                            probe = native_probe(history,snapshot,send,lambda: json.loads(p.stdout.readline()))
+                            probe = native_probe(history,query_snapshot,send,lambda: json.loads(p.stdout.readline()))
                             flags = probe(rid, roles, rows)
                             receipt_seconds += perf_counter()-start
                             return flags
@@ -215,7 +226,8 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
         raise ValueError('wave receipts differ from final verifier ledger')
     if assist and report['assist']['residual_commits'] + counts['accepted'] != report['matches']:
         raise ValueError('assist ownership differs from committed source bindings')
-    return dict(**(dict(assist=report['assist'],resume_audit=report.get('resumes',[]),event_audit=report.get('events',[])) if assist else {}),partial_proof_counts={f'{kind}_{depth}': dict(c) for (kind,depth),c in prefix_counts.items()},
+    return dict(**(dict(visible_port_visits=port_projection.full,encoded_port_visits=port_projection.encoded) if port_projection else {}),
+                **(dict(assist=report['assist'],resume_audit=report.get('resumes',[]),event_audit=report.get('events',[])) if assist else {}),partial_proof_counts={f'{kind}_{depth}': dict(c) for (kind,depth),c in prefix_counts.items()},
                 native_partial_reads=report.get('prefix_reads',0),native_partial_probes=report.get('prefixes_checked',0),
                 native_partial_seconds=report.get('prefix_verify_seconds',0),
                 shadow_report=report if teacher_tape else None,live_receipts=live_receipts,receipt_counts=receipt_counts,wave_receipt_seconds=receipt_seconds,
@@ -239,10 +251,12 @@ if __name__=='__main__':
     parser.add_argument('--live-receipts',action='store_true',default=None)
     parser.add_argument('--top-k', type=int, help='cap the frontier for each rule and owner at every depth')
     parser.add_argument('--verify-prefix',action='store_true',help='check proposed partial proofs before extension')
+    parser.add_argument('--assist',action='store_true',help='enable exact residual search in the source executor')
+    parser.add_argument('--project-ports',action=argparse.BooleanOptionalAction,default=None)
     a=parser.parse_args()
     from prefix_policy import Policy
     policy=Policy(a.top_k,a.verify_prefix) if a.top_k is not None or a.verify_prefix else None
     torch.set_num_threads(1)
     torch.manual_seed(a.seed)
     model = load_actor(a.weights, a.field_pointer)
-    print(json.dumps(execute(a.binary.resolve(),a.program.resolve(),model,a.seed,a.wave_limit,live_receipts=a.live_receipts,prefix_policy=policy)))
+    print(json.dumps(execute(a.binary.resolve(),a.program.resolve(),model,a.seed,a.wave_limit,live_receipts=a.live_receipts,prefix_policy=policy,assist=a.assist,project_ports=a.project_ports)))

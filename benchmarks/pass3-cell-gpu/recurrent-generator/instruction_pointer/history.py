@@ -43,12 +43,13 @@ class Snapshot:
 
 class History:
     """Build a snapshot solely from runtime deltas and receipts, including on free rollouts."""
-    def __init__(self, catalog, seed):
+    def __init__(self, catalog, seed, cache_ports=False):
         self.catalog = catalog
         self.rng = random.Random(seed)
         self.names, self.inverse = {}, {}
         self.templates, self.inputs, self.visible = {}, {}, {}
         self.run = 0
+        self.port_cache = {} if cache_ports else None
 
     def rename(self, a):
         token, pc = a
@@ -80,7 +81,10 @@ class History:
             self.templates[req['token']] = tpl
             self.inputs[req['token']] = tuple(zip(catalog.inputs[tpl], parents, strict=True))
         for item in frame['retired']:
-            del self.visible[address(item)]
+            retired = address(item)
+            del self.visible[retired]
+            if self.port_cache is not None:
+                self.port_cache.pop(retired,None)
         for item,row in frame['updates']:
             a = address(item)
             self.visible[a] = row
@@ -97,14 +101,25 @@ class History:
             self.templates[event['token']] = tpl
             self.inputs[event['token']] = tuple(zip(catalog.inputs[tpl], parents, strict=True))
         if not materialize:
+            if self.port_cache is not None:
+                self.port_cache.clear()
             return None
-        ports = []
-        for a,row in self.visible.items():
+        def port(a,row):
             token,pc = a
             tpl = self.templates[token]
-            ports.append(Port(self.rename(a),tpl[0],catalog.roots[tpl],catalog.outputs[tpl,pc],
-                              row['table'],row['version'],row['forwarded'],tuple(row['hashes']),
-                              self.inputs.get(token,())))
+            return Port(self.rename(a),tpl[0],catalog.roots[tpl],catalog.outputs[tpl,pc],
+                        row['table'],row['version'],row['forwarded'],tuple(row['hashes']),
+                        self.inputs.get(token,()))
+        if self.port_cache is None:
+            ports = [port(a,row) for a,row in self.visible.items()]
+        else:
+            # Receipts freeze template and parent fields at signing. The native
+            # delta carries changes of version, content, forwarding and visibility.
+            # Keep the same insertion order and seeded permutation as a full rebuild.
+            updates = ((address(item),row) for item,row in frame['updates']) if self.port_cache else self.visible.items()
+            for a,row in updates:
+                self.port_cache[a] = port(a,row)
+            ports = list(self.port_cache.values())
         self.rng.shuffle(ports)
         return Snapshot(run,frame['epoch'],dict(frame['rules']),ports,[])
 
