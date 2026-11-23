@@ -89,18 +89,21 @@ class GraphIssuer:
         return dict(counts=self.counts,steps=self.sizes,distinct_issued=len(self.issued_units),
                     distinct_complete=len(self.finished_units),outstanding=len(self.instances),seconds=self.seconds)
 
+    def choose_layout(self,req,options,context):
+        scores=self.model(context.expand(len(options),-1),self.codes[options])[:,1]
+        k=int(scores.argmax())
+        return options[k] if scores[k]>0 else None
+
     def select(self,req,options,history,domains):
         if not options:
             return None
         refs=req['parents']
         prior=[tuple(history.visible[address(p)]['hashes']) for p in refs]
         context=root_context(prior,self.codes.shape[1])
-        scores=self.model(context.expand(len(options),-1),self.codes[options])[:,1]
         self.counts['root_decisions']+=1
-        k=int(scores.argmax())
-        if scores[k]<=0:
+        u=self.choose_layout(req,options,context)
+        if u is None:
             return None
-        u=options[k]
         layout=self.layouts[u]
         points={}
         for (_,slot),p in zip(layout[0][2],refs,strict=True):
@@ -196,13 +199,13 @@ class GraphIssuer:
         return issued,next_token
 
 
-def evaluate(root,donor,binary,weights,baked,name,out,control,native,exclusive=False):
+def evaluate(root,donor,binary,weights,baked,name,out,control,native,exclusive=False,issuer_factory=GraphIssuer):
     if digest(weights)!=read(baked/'study.json')['root_weights']:
         raise ValueError('root Actor checkpoint differs from training')
     folder=root/name
     actor=load_actor(weights,True)
     started=perf_counter()
-    issuer=None if control else GraphIssuer(actor,donor,read(folder/'program.json'),baked,native)
+    issuer=None if control else issuer_factory(actor,donor,read(folder/'program.json'),baked,native)
     setup=perf_counter()-started
     seed=next((r['seed'] for r in read(root/'manifest.json') if r['directory']==name),0)
     with TemporaryDirectory() as tmp:
@@ -220,7 +223,7 @@ def evaluate(root,donor,binary,weights,baked,name,out,control,native,exclusive=F
             if not exclusive:
                 raise
             failure=dict(run=error.run,charged=error.charged)
-            issuer=None if control else GraphIssuer(actor,donor,read(folder/'program.json'),baked,native)
+            issuer=None if control else issuer_factory(actor,donor,read(folder/'program.json'),baked,native)
             run=live(error.run-1)
             if run['runs']!=error.run-1:
                 raise ValueError('could not reproduce prefix before panic')
