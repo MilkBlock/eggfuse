@@ -2,7 +2,7 @@
 use super::{Address, Premise, Request};
 use crate::program::{Call, Op, Program, Result};
 use serde::{Deserialize, Serialize};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 pub(super) const INTERNAL: i64 = 1 << 61;
 
@@ -27,6 +27,7 @@ pub struct Counts {
     pub side_reads_at_issue: usize,
     pub side_invalid_at_issue: usize,
     pub side_steps_issued: usize,
+    pub side_watermark_skips: usize,
     pub forks_issued: usize,
     pub forks_accepted: usize,
     pub side_steps_accepted: usize,
@@ -36,6 +37,7 @@ pub struct Counts {
 
 pub(super) struct Higher {
     recipes: Vec<Recipe>,
+    seminaive_sides: BTreeSet<usize>,
     // Accepted steps acquire their result version at the first sealed boundary.
     capture: Vec<(i64, usize, usize, Option<Premise>)>,
     waiting: BTreeMap<usize, Vec<(Premise, usize, usize, Option<Premise>)>>,
@@ -45,6 +47,7 @@ pub(super) struct Higher {
 
 impl Higher {
     pub fn new(program: &Program, recipes: Vec<Recipe>) -> Result<Self> {
+        let mut seminaive_sides = BTreeSet::new();
         for recipe in &recipes {
             let mut prior = recipe.root;
             if recipe.hops.is_empty() {
@@ -68,6 +71,9 @@ impl Higher {
                     .collect();
                 let valid = match recipe.side.filter(|_| index + 1 == recipe.hops.len()) {
                     Some((pivot, side)) => {
+                        if rule.seminaive {
+                            seminaive_sides.insert(child);
+                        }
                         pivot < 2
                             && inputs.len() == 2
                             && inputs[pivot] == table
@@ -85,6 +91,7 @@ impl Higher {
         }
         Ok(Self {
             recipes,
+            seminaive_sides,
             capture: vec![],
             waiting: BTreeMap::new(),
             next: INTERNAL,
@@ -190,21 +197,32 @@ impl Higher {
                 self.counts.missing_exports += 1;
             }
         }
-        for &(rule, _) in rules {
+        for &(rule, watermark) in rules {
             for (parent, unit, step, mut side) in self.waiting.remove(&rule).unwrap_or_default() {
                 if self.next >= i64::MAX / 2 {
                     return Err("higher token namespace exhausted".into());
                 }
+                let token = self.next;
+                self.next += 1;
                 let mut parents = vec![parent];
                 if let Some((pivot, _)) = self.recipes[unit]
                     .side
                     .filter(|_| step == self.recipes[unit].hops.len())
                 {
-                    parents.insert(1 - pivot, side.take().ok_or("missing signed side")?);
+                    let external = side.take().ok_or("missing signed side")?;
+                    // bind_named requires both versions unchanged. Even a still-live pair
+                    // cannot supply a delta witness below the child's own watermark.
+                    if self.seminaive_sides.contains(&rule)
+                        && parents[0].version.max(external.version) < watermark
+                    {
+                        self.counts.side_watermark_skips += 1;
+                        continue;
+                    }
+                    parents.insert(1 - pivot, external);
                     self.counts.side_steps_issued += 1;
                 }
                 queue.entry((run, rule)).or_default().push(Request {
-                    token: self.next,
+                    token,
                     closed_branch: None,
                     run,
                     rule,
@@ -213,7 +231,6 @@ impl Higher {
                     unit: Some(unit),
                     step,
                 });
-                self.next += 1;
                 self.counts.issued_steps += 1;
             }
         }
@@ -229,6 +246,7 @@ mod tests {
     #[test]
     fn delayed_consumer_verifies_the_first_sealed_version_and_never_retries_a_failed_step() {
         let mut state = Higher {
+            seminaive_sides: BTreeSet::new(),
             recipes: vec![Recipe {
                 root: 3,
                 side: None,
@@ -283,8 +301,13 @@ mod tests {
     }
     #[test]
     fn a_fork_freezes_its_side_at_the_root_and_keeps_the_other_branch_on_failure() {
-        for pivot in [0, 1] {
+        for (pivot, wm, sem) in [(0, 3, true), (1, 4, true), (1, 4, false)] {
             let mut state = Higher {
+                seminaive_sides: if sem {
+                    BTreeSet::from([5])
+                } else {
+                    BTreeSet::new()
+                },
                 recipes: vec![
                     Recipe {
                         root: 3,
@@ -342,7 +365,12 @@ mod tests {
                 row(9, 3),
             );
             visible.insert(side.address, row(8, 3));
-            state.dispatch(&visible, 3, &[(5, 0)], &mut queue).unwrap();
+            state.dispatch(&visible, 3, &[(5, wm)], &mut queue).unwrap();
+            if sem && wm > 3 {
+                assert!(!queue.contains_key(&(3, 5)));
+                assert_eq!(state.counts.side_watermark_skips, 1);
+                continue;
+            }
             let child = &queue[&(3, 5)][0];
             assert_eq!(child.parents[1 - pivot].address, side.address);
             assert_eq!(child.parents[1 - pivot].version, 1);
