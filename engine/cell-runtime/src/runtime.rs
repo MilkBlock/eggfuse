@@ -1201,7 +1201,15 @@ impl Executor {
     #[cfg(feature = "cell-token-replay")]
     pub fn start_token_assist(&mut self) -> Result<()> {
         self.start_tokens(None)?;
-        self.token_history.as_mut().unwrap().assist = Some(Default::default());
+        let point_pivots = self.graph.program.rules.iter().map(|rule| {
+            rule.query.iter().enumerate().filter_map(|(pivot, atom)| {
+                let Call::Table(table) = atom.call else { return None; };
+                Some((pivot, table, crate::cell::query_order(rule, pivot, 0).is_some()))
+            }).collect()
+        }).collect();
+        self.token_history.as_mut().unwrap().assist = Some(crate::cell_tokens::AssistCounts {
+            point_pivots, ..Default::default()
+        });
         self.export_token_memory(None)
     }
     #[cfg(feature = "cell-token-replay")]
@@ -1248,19 +1256,49 @@ impl Executor {
         let wm = self.watermarks[rid];
         let named = self.token_history.as_mut().unwrap().verify(&self.graph, self.steps.len()+1, rid, wm)?;
         let rule = &self.graph.program.rules[rid];
-        let mut tables = rule.query.iter().filter_map(|atom| match atom.call {
-            crate::program::Call::Table(t) => Some(t),
-            _ => None,
-        });
-        // Deterministic primitives add at most one solution per table row.
-        // admit() has already deduplicated these verified input projections.
-        let bound = match (tables.next(), tables.next()) {
-            (None, _) => Some(1),
-            (Some(t), None) => Some(self.graph.witness_count(t)),
-            _ => None,
+        let stats = self.token_history.as_mut().unwrap().assist.as_mut().unwrap();
+        let pivots = &stats.point_pivots[rid];
+        // A pivot followed by deterministic scalar operations and unique-key
+        // reads can produce at most one distinct RHS binding for a table row.
+        let single = match pivots.as_slice() {
+            [] => named.len() == 1,
+            [(_, table, _)] => !named.is_empty() && named.len() == self.graph.witness_count(*table),
+            _ => false,
         };
-        if !named.is_empty() && bound == Some(named.len()) {
-            self.token_history.as_mut().unwrap().assist.as_mut().unwrap().skipped_rule_calls += 1;
+        let point_domain = !named.is_empty() && !single && pivots.iter().any(|&(_, table, point)| {
+            point && self.graph.witness_count(table) == named.len()
+        });
+        let mut delta_domain = false;
+        if !single && !point_domain && !named.is_empty() && rule.seminaive && !pivots.is_empty() {
+            // Only the exact scheduler can certify that the fresh Entry domain
+            // is exhausted. Named witnesses can cover several delta orientations.
+            delta_domain = true;
+            for &(pivot, table, point) in pivots {
+                let covered: BTreeSet<_> = named.iter().filter_map(|b| b.known.receipt(pivot)).collect();
+                let mut accounted = |w| {
+                    stats.delta_members_checked += 1;
+                    point && covered.contains(&w)
+                };
+                let complete = if self.entry_schedule.accepts(rid) {
+                    let batch = self.entry_schedule.terminal_batch(&self.graph,rid,pivot,wm)?;
+                    batch.delta().all(|&(_,w)| accounted(w))
+                } else {
+                    self.pending[rid].iter().copied().filter(|&w| {
+                        self.graph.live_table(w) == Some(table)
+                            && self.graph.visible_epoch(w).is_some_and(|e| e >= wm)
+                    }).all(accounted)
+                };
+                if !complete {
+                    delta_domain = false;
+                    break;
+                }
+            }
+        }
+        if single || point_domain || delta_domain {
+            stats.skipped_rule_calls += 1;
+            stats.point_domain_skips += usize::from(point_domain);
+            stats.delta_domain_skips += usize::from(delta_domain);
+            stats.certified_bindings += named.len();
             let facts = self.stage_spine.alias_query_facts(&self.graph, rid);
             let mut out = self.stage_spine.resume_named(&mut self.graph,&self.entry_schedule,rid,wm,&named,&facts)?;
             out.extend(named);

@@ -135,6 +135,12 @@ impl RecallAudit {
 pub struct AssistCounts {
     pub exact_rule_calls: usize,
     pub skipped_rule_calls: usize,
+    pub point_domain_skips: usize,
+    pub delta_domain_skips: usize,
+    pub delta_members_checked: usize,
+    pub certified_bindings: usize,
+    #[serde(skip)]
+    pub(crate) point_pivots: Vec<Vec<(usize, usize, bool)>>,
     pub exact_rows: usize,
     pub exact_candidates: u64,
     pub residual_commits: usize,
