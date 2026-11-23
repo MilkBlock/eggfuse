@@ -80,3 +80,24 @@ python rule_audit.py "$root" "$initial" "$epoch/census-before-with-ranking.json"
 python rule_audit.py "$root" "$epoch/mps-epoch.pt" "$epoch/census-after-with-ranking.json" --field-pointer --held-rule-census
 python mixed_results.py "$root" "$epoch" mixed-epoch-results.json
 ```
+
+### Selecting a rule from typed port reads
+
+The previous Metal checkpoint selected a rule from the mean key of every port in the sealed snapshot. To test what information that mean lost, we froze every parameter of that checkpoint and added a learned correction to each scheduled rule's logit. The control receives the rule root, the global mean port key and port count. The experimental head reads the atom's table twice, once over all visible ports and once over the rule's legal delta. Each read pools port keys, includes a log count and uses the atom's GNN role in the rule summary. Empty tables and empty-LHS templates remain representable. Both heads have identical parameter counts. Both use the same unchanged Stop logit and parent decoder. Static typing and the source watermark determine the reads. The network still has to select a rule and name its parents.
+
+We cached the frozen CPU representations on the 6,035 training snapshots and trained both residual heads on MPS. Each received the same shuffled snapshots, target draws, initialization and 756 updates over four epochs. Every reference binding contributes its rule to the draw pool. The objective marginalizes over assignments of up to four sampled rule labels to the lanes, including Stop for vacant lanes. The original backbone and all pointer weights were checked byte-for-byte after training.
+
+| Metric | Previous mixed checkpoint | Retrained global read | Retrained typed read |
+|---|---:|---:|---:|
+| Busy reference Runs with a correct rule, fact + loopfact, out of 329 | 2 | 48 | 172 |
+| Busy Runs on which all lanes stopped | 319 | 227 | 129 |
+| Empty Runs on which all lanes stopped, out of 923 | 921 | 907 | 912 |
+| Accepted / issued in complete exclusive executions, fact + loopfact | 4/4 | 16/52 | 31/103 |
+| Certified reference prefix commits, out of 3,087 | 2 | 2 | 2 |
+| Correct final graphs, fact + loopfact | 0/2 | 0/2 | 0/2 |
+
+In the teacher-snapshot census the typed head chose a rule with a winner on 587/673 non-Stop lane decisions in busy Runs. The global head did so on 109/297. On the separate 16-busy-Run samples per held workload, the typed arm named a complete teacher parent tuple on 2/27 correct parent-requiring rule selections for fact and 6/34 for loopfact. In both exclusive runs the first discrepancy was Run 2. The required type-helpers rule has zero table parents. On the matching prefix every lane ranked it tenth. Correct graphs in the three synthetic groups were 48/48, 46/48 and 13/48 with the typed read; the held repair position remained 0/24. A third native program, sum-divisors, was evaluated after fitting. Its native teacher replay reproduced all 17,341 commits and the reference graph. The exclusive global and typed heads accepted 10/25 and 22/61 proposals; neither reproduced that graph.
+
+All inference and verification above ran on CPU. There was one issuance wave per Run, with no residual search. Counts in the [paired report](rule-read-results.json) separate exclusive execution, shadow reads and oracle-rule diagnostics. No paired timing experiment was performed.
+
+Reproduce the heads with `python train_rule_read.py "$root" "$epoch/mps-epoch.pt" "$out"`. Evaluate each `$out/global.pt` and `$out/typed.pt` with the same evaluate and rule-audit commands as the mixed epoch (use the output suffixes `-held.json`, `-rule.json` and `-census.json`). For the additional holdout save the native reference and replay audit reports and each arm's `online.py --field-pointer` output as `sum-divisors-{reference,replay,global,typed}.json`. Run `python rule_read_results.py "$out" mixed-epoch-results.json rule-read-results.json`. The per-atom reference reduction in `check_rule_read.py` agreed with the grouped read on 408 rule snapshots from nine sum-bits Runs, including 47 partially fresh atom windows and reversed port order.
