@@ -1,0 +1,76 @@
+{
+  "donor": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+  "training": {
+    "sum": "856765e48910fe600548e17c7f18b7f3859c1355e5bc57420a15463e111ad792",
+    "dot": "7f8cd9a9904f160448d8639f61b3486b47bf3a83a736d815dea884572e13df97"
+  },
+  "candidates": 19,
+  "fingerprints": {
+    "55": "986c7264f40cc80a2c305724a4d3b7377e7f7f227669e927298cbb3cc71baa12",
+    "58": "ae59039827522df6ed1465783751361f167b9fbeed2a7e63e4f95ad8af40baa6",
+    "114": "e8e767cb6cd5507836718b2c89bb3811482d4898262bd98fc6ee92143e4dd1a1",
+    "137": "0543239df8ad6489244c3b4e1acf4c3a0f48e98755977f742df0549d2d0a8b32",
+    "143": "d6d92eb692b7be1da98881e13e5a7ef4df59fe75448f3a5614094836c70557fc",
+    "420": "5f17434f435e087fa0916c90c9ae727202c3788419b18c7f89df999c21021a9c",
+    "502": "0f3b7de9c467b34e813f47fb56a622256201383de3856de9324651cb074bb596",
+    "506": "6c06b76b63012b9a685d04f6639c1671a9be92ea4d111b7473f1e48470240934"
+  },
+  "units": [
+    {
+      "root": 55,
+      "hops": [
+        [
+          1,
+          143
+        ],
+        [
+          2,
+          137
+        ]
+      ],
+      "bake_id": 43,
+      "training_roots": 144,
+      "training_steps": 194
+    },
+    {
+      "root": 114,
+      "hops": [
+        [
+          0,
+          420
+        ]
+      ],
+      "bake_id": 62,
+      "training_roots": 33,
+      "training_steps": 2
+    },
+    {
+      "root": 143,
+      "hops": [
+        [
+          2,
+          137
+        ],
+        [
+          1,
+          58
+        ]
+      ],
+      "bake_id": 45,
+      "training_roots": 385,
+      "training_steps": 291
+    },
+    {
+      "root": 502,
+      "hops": [
+        [
+          6,
+          506
+        ]
+      ],
+      "bake_id": 56,
+      "training_roots": 5,
+      "training_steps": 5
+    }
+  ]
+}

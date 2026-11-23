@@ -1,0 +1,1355 @@
+{
+  "fact": {
+    "base": {
+      "arm": "base",
+      "compatible_units": [
+        43,
+        62,
+        45
+      ],
+      "program": "f4da1650af5393f3f07d5d20d092e26270ae58090266dd197113dd295ffaf900",
+      "binary": "b53793f5f9c08351e32a43d667bdf0a777e145b4c8eca641b97fa2b8444f668e",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "reference_commits": 1668,
+      "omitted_standalone_rules": [],
+      "execution": {
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "eab7b3ced15fa4f043dbe761377891fed751dc31c6601a5cdf01f8f774e7de25",
+          "runs": 634,
+          "signed_external": [
+            604,
+            217,
+            83,
+            0
+          ],
+          "signed_internal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "uncredited": [
+            259,
+            144,
+            60,
+            0
+          ],
+          "per_external_request": 0.2370214997378081,
+          "per_decoded_request": 0.2370214997378081
+        },
+        "visible_port_visits": 1769135,
+        "encoded_port_visits": 79060,
+        "assist": {
+          "certified_bindings": 354,
+          "delta_domain_skips": 35,
+          "delta_members_checked": 571,
+          "duplicate_reads": 4641,
+          "duplicate_seconds": 0.0009974110000000001,
+          "exact_candidates": 1845,
+          "exact_rows": 1314,
+          "exact_rule_calls": 2642,
+          "exact_seconds": 0.005784748000000015,
+          "point_domain_skips": 4,
+          "rejected_reads": 540,
+          "rejected_seconds": 0.00015100000000000023,
+          "residual_commits": 426,
+          "skipped_rule_calls": 61
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 634
+        },
+        "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d",
+        "runs": 634,
+        "neural_waves": 634,
+        "issued": 3814,
+        "counts": {
+          "accepted": 1242,
+          "calls": 2703,
+          "duplicates": 2270,
+          "reads": 7402,
+          "reads_by_kind": {
+            "generated": 7368,
+            "initial": 34
+          },
+          "rejected": {
+            "binding": 51,
+            "guard": 251
+          }
+        },
+        "native_runtime_events": 0,
+        "independent_search_calls": 2642,
+        "network_seconds": 1.6744492489488039,
+        "remaining_process_seconds_including_ipc": 0.6885873050523066,
+        "native_verify_seconds": 0.002488862,
+        "native_repair_seconds": 0.0006415060000000057,
+        "wall_seconds": 2.588014499997371
+      }
+    },
+    "owned": {
+      "arm": "owned",
+      "compatible_units": [
+        43,
+        62,
+        45
+      ],
+      "program": "f4da1650af5393f3f07d5d20d092e26270ae58090266dd197113dd295ffaf900",
+      "binary": "b53793f5f9c08351e32a43d667bdf0a777e145b4c8eca641b97fa2b8444f668e",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "reference_commits": 1668,
+      "omitted_standalone_rules": [],
+      "execution": {
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "eab7b3ced15fa4f043dbe761377891fed751dc31c6601a5cdf01f8f774e7de25",
+          "runs": 634,
+          "signed_external": [
+            579,
+            217,
+            55,
+            0
+          ],
+          "signed_internal": [
+            25,
+            0,
+            28,
+            0
+          ],
+          "uncredited": [
+            259,
+            144,
+            60,
+            0
+          ],
+          "per_external_request": 0.23764458464773922,
+          "per_decoded_request": 0.23677317967522263
+        },
+        "higher": {
+          "counts": {
+            "accepted_roots": 79,
+            "accepted_steps": 86,
+            "by_depth": {
+              "2": 58,
+              "3": 28
+            },
+            "issued_roots": 133,
+            "issued_steps": 122,
+            "missing_exports": 12
+          },
+          "outstanding": 0
+        },
+        "withheld_owned_requests": 14,
+        "visible_port_visits": 1769135,
+        "encoded_port_visits": 79060,
+        "assist": {
+          "certified_bindings": 374,
+          "delta_domain_skips": 36,
+          "delta_members_checked": 575,
+          "duplicate_reads": 4710,
+          "duplicate_seconds": 0.000978372,
+          "exact_candidates": 1845,
+          "exact_rows": 1294,
+          "exact_rule_calls": 2640,
+          "exact_seconds": 0.005709927000000002,
+          "point_domain_skips": 4,
+          "rejected_reads": 576,
+          "rejected_seconds": 0.00015729800000000032,
+          "residual_commits": 414,
+          "skipped_rule_calls": 63
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 634
+        },
+        "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d",
+        "runs": 634,
+        "neural_waves": 634,
+        "issued": 3804,
+        "counts": {
+          "accepted": 1254,
+          "calls": 2703,
+          "duplicates": 2334,
+          "reads": 7518,
+          "reads_by_kind": {
+            "generated": 7485,
+            "initial": 33
+          },
+          "rejected": {
+            "binding": 51,
+            "guard": 251,
+            "watermark": 36
+          }
+        },
+        "native_runtime_events": 0,
+        "independent_search_calls": 2640,
+        "network_seconds": 1.6646457410024595,
+        "remaining_process_seconds_including_ipc": 0.6663110489961714,
+        "native_verify_seconds": 0.002435251,
+        "native_repair_seconds": 0.0006516040000000063,
+        "wall_seconds": 2.903857542001788
+      }
+    },
+    "replace": {
+      "arm": "replace",
+      "compatible_units": [
+        43,
+        62,
+        45
+      ],
+      "program": "f4da1650af5393f3f07d5d20d092e26270ae58090266dd197113dd295ffaf900",
+      "binary": "b53793f5f9c08351e32a43d667bdf0a777e145b4c8eca641b97fa2b8444f668e",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "reference_commits": 1668,
+      "omitted_standalone_rules": [
+        58,
+        137,
+        420
+      ],
+      "execution": {
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "eab7b3ced15fa4f043dbe761377891fed751dc31c6601a5cdf01f8f774e7de25",
+          "runs": 634,
+          "signed_external": [
+            543,
+            217,
+            55,
+            0
+          ],
+          "signed_internal": [
+            25,
+            0,
+            28,
+            0
+          ],
+          "uncredited": [
+            295,
+            144,
+            60,
+            0
+          ],
+          "per_external_request": 0.23702894593118515,
+          "per_decoded_request": 0.23702894593118515
+        },
+        "higher": {
+          "counts": {
+            "accepted_roots": 79,
+            "accepted_steps": 86,
+            "by_depth": {
+              "2": 58,
+              "3": 28
+            },
+            "issued_roots": 133,
+            "issued_steps": 122,
+            "missing_exports": 12
+          },
+          "outstanding": 0
+        },
+        "withheld_owned_requests": 0,
+        "visible_port_visits": 1769135,
+        "encoded_port_visits": 79060,
+        "assist": {
+          "certified_bindings": 304,
+          "delta_domain_skips": 31,
+          "delta_members_checked": 513,
+          "duplicate_reads": 4645,
+          "duplicate_seconds": 0.0009926849999999988,
+          "exact_candidates": 1845,
+          "exact_rows": 1364,
+          "exact_rule_calls": 2646,
+          "exact_seconds": 0.0054945930000000155,
+          "point_domain_skips": 4,
+          "rejected_reads": 567,
+          "rejected_seconds": 0.0001494300000000003,
+          "residual_commits": 487,
+          "skipped_rule_calls": 57
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 634
+        },
+        "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d",
+        "runs": 634,
+        "neural_waves": 634,
+        "issued": 3662,
+        "counts": {
+          "accepted": 1181,
+          "calls": 2703,
+          "duplicates": 2274,
+          "reads": 7369,
+          "reads_by_kind": {
+            "generated": 7336,
+            "initial": 33
+          },
+          "rejected": {
+            "binding": 42,
+            "guard": 251,
+            "watermark": 36
+          }
+        },
+        "native_runtime_events": 0,
+        "independent_search_calls": 2646,
+        "network_seconds": 1.6532866899760847,
+        "remaining_process_seconds_including_ipc": 0.6667314880236459,
+        "native_verify_seconds": 0.002414197,
+        "native_repair_seconds": 0.0006125030000000041,
+        "wall_seconds": 2.538863042002049
+      }
+    },
+    "withhold": {
+      "arm": "withhold",
+      "compatible_units": [
+        43,
+        62,
+        45
+      ],
+      "program": "f4da1650af5393f3f07d5d20d092e26270ae58090266dd197113dd295ffaf900",
+      "binary": "b53793f5f9c08351e32a43d667bdf0a777e145b4c8eca641b97fa2b8444f668e",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "reference_commits": 1668,
+      "omitted_standalone_rules": [
+        58,
+        137,
+        420
+      ],
+      "execution": {
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "eab7b3ced15fa4f043dbe761377891fed751dc31c6601a5cdf01f8f774e7de25",
+          "runs": 634,
+          "signed_external": [
+            565,
+            217,
+            83,
+            0
+          ],
+          "signed_internal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "uncredited": [
+            298,
+            144,
+            60,
+            0
+          ],
+          "per_external_request": 0.23672687465790915,
+          "per_decoded_request": 0.23672687465790915
+        },
+        "visible_port_visits": 1769135,
+        "encoded_port_visits": 79060,
+        "assist": {
+          "certified_bindings": 266,
+          "delta_domain_skips": 28,
+          "delta_members_checked": 489,
+          "duplicate_reads": 4599,
+          "duplicate_seconds": 0.0009620349999999989,
+          "exact_candidates": 1845,
+          "exact_rows": 1402,
+          "exact_rule_calls": 2651,
+          "exact_seconds": 0.005325683000000008,
+          "point_domain_skips": 4,
+          "rejected_reads": 531,
+          "rejected_seconds": 0.00014216900000000023,
+          "residual_commits": 544,
+          "skipped_rule_calls": 52
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 634
+        },
+        "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d",
+        "runs": 634,
+        "neural_waves": 634,
+        "issued": 3654,
+        "counts": {
+          "accepted": 1124,
+          "calls": 2703,
+          "duplicates": 2237,
+          "reads": 7231,
+          "reads_by_kind": {
+            "generated": 7198,
+            "initial": 33
+          },
+          "rejected": {
+            "binding": 42,
+            "guard": 251
+          }
+        },
+        "native_runtime_events": 0,
+        "independent_search_calls": 2651,
+        "network_seconds": 1.6553105009661522,
+        "remaining_process_seconds_including_ipc": 0.6751243680320242,
+        "native_verify_seconds": 0.002257298,
+        "native_repair_seconds": 0.0006430450000000057,
+        "wall_seconds": 2.5545616669987794
+      }
+    }
+  },
+  "loopfact": {
+    "base": {
+      "arm": "base",
+      "compatible_units": [
+        43,
+        62,
+        45,
+        56
+      ],
+      "program": "8f6d2b1a5f5a593b73119d0bfded0aefee97315191cc5f3efcd6e35320beacba",
+      "binary": "b53793f5f9c08351e32a43d667bdf0a777e145b4c8eca641b97fa2b8444f668e",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "reference_commits": 1419,
+      "omitted_standalone_rules": [],
+      "execution": {
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "da3eb13aeb22993cf38dbfa9356415bee92959ab1143f4ff46e65e55fc758703",
+          "runs": 618,
+          "signed_external": [
+            501,
+            236,
+            68,
+            0
+          ],
+          "signed_internal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "uncredited": [
+            295,
+            187,
+            58,
+            0
+          ],
+          "per_external_request": 0.21432374866879658,
+          "per_decoded_request": 0.21432374866879658
+        },
+        "visible_port_visits": 1718698,
+        "encoded_port_visits": 70913,
+        "assist": {
+          "certified_bindings": 258,
+          "delta_domain_skips": 43,
+          "delta_members_checked": 511,
+          "duplicate_reads": 4991,
+          "duplicate_seconds": 0.0010454330000000036,
+          "exact_candidates": 1626,
+          "exact_rows": 1161,
+          "exact_rule_calls": 2355,
+          "exact_seconds": 0.006175758000000004,
+          "point_domain_skips": 8,
+          "rejected_reads": 577,
+          "rejected_seconds": 0.00014767400000000025,
+          "residual_commits": 379,
+          "skipped_rule_calls": 77
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 618
+        },
+        "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724",
+        "runs": 618,
+        "neural_waves": 618,
+        "issued": 3756,
+        "counts": {
+          "accepted": 1040,
+          "calls": 2432,
+          "duplicates": 2419,
+          "reads": 7466,
+          "reads_by_kind": {
+            "generated": 7450,
+            "initial": 16
+          },
+          "rejected": {
+            "binding": 33,
+            "guard": 264
+          }
+        },
+        "native_runtime_events": 0,
+        "independent_search_calls": 2355,
+        "network_seconds": 1.6298248329949274,
+        "remaining_process_seconds_including_ipc": 0.6922643890053135,
+        "native_verify_seconds": 0.002505153,
+        "native_repair_seconds": 0.0007652950000000032,
+        "wall_seconds": 2.553453874999832
+      }
+    },
+    "owned": {
+      "arm": "owned",
+      "compatible_units": [
+        43,
+        62,
+        45,
+        56
+      ],
+      "program": "8f6d2b1a5f5a593b73119d0bfded0aefee97315191cc5f3efcd6e35320beacba",
+      "binary": "b53793f5f9c08351e32a43d667bdf0a777e145b4c8eca641b97fa2b8444f668e",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "reference_commits": 1419,
+      "omitted_standalone_rules": [],
+      "execution": {
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "da3eb13aeb22993cf38dbfa9356415bee92959ab1143f4ff46e65e55fc758703",
+          "runs": 618,
+          "signed_external": [
+            476,
+            217,
+            49,
+            0
+          ],
+          "signed_internal": [
+            22,
+            5,
+            19,
+            0
+          ],
+          "uncredited": [
+            298,
+            201,
+            58,
+            0
+          ],
+          "per_external_request": 0.21222730945327228,
+          "per_decoded_request": 0.21160042964554243
+        },
+        "higher": {
+          "counts": {
+            "accepted_roots": 55,
+            "accepted_steps": 63,
+            "by_depth": {
+              "2": 44,
+              "3": 19
+            },
+            "issued_roots": 118,
+            "issued_steps": 85,
+            "missing_exports": 6
+          },
+          "outstanding": 0
+        },
+        "withheld_owned_requests": 11,
+        "visible_port_visits": 1718698,
+        "encoded_port_visits": 70913,
+        "assist": {
+          "certified_bindings": 279,
+          "delta_domain_skips": 44,
+          "delta_members_checked": 513,
+          "duplicate_reads": 4959,
+          "duplicate_seconds": 0.0010034450000000004,
+          "exact_candidates": 1626,
+          "exact_rows": 1140,
+          "exact_rule_calls": 2352,
+          "exact_seconds": 0.005168288000000006,
+          "point_domain_skips": 8,
+          "rejected_reads": 599,
+          "rejected_seconds": 0.00014529700000000012,
+          "residual_commits": 375,
+          "skipped_rule_calls": 80
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 618
+        },
+        "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724",
+        "runs": 618,
+        "neural_waves": 618,
+        "issued": 3713,
+        "counts": {
+          "accepted": 1044,
+          "calls": 2432,
+          "duplicates": 2435,
+          "reads": 7446,
+          "reads_by_kind": {
+            "generated": 7430,
+            "initial": 16
+          },
+          "rejected": {
+            "binding": 32,
+            "guard": 265,
+            "watermark": 22
+          }
+        },
+        "native_runtime_events": 0,
+        "independent_search_calls": 2352,
+        "network_seconds": 1.60128609102685,
+        "remaining_process_seconds_including_ipc": 0.7150496729733611,
+        "native_verify_seconds": 0.002266902,
+        "native_repair_seconds": 0.0006852360000000023,
+        "wall_seconds": 2.540152207999199
+      }
+    },
+    "replace": {
+      "arm": "replace",
+      "compatible_units": [
+        43,
+        62,
+        45,
+        56
+      ],
+      "program": "8f6d2b1a5f5a593b73119d0bfded0aefee97315191cc5f3efcd6e35320beacba",
+      "binary": "b53793f5f9c08351e32a43d667bdf0a777e145b4c8eca641b97fa2b8444f668e",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "reference_commits": 1419,
+      "omitted_standalone_rules": [
+        58,
+        137,
+        420,
+        506
+      ],
+      "execution": {
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "da3eb13aeb22993cf38dbfa9356415bee92959ab1143f4ff46e65e55fc758703",
+          "runs": 618,
+          "signed_external": [
+            444,
+            178,
+            49,
+            0
+          ],
+          "signed_internal": [
+            22,
+            5,
+            19,
+            0
+          ],
+          "uncredited": [
+            330,
+            240,
+            58,
+            0
+          ],
+          "per_external_request": 0.20621225194132872,
+          "per_decoded_request": 0.20621225194132872
+        },
+        "higher": {
+          "counts": {
+            "accepted_roots": 55,
+            "accepted_steps": 63,
+            "by_depth": {
+              "2": 44,
+              "3": 19
+            },
+            "issued_roots": 118,
+            "issued_steps": 85,
+            "missing_exports": 6
+          },
+          "outstanding": 0
+        },
+        "withheld_owned_requests": 0,
+        "visible_port_visits": 1718698,
+        "encoded_port_visits": 70913,
+        "assist": {
+          "certified_bindings": 177,
+          "delta_domain_skips": 29,
+          "delta_members_checked": 431,
+          "duplicate_reads": 4728,
+          "duplicate_seconds": 0.0010278749999999975,
+          "exact_candidates": 1626,
+          "exact_rows": 1242,
+          "exact_rule_calls": 2369,
+          "exact_seconds": 0.006111512000000015,
+          "point_domain_skips": 8,
+          "rejected_reads": 593,
+          "rejected_seconds": 0.0001595860000000003,
+          "residual_commits": 467,
+          "skipped_rule_calls": 63
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 618
+        },
+        "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724",
+        "runs": 618,
+        "neural_waves": 618,
+        "issued": 3477,
+        "counts": {
+          "accepted": 952,
+          "calls": 2432,
+          "duplicates": 2300,
+          "reads": 7108,
+          "reads_by_kind": {
+            "generated": 7092,
+            "initial": 16
+          },
+          "rejected": {
+            "binding": 20,
+            "guard": 268,
+            "watermark": 22
+          }
+        },
+        "native_runtime_events": 0,
+        "independent_search_calls": 2369,
+        "network_seconds": 1.6117982239520643,
+        "remaining_process_seconds_including_ipc": 0.6764716850464496,
+        "native_verify_seconds": 0.002431924,
+        "native_repair_seconds": 0.0007332830000000047,
+        "wall_seconds": 2.519154499997967
+      }
+    },
+    "withhold": {
+      "arm": "withhold",
+      "compatible_units": [
+        43,
+        62,
+        45,
+        56
+      ],
+      "program": "8f6d2b1a5f5a593b73119d0bfded0aefee97315191cc5f3efcd6e35320beacba",
+      "binary": "b53793f5f9c08351e32a43d667bdf0a777e145b4c8eca641b97fa2b8444f668e",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "reference_commits": 1419,
+      "omitted_standalone_rules": [
+        58,
+        137,
+        420,
+        506
+      ],
+      "execution": {
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "da3eb13aeb22993cf38dbfa9356415bee92959ab1143f4ff46e65e55fc758703",
+          "runs": 618,
+          "signed_external": [
+            461,
+            179,
+            68,
+            0
+          ],
+          "signed_internal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "uncredited": [
+            335,
+            244,
+            58,
+            0
+          ],
+          "per_external_request": 0.20321469575200918,
+          "per_decoded_request": 0.20321469575200918
+        },
+        "visible_port_visits": 1718698,
+        "encoded_port_visits": 70913,
+        "assist": {
+          "certified_bindings": 156,
+          "delta_domain_skips": 27,
+          "delta_members_checked": 411,
+          "duplicate_reads": 4729,
+          "duplicate_seconds": 0.0009642470000000031,
+          "exact_candidates": 1626,
+          "exact_rows": 1263,
+          "exact_rule_calls": 2373,
+          "exact_seconds": 0.005643832000000008,
+          "point_domain_skips": 8,
+          "rejected_reads": 577,
+          "rejected_seconds": 0.00013996100000000005,
+          "residual_commits": 508,
+          "skipped_rule_calls": 59
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 618
+        },
+        "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724",
+        "runs": 618,
+        "neural_waves": 618,
+        "issued": 3484,
+        "counts": {
+          "accepted": 911,
+          "calls": 2432,
+          "duplicates": 2284,
+          "reads": 7059,
+          "reads_by_kind": {
+            "generated": 7042,
+            "initial": 17
+          },
+          "rejected": {
+            "binding": 21,
+            "guard": 268
+          }
+        },
+        "native_runtime_events": 0,
+        "independent_search_calls": 2373,
+        "network_seconds": 1.585283425047237,
+        "remaining_process_seconds_including_ipc": 0.6604912499519964,
+        "native_verify_seconds": 0.002210658,
+        "native_repair_seconds": 0.0006467060000000048,
+        "wall_seconds": 2.458904208000604
+      }
+    }
+  },
+  "sum-divisors": {
+    "base": {
+      "arm": "base",
+      "compatible_units": [
+        43,
+        62,
+        45
+      ],
+      "program": "3b904063c8c7e580ec2030b452d831ee53478a28c3dfaecf17eeb7e853a0aaf8",
+      "binary": "b53793f5f9c08351e32a43d667bdf0a777e145b4c8eca641b97fa2b8444f668e",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "reference_commits": 17341,
+      "omitted_standalone_rules": [],
+      "execution": {
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "94510dbed2b574e97152cf38a32dd2308aee25aa3728fbc31e4ec946eb94ffe0",
+          "runs": 1644,
+          "signed_external": [
+            3353,
+            1063,
+            473,
+            40
+          ],
+          "signed_internal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "uncredited": [
+            4219,
+            1953,
+            2314,
+            94
+          ],
+          "per_external_request": 0.19831019915509956,
+          "per_decoded_request": 0.19831019915509956
+        },
+        "visible_port_visits": 36307164,
+        "encoded_port_visits": 2524397,
+        "assist": {
+          "certified_bindings": 1230,
+          "delta_domain_skips": 229,
+          "delta_members_checked": 2813,
+          "duplicate_reads": 28838,
+          "duplicate_seconds": 0.006634035000000178,
+          "exact_candidates": 22677,
+          "exact_rows": 16111,
+          "exact_rule_calls": 9447,
+          "exact_seconds": 0.048497315999998535,
+          "point_domain_skips": 13,
+          "rejected_reads": 3646,
+          "rejected_seconds": 0.0011400070000000026,
+          "residual_commits": 8783,
+          "skipped_rule_calls": 267
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 1644
+        },
+        "state_sha": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e",
+        "runs": 1644,
+        "neural_waves": 1644,
+        "issued": 24855,
+        "counts": {
+          "accepted": 8558,
+          "calls": 9714,
+          "duplicates": 14144,
+          "reads": 47887,
+          "reads_by_kind": {
+            "generated": 47588,
+            "initial": 278,
+            "repair": 21
+          },
+          "rejected": {
+            "binding": 982,
+            "guard": 1171
+          }
+        },
+        "native_runtime_events": 1,
+        "independent_search_calls": 9447,
+        "network_seconds": 32.75185936894195,
+        "remaining_process_seconds_including_ipc": 16.02567526305723,
+        "native_verify_seconds": 0.018145409,
+        "native_repair_seconds": 0.011462573,
+        "wall_seconds": 49.06655333299932,
+        "policy_process_wall": 49.1334137920021
+      }
+    },
+    "owned": {
+      "arm": "owned",
+      "compatible_units": [
+        43,
+        62,
+        45
+      ],
+      "program": "3b904063c8c7e580ec2030b452d831ee53478a28c3dfaecf17eeb7e853a0aaf8",
+      "binary": "b53793f5f9c08351e32a43d667bdf0a777e145b4c8eca641b97fa2b8444f668e",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "reference_commits": 17341,
+      "omitted_standalone_rules": [],
+      "execution": {
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "94510dbed2b574e97152cf38a32dd2308aee25aa3728fbc31e4ec946eb94ffe0",
+          "runs": 1644,
+          "signed_external": [
+            3292,
+            1063,
+            339,
+            40
+          ],
+          "signed_internal": [
+            73,
+            0,
+            144,
+            0
+          ],
+          "uncredited": [
+            4207,
+            1953,
+            2304,
+            94
+          ],
+          "per_external_request": 0.19977403865553,
+          "per_decoded_request": 0.19901117453171477
+        },
+        "higher": {
+          "counts": {
+            "accepted_roots": 448,
+            "accepted_steps": 376,
+            "by_depth": {
+              "2": 300,
+              "3": 76
+            },
+            "issued_roots": 809,
+            "issued_steps": 644,
+            "missing_exports": 97
+          },
+          "outstanding": 0
+        },
+        "withheld_owned_requests": 95,
+        "visible_port_visits": 36307164,
+        "encoded_port_visits": 2524397,
+        "assist": {
+          "certified_bindings": 1266,
+          "delta_domain_skips": 234,
+          "delta_members_checked": 2857,
+          "duplicate_reads": 29083,
+          "duplicate_seconds": 0.006562610000000161,
+          "exact_candidates": 22677,
+          "exact_rows": 16075,
+          "exact_rule_calls": 9442,
+          "exact_seconds": 0.046559097999998564,
+          "point_domain_skips": 13,
+          "rejected_reads": 3875,
+          "rejected_seconds": 0.0012209479999999986,
+          "residual_commits": 8692,
+          "skipped_rule_calls": 272
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 1644
+        },
+        "state_sha": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e",
+        "runs": 1644,
+        "neural_waves": 1644,
+        "issued": 24783,
+        "counts": {
+          "accepted": 8649,
+          "calls": 9714,
+          "duplicates": 14361,
+          "reads": 48449,
+          "reads_by_kind": {
+            "generated": 48148,
+            "initial": 280,
+            "repair": 21
+          },
+          "rejected": {
+            "binding": 978,
+            "guard": 1171,
+            "untriggered_rule": 32,
+            "watermark": 236
+          }
+        },
+        "native_runtime_events": 1,
+        "independent_search_calls": 9442,
+        "network_seconds": 30.743422996976733,
+        "remaining_process_seconds_including_ipc": 15.430103276021875,
+        "native_verify_seconds": 0.018123019,
+        "native_repair_seconds": 0.01121543099999996,
+        "wall_seconds": 46.4555917079997
+      }
+    },
+    "replace": {
+      "arm": "replace",
+      "compatible_units": [
+        43,
+        62,
+        45
+      ],
+      "program": "3b904063c8c7e580ec2030b452d831ee53478a28c3dfaecf17eeb7e853a0aaf8",
+      "binary": "b53793f5f9c08351e32a43d667bdf0a777e145b4c8eca641b97fa2b8444f668e",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "reference_commits": 17341,
+      "omitted_standalone_rules": [
+        58,
+        137,
+        420
+      ],
+      "execution": {
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "94510dbed2b574e97152cf38a32dd2308aee25aa3728fbc31e4ec946eb94ffe0",
+          "runs": 1644,
+          "signed_external": [
+            3185,
+            1065,
+            341,
+            40
+          ],
+          "signed_internal": [
+            73,
+            0,
+            144,
+            0
+          ],
+          "uncredited": [
+            4314,
+            1951,
+            2302,
+            94
+          ],
+          "per_external_request": 0.20387737078935195,
+          "per_decoded_request": 0.20387737078935195
+        },
+        "higher": {
+          "counts": {
+            "accepted_roots": 449,
+            "accepted_steps": 376,
+            "by_depth": {
+              "2": 300,
+              "3": 76
+            },
+            "issued_roots": 810,
+            "issued_steps": 645,
+            "missing_exports": 97
+          },
+          "outstanding": 0
+        },
+        "withheld_owned_requests": 0,
+        "visible_port_visits": 36307164,
+        "encoded_port_visits": 2524397,
+        "assist": {
+          "certified_bindings": 1115,
+          "delta_domain_skips": 206,
+          "delta_members_checked": 2568,
+          "duplicate_reads": 28868,
+          "duplicate_seconds": 0.006441675000000198,
+          "exact_candidates": 22677,
+          "exact_rows": 16226,
+          "exact_rule_calls": 9470,
+          "exact_seconds": 0.04646867599999862,
+          "point_domain_skips": 13,
+          "rejected_reads": 3620,
+          "rejected_seconds": 0.0011430620000000015,
+          "residual_commits": 9201,
+          "skipped_rule_calls": 244
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 1644
+        },
+        "state_sha": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e",
+        "runs": 1644,
+        "neural_waves": 1644,
+        "issued": 23779,
+        "counts": {
+          "accepted": 8140,
+          "calls": 9714,
+          "duplicates": 14129,
+          "reads": 47485,
+          "reads_by_kind": {
+            "generated": 47180,
+            "initial": 284,
+            "repair": 21
+          },
+          "rejected": {
+            "binding": 711,
+            "guard": 1175,
+            "untriggered_rule": 33,
+            "watermark": 236
+          }
+        },
+        "native_runtime_events": 1,
+        "independent_search_calls": 9470,
+        "network_seconds": 30.864349419989594,
+        "remaining_process_seconds_including_ipc": 15.347804684009724,
+        "native_verify_seconds": 0.017709271,
+        "native_repair_seconds": 0.01125638499999997,
+        "wall_seconds": 46.49003745800292,
+        "policy_process_wall": 46.55193333399802
+      }
+    },
+    "withhold": {
+      "arm": "withhold",
+      "compatible_units": [
+        43,
+        62,
+        45
+      ],
+      "program": "3b904063c8c7e580ec2030b452d831ee53478a28c3dfaecf17eeb7e853a0aaf8",
+      "binary": "b53793f5f9c08351e32a43d667bdf0a777e145b4c8eca641b97fa2b8444f668e",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "reference_commits": 17341,
+      "omitted_standalone_rules": [
+        58,
+        137,
+        420
+      ],
+      "execution": {
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "94510dbed2b574e97152cf38a32dd2308aee25aa3728fbc31e4ec946eb94ffe0",
+          "runs": 1644,
+          "signed_external": [
+            3236,
+            1066,
+            473,
+            40
+          ],
+          "signed_internal": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "uncredited": [
+            4336,
+            1950,
+            2314,
+            94
+          ],
+          "per_external_request": 0.20284787462611115,
+          "per_decoded_request": 0.20284787462611115
+        },
+        "visible_port_visits": 36307164,
+        "encoded_port_visits": 2524397,
+        "assist": {
+          "certified_bindings": 1083,
+          "delta_domain_skips": 200,
+          "delta_members_checked": 2502,
+          "duplicate_reads": 28684,
+          "duplicate_seconds": 0.0064135920000001475,
+          "exact_candidates": 22677,
+          "exact_rows": 16258,
+          "exact_rule_calls": 9477,
+          "exact_seconds": 0.04755463999999863,
+          "point_domain_skips": 13,
+          "rejected_reads": 3388,
+          "rejected_seconds": 0.0010473460000000054,
+          "residual_commits": 9464,
+          "skipped_rule_calls": 237
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 1644
+        },
+        "state_sha": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e",
+        "runs": 1644,
+        "neural_waves": 1644,
+        "issued": 23737,
+        "counts": {
+          "accepted": 7877,
+          "calls": 9714,
+          "duplicates": 13972,
+          "reads": 46786,
+          "reads_by_kind": {
+            "generated": 46481,
+            "initial": 284,
+            "repair": 21
+          },
+          "rejected": {
+            "binding": 713,
+            "guard": 1175
+          }
+        },
+        "native_runtime_events": 1,
+        "independent_search_calls": 9477,
+        "network_seconds": 31.3093053460143,
+        "remaining_process_seconds_including_ipc": 15.41303720398264,
+        "native_verify_seconds": 0.017500158,
+        "native_repair_seconds": 0.011745674999999994,
+        "wall_seconds": 46.99812162500166,
+        "policy_process_wall": 47.0598820410014
+      }
+    }
+  }
+}

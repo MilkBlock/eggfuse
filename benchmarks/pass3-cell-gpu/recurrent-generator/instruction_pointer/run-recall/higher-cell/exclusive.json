@@ -1,0 +1,153 @@
+{
+  "fact": {
+    "base": {
+      "arm": "base",
+      "mode": "exclusive",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "binary": "b53793f5f9c08351e32a43d667bdf0a777e145b4c8eca641b97fa2b8444f668e",
+      "program": "f4da1650af5393f3f07d5d20d092e26270ae58090266dd197113dd295ffaf900",
+      "common_runs": 6,
+      "reference_runs": 634,
+      "final_equal": false,
+      "failure": null,
+      "measured_runs": 372,
+      "paid": 1560,
+      "higher": null,
+      "independent_search_calls": 0
+    },
+    "owned": {
+      "arm": "owned",
+      "mode": "exclusive",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "binary": "b53793f5f9c08351e32a43d667bdf0a777e145b4c8eca641b97fa2b8444f668e",
+      "program": "f4da1650af5393f3f07d5d20d092e26270ae58090266dd197113dd295ffaf900",
+      "common_runs": 6,
+      "reference_runs": 634,
+      "final_equal": false,
+      "failure": null,
+      "measured_runs": 372,
+      "paid": 1579,
+      "higher": {
+        "counts": {
+          "accepted_roots": 37,
+          "accepted_steps": 57,
+          "by_depth": {
+            "2": 37,
+            "3": 20
+          },
+          "issued_roots": 57,
+          "issued_steps": 71,
+          "missing_exports": 0
+        },
+        "outstanding": 0
+      },
+      "independent_search_calls": 0
+    }
+  },
+  "loopfact": {
+    "base": {
+      "arm": "base",
+      "mode": "exclusive",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "binary": "b53793f5f9c08351e32a43d667bdf0a777e145b4c8eca641b97fa2b8444f668e",
+      "program": "8f6d2b1a5f5a593b73119d0bfded0aefee97315191cc5f3efcd6e35320beacba",
+      "common_runs": 7,
+      "reference_runs": 618,
+      "final_equal": false,
+      "failure": null,
+      "measured_runs": 360,
+      "paid": 1143,
+      "higher": null,
+      "independent_search_calls": 0
+    },
+    "owned": {
+      "arm": "owned",
+      "mode": "exclusive",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "binary": "b53793f5f9c08351e32a43d667bdf0a777e145b4c8eca641b97fa2b8444f668e",
+      "program": "8f6d2b1a5f5a593b73119d0bfded0aefee97315191cc5f3efcd6e35320beacba",
+      "common_runs": 7,
+      "reference_runs": 618,
+      "final_equal": false,
+      "failure": null,
+      "measured_runs": 360,
+      "paid": 1142,
+      "higher": {
+        "counts": {
+          "accepted_roots": 29,
+          "accepted_steps": 42,
+          "by_depth": {
+            "2": 29,
+            "3": 13
+          },
+          "issued_roots": 50,
+          "issued_steps": 50,
+          "missing_exports": 0
+        },
+        "outstanding": 0
+      },
+      "independent_search_calls": 0
+    }
+  },
+  "sum-divisors": {
+    "base": {
+      "arm": "base",
+      "mode": "exclusive",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "binary": "b53793f5f9c08351e32a43d667bdf0a777e145b4c8eca641b97fa2b8444f668e",
+      "program": "3b904063c8c7e580ec2030b452d831ee53478a28c3dfaecf17eeb7e853a0aaf8",
+      "common_runs": 10,
+      "reference_runs": 1644,
+      "final_equal": false,
+      "failure": {
+        "run": 85,
+        "charged": {
+          "issued": 1908,
+          "neural_waves": 85,
+          "wall_seconds": 0.7304911669998546,
+          "network_seconds": 0.4439983780030161
+        }
+      },
+      "measured_runs": 84,
+      "paid": 1884,
+      "higher": null,
+      "independent_search_calls": 0
+    },
+    "owned": {
+      "arm": "owned",
+      "mode": "exclusive",
+      "weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "binary": "b53793f5f9c08351e32a43d667bdf0a777e145b4c8eca641b97fa2b8444f668e",
+      "program": "3b904063c8c7e580ec2030b452d831ee53478a28c3dfaecf17eeb7e853a0aaf8",
+      "common_runs": 10,
+      "reference_runs": 1644,
+      "final_equal": false,
+      "failure": {
+        "run": 85,
+        "charged": {
+          "issued": 1923,
+          "neural_waves": 85,
+          "wall_seconds": 0.7410989589989185,
+          "network_seconds": 0.4500807460244687
+        }
+      },
+      "measured_runs": 84,
+      "paid": 1900,
+      "higher": {
+        "counts": {
+          "accepted_roots": 75,
+          "accepted_steps": 109,
+          "by_depth": {
+            "2": 70,
+            "3": 39
+          },
+          "issued_roots": 114,
+          "issued_steps": 140,
+          "missing_exports": 0
+        },
+        "outstanding": 5
+      },
+      "independent_search_calls": 0
+    }
+  }
+}

@@ -544,3 +544,5 @@ starts and provided no reduction in verifier traffic on the measured prefix.
 The [paired CPU timings and native work counts](run-recall/assist-cost/README.md) cover all three full EggCC workloads.
 
 The [sealed-domain assist experiment](run-recall/assist-domains/README.md) compares full-run signed streams, complete-domain checks, residual search costs and independent rollouts with the frozen Actor.
+
+The [higher Cell experiment](run-recall/higher-cell/README.md) signs typed iterative Bake continuations from neural roots, verifies them on the actual source boundary and measures settled effective operations per token.
