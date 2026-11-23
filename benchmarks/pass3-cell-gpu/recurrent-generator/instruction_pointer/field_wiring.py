@@ -85,13 +85,14 @@ class RouteBank:
     def has_links(self,uid,slot):
         return bool(self.bank[self.uses[uid][slot]])
 
-    def features(self, uid, slot, known, rows):
+    def features(self, uid, slot, known, rows, encoded=None):
         links=self.bank[self.uses[uid][slot]]
         if not links:
             return torch.zeros(len(rows),3)
         source=[known[p][i] for p,i,_ in links]
         cols=[j for _,_,j in links]
-        keys=bits(rows,len(rows[0]))[:,cols]
+        domain_bits=bits(rows,len(rows[0])) if encoded is None else encoded.bits
+        keys=domain_bits[:,cols]
         scores=(keys*bits([source],len(source))).mean(-1)
         return torch.stack((scores.amin(1),scores.mean(1),scores.amax(1)),1)
 
@@ -107,5 +108,5 @@ class FieldReader:
         self.model=nn.Linear(3,1,bias=False).eval()
         self.model.load_state_dict(torch.load(folder/'field.pt',weights_only=True))
 
-    def adjustment(self,uid,slot,known,rows):
-        return self.model(self.routes.features(uid,slot,known,rows)).flatten()
+    def adjustment(self,uid,slot,known,rows,encoded=None):
+        return self.model(self.routes.features(uid,slot,known,rows,encoded)).flatten()

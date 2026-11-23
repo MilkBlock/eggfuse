@@ -17,7 +17,7 @@ from online import execute
 from prefix_policy import Policy
 
 
-def compare(folder,donor,binary,weights,baked,audits,seed,learned=None,base_bake=None,base_policy=None,additional=None,recovery_dir=None):
+def compare(folder,donor,binary,weights,baked,audits,seed,learned=None,base_bake=None,base_policy=None,additional=None,recovery_dir=None,field_dir=None):
     results=[]
     if learned:
         from layout_credit import CreditIssuer,load_policy
@@ -52,6 +52,13 @@ def compare(folder,donor,binary,weights,baked,audits,seed,learned=None,base_bake
                     raise ValueError('timed layout policy differs from the audit')
                 issuer=CreditIssuer(actor,donor,read(folder/'program.json'),catalog(arm),omit=True,
                                     attach=True,seed=1703,explore=False,policy=policy)
+                if records[arm].get('field_reader'):
+                    from field_wiring import FieldReader
+                    if field_dir is None:
+                        raise ValueError('field checkpoint required by timed audit')
+                    issuer.field_reader=FieldReader(field_dir,catalog(arm))
+                    if issuer.field_reader.checkpoint!=records[arm]['field_reader']:
+                        raise ValueError('timed field pointer differs from work audit')
             else:
                 issuer=None if arm=='control' else GraphIssuer(actor,donor,read(folder/'program.json'),baked,True)
             prefix=Policy(32)
@@ -73,6 +80,8 @@ def compare(folder,donor,binary,weights,baked,audits,seed,learned=None,base_bake
             expected=records[arm]['execution']
             if any(r.get(k)!=expected.get(k) for k in ('issued','state_sha','counts','layouts','runs')):
                 raise ValueError('timed execution diverged from signed operation audit')
+            if issuer and records[arm].get('field_reader') and issuer.counts!=records[arm]['issuer']['counts']:
+                raise ValueError('timed field read counts differ from audited issuance')
             e=expected['ept']
             ops=sum(e['signed_external']+e['signed_internal'])
             pair[arm]=dict(wall=wall,signed_ops=ops,eps=ops/wall,root=r['network_seconds'],
@@ -89,6 +98,7 @@ if __name__=='__main__':
     for k in ('root','donor','binary','weights','baked','audits','out'):
         p.add_argument(k,type=Path)
     p.add_argument('--recovery-dir',type=Path)
+    p.add_argument('--field-reader',type=Path)
     p.add_argument('--policy',type=Path)
     p.add_argument('--additional-policy',type=Path)
     p.add_argument('--base-bake',type=Path)
@@ -104,5 +114,5 @@ if __name__=='__main__':
     donor=read(a.donor/'program.json')
     reports={}
     for name in a.cases:
-        reports[name]=compare(a.root/name,donor,a.binary,a.weights,a.baked,a.audits,1703+seeds.get(name,0),a.policy,a.base_bake,a.base_policy,a.additional_policy,a.recovery_dir)
+        reports[name]=compare(a.root/name,donor,a.binary,a.weights,a.baked,a.audits,1703+seeds.get(name,0),a.policy,a.base_bake,a.base_policy,a.additional_policy,a.recovery_dir,a.field_reader)
         a.out.write_text(json.dumps(reports,indent=2)+'\n')

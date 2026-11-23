@@ -48,24 +48,33 @@ class BoundaryReader(nn.Module):
             torch.cat((q[:,None].expand(-1,keys.shape[1],-1),comparison),dim=-1)).squeeze(-1)
 
 
-def fields(prior,domain,width):
+class EncodedPorts:
+    """Read-only columns for one visible, typed domain in a sealed Run."""
+    def __init__(self,domain,width):
+        from side_pointer import bits
+        self.keys=row_features(domain,width,'cpu')
+        n=max(map(len,domain),default=0)
+        self.bits=bits(domain,n)
+        self.present=torch.arange(n)[None,:]<torch.tensor(list(map(len,domain)))[:,None]
+
+
+def fields(prior,domain,width,encoded=None):
     # All ports of the requested static type are scored in deployment. The
     # similarity arithmetic belongs to the reader and supplies no exact join mask.
     from side_pointer import bits
     previous=[x for row in prior for x in row]
-    field_width=max(map(len,domain),default=0)
-    keys=row_features(domain,width,'cpu')
-    if not previous or not field_width:
-        return keys,torch.zeros(len(domain),4)
+    if encoded is None:
+        encoded=EncodedPorts(domain,width)
+    if not previous or not encoded.bits.shape[1]:
+        return encoded.keys,torch.zeros(len(domain),4)
     x=bits([previous],len(previous))[0]
-    y=bits(domain,field_width)
-    pair=torch.einsum('pf,nsf->nps',x,y)/64
-    present=torch.arange(field_width)[None,:]<torch.tensor(list(map(len,domain)))[:,None]
+    pair=torch.einsum('pf,nsf->nps',x,encoded.bits)/64
+    present=encoded.present
     valid=present[:,None,:].expand_as(pair)
     best=pair.masked_fill(~valid,-1).amax((1,2))
     mean=(pair*valid).sum((1,2))/valid.sum((1,2)).clamp_min(1)
     each=pair.amax(1)
-    return keys,torch.stack((best,mean,each[:,0],(each*present).sum(1)/present.sum(1).clamp_min(1)),dim=1)
+    return encoded.keys,torch.stack((best,mean,each[:,0],(each*present).sum(1)/present.sum(1).clamp_min(1)),dim=1)
 
 
 def make_steps(folder,donor,layouts,selected,seed,codes,roles,model=None,*,grow_consumers=False,record_fields=None,field_reader=None):

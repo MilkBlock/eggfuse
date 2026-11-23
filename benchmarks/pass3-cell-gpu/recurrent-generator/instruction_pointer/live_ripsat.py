@@ -15,7 +15,7 @@ from anchor_set_audit import load_actor
 from higher_cell import read
 from online import SourcePanic,execute
 from prefix_policy import Policy
-from ripsat_boundary import BoundaryReader,fields
+from ripsat_boundary import BoundaryReader,EncodedPorts,fields
 from ripsat_layout import signatures
 from ripsat_policy import CellScorer,root_context
 from ripsat_replay import unpack
@@ -29,6 +29,20 @@ class Instance:
     group:int=0
     sent:dict=field(default_factory=dict)
     returns:dict=field(default_factory=dict)
+
+
+class RunPorts(defaultdict):
+    def __init__(self,ports):
+        super().__init__(list)
+        for port in ports:
+            self[port.table].append(port)
+        self.encodings={}
+
+    def encoded(self,table,width):
+        if table not in self.encodings:
+            rows=[p.hashes for p in self[table]]
+            self.encodings[table]=rows,EncodedPorts(rows,width)
+        return self.encodings[table]
 
 
 class GraphIssuer:
@@ -125,13 +139,16 @@ class GraphIssuer:
                 return None
             prior=[tuple(history.visible[address(points[j])]['hashes']) for j in sorted(points)]
             ctx=torch.cat((self.codes[u],role,root_context(prior,self.codes.shape[1])))
-            rows=[p.hashes for p in ports]
-            keys,comparison=fields(prior,rows,self.codes.shape[1])
+            if isinstance(domains,RunPorts):
+                rows,encoded=domains.encoded(table,self.codes.shape[1])
+            else:
+                rows,encoded=[p.hashes for p in ports],None
+            keys,comparison=fields(prior,rows,self.codes.shape[1],encoded)
             scores=self.reader(ctx[None],keys[None],comparison[None])[0]
             j=int(scores.argmax())
             if self.field_reader is not None and self.field_reader.routes.has_links(u,slot):
                 prior_slots=dict(zip(sorted(points),prior,strict=True))
-                adjusted=int((scores+self.field_reader.adjustment(u,slot,prior_slots,rows)).argmax())
+                adjusted=int((scores+self.field_reader.adjustment(u,slot,prior_slots,rows,encoded)).argmax())
                 self.counts['routed_reads']+=1
                 self.counts['routed_candidate_scores']+=len(ports)
                 self.counts['changed_port_choices']+=int(j!=adjusted)
@@ -188,9 +205,7 @@ class GraphIssuer:
                 for step in self.groups[u][inst.group]:
                     emit(inst,step)
             keep.append(inst)
-        domains=defaultdict(list)
-        for port in snap.ports:
-            domains[port.table].append(port)
+        domains=RunPorts(snap.ports)
         opts={rid:[u for u in self.choices[rid] if allowed(u,0)] for rid in {r['rule'] for r in roots}}
         for req in roots:
             inst=self.select(req,opts[req['rule']],history,domains)
