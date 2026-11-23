@@ -72,7 +72,7 @@ def propose(actor, catalog, snapshot, nodes):
 
 
 @torch.no_grad()
-def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=None, live_receipts=None, teacher_tape=None, observe_packets=None, mask_receipts=False, prefix_policy=None, shadow_runs=None, run_limit=None, observe_snapshot=None, assist=False, audit=True, frame_observer=None, rule_screen=None, activation_observer=None, project_ports=None):
+def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=None, live_receipts=None, teacher_tape=None, observe_packets=None, mask_receipts=False, prefix_policy=None, shadow_runs=None, run_limit=None, observe_snapshot=None, assist=False, audit=True, frame_observer=None, rule_screen=None, activation_observer=None, project_ports=None, higher_catalog=None, higher_choices=None, omit_rules=(), higher_ownership=None, audit_ept=False):
     if wave_limit is None:
         wave_limit = getattr(actor,'default_waves',1)
     if live_receipts is None:
@@ -119,6 +119,12 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
     cmd = [binary,role,program,teacher_tape or '-','audit' if audit else 'time']
     if run_limit is not None:
         cmd.append(str(run_limit))
+    if higher_catalog is not None:
+        if role not in ('online','assist') or not higher_choices:
+            raise ValueError('higher templates require a bounded live Actor and a nonempty catalog')
+        cmd.extend(['--higher',higher_catalog])
+    if audit_ept:
+        cmd.append('--ept')
     with TemporaryFile(mode='w+') as errors, subprocess.Popen(
             cmd,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=errors,text=True,bufsize=1) as p:
         try:
@@ -134,6 +140,7 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
                 snapshot = history.snapshot(frame)
                 if observe_snapshot is not None:
                     observe_snapshot(catalog,history,snapshot)
+                owned = higher_ownership.advance(frame,history) if higher_ownership else ()
                 def packets(actions):
                     nonlocal next_token, issued
                     out = []
@@ -143,7 +150,12 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
                             token = history.inverse[alias]
                             row = history.visible[token,pc]
                             parents.append(dict(address=dict(token=token,op=pc),version=row['version']))
+                        if higher_ownership and rid not in higher_choices and higher_ownership.covered(owned,rid,parents):
+                            next_token += 1
+                            continue
                         out.append(dict(run=snapshot.run,rule=rid,parents=parents,token=next_token))
+                        if higher_choices and rid in higher_choices:
+                            out[-1]["unit"] = higher_choices[rid]
                         next_token += 1
                     issued += len(out)
                     if observe_packets is not None:
@@ -173,6 +185,8 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
                 if prefix_policy is not None:
                     if shadow_runs is None or snapshot.run in shadow_runs:
                         selected = rule_screen.select(catalog,snapshot,nodes) if rule_screen is not None else None
+                        if omit_rules:
+                            selected = set(snapshot.rules if selected is None else selected).difference(omit_rules)
                         query_snapshot = port_projection.project(snapshot) if port_projection else snapshot
                         mem = actor.memory(catalog,query_snapshot,nodes) if selected is None or selected else None
                         def read_prefix(rid, roles, rows):
@@ -217,7 +231,9 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
         if p.wait() or not calls or not report['counts']['calls']:
             raise RuntimeError('empty or unsuccessful online run')
     counts = report['wave_checks'] if teacher_tape else report['counts']
-    if report['unused'] or issued != counts['accepted'] + counts['duplicates'] + sum(counts['rejected'].values()):
+    higher = report.get('higher')
+    internal = higher['counts']['issued_steps'] if higher else 0
+    if report['unused'] or issued + internal != counts['accepted'] + counts['duplicates'] + sum(counts['rejected'].values()):
         raise RuntimeError('unaccounted online proposals')
     if live_receipts and (report['wave_requests'] != issued
             or receipt_counts.get('accepted',0) != counts['accepted']
@@ -226,7 +242,7 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
         raise ValueError('wave receipts differ from final verifier ledger')
     if assist and report['assist']['residual_commits'] + counts['accepted'] != report['matches']:
         raise ValueError('assist ownership differs from committed source bindings')
-    return dict(**(dict(visible_port_visits=port_projection.full,encoded_port_visits=port_projection.encoded) if port_projection else {}),
+    return dict(**({'ept':report['ept']} if audit_ept else {}), **({'higher':higher,'withheld_owned_requests':higher_ownership.omitted if higher_ownership else 0} if higher else {}), **(dict(visible_port_visits=port_projection.full,encoded_port_visits=port_projection.encoded) if port_projection else {}),
                 **(dict(assist=report['assist'],resume_audit=report.get('resumes',[]),event_audit=report.get('events',[])) if assist else {}),partial_proof_counts={f'{kind}_{depth}': dict(c) for (kind,depth),c in prefix_counts.items()},
                 native_partial_reads=report.get('prefix_reads',0),native_partial_probes=report.get('prefixes_checked',0),
                 native_partial_seconds=report.get('prefix_verify_seconds',0),
