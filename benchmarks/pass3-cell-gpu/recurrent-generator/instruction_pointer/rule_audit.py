@@ -8,7 +8,7 @@ import random
 
 import torch
 from actor import InstructionActor
-from history import load
+from history import load, stream
 from online import lane_choice
 
 
@@ -89,6 +89,56 @@ def audit(root,weights,output,samples,seed,field):
         output.write_text(json.dumps(report,indent=2)+'\n')
 
 
+@torch.no_grad()
+def held_rule_census(root, weights, output, seed, field):
+    """Score only the free rule/Stop decision on every Run of each native holdout."""
+    torch.set_num_threads(1)
+    actor = InstructionActor(field_pointer=field).eval()
+    actor.load_state_dict(torch.load(weights, weights_only=True, map_location='cpu'))
+    report = dict(mode='shadow', decision='rule before any parent read', wave=1,
+                  seed=seed, field_pointer=field,
+                  weights_sha256=hashlib.sha256(weights.read_bytes()).hexdigest(), cases={})
+    for rec in json.loads((root/'manifest.json').read_bytes()):
+        if rec['split'] != 'held_eggcc':
+            continue
+        strata = {key:Counter() for key in ('with_commits', 'without_commits')}
+        forced = Counter()
+        nodes = None
+        for cat, frame in stream(root / rec['directory'], seed):
+            if nodes is None:
+                nodes = actor.template_graph(cat)
+            mem = actor.memory(cat, frame, nodes)
+            expected = {rid for rid, _ in frame.targets}
+            counts = strata['with_commits' if expected else 'without_commits']
+            counts.update(runs=1, teacher_rule_run_pairs=len(expected))
+            chosen = set()
+            for lane in range(actor.lanes.num_embeddings):
+                _, rules, logits = actor.actions(cat, mem, lane)
+                action = int(logits.argmax())
+                if expected and action == 0:
+                    # Diagnostic only: on a busy reference Run, remove Stop
+                    # for this ranking read. Never submit its result.
+                    forced['stopped_lanes_on_busy_runs'] += 1
+                    forced['best_rule_has_winner'] += int(rules[int(logits[1:].argmax())] in expected)
+                counts['lane_decisions'] += 1
+                if action == 0:
+                    counts['stop'] += 1
+                else:
+                    rid = rules[action - 1]
+                    chosen.add(rid)
+                    counts['rule_chosen'] += 1
+                    counts['correct_rule_choices'] += int(rid in expected)
+            counts.update(all_lanes_stopped=int(not chosen),
+                          correct_distinct_rule_run_pairs=len(chosen & expected),
+                          runs_with_a_correct_rule=int(bool(chosen & expected)))
+        if sum(c['runs'] for c in strata.values()) != rec['runs']:
+            raise ValueError('missing native Run')
+        report['cases'][rec['workload']] = {**strata, 'forced_issue':dict(mode='assist', **forced)}
+    if not report['cases']:
+        raise ValueError('no held EggCC programs')
+    output.write_text(json.dumps(report, indent=2) + '\n')
+
+
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     for key in ('root','weights','output'):
@@ -96,5 +146,10 @@ if __name__=='__main__':
     p.add_argument('--samples',type=int,default=16)
     p.add_argument('--seed',type=int,default=1967)
     p.add_argument('--field-pointer',action='store_true')
+    p.add_argument('--held-rule-census', action='store_true',
+                   help='score the free rule head on every held native Run, omit parent decoding')
     a=p.parse_args()
-    audit(a.root,a.weights,a.output,a.samples,a.seed,a.field_pointer)
+    if a.held_rule_census:
+        held_rule_census(a.root, a.weights, a.output, a.seed, a.field_pointer)
+    else:
+        audit(a.root,a.weights,a.output,a.samples,a.seed,a.field_pointer)

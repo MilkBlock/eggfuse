@@ -36,10 +36,12 @@ def check_live_fields(model,cat,frame,nodes):
     return False
 
 
-def check(directory):
+def check(directory, weights=None):
     torch.manual_seed(1703)
     torch.set_num_threads(1)
     model = InstructionActor().eval()
+    if weights is not None:
+        model.load_state_dict(torch.load(weights, map_location="cpu", weights_only=True))
     cat, snapshots = load(directory,19)
     _, renamed = load(directory,23)
     with torch.no_grad():
@@ -70,10 +72,12 @@ def check(directory):
     with torch.no_grad():
         model.field_pointer=True
         assert any(check_live_fields(model,cat,s,nodes) for s in snapshots), 'missing distinct first reads'
-    print('system output visibility, ordered collision operands, optional latent, renamed keys, teacher action support: pass')
+    print('system output visibility, ordered collision operands, optional latent, renamed keys, teacher action support, dynamic keys and first-parent-conditioned field scores: pass')
 
 
 if __name__=='__main__':
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('program_directory',type=Path)
-    check(ap.parse_args().program_directory)
+    ap.add_argument('--weights', type=Path)
+    args = ap.parse_args()
+    check(args.program_directory, args.weights)

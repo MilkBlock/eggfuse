@@ -53,3 +53,30 @@ On the same 96 held-out programs, correct exclusive final states increased from 
 `online.py --wave-limit N` reuses one immutable memory snapshot for all waves. Lanes receive a pooled representation of their just-issued templates and ordered parent keys before their next decision. Every complete proposal, including duplicates, reaches the verifier. The issuer reports Stop, an incomplete request, a repeated wave or budget exhaustion; these are local decoding outcomes. Source execution can still diverge from saturation.
 
 Counting the reference tapes gives a four-lane single-wave ceiling of 1,583/7,265 RHS bindings for sum-bits and 1,594/6,704 for dot-product with one binding per proposal. With fixed weights trained only on single waves, changing the limit from one to eight on sum-bits raised paid proposals from 130 to 234 and native acceptances from 10 to 12. Dot-product went from 126 to 221 proposals and 9 to 10 acceptances. Both final graphs still diverged. The increased budget mostly added duplicate or rejected work. [Raw counts and timings](wave-results.json)
+
+### Mixed EggCC epoch on Apple Metal
+
+The field-pointer Actor trained with AdamW/backpropagation on MPS for 8,930 updates from the earlier checkpoint. It visited all 1,026 training programs and all 6,035 source Run snapshots. The random portion grew from 16 programs and 48 snapshots to 1,024 and 3,072. Its three merge shapes gave 170, 171 and 171 training programs with a consumed repair output at PC 0, 1 and 2 respectively. The native portion contributed 13,969 committed bindings on 2,963 Runs of sum-bits and dot-product. Fact and loopfact were held out. Each independent native tape was replay-checked before inclusion. Both checkpoints used the same pointer architecture, rotary frequencies, four lanes and one issuance wave. The trained key and first-parent conditioning checks passed on collision examples from each of the three training merge shapes.
+
+| Held programs | Exact final states before → after, exclusive CPU | Required repair parent correct before → after, teacher snapshots |
+|---|---:|---:|
+| Fresh random programs | 16 → 48 of 48 | 15 → 24 of 24 |
+| Held merge template | 19 → 46 of 48 | 10 → 24 of 24 |
+| Held result position and template | 9 → 13 of 48 | 0 → 0 of 24 |
+| Fact and loopfact | 0 → 0 of 2 | No required repair references on sampled snapshots |
+
+On the complete 1,252-Run native holdout census, the trained rule head stopped all four lanes on 319/329 Runs with teacher commits and 921/923 Runs without commits. Before training the corresponding counts were 0/329 and 2/923. Among busy Runs, the number with at least one correct free rule choice fell from 39/163 to 1/163 on fact and from 56/166 to 1/166 on loopfact. In an offline diagnostic on stopped lanes of busy Runs, the trained Actor's highest-scoring non-Stop rule had a winner on 200/647 and 238/659 lanes respectively. Removing Stop alone would still leave most of these rules wrong.
+
+With the teacher naming a winning rule on 16 sampled busy Runs per program, exact full parent tuples improved from 20/176 to 30/176 lane/rule trials for fact and from 49/256 to 65/256 for loopfact. In free exclusive execution, both models used single-thread CPU inference and the actual native verifier with zero independent searches. Together the held EggCC programs went from 17 accepted of 258 issued to 4 accepted of 4 issued; the certified prefix fell from four reference commits to two out of 3,087. These measurements evaluate proposal semantics. Wall times include the experimental JSON transport and have no paired speed control.
+
+The [paired experiment record](mixed-epoch-results.json) includes the hashes, split ledger, every sampled rule-audit Run, the separate full rule census, shadow parent accuracy and exclusive receiver outcomes. To reproduce using a sealed corpus at `$root`, the previous checkpoint at `$initial` and its receiver at `$receiver`, run the following from this directory. The reporting helper expects the existing initial-weight evaluations in `$root/baseline-eval.json` and `$root/rule-head-baseline.json`, produced with the same evaluation commands and initial weights.
+
+```sh
+mkdir -p "$epoch"
+python train.py "$root" "$epoch/mps-epoch.pt" --device mps --field-pointer --steps 8930 --initial-weights "$initial"
+python rule_audit.py "$root" "$epoch/mps-epoch.pt" "$epoch/rule-head.json" --field-pointer --samples 16
+python evaluate.py "$root" "$receiver" "$epoch/held.json" --weights "$epoch/mps-epoch.pt" --field-pointer --split held_eggcc --split held_program --split held_merge --split held_result_pc --snapshot-count 16
+python rule_audit.py "$root" "$initial" "$epoch/census-before-with-ranking.json" --field-pointer --held-rule-census
+python rule_audit.py "$root" "$epoch/mps-epoch.pt" "$epoch/census-after-with-ranking.json" --field-pointer --held-rule-census
+python mixed_results.py "$root" "$epoch" mixed-epoch-results.json
+```

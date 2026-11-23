@@ -1,0 +1,1376 @@
+{
+  "manifest_sha256": "fb6526b731d455fccc6221011bbbacdca0c5f32b35b4ed9eea5bbaf2824351fd",
+  "corpus": {
+    "train/random": {
+      "programs": 1024,
+      "runs": 3072,
+      "actions": 7680,
+      "repair_input_runs": 512
+    },
+    "held_program/random": {
+      "programs": 48,
+      "runs": 144,
+      "actions": 360,
+      "repair_input_runs": 24
+    },
+    "held_merge/random": {
+      "programs": 48,
+      "runs": 144,
+      "actions": 360,
+      "repair_input_runs": 24
+    },
+    "held_result_pc/random": {
+      "programs": 48,
+      "runs": 144,
+      "actions": 360,
+      "repair_input_runs": 24
+    },
+    "train/eggcc": {
+      "programs": 2,
+      "runs": 2963,
+      "actions": 13969,
+      "repair_input_runs": 10
+    },
+    "held_eggcc/eggcc": {
+      "programs": 2,
+      "runs": 1252,
+      "actions": 3087,
+      "repair_input_runs": 0
+    }
+  },
+  "random_training_consumed_repair_pcs": {
+    "1": 171,
+    "2": 171,
+    "0": 170
+  },
+  "training": {
+    "field_pointer": true,
+    "device": "mps",
+    "steps": 8930,
+    "seed": 1703,
+    "event_fraction": null,
+    "natural_event_frames": null,
+    "train_frames": null,
+    "mixed_update_steps": {
+      "random": 3072,
+      "eggcc": 5858
+    },
+    "native_updates": {
+      "sum": 2954,
+      "dot": 2904
+    },
+    "initial_weights_sha256": "302d7240e731b9da2c9063586e952017f0de44181cfc522d63255155eeb82ad8",
+    "distinct_programs": 1026,
+    "distinct_runs": 6035,
+    "templates": [
+      "7d67c32b87dc58c015f6051a1d85462c6a905f3645b7949e4d622c1f3308c196",
+      "92db3fe6aa4387da75d1253697a5566012ea4c4a78d040f797a4072cdabaf7b9",
+      "d7fb4d59bb9230834a804c0cc802ed46eca7184ad2c06268fb10f34d0c2fe910"
+    ]
+  },
+  "verifier_sha256": "4f776e000dd7bc14bfca72ea82f17dcf769f7e720c01fbe85c78bff04e2ae0ab",
+  "inference_device": "single-thread CPU",
+  "rule_head": {
+    "before": {
+      "mode": "shadow",
+      "wave": 1,
+      "seed": 1967,
+      "field_pointer": true,
+      "weights_sha256": "302d7240e731b9da2c9063586e952017f0de44181cfc522d63255155eeb82ad8",
+      "cases": {
+        "sum": {
+          "split": "train",
+          "with_commits": {
+            "population": 527,
+            "sample": [
+              12,
+              31,
+              227,
+              281,
+              447,
+              589,
+              598,
+              726,
+              729,
+              768,
+              793,
+              848,
+              886,
+              1021,
+              1148,
+              1232
+            ],
+            "counts": {
+              "runs": 16,
+              "teacher_rules": 64,
+              "teacher_bindings": 160,
+              "lanes": 64,
+              "rule_chosen": 63,
+              "rule_without_winner": 56,
+              "correct_rule_choices": 7,
+              "correct_rule_requiring_parent": 7,
+              "correct_rule_other_parents": 6,
+              "covered_distinct_rules": 5,
+              "stop": 1,
+              "exact_required_parents": 1,
+              "correct_rule_exact_parents": 1,
+              "exact_distinct_requests": 1
+            },
+            "oracle_rule": {
+              "mode": "assist",
+              "required_rule_lane_trials": 256,
+              "complete_tuple": 256,
+              "exact_teacher_tuple": 83
+            }
+          },
+          "without_commits": {
+            "population": 901,
+            "sample": [
+              14,
+              68,
+              289,
+              392,
+              529,
+              542,
+              832,
+              865,
+              894,
+              943,
+              959,
+              974,
+              1146,
+              1218,
+              1272,
+              1303
+            ],
+            "counts": {
+              "runs": 16,
+              "lanes": 64,
+              "rule_chosen": 56,
+              "rule_without_winner": 56,
+              "empty_runs": 16,
+              "stop": 8
+            },
+            "oracle_rule": {
+              "mode": "assist"
+            }
+          }
+        },
+        "dot": {
+          "split": "train",
+          "with_commits": {
+            "population": 546,
+            "sample": [
+              36,
+              190,
+              199,
+              276,
+              403,
+              507,
+              589,
+              610,
+              939,
+              1085,
+              1099,
+              1198,
+              1283,
+              1289,
+              1347,
+              1364
+            ],
+            "counts": {
+              "runs": 16,
+              "teacher_rules": 47,
+              "teacher_bindings": 141,
+              "lanes": 64,
+              "rule_chosen": 63,
+              "rule_without_winner": 53,
+              "stop": 1,
+              "correct_rule_choices": 10,
+              "correct_rule_requiring_parent": 10,
+              "exact_required_parents": 6,
+              "correct_rule_exact_parents": 6,
+              "covered_distinct_rules": 4,
+              "exact_distinct_requests": 5,
+              "correct_rule_other_parents": 4
+            },
+            "oracle_rule": {
+              "mode": "assist",
+              "required_rule_lane_trials": 188,
+              "complete_tuple": 188,
+              "exact_teacher_tuple": 28
+            }
+          },
+          "without_commits": {
+            "population": 989,
+            "sample": [
+              55,
+              106,
+              126,
+              170,
+              194,
+              203,
+              584,
+              675,
+              756,
+              790,
+              799,
+              864,
+              974,
+              1117,
+              1223,
+              1493
+            ],
+            "counts": {
+              "runs": 16,
+              "lanes": 64,
+              "rule_chosen": 63,
+              "rule_without_winner": 63,
+              "empty_runs": 16,
+              "stop": 1
+            },
+            "oracle_rule": {
+              "mode": "assist"
+            }
+          }
+        },
+        "fact": {
+          "split": "held_eggcc",
+          "with_commits": {
+            "population": 163,
+            "sample": [
+              4,
+              17,
+              96,
+              104,
+              149,
+              152,
+              157,
+              166,
+              172,
+              202,
+              261,
+              276,
+              286,
+              290,
+              314,
+              320
+            ],
+            "counts": {
+              "runs": 16,
+              "teacher_rules": 44,
+              "teacher_bindings": 195,
+              "lanes": 64,
+              "rule_chosen": 63,
+              "rule_without_winner": 57,
+              "correct_rule_choices": 6,
+              "correct_rule_requiring_parent": 6,
+              "correct_rule_other_parents": 6,
+              "covered_distinct_rules": 3,
+              "stop": 1
+            },
+            "oracle_rule": {
+              "mode": "assist",
+              "required_rule_lane_trials": 176,
+              "complete_tuple": 176,
+              "exact_teacher_tuple": 20
+            }
+          },
+          "without_commits": {
+            "population": 471,
+            "sample": [
+              47,
+              102,
+              145,
+              167,
+              171,
+              176,
+              284,
+              315,
+              322,
+              409,
+              456,
+              480,
+              483,
+              518,
+              559,
+              577
+            ],
+            "counts": {
+              "runs": 16,
+              "lanes": 64,
+              "rule_chosen": 63,
+              "rule_without_winner": 63,
+              "empty_runs": 16,
+              "stop": 1
+            },
+            "oracle_rule": {
+              "mode": "assist"
+            }
+          }
+        },
+        "loopfact": {
+          "split": "held_eggcc",
+          "with_commits": {
+            "population": 166,
+            "sample": [
+              64,
+              86,
+              95,
+              101,
+              126,
+              147,
+              149,
+              152,
+              154,
+              216,
+              239,
+              242,
+              249,
+              276,
+              291,
+              303
+            ],
+            "counts": {
+              "runs": 16,
+              "teacher_rules": 64,
+              "teacher_bindings": 188,
+              "lanes": 64,
+              "rule_chosen": 62,
+              "rule_without_winner": 50,
+              "correct_rule_choices": 12,
+              "correct_rule_requiring_parent": 12,
+              "correct_rule_other_parents": 11,
+              "covered_distinct_rules": 6,
+              "exact_required_parents": 1,
+              "correct_rule_exact_parents": 1,
+              "stop": 2,
+              "exact_distinct_requests": 1
+            },
+            "oracle_rule": {
+              "mode": "assist",
+              "required_rule_lane_trials": 256,
+              "complete_tuple": 256,
+              "exact_teacher_tuple": 49
+            }
+          },
+          "without_commits": {
+            "population": 452,
+            "sample": [
+              46,
+              94,
+              96,
+              113,
+              124,
+              163,
+              198,
+              213,
+              238,
+              241,
+              326,
+              360,
+              408,
+              424,
+              452,
+              581
+            ],
+            "counts": {
+              "runs": 16,
+              "lanes": 64,
+              "rule_chosen": 62,
+              "rule_without_winner": 62,
+              "empty_runs": 16,
+              "stop": 2
+            },
+            "oracle_rule": {
+              "mode": "assist"
+            }
+          }
+        }
+      }
+    },
+    "after": {
+      "mode": "shadow",
+      "wave": 1,
+      "seed": 1967,
+      "field_pointer": true,
+      "weights_sha256": "beb0848ce275034a68b67653c4fd4e4d6c15f4f0402965452d8ea8cc59219dee",
+      "cases": {
+        "sum": {
+          "split": "train",
+          "with_commits": {
+            "population": 527,
+            "sample": [
+              12,
+              31,
+              227,
+              281,
+              447,
+              589,
+              598,
+              726,
+              729,
+              768,
+              793,
+              848,
+              886,
+              1021,
+              1148,
+              1232
+            ],
+            "counts": {
+              "runs": 16,
+              "teacher_rules": 64,
+              "teacher_bindings": 160,
+              "lanes": 64,
+              "stop": 64
+            },
+            "oracle_rule": {
+              "mode": "assist",
+              "required_rule_lane_trials": 256,
+              "complete_tuple": 256,
+              "exact_teacher_tuple": 79
+            }
+          },
+          "without_commits": {
+            "population": 901,
+            "sample": [
+              14,
+              68,
+              289,
+              392,
+              529,
+              542,
+              832,
+              865,
+              894,
+              943,
+              959,
+              974,
+              1146,
+              1218,
+              1272,
+              1303
+            ],
+            "counts": {
+              "runs": 16,
+              "lanes": 64,
+              "stop": 64,
+              "empty_runs": 16,
+              "empty_correct_stop": 16
+            },
+            "oracle_rule": {
+              "mode": "assist"
+            }
+          }
+        },
+        "dot": {
+          "split": "train",
+          "with_commits": {
+            "population": 546,
+            "sample": [
+              36,
+              190,
+              199,
+              276,
+              403,
+              507,
+              589,
+              610,
+              939,
+              1085,
+              1099,
+              1198,
+              1283,
+              1289,
+              1347,
+              1364
+            ],
+            "counts": {
+              "runs": 16,
+              "teacher_rules": 47,
+              "teacher_bindings": 141,
+              "lanes": 64,
+              "stop": 64
+            },
+            "oracle_rule": {
+              "mode": "assist",
+              "required_rule_lane_trials": 188,
+              "complete_tuple": 188,
+              "exact_teacher_tuple": 51
+            }
+          },
+          "without_commits": {
+            "population": 989,
+            "sample": [
+              55,
+              106,
+              126,
+              170,
+              194,
+              203,
+              584,
+              675,
+              756,
+              790,
+              799,
+              864,
+              974,
+              1117,
+              1223,
+              1493
+            ],
+            "counts": {
+              "runs": 16,
+              "lanes": 64,
+              "stop": 64,
+              "empty_runs": 16,
+              "empty_correct_stop": 16
+            },
+            "oracle_rule": {
+              "mode": "assist"
+            }
+          }
+        },
+        "fact": {
+          "split": "held_eggcc",
+          "with_commits": {
+            "population": 163,
+            "sample": [
+              4,
+              17,
+              96,
+              104,
+              149,
+              152,
+              157,
+              166,
+              172,
+              202,
+              261,
+              276,
+              286,
+              290,
+              314,
+              320
+            ],
+            "counts": {
+              "runs": 16,
+              "teacher_rules": 44,
+              "teacher_bindings": 195,
+              "lanes": 64,
+              "stop": 63,
+              "rule_chosen": 1,
+              "rule_without_winner": 1
+            },
+            "oracle_rule": {
+              "mode": "assist",
+              "required_rule_lane_trials": 176,
+              "complete_tuple": 176,
+              "exact_teacher_tuple": 30
+            }
+          },
+          "without_commits": {
+            "population": 471,
+            "sample": [
+              47,
+              102,
+              145,
+              167,
+              171,
+              176,
+              284,
+              315,
+              322,
+              409,
+              456,
+              480,
+              483,
+              518,
+              559,
+              577
+            ],
+            "counts": {
+              "runs": 16,
+              "lanes": 64,
+              "stop": 64,
+              "empty_runs": 16,
+              "empty_correct_stop": 16
+            },
+            "oracle_rule": {
+              "mode": "assist"
+            }
+          }
+        },
+        "loopfact": {
+          "split": "held_eggcc",
+          "with_commits": {
+            "population": 166,
+            "sample": [
+              64,
+              86,
+              95,
+              101,
+              126,
+              147,
+              149,
+              152,
+              154,
+              216,
+              239,
+              242,
+              249,
+              276,
+              291,
+              303
+            ],
+            "counts": {
+              "runs": 16,
+              "teacher_rules": 64,
+              "teacher_bindings": 188,
+              "lanes": 64,
+              "stop": 64
+            },
+            "oracle_rule": {
+              "mode": "assist",
+              "required_rule_lane_trials": 256,
+              "complete_tuple": 256,
+              "exact_teacher_tuple": 65
+            }
+          },
+          "without_commits": {
+            "population": 452,
+            "sample": [
+              46,
+              94,
+              96,
+              113,
+              124,
+              163,
+              198,
+              213,
+              238,
+              241,
+              326,
+              360,
+              408,
+              424,
+              452,
+              581
+            ],
+            "counts": {
+              "runs": 16,
+              "lanes": 64,
+              "stop": 64,
+              "empty_runs": 16,
+              "empty_correct_stop": 16
+            },
+            "oracle_rule": {
+              "mode": "assist"
+            }
+          }
+        }
+      }
+    }
+  },
+  "holdouts": {
+    "before": {
+      "parameter_bytes_sha256": "ec84c44be9f72495dbbe3245bea12cf1e25fa6ea0737272f0a3913ff03deb1de",
+      "rule_head_census": {
+        "mode": "shadow",
+        "decision": "rule before any parent read",
+        "wave": 1,
+        "seed": 1967,
+        "field_pointer": true,
+        "weights_sha256": "302d7240e731b9da2c9063586e952017f0de44181cfc522d63255155eeb82ad8",
+        "cases": {
+          "fact": {
+            "with_commits": {
+              "runs": 163,
+              "teacher_rule_run_pairs": 453,
+              "lane_decisions": 652,
+              "rule_chosen": 638,
+              "correct_rule_choices": 70,
+              "stop": 14,
+              "all_lanes_stopped": 0,
+              "correct_distinct_rule_run_pairs": 39,
+              "runs_with_a_correct_rule": 39
+            },
+            "without_commits": {
+              "runs": 471,
+              "teacher_rule_run_pairs": 0,
+              "lane_decisions": 1884,
+              "rule_chosen": 1761,
+              "correct_rule_choices": 0,
+              "all_lanes_stopped": 1,
+              "correct_distinct_rule_run_pairs": 0,
+              "runs_with_a_correct_rule": 0,
+              "stop": 123
+            },
+            "forced_issue": {
+              "mode": "assist",
+              "stopped_lanes_on_busy_runs": 14,
+              "best_rule_has_winner": 2
+            }
+          },
+          "loopfact": {
+            "with_commits": {
+              "runs": 166,
+              "teacher_rule_run_pairs": 476,
+              "lane_decisions": 664,
+              "stop": 22,
+              "rule_chosen": 642,
+              "correct_rule_choices": 101,
+              "all_lanes_stopped": 0,
+              "correct_distinct_rule_run_pairs": 56,
+              "runs_with_a_correct_rule": 56
+            },
+            "without_commits": {
+              "runs": 452,
+              "teacher_rule_run_pairs": 0,
+              "lane_decisions": 1808,
+              "rule_chosen": 1683,
+              "correct_rule_choices": 0,
+              "all_lanes_stopped": 1,
+              "correct_distinct_rule_run_pairs": 0,
+              "runs_with_a_correct_rule": 0,
+              "stop": 125
+            },
+            "forced_issue": {
+              "mode": "assist",
+              "stopped_lanes_on_busy_runs": 22,
+              "best_rule_has_winner": 5
+            }
+          }
+        }
+      },
+      "splits": {
+        "held_eggcc": {
+          "shadow": {
+            "mode": "shadow",
+            "snapshot_network_seconds": 0.6883451279718429,
+            "snapshot_calls": 32,
+            "teacher_commits": 23,
+            "proposed": 27,
+            "duplicates": 10,
+            "correct_complete": 0,
+            "off_reference_unique": 17,
+            "complete_coverage": 0.0,
+            "by_parent_kind": {
+              "initial": {
+                "correct": 0,
+                "required": 1
+              },
+              "generated": {
+                "correct": 4,
+                "required": 53
+              },
+              "repair": {
+                "correct": 0,
+                "required": 0
+              }
+            }
+          },
+          "exclusive": {
+            "counts": {
+              "programs": 2,
+              "correct_final_states": 0,
+              "reference_commits": 3087,
+              "reference_runs": 1252,
+              "accepted": 17,
+              "duplicates": 11,
+              "verifier_calls": 1230,
+              "issued": 258,
+              "source_runs": 594,
+              "neural_waves": 594,
+              "native_repair_events": 0,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 4
+            },
+            "rejected": {
+              "binding": 14,
+              "guard": 6,
+              "untriggered_rule": 210
+            },
+            "total_seconds": {
+              "network_seconds": 1.0728822599630803,
+              "native_verify_seconds": 0.000145665,
+              "native_repair_seconds": 0.000266923,
+              "remaining_process_seconds_including_ipc": 0.23808194995749643,
+              "wall_seconds": 1.7504701660946012,
+              "reference_seconds": 0.018967334000000002
+            }
+          },
+          "exclusive_by_program": {
+            "fact": {
+              "counts": {
+                "programs": 1,
+                "correct_final_states": 0,
+                "reference_commits": 1668,
+                "reference_runs": 634,
+                "accepted": 7,
+                "duplicates": 6,
+                "verifier_calls": 615,
+                "issued": 128,
+                "source_runs": 297,
+                "neural_waves": 297,
+                "native_repair_events": 0,
+                "independent_search_calls": 0,
+                "certified_reference_prefix_commits": 2
+              },
+              "rejected": {
+                "binding": 7,
+                "guard": 3,
+                "untriggered_rule": 105
+              },
+              "total_seconds": {
+                "network_seconds": 0.5549450071994215,
+                "native_verify_seconds": 7.1374e-05,
+                "native_repair_seconds": 0.0001286000000000001,
+                "remaining_process_seconds_including_ipc": 0.12434953573263974,
+                "wall_seconds": 0.891902833012864,
+                "reference_seconds": 0.009589042
+              }
+            },
+            "loopfact": {
+              "counts": {
+                "programs": 1,
+                "correct_final_states": 0,
+                "reference_commits": 1419,
+                "reference_runs": 618,
+                "accepted": 10,
+                "duplicates": 5,
+                "verifier_calls": 615,
+                "issued": 130,
+                "source_runs": 297,
+                "neural_waves": 297,
+                "native_repair_events": 0,
+                "independent_search_calls": 0,
+                "certified_reference_prefix_commits": 2
+              },
+              "rejected": {
+                "binding": 7,
+                "guard": 3,
+                "untriggered_rule": 105
+              },
+              "total_seconds": {
+                "network_seconds": 0.5179372527636588,
+                "native_verify_seconds": 7.4291e-05,
+                "native_repair_seconds": 0.00013832299999999993,
+                "remaining_process_seconds_including_ipc": 0.11373241422485669,
+                "wall_seconds": 0.8585673330817372,
+                "reference_seconds": 0.009378292
+              }
+            }
+          }
+        },
+        "held_program": {
+          "shadow": {
+            "mode": "shadow",
+            "snapshot_network_seconds": 0.09211716032586992,
+            "snapshot_calls": 144,
+            "teacher_commits": 360,
+            "proposed": 384,
+            "duplicates": 62,
+            "correct_complete": 322,
+            "off_reference_unique": 0,
+            "complete_coverage": 0.8944444444444445,
+            "by_parent_kind": {
+              "initial": {
+                "correct": 370,
+                "required": 408
+              },
+              "generated": {
+                "correct": 191,
+                "required": 192
+              },
+              "repair": {
+                "correct": 15,
+                "required": 24
+              }
+            }
+          },
+          "exclusive": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 16,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 290,
+              "duplicates": 61,
+              "verifier_calls": 144,
+              "issued": 384,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 16,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 134
+            },
+            "rejected": {
+              "binding": 33
+            },
+            "total_seconds": {
+              "network_seconds": 0.140250003663823,
+              "native_verify_seconds": 0.00058391,
+              "native_repair_seconds": 0.00047249900000000003,
+              "remaining_process_seconds_including_ipc": 0.04047521376163698,
+              "wall_seconds": 0.634090457810089,
+              "reference_seconds": 0.008883504
+            }
+          }
+        },
+        "held_merge": {
+          "shadow": {
+            "mode": "shadow",
+            "snapshot_network_seconds": 0.09242413169704378,
+            "snapshot_calls": 144,
+            "teacher_commits": 360,
+            "proposed": 384,
+            "duplicates": 59,
+            "correct_complete": 325,
+            "off_reference_unique": 0,
+            "complete_coverage": 0.9027777777777778,
+            "by_parent_kind": {
+              "initial": {
+                "correct": 373,
+                "required": 408
+              },
+              "generated": {
+                "correct": 189,
+                "required": 192
+              },
+              "repair": {
+                "correct": 10,
+                "required": 24
+              }
+            }
+          },
+          "exclusive": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 19,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 310,
+              "duplicates": 53,
+              "verifier_calls": 144,
+              "issued": 384,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 20,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 181
+            },
+            "rejected": {
+              "binding": 21
+            },
+            "total_seconds": {
+              "network_seconds": 0.14468520297668874,
+              "native_verify_seconds": 0.0006375329999999997,
+              "native_repair_seconds": 0.0006194179999999996,
+              "remaining_process_seconds_including_ipc": 0.042021348634991275,
+              "wall_seconds": 0.6489581612404436,
+              "reference_seconds": 0.009020414000000004
+            }
+          }
+        },
+        "held_result_pc": {
+          "shadow": {
+            "mode": "shadow",
+            "snapshot_network_seconds": 0.09719004132784903,
+            "snapshot_calls": 144,
+            "teacher_commits": 360,
+            "proposed": 384,
+            "duplicates": 78,
+            "correct_complete": 304,
+            "off_reference_unique": 2,
+            "complete_coverage": 0.8444444444444444,
+            "by_parent_kind": {
+              "initial": {
+                "correct": 354,
+                "required": 408
+              },
+              "generated": {
+                "correct": 190,
+                "required": 192
+              },
+              "repair": {
+                "correct": 0,
+                "required": 24
+              }
+            }
+          },
+          "exclusive": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 9,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 266,
+              "duplicates": 64,
+              "verifier_calls": 144,
+              "issued": 384,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 13,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 99
+            },
+            "rejected": {
+              "binding": 54
+            },
+            "total_seconds": {
+              "network_seconds": 0.1469336140435189,
+              "native_verify_seconds": 0.0006397149999999999,
+              "native_repair_seconds": 0.00042995499999999993,
+              "remaining_process_seconds_including_ipc": 0.044802672421793574,
+              "wall_seconds": 0.6617590798996389,
+              "reference_seconds": 0.00957037
+            }
+          }
+        }
+      }
+    },
+    "after": {
+      "parameter_bytes_sha256": "882751e33956e0c20834e61b1fb04fcd3d8510409b3af74298862a15f774a341",
+      "rule_head_census": {
+        "mode": "shadow",
+        "decision": "rule before any parent read",
+        "wave": 1,
+        "seed": 1967,
+        "field_pointer": true,
+        "weights_sha256": "beb0848ce275034a68b67653c4fd4e4d6c15f4f0402965452d8ea8cc59219dee",
+        "cases": {
+          "fact": {
+            "with_commits": {
+              "runs": 163,
+              "teacher_rule_run_pairs": 453,
+              "lane_decisions": 652,
+              "stop": 647,
+              "rule_chosen": 5,
+              "correct_rule_choices": 1,
+              "all_lanes_stopped": 158,
+              "correct_distinct_rule_run_pairs": 1,
+              "runs_with_a_correct_rule": 1
+            },
+            "without_commits": {
+              "runs": 471,
+              "teacher_rule_run_pairs": 0,
+              "lane_decisions": 1884,
+              "stop": 1883,
+              "rule_chosen": 1,
+              "correct_rule_choices": 0,
+              "all_lanes_stopped": 470,
+              "correct_distinct_rule_run_pairs": 0,
+              "runs_with_a_correct_rule": 0
+            },
+            "forced_issue": {
+              "mode": "assist",
+              "stopped_lanes_on_busy_runs": 647,
+              "best_rule_has_winner": 200
+            }
+          },
+          "loopfact": {
+            "with_commits": {
+              "runs": 166,
+              "teacher_rule_run_pairs": 476,
+              "lane_decisions": 664,
+              "stop": 659,
+              "rule_chosen": 5,
+              "correct_rule_choices": 1,
+              "all_lanes_stopped": 161,
+              "correct_distinct_rule_run_pairs": 1,
+              "runs_with_a_correct_rule": 1
+            },
+            "without_commits": {
+              "runs": 452,
+              "teacher_rule_run_pairs": 0,
+              "lane_decisions": 1808,
+              "stop": 1807,
+              "rule_chosen": 1,
+              "correct_rule_choices": 0,
+              "all_lanes_stopped": 451,
+              "correct_distinct_rule_run_pairs": 0,
+              "runs_with_a_correct_rule": 0
+            },
+            "forced_issue": {
+              "mode": "assist",
+              "stopped_lanes_on_busy_runs": 659,
+              "best_rule_has_winner": 238
+            }
+          }
+        }
+      },
+      "splits": {
+        "held_eggcc": {
+          "shadow": {
+            "mode": "shadow",
+            "snapshot_network_seconds": 0.7048732090001977,
+            "snapshot_calls": 32,
+            "teacher_commits": 23,
+            "proposed": 0,
+            "duplicates": 0,
+            "correct_complete": 0,
+            "off_reference_unique": 0,
+            "complete_coverage": 0.0,
+            "by_parent_kind": {
+              "initial": {
+                "correct": 0,
+                "required": 1
+              },
+              "generated": {
+                "correct": 0,
+                "required": 53
+              },
+              "repair": {
+                "correct": 0,
+                "required": 0
+              }
+            }
+          },
+          "exclusive": {
+            "counts": {
+              "programs": 2,
+              "correct_final_states": 0,
+              "reference_commits": 3087,
+              "reference_runs": 1252,
+              "accepted": 4,
+              "duplicates": 0,
+              "verifier_calls": 1164,
+              "issued": 4,
+              "source_runs": 416,
+              "neural_waves": 416,
+              "native_repair_events": 0,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 2
+            },
+            "rejected": {},
+            "total_seconds": {
+              "network_seconds": 0.6624386769981356,
+              "native_verify_seconds": 5.7416999999999996e-05,
+              "native_repair_seconds": 7.321500000000009e-05,
+              "remaining_process_seconds_including_ipc": 0.14216428100191314,
+              "wall_seconds": 1.247015499999634,
+              "reference_seconds": 0.019630708
+            }
+          },
+          "exclusive_by_program": {
+            "fact": {
+              "counts": {
+                "programs": 1,
+                "correct_final_states": 0,
+                "reference_commits": 1668,
+                "reference_runs": 634,
+                "accepted": 2,
+                "duplicates": 0,
+                "verifier_calls": 582,
+                "issued": 2,
+                "source_runs": 208,
+                "neural_waves": 208,
+                "native_repair_events": 0,
+                "independent_search_calls": 0,
+                "certified_reference_prefix_commits": 1
+              },
+              "rejected": {},
+              "total_seconds": {
+                "network_seconds": 0.34159992000104467,
+                "native_verify_seconds": 2.1124e-05,
+                "native_repair_seconds": 3.2411999999999974e-05,
+                "remaining_process_seconds_including_ipc": 0.0750728729992895,
+                "wall_seconds": 0.6303466669996851,
+                "reference_seconds": 0.009646708
+              }
+            },
+            "loopfact": {
+              "counts": {
+                "programs": 1,
+                "correct_final_states": 0,
+                "reference_commits": 1419,
+                "reference_runs": 618,
+                "accepted": 2,
+                "duplicates": 0,
+                "verifier_calls": 582,
+                "issued": 2,
+                "source_runs": 208,
+                "neural_waves": 208,
+                "native_repair_events": 0,
+                "independent_search_calls": 0,
+                "certified_reference_prefix_commits": 1
+              },
+              "rejected": {},
+              "total_seconds": {
+                "network_seconds": 0.32083875699709097,
+                "native_verify_seconds": 3.6293e-05,
+                "native_repair_seconds": 4.080300000000011e-05,
+                "remaining_process_seconds_including_ipc": 0.06709140800262364,
+                "wall_seconds": 0.6166688329999488,
+                "reference_seconds": 0.009984
+              }
+            }
+          }
+        },
+        "held_program": {
+          "shadow": {
+            "mode": "shadow",
+            "snapshot_network_seconds": 0.09496832699960578,
+            "snapshot_calls": 144,
+            "teacher_commits": 360,
+            "proposed": 382,
+            "duplicates": 22,
+            "correct_complete": 360,
+            "off_reference_unique": 0,
+            "complete_coverage": 1.0,
+            "by_parent_kind": {
+              "initial": {
+                "correct": 408,
+                "required": 408
+              },
+              "generated": {
+                "correct": 192,
+                "required": 192
+              },
+              "repair": {
+                "correct": 24,
+                "required": 24
+              }
+            }
+          },
+          "exclusive": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 48,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 360,
+              "duplicates": 22,
+              "verifier_calls": 144,
+              "issued": 382,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 24,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 360
+            },
+            "rejected": {},
+            "total_seconds": {
+              "network_seconds": 0.1397940830038351,
+              "native_verify_seconds": 0.0005737459999999998,
+              "native_repair_seconds": 0.000547252,
+              "remaining_process_seconds_including_ipc": 0.0366115489991876,
+              "wall_seconds": 0.518826583000191,
+              "reference_seconds": 0.008268751
+            }
+          }
+        },
+        "held_merge": {
+          "shadow": {
+            "mode": "shadow",
+            "snapshot_network_seconds": 0.09830637400091291,
+            "snapshot_calls": 144,
+            "teacher_commits": 360,
+            "proposed": 378,
+            "duplicates": 20,
+            "correct_complete": 358,
+            "off_reference_unique": 0,
+            "complete_coverage": 0.9944444444444445,
+            "by_parent_kind": {
+              "initial": {
+                "correct": 406,
+                "required": 408
+              },
+              "generated": {
+                "correct": 192,
+                "required": 192
+              },
+              "repair": {
+                "correct": 24,
+                "required": 24
+              }
+            }
+          },
+          "exclusive": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 46,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 358,
+              "duplicates": 20,
+              "verifier_calls": 144,
+              "issued": 378,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 24,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 345
+            },
+            "rejected": {},
+            "total_seconds": {
+              "network_seconds": 0.14526915999886114,
+              "native_verify_seconds": 0.0005877079999999999,
+              "native_repair_seconds": 0.0006001629999999999,
+              "remaining_process_seconds_including_ipc": 0.038724210001374694,
+              "wall_seconds": 0.549699040998803,
+              "reference_seconds": 0.008827583
+            }
+          }
+        },
+        "held_result_pc": {
+          "shadow": {
+            "mode": "shadow",
+            "snapshot_network_seconds": 0.09799770400240959,
+            "snapshot_calls": 144,
+            "teacher_commits": 360,
+            "proposed": 384,
+            "duplicates": 70,
+            "correct_complete": 314,
+            "off_reference_unique": 0,
+            "complete_coverage": 0.8722222222222222,
+            "by_parent_kind": {
+              "initial": {
+                "correct": 362,
+                "required": 408
+              },
+              "generated": {
+                "correct": 192,
+                "required": 192
+              },
+              "repair": {
+                "correct": 0,
+                "required": 24
+              }
+            }
+          },
+          "exclusive": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 13,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 282,
+              "duplicates": 60,
+              "verifier_calls": 144,
+              "issued": 384,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 15,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 143
+            },
+            "rejected": {
+              "binding": 42
+            },
+            "total_seconds": {
+              "network_seconds": 0.1386403410051571,
+              "native_verify_seconds": 0.0005214139999999999,
+              "native_repair_seconds": 0.000388295,
+              "remaining_process_seconds_including_ipc": 0.03606003699515601,
+              "wall_seconds": 0.5246205379999083,
+              "reference_seconds": 0.008805211
+            }
+          }
+        }
+      }
+    }
+  }
+}
