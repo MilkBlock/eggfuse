@@ -385,3 +385,92 @@ and the absence of graph effects from a partial check. The
 [per-Run measurements](run-recall/prefix-policy/summary.json) include hashes,
 receiver reads, rejections, duplicates and diagnostic time. No paired speed
 measurement was made.
+
+### Calibrating anchors and assigning credit to the final named parent
+
+A nonempty anchor of a one-parent rule immediately issues a proof. A
+multi-parent anchor starts a read that can still fail. The calibrated Actor
+adds one scalar bias to each of these two decisions. It selects the pair on
+50 reserved Runs of training programs using native distinct-winner F2,
+`5 * recovered / (4 * required + issued)`. The parent scores, zero-parent
+gate and K=32 frontier budget remain fixed. Complete requests include all
+independent parents. The partial verifier is off throughout this comparison.
+
+On training-program data, the new terminal head sees 523 sampled teacher
+prefixes and 199 perturbed prefixes. Each training matrix contains the whole
+typed, visible domain of its last parent. The native replay receiver checked
+221,770 complete named requests, including 14,624 verified matches, 207,126
+binding rejections and 20 guard rejections. Several ports can certify the same
+commit. Training rewards its highest-scoring proof, charges other likely proofs
+of the same commit, and trains against the highest-scoring actual rejections.
+MPS fits the terminal head in 512 updates. The preceding gates, template and
+port encoders remain frozen. Inference runs on one CPU thread.
+
+The opaque encoding removes absolute e-class hash bits from address-local
+content vectors for both current and inherited port fields. The compiler's
+column sorts determine these positions. Scalars keep their existing content
+encoding, and shared-column comparisons still use the separate 64-bit fields.
+Both terminal treatments use the same sampled prefixes, native labels,
+optimizer budget and input checkpoint. A common XOR mask applied to every
+opaque hash preserves all same-sort binary field dot products. Across five
+programs, five chosen Runs and three masks, the raw terminal Actor changed
+its named proof set in 51 of 75 interventions. The opaque model changed zero.
+This measures invariance to a simultaneous bitwise change of coordinates.
+In a stronger intervention, an invertible permutation also changes distances
+between unequal class codes. That changed 6/75 issued sets for the recalibrated
+opaque Actor. Its field scorer still uses those distances.
+
+The calibrated root increased conditional reach while leaving terminal
+quality fixed. On loopfact Run 79, supplying correct roots recovers 18/56
+multi-parent commits before terminal training and 53/56 after it, with 50
+and 175 full requests respectively in this supplied-anchor diagnostic. The
+trained raw model's natural K=32 issuance recovers 65/74 on that Run.
+Independent verification gives one credit for each distinct committed binding.
+
+Across all 20,428 held EggCC commits on the teacher trajectory, the controls gave:
+
+| Policy, K=32 | Full proposals | Distinct commits | Complete nonempty Runs of 956 |
+|---|---:|---:|---:|
+| Frozen field scorer | 3,980 | 1,428 | 46 |
+| Anchor calibration | 16,108 | 5,008 | 119 |
+| Add native terminal-parent training | 33,917 | 9,923 | 256 |
+| Matched terminal training with opaque content | 28,226 | 9,928 | 243 |
+| Recalibrate anchors with the opaque terminal scorer frozen | 32,056 | 10,824 | 347 |
+
+The last model recovered 1,248/1,668 fact, 1,031/1,419 loopfact and
+8,545/17,341 sum-divisors commits. Its anchors activated 3,054/3,095
+productive rule/Run pairs among 13,911 activations. Only 13,946/20,428
+commits retained their canonical teacher anchor. Alternate addresses may
+also prove a commit. Free execution first differed on Runs 7, 8 and 11
+respectively. The last trajectory then hit an original source panic on
+Run 85. There was no successful final export for this trajectory.
+At its first difference, 28/36 distinct commits were proven by 35 actual
+packets. Raising K to 128 gave the same 28. On the same private state,
+relaxing only the anchor threshold gave 34/36 from 44 packets. Relaxing
+both pointer thresholds gave 36/36 from 146 packets, including 109 binding
+rejections. This selected-Run intervention is charged separately.
+The raw trained terminal treatment reproduced all 144 generated exclusive
+final graphs, and the recalibrated opaque treatment reproduced 143/144.
+
+The [native ledger](run-recall/parent-credit/summary.json) separates pre-completion
+rule selection, exact teacher anchor addresses, recovered bindings by arity,
+full proposals, duplicates, rejections and complete nonempty Runs. The CSVs
+compare actual winner identities at each source boundary. Exclusive rollouts
+use the policy's own generated ports with independent search disabled. A
+source panic fails the rollout; its costs are recorded separately from replay
+of the completed prefix preceding the failure. The sum-bits choice contract
+and the five-program teacher receiver control remain those of the preceding
+prefix study. The quality ledgers supply no paired speed or EPT measurement.
+
+Reproduce the calibrated model with `calibrate_anchor.py ROOT RECEIVER BASE OUT`
+and train the terminal model with `train_final_parent.py ROOT RECEIVER OUT/model.pt TERMINAL`.
+Repeat terminal training with `--opaque` for the matched representation ablation.
+Run the same root calibration on the frozen opaque model. For each model,
+`prefix_study.py --case NAME --top-k 32` and `prefix_exclusive.py --top-k 32`
+provide shadow and exclusive execution. `rule_issuance.py` measures activity
+immediately after anchor selection. `eq_hash_intervention.py` changes only
+opaque field coordinates. `first_boundary.py` remaps actual, earlier native
+results to corresponding teacher commits to audit the first exclusive failure.
+`boundary_gates.py` varies the root threshold, parent threshold or frontier
+size on that same reached snapshot. All these proof-correspondence and
+counterfactual checks run offline.

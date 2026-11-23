@@ -19,9 +19,21 @@ from typed_content import Schemas
 
 
 class CoordinateChange(Schemas):
-    @staticmethod
-    def change(values,schema,salt):
-        return tuple(h^salt if opaque else h for h,opaque in zip(values,schema,strict=True))
+    def __init__(self,cat,program,permutation='xor'):
+        super().__init__(cat,program)
+        self.permutation=permutation
+
+    def change(self,values,schema,salt):
+        def code(h):
+            x=h^salt
+            if self.permutation=='mix' and salt:
+                # Each xor-shift and multiplication by an odd constant is
+                # invertible on 64-bit words. Equality survives every relabeling.
+                x=((x^(x>>30))*0xbf58476d1ce4e5b9)&0xffffffffffffffff
+                x=((x^(x>>27))*0x94d049bb133111eb)&0xffffffffffffffff
+                x=x^(x>>31)
+            return x
+        return tuple(code(h) if opaque else h for h,opaque in zip(values,schema,strict=True))
 
     def transform(self,snap,salt):
         ports=[]
@@ -33,12 +45,12 @@ class CoordinateChange(Schemas):
 
 
 @torch.no_grad()
-def inspect(folder,binary,model,runs,salts,seed):
+def inspect(folder,binary,model,runs,salts,seed,permutation):
     program=json.loads((folder/'program.json').read_bytes())
     tape=json.loads((folder/'tape.json').read_bytes())
     required=Counter(r['run'] for r in tape['requests'])
     cat=model.catalog_type(program)
-    schemas=CoordinateChange(cat,program)
+    schemas=CoordinateChange(cat,program,permutation)
     nodes=model.template_graph(cat)
     history=History(cat,seed)
     packets=[]
@@ -83,12 +95,13 @@ if __name__=='__main__':
     for n in ('root','binary','weights','out'):p.add_argument(n,type=Path)
     p.add_argument('--cases',nargs='+',required=True)
     p.add_argument('--runs',nargs='+',type=int,required=True)
+    p.add_argument('--permutation',choices=['xor','mix'],default='xor')
     a=p.parse_args()
     torch.set_num_threads(1)
     model=load_actor(a.weights,True)
     rng=random.Random(1703)
     salts=[0]+[rng.getrandbits(64) for _ in range(3)]
     seeds={r['directory']:r['seed'] for r in json.loads((a.root/'manifest.json').read_bytes())}
-    cases={n:inspect(a.root/n,a.binary,model,set(a.runs),salts,1703+seeds.get(n,0)) for n in a.cases}
+    cases={n:inspect(a.root/n,a.binary,model,set(a.runs),salts,1703+seeds.get(n,0),a.permutation) for n in a.cases}
     a.out.write_text(json.dumps(dict(weights_sha256=digest(a.weights),receiver_sha256=digest(a.binary),
-                                    masks=salts,mode='same-snapshot coordinate intervention',cases=cases),indent=2)+'\n')
+                                    masks=salts,permutation=a.permutation,mode='same-snapshot coordinate intervention',cases=cases),indent=2)+'\n')

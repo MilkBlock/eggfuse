@@ -52,7 +52,11 @@ def inspect(folder,receiver,weights,seed):
     try:
         model=execute(receiver,folder/'program.json',actor,seed,observe_packets=keep,prefix_policy=Policy(32))
     except SourcePanic as error:
-        failure=dict(kind='source_panic',run=error.run,charged=error.charged)
+        rules=json.loads((folder/'program.json').read_bytes())['recipe']['rules']
+        proposals=Counter(p['rule'] for p in issued[error.run])
+        failure=dict(kind='source_panic',run=error.run,charged=error.charged,issued_by_rule=proposals,
+                     proposed_rules_with_panic=[rid for rid in proposals
+                                                if any(op['op']=='panic' for op in rules[rid]['effects'])])
         model=execute(receiver,folder/'program.json',actor,seed,run_limit=error.run-1,prefix_policy=Policy(32))
         if model['runs']!=error.run-1:
             raise ValueError('failed to reproduce completed prefix')
