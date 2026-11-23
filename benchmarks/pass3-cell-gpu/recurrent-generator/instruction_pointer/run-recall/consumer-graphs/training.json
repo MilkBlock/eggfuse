@@ -1,0 +1,152 @@
+{
+  "schema": "eggfuse-higher-layout-study/v1",
+  "mode": "teacher-snapshot ranking",
+  "root_weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+  "weights": "e271524cce20a68c22c9dca83038116fce9cbab946e6a3fe38a7f33ffb7721af",
+  "catalog_sha": "02496f372c3b9475ff569e60140ecc82b41dcd1a1d71c5360358aa77d4c3687d",
+  "updates": 642,
+  "epochs": 1,
+  "ready_training_layouts": 7828,
+  "ready_catalog_layouts": 7828,
+  "grow_consumers": true,
+  "selection": "all_observed",
+  "distinct_step_vectors": 2088,
+  "distinct_edge_vectors": 9539,
+  "positive_by_size": {
+    "4": 4026,
+    "3": 2768,
+    "2": 1387,
+    "5": 5208,
+    "6": 5923,
+    "7": 6518,
+    "8": 6925,
+    "9": 7224,
+    "10": 7449
+  },
+  "ready_positive_by_size": {
+    "4": 960,
+    "3": 1085,
+    "2": 767,
+    "5": 943,
+    "6": 849,
+    "7": 720,
+    "8": 579,
+    "9": 489,
+    "10": 461
+  },
+  "max_steps": 10,
+  "compiled": 54156,
+  "native_join_layouts": 32,
+  "observed_layouts": 54146,
+  "train_layouts_in_gradient": 47437,
+  "positive_gradient_layouts": 47428,
+  "held_layouts": 6719,
+  "depths": {
+    "3": 3181,
+    "4": 4626,
+    "2": 1592,
+    "5": 5915,
+    "6": 6787,
+    "7": 7437,
+    "8": 7891,
+    "9": 8247,
+    "10": 8480
+  },
+  "training_pairs": 164183,
+  "training": {
+    "sum": "856765e48910fe600548e17c7f18b7f3859c1355e5bc57420a15463e111ad792",
+    "dot": "7f8cd9a9904f160448d8639f61b3486b47bf3a83a736d815dea884572e13df97"
+  },
+  "programs": {
+    "fact": {
+      "all_observed": {
+        "decisions": 1452,
+        "roots_with_observed_target": 880,
+        "issued": 1451,
+        "selected_recorded_target": 297,
+        "steps_in_selected_targets": 611
+      },
+      "all_ready": {
+        "decisions": 1452,
+        "roots_with_observed_target": 729,
+        "issued": 1392,
+        "selected_recorded_target": 247,
+        "steps_in_selected_targets": 594
+      },
+      "held_layout_observed": {
+        "decisions": 1442,
+        "roots_with_observed_target": 380,
+        "issued": 1389,
+        "selected_recorded_target": 119,
+        "steps_in_selected_targets": 297
+      },
+      "held_layout_ready": {
+        "decisions": 1442,
+        "roots_with_observed_target": 164,
+        "issued": 1123,
+        "selected_recorded_target": 62,
+        "steps_in_selected_targets": 154
+      }
+    },
+    "loopfact": {
+      "all_observed": {
+        "decisions": 1208,
+        "roots_with_observed_target": 787,
+        "issued": 1207,
+        "selected_recorded_target": 280,
+        "steps_in_selected_targets": 567
+      },
+      "all_ready": {
+        "decisions": 1208,
+        "roots_with_observed_target": 648,
+        "issued": 1153,
+        "selected_recorded_target": 218,
+        "steps_in_selected_targets": 514
+      },
+      "held_layout_observed": {
+        "decisions": 1183,
+        "roots_with_observed_target": 366,
+        "issued": 1139,
+        "selected_recorded_target": 146,
+        "steps_in_selected_targets": 368
+      },
+      "held_layout_ready": {
+        "decisions": 1183,
+        "roots_with_observed_target": 161,
+        "issued": 919,
+        "selected_recorded_target": 57,
+        "steps_in_selected_targets": 144
+      }
+    },
+    "sum-divisors": {
+      "all_observed": {
+        "decisions": 14748,
+        "roots_with_observed_target": 8004,
+        "issued": 14718,
+        "selected_recorded_target": 2435,
+        "steps_in_selected_targets": 5010
+      },
+      "all_ready": {
+        "decisions": 14748,
+        "roots_with_observed_target": 6301,
+        "issued": 14249,
+        "selected_recorded_target": 1918,
+        "steps_in_selected_targets": 4547
+      },
+      "held_layout_observed": {
+        "decisions": 14289,
+        "roots_with_observed_target": 3936,
+        "issued": 13914,
+        "selected_recorded_target": 1313,
+        "steps_in_selected_targets": 3338
+      },
+      "held_layout_ready": {
+        "decisions": 14289,
+        "roots_with_observed_target": 1866,
+        "issued": 11735,
+        "selected_recorded_target": 715,
+        "steps_in_selected_targets": 1828
+      }
+    }
+  }
+}

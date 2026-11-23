@@ -1,0 +1,117 @@
+{
+  "binary": "d139843a29ded757dcb2873b21742be4f2c0b45e4a4ceab57f4f913ece54252d",
+  "catalog": "02496f372c3b9475ff569e60140ecc82b41dcd1a1d71c5360358aa77d4c3687d",
+  "cases": {
+    "sum": {
+      "mode": "native teacher replay",
+      "observed_catalog_layouts": 37518,
+      "complete_by_size": {
+        "3": 973,
+        "4": 775,
+        "5": 704,
+        "6": 631,
+        "7": 510,
+        "2": 732,
+        "10": 319,
+        "8": 403,
+        "9": 344
+      },
+      "named_steps": {
+        "match": 27869
+      },
+      "corrupted_final_control": {
+        "version": 5391
+      },
+      "complete_count": 5391
+    },
+    "dot": {
+      "mode": "native teacher replay",
+      "observed_catalog_layouts": 19742,
+      "complete_by_size": {
+        "2": 386,
+        "3": 582,
+        "4": 477,
+        "5": 468,
+        "6": 432,
+        "7": 353,
+        "8": 283,
+        "9": 243,
+        "10": 225
+      },
+      "named_steps": {
+        "match": 18530
+      },
+      "corrupted_final_control": {
+        "version": 3449
+      },
+      "complete_count": 3449
+    },
+    "fact": {
+      "mode": "native teacher replay",
+      "observed_catalog_layouts": 2039,
+      "complete_by_size": {
+        "2": 190,
+        "3": 232,
+        "4": 125,
+        "5": 91,
+        "7": 28,
+        "9": 11,
+        "8": 20,
+        "6": 49,
+        "10": 6
+      },
+      "named_steps": {
+        "match": 2840
+      },
+      "corrupted_final_control": {
+        "version": 752
+      },
+      "complete_count": 752
+    },
+    "loopfact": {
+      "mode": "native teacher replay",
+      "observed_catalog_layouts": 2944,
+      "complete_by_size": {
+        "2": 218,
+        "3": 281,
+        "4": 151,
+        "5": 104,
+        "6": 79,
+        "7": 48,
+        "8": 36,
+        "9": 25,
+        "10": 19
+      },
+      "named_steps": {
+        "match": 3916
+      },
+      "corrupted_final_control": {
+        "version": 961
+      },
+      "complete_count": 961
+    },
+    "sum-divisors": {
+      "mode": "native teacher replay",
+      "observed_catalog_layouts": 15022,
+      "complete_by_size": {
+        "2": 490,
+        "3": 677,
+        "4": 497,
+        "5": 423,
+        "6": 338,
+        "7": 251,
+        "8": 166,
+        "9": 130,
+        "10": 101
+      },
+      "named_steps": {
+        "match": 14407
+      },
+      "corrupted_final_control": {
+        "version": 3073
+      },
+      "complete_count": 3073
+    }
+  },
+  "distinct_completed": 7866
+}
