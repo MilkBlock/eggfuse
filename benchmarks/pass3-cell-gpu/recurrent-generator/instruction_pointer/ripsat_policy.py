@@ -1,6 +1,7 @@
 """One compositional scorer for a catalog of variable-size, typed Cell instruction graphs."""
 import math
 
+import numpy as np
 import torch
 from torch import nn
 
@@ -11,42 +12,71 @@ def positional(width, index):
     return rotate(torch.ones(1,width),torch.tensor([index]))[0]
 
 
-def compile_graphs(layouts, catalog, nodes):
-    """Compile every atom edge to its consumer role and exact producer instruction."""
-    width=nodes.shape[1]
-    count=len(layouts)
-    length=max(map(len,layouts))
-    fan=max(len(wires) for layout in layouts for _,_,wires in layout)
-    steps=nodes.new_zeros(count,length,width)
-    valid=torch.zeros(count,length,dtype=torch.bool)
-    edges=nodes.new_zeros(count,length,fan,width)
-    incoming=torch.zeros(count,length,fan,dtype=torch.long)
-    used=torch.zeros(count,length,fan,dtype=torch.bool)
-    positions={}
-    def position(k):
-        if k not in positions:
-            positions[k]=positional(width,k)
-        return positions[k]
-    for n,layout in enumerate(layouts):
-        for j,(rid,group,wires) in enumerate(layout):
-            tmpl='generated',rid
-            steps[n,j]=nodes[catalog.roots[tmpl]]+position(group)
-            valid[n,j]=True
-            if len(wires)!=len(catalog.inputs[tmpl]):
-                raise ValueError('wrong template arity')
-            for role,(owner,slot) in enumerate(wires):
-                atom=nodes[catalog.inputs[tmpl][role]]
-                if owner<0:
-                    source=position(slot)
-                elif owner<j:
-                    pc_node=catalog.outputs[('generated',layout[owner][0]),slot]
-                    source=nodes[pc_node]+position(slot)
-                    incoming[n,j,role]=owner+1
-                else:
-                    raise ValueError('forward reference in a Cell')
-                edges[n,j,role]=rotate((source+atom)[None],torch.tensor([role]))[0]
-                used[n,j,role]=True
-    return steps,valid,edges,incoming,used
+class GraphBank:
+    """Store shared static vectors once. Gather a dense tensor only for a model batch."""
+
+    def __init__(self, layouts, catalog, nodes):
+        count = len(layouts)
+        length = max(map(len, layouts))
+        fan = max(len(wires) for layout in layouts for _, _, wires in layout)
+        step_ids = np.zeros((count, length), dtype=np.int32)
+        edge_ids = np.zeros((count, length, fan), dtype=np.int32)
+        parents = np.zeros_like(edge_ids)
+        step_vectors = [nodes.new_zeros(nodes.shape[1])]
+        edge_vectors = [torch.zeros_like(step_vectors[0])]
+        step_keys = {}
+        edge_keys = {}
+        positions = {}
+
+        def position(k):
+            if k not in positions:
+                positions[k] = positional(nodes.shape[1], k)
+            return positions[k]
+
+        for i, layout in enumerate(layouts):
+            for j, (rid, group, wires) in enumerate(layout):
+                template = 'generated', rid
+                root = catalog.roots[template]
+                key = root, group
+                if key not in step_keys:
+                    step_keys[key] = len(step_vectors)
+                    step_vectors.append(nodes[root] + position(group))
+                step_ids[i, j] = step_keys[key]
+                inputs = catalog.inputs[template]
+                if len(wires) != len(inputs):
+                    raise ValueError('wrong template arity')
+                for role, (owner, slot) in enumerate(wires):
+                    if slot < 0 or owner < -1 or owner >= j:
+                        raise ValueError('invalid source in Cell wiring')
+                    pc = None
+                    if owner >= 0:
+                        pc = catalog.outputs[('generated', layout[owner][0]), slot]
+                        parents[i, j, role] = owner + 1
+                    atom = inputs[role]
+                    key = atom, role, pc, slot
+                    if key not in edge_keys:
+                        source = position(slot) if pc is None else nodes[pc] + position(slot)
+                        vector = rotate((source + nodes[atom])[None], torch.tensor([role]))[0]
+                        edge_keys[key] = len(edge_vectors)
+                        edge_vectors.append(vector)
+                    edge_ids[i, j, role] = edge_keys[key]
+        self.step_ids = torch.from_numpy(step_ids)
+        self.edge_ids = torch.from_numpy(edge_ids)
+        self.parents = torch.from_numpy(parents)
+        self.steps = torch.stack(step_vectors)
+        self.edges = torch.stack(edge_vectors)
+
+    def batch(self, indices, device):
+        steps = self.step_ids[indices].long()
+        edges = self.edge_ids[indices].long()
+        batch = (self.steps[steps], steps != 0, self.edges[edges],
+                 self.parents[indices].long(), edges != 0)
+        return tuple(t.to(device) for t in batch)
+
+    def encode(self, model, batch_size=256):
+        device = next(model.parameters()).device
+        return torch.cat([model.encode(self.batch(slice(i, i + batch_size), device))
+                          for i in range(0, len(self.step_ids), batch_size)])
 
 
 class CellScorer(nn.Module):

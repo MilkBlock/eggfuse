@@ -14,7 +14,7 @@ from alternate_proofs import digest
 from anchor_set_audit import load_actor
 from higher_cell import read
 from ripsat_layout import capture, queries
-from ripsat_policy import CellScorer, compile_graphs, root_context
+from ripsat_policy import CellScorer, GraphBank, root_context
 from ripsat_replay import unpack
 from train_ripsat import layout_id
 
@@ -68,9 +68,9 @@ def fields(prior,domain,width):
     return keys,torch.stack((best,mean,each[:,0],(each*present).sum(1)/present.sum(1).clamp_min(1)),dim=1)
 
 
-def make_steps(folder,donor,layouts,selected,seed,codes,roles,model=None):
+def make_steps(folder,donor,layouts,selected,seed,codes,roles,model=None,*,grow_consumers=False):
     rng=random.Random(seed)
-    refs,_,roots,_=capture(folder,donor,max(map(len,layouts)))
+    refs,_,roots,_=capture(folder,donor,max(map(len,layouts)),grow_consumers=grow_consumers)
     ids={layouts[i]:i for i in selected}
     # Each layout contributes at most one complete certificate per program.
     by_run=defaultdict(list)
@@ -158,7 +158,7 @@ def fit(root,donor_folder,baked,root_weights,out,names):
         nodes=actor.template_graph(cat)
         scorer=CellScorer(actor.width)
         scorer.load_state_dict(torch.load(baked/'shared.pt',weights_only=True))
-        codes=scorer.encode(compile_graphs(layouts,cat,nodes))
+        codes=GraphBank(layouts,cat,nodes).encode(scorer)
         roles=[[(table,torch.stack([nodes[cat.inputs['generated',rid][role]] for _,rid,role in uses]).mean(0))
                 for table,uses in slots(l,donor['recipe']['rules'])] for l in layouts]
     held={i for i,l in enumerate(layouts) if int(layout_id(l)[:8],16)%8==0}
@@ -170,7 +170,7 @@ def fit(root,donor_folder,baked,root_weights,out,names):
     for name,sha in study['training'].items():
         if digest(root/name/'tape.json')!=sha:
             raise ValueError('training tape changed')
-        rows,train_stats[name]=make_steps(root/name,donor,layouts,train,1703,codes,roles)
+        rows,train_stats[name]=make_steps(root/name,donor,layouts,train,1703,codes,roles,grow_consumers=study.get("grow_consumers",False))
         data.extend(rows)
     size=max(len(k) for _,k,_ in data)
     ctx=torch.stack([c for c,_,_ in data]).to('mps')
@@ -201,7 +201,7 @@ def fit(root,donor_folder,baked,root_weights,out,names):
         for name in names:
             result['programs'][name]={}
             for group,active in [('known',train),('held',held)]:
-                _,report=make_steps(root/name,donor,layouts,active,1703,codes,roles,model)
+                _,report=make_steps(root/name,donor,layouts,active,1703,codes,roles,model,grow_consumers=study.get("grow_consumers",False))
                 result['programs'][name][group]=report
     (out/'boundary.json').write_text(json.dumps(result,indent=2)+'\n')
 

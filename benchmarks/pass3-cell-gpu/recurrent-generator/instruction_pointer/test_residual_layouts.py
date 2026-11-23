@@ -38,6 +38,39 @@ class AlternateEntryTest(unittest.TestCase):
             _,_,stale,_=capture(d,program,2,each_parent_first=True)
             self.assertFalse(next(iter(stale[1].values()))[0][1])
 
+    def test_consumer_growth_bakes_fanout_only_when_both_returns_are_live(self):
+        # Two downstream rules read different result PCs. Neither is an
+        # ancestor of the other, so backwards extraction only finds pairs.
+        program = {'recipe': {'rules': [
+            {'query': [], 'effects': [{'op': 'let', 'call': {'table': k}} for k in ('L', 'R')]},
+            *[{'query': [{'call': {'table': k}}], 'effects': []} for k in ('L', 'R')]
+        ]}}
+        ports = [{'token': 1, 'op': pc} for pc in (0, 1)]
+        tape = [{'rule': 0, 'run': 1, 'token': 1, 'parents': []}]
+        tape.extend({'rule': pc + 1, 'run': 2, 'token': pc + 2,
+                     'parents': [{'address': p, 'version': 1}]} for pc, p in enumerate(ports))
+        frames = [
+            {'run': 1, 'rules': [[0, 0]], 'retired': [], 'updates': []},
+            {'run': 2, 'rules': [[1, 0], [2, 0]], 'retired': [],
+             'updates': [[p, {'version': 1}] for p in ports]}
+        ]
+        with TemporaryDirectory() as tmp:
+            d = Path(tmp)
+            (d/'program.json').write_text(json.dumps(program))
+            (d/'memory.jsonl').write_text(''.join(json.dumps(f)+'\n' for f in frames))
+            (d/'tape.json').write_text(json.dumps({'requests': tape}))
+            _, _, old, _ = capture(d, program, 3)
+            _, _, joined, _ = capture(d, program, 3, grow_consumers=True)
+            fork = ((0, 0, ()), (1, 1, ((0, 0),)), (2, 1, ((0, 1),)))
+            self.assertNotIn(fork, old[0])
+            self.assertEqual(joined[0][fork], [((), True, True, (1, 2, 3))])
+            for pair in old[0]:
+                self.assertEqual(old[0][pair], joined[0][pair])
+            tape[-1]['parents'][0]['version'] += 1
+            (d/'tape.json').write_text(json.dumps({'requests': tape}))
+            _, _, stale, _ = capture(d, program, 3, grow_consumers=True)
+            self.assertNotIn(fork, stale[0])
+
 
 if __name__=='__main__':
     unittest.main()

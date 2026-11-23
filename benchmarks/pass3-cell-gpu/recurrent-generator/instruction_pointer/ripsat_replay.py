@@ -15,8 +15,8 @@ def unpack(rows):
     return [tuple((rid,run,tuple(map(tuple,wires))) for rid,run,wires in steps) for steps in rows]
 
 
-def verify(folder,donor,layouts,binary,max_steps):
-    ref,mapped,by_root,_=capture(folder,donor,max_steps)
+def verify(folder,donor,layouts,binary,max_steps,*,grow_consumers=False):
+    ref,mapped,by_root,_=capture(folder,donor,max_steps,grow_consumers=grow_consumers)
     dest={layout:i for i,layout in enumerate(layouts)}
     samples={}
     observed=set()
@@ -119,9 +119,10 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     for k in ('root','donor','catalog','binary','out'):
         parser.add_argument(k,type=Path)
+    parser.add_argument('--grow-consumers',action='store_true')
     parser.add_argument('--cases',nargs='+',required=True)
     a=parser.parse_args()
     ls=unpack(read(a.catalog))
     donor=read(a.donor/'program.json')
-    result={n:verify(a.root/n,donor,ls,a.binary,max(map(len,ls))) for n in a.cases}
+    result={n:verify(a.root/n,donor,ls,a.binary,max(map(len,ls)),grow_consumers=a.grow_consumers) for n in a.cases}
     a.out.write_text(json.dumps(dict(binary=digest(a.binary),catalog=digest(a.catalog),cases=result),indent=2)+'\n')

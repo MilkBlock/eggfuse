@@ -13,7 +13,7 @@ from anchor_set_audit import load_actor
 from alternate_proofs import digest
 from higher_cell import read
 from ripsat_layout import capture, iterative_layouts
-from ripsat_policy import compile_graphs, root_context, CellScorer
+from ripsat_policy import GraphBank, root_context, CellScorer
 from side_boundary import address
 
 
@@ -75,13 +75,13 @@ def evaluate(model,codes,rows,choices,layouts,held):
     return counts
 
 
-def run(root,donor_folder,weights,out,limit,size,updates,extra=()):
+def run(root,donor_folder,weights,out,limit,size,updates,extra=(),grow_consumers=False):
     manifest=read(root/'manifest.json')
     training=[root/r['directory'] for r in manifest if r['origin']=='eggcc' and r['split']=='train']
     if donor_folder.resolve() not in [f.resolve() for f in training]:
         raise ValueError('donor must be a training program')
     donor=read(donor_folder/'program.json')
-    archived={f.name:capture(f,donor,limit) for f in training}
+    archived={f.name:capture(f,donor,limit,grow_consumers=grow_consumers) for f in training}
     support=Counter()
     ready_support=Counter()
     for _,_,roots,_ in archived.values():
@@ -91,7 +91,7 @@ def run(root,donor_folder,weights,out,limit,size,updates,extra=()):
     original=iterative_layouts(donor,donor['iterative_bake'])
     selected=set(original)
     for layout in sorted(support,key=lambda l:(-ready_support[l]*(len(l)-1),-support[l],l)):
-        if len(selected)>=size:
+        if size is not None and len(selected)>=size:
             break
         selected.add(layout)
     layouts=sorted(selected)
@@ -104,7 +104,7 @@ def run(root,donor_folder,weights,out,limit,size,updates,extra=()):
     cat=actor.catalog_type(donor)
     with torch.no_grad():
         nodes=actor.template_graph(cat).cpu()
-    graphs=compile_graphs(layouts,cat,nodes)
+    graphs=GraphBank(layouts,cat,nodes)
     idx={l:i for i,l in enumerate(layouts)}
     rows=[row for f in training for row in materialize(f,archived[f.name],idx,choices,actor.width)]
     del archived
@@ -118,7 +118,6 @@ def run(root,donor_folder,weights,out,limit,size,updates,extra=()):
     # Each training epoch sees every recorded positive template instance. Both heads
     # use the same weights across every layout depth and external atom count.
     device='mps'
-    graph=tuple(t.to(device) for t in graphs)
     contexts=torch.stack([r[1] for r in rows]).to(device)
     items=torch.tensor(pairs)
     ji=items[:,0].long().to(device)
@@ -137,7 +136,7 @@ def run(root,donor_folder,weights,out,limit,size,updates,extra=()):
             # Compact the graph batch before running shared message passing.
             compact,inverse=torch.unique(items[batch,1].long(),return_inverse=True)
             covered.update(compact.tolist())
-            keys=model.encode(tuple(t[compact.to(device)] for t in graph))
+            keys=model.encode(graphs.batch(compact,device))
             pred=model(contexts[ji[batch]],keys[inverse.to(device)])
             loss=F.binary_cross_entropy_with_logits(pred,labels[batch])
             opt.zero_grad()
@@ -149,11 +148,15 @@ def run(root,donor_folder,weights,out,limit,size,updates,extra=()):
     model=model.cpu().eval()
     torch.save(model.state_dict(),out/'shared.pt')
     with torch.no_grad():
-        codes=model.encode(graphs)
+        codes=graphs.encode(model)
     out.joinpath('catalog.json').write_text(json.dumps(layouts,separators=(',',':'))+'\n')
     report=dict(schema='eggfuse-higher-layout-study/v1',mode='teacher-snapshot ranking',root_weights=digest(weights),
                 weights=digest(out/'shared.pt'),catalog_sha=digest(out/'catalog.json'),updates=actual,epochs=epochs,
                 ready_training_layouts=len(ready_support),ready_catalog_layouts=sum(l in ready_support for l in layouts),
+                grow_consumers=grow_consumers,selection="all_observed" if size is None else "bounded",
+                distinct_step_vectors=len(graphs.steps)-1,distinct_edge_vectors=len(graphs.edges)-1,
+                positive_by_size=dict(Counter(len(layouts[u]) for u in {u for _,u,y,_ in pairs if y})),
+                ready_positive_by_size=dict(Counter(len(layouts[u]) for u in {u for _,u,_,y in pairs if y})),
                 max_steps=limit,compiled=len(layouts),native_join_layouts=len(original),observed_layouts=len(support),
                 train_layouts_in_gradient=len(covered),positive_gradient_layouts=len({u for _,u,y,_ in pairs if y}),
                 held_layouts=len(held),depths=dict(Counter(map(len,layouts))),training_pairs=len(pairs),
@@ -165,7 +168,7 @@ def run(root,donor_folder,weights,out,limit,size,updates,extra=()):
         raise ValueError('evaluation overlaps training')
     for name in sorted(evaluation):
         f=root/name
-        data=capture(f,donor,limit)
+        data=capture(f,donor,limit,grow_consumers=grow_consumers)
         rows=materialize(f,data,idx,choices,actor.width)
         report['programs'][f.name]=evaluate(model,codes,rows,choices,layouts,held)
     (out/'study.json').write_text(json.dumps(report,indent=2)+'\n')
@@ -176,9 +179,13 @@ if __name__=='__main__':
     for k in ('root','donor','weights','out'):
         parser.add_argument(k,type=Path)
     parser.add_argument('--steps',type=int,default=10)
-    parser.add_argument('--size',type=int,default=1024)
+    selection=parser.add_mutually_exclusive_group()
+    selection.add_argument('--size',type=int,default=1024)
+    selection.add_argument('--all-observed',action='store_true',
+                           help='include every layout extracted from the training programs plus iterative joins')
     parser.add_argument('--updates',type=int,default=320)
+    parser.add_argument('--grow-consumers',action='store_true',help='also grow root-ready graphs through their actual consumers')
     parser.add_argument('--extra-eval',nargs='*',default=[])
     a=parser.parse_args()
     torch.set_num_threads(1)
-    run(a.root,a.donor,a.weights,a.out,a.steps,a.size,a.updates,a.extra_eval)
+    run(a.root,a.donor,a.weights,a.out,a.steps,None if a.all_observed else a.size,a.updates,a.extra_eval,a.grow_consumers)

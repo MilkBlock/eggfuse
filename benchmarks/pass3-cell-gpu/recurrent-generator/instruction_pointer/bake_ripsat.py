@@ -10,7 +10,7 @@ from alternate_proofs import digest
 from higher_cell import read
 from ripsat_layout import signatures
 from ripsat_boundary import slots
-from ripsat_policy import CellScorer,compile_graphs
+from ripsat_policy import CellScorer,GraphBank
 from ripsat_replay import unpack
 
 
@@ -25,7 +25,7 @@ def bake(donor,weights,folder):
     nodes=actor.template_graph(cat)
     model=CellScorer(actor.width).eval()
     model.load_state_dict(torch.load(folder/'shared.pt',weights_only=True))
-    codes=model.encode(compile_graphs(layouts,cat,nodes))
+    codes=GraphBank(layouts,cat,nodes).encode(model)
     unique={}
     inputs=[]
     for layout in layouts:

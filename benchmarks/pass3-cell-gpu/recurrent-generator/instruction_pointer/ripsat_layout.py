@@ -2,6 +2,7 @@
 from bisect import bisect_right
 from collections import Counter, defaultdict, deque
 from functools import lru_cache
+from heapq import heappop, heappush
 import json
 
 from higher_cell import fingerprint, read
@@ -23,7 +24,7 @@ def output_table(rule, pc):
     return effect.get('call',{}).get('table') if effect['op'] in ('let','set') else None
 
 
-def capture(folder, donor, limit, *, each_parent_first=False):
+def capture(folder, donor, limit, *, each_parent_first=False, grow_consumers=False):
     """Layout contains (rule, relative Run group, atom sources) in source order.
     A source is (previous step, result PC) or (-1, independent boundary slot).
     Exact obligations include every table atom, including external repair ports.
@@ -134,6 +135,33 @@ def capture(folder, donor, limit, *, each_parent_first=False):
                 layout,root,boundary,ready,first_schedule,tokens=encode(selected)
                 by_root[root].setdefault(layout,[]).append((boundary,ready,first_schedule,tokens))
                 counts[len(layout)]+=1
+    if grow_consumers:
+        # Bake time only. A root can own parallel consumers which never appear
+        # together in the ancestors of any single downstream request.
+        consumers = defaultdict(list)
+        for child, req in enumerate(refs):
+            if mapped[req['rule']] is not None:
+                for pred in set(parents(child)) - {None}:
+                    consumers[pred].append(child)
+        for root in list(consumers):
+            selected = {root}
+            pending = list(consumers[root])  # already in ascending source order
+            queued = set(pending)
+            while pending and len(selected) < limit:
+                child = heappop(pending)
+                layout, first, boundary, ready, scheduled, tokens = encode(selected | {child})
+                if not ready or not scheduled:
+                    continue
+                selected.add(child)
+                record = (boundary, ready, scheduled, tokens)
+                occurrences = by_root[first].setdefault(layout, [])
+                if record not in occurrences:
+                    occurrences.append(record)
+                    counts[len(layout)] += 1
+                for successor in consumers.get(child, ()):
+                    if successor not in queued:
+                        heappush(pending, successor)
+                        queued.add(successor)
     return refs,mapped,by_root,counts
 
 
