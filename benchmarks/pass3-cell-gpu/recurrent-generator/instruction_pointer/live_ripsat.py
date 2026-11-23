@@ -52,6 +52,7 @@ class GraphIssuer:
         self.model=CellScorer(actor.width).eval()
         self.model.load_state_dict(torch.load(baked/'shared.pt',weights_only=True))
         self.reader=BoundaryReader(actor.width).eval()
+        self.field_reader=None
         self.reader.load_state_dict(torch.load(baked/'boundary.pt',weights_only=True))
         target_ids={v:i for i,v in enumerate(signatures(target))}
         self.rule={i:target_ids[s] for i,s in enumerate(signatures(donor)) if s in target_ids}
@@ -124,8 +125,17 @@ class GraphIssuer:
                 return None
             prior=[tuple(history.visible[address(points[j])]['hashes']) for j in sorted(points)]
             ctx=torch.cat((self.codes[u],role,root_context(prior,self.codes.shape[1])))
-            keys,comparison=fields(prior,[p.hashes for p in ports],self.codes.shape[1])
-            j=int(self.reader(ctx[None],keys[None],comparison[None])[0].argmax())
+            rows=[p.hashes for p in ports]
+            keys,comparison=fields(prior,rows,self.codes.shape[1])
+            scores=self.reader(ctx[None],keys[None],comparison[None])[0]
+            j=int(scores.argmax())
+            if self.field_reader is not None and self.field_reader.routes.has_links(u,slot):
+                prior_slots=dict(zip(sorted(points),prior,strict=True))
+                adjusted=int((scores+self.field_reader.adjustment(u,slot,prior_slots,rows)).argmax())
+                self.counts['routed_reads']+=1
+                self.counts['routed_candidate_scores']+=len(ports)
+                self.counts['changed_port_choices']+=int(j!=adjusted)
+                j=adjusted
             alias,pc=ports[j].address
             points[slot]=dict(address=dict(token=history.inverse[alias],op=pc),version=ports[j].version)
             self.counts['named_independent_slots']+=1
@@ -239,11 +249,16 @@ def evaluate(root,donor,binary,weights,baked,name,out,control,native,exclusive=F
                 or run['rhs_by_run'][i]!=ref['rhs'][i]):
                 break
             common+=1
+        field_audit={}
+        if getattr(issuer,'field_reader',None) is not None:
+            if not issuer.counts['routed_reads']:
+                raise ValueError('loaded field reader never ran on exclusive prefix')
+            field_audit=dict(field_reader=issuer.field_reader.checkpoint,issuer=issuer.report())
         out.write_text(json.dumps(dict(case=name,mode='exclusive',binary=digest(binary),actor=digest(weights),
             catalog=digest(baked/'catalog.json'),common_runs=common,reference_runs=ref['runs'],
             final_equal=failure is None and run['state_sha']==ref['state_sha'],failure=failure,
             independent_search_calls=run['independent_search_calls'],paid=run['issued'],
-            layouts=run.get('layouts')),indent=2)+'\n')
+            layouts=run.get('layouts'),**field_audit),indent=2)+'\n')
         return
     if native and issuer:
         backend=run['layouts']['counts']
