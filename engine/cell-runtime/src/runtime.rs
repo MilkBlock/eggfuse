@@ -2254,7 +2254,11 @@ impl Executor {
         }
         #[cfg(feature = "cell-token-replay")]
         if let Some(history) = &mut self.token_history { history.begin_rhs(&self.graph,rid,&b)?; }
+        #[cfg(feature = "cell-token-ept")]
+        if let Some(e)=&mut self.graph.token_ept {e.begin(self.token_history.as_ref().and_then(|h|h.current));}
         let result=self.apply_owned(rid,b,#[cfg(feature="structural-depth")] evidence);
+        #[cfg(feature = "cell-token-ept")]
+        if let Some(e)=&mut self.graph.token_ept {e.end();}
         self.graph.end_owner_entry();
         #[cfg(feature = "cell-token-replay")]
         if result.is_ok() && let Some(history)=&mut self.token_history {
@@ -2778,6 +2782,8 @@ impl Executor {
                 crate::transfer_audit::begin_writes();
                 crate::transfer_audit::repaired();
                 crate::transfer_audit::end_writes();
+                #[cfg(feature = "cell-token-ept")]
+                if let Some(mut e)=self.graph.token_ept.take() {e.boundary(&self.graph)?; self.graph.token_ept=Some(e);}
             }
             self.graph.stats.idle_scheduled_runs += 1;
             let elapsed = start.elapsed().as_secs_f64();
@@ -3129,6 +3135,8 @@ impl Executor {
         let end = Instant::now();
         #[cfg(feature = "slot-transfer-audit")]
         crate::transfer_audit::end_writes();
+        #[cfg(feature = "cell-token-ept")]
+        if let Some(mut e)=self.graph.token_ept.take() {e.boundary(&self.graph)?; self.graph.token_ept=Some(e);}
         let changed = self.graph.changed;
         let ordinal=self.steps.len()+1;
         if changed {self.last_change=ordinal;}

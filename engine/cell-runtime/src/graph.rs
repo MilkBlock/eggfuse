@@ -249,6 +249,8 @@ mod scalar_keys;
 #[path = "writer_frames.rs"]
 mod writer_frames;
 pub struct Graph {
+    #[cfg(feature = "cell-token-ept")]
+    pub token_ept: Option<crate::token_ept::Ledger>,
     pub(crate) scalars: value::ScalarContext,
     #[cfg(feature = "sparse-cells")]
     pub(crate) sealed_generation: Option<u64>,
@@ -543,6 +545,8 @@ impl Graph {
             scalar_merge: cfg!(feature = "sparse-cells"),
             #[cfg(feature = "cell-token-replay")]
             token_merge: None,
+            #[cfg(feature = "cell-token-ept")]
+            token_ept: None,
             merge_programs_enabled: true,
             pending_unions: vec![],
             union_digest,
@@ -1456,6 +1460,8 @@ impl Graph {
         let h = self.constructor_hash(t, key);
         #[cfg(feature = "slot-transfer-audit")]
         crate::transfer_audit::birth(t, key, &v, f.ordered_id());
+        #[cfg(feature = "cell-token-ept")]
+        if let Some(e) = &mut self.token_ept { e.birth(f,t); }
         let vs = Self::shared_fields(key, &v);
         #[cfg(feature = "sparse-cells")]
         self.promote_owner(f.cell);
@@ -1734,6 +1740,8 @@ impl Graph {
         let (Value::Eq(a), Value::Eq(b)) = (a, b) else {
             return Err("union requires equality values".into());
         };
+        #[cfg(feature = "cell-token-ept")]
+        if let Some(e) = &mut self.token_ept { e.queue(a,b); }
         self.pending_unions.push((a, b));
 
         Ok(())
@@ -1779,8 +1787,12 @@ impl Graph {
         Ok(json!({"schema":"eggfuse-repair-inputs/v1","program_sha256":self.program.artifact["sha256"],"facts":facts,"anchors":anchors}))
     }
     fn union(&mut self, a: u64, b: u64) -> Result<()> {
+        #[cfg(feature = "cell-token-ept")]
+        let source=(a,b);
         let a = root(&self.parents, a);
         let b = root(&self.parents, b);
+        #[cfg(feature = "cell-token-ept")]
+        if let Some(e) = &mut self.token_ept { e.union(source,a,b)?; }
         if a == b {
             return Ok(());
         }
@@ -2186,6 +2198,8 @@ impl Graph {
             let next = self.merge_value(t, old.clone(), value)?;
             if next != old {
                 self.function_decoded[i] = Some(Self::shared_fields(key, &next));
+                #[cfg(feature = "cell-token-ept")]
+                if let Some(e) = &mut self.token_ept {e.write(t,i);}
                 #[cfg(feature = "slot-transfer-audit")]
                 crate::transfer_audit::effective(self.epoch, t, i, key, Some(&old), &next)?;
                 self.functions[i].value = next;
@@ -2209,6 +2223,8 @@ impl Graph {
             let i = self.functions.len();
             #[cfg(feature="slot-transfer-audit")]
             crate::transfer_audit::set_input(t,i,key,None,&value);
+            #[cfg(feature = "cell-token-ept")]
+            if let Some(e) = &mut self.token_ept {e.write(t,i);}
             #[cfg(feature = "slot-transfer-audit")]
             crate::transfer_audit::effective(self.epoch, t, i, key, None, &value)?;
             let compact = if cfg!(feature = "view-storage")
@@ -2301,6 +2317,9 @@ impl Graph {
         self.visibility_tainted[t]
     }
     pub fn hide(&mut self, t: usize, key: &[Value], delete: bool) -> Result<bool> {
+        self.hide_existing(t,key,delete,true)
+    }
+    fn hide_existing(&mut self, t:usize, key:&[Value], delete:bool, _existing:bool) -> Result<bool> {
         if self.union_digest.is_some() {
             return Err("union digest does not support deletion or subsumption".into());
         }
@@ -2318,10 +2337,12 @@ impl Graph {
             } else {
                 let v = self.dynamic_construct(t, key.to_vec())?;
                 let _ = v;
-                self.hide(t, key, false)?;
+                self.hide_existing(t, key, false,false)?;
                 Ok(false)
             };
         };
+        #[cfg(feature = "cell-token-ept")]
+        if _existing && !row.hidden && let Some(e) = &mut self.token_ept {e.hide(t,row.witness);}
         match row.witness {
             Dependency::Fact(f) => {
                 let born = self.cells[&f.cell].facts[&f.op].born;
@@ -2609,6 +2630,8 @@ impl Graph {
                                 let next=next?;
                                 #[cfg(feature = "slot-transfer-audit")]
                                 if before != next {
+                                    #[cfg(feature = "cell-token-ept")]
+                                    if let Some(e) = &mut self.token_ept {e.write(row.table,j);}
                                     crate::transfer_audit::effective(
                                         self.epoch,
                                         row.table,

@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [features]
+cell-token-ept = ["cell-token-replay", "slot-transfer-audit"]
 cell-token-replay = ["iterative-bake"]
 late-merge-ports = ["action-units"]
 action-units = ["precomputed-forest"]

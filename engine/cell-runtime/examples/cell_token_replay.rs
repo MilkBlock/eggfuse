@@ -18,6 +18,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let [role, program, tape, audit, rest @ ..] = args.as_slice() else {
         return Err("expected reference|capture|replay|online PROGRAM TAPE audit|time".into());
     };
+    #[cfg(feature = "cell-token-ept")]
+    let (rest, ept) = match rest { [rest @ .., flag] if flag=="--ept" => (rest,true), _ => (rest,false) };
     let (rest, higher_path) = match rest {
         [rest @ .., flag, path] if flag == "--higher" && (role == "assist" || role == "online") => (rest, Some(path)),
         _ => (rest,None),
@@ -58,6 +60,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
     let started = Instant::now();
     let mut engine = Executor::new(Graph::new(p)?, false);
+    #[cfg(feature = "cell-token-ept")]
+    if ept {engine.graph.token_ept=Some(Default::default());}
     match role.as_str() {
         "replay" | "capture" | "shadow-waves" => engine.start_tokens(packets)?,
         "online" | "online-waves" => engine.start_tokens(Some(Vec::new()))?,
@@ -104,6 +108,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "schedule":engine.steps.iter().map(|s|json!([s.ruleset,s.path,s.iterations,s.epoch,s.executed_bindings,s.changed])).collect::<Vec<_>>()
     });
     report["residual_candidates"] = json!(engine.graph.stats.residual_candidates);
+    #[cfg(feature = "cell-token-ept")]
+    if let Some(e)=&engine.graph.token_ept {report["ept"]=e.report();}
     if let Some(h) = engine.tokens() {
         if let Some(counts) = h.higher_report() { report["higher"] = counts; }
         if let Some(a) = &h.assist { report["assist"] = json!(a); }

@@ -175,7 +175,7 @@ pub struct History {
     forwards: BTreeMap<Dependency, Dependency>,
     queue: BTreeMap<(usize, usize), Vec<Request>>,
     signing: BTreeMap<(usize, Vec<Value>), i64>,
-    current: Option<i64>,
+    pub(crate) current: Option<i64>,
     next: i64,
     pub tape: Vec<Request>,
     pub counts: Counts,
