@@ -1,0 +1,1746 @@
+{
+  "receiver_sha256": "a58c7246098dba7587504a9766b812c1f3fdbef7a8a7bcd6c871173efa0e6d1d",
+  "arms": {
+    "named": {
+      "training": {
+        "mode": "named",
+        "device": "mps",
+        "seed": 1703,
+        "steps": 384,
+        "training_runs": 242,
+        "calibration_runs": 50,
+        "semantic_categories": 60,
+        "counts": {
+          "updates": 348,
+          "reads": 3192
+        },
+        "parameters": 284454,
+        "calibration": {
+          "0": {
+            "threshold": 2.572540044784546,
+            "positives": 2,
+            "decisions": 2,
+            "f1": 1.0
+          },
+          "1": {
+            "threshold": 1.0301711559295654,
+            "positives": 161,
+            "decisions": 1859,
+            "f1": 0.5657370686531067
+          },
+          "2": {
+            "threshold": 0.13449901342391968,
+            "positives": 213,
+            "decisions": 119368,
+            "f1": 0.43589743971824646
+          }
+        },
+        "weights_sha256": "a1f1d100df6b0c73260bb86f1b7c8d1f7befed767b1c221c3b4f62061bb847e6"
+      },
+      "one_batch": {
+        "fact": {
+          "live_transport": {},
+          "runs": 634,
+          "busy": 163,
+          "empty": 471,
+          "issued": 48,
+          "teacher_commits": 1668,
+          "recovered": 47,
+          "micro": 0.02817745803357314,
+          "macro": 0.048825969668542614,
+          "complete_busy": 4,
+          "zero_busy": 150,
+          "empty_runs_with_proposals": 0,
+          "proposals_on_empty_runs": 0,
+          "reasons": {},
+          "duplicates": 1,
+          "recovered_only_by_alternate_certificate": 3,
+          "decode_endings": {
+            "single_batch": 634
+          }
+        },
+        "loopfact": {
+          "live_transport": {},
+          "runs": 618,
+          "busy": 166,
+          "empty": 452,
+          "issued": 41,
+          "teacher_commits": 1419,
+          "recovered": 40,
+          "micro": 0.028188865398167725,
+          "macro": 0.04844809861455391,
+          "complete_busy": 4,
+          "zero_busy": 153,
+          "empty_runs_with_proposals": 0,
+          "proposals_on_empty_runs": 0,
+          "reasons": {},
+          "duplicates": 1,
+          "recovered_only_by_alternate_certificate": 2,
+          "decode_endings": {
+            "single_batch": 618
+          }
+        },
+        "sum-divisors": {
+          "live_transport": {},
+          "runs": 1644,
+          "busy": 627,
+          "empty": 1017,
+          "issued": 331,
+          "teacher_commits": 17341,
+          "recovered": 318,
+          "micro": 0.018338042788766506,
+          "macro": 0.03341671178522396,
+          "complete_busy": 5,
+          "zero_busy": 586,
+          "empty_runs_with_proposals": 0,
+          "proposals_on_empty_runs": 0,
+          "reasons": {},
+          "duplicates": 13,
+          "recovered_only_by_alternate_certificate": 19,
+          "decode_endings": {
+            "single_batch": 1644
+          }
+        }
+      },
+      "exclusive": {
+        "fact": {
+          "first_difference": {
+            "run": 3,
+            "actual_commits": 0,
+            "teacher_by_rule": {
+              "575": 2
+            },
+            "teacher_parent_counts": {
+              "2": 2
+            },
+            "issued": {
+              "by_rule": {},
+              "distinct": 0
+            }
+          },
+          "common_runs": 2,
+          "exclusive": {
+            "counts": {
+              "programs": 1,
+              "correct_final_states": 0,
+              "reference_commits": 1668,
+              "reference_runs": 634,
+              "accepted": 24,
+              "duplicates": 1,
+              "verifier_calls": 698,
+              "issued": 25,
+              "source_runs": 275,
+              "neural_waves": 275,
+              "native_repair_events": 0,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 2
+            },
+            "rejected": {},
+            "total_seconds": {
+              "network_seconds": 0.7155124610217172,
+              "native_verify_seconds": 5.5676e-05,
+              "native_repair_seconds": 0.00020471300000000017,
+              "remaining_process_seconds_including_ipc": 0.14460582097840735,
+              "wall_seconds": 1.1101862079995044,
+              "reference_seconds": 0.387846333
+            }
+          }
+        },
+        "loopfact": {
+          "first_difference": {
+            "run": 3,
+            "actual_commits": 0,
+            "teacher_by_rule": {
+              "575": 2
+            },
+            "teacher_parent_counts": {
+              "2": 2
+            },
+            "issued": {
+              "by_rule": {},
+              "distinct": 0
+            }
+          },
+          "common_runs": 2,
+          "exclusive": {
+            "counts": {
+              "programs": 1,
+              "correct_final_states": 0,
+              "reference_commits": 1419,
+              "reference_runs": 618,
+              "accepted": 17,
+              "duplicates": 0,
+              "verifier_calls": 671,
+              "issued": 17,
+              "source_runs": 275,
+              "neural_waves": 275,
+              "native_repair_events": 0,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 2
+            },
+            "rejected": {},
+            "total_seconds": {
+              "network_seconds": 0.6179417430048488,
+              "native_verify_seconds": 4.6835e-05,
+              "native_repair_seconds": 0.0001949140000000001,
+              "remaining_process_seconds_including_ipc": 0.12184467199576154,
+              "wall_seconds": 0.9736079590002191,
+              "reference_seconds": 0.3739335
+            }
+          }
+        },
+        "sum-divisors": {
+          "first_difference": {
+            "run": 3,
+            "actual_commits": 0,
+            "teacher_by_rule": {
+              "575": 2
+            },
+            "teacher_parent_counts": {
+              "2": 2
+            },
+            "issued": {
+              "by_rule": {},
+              "distinct": 0
+            }
+          },
+          "common_runs": 2,
+          "exclusive": {
+            "counts": {
+              "programs": 1,
+              "correct_final_states": 0,
+              "reference_commits": 17341,
+              "reference_runs": 1644,
+              "accepted": 41,
+              "duplicates": 0,
+              "verifier_calls": 735,
+              "issued": 41,
+              "source_runs": 297,
+              "neural_waves": 297,
+              "native_repair_events": 0,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 2
+            },
+            "rejected": {},
+            "total_seconds": {
+              "network_seconds": 1.1345761229822529,
+              "native_verify_seconds": 8.9639e-05,
+              "native_repair_seconds": 0.00026979599999999994,
+              "remaining_process_seconds_including_ipc": 0.25516603101880286,
+              "wall_seconds": 1.652349707999747,
+              "reference_seconds": 10.296844959
+            }
+          }
+        }
+      },
+      "synthetic": {
+        "held_program": {
+          "calibrated": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 23,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 319,
+              "duplicates": 0,
+              "verifier_calls": 144,
+              "issued": 403,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 12,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 255
+            },
+            "rejected": {
+              "binding": 84
+            },
+            "total_seconds": {
+              "network_seconds": 0.15787633101354004,
+              "native_verify_seconds": 0.0008028420000000001,
+              "native_repair_seconds": 0.000400625,
+              "remaining_process_seconds_including_ipc": 0.043974696989565944,
+              "wall_seconds": 0.6602369570009614,
+              "reference_seconds": 0.010065415
+            }
+          },
+          "fixed": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 45,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 354,
+              "duplicates": 0,
+              "verifier_calls": 144,
+              "issued": 500,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 21,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 345
+            },
+            "rejected": {
+              "binding": 146
+            },
+            "total_seconds": {
+              "network_seconds": 0.14629917198726616,
+              "native_verify_seconds": 0.000839786,
+              "native_repair_seconds": 0.0004606280000000001,
+              "remaining_process_seconds_including_ipc": 0.04465375400268559,
+              "wall_seconds": 0.6042056290043547,
+              "reference_seconds": 0.008872914000000003
+            }
+          }
+        },
+        "held_merge": {
+          "calibrated": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 27,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 328,
+              "duplicates": 0,
+              "verifier_calls": 144,
+              "issued": 431,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 18,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 274
+            },
+            "rejected": {
+              "binding": 103
+            },
+            "total_seconds": {
+              "network_seconds": 0.14599012501093966,
+              "native_verify_seconds": 0.000779458,
+              "native_repair_seconds": 0.00047354499999999986,
+              "remaining_process_seconds_including_ipc": 0.04217737799841633,
+              "wall_seconds": 0.6396423750047688,
+              "reference_seconds": 0.009433374999999999
+            }
+          },
+          "fixed": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 43,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 352,
+              "duplicates": 0,
+              "verifier_calls": 144,
+              "issued": 515,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 21,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 337
+            },
+            "rejected": {
+              "binding": 163
+            },
+            "total_seconds": {
+              "network_seconds": 0.14732636699773138,
+              "native_verify_seconds": 0.000766914,
+              "native_repair_seconds": 0.000488077,
+              "remaining_process_seconds_including_ipc": 0.04659455000627836,
+              "wall_seconds": 0.6441688740123936,
+              "reference_seconds": 0.008657997999999998
+            }
+          }
+        },
+        "held_result_pc": {
+          "calibrated": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 0,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 275,
+              "duplicates": 0,
+              "verifier_calls": 144,
+              "issued": 330,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 12,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 179
+            },
+            "rejected": {
+              "binding": 55
+            },
+            "total_seconds": {
+              "network_seconds": 0.1522513709969644,
+              "native_verify_seconds": 0.000770958,
+              "native_repair_seconds": 0.000421455,
+              "remaining_process_seconds_including_ipc": 0.04683504300939629,
+              "wall_seconds": 0.6737658299989562,
+              "reference_seconds": 0.010422204
+            }
+          },
+          "fixed": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 26,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 330,
+              "duplicates": 0,
+              "verifier_calls": 144,
+              "issued": 440,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 17,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 266
+            },
+            "rejected": {
+              "binding": 110
+            },
+            "total_seconds": {
+              "network_seconds": 0.14996084001359122,
+              "native_verify_seconds": 0.000715708,
+              "native_repair_seconds": 0.0004310820000000001,
+              "remaining_process_seconds_including_ipc": 0.047834454989014806,
+              "wall_seconds": 0.6438898750093358,
+              "reference_seconds": 0.008992336000000002
+            }
+          }
+        }
+      },
+      "run79": {
+        "shadow": {
+          "counts": {
+            "required": 74,
+            "issued": 0,
+            "recovered": 0,
+            "duplicates": 0,
+            "busy": 1,
+            "complete_busy": 0
+          },
+          "runs": [
+            {
+              "run": 79,
+              "required": 74,
+              "issued": 0,
+              "hits": 0,
+              "duplicates": 0,
+              "other": {},
+              "recall": 0.0
+            }
+          ],
+          "encoding_seconds": 0.054150083000422455,
+          "network_and_packet_seconds": 0.015318916000978788,
+          "reference_replay_and_probe_wall_seconds": 0.16962762500043027,
+          "native_verify_seconds": 0.000878502,
+          "proposal_search_calls": 0,
+          "mode": "shadow"
+        },
+        "given_anchors": {
+          "counts": {
+            "required": 56,
+            "issued": 0,
+            "recovered": 0,
+            "duplicates": 0,
+            "busy": 1,
+            "complete_busy": 0
+          },
+          "runs": [
+            {
+              "run": 79,
+              "required": 56,
+              "issued": 0,
+              "hits": 0,
+              "duplicates": 0,
+              "other": {},
+              "recall": 0.0
+            }
+          ],
+          "encoding_seconds": 0.054150083000422455,
+          "network_and_packet_seconds": 0.014217292000466841,
+          "reference_replay_and_probe_wall_seconds": 0.16902366700014682,
+          "native_verify_seconds": 0.000835458,
+          "proposal_search_calls": 0,
+          "mode": "assist"
+        },
+        "teacher_prefix_ranks": {
+          "79": {
+            "anchor": {
+              "reads": 25,
+              "candidates": 264,
+              "required": 67,
+              "passing": 0,
+              "hits": 0,
+              "credit_at_teacher_k": 26.0,
+              "positive_logit_sum": -55.2223904132843
+            },
+            "parent": {
+              "reads": 57,
+              "candidates": 4233,
+              "required": 64,
+              "passing": 0,
+              "hits": 0,
+              "credit_at_teacher_k": 10.0,
+              "positive_logit_sum": -157.88098812103271
+            }
+          }
+        }
+      },
+      "fixed_run79": {
+        "shadow": {
+          "counts": {
+            "required": 74,
+            "issued": 3,
+            "recovered": 3,
+            "duplicates": 0,
+            "busy": 1,
+            "complete_busy": 0
+          },
+          "runs": [
+            {
+              "run": 79,
+              "required": 74,
+              "issued": 3,
+              "hits": 3,
+              "duplicates": 0,
+              "other": {},
+              "recall": 0.04054054054054054
+            }
+          ],
+          "encoding_seconds": 0.055324832999758655,
+          "network_and_packet_seconds": 0.017638790999626508,
+          "reference_replay_and_probe_wall_seconds": 0.18446404200039979,
+          "native_verify_seconds": 0.000976162,
+          "proposal_search_calls": 0,
+          "mode": "shadow"
+        },
+        "given_anchors": {
+          "counts": {
+            "required": 56,
+            "issued": 0,
+            "recovered": 0,
+            "duplicates": 0,
+            "busy": 1,
+            "complete_busy": 0
+          },
+          "runs": [
+            {
+              "run": 79,
+              "required": 56,
+              "issued": 0,
+              "hits": 0,
+              "duplicates": 0,
+              "other": {},
+              "recall": 0.0
+            }
+          ],
+          "encoding_seconds": 0.055324832999758655,
+          "network_and_packet_seconds": 0.013834374998623389,
+          "reference_replay_and_probe_wall_seconds": 0.17885879099958402,
+          "native_verify_seconds": 0.00095469,
+          "proposal_search_calls": 0,
+          "mode": "assist"
+        }
+      },
+      "name_intervention_changed_requests": {
+        "loopfact": {
+          "shadow": false,
+          "given_anchors": false
+        },
+        "random/held_merge-40536-1": {
+          "shadow": true,
+          "given_anchors": true
+        }
+      },
+      "trained_declaration_ties": {
+        "loopfact": {
+          "tables": 401,
+          "distinct_vectors": 401,
+          "tied_tables": 0,
+          "largest_group": 1,
+          "changed_nodes_on_rename": 13270
+        },
+        "fact": {
+          "tables": 401,
+          "distinct_vectors": 401,
+          "tied_tables": 0,
+          "largest_group": 1,
+          "changed_nodes_on_rename": 13381
+        },
+        "random/held_merge-40536-1": {
+          "tables": 9,
+          "distinct_vectors": 9,
+          "tied_tables": 0,
+          "largest_group": 1,
+          "changed_nodes_on_rename": 69
+        }
+      }
+    },
+    "renamed": {
+      "training": {
+        "mode": "renamed",
+        "device": "mps",
+        "seed": 1703,
+        "steps": 384,
+        "training_runs": 242,
+        "calibration_runs": 50,
+        "semantic_categories": 60,
+        "counts": {
+          "updates": 348,
+          "reads": 3192
+        },
+        "parameters": 284454,
+        "calibration": {
+          "0": {
+            "threshold": 2.3483548164367676,
+            "positives": 2,
+            "decisions": 2,
+            "f1": 1.0
+          },
+          "1": {
+            "threshold": 0.8907415866851807,
+            "positives": 161,
+            "decisions": 1859,
+            "f1": 0.5
+          },
+          "2": {
+            "threshold": 0.07262733578681946,
+            "positives": 213,
+            "decisions": 119368,
+            "f1": 0.42500001192092896
+          }
+        },
+        "weights_sha256": "e5a667538d6700ddcbe3cfdcddb48fab28172002895d5024d97b396b25abf4ed"
+      },
+      "one_batch": {
+        "fact": {
+          "live_transport": {},
+          "runs": 634,
+          "busy": 163,
+          "empty": 471,
+          "issued": 65,
+          "teacher_commits": 1668,
+          "recovered": 56,
+          "micro": 0.03357314148681055,
+          "macro": 0.03332495584618319,
+          "complete_busy": 3,
+          "zero_busy": 148,
+          "empty_runs_with_proposals": 0,
+          "proposals_on_empty_runs": 0,
+          "reasons": {},
+          "duplicates": 9,
+          "recovered_only_by_alternate_certificate": 6,
+          "decode_endings": {
+            "single_batch": 634
+          }
+        },
+        "loopfact": {
+          "live_transport": {},
+          "runs": 618,
+          "busy": 166,
+          "empty": 452,
+          "issued": 52,
+          "teacher_commits": 1419,
+          "recovered": 44,
+          "micro": 0.031007751937984496,
+          "macro": 0.04036960957995691,
+          "complete_busy": 3,
+          "zero_busy": 150,
+          "empty_runs_with_proposals": 0,
+          "proposals_on_empty_runs": 0,
+          "reasons": {},
+          "duplicates": 8,
+          "recovered_only_by_alternate_certificate": 2,
+          "decode_endings": {
+            "single_batch": 618
+          }
+        },
+        "sum-divisors": {
+          "live_transport": {},
+          "runs": 1644,
+          "busy": 627,
+          "empty": 1017,
+          "issued": 459,
+          "teacher_commits": 17341,
+          "recovered": 357,
+          "micro": 0.02058704803644542,
+          "macro": 0.02530897686171292,
+          "complete_busy": 4,
+          "zero_busy": 556,
+          "empty_runs_with_proposals": 0,
+          "proposals_on_empty_runs": 0,
+          "reasons": {
+            "guard": 1
+          },
+          "duplicates": 101,
+          "recovered_only_by_alternate_certificate": 38,
+          "decode_endings": {
+            "single_batch": 1644
+          }
+        }
+      },
+      "exclusive": {
+        "fact": {
+          "first_difference": {
+            "run": 3,
+            "actual_commits": 0,
+            "teacher_by_rule": {
+              "575": 2
+            },
+            "teacher_parent_counts": {
+              "2": 2
+            },
+            "issued": {
+              "by_rule": {},
+              "distinct": 0
+            }
+          },
+          "common_runs": 2,
+          "exclusive": {
+            "counts": {
+              "programs": 1,
+              "correct_final_states": 0,
+              "reference_commits": 1668,
+              "reference_runs": 634,
+              "accepted": 24,
+              "duplicates": 1,
+              "verifier_calls": 698,
+              "issued": 25,
+              "source_runs": 275,
+              "neural_waves": 275,
+              "native_repair_events": 0,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 2
+            },
+            "rejected": {},
+            "total_seconds": {
+              "network_seconds": 0.7520782579867955,
+              "native_verify_seconds": 5.9792e-05,
+              "native_repair_seconds": 0.00026600700000000007,
+              "remaining_process_seconds_including_ipc": 0.16143870001299432,
+              "wall_seconds": 1.1481720419997146,
+              "reference_seconds": 0.387846333
+            }
+          }
+        },
+        "loopfact": {
+          "first_difference": {
+            "run": 3,
+            "actual_commits": 0,
+            "teacher_by_rule": {
+              "575": 2
+            },
+            "teacher_parent_counts": {
+              "2": 2
+            },
+            "issued": {
+              "by_rule": {},
+              "distinct": 0
+            }
+          },
+          "common_runs": 2,
+          "exclusive": {
+            "counts": {
+              "programs": 1,
+              "correct_final_states": 0,
+              "reference_commits": 1419,
+              "reference_runs": 618,
+              "accepted": 22,
+              "duplicates": 1,
+              "verifier_calls": 717,
+              "issued": 23,
+              "source_runs": 275,
+              "neural_waves": 275,
+              "native_repair_events": 0,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 2
+            },
+            "rejected": {},
+            "total_seconds": {
+              "network_seconds": 0.6960673009853053,
+              "native_verify_seconds": 6.5336e-05,
+              "native_repair_seconds": 0.00023652900000000008,
+              "remaining_process_seconds_including_ipc": 0.1431274880139245,
+              "wall_seconds": 1.0815489160013385,
+              "reference_seconds": 0.3739335
+            }
+          }
+        },
+        "sum-divisors": {
+          "first_difference": {
+            "run": 3,
+            "actual_commits": 0,
+            "teacher_by_rule": {
+              "575": 2
+            },
+            "teacher_parent_counts": {
+              "2": 2
+            },
+            "issued": {
+              "by_rule": {},
+              "distinct": 0
+            }
+          },
+          "common_runs": 2,
+          "exclusive": {
+            "counts": {
+              "programs": 1,
+              "correct_final_states": 0,
+              "reference_commits": 17341,
+              "reference_runs": 1644,
+              "accepted": 59,
+              "duplicates": 2,
+              "verifier_calls": 716,
+              "issued": 61,
+              "source_runs": 278,
+              "neural_waves": 278,
+              "native_repair_events": 0,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 2
+            },
+            "rejected": {},
+            "total_seconds": {
+              "network_seconds": 1.1291866269821185,
+              "native_verify_seconds": 9.2914e-05,
+              "native_repair_seconds": 0.0002840819999999999,
+              "remaining_process_seconds_including_ipc": 0.2567770000175569,
+              "wall_seconds": 1.6490748340002028,
+              "reference_seconds": 10.296844959
+            }
+          }
+        }
+      },
+      "synthetic": {
+        "held_program": {
+          "calibrated": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 0,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 245,
+              "duplicates": 0,
+              "verifier_calls": 144,
+              "issued": 367,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 19,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 187
+            },
+            "rejected": {
+              "binding": 122
+            },
+            "total_seconds": {
+              "network_seconds": 0.16024441899571684,
+              "native_verify_seconds": 0.0007579590000000001,
+              "native_repair_seconds": 0.000603961,
+              "remaining_process_seconds_including_ipc": 0.045632204006692594,
+              "wall_seconds": 0.6689319950037316,
+              "reference_seconds": 0.009881085000000001
+            }
+          },
+          "fixed": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 29,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 338,
+              "duplicates": 0,
+              "verifier_calls": 144,
+              "issued": 508,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 22,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 291
+            },
+            "rejected": {
+              "binding": 170
+            },
+            "total_seconds": {
+              "network_seconds": 0.145812880995436,
+              "native_verify_seconds": 0.000732376,
+              "native_repair_seconds": 0.0004556269999999999,
+              "remaining_process_seconds_including_ipc": 0.0434305350053392,
+              "wall_seconds": 0.598664249999274,
+              "reference_seconds": 0.008294706999999995
+            }
+          }
+        },
+        "held_merge": {
+          "calibrated": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 0,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 236,
+              "duplicates": 0,
+              "verifier_calls": 144,
+              "issued": 356,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 20,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 188
+            },
+            "rejected": {
+              "binding": 120
+            },
+            "total_seconds": {
+              "network_seconds": 0.15772583398938878,
+              "native_verify_seconds": 0.0008010379999999999,
+              "native_repair_seconds": 0.000609421,
+              "remaining_process_seconds_including_ipc": 0.04542709200887588,
+              "wall_seconds": 0.7196836650036857,
+              "reference_seconds": 0.010169085
+            }
+          },
+          "fixed": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 27,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 334,
+              "duplicates": 0,
+              "verifier_calls": 144,
+              "issued": 501,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 21,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 283
+            },
+            "rejected": {
+              "binding": 167
+            },
+            "total_seconds": {
+              "network_seconds": 0.14621588199406688,
+              "native_verify_seconds": 0.0007422469999999999,
+              "native_repair_seconds": 0.0004707019999999998,
+              "remaining_process_seconds_including_ipc": 0.0455921630133873,
+              "wall_seconds": 0.6113439980072144,
+              "reference_seconds": 0.008330543999999999
+            }
+          }
+        },
+        "held_result_pc": {
+          "calibrated": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 0,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 247,
+              "duplicates": 0,
+              "verifier_calls": 144,
+              "issued": 322,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 17,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 185
+            },
+            "rejected": {
+              "binding": 75
+            },
+            "total_seconds": {
+              "network_seconds": 0.1521366089946241,
+              "native_verify_seconds": 0.0007144930000000001,
+              "native_repair_seconds": 0.0004891250000000001,
+              "remaining_process_seconds_including_ipc": 0.04848260100471181,
+              "wall_seconds": 0.6622641250032757,
+              "reference_seconds": 0.010377289000000003
+            }
+          },
+          "fixed": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 16,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 314,
+              "duplicates": 0,
+              "verifier_calls": 144,
+              "issued": 421,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 18,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 234
+            },
+            "rejected": {
+              "binding": 107
+            },
+            "total_seconds": {
+              "network_seconds": 0.15075937299661746,
+              "native_verify_seconds": 0.0006978710000000001,
+              "native_repair_seconds": 0.0004265859999999999,
+              "remaining_process_seconds_including_ipc": 0.04761729400715245,
+              "wall_seconds": 0.6632575400035421,
+              "reference_seconds": 0.008943047
+            }
+          }
+        }
+      },
+      "run79": {
+        "shadow": {
+          "counts": {
+            "required": 74,
+            "issued": 0,
+            "recovered": 0,
+            "duplicates": 0,
+            "busy": 1,
+            "complete_busy": 0
+          },
+          "runs": [
+            {
+              "run": 79,
+              "required": 74,
+              "issued": 0,
+              "hits": 0,
+              "duplicates": 0,
+              "other": {},
+              "recall": 0.0
+            }
+          ],
+          "encoding_seconds": 0.05430529200020828,
+          "network_and_packet_seconds": 0.017173582999021164,
+          "reference_replay_and_probe_wall_seconds": 0.17503525000029185,
+          "native_verify_seconds": 0.000900331,
+          "proposal_search_calls": 0,
+          "mode": "shadow"
+        },
+        "given_anchors": {
+          "counts": {
+            "required": 56,
+            "issued": 0,
+            "recovered": 0,
+            "duplicates": 0,
+            "busy": 1,
+            "complete_busy": 0
+          },
+          "runs": [
+            {
+              "run": 79,
+              "required": 56,
+              "issued": 0,
+              "hits": 0,
+              "duplicates": 0,
+              "other": {},
+              "recall": 0.0
+            }
+          ],
+          "encoding_seconds": 0.05430529200020828,
+          "network_and_packet_seconds": 0.014586874998713029,
+          "reference_replay_and_probe_wall_seconds": 0.16935150000063004,
+          "native_verify_seconds": 0.000851977,
+          "proposal_search_calls": 0,
+          "mode": "assist"
+        },
+        "teacher_prefix_ranks": {
+          "79": {
+            "anchor": {
+              "reads": 25,
+              "candidates": 264,
+              "required": 67,
+              "passing": 8,
+              "hits": 2,
+              "credit_at_teacher_k": 30.0,
+              "positive_logit_sum": -29.83354139328003
+            },
+            "parent": {
+              "reads": 57,
+              "candidates": 4233,
+              "required": 64,
+              "passing": 0,
+              "hits": 0,
+              "credit_at_teacher_k": 8.0,
+              "positive_logit_sum": -146.80318158864975
+            }
+          }
+        }
+      },
+      "fixed_run79": {
+        "shadow": {
+          "counts": {
+            "required": 74,
+            "issued": 13,
+            "recovered": 9,
+            "duplicates": 3,
+            "busy": 1,
+            "complete_busy": 0,
+            "guard": 1
+          },
+          "runs": [
+            {
+              "run": 79,
+              "required": 74,
+              "issued": 13,
+              "hits": 9,
+              "duplicates": 3,
+              "other": {
+                "guard": 1
+              },
+              "recall": 0.12162162162162163
+            }
+          ],
+          "encoding_seconds": 0.0552521669997077,
+          "network_and_packet_seconds": 0.018322207000892377,
+          "reference_replay_and_probe_wall_seconds": 0.17950020799980848,
+          "native_verify_seconds": 0.000870381,
+          "proposal_search_calls": 0,
+          "mode": "shadow"
+        },
+        "given_anchors": {
+          "counts": {
+            "required": 56,
+            "issued": 0,
+            "recovered": 0,
+            "duplicates": 0,
+            "busy": 1,
+            "complete_busy": 0
+          },
+          "runs": [
+            {
+              "run": 79,
+              "required": 56,
+              "issued": 0,
+              "hits": 0,
+              "duplicates": 0,
+              "other": {},
+              "recall": 0.0
+            }
+          ],
+          "encoding_seconds": 0.0552521669997077,
+          "network_and_packet_seconds": 0.013303790999998455,
+          "reference_replay_and_probe_wall_seconds": 0.17956733300161432,
+          "native_verify_seconds": 0.000888423,
+          "proposal_search_calls": 0,
+          "mode": "assist"
+        }
+      },
+      "name_intervention_changed_requests": {
+        "loopfact": {
+          "shadow": true,
+          "given_anchors": false
+        },
+        "random/held_merge-40536-1": {
+          "shadow": true,
+          "given_anchors": true
+        }
+      },
+      "trained_declaration_ties": {
+        "loopfact": {
+          "tables": 401,
+          "distinct_vectors": 401,
+          "tied_tables": 0,
+          "largest_group": 1,
+          "changed_nodes_on_rename": 13270
+        },
+        "fact": {
+          "tables": 401,
+          "distinct_vectors": 401,
+          "tied_tables": 0,
+          "largest_group": 1,
+          "changed_nodes_on_rename": 13381
+        },
+        "random/held_merge-40536-1": {
+          "tables": 9,
+          "distinct_vectors": 9,
+          "tied_tables": 0,
+          "largest_group": 1,
+          "changed_nodes_on_rename": 69
+        }
+      }
+    },
+    "structural": {
+      "training": {
+        "mode": "structural",
+        "device": "mps",
+        "seed": 1703,
+        "steps": 384,
+        "training_runs": 242,
+        "calibration_runs": 50,
+        "semantic_categories": 60,
+        "counts": {
+          "updates": 348,
+          "reads": 3192
+        },
+        "parameters": 22310,
+        "calibration": {
+          "0": {
+            "threshold": 2.67604923248291,
+            "positives": 2,
+            "decisions": 2,
+            "f1": 1.0
+          },
+          "1": {
+            "threshold": 0.9900643825531006,
+            "positives": 161,
+            "decisions": 1859,
+            "f1": 0.5367646813392639
+          },
+          "2": {
+            "threshold": -0.048529207706451416,
+            "positives": 213,
+            "decisions": 119368,
+            "f1": 0.4530744254589081
+          }
+        },
+        "weights_sha256": "f991760cf2720e3ab5d6be2109f2bc7e2fe9dad1b0b6defc5b0990c56d4c1f8a"
+      },
+      "one_batch": {
+        "fact": {
+          "live_transport": {},
+          "runs": 634,
+          "busy": 163,
+          "empty": 471,
+          "issued": 57,
+          "teacher_commits": 1668,
+          "recovered": 53,
+          "micro": 0.03177458033573141,
+          "macro": 0.0464071672113966,
+          "complete_busy": 5,
+          "zero_busy": 148,
+          "empty_runs_with_proposals": 0,
+          "proposals_on_empty_runs": 0,
+          "reasons": {},
+          "duplicates": 4,
+          "recovered_only_by_alternate_certificate": 9,
+          "decode_endings": {
+            "single_batch": 634
+          }
+        },
+        "loopfact": {
+          "live_transport": {},
+          "runs": 618,
+          "busy": 166,
+          "empty": 452,
+          "issued": 55,
+          "teacher_commits": 1419,
+          "recovered": 54,
+          "micro": 0.03805496828752643,
+          "macro": 0.05513304413827559,
+          "complete_busy": 4,
+          "zero_busy": 151,
+          "empty_runs_with_proposals": 0,
+          "proposals_on_empty_runs": 0,
+          "reasons": {},
+          "duplicates": 1,
+          "recovered_only_by_alternate_certificate": 5,
+          "decode_endings": {
+            "single_batch": 618
+          }
+        },
+        "sum-divisors": {
+          "live_transport": {},
+          "runs": 1644,
+          "busy": 627,
+          "empty": 1017,
+          "issued": 411,
+          "teacher_commits": 17341,
+          "recovered": 377,
+          "micro": 0.021740384060896144,
+          "macro": 0.03578099601269801,
+          "complete_busy": 5,
+          "zero_busy": 572,
+          "empty_runs_with_proposals": 0,
+          "proposals_on_empty_runs": 0,
+          "reasons": {
+            "guard": 2,
+            "binding": 1
+          },
+          "duplicates": 31,
+          "recovered_only_by_alternate_certificate": 25,
+          "decode_endings": {
+            "single_batch": 1644
+          }
+        }
+      },
+      "exclusive": {
+        "fact": {
+          "first_difference": {
+            "run": 3,
+            "actual_commits": 0,
+            "teacher_by_rule": {
+              "575": 2
+            },
+            "teacher_parent_counts": {
+              "2": 2
+            },
+            "issued": {
+              "by_rule": {},
+              "distinct": 0
+            }
+          },
+          "common_runs": 2,
+          "exclusive": {
+            "counts": {
+              "programs": 1,
+              "correct_final_states": 0,
+              "reference_commits": 1668,
+              "reference_runs": 634,
+              "accepted": 27,
+              "duplicates": 1,
+              "verifier_calls": 721,
+              "issued": 28,
+              "source_runs": 293,
+              "neural_waves": 293,
+              "native_repair_events": 0,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 2
+            },
+            "rejected": {},
+            "total_seconds": {
+              "network_seconds": 0.708845294011553,
+              "native_verify_seconds": 7.0985e-05,
+              "native_repair_seconds": 0.00013341800000000033,
+              "remaining_process_seconds_including_ipc": 0.13675567898887342,
+              "wall_seconds": 1.0722262079998472,
+              "reference_seconds": 0.387846333
+            }
+          }
+        },
+        "loopfact": {
+          "first_difference": {
+            "run": 3,
+            "actual_commits": 0,
+            "teacher_by_rule": {
+              "575": 2
+            },
+            "teacher_parent_counts": {
+              "2": 2
+            },
+            "issued": {
+              "by_rule": {},
+              "distinct": 0
+            }
+          },
+          "common_runs": 2,
+          "exclusive": {
+            "counts": {
+              "programs": 1,
+              "correct_final_states": 0,
+              "reference_commits": 1419,
+              "reference_runs": 618,
+              "accepted": 30,
+              "duplicates": 1,
+              "verifier_calls": 764,
+              "issued": 31,
+              "source_runs": 300,
+              "neural_waves": 300,
+              "native_repair_events": 0,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 2
+            },
+            "rejected": {},
+            "total_seconds": {
+              "network_seconds": 0.7454742539848667,
+              "native_verify_seconds": 7.1744e-05,
+              "native_repair_seconds": 0.00015121500000000017,
+              "remaining_process_seconds_including_ipc": 0.13918225101417503,
+              "wall_seconds": 1.1125004999994417,
+              "reference_seconds": 0.3739335
+            }
+          }
+        },
+        "sum-divisors": {
+          "first_difference": {
+            "run": 3,
+            "actual_commits": 0,
+            "teacher_by_rule": {
+              "575": 2
+            },
+            "teacher_parent_counts": {
+              "2": 2
+            },
+            "issued": {
+              "by_rule": {},
+              "distinct": 0
+            }
+          },
+          "common_runs": 2,
+          "exclusive": {
+            "counts": {
+              "programs": 1,
+              "correct_final_states": 0,
+              "reference_commits": 17341,
+              "reference_runs": 1644,
+              "accepted": 61,
+              "duplicates": 3,
+              "verifier_calls": 735,
+              "issued": 65,
+              "source_runs": 297,
+              "neural_waves": 297,
+              "native_repair_events": 0,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 2
+            },
+            "rejected": {
+              "guard": 1
+            },
+            "total_seconds": {
+              "network_seconds": 1.222304619004717,
+              "native_verify_seconds": 0.000127757,
+              "native_repair_seconds": 0.0002528740000000001,
+              "remaining_process_seconds_including_ipc": 0.2600036659943925,
+              "wall_seconds": 1.719657665998966,
+              "reference_seconds": 10.296844959
+            }
+          }
+        }
+      },
+      "synthetic": {
+        "held_program": {
+          "calibrated": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 37,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 340,
+              "duplicates": 0,
+              "verifier_calls": 144,
+              "issued": 444,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 17,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 312
+            },
+            "rejected": {
+              "binding": 104
+            },
+            "total_seconds": {
+              "network_seconds": 0.13528170199424494,
+              "native_verify_seconds": 0.0007169969999999997,
+              "native_repair_seconds": 0.0004310460000000001,
+              "remaining_process_seconds_including_ipc": 0.03909000700222182,
+              "wall_seconds": 0.5819728350052173,
+              "reference_seconds": 0.009339960000000001
+            }
+          },
+          "fixed": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 26,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 327,
+              "duplicates": 0,
+              "verifier_calls": 144,
+              "issued": 401,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 17,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 273
+            },
+            "rejected": {
+              "binding": 74
+            },
+            "total_seconds": {
+              "network_seconds": 0.14469487999122066,
+              "native_verify_seconds": 0.0006843810000000003,
+              "native_repair_seconds": 0.000410299,
+              "remaining_process_seconds_including_ipc": 0.044449904012663924,
+              "wall_seconds": 0.6016997950064251,
+              "reference_seconds": 0.009193666000000001
+            }
+          }
+        },
+        "held_merge": {
+          "calibrated": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 42,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 350,
+              "duplicates": 0,
+              "verifier_calls": 144,
+              "issued": 441,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 20,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 333
+            },
+            "rejected": {
+              "binding": 91
+            },
+            "total_seconds": {
+              "network_seconds": 0.12871024400010356,
+              "native_verify_seconds": 0.0006677949999999999,
+              "native_repair_seconds": 0.0004905370000000001,
+              "remaining_process_seconds_including_ipc": 0.03690187799770907,
+              "wall_seconds": 0.5804393329908635,
+              "reference_seconds": 0.008767624
+            }
+          },
+          "fixed": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 14,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 313,
+              "duplicates": 0,
+              "verifier_calls": 144,
+              "issued": 384,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 16,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 227
+            },
+            "rejected": {
+              "binding": 71
+            },
+            "total_seconds": {
+              "network_seconds": 0.14564162999522523,
+              "native_verify_seconds": 0.0006759439999999999,
+              "native_repair_seconds": 0.000467871,
+              "remaining_process_seconds_including_ipc": 0.046029262000290366,
+              "wall_seconds": 0.6179182910109375,
+              "reference_seconds": 0.008813789
+            }
+          }
+        },
+        "held_result_pc": {
+          "calibrated": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 18,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 314,
+              "duplicates": 0,
+              "verifier_calls": 144,
+              "issued": 373,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 15,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 236
+            },
+            "rejected": {
+              "binding": 59
+            },
+            "total_seconds": {
+              "network_seconds": 0.13318448900645308,
+              "native_verify_seconds": 0.000635169,
+              "native_repair_seconds": 0.000376913,
+              "remaining_process_seconds_including_ipc": 0.04091021299039824,
+              "wall_seconds": 0.5841657910023059,
+              "reference_seconds": 0.009432206999999998
+            }
+          },
+          "fixed": {
+            "counts": {
+              "programs": 48,
+              "correct_final_states": 7,
+              "reference_commits": 360,
+              "reference_runs": 144,
+              "accepted": 288,
+              "duplicates": 0,
+              "verifier_calls": 144,
+              "issued": 325,
+              "source_runs": 144,
+              "neural_waves": 144,
+              "native_repair_events": 12,
+              "independent_search_calls": 0,
+              "certified_reference_prefix_commits": 199
+            },
+            "rejected": {
+              "binding": 37
+            },
+            "total_seconds": {
+              "network_seconds": 0.14902450099725684,
+              "native_verify_seconds": 0.000631509,
+              "native_repair_seconds": 0.000393255,
+              "remaining_process_seconds_including_ipc": 0.047793655001275616,
+              "wall_seconds": 0.639217998004824,
+              "reference_seconds": 0.009477998999999999
+            }
+          }
+        }
+      },
+      "run79": {
+        "shadow": {
+          "counts": {
+            "required": 74,
+            "issued": 0,
+            "recovered": 0,
+            "duplicates": 0,
+            "busy": 1,
+            "complete_busy": 0
+          },
+          "runs": [
+            {
+              "run": 79,
+              "required": 74,
+              "issued": 0,
+              "hits": 0,
+              "duplicates": 0,
+              "other": {},
+              "recall": 0.0
+            }
+          ],
+          "encoding_seconds": 0.052583500000764616,
+          "network_and_packet_seconds": 0.016112374998556334,
+          "reference_replay_and_probe_wall_seconds": 0.16809987499982526,
+          "native_verify_seconds": 0.000906552,
+          "proposal_search_calls": 0,
+          "mode": "shadow"
+        },
+        "given_anchors": {
+          "counts": {
+            "required": 56,
+            "issued": 0,
+            "recovered": 0,
+            "duplicates": 0,
+            "busy": 1,
+            "complete_busy": 0
+          },
+          "runs": [
+            {
+              "run": 79,
+              "required": 56,
+              "issued": 0,
+              "hits": 0,
+              "duplicates": 0,
+              "other": {},
+              "recall": 0.0
+            }
+          ],
+          "encoding_seconds": 0.052583500000764616,
+          "network_and_packet_seconds": 0.014773333998164162,
+          "reference_replay_and_probe_wall_seconds": 0.1662572919995,
+          "native_verify_seconds": 0.000810179,
+          "proposal_search_calls": 0,
+          "mode": "assist"
+        },
+        "teacher_prefix_ranks": {
+          "79": {
+            "anchor": {
+              "reads": 25,
+              "candidates": 264,
+              "required": 67,
+              "passing": 0,
+              "hits": 0,
+              "credit_at_teacher_k": 29.0,
+              "positive_logit_sum": -34.710936456918716
+            },
+            "parent": {
+              "reads": 57,
+              "candidates": 4233,
+              "required": 64,
+              "passing": 0,
+              "hits": 0,
+              "credit_at_teacher_k": 10.0,
+              "positive_logit_sum": -150.74438631534576
+            }
+          }
+        }
+      },
+      "fixed_run79": {
+        "shadow": {
+          "counts": {
+            "required": 74,
+            "issued": 10,
+            "recovered": 5,
+            "duplicates": 4,
+            "busy": 1,
+            "complete_busy": 0,
+            "guard": 1
+          },
+          "runs": [
+            {
+              "run": 79,
+              "required": 74,
+              "issued": 10,
+              "hits": 5,
+              "duplicates": 4,
+              "other": {
+                "guard": 1
+              },
+              "recall": 0.06756756756756757
+            }
+          ],
+          "encoding_seconds": 0.054615832999843406,
+          "network_and_packet_seconds": 0.017938582999704522,
+          "reference_replay_and_probe_wall_seconds": 0.18140200000016193,
+          "native_verify_seconds": 0.000909173,
+          "proposal_search_calls": 0,
+          "mode": "shadow"
+        },
+        "given_anchors": {
+          "counts": {
+            "required": 56,
+            "issued": 0,
+            "recovered": 0,
+            "duplicates": 0,
+            "busy": 1,
+            "complete_busy": 0
+          },
+          "runs": [
+            {
+              "run": 79,
+              "required": 56,
+              "issued": 0,
+              "hits": 0,
+              "duplicates": 0,
+              "other": {},
+              "recall": 0.0
+            }
+          ],
+          "encoding_seconds": 0.054615832999843406,
+          "network_and_packet_seconds": 0.014052500000616419,
+          "reference_replay_and_probe_wall_seconds": 0.1779587500004709,
+          "native_verify_seconds": 0.000910101,
+          "proposal_search_calls": 0,
+          "mode": "assist"
+        }
+      },
+      "name_intervention_changed_requests": {
+        "loopfact": {
+          "shadow": false,
+          "given_anchors": false
+        },
+        "random/held_merge-40536-1": {
+          "shadow": false,
+          "given_anchors": false
+        }
+      },
+      "trained_declaration_ties": {
+        "loopfact": {
+          "tables": 401,
+          "distinct_vectors": 296,
+          "tied_tables": 139,
+          "largest_group": 23,
+          "changed_nodes_on_rename": 0
+        },
+        "fact": {
+          "tables": 401,
+          "distinct_vectors": 296,
+          "tied_tables": 139,
+          "largest_group": 23,
+          "changed_nodes_on_rename": 0
+        },
+        "random/held_merge-40536-1": {
+          "tables": 9,
+          "distinct_vectors": 9,
+          "tied_tables": 0,
+          "largest_group": 1,
+          "changed_nodes_on_rename": 0
+        }
+      }
+    }
+  }
+}

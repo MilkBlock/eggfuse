@@ -195,3 +195,64 @@ the program/merge/result-position holdouts. Compare the two EggCC held programs
 separately. A static exposure audit or invariance under renaming alone cannot
 establish that removing names improves recall. The existing hash Actor has a
 different graph and serves as a historical reference outside the matched ablation.
+
+Three arms used seed 1703 and the same 242 training and 50 calibration snapshots
+from 48 generated programs plus sum-bits and dot. Each made 348 AdamW updates
+on MPS. All three used 60 semantic categories and the same initialization of
+common parameters. Named and renamed have 284,454 parameters each, structural
+has 22,310. Each CPU evaluation used one batch per Run and native named-port
+verification with independent search disabled. Each non-anchor role reads the
+prefix selected so far, so the batch contains successive layers for higher arity.
+
+| Symbol treatment | Held program, calibrated / fixed | Held merge, calibrated / fixed | Held result position, calibrated / fixed |
+|---|---:|---:|---:|
+| Named | 23 / 45 | 27 / 43 | 0 / 26 |
+| Renamed each exposure | 0 / 29 | 0 / 27 | 0 / 16 |
+| Structural | 37 / 26 | 42 / 14 | 18 / 7 |
+
+Each entry counts correct exclusive final graphs out of 48 in that split.
+The fixed control uses a logit cut of zero (sigmoid 0.5) at all levels.
+The calibrated control uses the same training-only F1 selection procedure on
+the same reads, yielding different cuts for the three treatments. The ranking
+reverses between these controls. This single-seed result supports name
+invariance and a smaller model. It leaves the generalization advantage open.
+
+On loopfact Run 79 each calibrated treatment recovered 0/74. At the common fixed
+cut, named recovered 3, renamed 9 and structural 5. Supplying every actual
+multi-parent anchor still yielded no complete packet for the 56 multi-parent
+teacher commits under either threshold choice. Precision is undefined with zero
+packets. For structural, even with every correct intermediate prefix supplied
+and the count of true children given at each read, only 10 of 64 next-parent
+labels ranked in those top positions. This teacher-only ranking diagnostic gives
+no issuance credit. On loopfact, renaming the declarations changed 12,210 of
+13,565 node embeddings in the old receipt Actor. The trained structural model
+changed none of its 13,666 node embeddings. Its two GNN steps assigned only 296
+distinct embeddings to 401 table declarations. That tie count applies to the
+declarations; dynamic port keys and static type masks retain other distinctions.
+
+Reproduce with `train_anchor_set.py ROOT OUT`. For each treatment directory
+`MODE` run `run_recall.py ROOT RECEIVER MODE/model.pt MODE/live --workloads fact loopfact sum-divisors`
+and `anchor_audit.py ROOT RECEIVER MODE/model.pt MODE/exclusive.json`. Use
+`evaluate.py` with the three generated holdout splits and `--snapshot-count 3`,
+saving `held.json` and then `held-fixed.json` with `--fixed-threshold 0`.
+Run `anchor_set_audit.py ROOT RECEIVER MODE/model.pt MODE/run79.json --case loopfact --runs 79`;
+repeat with the common fixed cut as `fixed.json`. For `plain-probe.json` and
+`rename-probe.json` use `--case loopfact --case random/held_merge-40536-1 --runs 3 79`
+and add `--rename 993` to the second invocation. Use `symbol_symmetry.py ROOT MODE/model.pt MODE/symmetry.json --cases loopfact fact random/held_merge-40536-1`
+for declaration ties and `anchor_set_results.py OUT run-recall/parallel-anchors`
+to assemble the matched per-Run ledgers. These are model-quality experiments.
+
+The training BCE uses the ports named in the teacher proofs. A different
+certificate for the same binding may have been labeled negative. Native recall
+credits such a certificate once. For the calibrated structural treatment,
+9 of the 53 recovered fact commits and 5 of the 54 recovered loopfact commits
+were recovered only through an alternate certificate. This is a measured
+mismatch between pointer supervision and the verifier's acceptance criterion.
+
+Across the 20,428 held EggCC reference commits, the calibrated single batches
+recovered 405 named, 457 renamed and 484 structural. The structural model
+completed 5/163 busy Runs on fact, 4/166 on loopfact and 5/627 on sum-divisors.
+All nine exclusive EggCC trajectories first diverged on Run 3. The previous
+multi-wave receipt policy recovered 925 commits on those same teacher snapshots.
+The [per-Run counts and matched controls](run-recall/parallel-anchors/summary.json)
+include mode-specific receipts and diagnostic timings.

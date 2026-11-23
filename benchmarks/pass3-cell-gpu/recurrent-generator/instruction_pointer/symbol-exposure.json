@@ -51,5 +51,31 @@
       "unseen_labels_in_occupied_buckets": 0,
       "excess_labels_due_to_collisions": 68
     }
+  },
+  "paired_rename": {
+    "loopfact": {
+      "original_nodes": 13565,
+      "old_changed": 12210,
+      "structural_nodes": 13666,
+      "structural_changed": 0
+    },
+    "random/held_program-40512-1": {
+      "original_nodes": 59,
+      "old_changed": 57,
+      "structural_nodes": 65,
+      "structural_changed": 0
+    },
+    "random/held_merge-40536-1": {
+      "original_nodes": 63,
+      "old_changed": 61,
+      "structural_nodes": 69,
+      "structural_changed": 0
+    },
+    "random/held_result_pc-40560-1": {
+      "original_nodes": 63,
+      "old_changed": 61,
+      "structural_nodes": 69,
+      "structural_changed": 0
+    }
   }
 }

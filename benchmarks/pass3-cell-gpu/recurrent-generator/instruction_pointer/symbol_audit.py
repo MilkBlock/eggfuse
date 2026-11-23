@@ -1,6 +1,6 @@
 """Measure hash exposure and counterfactual user-symbol renames on a frozen Actor."""
 import argparse
-from collections import Counter, defaultdict
+from collections import defaultdict
 import hashlib
 import json
 from pathlib import Path
@@ -9,7 +9,6 @@ import random
 import torch
 
 from catalog import Catalog, symbol
-from history import stream
 from rule_read import load_actor
 
 
@@ -80,6 +79,29 @@ def audit(root,weights):
         return {symbol(json.loads(label)) for label in labels}
     training=all_labels['train']
     exposed=buckets(training)
+    # Graph-only counterfactual. Runtime rows, rules, version filters and token
+    # addresses retain the same indices. Only compiler-visible names change.
+    perturbations={}
+    from semantic_catalog import SemanticActor,SemanticCatalog
+    torch.manual_seed(1703)
+    probes=['loopfact']+[next(r['directory'] for r in rows if r['split']==s and r['collision'])
+                         for s in ('held_program','held_merge','held_result_pc')]
+    with torch.no_grad():
+        for name in probes:
+            pg=read(root/name/'program.json')
+            renamed=renamed_program(pg,1703)
+            before,after=Catalog(pg),Catalog(renamed)
+            a,b=model.template_graph(before),model.template_graph(after)
+            u,v=SemanticCatalog(pg),SemanticCatalog(renamed)
+            if (u.factors!=v.factors or u.constants!=v.constants or u.edges!=v.edges or
+                u.outputs!=v.outputs or u.atoms!=v.atoms or u.field_links!=v.field_links or
+                u.seminaive!=v.seminaive):
+                raise ValueError('typed structure changed under alpha renaming')
+            typed=SemanticActor(sorted({x for row in u.factors for x in row}))
+            if not torch.equal(typed.template_graph(u),typed.template_graph(v)):
+                raise ValueError('structural node states depend on user spelling')
+            perturbations[name]=dict(original_nodes=len(a),old_changed=int((a!=b).any(1).sum()),
+                                     structural_nodes=len(u.nodes),structural_changed=0)
     report={}
     for split,labels in all_labels.items():
         occupied=buckets(labels)
@@ -91,7 +113,7 @@ def audit(root,weights):
         checkpoint_parameters=sum(p.numel() for p in model.parameters()),static_parameters=model.static.weight.numel(),
         static_shape=list(model.static.weight.shape),catalogs=len(rows),compiled_bytes_distinct=len(cache),
         training_random_merge_families=len({r['merge_family'] for r in rows if r['split']=='train' and 'merge_family' in r}),
-        exposure=report)
+        exposure=report,paired_rename=perturbations)
 
 
 if __name__=='__main__':

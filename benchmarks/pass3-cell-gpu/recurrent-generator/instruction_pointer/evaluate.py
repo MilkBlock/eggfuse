@@ -52,16 +52,22 @@ def align(targets,proposals):
     return [(t,pred[j]) for t,j in zip(target,order) if t is not None]
 
 
-def assess(root,binary,weights,seed, field_pointer=False, splits=None, snapshot_count=None):
+def assess(root,binary,weights,seed, field_pointer=False, splits=None, snapshot_count=None,fixed_threshold=None):
     torch.manual_seed(seed)
     torch.set_num_threads(1)
     actor = load_actor(weights, field_pointer)
+    if fixed_threshold is not None:
+        if not hasattr(actor,'thresholds'): raise ValueError('fixed threshold requires set issuance')
+        actor.thresholds.fill_(fixed_threshold)
     numbers = b''.join(t.detach().numpy().tobytes() for t in actor.state_dict().values())
     result=dict(snapshot_receipts='unavailable',exclusive_live_receipts=getattr(actor,'requires_receipts',False),
                 field_pointer=field_pointer,provider='trained' if weights else 'random_initialization',seed=seed,
                 build_sha256=sha(binary.read_bytes()),weights_sha256=sha(numbers),device='single-thread CPU',
                 snapshot_metric='address equality to one reference certificate; each proposal used at most once',
                 exclusive_credit='common complete Run prefix lower bound; divergent suffix is uncredited',splits={})
+    if hasattr(actor,'thresholds'):
+        result['thresholds']=actor.thresholds.tolist()
+        result['checkpoint_sha256']=sha(weights.read_bytes())
     manifest=json.loads((root/'manifest.json').read_bytes())
     known=set(r['split'] for r in manifest)
     if splits and set(splits)-known:
@@ -137,5 +143,6 @@ if __name__=='__main__':
     parser.add_argument('--field-pointer',action='store_true')
     parser.add_argument('--split',action='append')
     parser.add_argument('--snapshot-count',type=int)
+    parser.add_argument('--fixed-threshold',type=float)
     a=parser.parse_args()
-    a.output.write_text(json.dumps(assess(a.corpus,a.receiver.resolve(),a.weights,a.seed,a.field_pointer,a.split,a.snapshot_count),indent=2)+'\n')
+    a.output.write_text(json.dumps(assess(a.corpus,a.receiver.resolve(),a.weights,a.seed,a.field_pointer,a.split,a.snapshot_count,a.fixed_threshold),indent=2)+'\n')
