@@ -18,6 +18,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let [role, program, tape, audit, rest @ ..] = args.as_slice() else {
         return Err("expected reference|capture|replay|online PROGRAM TAPE audit|time".into());
     };
+    let (rest, recall_path) = match rest {
+        [rest @ .., flag, path] if flag == "--recall" && role == "replay" => (rest, Some(path)),
+        _ => (rest, None),
+    };
     let (rest, memory_path) = match rest {
         [rest @ .., flag, path] if flag == "--memory" => (rest, Some(path)),
         _ => (rest, None),
@@ -56,6 +60,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "reference" => (),
         _ => return Err("unknown execution mode".into()),
     }
+    if let Some(path) = recall_path {
+        let probes: Tape = serde_json::from_slice(&fs::read(path)?)?;
+        if probes.schema != "cell-token-replay/v2" || probes.program_sha256 != digest {
+            return Err("recall tape/program mismatch".into());
+        }
+        engine.audit_token_recall(probes.requests)?;
+    }
     if let Some(path) = memory_path {
         engine.export_token_memory(Some(std::path::Path::new(path)))?;
     } else if role == "online" {
@@ -83,6 +94,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "schedule":engine.steps.iter().map(|s|json!([s.ruleset,s.path,s.iterations,s.epoch,s.executed_bindings,s.changed])).collect::<Vec<_>>()
     });
     if let Some(h) = engine.tokens() {
+        if let Some(audit) = &h.recall {
+            report["recall_verdicts"] = json!(audit.verdicts);
+            report["unused_recall"] = json!(audit.pending());
+        }
         report["runtime_events"] = json!(h.repair_events);
         report["event_registration_seconds"] = json!(h.event_time.as_secs_f64());
         report["counts"] = json!(h.counts);

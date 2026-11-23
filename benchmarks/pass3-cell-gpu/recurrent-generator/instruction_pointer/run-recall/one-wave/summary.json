@@ -1,0 +1,83 @@
+{
+  "mode": "shadow",
+  "teacher_control": false,
+  "wave_limit": 1,
+  "weights_sha256": "59fda6c8ae51dc64809865a832846eba877eb631b8704714c3319e287187a4dc",
+  "receiver_sha256": "77d35b3325410dfda3a34e6bca78173d23c27872da59a7c63e7fb42bdde82a79",
+  "cases": {
+    "fact": {
+      "runs": 634,
+      "busy": 163,
+      "empty": 471,
+      "issued": 368,
+      "teacher_commits": 1668,
+      "recovered": 114,
+      "micro": 0.0683453237410072,
+      "macro": 0.14796021648144095,
+      "complete_busy": 5,
+      "zero_busy": 87,
+      "empty_runs_with_proposals": 3,
+      "proposals_on_empty_runs": 8,
+      "reasons": {
+        "binding": 133,
+        "guard": 12
+      },
+      "duplicates": 109,
+      "recovered_only_by_alternate_certificate": 59,
+      "decode_endings": {
+        "budget": 108,
+        "no_complete_request": 1,
+        "stop": 525
+      }
+    },
+    "loopfact": {
+      "runs": 618,
+      "busy": 166,
+      "empty": 452,
+      "issued": 378,
+      "teacher_commits": 1419,
+      "recovered": 135,
+      "micro": 0.09513742071881606,
+      "macro": 0.16107539228485462,
+      "complete_busy": 6,
+      "zero_busy": 88,
+      "empty_runs_with_proposals": 9,
+      "proposals_on_empty_runs": 23,
+      "reasons": {
+        "binding": 141,
+        "guard": 15
+      },
+      "duplicates": 87,
+      "recovered_only_by_alternate_certificate": 79,
+      "decode_endings": {
+        "budget": 113,
+        "stop": 505
+      }
+    },
+    "sum-divisors": {
+      "runs": 1644,
+      "busy": 627,
+      "empty": 1017,
+      "issued": 1921,
+      "teacher_commits": 17341,
+      "recovered": 595,
+      "micro": 0.03431174672740903,
+      "macro": 0.14213040338340527,
+      "complete_busy": 26,
+      "zero_busy": 290,
+      "empty_runs_with_proposals": 42,
+      "proposals_on_empty_runs": 134,
+      "reasons": {
+        "binding": 755,
+        "guard": 141
+      },
+      "duplicates": 430,
+      "recovered_only_by_alternate_certificate": 349,
+      "decode_endings": {
+        "budget": 533,
+        "stop": 1105,
+        "no_complete_request": 6
+      }
+    }
+  }
+}

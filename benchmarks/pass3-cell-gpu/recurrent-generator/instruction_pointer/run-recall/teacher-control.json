@@ -1,0 +1,63 @@
+{
+  "mode": "shadow",
+  "teacher_control": true,
+  "wave_limit": 1,
+  "weights_sha256": "59fda6c8ae51dc64809865a832846eba877eb631b8704714c3319e287187a4dc",
+  "receiver_sha256": "77d35b3325410dfda3a34e6bca78173d23c27872da59a7c63e7fb42bdde82a79",
+  "cases": {
+    "fact": {
+      "runs": 634,
+      "busy": 163,
+      "empty": 471,
+      "issued": 1668,
+      "teacher_commits": 1668,
+      "recovered": 1668,
+      "micro": 1.0,
+      "macro": 1.0,
+      "complete_busy": 163,
+      "zero_busy": 0,
+      "empty_runs_with_proposals": 0,
+      "proposals_on_empty_runs": 0,
+      "reasons": {},
+      "duplicates": 0,
+      "recovered_only_by_alternate_certificate": 0,
+      "decode_endings": {}
+    },
+    "loopfact": {
+      "runs": 618,
+      "busy": 166,
+      "empty": 452,
+      "issued": 1419,
+      "teacher_commits": 1419,
+      "recovered": 1419,
+      "micro": 1.0,
+      "macro": 1.0,
+      "complete_busy": 166,
+      "zero_busy": 0,
+      "empty_runs_with_proposals": 0,
+      "proposals_on_empty_runs": 0,
+      "reasons": {},
+      "duplicates": 0,
+      "recovered_only_by_alternate_certificate": 0,
+      "decode_endings": {}
+    },
+    "sum-divisors": {
+      "runs": 1644,
+      "busy": 627,
+      "empty": 1017,
+      "issued": 17341,
+      "teacher_commits": 17341,
+      "recovered": 17341,
+      "micro": 1.0,
+      "macro": 1.0,
+      "complete_busy": 627,
+      "zero_busy": 0,
+      "empty_runs_with_proposals": 0,
+      "proposals_on_empty_runs": 0,
+      "reasons": {},
+      "duplicates": 0,
+      "recovered_only_by_alternate_certificate": 0,
+      "decode_endings": {}
+    }
+  }
+}

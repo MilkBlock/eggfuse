@@ -89,7 +89,19 @@ struct MemoryExport {
     accepted: Vec<Request>,
     online_ids: Option<BTreeSet<i64>>,
 }
+#[derive(Default)]
+pub struct RecallAudit {
+    queue: BTreeMap<(usize, usize), Vec<Request>>,
+    pub verdicts: Vec<(usize, i64, Option<i64>, &'static str)>,
+}
+impl RecallAudit {
+    pub fn pending(&self) -> usize {
+        self.queue.values().map(Vec::len).sum()
+    }
+}
+
 pub struct History {
+    pub recall: Option<RecallAudit>,
     memory: Option<MemoryExport>,
     pub repair_events: Vec<RepairEvent>,
     pub event_time: Duration,
@@ -133,6 +145,7 @@ impl History {
             .collect();
         let mut history = Self {
             memory: None,
+            recall: None,
             merge_offsets,
             function_sources: BTreeMap::new(),
             repair_events: Vec::new(),
@@ -185,10 +198,28 @@ impl History {
         }
         Ok(h)
     }
+    pub(crate) fn enable_recall(&mut self, proposals: Vec<Request>) -> Result<()> {
+        let mut audit = RecallAudit::default();
+        let mut ids = BTreeSet::new();
+        for p in proposals {
+            if !ids.insert(p.token) || p.token <= 0 || p.run == 0 {
+                return Err("invalid recall proposal identity".into());
+            }
+            audit.queue.entry((p.run,p.rule)).or_default().push(p);
+        }
+        self.recall = Some(audit);
+        Ok(())
+    }
+
     pub fn unused(&self) -> usize {
         self.queue.values().map(Vec::len).sum()
     }
     pub(crate) fn reject_untriggered(&mut self, run: usize, rid: usize) {
+        if let Some(audit) = &mut self.recall {
+            for p in audit.queue.remove(&(run, rid)).unwrap_or_default() {
+                audit.verdicts.push((run, p.token, None, "untriggered_rule"));
+            }
+        }
         if let Some(packets) = self.queue.remove(&(run, rid)) {
             *self.counts.rejected.entry("untriggered_rule").or_default() += packets.len();
         }
@@ -486,6 +517,26 @@ impl History {
                 }
                 Err(reason) => *self.counts.rejected.entry(reason).or_default() += 1,
             }
+        }
+        // All reference bindings for this rule are signed, before any RHS writes.
+        // Resolve alternate certificates against the same input key used by the receiver.
+        if let Some(mut audit) = self.recall.take() {
+            let teacher_counts = std::mem::take(&mut self.counts);
+            for p in audit.queue.remove(&(run, rid)).unwrap_or_default() {
+                let (teacher, reason) = match self.check(g, rid, wm, &p)? {
+                    Ok(answer) => {
+                        let key = (rid, answer.input_values(&rule.inputs).cloned().collect());
+                        match self.signing.get(&key) {
+                            Some(id) => (Some(*id), "match"),
+                            None => (None, "off_reference"),
+                        }
+                    }
+                    Err(reason) => (None, reason),
+                };
+                audit.verdicts.push((run, p.token, teacher, reason));
+            }
+            self.counts = teacher_counts;
+            self.recall = Some(audit);
         }
         self.verify_time += started.elapsed();
         Ok(answers)

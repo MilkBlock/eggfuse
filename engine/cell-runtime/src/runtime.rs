@@ -1201,6 +1201,10 @@ impl Executor {
     #[cfg(feature = "cell-token-replay")]
     pub fn tokens(&self) -> Option<&crate::cell_tokens::History> { self.token_history.as_ref() }
     #[cfg(feature = "cell-token-replay")]
+    pub fn audit_token_recall(&mut self, probes: Vec<crate::cell_tokens::Request>) -> Result<()> {
+        self.token_history.as_mut().ok_or("missing token history")?.enable_recall(probes)
+    }
+    #[cfg(feature = "cell-token-replay")]
     pub fn export_token_memory(&mut self, path: Option<&std::path::Path>) -> Result<()> {
         self.token_history.as_mut().ok_or("token history not active")?.export_memory(path)
     }
