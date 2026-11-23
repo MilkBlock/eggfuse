@@ -31,9 +31,11 @@ def pointer(weight,physical,dev):
 
 
 @torch.inference_mode()
-def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='learned',union='fenced',directory='published',spine=True,lookup='hash',batch_runs=0,tiles=32,token_layout='packed',arena='shared',router=None,export_only=False,token_cap=256,scalars='integer',profile_prims=False,prune=False,row_audit=False,measure_resident=None,hot_filter=4,index_repair=False,count_work=False,block_study=None,neural=None,maintenance_repeat=1,maintenance_control=False,serial_compile=None,birth_audit=False):
+def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='learned',union='fenced',directory='published',spine=True,lookup='hash',batch_runs=0,tiles=32,token_layout='packed',arena='shared',router=None,export_only=False,token_cap=256,scalars='integer',profile_prims=False,prune=False,row_audit=False,measure_resident=None,hot_filter=4,index_repair=False,count_work=False,block_study=None,neural=None,maintenance_repeat=1,maintenance_control=False,serial_compile=None,birth_audit=False,run_observer=None):
     if serial_compile is None and (os.environ.get('PYTORCH_ENABLE_MPS_FALLBACK','0')!='0' or not torch.backends.mps.is_available()):
         raise RuntimeError('Metal GPU required')
+    if run_observer is not None and not (neural and neural.get("capture_boundaries") and neural.get("capture") and not batch_runs):
+        raise ValueError("Run observation requires split neural boundary capture")
     if steps<0 or steps>4096:raise ValueError('Run budget outside trace capacity')
     if lookup not in ('scan','point','hash') or batch_runs<0 or batch_runs>32:raise ValueError('lookup or batch budget')
     if lookup=='hash' and directory!='published':raise ValueError('hash keys require published-key storage')
@@ -358,6 +360,10 @@ def execute(packet,weight,port_weights,steps,lanes,root,capture=False,reader='le
                 if neural is not None:
                     if capture_edges:
                         lib.neural_snapshot_anchors(state,meta,threads=cap)
+                    if run_observer is not None and not (state[5].item() or state[7].item()):
+                        n=int(state[0].item())
+                        run_observer(int(state[3].item()),int(state[4].item()),meta[:n,:5].cpu().numpy().copy(),
+                                     wm.cpu().numpy().copy(),meta.view(-1)[limits['EDGE_BEFORE']:limits['EDGE_BEFORE']+n].cpu().numpy().copy())
                     if fusion!=2:
                         lib.neural_features(prog,state,meta,head,wm,feats,threads=leaves*ranks)
                     if compound is not None:

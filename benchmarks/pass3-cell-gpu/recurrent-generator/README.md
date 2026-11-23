@@ -218,3 +218,11 @@ python "$d/root_returns.py" "$e" "$source_dir" "$e/all-depth-returns-v8" "$e/new
 python "$d/root_returns.py" "$e" "$source_dir" "$e/new-root" "$e/new-stop" --tune-stop --coverage-floor 0.9 --cost-weight 2 --updates 32
 python "$d/returns_evaluate.py" "$e" "$e/all-depth-returns-v8/policy.json" "$e/new-stop/policy.json" "$e/new-fept-comparison" --source "$source_dir" --cases histogram-scatter gated-state sum-bits dot-product gemm-bias-relu stable-argmax
 ```
+
+### Run-aligned delta visibility
+
+Run `python delta_capture.py "$corpus" "$ref" "$reader" OUTPUT --case sum-bits` to capture a frozen snapshot after scheduling and before search or RHS writes. Repeat with dot-product. This diagnostic runs the original grid kernels with the serial C++ adapter and checks ordered bindings, writes, resumes, union history, parents, schedules and exported table rows against the saved device execution. It does not train or time an Actor. It aligns every committed table witness to the actual query route, including reordering by certified Spine entries, and checks its table, visibility, version and publication ticket against the earlier snapshot.
+
+The fixed-window count uses the actual source pivot. The unlimited delta counts distinguish that same pivot from any published fresh pivot admitted by the existing leaf catalog. The broader structural bound allows new entries and any fresh table witness, then tries to bind remaining atoms using only fully determined keys and primitive arguments. It assumes the successful reference binding and does not measure model accuracy. Two-lane upper bounds allow at most two single-binding proposals per Run. A nullary rule has no row anchor.
+
+On sum-bits, expanding the window increases actual-source-pivot coverage from 742 to 1,428. Allowing alternate certified pivots reaches 1,432. There are 7,263 bindings with a fresh table witness, but 5,163 of those require an additional independent input under the table-key and primitive closure test. The two empty LHS bindings need their own action. [Counts and per-Run lane bounds for both workloads](delta-coverage.json).
