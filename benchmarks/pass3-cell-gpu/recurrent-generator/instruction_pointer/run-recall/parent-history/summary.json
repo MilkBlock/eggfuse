@@ -1,0 +1,86 @@
+{
+  "mode": "shadow",
+  "oracle_rules": false,
+  "teacher_control": false,
+  "live_receipts": true,
+  "masked": false,
+  "wave_limit": 128,
+  "weights_sha256": "f8e72f111f42e415109887a08e9a978f5c7819a74b3dda086cb6776418c37fb8",
+  "receiver_sha256": "a58c7246098dba7587504a9766b812c1f3fdbef7a8a7bcd6c871173efa0e6d1d",
+  "cases": {
+    "loopfact": {
+      "live_transport": {
+        "receipt_batches": 1018,
+        "receipt_counts": {
+          "accepted": 158,
+          "binding": 2837,
+          "guard": 23,
+          "duplicate": 749
+        },
+        "wave_receipt_seconds": 0.04005831100221258,
+        "network_seconds": 18.122974118005004,
+        "native_verify_seconds": 0.006135599,
+        "wall_seconds": 20.99403812499986
+      },
+      "runs": 618,
+      "busy": 166,
+      "empty": 452,
+      "issued": 3767,
+      "teacher_commits": 1419,
+      "recovered": 158,
+      "micro": 0.1113460183227625,
+      "macro": 0.22793933329359864,
+      "complete_busy": 19,
+      "zero_busy": 73,
+      "empty_runs_with_proposals": 6,
+      "proposals_on_empty_runs": 45,
+      "reasons": {
+        "binding": 2837,
+        "guard": 23
+      },
+      "duplicates": 749,
+      "recovered_only_by_alternate_certificate": 66,
+      "decode_endings": {
+        "stop": 612,
+        "budget": 6
+      }
+    },
+    "fact": {
+      "live_transport": {
+        "receipt_batches": 871,
+        "receipt_counts": {
+          "accepted": 148,
+          "binding": 1502,
+          "guard": 1032,
+          "duplicate": 520
+        },
+        "wave_receipt_seconds": 0.03482258599433408,
+        "network_seconds": 17.66970666602174,
+        "native_verify_seconds": 0.005819908,
+        "wall_seconds": 20.680512291000923
+      },
+      "runs": 634,
+      "busy": 163,
+      "empty": 471,
+      "issued": 3202,
+      "teacher_commits": 1668,
+      "recovered": 148,
+      "micro": 0.08872901678657075,
+      "macro": 0.18055836845929515,
+      "complete_busy": 8,
+      "zero_busy": 81,
+      "empty_runs_with_proposals": 2,
+      "proposals_on_empty_runs": 40,
+      "reasons": {
+        "binding": 1502,
+        "guard": 1032
+      },
+      "duplicates": 520,
+      "recovered_only_by_alternate_certificate": 68,
+      "decode_endings": {
+        "stop": 629,
+        "budget": 5
+      }
+    }
+  }
+}

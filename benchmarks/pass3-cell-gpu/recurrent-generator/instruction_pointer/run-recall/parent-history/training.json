@@ -1,0 +1,29 @@
+{
+  "seed": 1703,
+  "device": "mps",
+  "steps": 512,
+  "reads": 4577,
+  "exposure": {
+    "remaining_sampled": 2320,
+    "probe_binding": 857,
+    "probe_accepted": 547,
+    "probe_duplicate": 363,
+    "source_runs": 336,
+    "probe_watermark": 87,
+    "programs": 50,
+    "probe_guard": 3
+  },
+  "weights": [
+    [
+      0.6575282216072083,
+      0.6093496680259705,
+      -0.6957395672798157,
+      2.7196037769317627,
+      -2.68864369392395,
+      -1.909439206123352,
+      -0.714080274105072,
+      2.8101325035095215
+    ]
+  ],
+  "initial_sha256": "1662f7ec2bac71c49c857033748e448f84ace29b612771d590a4758735640b03"
+}

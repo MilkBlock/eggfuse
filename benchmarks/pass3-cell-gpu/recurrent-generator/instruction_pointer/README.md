@@ -149,3 +149,18 @@ For teacher protocol parity, run the same `wave_parity.py` command with `--teach
 | sum-divisors | 623 → 665 / 17,341 | 124,632 → 17,812 | 2,355 / 17,341 |
 
 The number of completely recovered busy Runs stayed at 6, 19 and 53, respectively. In exclusive execution all three still first diverged on Run 2. On loopfact Run 79, live feedback recovered six of 74 and spent 512 proposals, of which 440 were duplicates and 66 failed verification. The frozen parent ceiling for that Run was 19/74 even when each correct rule was supplied.
+
+### Sequential parent-history control
+
+The parent pointer reads counts of its own pending requests and native verdicts at
+the candidate port and, for subsequent roles, at that port with the selected
+prefix. The rest of the receipt checkpoint is frozen. Run
+`train_parent_history.py ROOT RECEIVER RECEIPT_CHECKPOINT OUT` then
+`run_recall.py ROOT RECEIVER OUT/model.pt OUT/live --workloads loopfact fact`.
+MPS fitting used 4,577 history-sensitive pointer reads. On sealed teacher Runs
+the CPU policy recovered 148/1,668 commits on fact (8 complete busy Runs)
+and 158/1,419 on loopfact (19 complete). Loopfact Run 79 rose from 6/74 to
+13/74 at the same 512 issues, with 357 duplicates and 142 rejects. The remaining
+61 commits and the long decision chain motivate the parallel-anchor experiment.
+These [two shadow trajectories](run-recall/parent-history) measure the trained
+sequential control. They do not establish an exclusive final graph or a speedup.
