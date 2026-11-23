@@ -155,3 +155,28 @@ class CalibratedAnchorActor(DisagreementActor):
         if role is None:
             return score
         return score+self.root_offset[int(len(cat.atoms[rid])>1)]
+
+
+class FinalParentActor(CalibratedAnchorActor):
+    """Score the last named parent from the selected prefix and the candidate port."""
+    def __init__(self,vocabulary,names='structural',width=32):
+        super().__init__(vocabulary,names,width)
+        self.final_query=nn.Linear(3*width,width+1)
+        nn.init.zeros_(self.final_query.weight)
+        nn.init.zeros_(self.final_query.bias)
+
+    def final_context(self,cat,mem,rid,prefix,role):
+        h=mem.keys[prefix].mean(dim=1)
+        root=mem.nodes[cat.roots['generated',rid]].expand_as(h)
+        atom=mem.nodes[cat.atoms[rid][role][1]].expand_as(h)
+        return torch.cat((root,atom,h),dim=-1)
+
+    def final_adjustment(self,context,keys):
+        q=self.final_query(context)
+        return q[:,:-1] @ keys.T / math.sqrt(self.width) + q[:,-1:]
+
+    def pair_scores(self,cat,mem,rid,ordered,prefix,role,ids):
+        scores=super().pair_scores(cat,mem,rid,ordered,prefix,role,ids)
+        if len(ordered)+1==len(cat.atoms[rid]):
+            scores=scores+self.final_adjustment(self.final_context(cat,mem,rid,prefix,role),mem.keys[ids])
+        return scores
