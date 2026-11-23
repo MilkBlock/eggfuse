@@ -72,7 +72,7 @@ def propose(actor, catalog, snapshot, nodes):
 
 
 @torch.no_grad()
-def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=None, live_receipts=None, teacher_tape=None, observe_packets=None, mask_receipts=False, prefix_policy=None, shadow_runs=None, run_limit=None, observe_snapshot=None, assist=False, audit=True, frame_observer=None, rule_screen=None, activation_observer=None, project_ports=None, higher_catalog=None, higher_choices=None, omit_rules=(), higher_ownership=None, audit_ept=False, side_pointer=None):
+def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=None, live_receipts=None, teacher_tape=None, observe_packets=None, mask_receipts=False, prefix_policy=None, shadow_runs=None, run_limit=None, observe_snapshot=None, assist=False, audit=True, frame_observer=None, rule_screen=None, activation_observer=None, project_ports=None, higher_catalog=None, higher_choices=None, omit_rules=(), higher_ownership=None, audit_ept=False, side_pointer=None, graph_issuer=None, layout_file=None):
     if wave_limit is None:
         wave_limit = getattr(actor,'default_waves',1)
     if live_receipts is None:
@@ -106,6 +106,8 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
         if not hasattr(actor, 'pair_components') or wave_limit != 1:
             raise ValueError('bounded prefix decoding needs a one-batch anchor Actor')
         live_receipts = bool(teacher_tape or prefix_policy.verify or prefix_policy.audit)
+    if graph_issuer and (higher_catalog or teacher_tape or live_receipts or wave_limit!=1 or prefix_policy is None):
+        raise ValueError('a graph issuer requires the ordinary sealed single-batch entry point')
     if shadow_runs is not None and (not teacher_tape or prefix_policy is None):
         raise ValueError('selective inference is a teacher-shadow diagnostic')
     if live_receipts and prefix_policy is None and not hasattr(actor, 'decisions'):
@@ -124,6 +126,10 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
         if role not in ('online','assist') or not higher_choices:
             raise ValueError('higher templates require a bounded live Actor and a nonempty catalog')
         cmd.extend(['--higher',higher_catalog])
+    if layout_file is not None:
+        if graph_issuer is None:
+            raise ValueError("layout receiver requires a graph issuer")
+        cmd.extend(["--layouts",layout_file])
     if audit_ept:
         cmd.append('--ept')
     with TemporaryFile(mode='w+') as errors, subprocess.Popen(
@@ -163,6 +169,9 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
                             continue
                         out.append(proposal)
                         next_token += 1
+                    if graph_issuer:
+                        children,next_token=graph_issuer.batch(frame,history,snapshot,out,next_token)
+                        out=children+out
                     issued += len(out)
                     if observe_packets is not None:
                         observe_packets(out)
@@ -239,6 +248,8 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
     counts = report['wave_checks'] if teacher_tape else report['counts']
     higher = report.get('higher')
     internal = higher['counts']['issued_steps'] if higher else 0
+    if 'layouts' in report:
+        internal+=report['layouts']['counts']['issued_steps']
     if report['unused'] or issued + internal != counts['accepted'] + counts['duplicates'] + sum(counts['rejected'].values()):
         raise RuntimeError('unaccounted online proposals')
     if live_receipts and (report['wave_requests'] != issued
@@ -248,7 +259,7 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
         raise ValueError('wave receipts differ from final verifier ledger')
     if assist and report['assist']['residual_commits'] + counts['accepted'] != report['matches']:
         raise ValueError('assist ownership differs from committed source bindings')
-    return dict(**({'side_pointer':dict(side_pointer.counts),'side_seconds':side_seconds} if side_pointer else {}), **({'ept':report['ept']} if audit_ept else {}), **({'higher':higher,'withheld_owned_requests':higher_ownership.omitted if higher_ownership else 0} if higher else {}), **(dict(visible_port_visits=port_projection.full,encoded_port_visits=port_projection.encoded) if port_projection else {}),
+    return dict(**({'layouts':report['layouts']} if 'layouts' in report else {}), **({'side_pointer':dict(side_pointer.counts),'side_seconds':side_seconds} if side_pointer else {}), **({'ept':report['ept']} if audit_ept else {}), **({'higher':higher,'withheld_owned_requests':higher_ownership.omitted if higher_ownership else 0} if higher else {}), **(dict(visible_port_visits=port_projection.full,encoded_port_visits=port_projection.encoded) if port_projection else {}),
                 **(dict(assist=report['assist'],resume_audit=report.get('resumes',[]),event_audit=report.get('events',[])) if assist else {}),partial_proof_counts={f'{kind}_{depth}': dict(c) for (kind,depth),c in prefix_counts.items()},
                 native_partial_reads=report.get('prefix_reads',0),native_partial_probes=report.get('prefixes_checked',0),
                 native_partial_seconds=report.get('prefix_verify_seconds',0),
