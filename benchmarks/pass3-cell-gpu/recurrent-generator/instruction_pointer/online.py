@@ -77,7 +77,7 @@ def propose(actor, catalog, snapshot, nodes):
 
 
 @torch.no_grad()
-def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=None, live_receipts=None, teacher_tape=None, observe_packets=None, mask_receipts=False, prefix_policy=None, shadow_runs=None, run_limit=None, observe_snapshot=None, assist=False, audit=True, frame_observer=None, rule_screen=None, activation_observer=None, project_ports=None, higher_catalog=None, higher_choices=None, omit_rules=(), higher_ownership=None, audit_ept=False, side_pointer=None, graph_issuer=None, layout_file=None):
+def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=None, live_receipts=None, teacher_tape=None, observe_packets=None, mask_receipts=False, prefix_policy=None, shadow_runs=None, run_limit=None, observe_snapshot=None, assist=False, audit=True, frame_observer=None, rule_screen=None, activation_observer=None, project_ports=None, higher_catalog=None, higher_choices=None, omit_rules=(), higher_ownership=None, audit_ept=False, side_pointer=None, graph_issuer=None, layout_file=None, audit_origins=False):
     if wave_limit is None:
         wave_limit = getattr(actor,'default_waves',1)
     if live_receipts is None:
@@ -135,7 +135,9 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
         if graph_issuer is None:
             raise ValueError("layout receiver requires a graph issuer")
         cmd.extend(["--layout-feedback" if getattr(graph_issuer,"ownership_feedback",False) else "--layouts",layout_file])
-    if audit_ept:
+    if audit_origins:
+        cmd.append('--ept-origins')
+    elif audit_ept:
         cmd.append('--ept')
     with TemporaryFile(mode='w+') as errors, subprocess.Popen(
             cmd,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=errors,text=True,bufsize=1) as p:
@@ -265,7 +267,7 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
         raise ValueError('wave receipts differ from final verifier ledger')
     if assist and report['assist']['residual_commits'] + counts['accepted'] != report['matches']:
         raise ValueError('assist ownership differs from committed source bindings')
-    return dict(**({'layouts':report['layouts']} if 'layouts' in report else {}), **({'side_pointer':dict(side_pointer.counts),'side_seconds':side_seconds} if side_pointer else {}), **({'ept':report['ept']} if audit_ept else {}), **({'higher':higher,'withheld_owned_requests':higher_ownership.omitted if higher_ownership else 0} if higher else {}), **(dict(visible_port_visits=port_projection.full,encoded_port_visits=port_projection.encoded) if port_projection else {}),
+    return dict(**({'layouts':report['layouts']} if 'layouts' in report else {}), **({'side_pointer':dict(side_pointer.counts),'side_seconds':side_seconds} if side_pointer else {}), **({'ept':report['ept']} if audit_ept or audit_origins else {}), **({'higher':higher,'withheld_owned_requests':higher_ownership.omitted if higher_ownership else 0} if higher else {}), **(dict(visible_port_visits=port_projection.full,encoded_port_visits=port_projection.encoded) if port_projection else {}),
                 **(dict(assist=report['assist'],resume_audit=report.get('resumes',[]),event_audit=report.get('events',[])) if assist else {}),partial_proof_counts={f'{kind}_{depth}': dict(c) for (kind,depth),c in prefix_counts.items()},
                 native_partial_reads=report.get('prefix_reads',0),native_partial_probes=report.get('prefixes_checked',0),
                 native_partial_seconds=report.get('prefix_verify_seconds',0),

@@ -19,7 +19,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         return Err("expected reference|capture|replay|online PROGRAM TAPE audit|time".into());
     };
     #[cfg(feature = "cell-token-ept")]
-    let (rest, ept) = match rest { [rest @ .., flag] if flag=="--ept" => (rest,true), _ => (rest,false) };
+    let (rest, ept, origins) = match rest {
+        [rest @ .., flag] if flag == "--ept-origins" => (rest, true, true),
+        [rest @ .., flag] if flag == "--ept" => (rest, true, false),
+        _ => (rest, false, false),
+    };
     let (rest, layout_path) = match rest {
         [rest @ ..,flag,path] if (flag=="--layouts" || flag=="--layout-feedback") && (role=="assist" || role=="online") => (rest,Some((path,flag=="--layout-feedback"))),
         _ => (rest,None),
@@ -67,6 +71,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     #[cfg(feature = "cell-token-ept")]
     if ept {
         let mut ledger=eggfuse_cell_runtime::token_ept::Ledger::default();
+        if origins { ledger.enable_origins(); }
         if layout_path.is_some_and(|(_,feedback)|feedback) {ledger.enable_step_credit();}
         engine.graph.token_ept=Some(ledger);
     }

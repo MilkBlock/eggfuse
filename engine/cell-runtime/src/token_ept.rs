@@ -18,6 +18,8 @@ pub(crate) struct Owner {
 pub struct Ledger {
     owner: Owner,
     ordinal: u64,
+    // Position in source RHS order, including commits with zero effective operations.
+    origins: Option<Vec<(Option<i64>, u64)>>,
     queue: VecDeque<((u64, u64), Owner)>,
     births: Vec<(FactRef, usize, Owner)>,
     hash: Sha256,
@@ -27,11 +29,17 @@ pub struct Ledger {
 }
 
 impl Ledger {
+    pub fn enable_origins(&mut self) {
+        self.origins = Some(Vec::new());
+    }
     pub fn enable_step_credit(&mut self) {
         self.internal_credit = Some(BTreeMap::new());
     }
     pub(crate) fn begin(&mut self, token: Option<i64>) {
         self.ordinal += 1;
+        if let Some(origins) = &mut self.origins {
+            origins.push((token, 0));
+        }
         let group = match token {
             Some(t) if (1..(1_i64 << 61)).contains(&t) => 1,
             Some(t) if ((1_i64 << 61)..i64::MAX / 2).contains(&t) => 2,
@@ -48,6 +56,9 @@ impl Ledger {
     }
     fn event(&mut self, owner: Owner, kind: usize, identity: impl Serialize) {
         self.counts[owner.group][kind] += 1;
+        if owner.ordinal > 0 && let Some(origins) = &mut self.origins {
+            origins[(owner.ordinal - 1) as usize].1 += 1;
+        }
         if owner.group == 2 && let (Some(credit),Some(token))=(&mut self.internal_credit,owner.token) {
             credit.entry(token).or_default()[kind]+=1;
         }
@@ -100,6 +111,7 @@ impl Ledger {
             "kinds":["visible_birth","function_write","effective_union","visibility_change"],
             "uncredited":self.counts[0],"signed_external":self.counts[1],"signed_internal":self.counts[2]});
         if let Some(credit)=&self.internal_credit {value["internal_tokens"]=serde_json::json!(credit);}
+        if let Some(origins) = &self.origins { value["origins"] = serde_json::json!(origins); }
         value
     }
 }
