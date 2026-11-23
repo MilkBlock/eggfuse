@@ -13,9 +13,11 @@ from online import execute
 from rule_read import load_actor
 
 
-def audit(root, binary, weights, wave_limit=1):
+def audit(root, binary, weights, wave_limit=None):
     torch.set_num_threads(1)
     model = load_actor(weights, True)
+    if wave_limit is None:
+        wave_limit = getattr(model,'default_waves',1)
     report = dict(mode='exclusive', wave_limit=wave_limit, weights_sha256=hashlib.sha256(weights.read_bytes()).hexdigest(),
                   verifier_sha256=hashlib.sha256(binary.read_bytes()).hexdigest(), cases={})
     manifest = read(root/'manifest.json')
@@ -62,6 +64,6 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     for key in ('root','receiver','weights','output'):
         p.add_argument(key,type=Path)
-    p.add_argument('--wave-limit',type=int,default=1)
+    p.add_argument('--wave-limit',type=int)
     args=p.parse_args()
     args.output.write_text(json.dumps(audit(args.root,args.receiver,args.weights,args.wave_limit),indent=2)+'\n')

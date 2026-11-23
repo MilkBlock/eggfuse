@@ -111,7 +111,11 @@ class RuleReadActor(InstructionActor):
 
 def load_actor(weights, field_pointer):
     state = torch.load(weights, map_location='cpu', weights_only=True) if weights else None
-    if state is not None and state.get('format') == 'rule-read-v1':
+    if state is not None and state.get('format') == 'sequence-actor-v1':
+        from sequence_actor import SequenceActor
+        actor = SequenceActor(field_pointer)
+        actor.load_state_dict(state['parameters'])
+    elif state is not None and state.get('format') == 'rule-read-v1':
         actor = RuleReadActor(state['read_mode'], field_pointer, state.get('mask_anchors', False))
         actor.load_state_dict(state['parameters'])
     else:

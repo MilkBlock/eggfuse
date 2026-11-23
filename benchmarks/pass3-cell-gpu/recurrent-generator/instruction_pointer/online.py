@@ -22,10 +22,14 @@ def lane_choice(actor,catalog,memory,state):
     return rid,refs
 
 
-def issue_run(actor, catalog, snapshot, nodes, wave_limit=1):
+def issue_run(actor, catalog, snapshot, nodes, wave_limit=None):
     """All waves name ports from one sealed snapshot; issued proofs are returned for charging."""
+    if wave_limit is None:
+        wave_limit = getattr(actor, 'default_waves', 1)
     if wave_limit < 1:
         raise ValueError('a source Run needs at least one wave')
+    if hasattr(actor, 'decode'):
+        return actor.decode(catalog,snapshot,nodes,wave_limit)
     memory = actor.memory(catalog,snapshot,nodes)
     by_address = {p.address:i for i,p in enumerate(memory.ports)} if wave_limit>1 else {}
     state = [actor.actions(catalog,memory,lane) for lane in range(actor.lanes.num_embeddings)]
@@ -59,7 +63,9 @@ def propose(actor, catalog, snapshot, nodes):
 
 
 @torch.no_grad()
-def execute(binary, program, actor, seed, wave_limit=1, observe_proposals=None):
+def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=None):
+    if wave_limit is None:
+        wave_limit = getattr(actor,'default_waves',1)
     start = perf_counter()
     catalog = Catalog(json.loads(program.read_bytes()))
     history = History(catalog,seed)
@@ -125,7 +131,7 @@ if __name__=='__main__':
     parser.add_argument('--weights',type=Path)
     parser.add_argument('--seed',type=int,default=1703)
     parser.add_argument('--field-pointer',action='store_true')
-    parser.add_argument('--wave-limit',type=int,default=1)
+    parser.add_argument('--wave-limit',type=int)
     a=parser.parse_args()
     torch.set_num_threads(1)
     torch.manual_seed(a.seed)

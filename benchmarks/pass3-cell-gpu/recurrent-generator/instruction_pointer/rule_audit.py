@@ -12,6 +12,15 @@ from history import load, stream
 from online import lane_choice
 
 
+def decisions(actor,cat,frame,mem):
+    if hasattr(actor,'decisions'):
+        yield from actor.decisions(cat,frame,mem,actor.default_waves)
+    else:
+        for lane in range(actor.lanes.num_embeddings):
+            state = actor.actions(cat,mem,lane)
+            yield state,*lane_choice(actor,cat,mem,state)
+
+
 def score(actor,cat,frame,nodes):
     good=set(frame.targets)
     rules={rid for rid,_ in good}
@@ -20,15 +29,13 @@ def score(actor,cat,frame,nodes):
     oracle=Counter()
     chosen=set()
     exact=set()
-    for lane in range(actor.lanes.num_embeddings):
-        state=actor.actions(cat,mem,lane)
+    for state,rid,refs in decisions(actor,cat,frame,mem):
         for teacher_rule in sorted(rules):
             if cat.atoms[teacher_rule]:
                 oracle['required_rule_lane_trials']+=1
                 decoded,_=actor.references(cat,mem,state[0],teacher_rule)
                 oracle['complete_tuple']+=int(decoded is not None)
                 oracle['exact_teacher_tuple']+=int((teacher_rule,decoded) in good)
-        rid,refs=lane_choice(actor,cat,mem,state)
         n['lanes']+=1
         if rid is None:
             n['stop']+=1
@@ -63,7 +70,7 @@ def audit(root,weights,output,samples,seed,field):
     torch.set_num_threads(1)
     actor = load_actor(weights, field)
     manifest=json.loads((root/'manifest.json').read_bytes())
-    report=dict(mode='shadow',wave=1,seed=seed,field_pointer=field,
+    report=dict(mode='shadow',wave_limit=getattr(actor,"default_waves",1),seed=seed,field_pointer=field,
                 weights_sha256=hashlib.sha256(weights.read_bytes()).hexdigest(),cases={})
     for rec in (r for r in manifest if r['origin']=='eggcc'):
         busy=set(rec['busy_runs'])
@@ -93,7 +100,7 @@ def held_rule_census(root, weights, output, seed, field):
     """Score only the free rule/Stop decision on every Run of each native holdout."""
     torch.set_num_threads(1)
     actor = load_actor(weights, field)
-    report = dict(mode='shadow', decision='rule before any parent read', wave=1,
+    report = dict(mode='shadow', decision='rule before any parent read', wave_limit=getattr(actor,"default_waves",1),
                   seed=seed, field_pointer=field,
                   weights_sha256=hashlib.sha256(weights.read_bytes()).hexdigest(), cases={})
     for rec in json.loads((root/'manifest.json').read_bytes()):
@@ -110,8 +117,11 @@ def held_rule_census(root, weights, output, seed, field):
             counts = strata['with_commits' if expected else 'without_commits']
             counts.update(runs=1, teacher_rule_run_pairs=len(expected))
             chosen = set()
-            for lane in range(actor.lanes.num_embeddings):
-                _, rules, logits = actor.actions(cat, mem, lane)
+            if hasattr(actor, 'decisions'):
+                states = (state for state,_,_ in decisions(actor,cat,frame,mem))
+            else:
+                states = (actor.actions(cat,mem,i) for i in range(actor.lanes.num_embeddings))
+            for _,rules,logits in states:
                 action = int(logits.argmax())
                 if expected and action == 0:
                     # Diagnostic only: on a busy reference Run, remove Stop

@@ -114,11 +114,13 @@ if __name__=='__main__':
     for key in ('root','binary','weights','output'):
         p.add_argument(key,type=Path)
     p.add_argument('--workloads',nargs='+',required=True)
-    p.add_argument('--wave-limit',type=int,default=1)
+    p.add_argument('--wave-limit',type=int)
     p.add_argument('--teacher-control',action='store_true')
     a=p.parse_args()
     torch.set_num_threads(1)
     model = load_actor(a.weights,True)
+    if a.wave_limit is None:
+        a.wave_limit = getattr(model,'default_waves',1)
     manifest=read(a.root/'manifest.json')
     seeds={r['directory']:r['seed'] for r in manifest}
     report=dict(mode='shadow',teacher_control=a.teacher_control,wave_limit=a.wave_limit,
