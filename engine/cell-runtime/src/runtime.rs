@@ -1199,6 +1199,12 @@ impl Executor {
         Ok(())
     }
     #[cfg(feature = "cell-token-replay")]
+    pub fn start_token_assist(&mut self) -> Result<()> {
+        self.start_tokens(None)?;
+        self.token_history.as_mut().unwrap().assist = Some(Default::default());
+        self.export_token_memory(None)
+    }
+    #[cfg(feature = "cell-token-replay")]
     pub fn tokens(&self) -> Option<&crate::cell_tokens::History> { self.token_history.as_ref() }
     #[cfg(feature = "cell-token-replay")]
     pub fn audit_token_recall(&mut self, probes: Vec<crate::cell_tokens::Request>) -> Result<()> {
@@ -1220,6 +1226,10 @@ impl Executor {
 
     fn matches(&mut self, rid: usize, probe: bool) -> Result<Vec<Binding>> {
         #[cfg(feature = "cell-token-replay")]
+        if !probe && self.token_history.as_ref().is_some_and(|h| h.assist.is_some()) {
+            return self.assisted_matches(rid);
+        }
+        #[cfg(feature = "cell-token-replay")]
         if let Some(history) = &mut self.token_history && !history.is_teacher() {
             if probe { return Err("schedule probe requires its own named proof".into()); }
             let mut rows=history.verify(&self.graph,self.steps.len()+1,rid,self.watermarks[rid])?;
@@ -1230,6 +1240,59 @@ impl Executor {
             if self.graph.program.rules[rid].seminaive {self.dirty[rid]=false;}
             return self.dedup_bindings(rid,routed);
         }
+        self.exact_matches(rid, probe)
+    }
+
+    #[cfg(feature = "cell-token-replay")]
+    fn assisted_matches(&mut self, rid: usize) -> Result<Vec<Binding>> {
+        let wm = self.watermarks[rid];
+        let named = self.token_history.as_mut().unwrap().verify(&self.graph, self.steps.len()+1, rid, wm)?;
+        let rule = &self.graph.program.rules[rid];
+        let mut tables = rule.query.iter().filter_map(|atom| match atom.call {
+            crate::program::Call::Table(t) => Some(t),
+            _ => None,
+        });
+        // Deterministic primitives add at most one solution per table row.
+        // admit() has already deduplicated these verified input projections.
+        let bound = match (tables.next(), tables.next()) {
+            (None, _) => Some(1),
+            (Some(t), None) => Some(self.graph.witness_count(t)),
+            _ => None,
+        };
+        if !named.is_empty() && bound == Some(named.len()) {
+            self.token_history.as_mut().unwrap().assist.as_mut().unwrap().skipped_rule_calls += 1;
+            let facts = self.stage_spine.alias_query_facts(&self.graph, rid);
+            let mut out = self.stage_spine.resume_named(&mut self.graph,&self.entry_schedule,rid,wm,&named,&facts)?;
+            out.extend(named);
+            self.pending[rid].clear();
+            if self.graph.program.rules[rid].seminaive { self.dirty[rid] = false; }
+            return self.dedup_bindings(rid,out);
+        }
+        let start = Instant::now();
+        let candidates = self.graph.stats.residual_candidates;
+        let mut ordinary = self.exact_matches(rid,false)?;
+        let stats = self.token_history.as_mut().unwrap().assist.as_mut().unwrap();
+        stats.exact_seconds += start.elapsed().as_secs_f64();
+        stats.exact_rule_calls += 1;
+        stats.exact_rows += ordinary.len();
+        stats.exact_candidates += self.graph.stats.residual_candidates - candidates;
+        if named.is_empty() { return Ok(ordinary); }
+        let inputs = &self.graph.program.rules[rid].inputs;
+        let mut signed: std::collections::BTreeMap<Vec<_>,_> = named.into_iter()
+            .map(|b| (b.input_values(inputs).cloned().collect(),b)).collect();
+        for b in &mut ordinary {
+            let key: Vec<_> = b.input_values(inputs).cloned().collect();
+            if let Some(proof) = signed.remove(&key) {
+                // The source match owns ordering and continuation. The signed
+                // proof supplies the actual witness ports for this execution.
+                b.known = proof.known;
+            }
+        }
+        if !signed.is_empty() { return Err("verified assist request outside native source obligations".into()); }
+        Ok(ordinary)
+    }
+
+    fn exact_matches(&mut self, rid: usize, probe: bool) -> Result<Vec<Binding>> {
         if !probe
             && self.graph.program.rules[rid].seminaive
             && !std::mem::replace(&mut self.dirty[rid], false)

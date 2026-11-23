@@ -72,7 +72,7 @@ def propose(actor, catalog, snapshot, nodes):
 
 
 @torch.no_grad()
-def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=None, live_receipts=None, teacher_tape=None, observe_packets=None, mask_receipts=False, prefix_policy=None, shadow_runs=None, run_limit=None, observe_snapshot=None):
+def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=None, live_receipts=None, teacher_tape=None, observe_packets=None, mask_receipts=False, prefix_policy=None, shadow_runs=None, run_limit=None, observe_snapshot=None, assist=False, audit=True):
     if wave_limit is None:
         wave_limit = getattr(actor,'default_waves',1)
     if live_receipts is None:
@@ -102,7 +102,11 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
     if teacher_tape and not live_receipts:
         raise ValueError('shadow waves require live receipts')
     role = 'shadow-waves' if teacher_tape else 'online-waves' if live_receipts else 'online'
-    cmd = [binary,role,program,teacher_tape or '-','audit']
+    if assist:
+        if teacher_tape or live_receipts or prefix_policy is None:
+            raise ValueError('assist uses one bounded issuance on each actual source snapshot')
+        role = 'assist'
+    cmd = [binary,role,program,teacher_tape or '-','audit' if audit else 'time']
     if run_limit is not None:
         cmd.append(str(run_limit))
     with TemporaryFile(mode='w+') as errors, subprocess.Popen(
@@ -200,14 +204,16 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
             or receipt_counts.get('duplicate',0) != counts['duplicates']
             or {r:n for r,n in receipt_counts.items() if r not in ('accepted','duplicate')} != counts['rejected']):
         raise ValueError('wave receipts differ from final verifier ledger')
-    return dict(partial_proof_counts={f'{kind}_{depth}': dict(c) for (kind,depth),c in prefix_counts.items()},
+    if assist and report['assist']['residual_commits'] + counts['accepted'] != report['matches']:
+        raise ValueError('assist ownership differs from committed source bindings')
+    return dict(**(dict(assist=report['assist'],resume_audit=report.get('resumes',[]),event_audit=report.get('events',[])) if assist else {}),partial_proof_counts={f'{kind}_{depth}': dict(c) for (kind,depth),c in prefix_counts.items()},
                 native_partial_reads=report.get('prefix_reads',0),native_partial_probes=report.get('prefixes_checked',0),
                 native_partial_seconds=report.get('prefix_verify_seconds',0),
                 shadow_report=report if teacher_tape else None,live_receipts=live_receipts,receipt_counts=receipt_counts,wave_receipt_seconds=receipt_seconds,
-                receipt_batches=report.get('wave_batches',0),mode='shadow' if teacher_tape else 'exclusive',wave_limit=wave_limit,wave_endings=endings,state_sha=report['state_sha'],runs=report['runs'],neural_waves=calls,
+                receipt_batches=report.get('wave_batches',0),mode='assist' if assist else 'shadow' if teacher_tape else 'exclusive',wave_limit=wave_limit,wave_endings=endings,state_sha=report['state_sha'],runs=report['runs'],neural_waves=calls,
                 issued=issued,counts=report['counts'],native_runtime_events=len(report['runtime_events']),
-                independent_search_calls=0,network_seconds=inference+encoding,
-                rhs_by_run=report['rhs'],writes_by_run=report['writes'],source_schedule=report['schedule'],
+                independent_search_calls=report['assist']['exact_rule_calls'] if assist else 0,network_seconds=inference+encoding,
+                rhs_by_run=report.get('rhs',[]),writes_by_run=report.get('writes',[]),source_schedule=report['schedule'],
                 remaining_process_seconds_including_ipc=report['seconds']-report['verify_seconds']-inference,
                 native_verify_seconds=report['verify_seconds'],native_repair_seconds=report['repair_phase_seconds'],
                 wall_seconds=perf_counter()-start)

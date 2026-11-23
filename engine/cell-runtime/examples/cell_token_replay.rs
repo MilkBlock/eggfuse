@@ -57,6 +57,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     match role.as_str() {
         "replay" | "capture" | "shadow-waves" => engine.start_tokens(packets)?,
         "online" | "online-waves" => engine.start_tokens(Some(Vec::new()))?,
+        "assist" => engine.start_token_assist()?,
         "reference" => (),
         _ => return Err("unknown execution mode".into()),
     }
@@ -95,7 +96,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "runs":engine.steps.len(),
         "schedule":engine.steps.iter().map(|s|json!([s.ruleset,s.path,s.iterations,s.epoch,s.executed_bindings,s.changed])).collect::<Vec<_>>()
     });
+    report["residual_candidates"] = json!(engine.graph.stats.residual_candidates);
     if let Some(h) = engine.tokens() {
+        if let Some(a) = &h.assist { report["assist"] = json!(a); }
         if let Some(audit) = &h.recall {
             report["recall_verdicts"] = json!(audit.verdicts);
             report["unused_recall"] = json!(audit.pending());

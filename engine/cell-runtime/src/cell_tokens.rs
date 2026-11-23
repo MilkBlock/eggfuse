@@ -131,7 +131,22 @@ impl RecallAudit {
     }
 }
 
+#[derive(Default, Serialize)]
+pub struct AssistCounts {
+    pub exact_rule_calls: usize,
+    pub skipped_rule_calls: usize,
+    pub exact_rows: usize,
+    pub exact_candidates: u64,
+    pub residual_commits: usize,
+    pub exact_seconds: f64,
+    pub rejected_reads: usize,
+    pub rejected_seconds: f64,
+    pub duplicate_reads: usize,
+    pub duplicate_seconds: f64,
+}
+
 pub struct History {
+    pub assist: Option<AssistCounts>,
     pub recall: Option<RecallAudit>,
     pub waves: Option<WaveReceiver>,
     memory: Option<MemoryExport>,
@@ -176,6 +191,7 @@ impl History {
             })
             .collect();
         let mut history = Self {
+            assist: None,
             memory: None,
             recall: None,
             waves: None,
@@ -346,6 +362,7 @@ impl History {
             let proposals: Vec<Request> = serde_json::from_str(&line).map_err(|e| e.to_string())?;
             for request in proposals {
                 if request.run != run
+                    || (self.assist.is_some() && request.token >= i64::MAX / 2)
                     || !rules.iter().any(|&(rid, _)| rid == request.rule)
                     || request.token <= 0
                     || !ids.insert(request.token)
@@ -529,6 +546,9 @@ impl History {
             return Ok(());
         };
         let rule = &g.program.rules[rid];
+        if self.assist.is_some() && self.signing.contains_key(&(rid, b.input_values(&rule.inputs).cloned().collect())) {
+            return Ok(());
+        }
         let mut parents = Vec::new();
         for (i, atom) in rule.query.iter().enumerate() {
             let Call::Table(_) = atom.call else { continue };
@@ -544,20 +564,23 @@ impl History {
                 version: row.epoch,
             });
         }
-        let token = self.next;
+        let token = if let Some(counts) = &mut self.assist {
+            counts.residual_commits += 1;
+            (i64::MAX / 2).checked_add(self.next).ok_or("residual token namespace exhausted")?
+        } else {
+            self.next
+        };
         self.next += 1;
         self.signing.insert(
             (rid, b.input_values(&rule.inputs).cloned().collect()),
             token,
         );
-        self.tape.push(Request {
-            token,
-            rule: rid,
-            run,
-            parents,
-        });
+        let request = Request { token, rule: rid, run, parents };
         if let Some(memory) = &mut self.memory {
-            memory.accepted.push(self.tape.last().unwrap().clone());
+            memory.accepted.push(request.clone());
+        }
+        if self.assist.is_none() {
+            self.tape.push(request);
         }
         Ok(())
     }
@@ -633,7 +656,19 @@ impl History {
             }
         } else {
             for packet in self.queue.remove(&(run, rid)).unwrap_or_default() {
-                if let (Some(answer), _) = self.admit(g,rid,wm,&packet)? {
+                let meter = self.assist.as_ref().map(|_| (Instant::now(), self.counts.reads));
+                let (answer, verdict) = self.admit(g,rid,wm,&packet)?;
+                if let Some((clock, reads)) = meter && answer.is_none() {
+                    let stats = self.assist.as_mut().unwrap();
+                    if verdict == "duplicate" {
+                        stats.duplicate_reads += self.counts.reads - reads;
+                        stats.duplicate_seconds += clock.elapsed().as_secs_f64();
+                    } else {
+                        stats.rejected_reads += self.counts.reads - reads;
+                        stats.rejected_seconds += clock.elapsed().as_secs_f64();
+                    }
+                }
+                if let Some(answer) = answer {
                     answers.push(answer);
                     if let Some(memory) = &mut self.memory { memory.accepted.push(packet); }
                 }
