@@ -30,7 +30,7 @@ def row_features(rows, width, device):
     row_ids = {row:i for i,row in enumerate(unique)}
     values = np.zeros((len(unique),width), dtype=np.float64)
     for col in range(max(map(len,unique),default=0)):
-        present = [i for i,row in enumerate(unique) if col < len(row)]
+        present = [i for i,row in enumerate(unique) if col < len(row) and row[col] is not None]
         bits = np.array([unique[i][col] for i in present],dtype=np.uint64)
         shifts = (np.arange(width,dtype=np.uint64)+7*col)%64
         signed = 2.*((bits[:,None] >> shifts) & 1)-1.
@@ -96,7 +96,10 @@ class InstructionActor(nn.Module):
         pc = idx([p.address[1] for p in ports])
         base = nodes[idx([p.root for p in ports])] + self.kind(idx([KINDS.index(p.kind) for p in ports]))
         feature = lambda rows: row_features(rows, self.width, nodes.device)
-        base = base + self.dynamic(feature([p.hashes for p in ports]))
+        schema = getattr(catalog,'content_schema',None)
+        rows = ([schema.scalar_content(p.hashes,schema.rows[p.table]) for p in ports]
+                if schema is not None else [p.hashes for p in ports])
+        base = base + self.dynamic(feature(rows))
         delta = [[math.log1p(snapshot.epoch - p.version), float(p.forwarded)] for p in ports]
         base = base + self.age(nodes.new_tensor(delta))
         sources = [(i, role, parent) for i,p in enumerate(ports) for role,parent in p.inputs]
@@ -105,7 +108,9 @@ class InstructionActor(nn.Module):
             parent = [v for _, _, v in sources]
             role = self.input_role(nodes[idx([r for _, r, _ in sources])]).tanh()
             source = rotate(nodes[idx([v.node for v in parent])], idx([v.pc for v in parent]))
-            content = self.input_content(source + self.dynamic(feature([v.hashes for v in parent])))
+            values = ([schema.scalar_content(v.hashes,schema.inputs[ports[i].root,r]) for i,r,v in sources]
+                      if schema is not None else [v.hashes for v in parent])
+            content = self.input_content(source + self.dynamic(feature(values)))
             contributions = content * role
             base = base.index_add(0, owners, contributions)
         if issued_latents:

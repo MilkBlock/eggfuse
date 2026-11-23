@@ -7,6 +7,7 @@ from torch import nn
 
 from actor import ints
 from semantic_catalog import SemanticActor
+from typed_content import TypedContentCatalog
 
 
 class Domains:
@@ -180,3 +181,8 @@ class FinalParentActor(CalibratedAnchorActor):
         if len(ordered)+1==len(cat.atoms[rid]):
             scores=scores+self.final_adjustment(self.final_context(cat,mem,rid,prefix,role),mem.keys[ids])
         return scores
+
+
+class OpaqueParentActor(FinalParentActor):
+    """Keep opaque e-class hashes in field comparisons, and scalar fields in port content."""
+    catalog_type=TypedContentCatalog

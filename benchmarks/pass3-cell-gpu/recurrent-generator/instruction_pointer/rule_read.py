@@ -111,7 +111,11 @@ class RuleReadActor(InstructionActor):
 
 def load_actor(weights, field_pointer):
     state = torch.load(weights, map_location='cpu', weights_only=True) if weights else None
-    if state is not None and state.get('format') == 'final-parent-v1':
+    if state is not None and state.get('format') == 'opaque-parent-v1':
+        from anchor_set import OpaqueParentActor
+        actor=OpaqueParentActor(state['vocabulary'],state['names'])
+        actor.load_state_dict(state['parameters'])
+    elif state is not None and state.get('format') == 'final-parent-v1':
         from anchor_set import FinalParentActor
         actor=FinalParentActor(state['vocabulary'],state['names'])
         actor.load_state_dict(state['parameters'])
