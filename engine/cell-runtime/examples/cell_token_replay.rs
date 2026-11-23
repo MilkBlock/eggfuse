@@ -21,7 +21,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     #[cfg(feature = "cell-token-ept")]
     let (rest, ept) = match rest { [rest @ .., flag] if flag=="--ept" => (rest,true), _ => (rest,false) };
     let (rest, layout_path) = match rest {
-        [rest @ ..,flag,path] if flag=="--layouts" && (role=="assist" || role=="online") => (rest,Some(path)),
+        [rest @ ..,flag,path] if (flag=="--layouts" || flag=="--layout-feedback") && (role=="assist" || role=="online") => (rest,Some((path,flag=="--layout-feedback"))),
         _ => (rest,None),
     };
     let (rest, higher_path) = match rest {
@@ -65,7 +65,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let started = Instant::now();
     let mut engine = Executor::new(Graph::new(p)?, false);
     #[cfg(feature = "cell-token-ept")]
-    if ept {engine.graph.token_ept=Some(Default::default());}
+    if ept {
+        let mut ledger=eggfuse_cell_runtime::token_ept::Ledger::default();
+        if layout_path.is_some_and(|(_,feedback)|feedback) {ledger.enable_step_credit();}
+        engine.graph.token_ept=Some(ledger);
+    }
     match role.as_str() {
         "replay" | "capture" | "shadow-waves" => engine.start_tokens(packets)?,
         "online" | "online-waves" => engine.start_tokens(Some(Vec::new()))?,
@@ -73,9 +77,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "reference" => (),
         _ => return Err("unknown execution mode".into()),
     }
-    if let Some(path) = layout_path {
+    if let Some((path,feedback)) = layout_path {
         if higher_path.is_some() { return Err("choose a single higher Cell ABI".into()); }
-        engine.enable_layout_tokens(serde_json::from_slice(&fs::read(path)?)?)?;
+        engine.configure_layout_tokens(serde_json::from_slice(&fs::read(path)?)?,feedback)?;
     }
     if let Some(path) = higher_path {
         engine.enable_higher_tokens(serde_json::from_slice(&fs::read(path)?)?)?;

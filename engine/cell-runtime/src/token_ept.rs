@@ -5,11 +5,12 @@ use crate::{
 };
 use serde::Serialize;
 use sha2::{Digest, Sha256};
-use std::collections::VecDeque;
+use std::collections::{BTreeMap,VecDeque};
 
 #[derive(Clone, Copy, Default)]
 pub(crate) struct Owner {
     ordinal: u64,
+    token: Option<i64>,
     group: usize, // no signed owner, external request, internal signed step
 }
 
@@ -20,11 +21,15 @@ pub struct Ledger {
     queue: VecDeque<((u64, u64), Owner)>,
     births: Vec<(FactRef, usize, Owner)>,
     hash: Sha256,
+    internal_credit:Option<BTreeMap<i64,[u64;4]>>,
     counts: [[u64; 4]; 3],
     runs: u64,
 }
 
 impl Ledger {
+    pub fn enable_step_credit(&mut self) {
+        self.internal_credit = Some(BTreeMap::new());
+    }
     pub(crate) fn begin(&mut self, token: Option<i64>) {
         self.ordinal += 1;
         let group = match token {
@@ -34,6 +39,7 @@ impl Ledger {
         };
         self.owner = Owner {
             ordinal: self.ordinal,
+            token,
             group,
         };
     }
@@ -42,6 +48,9 @@ impl Ledger {
     }
     fn event(&mut self, owner: Owner, kind: usize, identity: impl Serialize) {
         self.counts[owner.group][kind] += 1;
+        if owner.group == 2 && let (Some(credit),Some(token))=(&mut self.internal_credit,owner.token) {
+            credit.entry(token).or_default()[kind]+=1;
+        }
         self.hash
             .update(serde_json::to_vec(&(owner.ordinal, kind, identity)).expect("event identity"));
         self.hash.update(b"\n");
@@ -87,8 +96,10 @@ impl Ledger {
         Ok(())
     }
     pub fn report(&self) -> serde_json::Value {
-        serde_json::json!({"runs":self.runs,"ledger_sha256":format!("{:x}",self.hash.clone().finalize()),
+        let mut value=serde_json::json!({"runs":self.runs,"ledger_sha256":format!("{:x}",self.hash.clone().finalize()),
             "kinds":["visible_birth","function_write","effective_union","visibility_change"],
-            "uncredited":self.counts[0],"signed_external":self.counts[1],"signed_internal":self.counts[2]})
+            "uncredited":self.counts[0],"signed_external":self.counts[1],"signed_internal":self.counts[2]});
+        if let Some(credit)=&self.internal_credit {value["internal_tokens"]=serde_json::json!(credit);}
+        value
     }
 }

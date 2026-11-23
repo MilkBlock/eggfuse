@@ -24,7 +24,7 @@ pub struct Address {
     pub token: i64,
     pub op: usize,
 }
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Premise {
     pub address: Address,
@@ -260,8 +260,10 @@ impl History {
         self.higher = Some(higher::Higher::new(&g.program, recipes)?);
         Ok(())
     }
-    pub(crate) fn enable_layouts(&mut self,g:&Graph,layouts:Vec<Layout>)->Result<()> {
-        self.layouts=Some(graph_tokens::Receiver::new(&g.program,layouts)?);
+    pub(crate) fn enable_layouts(&mut self,g:&Graph,layouts:Vec<Layout>,feedback:bool)->Result<()> {
+        let mut receiver=graph_tokens::Receiver::new(&g.program,layouts)?;
+        if feedback {receiver.enable_feedback();}
+        self.layouts=Some(receiver);
         Ok(())
     }
     pub fn layout_report(&self)->Option<serde_json::Value> {
@@ -313,6 +315,9 @@ impl History {
         if let Some(packets) = self.queue.remove(&(run, rid)) {
             if let Some(higher)=&mut self.higher {
                 for p in &packets {higher.verdict(p,"untriggered_rule");}
+            }
+            if let Some(layouts)=&mut self.layouts {
+                for packet in &packets {layouts.completed_step(packet.token,"untriggered_rule");}
             }
             *self.counts.rejected.entry("untriggered_rule").or_default() += packets.len();
         }
@@ -378,14 +383,18 @@ impl History {
             .keys()
             .filter(|a| !visible.contains_key(a))
             .collect();
-        serde_json::to_writer(
-            &mut memory.writer,
-            &serde_json::json!({
-                "run":run, "epoch":graph.epoch, "rules":rules, "updates":updates, "retired":retired,
-                "accepted":memory.accepted,
-                "repair_events":&self.repair_events[self.repair_events.partition_point(|e| e.visible_from_run < run)..],
-            }),
-        )
+        let mut frame=serde_json::json!({
+            "run":run, "epoch":graph.epoch, "rules":rules, "updates":updates, "retired":retired,
+            "accepted":memory.accepted,
+            "repair_events":&self.repair_events[self.repair_events.partition_point(|e| e.visible_from_run < run)..],
+        });
+        if let Some(layouts)=&mut self.layouts {
+            layouts.advance(&visible,&memory.accepted,run,rules,&mut self.queue)?;
+            if let Some(feedback)=layouts.snapshot(run,&self.queue) {
+                frame["layout_feedback"]=feedback;
+            }
+        }
+        serde_json::to_writer(&mut memory.writer,&frame)
         .map_err(|e| e.to_string())?;
         memory
             .writer
@@ -394,9 +403,6 @@ impl History {
             .map_err(|e| e.to_string())?;
         if let Some(higher) = &mut self.higher {
             higher.dispatch(&visible, run, rules, &mut self.queue)?;
-        }
-        if let Some(layouts)=&mut self.layouts {
-            layouts.advance(&visible,&memory.accepted,run,rules,&mut self.queue)?;
         }
         memory.previous = visible;
         memory.accepted.clear();
@@ -409,6 +415,7 @@ impl History {
                 .read_line(&mut line)
                 .map_err(|e| e.to_string())?;
             let mut proposals: Vec<Request> = serde_json::from_str(&line).map_err(|e| e.to_string())?;
+            let mut attached=BTreeSet::new();
             for request in &mut proposals {
                 if let Some(higher) = &mut self.higher { higher.issue(request,&memory.previous)?; }
                 if (request.unit.is_some() || request.side.is_some() || request.closed_branch.is_some()) && self.higher.is_none() { return Err("missing higher catalog".into()); }
@@ -423,10 +430,13 @@ impl History {
                 }
                 if request.graph.is_some() {
                     let layouts=self.layouts.as_mut().ok_or("missing graph catalog")?;
-                    layouts.issue(request,&memory.previous,rules,&mut self.queue)?;
+                    if layouts.issue(request,&memory.previous,rules,&mut self.queue)? {
+                        attached.insert(request.token);
+                    }
                 }
             }
             for request in proposals {
+                if attached.contains(&request.token) {continue;}
                 self.queue
                     .entry((run, request.rule))
                     .or_default()
@@ -718,6 +728,7 @@ impl History {
                 let meter = self.assist.as_ref().map(|_| (Instant::now(), self.counts.reads));
                 let (answer, verdict) = self.admit(g,rid,wm,&packet)?;
                 if let Some(higher)=&mut self.higher {higher.verdict(&packet,verdict);}
+                if let Some(layouts)=&mut self.layouts {layouts.completed_step(packet.token,verdict);}
                 if let Some((clock, reads)) = meter && answer.is_none() {
                     let stats = self.assist.as_mut().unwrap();
                     if verdict == "duplicate" {
@@ -762,13 +773,19 @@ impl History {
         match self.check(g, rid, wm, packet)? {
             Ok(answer) => {
                 let key = (rid, answer.input_values(&g.program.rules[rid].inputs).cloned().collect());
-                if let std::collections::btree_map::Entry::Vacant(slot) = self.signing.entry(key) {
-                    slot.insert(packet.token);
-                    self.counts.accepted += 1;
-                    Ok((Some(answer), "accepted"))
-                } else {
-                    self.counts.duplicates += 1;
-                    Ok((None, "duplicate"))
+                match self.signing.entry(key) {
+                    std::collections::btree_map::Entry::Vacant(slot) => {
+                        slot.insert(packet.token);
+                        self.counts.accepted += 1;
+                        Ok((Some(answer), "accepted"))
+                    }
+                    std::collections::btree_map::Entry::Occupied(slot) => {
+                        if packet.token < higher::INTERNAL && let Some(layouts)=&mut self.layouts {
+                            layouts.completed_step(*slot.get(),"external_alternative");
+                        }
+                        self.counts.duplicates += 1;
+                        Ok((None, "duplicate"))
+                    }
                 }
             }
             Err(reason) => {

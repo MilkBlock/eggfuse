@@ -13,6 +13,9 @@ pub type Layout = Vec<(usize, usize, Vec<(i64, usize)>)>;
 pub struct Certificate {
     pub layout: usize,
     pub boundary: Vec<Premise>,
+    /// An already signed internal step at this sealed boundary.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub owner: Option<i64>,
 }
 
 struct Plan {
@@ -88,6 +91,7 @@ impl Plan {
 }
 
 struct Instance {
+    root: i64,
     layout: usize,
     group: usize,
     boundary: Vec<Premise>,
@@ -99,6 +103,7 @@ struct Instance {
 struct Counts {
     signed_layouts: usize,
     invalid_boundary: usize,
+    attached_roots: usize,
     boundary_reads: usize,
     issued_steps: usize,
     accepted_steps: usize,
@@ -113,6 +118,11 @@ pub(super) struct Receiver {
     plans: Vec<Plan>,
     instances: Vec<Instance>,
     next: i64,
+    /// Only enabled for ownership feedback. Entries live for one source Run.
+    feedback: bool,
+    origins: BTreeMap<i64, i64>,
+    advertised: BTreeMap<i64, (usize, usize)>,
+    outcomes: Vec<(i64, i64, &'static str)>,
     counts: Counts,
 }
 
@@ -127,12 +137,45 @@ impl Receiver {
         Ok(Self {
             plans,
             instances: vec![],
+            feedback: false,
+            origins: BTreeMap::new(),
+            advertised: BTreeMap::new(),
+            outcomes: Vec::new(),
             next: super::higher::INTERNAL,
             counts: Counts::default(),
         })
     }
     pub fn report(&self) -> serde_json::Value {
         serde_json::json!({"counts":self.counts,"outstanding":self.instances.len()})
+    }
+    pub fn enable_feedback(&mut self) {
+        self.feedback = true;
+    }
+
+    pub fn completed_step(&mut self, token: i64, verdict: &'static str) {
+        if self.feedback {
+            if let Some(&root) = self.origins.get(&token) {
+                self.outcomes.push((root, token, verdict));
+            }
+        }
+    }
+
+    pub fn snapshot(&mut self, run: usize, queue: &Queue) -> Option<serde_json::Value> {
+        if !self.feedback {
+            return None;
+        }
+        // These requests have already been signed. No lookup of candidate facts occurs here.
+        self.advertised.clear();
+        let mut claims = vec![];
+        for (&(_, rule), requests) in queue.range((run, 0)..=(run, usize::MAX)) {
+            for (index, r) in requests.iter().enumerate() {
+                if let Some(root) = self.origins.get(&r.token) {
+                    self.advertised.insert(r.token, (rule, index));
+                    claims.push((root, r.token, rule, &r.parents));
+                }
+            }
+        }
+        Some(serde_json::json!({"claims":claims,"outcomes":std::mem::take(&mut self.outcomes)}))
     }
     fn emit(
         plan: &Plan,
@@ -181,9 +224,9 @@ impl Receiver {
         visible: &BTreeMap<Address, PortObservation>,
         rules: &[(usize, u64)],
         queue: &mut Queue,
-    ) -> Result<()> {
+    ) -> Result<bool> {
         let Some(cert) = req.graph.take() else {
-            return Ok(());
+            return Ok(false);
         };
         let plan = self
             .plans
@@ -211,23 +254,44 @@ impl Receiver {
                 .is_some_and(|p| p.table == *table && p.version == premise.version)
             {
                 self.counts.invalid_boundary += 1;
-                return Ok(());
+                return Ok(false);
             }
         }
+        if let Some(owner) = cert.owner {
+            let (rid, index) = self
+                .advertised
+                .get(&owner)
+                .copied()
+                .ok_or("unadvertised layout owner")?;
+            let signed = queue
+                .get(&(req.run, rid))
+                .and_then(|q| q.get(index))
+                .ok_or("expired layout owner")?;
+            if rid != req.rule || signed.token != owner || signed.parents != req.parents {
+                return Err("layout owner names different premises".into());
+            }
+            self.counts.attached_roots += 1;
+            self.outcomes
+                .push((self.origins[&owner], owner, "external_alternative"));
+        }
         let mut inst = Instance {
+            root: req.token,
             layout: cert.layout,
             group: 0,
             boundary: cert.boundary,
-            sent: vec![(0, req.token)],
+            sent: vec![(0, cert.owner.unwrap_or(req.token))],
             returns: BTreeMap::new(),
         };
         for step in plan.groups[0].clone().skip(1) {
+            if self.feedback {
+                self.origins.insert(self.next, inst.root);
+            }
             Self::emit(plan, &mut inst, step, req.run, &mut self.next, queue)?;
             self.counts.issued_steps += 1;
         }
         *self.counts.issued_layouts.entry(inst.layout).or_default() += 1;
         self.instances.push(inst);
-        Ok(())
+        Ok(cert.owner.is_some())
     }
     pub fn advance(
         &mut self,
@@ -237,6 +301,7 @@ impl Receiver {
         rules: &[(usize, u64)],
         queue: &mut Queue,
     ) -> Result<()> {
+        self.origins.clear();
         if self.instances.is_empty() {
             return Ok(());
         }
@@ -287,6 +352,9 @@ impl Receiver {
             }
             if plan.scheduled(inst.group, rules) {
                 for step in plan.groups[inst.group].clone() {
+                    if self.feedback {
+                        self.origins.insert(self.next, inst.root);
+                    }
                     Self::emit(plan, &mut inst, step, run, &mut self.next, queue)?;
                     self.counts.issued_steps += 1;
                 }
@@ -314,6 +382,7 @@ mod tests {
             parents: vec![p.clone()],
             graph: Some(Certificate {
                 layout: 0,
+                owner: None,
                 boundary: vec![p],
             }),
             unit: None,
@@ -337,6 +406,10 @@ mod tests {
         Receiver {
             plans: vec![plan],
             instances: vec![],
+            feedback: false,
+            origins: BTreeMap::new(),
+            advertised: BTreeMap::new(),
+            outcomes: Vec::new(),
             next: super::super::higher::INTERNAL,
             counts: Counts::default(),
         }
@@ -400,5 +473,72 @@ mod tests {
         assert_eq!(r.counts.invalid_boundary, 1);
         assert!(queue.is_empty());
         assert!(r.instances.is_empty());
+    }
+    #[test]
+    fn attached_graph_uses_the_actual_owners_return_and_keeps_its_own_credit() {
+        let mut receiver = receiver();
+        receiver.enable_feedback();
+        receiver.plans = vec![Plan {
+            steps: vec![(0, 0, vec![(-1, 0)]), (0, 1, vec![(0, 0)])],
+            groups: vec![0..1, 1..2],
+            boundary: vec![5],
+            exports: vec![[0].into(), BTreeSet::new()],
+        }];
+        let mut queue = Queue::new();
+        let mut first = root(1);
+        let mut visible = BTreeMap::from([(first.parents[0].address, row(5, 1))]);
+        assert!(
+            !receiver
+                .issue(&mut first, &visible, &[(0, 0)], &mut queue)
+                .unwrap()
+        );
+        let returned = Address {
+            token: first.token,
+            op: 0,
+        };
+        visible.insert(returned, row(5, 2));
+        receiver
+            .advance(&visible, &[first], 2, &[(0, 0)], &mut queue)
+            .unwrap();
+        let owner = queue[&(2, 0)][0].clone();
+        receiver.snapshot(2, &queue);
+        let mut wrong = root(1);
+        wrong.token = 9;
+        wrong.run = 2;
+        wrong.graph.as_mut().unwrap().owner = Some(owner.token);
+        assert!(
+            receiver
+                .issue(&mut wrong, &visible, &[(0, 0)], &mut queue)
+                .is_err()
+        );
+        let mut extension = root(2);
+        extension.token = 10;
+        extension.run = 2;
+        extension.parents = owner.parents.clone();
+        extension.graph = Some(Certificate {
+            layout: 0,
+            boundary: owner.parents.clone(),
+            owner: Some(owner.token),
+        });
+        assert!(
+            receiver
+                .issue(&mut extension, &visible, &[(0, 0)], &mut queue)
+                .unwrap()
+        );
+        let actual = Address {
+            token: owner.token,
+            op: 0,
+        };
+        visible.insert(actual, row(5, 3));
+        receiver.completed_step(owner.token, "accepted");
+        receiver
+            .advance(&visible, &[owner], 3, &[(0, 0)], &mut queue)
+            .unwrap();
+        let next = &queue[&(3, 0)][0];
+        assert_eq!(next.parents[0].address, actual);
+        assert_eq!(next.parents[0].version, 3);
+        assert_eq!(receiver.origins[&next.token], extension.token);
+        assert_eq!(receiver.counts.attached_roots, 1);
+        assert_eq!(receiver.counts.accepted_steps, 1);
     }
 }

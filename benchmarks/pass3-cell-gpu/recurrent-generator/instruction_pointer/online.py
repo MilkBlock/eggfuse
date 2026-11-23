@@ -129,7 +129,7 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
     if layout_file is not None:
         if graph_issuer is None:
             raise ValueError("layout receiver requires a graph issuer")
-        cmd.extend(["--layouts",layout_file])
+        cmd.extend(["--layout-feedback" if getattr(graph_issuer,"ownership_feedback",False) else "--layouts",layout_file])
     if audit_ept:
         cmd.append('--ept')
     with TemporaryFile(mode='w+') as errors, subprocess.Popen(
@@ -250,7 +250,8 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
     internal = higher['counts']['issued_steps'] if higher else 0
     if 'layouts' in report:
         internal+=report['layouts']['counts']['issued_steps']
-    if report['unused'] or issued + internal != counts['accepted'] + counts['duplicates'] + sum(counts['rejected'].values()):
+    attached=report.get('layouts',{}).get('counts',{}).get('attached_roots',0)
+    if report['unused'] or issued + internal - attached != counts['accepted'] + counts['duplicates'] + sum(counts['rejected'].values()):
         raise RuntimeError('unaccounted online proposals')
     if live_receipts and (report['wave_requests'] != issued
             or receipt_counts.get('accepted',0) != counts['accepted']
