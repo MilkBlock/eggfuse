@@ -173,6 +173,8 @@ pub struct History {
     layouts:Option<graph_tokens::Receiver>,
     pub recall: Option<RecallAudit>,
     pub waves: Option<WaveReceiver>,
+    pub(crate) selected_anchors: Option<BTreeMap<(usize,usize),BTreeSet<Dependency>>>,
+    pub anchor_verify_time: Duration,
     memory: Option<MemoryExport>,
     pub repair_events: Vec<RepairEvent>,
     pub event_time: Duration,
@@ -221,6 +223,8 @@ impl History {
             memory: None,
             recall: None,
             waves: None,
+            selected_anchors: None,
+            anchor_verify_time: Duration::ZERO,
             merge_offsets,
             function_sources: BTreeMap::new(),
             repair_events: Vec::new(),
@@ -406,6 +410,29 @@ impl History {
         }
         memory.previous = visible;
         memory.accepted.clear();
+        if self.selected_anchors.is_some() {
+            let mut line = String::new();
+            std::io::stdin().read_line(&mut line).map_err(|e|e.to_string())?;
+            let start=Instant::now();
+            let (source_run,requests):(usize,Vec<(usize,usize,Premise)>)=serde_json::from_str(&line).map_err(|e|e.to_string())?;
+            if source_run!=run {return Err("anchor batch crossed a source Run".into());}
+            let mut selected=BTreeMap::<_,BTreeSet<_>>::new();
+            for (rid,pivot,parent) in requests {
+                let wm=rules.iter().find(|(rule,_)|*rule==rid).ok_or("unscheduled anchor")?.1;
+                let rule=&graph.program.rules[rid];
+                let Some(crate::program::Call::Table(table))=rule.query.get(pivot).map(|a|&a.call) else {return Err("non-table anchor".into());};
+                let w=self.resolve(parent.address).ok_or("unknown anchor return")?;
+                if graph.live_table(w)!=Some(*table) || graph.visible_epoch(w)!=Some(parent.version)
+                    || parent.version>=graph.epoch || (rule.seminaive && parent.version<wm)
+                    || (!rule.seminaive && rule.query[..pivot].iter().any(|a|matches!(a.call,crate::program::Call::Table(_)))) {
+                    return Err("invalid named delta anchor".into());
+                }
+                selected.entry((rid,pivot)).or_default().insert(w);
+            }
+            self.selected_anchors=Some(selected);
+            self.anchor_verify_time+=start.elapsed();
+            return Ok(());
+        }
         if self.waves.is_some() {
             return self.receive_waves(graph, run, rules, dirty, check_dirty);
         }

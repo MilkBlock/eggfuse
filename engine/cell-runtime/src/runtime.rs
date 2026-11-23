@@ -130,7 +130,13 @@ impl CellResultObserver {
     }
 }
 
+#[cfg(feature="cell-token-replay")]
+#[path="anchor_census.rs"]
+mod anchor_census;
+
 pub struct Executor {
+    #[cfg(feature="cell-token-replay")]
+    anchor_census: Option<anchor_census::Census>,
     #[cfg(feature = "cell-token-replay")]
     token_history: Option<crate::cell_tokens::History>,
     #[cfg(feature = "gpu-bindings")]
@@ -406,6 +412,8 @@ impl Executor {
             binding_observer: None,
             #[cfg(feature = "cell-token-replay")]
             token_history: None,
+            #[cfg(feature="cell-token-replay")]
+            anchor_census: None,
             result_observer: None,
             initial_audit,
             tasks,
@@ -1245,6 +1253,18 @@ impl Executor {
     }
 
     fn matches(&mut self, rid: usize, probe: bool) -> Result<Vec<Binding>> {
+        #[cfg(feature = "cell-token-replay")]
+        if !probe && self.anchor_census.as_ref().is_some_and(|c|c.partition)
+            && self.graph.program.rules[rid].query.iter().any(|a|matches!(a.call,Call::Table(_))) {
+            let mut found=Vec::new();
+            self.census_anchors(rid,Some(&mut found))?;
+            let facts=self.stage_spine.alias_query_facts(&self.graph,rid);
+            let mut routed=self.stage_spine.resume_named(&mut self.graph,&self.entry_schedule,rid,self.watermarks[rid],&found,&facts)?;
+            routed.append(&mut found);
+            self.pending[rid].clear();
+            if self.graph.program.rules[rid].seminaive {self.dirty[rid]=false;}
+            return self.dedup_bindings(rid,routed);
+        }
         #[cfg(feature = "cell-token-replay")]
         if !probe && self.token_history.as_ref().is_some_and(|h| h.assist.is_some()) {
             return self.assisted_matches(rid);
@@ -2843,6 +2863,10 @@ impl Executor {
         #[cfg(feature = "cell-absorption")]
         let mut absorbed_matches = 0;
         for rid in rules {
+            #[cfg(feature="cell-token-replay")]
+            let census_keys=if self.anchor_census.as_ref().is_some_and(|c| !c.partition) {
+                self.census_anchors(rid,None)?
+            } else {None};
             // Only semi-naive rules clear their dirty flag. An untriggered
             // source occurrence still advances its own watermark.
             #[cfg(not(any(feature = "family-survey", feature = "family-overlap")))]
@@ -2887,6 +2911,15 @@ impl Executor {
                     issued.extend(ordinary);self.dedup_bindings(rid,issued)?
                 }
             };
+            #[cfg(feature="cell-token-replay")]
+            if let Some(expected)=census_keys {
+                let inputs=&self.graph.program.rules[rid].inputs;
+                let actual=bindings.iter().map(|b|b.input_values(inputs).cloned().collect::<Vec<_>>()).collect::<BTreeSet<_>>();
+                if actual!=expected {
+                    return Err(format!("anchor census differs on Run {} rule {rid}: {} missing, {} extra",
+                        self.steps.len()+1, actual.difference(&expected).count(), expected.difference(&actual).count()).into());
+                }
+            }
             #[cfg(feature = "family-survey")]
             self.survey.rule(
                 self.graph.epoch,

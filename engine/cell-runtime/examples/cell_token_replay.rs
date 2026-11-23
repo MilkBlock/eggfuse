@@ -80,6 +80,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "online" | "online-waves" => engine.start_tokens(Some(Vec::new()))?,
         "assist" => engine.start_token_assist()?,
         "reference" => (),
+        "anchor-census" => engine.enable_anchor_census(),
+        "anchor-partition" => engine.enable_anchor_partition()?,
         _ => return Err("unknown execution mode".into()),
     }
     if let Some((path,feedback)) = layout_path {
@@ -124,6 +126,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "runs":engine.steps.len(),
         "schedule":engine.steps.iter().map(|s|json!([s.ruleset,s.path,s.iterations,s.epoch,s.executed_bindings,s.changed])).collect::<Vec<_>>()
     });
+    if let Some(rows)=engine.anchor_coverage() {report["anchor_coverage"]=json!(rows);}
+    if let Some(history)=engine.tokens() {report["anchor_verify_seconds"]=json!(history.anchor_verify_time.as_secs_f64());}
+    if let Some(rows)=engine.anchor_census_rows() {report["anchor_census"]=json!(rows);}
     report["residual_candidates"] = json!(engine.graph.stats.residual_candidates);
     #[cfg(feature = "cell-token-ept")]
     if let Some(e)=&engine.graph.token_ept {report["ept"]=e.report();}
