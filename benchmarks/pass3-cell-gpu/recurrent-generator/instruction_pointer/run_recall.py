@@ -89,6 +89,11 @@ def audit(folder, binary, model, seed, waves, output, control=False):
                          off_reference=sum(r=='off_reference' for _,_,r in verdicts),
                          rejected=sum(w is None and r!='off_reference' for w,_,r in verdicts),
                          recall=len(hits)/len(want) if want else None))
+    for row in rows:
+        if row['issued'] != sum(row[k] for k in ('recovered','duplicate_matches','off_reference','rejected')):
+            raise ValueError('incomplete per-Run proposal accounting')
+        if control and row['recovered'] != row['teacher_commits']:
+            raise ValueError('teacher control did not reach full recall')
     output.mkdir(exist_ok=True,parents=True)
     with (output/(folder.name+'.csv')).open('w') as f:
         writer = csv.DictWriter(f, fieldnames=list(rows[0]), lineterminator='\n')
