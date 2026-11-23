@@ -314,3 +314,74 @@ scoring of all requests, `anchor_set_audit.py` for supplied anchors,
 `prefix_fanout.py` for the per-layer widths and `anchor_audit.py` for exclusive
 execution. `alternate_results.py EXPERIMENT BASELINE OUT` checks weight and
 receiver hashes and combines the per-Run ledgers.
+
+### Bounded frontiers, optional native prefix verification, and the anchor gate
+
+The frozen disagreement Actor scores each typed, seminaively eligible extension
+of a prefix. `--top-k 32` keeps at most 32 passing prefixes per scheduled rule,
+anchor role and depth, across all score tiles for that frontier. A tie crossing
+the budget is dropped as a group, which makes the choice independent of memory
+order. K=32 is an experimental budget. Every independent input in a completed
+request still names a token, instruction position and version.
+
+`online.py --verify-prefix` enables the optional native check after selection.
+The receiver resolves exactly the addresses supplied and binds fields using the
+same native Values and operand checker as complete certificates. Its reply is
+one Boolean per proposed extension. A false reply ends that prefix. Scoring of
+any surviving prefix receives the frozen snapshot and its chosen parents.
+Partial checks cannot sign a binding, return another parent, look up partners or
+expose new Run facts. Complete requests still go through ordinary admission.
+The report separates partial address reads, complete packets and diagnostic times.
+
+| Three held EggCC teacher trajectories | Full proposals | Distinct of 20,428 | Complete of 956 nonempty Runs |
+|---|---:|---:|---:|
+| Learned field penalty, unlimited frontier | 64,604 | 1,509 | 63 |
+| Same, K=32 at every depth | 3,980 | 1,428 | 46 |
+| Same K, native partial checks enabled | 3,952 | 1,428 | 46 |
+
+The per-Run identity differences attribute 3 lost fact commits, 4 lost loopfact
+commits and 74 lost sum-divisors commits to K. Native partial checks removed
+1/2,444, 86/1,937 and 46/16,123 selected partial prefixes respectively. The
+sets of recovered commit identities were identical with the native check on and
+off. Across 2,461,303 scored partial extensions on the K=32 trajectories with
+checking disabled, 746,628 had at least one conflict between the exported
+64-bit hashes of statically shared fields. Zero crossed the model threshold.
+This diagnostic includes only visited frontiers and measures hash disagreement.
+The native partial check also covers literals, repeated slots and row validity.
+Exclusive EggCC trajectories in both bounded arms first diverged at Run 3.
+The two arms reproduced 46/48 generated program graphs, 47/48 held merge
+graphs and 44/48 held result-position graphs.
+
+On sum-divisors Run 709 the old field scorer let 2,590 of 34,450 shared-field
+conflicts pass its threshold on the frontiers it visited with K and native
+checks. After K, the receiver pruned 279 of 472 partial prefixes. Under the
+learned penalty it saw 35,102 conflicting extensions on its own frontiers,
+passed zero of them, and the receiver pruned 0/203. The original five-parent
+branch went from 7 anchors and 321 first extensions to 7 anchors and a single
+first extension before applying K. The unbounded corrected model and both
+bounded treatments recovered the same 6/26 commits on Run 709.
+
+The loopfact Run 79 anchor diagnostic attributes the first miss in 73/74
+canonical teacher certificates to the anchor threshold. With K=32 the
+unchanged policy issued 8 packets and recovered 1 commit. Opening only the
+anchor threshold while retaining learned ranking, the same K, parent scores
+and normal final verification produced 97 packets and 37 distinct commits.
+This selected-Run intervention received no teacher anchors. The separate
+teacher-anchor control recovered 18 of 56 multi-parent commits. At Run 3,
+two commits depend on one canonical anchor scoring -0.448 against a 1.001
+threshold. Supplying that anchor recovers only one of the two commits.
+
+Build the receiver with the same Cargo features as the alternate-proof study.
+Use `prefix_study.py ROOT RECEIVER WEIGHTS OUT --case NAME` for live, teacher
+shadow replay. Add `--top-k 32`, then `--verify-prefix` for the two treatments.
+On targeted Runs add `--runs R --audit` to classify the entire scored matrix
+after scoring, including rejected choices. For the anchor intervention select
+`--runs 3 79 --top-k 32 --open-anchor-gate`. `prefix_field_audit.py` records
+post-score conflicts over the full capped workload. `prefix_exclusive.py`
+runs the bounded Actor on its own three EggCC and 144 generated held trajectories.
+`anchor_gate.py` traces the first missed choice of each canonical proof.
+`check_prefix_policy.py` checks budget ties, unknown addresses, stale versions
+and the absence of graph effects from a partial check. The
+[per-Run measurements](run-recall/prefix-policy/summary.json) include hashes,
+receiver reads, rejections, duplicates and diagnostic time. No paired speed
+measurement was made.

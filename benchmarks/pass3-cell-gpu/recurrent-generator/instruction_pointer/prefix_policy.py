@@ -40,7 +40,7 @@ def shared_conflicts(cat, mem, rid, roles, prefix, ids):
     return conflicts
 
 
-def select_frontier(model, cat, mem, dom, rid, anchor, order, depth, frontier, policy, probe, count):
+def select_frontier(model, cat, mem, dom, rid, anchor, order, depth, frontier, policy, probe, count, field_audit):
     keep, values = [], []
     width = depth + 1
     cut = model.thresholds[1 if depth == 0 else 2]
@@ -49,10 +49,11 @@ def select_frontier(model, cat, mem, dom, rid, anchor, order, depth, frontier, p
         qualified = scores >= cut
         count['scored'] += scores.numel()
         count['above_threshold'] += int(qualified.sum())
-        if policy.audit:
+        if policy.audit or field_audit:
             conflicts = shared_conflicts(cat,mem,rid,order[:width],prefix,ids)
             count['shared_hash_conflicts_scored'] += int(conflicts.sum())
             count['shared_hash_conflicts_above_threshold'] += int((conflicts & qualified).sum())
+        if policy.audit:
             full = ids.tolist()
             good = torch.tensor(probe(rid, order[:width], [(p,full) for p in prefix.tolist()]), dtype=torch.bool)
             if good.shape != qualified.shape:
@@ -100,7 +101,7 @@ def select_frontier(model, cat, mem, dom, rid, anchor, order, depth, frontier, p
     return selected
 
 
-def generate(model, cat, mem, policy, probe=None, counts=None):
+def generate(model, cat, mem, policy, probe=None, counts=None, field_audit=False):
     if (policy.audit or policy.verify) and probe is None:
         raise ValueError('prefix verification needs a sealed native receiver')
     if counts is None:
@@ -117,7 +118,7 @@ def generate(model, cat, mem, policy, probe=None, counts=None):
             frontier = dom.empty.reshape(1,0)
             for depth in range(len(order)):
                 count = counts['partial' if depth+1 < len(order) else 'complete', depth+1]
-                frontier = select_frontier(model,cat,mem,dom,rid,anchor,order,depth,frontier,policy,probe,count)
+                frontier = select_frontier(model,cat,mem,dom,rid,anchor,order,depth,frontier,policy,probe,count,field_audit)
                 if not len(frontier):
                     break
             for row in frontier.tolist():
