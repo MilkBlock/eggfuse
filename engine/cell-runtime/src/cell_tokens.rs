@@ -89,6 +89,22 @@ struct MemoryExport {
     accepted: Vec<Request>,
     online_ids: Option<BTreeSet<i64>>,
 }
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct Wave {
+    requests: Vec<Request>,
+    finish: bool,
+}
+
+#[derive(Default)]
+pub struct WaveReceiver {
+    pub shadow: bool,
+    pub checks: Counts,
+    ready: BTreeMap<(usize, usize), Vec<(Request, Instance)>>,
+    pub batches: usize,
+    pub requests: usize,
+}
+
 #[derive(Default)]
 pub struct RecallAudit {
     queue: BTreeMap<(usize, usize), Vec<Request>>,
@@ -102,6 +118,7 @@ impl RecallAudit {
 
 pub struct History {
     pub recall: Option<RecallAudit>,
+    pub waves: Option<WaveReceiver>,
     memory: Option<MemoryExport>,
     pub repair_events: Vec<RepairEvent>,
     pub event_time: Duration,
@@ -146,6 +163,7 @@ impl History {
         let mut history = Self {
             memory: None,
             recall: None,
+            waves: None,
             merge_offsets,
             function_sources: BTreeMap::new(),
             repair_events: Vec::new(),
@@ -212,7 +230,8 @@ impl History {
     }
 
     pub fn unused(&self) -> usize {
-        self.queue.values().map(Vec::len).sum()
+        self.queue.values().map(Vec::len).sum::<usize>()
+            + self.waves.as_ref().map_or(0, |w| w.ready.values().map(Vec::len).sum())
     }
     pub(crate) fn reject_untriggered(&mut self, run: usize, rid: usize) {
         if let Some(audit) = &mut self.recall {
@@ -247,6 +266,8 @@ impl History {
         graph: &Graph,
         run: usize,
         rules: &[(usize, u64)],
+        dirty: &[bool],
+        check_dirty: bool,
     ) -> Result<()> {
         if self.memory.is_none() {
             return Ok(());
@@ -299,6 +320,9 @@ impl History {
             .map_err(|e| e.to_string())?;
         memory.previous = visible;
         memory.accepted.clear();
+        if self.waves.is_some() {
+            return self.receive_waves(graph, run, rules, dirty, check_dirty);
+        }
         if let Some(ids) = &mut memory.online_ids {
             let mut line = String::new();
             std::io::stdin()
@@ -320,6 +344,78 @@ impl History {
             }
         }
         Ok(())
+    }
+    fn receive_waves(
+        &mut self, graph: &Graph, run: usize, rules: &[(usize, u64)], dirty: &[bool], check_dirty: bool,
+    ) -> Result<()> {
+        let shadow = self.waves.as_ref().unwrap().shadow;
+        let mut seen = BTreeSet::new();
+        loop {
+            let mut line = String::new();
+            std::io::stdin().read_line(&mut line).map_err(|e| e.to_string())?;
+            let wave: Wave = serde_json::from_str(&line).map_err(|e| e.to_string())?;
+            if wave.finish {
+                if wave.requests.is_empty() { return Ok(()); }
+                return Err("finish must follow the last receipt".into());
+            }
+            if wave.requests.is_empty() { return Err("empty issue wave".into()); }
+            let started = Instant::now();
+            if shadow {
+                std::mem::swap(&mut self.counts, &mut self.waves.as_mut().unwrap().checks);
+            }
+            let mut replies = Vec::new();
+            for packet in wave.requests {
+                let rid = packet.rule;
+                let Some(&(_, wm)) = rules.iter().find(|&&(r, _)| r == rid) else {
+                    return Err("unscheduled wave request".into());
+                };
+                let id = packet.token;
+                let memory = self.memory.as_mut().expect("wave memory");
+                if packet.run != run || id <= 0 || !memory.online_ids.as_mut().expect("online").insert(id) {
+                    return Err("invalid wave request identity".into());
+                }
+                if shadow {
+                    self.recall.as_mut().unwrap().queue.entry((run,rid)).or_default().push(packet.clone());
+                }
+                let verdict = if check_dirty && !dirty[rid] {
+                    *self.counts.rejected.entry("untriggered_rule").or_default() += 1;
+                    "untriggered_rule"
+                } else if shadow {
+                    match self.check(graph, rid, wm, &packet)? {
+                        Ok(answer) => {
+                            let key: Vec<_> = answer.input_values(&graph.program.rules[rid].inputs).cloned().collect();
+                            if seen.insert((rid,key)) {
+                                self.counts.accepted += 1;
+                                "accepted"
+                            } else {
+                                self.counts.duplicates += 1;
+                                "duplicate"
+                            }
+                        }
+                        Err(reason) => {
+                            *self.counts.rejected.entry(reason).or_default() += 1;
+                            reason
+                        }
+                    }
+                } else {
+                    let (answer, verdict) = self.admit(graph, rid, wm, &packet)?;
+                    if let Some(answer) = answer {
+                        self.waves.as_mut().unwrap().ready.entry((run, rid)).or_default().push((packet, answer));
+                    }
+                    verdict
+                };
+                replies.push((id, verdict));
+            }
+            self.verify_time += started.elapsed();
+            let w = self.waves.as_mut().unwrap();
+            if shadow { std::mem::swap(&mut self.counts, &mut w.checks); }
+            w.batches += 1;
+            w.requests += replies.len();
+            let writer = &mut self.memory.as_mut().unwrap().writer;
+            serde_json::to_writer(&mut *writer, &serde_json::json!({"run":run, "verdicts":replies}))
+                .map_err(|e| e.to_string())?;
+            writer.write_all(b"\n").and_then(|_| writer.flush()).map_err(|e| e.to_string())?;
+        }
     }
     pub(crate) fn is_teacher(&self) -> bool {
         self.teacher.is_some()
@@ -498,24 +594,17 @@ impl History {
         let rule = &g.program.rules[rid];
         self.counts.calls += 1;
         let mut answers = Vec::new();
-        for packet in self.queue.remove(&(run, rid)).unwrap_or_default() {
-            let result = self.check(g, rid, wm, &packet)?;
-            match result {
-                Ok(answer) => {
-                    let key = (rid, answer.input_values(&rule.inputs).cloned().collect());
-                    match self.signing.entry(key) {
-                        std::collections::btree_map::Entry::Vacant(slot) => {
-                            slot.insert(packet.token);
-                            answers.push(answer);
-                            self.counts.accepted += 1;
-                            if let Some(memory) = &mut self.memory {
-                                memory.accepted.push(packet);
-                            }
-                        }
-                        _ => self.counts.duplicates += 1,
-                    }
+        if let Some(receiver) = &mut self.waves && !receiver.shadow {
+            for (packet, answer) in receiver.ready.remove(&(run,rid)).unwrap_or_default() {
+                answers.push(answer);
+                self.memory.as_mut().unwrap().accepted.push(packet);
+            }
+        } else {
+            for packet in self.queue.remove(&(run, rid)).unwrap_or_default() {
+                if let (Some(answer), _) = self.admit(g,rid,wm,&packet)? {
+                    answers.push(answer);
+                    if let Some(memory) = &mut self.memory { memory.accepted.push(packet); }
                 }
-                Err(reason) => *self.counts.rejected.entry(reason).or_default() += 1,
             }
         }
         // All reference bindings for this rule are signed, before any RHS writes.
@@ -540,6 +629,25 @@ impl History {
         }
         self.verify_time += started.elapsed();
         Ok(answers)
+    }
+    fn admit(&mut self, g: &Graph, rid: usize, wm: u64, packet: &Request) -> Result<(Option<Instance>, &'static str)> {
+        match self.check(g, rid, wm, packet)? {
+            Ok(answer) => {
+                let key = (rid, answer.input_values(&g.program.rules[rid].inputs).cloned().collect());
+                if let std::collections::btree_map::Entry::Vacant(slot) = self.signing.entry(key) {
+                    slot.insert(packet.token);
+                    self.counts.accepted += 1;
+                    Ok((Some(answer), "accepted"))
+                } else {
+                    self.counts.duplicates += 1;
+                    Ok((None, "duplicate"))
+                }
+            }
+            Err(reason) => {
+                *self.counts.rejected.entry(reason).or_default() += 1;
+                Ok((None, reason))
+            }
+        }
     }
     fn check(
         &mut self,

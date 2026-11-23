@@ -43,7 +43,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let compiled = fs::read(program)?;
     let digest = format!("{:x}", Sha256::digest(&compiled));
     let p = Program::parse(serde_json::from_slice(&compiled)?)?;
-    let packets = if role == "replay" {
+    let packets = if role == "replay" || role == "shadow-waves" {
         let saved: Tape = serde_json::from_slice(&fs::read(tape)?)?;
         if saved.schema != "cell-token-replay/v2" || saved.program_sha256 != digest {
             return Err("tape schema or compiled program digest differs".into());
@@ -55,8 +55,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let started = Instant::now();
     let mut engine = Executor::new(Graph::new(p)?, false);
     match role.as_str() {
-        "replay" | "capture" => engine.start_tokens(packets)?,
-        "online" => engine.start_tokens(Some(Vec::new()))?,
+        "replay" | "capture" | "shadow-waves" => engine.start_tokens(packets)?,
+        "online" | "online-waves" => engine.start_tokens(Some(Vec::new()))?,
         "reference" => (),
         _ => return Err("unknown execution mode".into()),
     }
@@ -69,6 +69,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     if let Some(path) = memory_path {
         engine.export_token_memory(Some(std::path::Path::new(path)))?;
+    } else if role == "online-waves" || role == "shadow-waves" {
+        engine.enable_token_waves(role == "shadow-waves")?;
     } else if role == "online" {
         engine.export_token_memory(None)?;
     }
@@ -97,6 +99,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         if let Some(audit) = &h.recall {
             report["recall_verdicts"] = json!(audit.verdicts);
             report["unused_recall"] = json!(audit.pending());
+        }
+        if let Some(w) = &h.waves {
+            report["wave_batches"] = json!(w.batches);
+            report["wave_requests"] = json!(w.requests);
+            if w.shadow { report["wave_checks"] = json!(w.checks); }
         }
         report["runtime_events"] = json!(h.repair_events);
         report["event_registration_seconds"] = json!(h.event_time.as_secs_f64());

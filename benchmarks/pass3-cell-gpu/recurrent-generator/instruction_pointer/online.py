@@ -63,9 +63,11 @@ def propose(actor, catalog, snapshot, nodes):
 
 
 @torch.no_grad()
-def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=None):
+def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=None, live_receipts=None, teacher_tape=None, observe_packets=None, mask_receipts=False):
     if wave_limit is None:
         wave_limit = getattr(actor,'default_waves',1)
+    if live_receipts is None:
+        live_receipts = getattr(actor,'requires_receipts',False)
     start = perf_counter()
     catalog = Catalog(json.loads(program.read_bytes()))
     history = History(catalog,seed)
@@ -76,7 +78,14 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
     inference = 0.
     calls = issued = 0
     endings = {}
-    cmd = [binary,'online',program,'-','audit']
+    receipt_counts = {}
+    receipt_seconds = 0.
+    if live_receipts and not hasattr(actor, 'decisions'):
+        raise ValueError('wave receipts require a sequence actor')
+    if teacher_tape and not live_receipts:
+        raise ValueError('shadow waves require live receipts')
+    role = 'shadow-waves' if teacher_tape else 'online-waves' if live_receipts else 'online'
+    cmd = [binary,role,program,teacher_tape or '-','audit']
     with subprocess.Popen(cmd,stdin=subprocess.PIPE,stdout=subprocess.PIPE,text=True,bufsize=1) as p:
         try:
             for line in p.stdout:
@@ -85,25 +94,52 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
                     report = frame
                     break
                 snapshot = history.snapshot(frame)
+                def packets(actions):
+                    nonlocal next_token, issued
+                    out = []
+                    for rid,refs in actions:
+                        parents = []
+                        for alias,pc in refs:
+                            token = history.inverse[alias]
+                            row = history.visible[token,pc]
+                            parents.append(dict(address=dict(token=token,op=pc),version=row['version']))
+                        out.append(dict(run=snapshot.run,rule=rid,parents=parents,token=next_token))
+                        next_token += 1
+                    issued += len(out)
+                    if observe_packets is not None:
+                        observe_packets(out)
+                    return out
+
+                def send(value):
+                    p.stdin.write(json.dumps(value)+'\n')
+                    p.stdin.flush()
+
+                def receive(actions):
+                    nonlocal receipt_seconds
+                    t = perf_counter()
+                    out = packets(actions)
+                    send(dict(finish=False,requests=out))
+                    reply = json.loads(p.stdout.readline())
+                    pairs = reply['verdicts']
+                    if reply['run'] != snapshot.run or [k for k,_ in pairs] != [x['token'] for x in out]:
+                        raise ValueError('out-of-order wave receipt')
+                    for _,reason in pairs:
+                        receipt_counts[reason] = receipt_counts.get(reason,0)+1
+                    receipt_seconds += perf_counter()-t
+                    return ['unknown' if mask_receipts else reason for _,reason in pairs]
+
                 before = perf_counter()
-                proposals,waves,reason = issue_run(actor,catalog,snapshot,nodes,wave_limit)
+                old_wait = receipt_seconds
+                if live_receipts:
+                    proposals,waves,reason = actor.decode(catalog,snapshot,nodes,wave_limit,receive)
+                else:
+                    proposals,waves,reason = issue_run(actor,catalog,snapshot,nodes,wave_limit)
+                inference += perf_counter()-before-(receipt_seconds-old_wait)
                 endings[reason] = endings.get(reason,0)+1
-                inference += perf_counter()-before
                 calls += waves
-                out = []
-                for rid,refs in proposals:
-                    parents = []
-                    for alias,pc in refs:
-                        token = history.inverse[alias]
-                        row = history.visible[token,pc]
-                        parents.append(dict(address=dict(token=token,op=pc),version=row['version']))
-                    out.append(dict(run=snapshot.run,rule=rid,parents=parents,token=next_token))
-                    next_token += 1
                 if observe_proposals is not None:
                     observe_proposals(snapshot.run, proposals)
-                issued += len(out)
-                p.stdin.write(json.dumps(out)+'\n')
-                p.stdin.flush()
+                send(dict(finish=True,requests=[]) if live_receipts else packets(proposals))
             else:
                 raise RuntimeError('native verifier exited without a final report')
         finally:
@@ -112,10 +148,16 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
                 p.kill()
         if p.wait() or not calls or not report['counts']['calls']:
             raise RuntimeError('empty or unsuccessful online run')
-    counts = report['counts']
+    counts = report['wave_checks'] if teacher_tape else report['counts']
     if report['unused'] or issued != counts['accepted'] + counts['duplicates'] + sum(counts['rejected'].values()):
         raise RuntimeError('unaccounted online proposals')
-    return dict(mode='exclusive',wave_limit=wave_limit,wave_endings=endings,state_sha=report['state_sha'],runs=report['runs'],neural_waves=calls,
+    if live_receipts and (report['wave_requests'] != issued
+            or receipt_counts.get('accepted',0) != counts['accepted']
+            or receipt_counts.get('duplicate',0) != counts['duplicates']
+            or {r:n for r,n in receipt_counts.items() if r not in ('accepted','duplicate')} != counts['rejected']):
+        raise ValueError('wave receipts differ from final verifier ledger')
+    return dict(shadow_report=report if teacher_tape else None,live_receipts=live_receipts,receipt_counts=receipt_counts,wave_receipt_seconds=receipt_seconds,
+                receipt_batches=report.get('wave_batches',0),mode='shadow' if teacher_tape else 'exclusive',wave_limit=wave_limit,wave_endings=endings,state_sha=report['state_sha'],runs=report['runs'],neural_waves=calls,
                 issued=issued,counts=report['counts'],native_runtime_events=len(report['runtime_events']),
                 independent_search_calls=0,network_seconds=inference+encoding,
                 rhs_by_run=report['rhs'],writes_by_run=report['writes'],source_schedule=report['schedule'],
@@ -132,8 +174,9 @@ if __name__=='__main__':
     parser.add_argument('--seed',type=int,default=1703)
     parser.add_argument('--field-pointer',action='store_true')
     parser.add_argument('--wave-limit',type=int)
+    parser.add_argument('--live-receipts',action='store_true',default=None)
     a=parser.parse_args()
     torch.set_num_threads(1)
     torch.manual_seed(a.seed)
     model = load_actor(a.weights, a.field_pointer)
-    print(json.dumps(execute(a.binary.resolve(),a.program.resolve(),model,a.seed,a.wave_limit)))
+    print(json.dumps(execute(a.binary.resolve(),a.program.resolve(),model,a.seed,a.wave_limit,live_receipts=a.live_receipts)))

@@ -1205,6 +1205,15 @@ impl Executor {
         self.token_history.as_mut().ok_or("missing token history")?.enable_recall(probes)
     }
     #[cfg(feature = "cell-token-replay")]
+    pub fn enable_token_waves(&mut self, shadow: bool) -> Result<()> {
+        let history = self.token_history.as_mut().ok_or("token history not active")?;
+        history.export_memory(None)?;
+        history.waves = Some(Default::default());
+        history.waves.as_mut().unwrap().shadow = shadow;
+        if shadow { history.enable_recall(Vec::new())?; }
+        Ok(())
+    }
+    #[cfg(feature = "cell-token-replay")]
     pub fn export_token_memory(&mut self, path: Option<&std::path::Path>) -> Result<()> {
         self.token_history.as_mut().ok_or("token history not active")?.export_memory(path)
     }
@@ -2647,7 +2656,8 @@ impl Executor {
                 let wm = self.ready_sets.as_ref().map_or(self.watermarks[rid], |s| self.watermarks[rid].max(s.watermark(rid)));
                 (rid, wm)
             }).collect();
-            h.observe(&self.graph, self.steps.len()+1, &scheduled)?;
+            let check_dirty = !cfg!(any(feature="family-survey", feature="family-overlap")) && !self.profile_queries;
+            h.observe(&self.graph, self.steps.len()+1, &scheduled, &self.dirty, check_dirty)?;
         }
         #[cfg(feature = "sparse-cells")]
         if rules.is_empty() && !self.audit && !cfg!(feature="projection-semijoin")

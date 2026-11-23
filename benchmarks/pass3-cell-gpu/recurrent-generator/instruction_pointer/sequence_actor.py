@@ -42,7 +42,7 @@ class SequenceActor(RuleReadActor):
         rule = self.sequence_query(state).tanh() @ keys.transpose(-1,-2) / math.sqrt(self.width)
         return base + torch.cat((self.sequence_stop(state),rule),-1)
 
-    def decisions(self, catalog, snapshot, mem, limit):
+    def decisions(self, catalog, snapshot, mem, limit, receive=None):
         nodes = mem.nodes
         inputs,lanes,base = self.setup(catalog,snapshot,mem)
         keys = self.sequence_key(inputs).tanh()
@@ -50,24 +50,35 @@ class SequenceActor(RuleReadActor):
         rules = list(mem.rules)
         past = nodes.new_zeros(1,self.width)
         for _ in range(limit):
+            wave = []
             for i in range(len(lanes)):
                 scores = self.logits(keys,past,lanes[i:i+1],base[i:i+1]).squeeze(0)
                 state = lanes[i],rules,scores
                 action = int(scores.argmax())
                 if action == 0:
+                    if receive and wave:
+                        receive(wave)
                     yield state,None,None
                     return
                 rid = rules[action-1]
                 refs,_ = self.references(catalog,mem,lanes[i],rid)
+                if refs is not None and receive:
+                    wave.append((rid,refs))
                 yield state,rid,refs
                 feedback = self.request_key(catalog,mem,rid,refs,by_address)
                 _,hidden = self.sequence_history(feedback.view(1,1,-1),past.unsqueeze(0))
                 past = hidden[0]
+            if receive and wave:
+                verdicts = receive(wave)
+                past = self.after_receipts(past, verdicts)
 
-    def decode(self, catalog, snapshot, nodes, limit):
+    def after_receipts(self, past, verdicts):
+        return past
+
+    def decode(self, catalog, snapshot, nodes, limit, receive=None):
         mem = self.memory(catalog,snapshot,nodes)
         issued = []
-        for step,(_,rid,refs) in enumerate(self.decisions(catalog,snapshot,mem,limit)):
+        for step,(_,rid,refs) in enumerate(self.decisions(catalog,snapshot,mem,limit,receive)):
             if rid is None:
                 return issued,step // self.lanes.num_embeddings + 1,'stop'
             if refs is not None:

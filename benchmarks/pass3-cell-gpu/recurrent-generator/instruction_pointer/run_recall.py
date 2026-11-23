@@ -13,7 +13,7 @@ import torch
 
 from catalog import Catalog
 from history import History
-from online import issue_run
+from online import issue_run, execute
 from rule_read import load_actor
 
 
@@ -42,15 +42,24 @@ def proposals(folder, model, seed, waves):
     return packets, reasons
 
 
-def audit(folder, binary, model, seed, waves, output, control=False):
+def audit(folder, binary, model, seed, waves, output, control=False, live=False, blind=False):
     teacher = read(folder/'tape.json')
     native = read(folder/'capture.json')
-    requests, endings = proposals(folder,model,seed,waves) if not control else (teacher['requests'],{})
-    with TemporaryDirectory() as tmp:
-        tape = Path(tmp)/'probe.json'
-        tape.write_text(json.dumps({**teacher,'requests':requests}))
-        checked = json.loads(subprocess.check_output([binary,'replay',folder/'program.json',folder/'tape.json',
-                                                     'audit','--recall',tape]))
+    if live:
+        if control:
+            raise ValueError('teacher control uses fixed proposal replay')
+        requests = []
+        execution = execute(binary, folder/'program.json', model, seed, waves, live_receipts=True,
+                      teacher_tape=folder/'tape.json', observe_packets=requests.extend, mask_receipts=blind)
+        checked = execution.pop('shadow_report')
+        endings = execution['wave_endings']
+    else:
+        requests, endings = proposals(folder,model,seed,waves) if not control else (teacher['requests'],{})
+        with TemporaryDirectory() as tmp:
+            tape = Path(tmp)/'probe.json'
+            tape.write_text(json.dumps({**teacher,'requests':requests}))
+            checked = json.loads(subprocess.check_output([binary,'replay',folder/'program.json',folder/'tape.json',
+                                                         'audit','--recall',tape]))
     if (checked['unused_recall'] or checked['unused'] or checked['counts']['accepted'] != native['matches']
             or any(checked[k] != native[k] for k in ('rhs','writes','schedule','state_sha','resumes','events'))):
         raise ValueError('teacher trajectory or probe ledger changed')
@@ -103,7 +112,9 @@ def audit(folder, binary, model, seed, waves, output, control=False):
     empty = [r for r in rows if not r['teacher_commits']]
     total = sum(r['teacher_commits'] for r in busy)
     found = sum(r['recovered'] for r in busy)
-    return dict(runs=len(rows),busy=len(busy),empty=len(empty),issued=len(requests),teacher_commits=total,
+    transport = {k:execution[k] for k in ('receipt_batches','receipt_counts','wave_receipt_seconds','network_seconds',
+                                      'native_verify_seconds','wall_seconds')} if live else {}
+    return dict(live_transport=transport,runs=len(rows),busy=len(busy),empty=len(empty),issued=len(requests),teacher_commits=total,
                 recovered=found,micro=found/total if total else None,
                 macro=mean(r['recall'] for r in busy) if busy else None,
                 complete_busy=sum(r['recovered']==r['teacher_commits'] for r in busy),
@@ -121,16 +132,22 @@ if __name__=='__main__':
     p.add_argument('--workloads',nargs='+',required=True)
     p.add_argument('--wave-limit',type=int)
     p.add_argument('--teacher-control',action='store_true')
+    p.add_argument('--live-receipts',action='store_true',default=None)
+    p.add_argument('--mask-receipts',action='store_true')
     a=p.parse_args()
     torch.set_num_threads(1)
     model = load_actor(a.weights,True)
+    if a.live_receipts is None:
+        a.live_receipts = getattr(model,'requires_receipts',False) and not a.teacher_control
+    if a.mask_receipts and not a.live_receipts:
+        p.error('masking requires live receipts')
     if a.wave_limit is None:
         a.wave_limit = getattr(model,'default_waves',1)
     manifest=read(a.root/'manifest.json')
     seeds={r['directory']:r['seed'] for r in manifest}
-    report=dict(mode='shadow',teacher_control=a.teacher_control,wave_limit=a.wave_limit,
+    report=dict(mode='shadow',teacher_control=a.teacher_control,live_receipts=a.live_receipts,masked=a.mask_receipts,wave_limit=a.wave_limit,
                 weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),
                 receiver_sha256=hashlib.sha256(a.binary.read_bytes()).hexdigest(), cases={})
     for name in a.workloads:
-        report['cases'][name]=audit(a.root/name,a.binary,model,1703+seeds.get(name,0),a.wave_limit,a.output,a.teacher_control)
+        report['cases'][name]=audit(a.root/name,a.binary,model,1703+seeds.get(name,0),a.wave_limit,a.output,a.teacher_control,a.live_receipts,a.mask_receipts)
         (a.output/'summary.json').write_text(json.dumps(report,indent=2)+'\n')
