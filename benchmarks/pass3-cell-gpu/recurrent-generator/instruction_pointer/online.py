@@ -12,22 +12,47 @@ from catalog import Catalog
 from history import History
 
 
-def propose(actor, catalog, snapshot, nodes):
+def issue_run(actor, catalog, snapshot, nodes, wave_limit=1):
+    """All waves name ports from one sealed snapshot; issued proofs are returned for charging."""
+    if wave_limit < 1:
+        raise ValueError('a source Run needs at least one wave')
     memory = actor.memory(catalog,snapshot,nodes)
-    proposals = []
-    for lane in range(actor.lanes.num_embeddings):
-        h, rules, logits = actor.actions(catalog,memory,lane)
-        action = int(logits.argmax())
-        if action:
-            rid = rules[action-1]
-            refs,_ = actor.references(catalog,memory,h,rid)
-            if refs is not None:
-                proposals.append((rid,refs))
-    return proposals
+    by_address = {p.address:i for i,p in enumerate(memory.ports)} if wave_limit>1 else {}
+    state = [actor.actions(catalog,memory,lane) for lane in range(actor.lanes.num_embeddings)]
+    issued, seen = [], set()
+    for wave in range(1,wave_limit+1):
+        actions, feedback = [], []
+        for h,rules,logits in state:
+            action = int(logits.argmax())
+            if action:
+                rid = rules[action-1]
+                refs,_ = actor.references(catalog,memory,h,rid)
+                if refs is not None:
+                    actions.append((rid,refs))
+                    if wave < wave_limit:
+                        embedding = nodes[catalog.roots['generated',rid]]
+                        for addr in refs:
+                            embedding = actor.next_read(memory.keys[by_address[addr]], embedding)
+                        feedback.append(embedding)
+        issued.extend(actions)
+        if not actions:
+            reason = 'stop' if all(int(logits.argmax())==0 for _,_,logits in state) else 'no_complete_request'
+            return issued,wave,reason
+        if seen.issuperset(actions):
+            return issued,wave,'repeated'
+        if wave == wave_limit:
+            return issued,wave,'budget'
+        seen.update(actions)
+        summary = torch.stack(feedback).mean(0)
+        state = [actor.resume_lane(catalog,memory,h,rules,summary) for h,rules,_ in state]
+
+
+def propose(actor, catalog, snapshot, nodes):
+    return issue_run(actor,catalog,snapshot,nodes)[0]
 
 
 @torch.no_grad()
-def execute(binary, program, actor, seed):
+def execute(binary, program, actor, seed, wave_limit=1):
     start = perf_counter()
     catalog = Catalog(json.loads(program.read_bytes()))
     history = History(catalog,seed)
@@ -37,6 +62,7 @@ def execute(binary, program, actor, seed):
     next_token = 1
     inference = 0.
     calls = issued = 0
+    endings = {}
     cmd = [binary,'online',program,'-','audit']
     with subprocess.Popen(cmd,stdin=subprocess.PIPE,stdout=subprocess.PIPE,text=True,bufsize=1) as p:
         try:
@@ -47,9 +73,10 @@ def execute(binary, program, actor, seed):
                     break
                 snapshot = history.snapshot(frame)
                 before = perf_counter()
-                proposals = propose(actor,catalog,snapshot,nodes)
+                proposals,waves,reason = issue_run(actor,catalog,snapshot,nodes,wave_limit)
+                endings[reason] = endings.get(reason,0)+1
                 inference += perf_counter()-before
-                calls += 1
+                calls += waves
                 out = []
                 for rid,refs in proposals:
                     parents = []
@@ -73,7 +100,7 @@ def execute(binary, program, actor, seed):
     counts = report['counts']
     if report['unused'] or issued != counts['accepted'] + counts['duplicates'] + sum(counts['rejected'].values()):
         raise RuntimeError('unaccounted online proposals')
-    return dict(mode='exclusive',state_sha=report['state_sha'],runs=report['runs'],neural_waves=calls,
+    return dict(mode='exclusive',wave_limit=wave_limit,wave_endings=endings,state_sha=report['state_sha'],runs=report['runs'],neural_waves=calls,
                 issued=issued,counts=report['counts'],native_runtime_events=len(report['runtime_events']),
                 independent_search_calls=0,network_seconds=inference+encoding,
                 rhs_by_run=report['rhs'],writes_by_run=report['writes'],source_schedule=report['schedule'],
@@ -89,10 +116,11 @@ if __name__=='__main__':
     parser.add_argument('--weights',type=Path)
     parser.add_argument('--seed',type=int,default=1703)
     parser.add_argument('--field-pointer',action='store_true')
+    parser.add_argument('--wave-limit',type=int,default=1)
     a=parser.parse_args()
     torch.set_num_threads(1)
     torch.manual_seed(a.seed)
     model=InstructionActor(field_pointer=a.field_pointer).eval()
     if a.weights:
         model.load_state_dict(torch.load(a.weights,map_location='cpu',weights_only=True))
-    print(json.dumps(execute(a.binary.resolve(),a.program.resolve(),model,a.seed)))
+    print(json.dumps(execute(a.binary.resolve(),a.program.resolve(),model,a.seed,a.wave_limit)))

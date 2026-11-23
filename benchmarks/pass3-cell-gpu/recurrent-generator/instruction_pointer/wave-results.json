@@ -1,0 +1,157 @@
+{
+  "mode": "exclusive",
+  "weights_file_sha256": "302d7240e731b9da2c9063586e952017f0de44181cfc522d63255155eeb82ad8",
+  "receiver_sha256": "4f776e000dd7bc14bfca72ea82f17dcf769f7e720c01fbe85c78bff04e2ae0ab",
+  "cases": {
+    "sum": {
+      "reference_commits": 7265,
+      "single_wave_4_lane_ceiling": 1583,
+      "peak_run": 172,
+      "1": {
+        "mode": "exclusive",
+        "wave_limit": 1,
+        "wave_endings": {
+          "budget": 48,
+          "no_complete_request": 248,
+          "stop": 1
+        },
+        "state_sha": "032b1ddbedd3231f8ed400a0535ceac258d61e1a885e186d3aefa2266add2c00",
+        "runs": 297,
+        "neural_waves": 297,
+        "issued": 130,
+        "counts": {
+          "accepted": 10,
+          "calls": 615,
+          "duplicates": 5,
+          "reads": 31,
+          "reads_by_kind": {
+            "generated": 27,
+            "initial": 4
+          },
+          "rejected": {
+            "binding": 7,
+            "guard": 3,
+            "untriggered_rule": 105
+          }
+        },
+        "native_runtime_events": 0,
+        "independent_search_calls": 0,
+        "network_seconds": 1.7582704229280353,
+        "remaining_process_seconds_including_ipc": 0.1586991629720822,
+        "native_verify_seconds": 8.1956e-05,
+        "native_repair_seconds": 0.0002087520000000001,
+        "wall_seconds": 2.203843541909009
+      },
+      "8": {
+        "mode": "exclusive",
+        "wave_limit": 8,
+        "wave_endings": {
+          "repeated": 44,
+          "no_complete_request": 253,
+          "stop": 1
+        },
+        "state_sha": "a6036137b0202e7c66a91ed6e052024066d6623a03ead2337c72dc6fcf34e6b2",
+        "runs": 298,
+        "neural_waves": 353,
+        "issued": 234,
+        "counts": {
+          "accepted": 12,
+          "calls": 651,
+          "duplicates": 16,
+          "reads": 93,
+          "reads_by_kind": {
+            "generated": 78,
+            "initial": 15
+          },
+          "rejected": {
+            "binding": 26,
+            "guard": 5,
+            "untriggered_rule": 175
+          }
+        },
+        "native_runtime_events": 0,
+        "independent_search_calls": 0,
+        "network_seconds": 1.708486330229789,
+        "remaining_process_seconds_including_ipc": 0.14191313195018074,
+        "native_verify_seconds": 0.000103079,
+        "native_repair_seconds": 0.0001586620000000002,
+        "wall_seconds": 2.064066250110045
+      }
+    },
+    "dot": {
+      "reference_commits": 6704,
+      "single_wave_4_lane_ceiling": 1594,
+      "peak_run": 278,
+      "1": {
+        "mode": "exclusive",
+        "wave_limit": 1,
+        "wave_endings": {
+          "budget": 47,
+          "no_complete_request": 246,
+          "stop": 1
+        },
+        "state_sha": "e67e0deb23aac49fb6b4e569a02c961db6775d2ed050d643df2a6e5d1668d290",
+        "runs": 294,
+        "neural_waves": 294,
+        "issued": 126,
+        "counts": {
+          "accepted": 9,
+          "calls": 613,
+          "duplicates": 5,
+          "reads": 30,
+          "reads_by_kind": {
+            "generated": 27,
+            "initial": 3
+          },
+          "rejected": {
+            "binding": 7,
+            "guard": 3,
+            "untriggered_rule": 102
+          }
+        },
+        "native_runtime_events": 0,
+        "independent_search_calls": 0,
+        "network_seconds": 2.3433721368201077,
+        "remaining_process_seconds_including_ipc": 0.2157366502301028,
+        "native_verify_seconds": 0.000111254,
+        "native_repair_seconds": 0.0008674200000000005,
+        "wall_seconds": 2.788640124956146
+      },
+      "8": {
+        "mode": "exclusive",
+        "wave_limit": 8,
+        "wave_endings": {
+          "repeated": 42,
+          "no_complete_request": 251,
+          "stop": 1
+        },
+        "state_sha": "9eac7b327b8ba2884f349890bb35c34d8f2e4a728069f88f868600ff13d57527",
+        "runs": 294,
+        "neural_waves": 346,
+        "issued": 221,
+        "counts": {
+          "accepted": 10,
+          "calls": 613,
+          "duplicates": 14,
+          "reads": 75,
+          "reads_by_kind": {
+            "generated": 63,
+            "initial": 12
+          },
+          "rejected": {
+            "binding": 22,
+            "guard": 5,
+            "untriggered_rule": 170
+          }
+        },
+        "native_runtime_events": 0,
+        "independent_search_calls": 0,
+        "network_seconds": 2.5004829596728086,
+        "remaining_process_seconds_including_ipc": 0.2277932522927446,
+        "native_verify_seconds": 0.00010708,
+        "native_repair_seconds": 0.000306843,
+        "wall_seconds": 2.969660958973691
+      }
+    }
+  }
+}

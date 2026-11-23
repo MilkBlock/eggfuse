@@ -121,6 +121,12 @@ class InstructionActor(nn.Module):
         h = self.lanes.weight[lane]
         if len(memory.keys):
             h = self.next_read(memory.keys.mean(0), h)
+        return self.action_logits(catalog,memory,h,rules)
+
+    def resume_lane(self,catalog,memory,h,rules,issued):
+        return self.action_logits(catalog,memory,self.next_read(issued,h),rules)
+
+    def action_logits(self,catalog,memory,h,rules):
         roots = ints(h, [catalog.roots['generated', rid] for rid in rules])
         logits = torch.cat((self.stop(h), memory.nodes[roots] @ self.query(h) / math.sqrt(self.width)))
         return h, rules, logits
