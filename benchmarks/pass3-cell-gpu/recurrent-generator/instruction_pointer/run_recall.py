@@ -125,6 +125,12 @@ def audit(folder, binary, model, seed, waves, output, control=False, live=False,
             raise ValueError('incomplete per-Run proposal accounting')
         if control and row['recovered'] != row['teacher_commits']:
             raise ValueError('teacher control did not reach full recall')
+    transport = {k:execution[k] for k in ('receipt_batches','receipt_counts','wave_receipt_seconds','network_seconds',
+                                      'native_verify_seconds','wall_seconds')} if live else {}
+    return write_rows(folder,output,rows,transport,rejects,aliased,endings)
+
+
+def write_rows(folder,output,rows,transport,rejects,aliased,endings):
     output.mkdir(exist_ok=True,parents=True)
     with (output/(folder.name+'.csv')).open('w') as f:
         writer = csv.DictWriter(f, fieldnames=list(rows[0]), lineterminator='\n')
@@ -134,9 +140,7 @@ def audit(folder, binary, model, seed, waves, output, control=False, live=False,
     empty = [r for r in rows if not r['teacher_commits']]
     total = sum(r['teacher_commits'] for r in busy)
     found = sum(r['recovered'] for r in busy)
-    transport = {k:execution[k] for k in ('receipt_batches','receipt_counts','wave_receipt_seconds','network_seconds',
-                                      'native_verify_seconds','wall_seconds')} if live else {}
-    return dict(live_transport=transport,runs=len(rows),busy=len(busy),empty=len(empty),issued=len(requests),teacher_commits=total,
+    return dict(live_transport=transport,runs=len(rows),busy=len(busy),empty=len(empty),issued=sum(r['issued'] for r in rows),teacher_commits=total,
                 recovered=found,micro=found/total if total else None,
                 macro=mean(r['recall'] for r in busy) if busy else None,
                 complete_busy=sum(r['recovered']==r['teacher_commits'] for r in busy),
