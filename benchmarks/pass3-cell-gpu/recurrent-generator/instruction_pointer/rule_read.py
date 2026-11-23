@@ -111,7 +111,11 @@ class RuleReadActor(InstructionActor):
 
 def load_actor(weights, field_pointer):
     state = torch.load(weights, map_location='cpu', weights_only=True) if weights else None
-    if state is not None and state.get('format') == 'parent-disagreement-v1':
+    if state is not None and state.get('format') == 'calibrated-anchor-v1':
+        from anchor_set import CalibratedAnchorActor
+        actor=CalibratedAnchorActor(state['vocabulary'],state['names'])
+        actor.load_state_dict(state['parameters'])
+    elif state is not None and state.get('format') == 'parent-disagreement-v1':
         from anchor_set import DisagreementActor
         actor=DisagreementActor(state['vocabulary'],state['names'])
         actor.load_state_dict(state['parameters'])

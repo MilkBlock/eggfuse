@@ -142,3 +142,16 @@ class DisagreementActor(AnchorSetActor):
     def pair_scores(self,cat,mem,rid,ordered,prefix,role,ids):
         scores,delta=self.pair_components(cat,mem,rid,ordered,prefix,role,ids,measure=True)
         return scores-self.disagreement_scale.clamp_min(0)*delta
+
+
+class CalibratedAnchorActor(DisagreementActor):
+    """Calibrate the issuance decision separately for final and intermediate anchors."""
+    def __init__(self,vocabulary,names='structural',width=32):
+        super().__init__(vocabulary,names,width)
+        self.register_buffer('root_offset',torch.zeros(2))
+
+    def root_scores(self,cat,mem,rid,role,ids,dom):
+        score=super().root_scores(cat,mem,rid,role,ids,dom)
+        if role is None:
+            return score
+        return score+self.root_offset[int(len(cat.atoms[rid])>1)]
