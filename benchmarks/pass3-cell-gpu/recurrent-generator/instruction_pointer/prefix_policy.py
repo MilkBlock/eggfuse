@@ -101,16 +101,20 @@ def select_frontier(model, cat, mem, dom, rid, anchor, order, depth, frontier, p
     return selected
 
 
-def generate(model, cat, mem, policy, probe=None, counts=None, field_audit=False):
+def generate(model, cat, mem, policy, probe=None, counts=None, field_audit=False, selected_rules=None, activated=None):
     if (policy.audit or policy.verify) and probe is None:
         raise ValueError('prefix verification needs a sealed native receiver')
     if counts is None:
         counts = defaultdict(Counter)
     dom = Domains(mem)
     for rid, wm in mem.rules.items():
+        if selected_rules is not None and rid not in selected_rules:
+            continue
         atoms = cat.atoms[rid]
         if not atoms:
             if (not cat.seminaive[rid] or wm == 0) and model.root_scores(cat,mem,rid,None,None,dom).item() >= model.thresholds[0]:
+                if activated is not None:
+                    activated.add(rid)
                 yield rid, ()
             continue
         for anchor in range(len(atoms) if cat.seminaive[rid] else 1):
@@ -121,6 +125,8 @@ def generate(model, cat, mem, policy, probe=None, counts=None, field_audit=False
                 frontier = select_frontier(model,cat,mem,dom,rid,anchor,order,depth,frontier,policy,probe,count,field_audit)
                 if not len(frontier):
                     break
+                if depth == 0 and activated is not None:
+                    activated.add(rid)
             for row in frontier.tolist():
                 refs = [None]*len(order)
                 for role,j in zip(order,row,strict=True):

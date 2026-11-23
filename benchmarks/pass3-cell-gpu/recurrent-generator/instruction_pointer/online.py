@@ -72,7 +72,7 @@ def propose(actor, catalog, snapshot, nodes):
 
 
 @torch.no_grad()
-def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=None, live_receipts=None, teacher_tape=None, observe_packets=None, mask_receipts=False, prefix_policy=None, shadow_runs=None, run_limit=None, observe_snapshot=None, assist=False, audit=True):
+def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=None, live_receipts=None, teacher_tape=None, observe_packets=None, mask_receipts=False, prefix_policy=None, shadow_runs=None, run_limit=None, observe_snapshot=None, assist=False, audit=True, frame_observer=None, rule_screen=None, activation_observer=None):
     if wave_limit is None:
         wave_limit = getattr(actor,'default_waves',1)
     if live_receipts is None:
@@ -117,6 +117,10 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
                 if 'role' in frame:
                     report = frame
                     break
+                if frame_observer is not None:
+                    frame_observer(frame)
+                if rule_screen is not None:
+                    rule_screen.history.observe(frame)
                 snapshot = history.snapshot(frame)
                 if observe_snapshot is not None:
                     observe_snapshot(catalog,history,snapshot)
@@ -158,7 +162,8 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
                 old_wait = receipt_seconds
                 if prefix_policy is not None:
                     if shadow_runs is None or snapshot.run in shadow_runs:
-                        mem = actor.memory(catalog,snapshot,nodes)
+                        selected = rule_screen.select(catalog,snapshot,nodes) if rule_screen is not None else None
+                        mem = actor.memory(catalog,snapshot,nodes) if selected is None or selected else None
                         def read_prefix(rid, roles, rows):
                             nonlocal receipt_seconds
                             start = perf_counter()
@@ -166,7 +171,11 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
                             flags = probe(rid, roles, rows)
                             receipt_seconds += perf_counter()-start
                             return flags
-                        proposals = list(generate(actor,catalog,mem,prefix_policy,read_prefix,prefix_counts))
+                        activated = set() if activation_observer is not None else None
+                        proposals = list(generate(actor,catalog,mem,prefix_policy,read_prefix,prefix_counts,
+                                                  selected_rules=selected,activated=activated)) if mem is not None else []
+                        if activation_observer is not None:
+                            activation_observer(snapshot.run, activated)
                         if live_receipts and proposals:
                             receive(proposals)
                         waves,reason = 1,'single_batch'
