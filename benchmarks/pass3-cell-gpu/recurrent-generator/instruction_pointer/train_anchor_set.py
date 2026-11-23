@@ -139,7 +139,7 @@ def reads(cat,s,mem,model,roots,children,rng,credit=None,tally=None):
     rows=[]
     for rid,anchor in rng.sample(positives,min(3,len(positives)))+rng.sample(negatives,min(3,len(negatives))):
         ids=ints(mem.nodes,[0]) if anchor is None else dom.role(cat,mem,rid,anchor,anchor)
-        scores=model.root_scores(cat,mem,rid,anchor,ids)
+        scores=model.root_scores(cat,mem,rid,anchor,ids,dom)
         rows.append(term(int(anchor is not None),(rid,anchor),scores,ids))
     for rid,anchor,prefix in rng.sample(list(children),min(6,len(children))):
         order=[anchor]+[j for j in range(len(cat.atoms[rid])) if j!=anchor]

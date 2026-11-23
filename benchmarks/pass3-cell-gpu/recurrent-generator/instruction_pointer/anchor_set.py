@@ -18,6 +18,7 @@ class Domains:
         self.empty=ints(mem.nodes,[])
         self.versions=ints(mem.nodes,[p.version for p in mem.ports])
         self.cache={}
+        self.summaries={}
 
     def role(self,cat,mem,rid,anchor,role):
         t=cat.atoms[rid][role][0]
@@ -47,7 +48,7 @@ class AnchorSetActor(SemanticActor):
         self.field_comparison=nn.Linear(2,1,bias=False)
         self.register_buffer('thresholds',torch.zeros(3))
 
-    def root_scores(self,cat,mem,rid,role,ids):
+    def root_scores(self,cat,mem,rid,role,ids,dom):
         root=mem.nodes[cat.roots['generated',rid]]
         if role is None:
             return self.anchor_empty(root)
@@ -99,7 +100,7 @@ class AnchorSetActor(SemanticActor):
             atoms=cat.atoms[rid]
             if not atoms:
                 if anchors is None and (not cat.seminaive[rid] or wm==0):
-                    if self.root_scores(cat,mem,rid,None,None).item()>=self.thresholds[0]:
+                    if self.root_scores(cat,mem,rid,None,None,dom).item()>=self.thresholds[0]:
                         yield rid,()
                 continue
             for anchor in range(len(atoms) if cat.seminaive[rid] else 1):
@@ -113,7 +114,7 @@ class AnchorSetActor(SemanticActor):
                     else:
                         continue
                 elif len(ids):
-                    scores=self.root_scores(cat,mem,rid,anchor,ids)
+                    scores=self.root_scores(cat,mem,rid,anchor,ids,dom)
                     first=ids[scores>=self.thresholds[1]]
                 else:
                     continue

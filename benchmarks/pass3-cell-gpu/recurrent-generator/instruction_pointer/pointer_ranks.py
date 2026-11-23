@@ -29,7 +29,7 @@ def ranks(cat,snap,mem,model,labels):
     for (rid,anchor),pos in roots.items():
         if anchor is None: continue
         ids=dom.role(cat,mem,rid,anchor,anchor)
-        add('anchor',model.root_scores(cat,mem,rid,anchor,ids),ids,pos,model.thresholds[1])
+        add('anchor',model.root_scores(cat,mem,rid,anchor,ids,dom),ids,pos,model.thresholds[1])
     for (rid,anchor,prefix),pos in children.items():
         order=[anchor]+[j for j in range(len(cat.atoms[rid])) if j!=anchor]
         role=order[len(prefix)]
