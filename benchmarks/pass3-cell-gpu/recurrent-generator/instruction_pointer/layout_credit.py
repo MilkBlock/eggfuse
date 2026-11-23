@@ -148,7 +148,7 @@ class CreditIssuer(GraphIssuer):
         return returns,totals
 
 
-def rollout(root,donor,binary,weights,baked,out,name,seed,omit,explore,policy=None,attach=False,run_recall=False):
+def rollout(root,donor,binary,weights,baked,out,name,seed,omit,explore,policy=None,attach=False,run_recall=False,prefix=None):
     actor=load_actor(weights,True)
     folder=root/name
     issuer=CreditIssuer(actor,read(donor/'program.json'),read(folder/'program.json'),baked,
@@ -174,7 +174,7 @@ def rollout(root,donor,binary,weights,baked,out,name,seed,omit,explore,policy=No
     with TemporaryDirectory() as tmp:
         spec=Path(tmp)/'layouts.json'
         spec.write_text(json.dumps(issuer.receiver_layouts(),separators=(',',':')))
-        result=execute(binary,folder/'program.json',actor,rename,assist=True,prefix_policy=Policy(32),
+        result=execute(binary,folder/'program.json',actor,rename,assist=True,prefix_policy=prefix or Policy(32),
                        graph_issuer=issuer,layout_file=spec,audit_ept=True,frame_observer=observe if run_recall else None)
     for key,target in [('source_schedule','schedule'),('rhs_by_run','rhs'),('writes_by_run','writes'),
                        ('resume_audit','resumes'),('event_audit','events')]:
@@ -182,7 +182,11 @@ def rollout(root,donor,binary,weights,baked,out,name,seed,omit,explore,policy=No
             raise ValueError('source audit differs in '+target)
     if result['state_sha']!=ref['state_sha']:
         raise ValueError('source state changed')
-    del result['partial_proof_counts']
+    recovery=prefix.recovery if prefix else None
+    if recovery is None:
+        del result['partial_proof_counts']
+    elif not any(c.get('recovery_scored',0) for c in result['partial_proof_counts'].values()):
+        raise ValueError('recovery head did not score any reads')
     per_root,counts=issuer.credit(result['ept'])
     if result['issued']+counts['omitted_packets']!=issuer.counts['root_packets']:
         raise ValueError('external packet attribution differs')
@@ -217,6 +221,9 @@ def rollout(root,donor,binary,weights,baked,out,name,seed,omit,explore,policy=No
                 actor=digest(weights),policy=policy.checkpoint if policy else None,scorer=digest(baked/'shared.pt'),reader=digest(baked/'boundary.pt'),
                 catalog=digest(baked/'catalog.json'),omit=omit,attach=attach,explore=explore,seed=seed,
                 withheld_layouts=len(issuer.withheld),held_issued=held_issued,held_complete=held_complete,reference_commits=ref['matches'],issuer=issuer.report(),credit=counts,execution=result)
+    if recovery is not None:
+        report['recovery']=dict(checkpoint=recovery.checkpoint,margin_only=recovery.margin_only,cut=recovery.cut,
+                                budget=recovery.budget)
     if run_recall:
         reference=Counter(req['run'] for req in read(folder/'tape.json')['requests'])
         if reference!=committed or sum(accepted.values())!=result['counts']['accepted']:
@@ -234,6 +241,8 @@ if __name__=='__main__':
     p.add_argument('--omit',action='store_true')
     p.add_argument('--policy',type=Path)
     p.add_argument('--training-bake',type=Path)
+    p.add_argument('--recovery',type=Path)
+    p.add_argument('--margin-only',action='store_true')
     p.add_argument('--run-recall',action='store_true')
     p.add_argument('--exclusive',action='store_true')
     p.add_argument('--attach',action='store_true')
@@ -241,6 +250,12 @@ if __name__=='__main__':
     args=p.parse_args()
     torch.set_num_threads(1)
     policy=None
+    prefix=None
+    if args.recovery:
+        from prefix_recovery import Recovery
+        prefix=Policy(32,recovery=Recovery(args.recovery,args.weights,margin_only=args.margin_only))
+    elif args.margin_only:
+        p.error('--margin-only requires a recovery head')
     if args.policy:
         if args.explore: raise ValueError('frozen deployment requires a separate exploration arm')
         from train_layout_bandit import LearnedChoice
@@ -254,8 +269,8 @@ if __name__=='__main__':
                 return CreditIssuer(actor,donor,target,baked,omit=args.omit,explore=False,
                                     seed=1703,policy=policy,attach=args.attach)
             evaluate(args.root,read(args.donor/'program.json'),args.binary,args.weights,args.baked,name,
-                     args.out/(name+'.json'),False,True,exclusive=True,issuer_factory=build)
+                     args.out/(name+'.json'),False,True,exclusive=True,issuer_factory=build,prefix=prefix)
             continue
         for seed in args.seeds:
             rollout(args.root,args.donor,args.binary,args.weights,args.baked,args.out,name,seed,
-                    args.omit,args.explore,policy=policy,attach=args.attach,run_recall=args.run_recall)
+                    args.omit,args.explore,policy=policy,attach=args.attach,run_recall=args.run_recall,prefix=prefix)

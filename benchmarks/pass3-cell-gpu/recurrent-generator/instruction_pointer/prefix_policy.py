@@ -11,6 +11,7 @@ class Policy:
     top_k: int | None = None
     verify: bool = False
     audit: bool = False
+    recovery: object = None
 
     def __post_init__(self):
         if self.top_k is not None and self.top_k < 1:
@@ -41,6 +42,9 @@ def shared_conflicts(cat, mem, rid, roles, prefix, ids):
 
 
 def select_frontier(model, cat, mem, dom, rid, anchor, order, depth, frontier, policy, probe, count, field_audit):
+    if policy.recovery is not None:
+        from prefix_recovery import select
+        return select(model,cat,mem,dom,rid,anchor,order,depth,frontier,policy,count)
     keep, values = [], []
     width = depth + 1
     cut = model.thresholds[1 if depth == 0 else 2]

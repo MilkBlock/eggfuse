@@ -203,7 +203,7 @@ class GraphIssuer:
         return issued,next_token
 
 
-def evaluate(root,donor,binary,weights,baked,name,out,control,native,exclusive=False,issuer_factory=GraphIssuer):
+def evaluate(root,donor,binary,weights,baked,name,out,control,native,exclusive=False,issuer_factory=GraphIssuer,prefix=None):
     if digest(weights)!=read(baked/'study.json')['root_weights']:
         raise ValueError('root Actor checkpoint differs from training')
     folder=root/name
@@ -218,7 +218,7 @@ def evaluate(root,donor,binary,weights,baked,name,out,control,native,exclusive=F
             layouts=Path(tmp)/'layouts.json'
             layouts.write_text(json.dumps(issuer.receiver_layouts(),separators=(',',':')))
         def live(limit=None):
-            return execute(binary,folder/'program.json',actor,1703+seed,assist=not exclusive,prefix_policy=Policy(32),
+            return execute(binary,folder/'program.json',actor,1703+seed,assist=not exclusive,prefix_policy=prefix or Policy(32),
                            graph_issuer=issuer,layout_file=layouts,audit_ept=not exclusive,run_limit=limit)
         failure=None
         try:
