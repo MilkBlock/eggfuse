@@ -1,0 +1,154 @@
+{
+  "bandit": {
+    "fact": {
+      "paid": 3789,
+      "ops": 917,
+      "ept": 0.24201636315650568,
+      "teacher": 1668,
+      "signed": 1268,
+      "nonempty": 163,
+      "complete": 65,
+      "mean_recall": 0.6584088407425587,
+      "held_complete": 5,
+      "uncredited": 400
+    },
+    "loopfact": {
+      "paid": 3745,
+      "ops": 821,
+      "ept": 0.2192256341789052,
+      "teacher": 1419,
+      "signed": 1053,
+      "nonempty": 166,
+      "complete": 83,
+      "mean_recall": 0.7018022781988572,
+      "held_complete": 6,
+      "uncredited": 366
+    },
+    "sum-divisors": {
+      "paid": 24744,
+      "ops": 5190,
+      "ept": 0.20974781765276432,
+      "teacher": 17341,
+      "signed": 8794,
+      "nonempty": 627,
+      "complete": 203,
+      "mean_recall": 0.5413918075396084,
+      "held_complete": 26,
+      "uncredited": 8547
+    }
+  },
+  "observed": {
+    "fact": {
+      "paid": 3750,
+      "ops": 918,
+      "ept": 0.2448,
+      "teacher": 1668,
+      "signed": 1256,
+      "nonempty": 163,
+      "complete": 65,
+      "mean_recall": 0.6579714530992817,
+      "held_complete": 2,
+      "uncredited": 412
+    },
+    "loopfact": {
+      "paid": 3720,
+      "ops": 827,
+      "ept": 0.22231182795698926,
+      "teacher": 1419,
+      "signed": 1053,
+      "nonempty": 166,
+      "complete": 82,
+      "mean_recall": 0.6971938444639174,
+      "held_complete": 5,
+      "uncredited": 366
+    },
+    "sum-divisors": {
+      "paid": 24642,
+      "ops": 5221,
+      "ept": 0.2118740361983605,
+      "teacher": 17341,
+      "signed": 8785,
+      "nonempty": 627,
+      "complete": 204,
+      "mean_recall": 0.5424301561329006,
+      "held_complete": 11,
+      "uncredited": 8556
+    }
+  },
+  "readable": {
+    "fact": {
+      "paid": 3759,
+      "ops": 918,
+      "ept": 0.24421388667198723,
+      "teacher": 1668,
+      "signed": 1257,
+      "nonempty": 163,
+      "complete": 66,
+      "mean_recall": 0.6562274832776491,
+      "held_complete": 4,
+      "uncredited": 411
+    },
+    "loopfact": {
+      "paid": 3677,
+      "ops": 843,
+      "ept": 0.2292629861299973,
+      "teacher": 1419,
+      "signed": 1060,
+      "nonempty": 166,
+      "complete": 85,
+      "mean_recall": 0.7038257823625009,
+      "held_complete": 8,
+      "uncredited": 359
+    },
+    "sum-divisors": {
+      "paid": 24545,
+      "ops": 5506,
+      "ept": 0.22432267264208597,
+      "teacher": 17341,
+      "signed": 8928,
+      "nonempty": 627,
+      "complete": 218,
+      "mean_recall": 0.5599460305882364,
+      "held_complete": 29,
+      "uncredited": 8413
+    }
+  },
+  "static": {
+    "fact": {
+      "paid": 3759,
+      "ops": 919,
+      "ept": 0.2444799148709763,
+      "teacher": 1668,
+      "signed": 1246,
+      "nonempty": 163,
+      "complete": 68,
+      "mean_recall": 0.6589592231604469,
+      "held_complete": 5,
+      "uncredited": 422
+    },
+    "loopfact": {
+      "paid": 3649,
+      "ops": 842,
+      "ept": 0.230748150178131,
+      "teacher": 1419,
+      "signed": 1053,
+      "nonempty": 166,
+      "complete": 86,
+      "mean_recall": 0.7033093760468023,
+      "held_complete": 6,
+      "uncredited": 366
+    },
+    "sum-divisors": {
+      "paid": 24572,
+      "ops": 5501,
+      "ept": 0.22387270063486894,
+      "teacher": 17341,
+      "signed": 8851,
+      "nonempty": 627,
+      "complete": 224,
+      "mean_recall": 0.5601869083656353,
+      "held_complete": 27,
+      "uncredited": 8490
+    }
+  }
+}

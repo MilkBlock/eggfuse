@@ -1,0 +1,126 @@
+{
+  "observed": {
+    "fact": {
+      "mode": "offline intervention on original assist snapshots",
+      "roots": {
+        "roots": 168,
+        "roots_selecting_observed_target": 13,
+        "root_layout_pairs": 239,
+        "pairs_with_observed_boundary": 56
+      },
+      "distinct_residual": {
+        "given_layout_and_boundary": 195,
+        "learned_layout_given_boundary": 13,
+        "given_layout_learned_boundary": 38,
+        "learned_layout_and_boundary": 0
+      },
+      "checked_commits": 1668,
+      "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d"
+    },
+    "loopfact": {
+      "mode": "offline intervention on original assist snapshots",
+      "roots": {
+        "roots": 134,
+        "roots_selecting_observed_target": 20,
+        "root_layout_pairs": 201,
+        "pairs_with_observed_boundary": 44
+      },
+      "distinct_residual": {
+        "given_layout_and_boundary": 147,
+        "learned_layout_given_boundary": 20,
+        "given_layout_learned_boundary": 25,
+        "learned_layout_and_boundary": 2
+      },
+      "checked_commits": 1419,
+      "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724"
+    },
+    "sum-divisors": {
+      "mode": "offline intervention on original assist snapshots",
+      "roots": {
+        "roots": 1707,
+        "roots_selecting_observed_target": 161,
+        "root_layout_pairs": 2909,
+        "pairs_with_observed_boundary": 703
+      },
+      "distinct_residual": {
+        "given_layout_and_boundary": 2900,
+        "learned_layout_given_boundary": 162,
+        "given_layout_learned_boundary": 594,
+        "learned_layout_and_boundary": 50
+      },
+      "checked_commits": 17341,
+      "state_sha": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e"
+    }
+  },
+  "readable": {
+    "fact": {
+      "context_permutation": {
+        "roots_with_changed_input": 159,
+        "changed_selections": 33,
+        "residuals_given_boundary": 1,
+        "residuals_learned_boundary": 1
+      },
+      "mode": "offline intervention on original assist snapshots",
+      "roots": {
+        "roots": 168,
+        "roots_selecting_observed_target": 1,
+        "root_layout_pairs": 239,
+        "pairs_with_observed_boundary": 56
+      },
+      "distinct_residual": {
+        "given_layout_and_boundary": 195,
+        "learned_layout_given_boundary": 1,
+        "given_layout_learned_boundary": 38,
+        "learned_layout_and_boundary": 1
+      },
+      "checked_commits": 1668,
+      "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d"
+    },
+    "loopfact": {
+      "context_permutation": {
+        "roots_with_changed_input": 120,
+        "changed_selections": 30,
+        "residuals_given_boundary": 4,
+        "residuals_learned_boundary": 4
+      },
+      "mode": "offline intervention on original assist snapshots",
+      "roots": {
+        "roots": 134,
+        "roots_selecting_observed_target": 4,
+        "root_layout_pairs": 201,
+        "pairs_with_observed_boundary": 44
+      },
+      "distinct_residual": {
+        "given_layout_and_boundary": 147,
+        "learned_layout_given_boundary": 4,
+        "given_layout_learned_boundary": 25,
+        "learned_layout_and_boundary": 4
+      },
+      "checked_commits": 1419,
+      "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724"
+    },
+    "sum-divisors": {
+      "context_permutation": {
+        "roots_with_changed_input": 1696,
+        "changed_selections": 362,
+        "residuals_given_boundary": 126,
+        "residuals_learned_boundary": 119
+      },
+      "mode": "offline intervention on original assist snapshots",
+      "roots": {
+        "roots": 1707,
+        "roots_selecting_observed_target": 127,
+        "root_layout_pairs": 2909,
+        "pairs_with_observed_boundary": 703
+      },
+      "distinct_residual": {
+        "given_layout_and_boundary": 2900,
+        "learned_layout_given_boundary": 121,
+        "given_layout_learned_boundary": 594,
+        "learned_layout_and_boundary": 111
+      },
+      "checked_commits": 17341,
+      "state_sha": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e"
+    }
+  }
+}
