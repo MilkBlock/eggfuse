@@ -94,11 +94,26 @@ struct MemoryExport {
 struct Wave {
     requests: Vec<Request>,
     finish: bool,
+    #[serde(default)]
+    prefix_probe: Option<PrefixProbe>,
+}
+
+/// Rules and atom roles are static. Every dynamic alternative is named by the caller.
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct PrefixProbe {
+    run: usize,
+    rule: usize,
+    roles: Vec<usize>,
+    rows: Vec<(Vec<Premise>, Vec<Premise>)>,
 }
 
 #[derive(Default)]
 pub struct WaveReceiver {
     pub shadow: bool,
+    pub prefix_reads: usize,
+    pub prefixes_checked: usize,
+    pub prefix_time: Duration,
     pub checks: Counts,
     ready: BTreeMap<(usize, usize), Vec<(Request, Instance)>>,
     pub batches: usize,
@@ -354,6 +369,23 @@ impl History {
             let mut line = String::new();
             std::io::stdin().read_line(&mut line).map_err(|e| e.to_string())?;
             let wave: Wave = serde_json::from_str(&line).map_err(|e| e.to_string())?;
+            if let Some(probe) = wave.prefix_probe {
+                if wave.finish || !wave.requests.is_empty() || probe.run != run
+                    || !rules.iter().any(|&(r, _)| r == probe.rule) {
+                    return Err("invalid partial proof envelope".into());
+                }
+                let start = Instant::now();
+                let (accepted, reads) = self.check_prefixes(graph, &probe)?;
+                let state = self.waves.as_mut().unwrap();
+                state.prefix_time += start.elapsed();
+                state.prefix_reads += reads;
+                state.prefixes_checked += accepted.iter().map(Vec::len).sum::<usize>();
+                let writer = &mut self.memory.as_mut().unwrap().writer;
+                serde_json::to_writer(&mut *writer, &serde_json::json!({"run":run, "prefix_ok":accepted}))
+                    .map_err(|e| e.to_string())?;
+                writer.write_all(b"\n").and_then(|_| writer.flush()).map_err(|e| e.to_string())?;
+                continue;
+            }
             if wave.finish {
                 if wave.requests.is_empty() { return Ok(()); }
                 return Err("finish must follow the last receipt".into());
@@ -649,6 +681,52 @@ impl History {
             }
         }
     }
+    fn bind_named(&self, g: &Graph, table: usize, atom: &crate::program::Atom, p: &Premise,
+                  witness: Dependency, env: &mut BTreeMap<usize, Value>)
+        -> Result<std::result::Result<u64, &'static str>> {
+        let Some(row) = g.row(witness)? else { return Ok(Err("retired")); };
+        if row.hidden { return Ok(Err("hidden")); }
+        if row.table != table { return Ok(Err("type")); }
+        if row.epoch != p.version || row.epoch >= g.epoch { return Ok(Err("version")); }
+        if row.values.len() != atom.args.len() || !atom.args.iter().zip(row.values.iter())
+            .all(|(a, v)| bind_query(a, v, env, g)) { return Ok(Err("binding")); }
+        Ok(Ok(row.epoch))
+    }
+
+    fn check_prefixes(&self, g: &Graph, probe: &PrefixProbe) -> Result<(Vec<Vec<bool>>, usize)> {
+        let atoms: Vec<_> = g.program.rules[probe.rule].query.iter().filter_map(|a| match a.call {
+            Call::Table(t) => Some((t, a)),
+            _ => None,
+        }).collect();
+        if probe.roles.is_empty() || probe.roles.iter().any(|&r| r >= atoms.len())
+            || probe.roles.iter().collect::<BTreeSet<_>>().len() != probe.roles.len() {
+            return Err("invalid partial proof roles".into());
+        }
+        let (last, prior) = probe.roles.split_last().unwrap();
+        let mut reads = 0;
+        let mut bind = |role: usize, p: &Premise, env: &mut BTreeMap<usize, Value>| -> Result<bool> {
+            let (table, atom) = atoms[role];
+            let Some(w) = self.resolve(p.address) else { return Ok(false); };
+            reads += 1;
+            Ok(self.bind_named(g, table, atom, p, w, env)?.is_ok())
+        };
+        let mut replies = Vec::with_capacity(probe.rows.len());
+        for (prefix, choices) in &probe.rows {
+            if prior.len() != prefix.len() { return Err("partial proof arity".into()); }
+            let mut env = BTreeMap::new();
+            let mut valid = true;
+            for (&role, p) in prior.iter().zip(prefix) {
+                if !bind(role, p, &mut env)? { valid = false; break; }
+            }
+            let mut row = Vec::with_capacity(choices.len());
+            for p in choices {
+                row.push(valid && bind(*last, p, &mut env.clone())?);
+            }
+            replies.push(row);
+        }
+        Ok((replies, reads))
+    }
+
     fn check(
         &mut self,
         g: &Graph,
@@ -687,28 +765,10 @@ impl History {
                 "initial"
             };
             *self.counts.reads_by_kind.entry(kind).or_default() += 1;
-            let Some(row) = g.row(w)? else {
-                return Ok(Err("retired"));
-            };
-            if row.hidden {
-                return Ok(Err("hidden"));
+            match self.bind_named(g, table, atom, parent, w, &mut env)? {
+                Ok(version) => epoch = epoch.max(version),
+                Err(reason) => return Ok(Err(reason)),
             }
-            if row.table != table {
-                return Ok(Err("type"));
-            }
-            if row.epoch != parent.version || row.epoch >= g.epoch {
-                return Ok(Err("version"));
-            }
-            if row.values.len() != atom.args.len()
-                || !atom
-                    .args
-                    .iter()
-                    .zip(row.values.iter())
-                    .all(|(a, v)| bind_query(a, v, &mut env, g))
-            {
-                return Ok(Err("binding"));
-            }
-            epoch = epoch.max(row.epoch);
             seen[i] = Some(w);
         }
         if rule.seminaive && epoch < wm {

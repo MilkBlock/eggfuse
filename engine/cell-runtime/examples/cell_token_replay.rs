@@ -101,6 +101,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             report["unused_recall"] = json!(audit.pending());
         }
         if let Some(w) = &h.waves {
+            report["prefixes_checked"] = json!(w.prefixes_checked);
+            report["prefix_reads"] = json!(w.prefix_reads);
+            report["prefix_verify_seconds"] = json!(w.prefix_time.as_secs_f64());
             report["wave_batches"] = json!(w.batches);
             report["wave_requests"] = json!(w.requests);
             if w.shadow { report["wave_checks"] = json!(w.checks); }
