@@ -1200,6 +1200,10 @@ impl Executor {
     }
     #[cfg(feature = "cell-token-replay")]
     pub fn tokens(&self) -> Option<&crate::cell_tokens::History> { self.token_history.as_ref() }
+    #[cfg(feature = "cell-token-replay")]
+    pub fn export_token_memory(&mut self, path: Option<&std::path::Path>) -> Result<()> {
+        self.token_history.as_mut().ok_or("token history not active")?.export_memory(path)
+    }
 
     fn matches(&mut self, rid: usize, probe: bool) -> Result<Vec<Binding>> {
         #[cfg(feature = "cell-token-replay")]
@@ -2633,6 +2637,14 @@ impl Executor {
         } else {
             (None,self.graph.program.sets.get(set).ok_or_else(||format!("unknown ruleset {set}"))?.clone())
         };
+        #[cfg(feature = "cell-token-replay")]
+        if let Some(h) = &mut self.token_history && h.observing() {
+            let scheduled: Vec<_> = rules.iter().map(|&rid| {
+                let wm = self.ready_sets.as_ref().map_or(self.watermarks[rid], |s| self.watermarks[rid].max(s.watermark(rid)));
+                (rid, wm)
+            }).collect();
+            h.observe(&self.graph, self.steps.len()+1, &scheduled)?;
+        }
         #[cfg(feature = "sparse-cells")]
         if rules.is_empty() && !self.audit && !cfg!(feature="projection-semijoin")
             && let Some(id) = set_id

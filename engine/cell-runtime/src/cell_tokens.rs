@@ -8,6 +8,8 @@ use crate::{
 };
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
+use std::hash::{DefaultHasher, Hash, Hasher};
+use std::io::{BufWriter, Write};
 use std::time::{Duration, Instant};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
@@ -51,6 +53,7 @@ pub(crate) struct MergeOutputs {
 pub(crate) struct CollisionResult {
     pub table: usize,
     pub inputs: [(usize, u64); 2],
+    pub input_hashes: [u64; 2],
     pub ports: Vec<(usize, Dependency)>,
 }
 /// Runtime-issued certificates have the merge program as their template.
@@ -62,9 +65,32 @@ pub struct RepairEvent {
     pub merge_table: usize,
     pub visible_from_run: usize,
     pub parents: [Premise; 2],
+    #[serde(default)]
+    pub input_hashes: Option<[u64; 2]>,
     pub operations: Vec<usize>,
 }
+#[derive(Serialize, PartialEq, Eq)]
+struct PortObservation {
+    table: usize,
+    version: u64,
+    forwarded: bool,
+    hashes: Vec<u64>,
+}
+pub(crate) fn value_hash(value: &Value) -> u64 {
+    let mut hash = DefaultHasher::new();
+    value.hash(&mut hash);
+    hash.finish()
+}
+/// Optional diagnostic exporter. Normal reference, capture and replay clocks do
+/// not scan token memory. Each record describes the snapshot before any RHS.
+struct MemoryExport {
+    writer: Box<dyn Write>,
+    previous: BTreeMap<Address, PortObservation>,
+    accepted: Vec<Request>,
+    online_ids: Option<BTreeSet<i64>>,
+}
 pub struct History {
+    memory: Option<MemoryExport>,
     pub repair_events: Vec<RepairEvent>,
     pub event_time: Duration,
     merge_offsets: Vec<BTreeMap<usize, usize>>,
@@ -106,6 +132,7 @@ impl History {
             })
             .collect();
         let mut history = Self {
+            memory: None,
             merge_offsets,
             function_sources: BTreeMap::new(),
             repair_events: Vec::new(),
@@ -161,6 +188,103 @@ impl History {
     pub fn unused(&self) -> usize {
         self.queue.values().map(Vec::len).sum()
     }
+    pub(crate) fn observing(&self) -> bool {
+        self.memory.is_some()
+    }
+    pub(crate) fn export_memory(&mut self, path: Option<&std::path::Path>) -> Result<()> {
+        let writer: Box<dyn Write> = match path {
+            Some(path) => Box::new(BufWriter::new(
+                std::fs::File::create(path).map_err(|e| e.to_string())?,
+            )),
+            None => Box::new(std::io::stdout()),
+        };
+        self.memory = Some(MemoryExport {
+            writer,
+            previous: BTreeMap::new(),
+            accepted: Vec::new(),
+            online_ids: path.is_none().then(BTreeSet::new),
+        });
+        Ok(())
+    }
+    pub(crate) fn observe(
+        &mut self,
+        graph: &Graph,
+        run: usize,
+        rules: &[(usize, u64)],
+    ) -> Result<()> {
+        if self.memory.is_none() {
+            return Ok(());
+        }
+        let mut visible = BTreeMap::new();
+        for (&address, &original) in &self.returns {
+            let Some(witness) = self.resolve(address) else {
+                continue;
+            };
+            let Some(row) = graph.row(witness)? else {
+                continue;
+            };
+            if row.hidden || row.epoch >= graph.epoch {
+                continue;
+            }
+            let hashes = row.values.iter().map(value_hash).collect();
+            visible.insert(
+                address,
+                PortObservation {
+                    table: row.table,
+                    version: row.epoch,
+                    forwarded: witness != original,
+                    hashes,
+                },
+            );
+        }
+        let memory = self.memory.as_mut().expect("enabled observation");
+        let updates: Vec<_> = visible
+            .iter()
+            .filter(|(a, row)| memory.previous.get(a) != Some(*row))
+            .collect();
+        let retired: Vec<_> = memory
+            .previous
+            .keys()
+            .filter(|a| !visible.contains_key(a))
+            .collect();
+        serde_json::to_writer(
+            &mut memory.writer,
+            &serde_json::json!({
+                "run":run, "epoch":graph.epoch, "rules":rules, "updates":updates, "retired":retired,
+                "accepted":memory.accepted,
+                "repair_events":&self.repair_events[self.repair_events.partition_point(|e| e.visible_from_run < run)..],
+            }),
+        )
+        .map_err(|e| e.to_string())?;
+        memory
+            .writer
+            .write_all(b"\n")
+            .and_then(|_| memory.writer.flush())
+            .map_err(|e| e.to_string())?;
+        memory.previous = visible;
+        memory.accepted.clear();
+        if let Some(ids) = &mut memory.online_ids {
+            let mut line = String::new();
+            std::io::stdin()
+                .read_line(&mut line)
+                .map_err(|e| e.to_string())?;
+            let proposals: Vec<Request> = serde_json::from_str(&line).map_err(|e| e.to_string())?;
+            for request in proposals {
+                if request.run != run
+                    || !rules.iter().any(|&(rid, _)| rid == request.rule)
+                    || request.token <= 0
+                    || !ids.insert(request.token)
+                {
+                    return Err("invalid online issue envelope".into());
+                }
+                self.queue
+                    .entry((run, request.rule))
+                    .or_default()
+                    .push(request);
+            }
+        }
+        Ok(())
+    }
     pub(crate) fn is_teacher(&self) -> bool {
         self.teacher.is_some()
     }
@@ -202,6 +326,7 @@ impl History {
                 run,
                 merge_table: event.table,
                 parents,
+                input_hashes: Some(event.input_hashes),
                 visible_from_run: run + 1,
                 operations,
             });
@@ -267,6 +392,9 @@ impl History {
             run,
             parents,
         });
+        if let Some(memory) = &mut self.memory {
+            memory.accepted.push(self.tape.last().unwrap().clone());
+        }
         Ok(())
     }
     pub(crate) fn begin_rhs(&mut self, g: &Graph, rid: usize, b: &Instance) -> Result<()> {
@@ -344,6 +472,9 @@ impl History {
                             slot.insert(packet.token);
                             answers.push(answer);
                             self.counts.accepted += 1;
+                            if let Some(memory) = &mut self.memory {
+                                memory.accepted.push(packet);
+                            }
                         }
                         _ => self.counts.duplicates += 1,
                     }

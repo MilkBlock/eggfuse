@@ -2600,6 +2600,7 @@ impl Graph {
                                             m.events.push(crate::cell_tokens::CollisionResult {
                                                 table:row.table,
                                                 inputs:[(j,self.functions[j].epoch),(i,row.epoch)],
+                                                input_hashes:[crate::cell_tokens::value_hash(&old),crate::cell_tokens::value_hash(row.values.last().unwrap())],
                                                 ports,
                                             });
                                         }

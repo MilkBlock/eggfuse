@@ -16,7 +16,11 @@ struct Tape {
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<_> = env::args().skip(1).collect();
     let [role, program, tape, audit, rest @ ..] = args.as_slice() else {
-        return Err("expected reference|capture|replay PROGRAM TAPE audit|time".into());
+        return Err("expected reference|capture|replay|online PROGRAM TAPE audit|time".into());
+    };
+    let (rest, memory_path) = match rest {
+        [rest @ .., flag, path] if flag == "--memory" => (rest, Some(path)),
+        _ => (rest, None),
     };
     let (rest, export_path) = match rest {
         [rest @ .., flag, path] if flag == "--export" => (rest, Some(path)),
@@ -48,8 +52,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut engine = Executor::new(Graph::new(p)?, false);
     match role.as_str() {
         "replay" | "capture" => engine.start_tokens(packets)?,
+        "online" => engine.start_tokens(Some(Vec::new()))?,
         "reference" => (),
         _ => return Err("unknown execution mode".into()),
+    }
+    if let Some(path) = memory_path {
+        engine.export_token_memory(Some(std::path::Path::new(path)))?;
+    } else if role == "online" {
+        engine.export_token_memory(None)?;
     }
     if do_audit {
         transfer_audit::set_active(true);
