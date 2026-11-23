@@ -22,7 +22,7 @@ def read(path):
 
 
 @torch.no_grad()
-def proposals(folder, model, seed, waves):
+def proposals(folder, model, seed, waves, oracle_rules=None):
     cat = Catalog(read(folder/'program.json'))
     history = History(cat,seed)
     nodes = model.template_graph(cat)
@@ -30,9 +30,26 @@ def proposals(folder, model, seed, waves):
     reasons = Counter()
     with (folder/'memory.jsonl').open() as frames:
         for line in frames:
-            frame = history.snapshot(json.loads(line))
-            actions, _, ending = issue_run(model,cat,frame,nodes,waves)
-            reasons[ending] += 1
+            row = json.loads(line)
+            wanted = None if oracle_rules is None else oracle_rules.get(row['run'], ())
+            frame = history.snapshot(row)
+            if wanted is not None and not wanted:
+                continue
+            if wanted is None:
+                actions, _, ending = issue_run(model,cat,frame,nodes,waves)
+                reasons[ending] += 1
+            else:
+                # Offline upper bound only. The frozen parent head reads one
+                # lane state per (Run, rule, lane), regardless of past receipts.
+                mem = model.memory(cat,frame,nodes)
+                _,lanes,_ = model.setup(cat,frame,mem)
+                actions = []
+                for rid in sorted(wanted):
+                    for lane in lanes:
+                        refs,_ = model.references(cat,mem,lane,rid)
+                        reasons['oracle_rule_lane_choices'] += 1
+                        if refs is not None:
+                            actions.append((rid,refs))
             for rid, refs in actions:
                 parents = []
                 for alias, pc in refs:
@@ -42,7 +59,7 @@ def proposals(folder, model, seed, waves):
     return packets, reasons
 
 
-def audit(folder, binary, model, seed, waves, output, control=False, live=False, blind=False):
+def audit(folder, binary, model, seed, waves, output, control=False, live=False, blind=False, oracle=False):
     teacher = read(folder/'tape.json')
     native = read(folder/'capture.json')
     if live:
@@ -54,7 +71,12 @@ def audit(folder, binary, model, seed, waves, output, control=False, live=False,
         checked = execution.pop('shadow_report')
         endings = execution['wave_endings']
     else:
-        requests, endings = proposals(folder,model,seed,waves) if not control else (teacher['requests'],{})
+        rules = None
+        if oracle:
+            rules = defaultdict(set)
+            for packet in teacher['requests']:
+                rules[packet['run']].add(packet['rule'])
+        requests, endings = proposals(folder,model,seed,waves,rules) if not control else (teacher['requests'],{})
         with TemporaryDirectory() as tmp:
             tape = Path(tmp)/'probe.json'
             tape.write_text(json.dumps({**teacher,'requests':requests}))
@@ -131,23 +153,27 @@ if __name__=='__main__':
         p.add_argument(key,type=Path)
     p.add_argument('--workloads',nargs='+',required=True)
     p.add_argument('--wave-limit',type=int)
-    p.add_argument('--teacher-control',action='store_true')
+    assists = p.add_mutually_exclusive_group()
+    assists.add_argument('--teacher-control',action='store_true')
+    assists.add_argument('--oracle-rules',action='store_true')
     p.add_argument('--live-receipts',action='store_true',default=None)
     p.add_argument('--mask-receipts',action='store_true')
     a=p.parse_args()
     torch.set_num_threads(1)
     model = load_actor(a.weights,True)
     if a.live_receipts is None:
-        a.live_receipts = getattr(model,'requires_receipts',False) and not a.teacher_control
+        a.live_receipts = getattr(model,'requires_receipts',False) and not (a.teacher_control or a.oracle_rules)
+    if a.oracle_rules and a.live_receipts:
+        p.error('oracle rules use fixed-snapshot diagnostics')
     if a.mask_receipts and not a.live_receipts:
         p.error('masking requires live receipts')
     if a.wave_limit is None:
         a.wave_limit = getattr(model,'default_waves',1)
     manifest=read(a.root/'manifest.json')
     seeds={r['directory']:r['seed'] for r in manifest}
-    report=dict(mode='shadow',teacher_control=a.teacher_control,live_receipts=a.live_receipts,masked=a.mask_receipts,wave_limit=a.wave_limit,
+    report=dict(mode='assist' if a.oracle_rules else 'shadow',oracle_rules=a.oracle_rules,teacher_control=a.teacher_control,live_receipts=a.live_receipts,masked=a.mask_receipts,wave_limit=a.wave_limit,
                 weights_sha256=hashlib.sha256(a.weights.read_bytes()).hexdigest(),
                 receiver_sha256=hashlib.sha256(a.binary.read_bytes()).hexdigest(), cases={})
     for name in a.workloads:
-        report['cases'][name]=audit(a.root/name,a.binary,model,1703+seeds.get(name,0),a.wave_limit,a.output,a.teacher_control,a.live_receipts,a.mask_receipts)
+        report['cases'][name]=audit(a.root/name,a.binary,model,1703+seeds.get(name,0),a.wave_limit,a.output,a.teacher_control,a.live_receipts,a.mask_receipts,a.oracle_rules)
         (a.output/'summary.json').write_text(json.dumps(report,indent=2)+'\n')

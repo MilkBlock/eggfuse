@@ -1,0 +1,827 @@
+{
+  "training": {
+    "device": "mps",
+    "steps": 512,
+    "seed": 1703,
+    "exposure": {
+      "open": 5231,
+      "rejection_open": 569,
+      "complete": 1142,
+      "duplicate_open": 4274,
+      "duplicate_complete": 1014,
+      "rejection_complete": 67,
+      "programs": 50,
+      "source_runs": 432,
+      "native_checked_probes": 1014
+    },
+    "initial_sha256": "b59bf6803665bb52523046a8ef4a93d370411b13691f8ab040e5a65678fc21f9"
+  },
+  "native": {
+    "mode": "exclusive",
+    "wave_limit": 128,
+    "weights_sha256": "1662f7ec2bac71c49c857033748e448f84ace29b612771d590a4758735640b03",
+    "verifier_sha256": "a58c7246098dba7587504a9766b812c1f3fdbef7a8a7bcd6c871173efa0e6d1d",
+    "cases": {
+      "fact": {
+        "first_difference": {
+          "run": 2,
+          "actual_commits": 0,
+          "teacher_by_rule": {
+            "574": 1
+          },
+          "teacher_parent_counts": {
+            "0": 1
+          },
+          "issued": {
+            "by_rule": {},
+            "distinct": 0
+          }
+        },
+        "common_runs": 1,
+        "exclusive": {
+          "counts": {
+            "programs": 1,
+            "correct_final_states": 0,
+            "reference_commits": 1668,
+            "reference_runs": 634,
+            "accepted": 19,
+            "duplicates": 9,
+            "verifier_calls": 671,
+            "issued": 37,
+            "source_runs": 292,
+            "neural_waves": 296,
+            "native_repair_events": 0,
+            "independent_search_calls": 0,
+            "certified_reference_prefix_commits": 1
+          },
+          "rejected": {
+            "binding": 9
+          },
+          "total_seconds": {
+            "network_seconds": 0.8252482820016667,
+            "native_verify_seconds": 0.000179701,
+            "native_repair_seconds": 0.00018771100000000002,
+            "remaining_process_seconds_including_ipc": 0.15028180899778365,
+            "wall_seconds": 1.2309277089998432,
+            "reference_seconds": 0.387846333
+          }
+        }
+      },
+      "loopfact": {
+        "first_difference": {
+          "run": 2,
+          "actual_commits": 0,
+          "teacher_by_rule": {
+            "574": 1
+          },
+          "teacher_parent_counts": {
+            "0": 1
+          },
+          "issued": {
+            "by_rule": {},
+            "distinct": 0
+          }
+        },
+        "common_runs": 1,
+        "exclusive": {
+          "counts": {
+            "programs": 1,
+            "correct_final_states": 0,
+            "reference_commits": 1419,
+            "reference_runs": 618,
+            "accepted": 8,
+            "duplicates": 511,
+            "verifier_calls": 646,
+            "issued": 526,
+            "source_runs": 282,
+            "neural_waves": 409,
+            "native_repair_events": 0,
+            "independent_search_calls": 0,
+            "certified_reference_prefix_commits": 1
+          },
+          "rejected": {
+            "binding": 7
+          },
+          "total_seconds": {
+            "network_seconds": 0.7338386679984978,
+            "native_verify_seconds": 0.000324126,
+            "native_repair_seconds": 0.00013115600000000006,
+            "remaining_process_seconds_including_ipc": 0.1218829980012135,
+            "wall_seconds": 1.0968183750001117,
+            "reference_seconds": 0.3739335
+          }
+        }
+      },
+      "sum-divisors": {
+        "first_difference": {
+          "run": 2,
+          "actual_commits": 0,
+          "teacher_by_rule": {
+            "574": 1
+          },
+          "teacher_parent_counts": {
+            "0": 1
+          },
+          "issued": {
+            "by_rule": {},
+            "distinct": 0
+          }
+        },
+        "common_runs": 1,
+        "exclusive": {
+          "counts": {
+            "programs": 1,
+            "correct_final_states": 0,
+            "reference_commits": 17341,
+            "reference_runs": 1644,
+            "accepted": 24,
+            "duplicates": 5,
+            "verifier_calls": 719,
+            "issued": 44,
+            "source_runs": 362,
+            "neural_waves": 366,
+            "native_repair_events": 0,
+            "independent_search_calls": 0,
+            "certified_reference_prefix_commits": 1
+          },
+          "rejected": {
+            "binding": 15
+          },
+          "total_seconds": {
+            "network_seconds": 1.412699004008573,
+            "native_verify_seconds": 0.0002363,
+            "native_repair_seconds": 0.0002914200000000001,
+            "remaining_process_seconds_including_ipc": 0.27364265399091114,
+            "wall_seconds": 1.9305449169996791,
+            "reference_seconds": 10.296844959
+          }
+        }
+      }
+    }
+  },
+  "transport_parity": {
+    "fact": {
+      "equal": [
+        "counts",
+        "source_schedule",
+        "writes_by_run",
+        "rhs_by_run",
+        "state_sha",
+        "wave_endings",
+        "issued",
+        "native_runtime_events"
+      ],
+      "counts": {
+        "accepted": 14,
+        "calls": 665,
+        "duplicates": 39,
+        "reads": 80,
+        "reads_by_kind": {
+          "generated": 74,
+          "initial": 6
+        },
+        "rejected": {
+          "binding": 11
+        }
+      },
+      "batches": 28,
+      "state_sha": "63ef0def8a3a2d80d08a82c91267bbeb05dc4707ee76592b98d491c3bc2c7c3a"
+    },
+    "loopfact": {
+      "equal": [
+        "counts",
+        "source_schedule",
+        "writes_by_run",
+        "rhs_by_run",
+        "state_sha",
+        "wave_endings",
+        "issued",
+        "native_runtime_events"
+      ],
+      "counts": {
+        "accepted": 8,
+        "calls": 646,
+        "duplicates": 511,
+        "reads": 536,
+        "reads_by_kind": {
+          "generated": 531,
+          "initial": 5
+        },
+        "rejected": {
+          "binding": 7
+        }
+      },
+      "batches": 141,
+      "state_sha": "3b5d58dcd635b4a7f35a8c5c2145b959389e790084d01843ecbf7628b60077b5"
+    },
+    "sum-divisors": {
+      "equal": [
+        "counts",
+        "source_schedule",
+        "writes_by_run",
+        "rhs_by_run",
+        "state_sha",
+        "wave_endings",
+        "issued",
+        "native_runtime_events"
+      ],
+      "counts": {
+        "accepted": 24,
+        "calls": 719,
+        "duplicates": 268,
+        "reads": 1106,
+        "reads_by_kind": {
+          "generated": 1100,
+          "initial": 6
+        },
+        "rejected": {
+          "binding": 269
+        }
+      },
+      "batches": 157,
+      "state_sha": "25701f8833dd79cb2f8776628d5ddb8c403ae5e8502409bb2f864dd96491cd7e"
+    }
+  },
+  "teacher_parity": {
+    "sum": {
+      "commits": 7265,
+      "runs": 1428,
+      "batches": 2053,
+      "repair_events": 1,
+      "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8"
+    },
+    "dot": {
+      "commits": 6704,
+      "runs": 1535,
+      "batches": 1915,
+      "repair_events": 8,
+      "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1"
+    },
+    "fact": {
+      "commits": 1668,
+      "runs": 634,
+      "batches": 479,
+      "repair_events": 0,
+      "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d"
+    },
+    "loopfact": {
+      "commits": 1419,
+      "runs": 618,
+      "batches": 434,
+      "repair_events": 0,
+      "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724"
+    },
+    "sum-divisors": {
+      "commits": 17341,
+      "runs": 1644,
+      "batches": 4613,
+      "repair_events": 1,
+      "state_sha": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e"
+    }
+  },
+  "sum_bits_semantic_status": "pass",
+  "recall": {
+    "fact": {
+      "live_transport": {
+        "receipt_batches": 608,
+        "receipt_counts": {
+          "accepted": 112,
+          "binding": 660,
+          "guard": 32,
+          "duplicate": 1347
+        },
+        "wave_receipt_seconds": 0.03325366299941379,
+        "network_seconds": 18.717706812995857,
+        "native_verify_seconds": 0.006496464,
+        "wall_seconds": 22.1883176249994
+      },
+      "runs": 634,
+      "busy": 163,
+      "empty": 471,
+      "issued": 2151,
+      "teacher_commits": 1668,
+      "recovered": 112,
+      "micro": 0.0671462829736211,
+      "macro": 0.16825566398375144,
+      "complete_busy": 6,
+      "zero_busy": 76,
+      "empty_runs_with_proposals": 2,
+      "proposals_on_empty_runs": 5,
+      "reasons": {
+        "binding": 660,
+        "guard": 32
+      },
+      "duplicates": 1347,
+      "recovered_only_by_alternate_certificate": 63,
+      "decode_endings": {
+        "stop": 631,
+        "budget": 3
+      }
+    },
+    "loopfact": {
+      "live_transport": {
+        "receipt_batches": 1015,
+        "receipt_counts": {
+          "accepted": 148,
+          "binding": 1938,
+          "guard": 27,
+          "duplicate": 1644
+        },
+        "wave_receipt_seconds": 0.057219334997171245,
+        "network_seconds": 20.03872150100051,
+        "native_verify_seconds": 0.008942144,
+        "wall_seconds": 23.479982582999583
+      },
+      "runs": 618,
+      "busy": 166,
+      "empty": 452,
+      "issued": 3757,
+      "teacher_commits": 1419,
+      "recovered": 148,
+      "micro": 0.10429880197322058,
+      "macro": 0.23575684331630667,
+      "complete_busy": 19,
+      "zero_busy": 70,
+      "empty_runs_with_proposals": 6,
+      "proposals_on_empty_runs": 9,
+      "reasons": {
+        "binding": 1938,
+        "guard": 27
+      },
+      "duplicates": 1644,
+      "recovered_only_by_alternate_certificate": 82,
+      "decode_endings": {
+        "stop": 612,
+        "budget": 6
+      }
+    },
+    "sum-divisors": {
+      "live_transport": {
+        "receipt_batches": 4663,
+        "receipt_counts": {
+          "accepted": 665,
+          "duplicate": 8538,
+          "binding": 8424,
+          "guard": 185
+        },
+        "wave_receipt_seconds": 0.4377922969943029,
+        "network_seconds": 494.82051918500383,
+        "native_verify_seconds": 0.082976943,
+        "wall_seconds": 565.5960457500005
+      },
+      "runs": 1644,
+      "busy": 627,
+      "empty": 1017,
+      "issued": 17812,
+      "teacher_commits": 17341,
+      "recovered": 665,
+      "micro": 0.03834842281298657,
+      "macro": 0.19459221939586177,
+      "complete_busy": 53,
+      "zero_busy": 237,
+      "empty_runs_with_proposals": 23,
+      "proposals_on_empty_runs": 140,
+      "reasons": {
+        "binding": 8424,
+        "guard": 185
+      },
+      "duplicates": 8538,
+      "recovered_only_by_alternate_certificate": 377,
+      "decode_endings": {
+        "stop": 1620,
+        "budget": 24
+      }
+    }
+  },
+  "controls": {
+    "oracle_rules": {
+      "fact": {
+        "live_transport": {},
+        "runs": 634,
+        "busy": 163,
+        "empty": 471,
+        "issued": 1812,
+        "teacher_commits": 1668,
+        "recovered": 461,
+        "micro": 0.276378896882494,
+        "macro": 0.47279918739844184,
+        "complete_busy": 28,
+        "zero_busy": 7,
+        "empty_runs_with_proposals": 0,
+        "proposals_on_empty_runs": 0,
+        "reasons": {
+          "binding": 721,
+          "guard": 22
+        },
+        "duplicates": 608,
+        "recovered_only_by_alternate_certificate": 207,
+        "decode_endings": {
+          "oracle_rule_lane_choices": 1812
+        }
+      },
+      "loopfact": {
+        "live_transport": {},
+        "runs": 618,
+        "busy": 166,
+        "empty": 452,
+        "issued": 1904,
+        "teacher_commits": 1419,
+        "recovered": 483,
+        "micro": 0.3403805496828753,
+        "macro": 0.5506315886612119,
+        "complete_busy": 48,
+        "zero_busy": 8,
+        "empty_runs_with_proposals": 0,
+        "proposals_on_empty_runs": 0,
+        "reasons": {
+          "binding": 745,
+          "guard": 32
+        },
+        "duplicates": 644,
+        "recovered_only_by_alternate_certificate": 208,
+        "decode_endings": {
+          "oracle_rule_lane_choices": 1904
+        }
+      },
+      "sum-divisors": {
+        "live_transport": {},
+        "runs": 1644,
+        "busy": 627,
+        "empty": 1017,
+        "issued": 8664,
+        "teacher_commits": 17341,
+        "recovered": 2355,
+        "micro": 0.1358053168790727,
+        "macro": 0.40784015445708377,
+        "complete_busy": 125,
+        "zero_busy": 41,
+        "empty_runs_with_proposals": 0,
+        "proposals_on_empty_runs": 0,
+        "reasons": {
+          "binding": 3550,
+          "guard": 78
+        },
+        "duplicates": 2681,
+        "recovered_only_by_alternate_certificate": 1233,
+        "decode_endings": {
+          "oracle_rule_lane_choices": 8664
+        }
+      }
+    },
+    "masked_fact": {
+      "mode": "shadow",
+      "teacher_control": false,
+      "live_receipts": true,
+      "masked": true,
+      "wave_limit": 128,
+      "weights_sha256": "1662f7ec2bac71c49c857033748e448f84ace29b612771d590a4758735640b03",
+      "receiver_sha256": "a58c7246098dba7587504a9766b812c1f3fdbef7a8a7bcd6c871173efa0e6d1d",
+      "cases": {
+        "fact": {
+          "live_transport": {
+            "receipt_batches": 4218,
+            "receipt_counts": {
+              "accepted": 113,
+              "binding": 3311,
+              "guard": 1032,
+              "duplicate": 12140
+            },
+            "wave_receipt_seconds": 0.21488825301821635,
+            "network_seconds": 34.25775349497053,
+            "native_verify_seconds": 0.027834364,
+            "wall_seconds": 37.83564629200009
+          },
+          "runs": 634,
+          "busy": 163,
+          "empty": 471,
+          "issued": 16596,
+          "teacher_commits": 1668,
+          "recovered": 113,
+          "micro": 0.06774580335731414,
+          "macro": 0.16831044049558316,
+          "complete_busy": 6,
+          "zero_busy": 76,
+          "empty_runs_with_proposals": 2,
+          "proposals_on_empty_runs": 513,
+          "reasons": {
+            "binding": 3311,
+            "guard": 1032
+          },
+          "duplicates": 12140,
+          "recovered_only_by_alternate_certificate": 63,
+          "decode_endings": {
+            "stop": 603,
+            "budget": 31
+          }
+        }
+      }
+    },
+    "frozen_first_wave": {
+      "mode": "shadow",
+      "teacher_control": false,
+      "live_receipts": true,
+      "masked": false,
+      "wave_limit": 1,
+      "weights_sha256": "b59bf6803665bb52523046a8ef4a93d370411b13691f8ab040e5a65678fc21f9",
+      "receiver_sha256": "a58c7246098dba7587504a9766b812c1f3fdbef7a8a7bcd6c871173efa0e6d1d",
+      "cases": {
+        "fact": {
+          "live_transport": {
+            "receipt_batches": 139,
+            "receipt_counts": {
+              "accepted": 111,
+              "binding": 95,
+              "guard": 16,
+              "duplicate": 74
+            },
+            "wave_receipt_seconds": 0.01008324600297783,
+            "network_seconds": 15.432237030997385,
+            "native_verify_seconds": 0.003409915,
+            "wall_seconds": 18.422005792000164
+          },
+          "runs": 634,
+          "busy": 163,
+          "empty": 471,
+          "issued": 296,
+          "teacher_commits": 1668,
+          "recovered": 111,
+          "micro": 0.06654676258992806,
+          "macro": 0.16821120768429382,
+          "complete_busy": 6,
+          "zero_busy": 76,
+          "empty_runs_with_proposals": 2,
+          "proposals_on_empty_runs": 5,
+          "reasons": {
+            "binding": 95,
+            "guard": 16
+          },
+          "duplicates": 74,
+          "recovered_only_by_alternate_certificate": 62,
+          "decode_endings": {
+            "stop": 586,
+            "budget": 48
+          }
+        },
+        "loopfact": {
+          "live_transport": {
+            "receipt_batches": 148,
+            "receipt_counts": {
+              "accepted": 139,
+              "binding": 103,
+              "guard": 18,
+              "duplicate": 56
+            },
+            "wave_receipt_seconds": 0.009669739997661964,
+            "network_seconds": 15.358662601004653,
+            "native_verify_seconds": 0.003480613,
+            "wall_seconds": 18.318842290999783
+          },
+          "runs": 618,
+          "busy": 166,
+          "empty": 452,
+          "issued": 316,
+          "teacher_commits": 1419,
+          "recovered": 139,
+          "micro": 0.09795630725863284,
+          "macro": 0.23475788111746004,
+          "complete_busy": 19,
+          "zero_busy": 71,
+          "empty_runs_with_proposals": 6,
+          "proposals_on_empty_runs": 9,
+          "reasons": {
+            "binding": 103,
+            "guard": 18
+          },
+          "duplicates": 56,
+          "recovered_only_by_alternate_certificate": 76,
+          "decode_endings": {
+            "stop": 567,
+            "budget": 51
+          }
+        }
+      }
+    }
+  },
+  "splits": {
+    "held_eggcc": {
+      "exclusive": {
+        "counts": {
+          "programs": 2,
+          "correct_final_states": 0,
+          "reference_commits": 3087,
+          "reference_runs": 1252,
+          "accepted": 27,
+          "duplicates": 520,
+          "verifier_calls": 1317,
+          "issued": 563,
+          "source_runs": 574,
+          "neural_waves": 705,
+          "native_repair_events": 0,
+          "independent_search_calls": 0,
+          "certified_reference_prefix_commits": 2
+        },
+        "rejected": {
+          "binding": 16
+        },
+        "total_seconds": {
+          "network_seconds": 1.5533485369924165,
+          "native_verify_seconds": 0.000602804,
+          "native_repair_seconds": 0.0003912400000000007,
+          "remaining_process_seconds_including_ipc": 0.2763017840077804,
+          "wall_seconds": 2.2984822919997896,
+          "reference_seconds": 0.020776
+        }
+      },
+      "shadow_without_receipts": {
+        "mode": "shadow",
+        "snapshot_network_seconds": 0.8295412490006129,
+        "snapshot_calls": 32,
+        "teacher_commits": 23,
+        "proposed": 7,
+        "duplicates": 0,
+        "correct_complete": 1,
+        "off_reference_unique": 6,
+        "complete_coverage": 0.043478260869565216,
+        "by_parent_kind": {
+          "initial": {
+            "correct": 0,
+            "required": 1
+          },
+          "generated": {
+            "correct": 4,
+            "required": 53
+          },
+          "repair": {
+            "correct": 0,
+            "required": 0
+          }
+        }
+      }
+    },
+    "held_program": {
+      "exclusive": {
+        "counts": {
+          "programs": 48,
+          "correct_final_states": 0,
+          "reference_commits": 360,
+          "reference_runs": 144,
+          "accepted": 219,
+          "duplicates": 74,
+          "verifier_calls": 144,
+          "issued": 348,
+          "source_runs": 144,
+          "neural_waves": 154,
+          "native_repair_events": 8,
+          "independent_search_calls": 0,
+          "certified_reference_prefix_commits": 6
+        },
+        "rejected": {
+          "binding": 55
+        },
+        "total_seconds": {
+          "network_seconds": 0.20415171899730922,
+          "native_verify_seconds": 0.001273337,
+          "native_repair_seconds": 0.00035625,
+          "remaining_process_seconds_including_ipc": 0.045379862010397065,
+          "wall_seconds": 0.6922899210048854,
+          "reference_seconds": 0.009742540000000001
+        }
+      },
+      "shadow_without_receipts": {
+        "mode": "shadow",
+        "snapshot_network_seconds": 0.15650162300516968,
+        "snapshot_calls": 144,
+        "teacher_commits": 360,
+        "proposed": 362,
+        "duplicates": 70,
+        "correct_complete": 280,
+        "off_reference_unique": 12,
+        "complete_coverage": 0.7777777777777778,
+        "by_parent_kind": {
+          "initial": {
+            "correct": 340,
+            "required": 408
+          },
+          "generated": {
+            "correct": 158,
+            "required": 192
+          },
+          "repair": {
+            "correct": 24,
+            "required": 24
+          }
+        }
+      }
+    },
+    "held_merge": {
+      "exclusive": {
+        "counts": {
+          "programs": 48,
+          "correct_final_states": 0,
+          "reference_commits": 360,
+          "reference_runs": 144,
+          "accepted": 221,
+          "duplicates": 74,
+          "verifier_calls": 144,
+          "issued": 346,
+          "source_runs": 144,
+          "neural_waves": 153,
+          "native_repair_events": 9,
+          "independent_search_calls": 0,
+          "certified_reference_prefix_commits": 0
+        },
+        "rejected": {
+          "binding": 51
+        },
+        "total_seconds": {
+          "network_seconds": 0.2111521199958588,
+          "native_verify_seconds": 0.001380793,
+          "native_repair_seconds": 0.0003935360000000001,
+          "remaining_process_seconds_including_ipc": 0.04723421700644663,
+          "wall_seconds": 0.7014063320020796,
+          "reference_seconds": 0.009450084000000004
+        }
+      },
+      "shadow_without_receipts": {
+        "mode": "shadow",
+        "snapshot_network_seconds": 0.1572358349985734,
+        "snapshot_calls": 144,
+        "teacher_commits": 360,
+        "proposed": 363,
+        "duplicates": 72,
+        "correct_complete": 281,
+        "off_reference_unique": 10,
+        "complete_coverage": 0.7805555555555556,
+        "by_parent_kind": {
+          "initial": {
+            "correct": 339,
+            "required": 408
+          },
+          "generated": {
+            "correct": 161,
+            "required": 192
+          },
+          "repair": {
+            "correct": 24,
+            "required": 24
+          }
+        }
+      }
+    },
+    "held_result_pc": {
+      "exclusive": {
+        "counts": {
+          "programs": 48,
+          "correct_final_states": 0,
+          "reference_commits": 360,
+          "reference_runs": 144,
+          "accepted": 175,
+          "duplicates": 106,
+          "verifier_calls": 144,
+          "issued": 377,
+          "source_runs": 144,
+          "neural_waves": 165,
+          "native_repair_events": 4,
+          "independent_search_calls": 0,
+          "certified_reference_prefix_commits": 0
+        },
+        "rejected": {
+          "binding": 96
+        },
+        "total_seconds": {
+          "network_seconds": 0.2189114509983483,
+          "native_verify_seconds": 0.0012972170000000002,
+          "native_repair_seconds": 0.00026208900000000007,
+          "remaining_process_seconds_including_ipc": 0.047509710000062724,
+          "wall_seconds": 0.7247471230002702,
+          "reference_seconds": 0.010279461000000002
+        }
+      },
+      "shadow_without_receipts": {
+        "mode": "shadow",
+        "snapshot_network_seconds": 0.16973887399672094,
+        "snapshot_calls": 144,
+        "teacher_commits": 360,
+        "proposed": 378,
+        "duplicates": 112,
+        "correct_complete": 263,
+        "off_reference_unique": 3,
+        "complete_coverage": 0.7305555555555555,
+        "by_parent_kind": {
+          "initial": {
+            "correct": 314,
+            "required": 408
+          },
+          "generated": {
+            "correct": 183,
+            "required": 192
+          },
+          "repair": {
+            "correct": 0,
+            "required": 24
+          }
+        }
+      }
+    }
+  }
+}
