@@ -14,7 +14,6 @@ import torch
 from history import History
 from pointer_ranks import ranks
 from rule_read import load_actor
-from semantic_catalog import SemanticCatalog
 from symbol_audit import renamed_program
 
 
@@ -41,7 +40,7 @@ def check(folder,binary,tape,requests):
 @torch.no_grad()
 def case(folder,binary,model,seed,runs,rename=None):
     program=data(folder/'program.json')
-    cat=SemanticCatalog(program if rename is None else renamed_program(program,rename))
+    cat=model.catalog_type(program if rename is None else renamed_program(program,rename))
     tape=data(folder/'tape.json')
     teacher=defaultdict(list)
     for p in tape['requests']:

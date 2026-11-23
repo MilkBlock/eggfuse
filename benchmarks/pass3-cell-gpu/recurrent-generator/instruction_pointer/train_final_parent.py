@@ -9,7 +9,7 @@ import torch
 from torch.nn import functional as F
 
 from alternate_proofs import addr, digest
-from anchor_set import Domains, FinalParentActor
+from anchor_set import Domains, FinalParentActor, OpaqueParentActor
 from anchor_set_audit import check
 from entry_coverage import split_runs
 from history import History
@@ -106,12 +106,13 @@ def collect(folder, binary, model, fitted, reserved, seed):
     return result,dict(runs=sorted(runs),counts=counts)
 
 
-def fit(root,binary,initial,out,seed):
+def fit(root,binary,initial,out,seed,opaque=False):
     torch.manual_seed(seed)
     torch.set_num_threads(1)
     rng=random.Random(seed)
     base=load_actor(initial,True)
-    model=FinalParentActor(base.vocabulary,base.name_mode)
+    kind=OpaqueParentActor if opaque else FinalParentActor
+    model=kind(base.vocabulary,base.name_mode)
     missing,extra=model.load_state_dict(base.state_dict(),strict=False)
     if set(missing)!={'final_query.weight','final_query.bias'} or extra:
         raise ValueError('wrong frozen model')
@@ -158,10 +159,10 @@ def fit(root,binary,initial,out,seed):
     if any(not torch.equal(v,model.state_dict()[n]) for n,v in base.state_dict().items()):
         raise ValueError('upstream policy changed')
     out.mkdir(parents=True,exist_ok=True)
-    torch.save(dict(format='final-parent-v1',names=model.name_mode,vocabulary=list(model.vocabulary),
+    torch.save(dict(format='opaque-parent-v1' if opaque else 'final-parent-v1',names=model.name_mode,vocabulary=list(model.vocabulary),
                     parameters=model.state_dict()),out/'model.pt')
     result=dict(initial_sha256=digest(initial),weights_sha256=digest(out/'model.pt'),receiver_sha256=digest(binary),
-                device='mps',seed=seed,updates=512,training_prefixes={k:len(v) for k,v in pools.items()},
+                device='mps',opaque_class_content=opaque,seed=seed,updates=512,training_prefixes={k:len(v) for k,v in pools.items()},
                 optimizer_prefix_reads=used,source_exposure=exposure)
     (out/'training.json').write_text(json.dumps(result,indent=2)+'\n')
     print(result['training_prefixes'],used,flush=True)
@@ -171,5 +172,6 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     for name in ('root','binary','initial','out'):p.add_argument(name,type=Path)
     p.add_argument('--seed',type=int,default=1703)
+    p.add_argument('--opaque',action='store_true',help='omit opaque column codes from address-local content')
     a=p.parse_args()
-    fit(a.root,a.binary,a.initial,a.out,a.seed)
+    fit(a.root,a.binary,a.initial,a.out,a.seed,a.opaque)
