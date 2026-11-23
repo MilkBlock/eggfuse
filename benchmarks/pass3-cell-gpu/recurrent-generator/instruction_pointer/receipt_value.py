@@ -166,7 +166,8 @@ class ReceiptChoice:
                 any(info['bake'][k] != digest(baked/k) for k in BAKE_FILES) or
                 info['policy'] != digest(folder/'policy.pt')):
             raise ValueError('incompatible receipt policy')
-        self.checkpoint = info['policy']
+        self.cut = info.get('issuance_cut', 0.)
+        self.checkpoint = digest(folder/'training.json') if 'issuance_cut' in info else info['policy']
         if info['compiled'] != digest(folder/'values.pt'):
             raise ValueError('compiled receipt action keys changed')
         weights = torch.load(folder/'policy.pt', weights_only=True)
@@ -177,14 +178,17 @@ class ReceiptChoice:
         self.keys = fixed['keys'].reshape(-1, len(PRICES), 16)
         self.bias = fixed['bias']
 
-    def select(self, req, options, context, issuer):
+    def outcomes(self, context, options):
         q = self.model.query(context).view(len(PRICES), 16)
         ids = torch.as_tensor(options)
         rates = ((self.keys[ids] * q).sum(-1) / 4 + self.bias[ids]).clamp(-14, 8).exp()
-        values = rates @ self.prices
+        return rates
+
+    def select(self, req, options, context, issuer):
+        values = self.outcomes(context, options) @ self.prices
         best = int(values.argmax())
         issuer.claim_counts['receipt_value_decisions'] += 1
-        return options[best] if values[best] > 0 else None
+        return options[best] if values[best] > self.cut else None
 
 
 if __name__ == '__main__':
