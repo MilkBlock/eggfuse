@@ -71,9 +71,12 @@ class InstructionActor(nn.Module):
         self.query = nn.Linear(width, width)
         self.stop = nn.Linear(width, 1)
 
+    def node_features(self, catalog):
+        return self.static(ints(self.static.weight, catalog.nodes))
+
     def template_graph(self, catalog):
-        device = self.static.weight
-        h = self.static(ints(device, catalog.nodes))
+        h = self.node_features(catalog)
+        device = h
         if not catalog.edges:
             return h
         src, dst, role = ints(device, catalog.edges).T

@@ -33,7 +33,7 @@ class Catalog:
             tmpl = ('generated', rid)
             root = self.node('rule')
             self.roots[tmpl] = root
-            slots = [self.node(('slot', s['sort']['kind'])) for s in rule['slots']]
+            slots = [self.slot_node(('slot', s['sort']['kind']), s['sort']) for s in rule['slots']]
             atoms = []
             for atom in rule['query']:
                 n = self.operation(root, slots, atom, 'query')
@@ -58,6 +58,9 @@ class Catalog:
                     self.merge_block(merges[table], n, tmpl, offset)
                     offset += len(merges[table]['operations'])
 
+    def slot_node(self, label, sort):
+        return self.node(label)
+
     def node(self, label):
         idx = len(self.nodes)
         self.nodes.append(symbol(label))
@@ -80,7 +83,7 @@ class Catalog:
         return n
 
     def merge_block(self, merge, root, tmpl, offset):
-        slots = [self.node(('operand', role if role < 2 else 'internal', s['kind']))
+        slots = [self.slot_node(('operand', role if role < 2 else 'internal', s['kind']), s)
                  for role, s in enumerate(merge['slots'])]
         if tmpl[0] == 'repair':
             self.inputs[tmpl] = slots[:2]

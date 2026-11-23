@@ -164,3 +164,34 @@ and 158/1,419 on loopfact (19 complete). Loopfact Run 79 rose from 6/74 to
 61 commits and the long decision chain motivate the parallel-anchor experiment.
 These [two shadow trajectories](run-recall/parent-history) measure the trained
 sequential control. They do not establish an exclusive final graph or a speedup.
+
+### Parallel anchor decoder and symbol ablation
+
+Each scheduled rule reads its sealed, typed port snapshot. Train a binary issuance
+score at every delta anchor, then multilabel pointers conditioned on the entire
+selected prefix. The first fresh atom in source order owns the witness tuple.
+Non-seminaive rules use their first table atom and zero-parent rules have a
+separate issuance decision. All complete requests still pass named native
+verification. Test one batch per Run, with no current-Run facts or verifier
+search. Report per-Run teacher commit recall, completed busy Runs, duplicate
+and rejected requests, and exclusive divergence. On loopfact Run 79 also measure
+remaining **complete tuple** precision and recall with correct rules and anchors
+supplied, separately from the end-to-end result.
+
+The symbol experiment holds the decoder, declaration graph, splits, seeds, optimizer,
+sampling, compute budget and decision thresholds fixed. Compare three treatments:
+
+* **Named** adds a learned hashed user-name embedding to each table and opaque sort declaration.
+* **Renamed** uses the same number of parameters, consistently pseudonymizing user
+  names on every training exposure. Include fresh, fixed renamings at evaluation.
+* **Structural** omits that embedding. Preserve anonymous same-table and same-sort
+  links, ordered parameter and result positions, primitive identity, literal
+  contents, operation and sort kinds. The vocabulary comes from training data.
+  Tables with identical types can still differ by how rules use them. A symmetry
+  of the encoded graph can leave two declarations indistinguishable to the GNN.
+
+Export parameter counts, bucket exposure and collisions, rename sensitivity and
+the program/merge/result-position holdouts. Compare the two EggCC held programs
+separately. A static exposure audit or invariance under renaming alone cannot
+establish that removing names improves recall. The existing hash Actor has a
+different graph and serves as a historical reference outside the matched ablation.

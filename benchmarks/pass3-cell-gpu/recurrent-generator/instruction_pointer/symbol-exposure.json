@@ -1,0 +1,55 @@
+{
+  "mode": "catalog-only",
+  "weights_sha256": "1662f7ec2bac71c49c857033748e448f84ace29b612771d590a4758735640b03",
+  "checkpoint_parameters": 294275,
+  "static_parameters": 262144,
+  "static_shape": [
+    8192,
+    32
+  ],
+  "catalogs": 1172,
+  "compiled_bytes_distinct": 1172,
+  "training_random_merge_families": 3,
+  "exposure": {
+    "train": {
+      "labels": 1598,
+      "occupied": 1442,
+      "unseen_labels": 0,
+      "unexposed_buckets": 0,
+      "unseen_labels_in_occupied_buckets": 0,
+      "excess_labels_due_to_collisions": 156
+    },
+    "held_program": {
+      "labels": 60,
+      "occupied": 59,
+      "unseen_labels": 24,
+      "unexposed_buckets": 17,
+      "unseen_labels_in_occupied_buckets": 7,
+      "excess_labels_due_to_collisions": 1
+    },
+    "held_merge": {
+      "labels": 60,
+      "occupied": 60,
+      "unseen_labels": 24,
+      "unexposed_buckets": 19,
+      "unseen_labels_in_occupied_buckets": 5,
+      "excess_labels_due_to_collisions": 0
+    },
+    "held_result_pc": {
+      "labels": 60,
+      "occupied": 59,
+      "unseen_labels": 24,
+      "unexposed_buckets": 21,
+      "unseen_labels_in_occupied_buckets": 3,
+      "excess_labels_due_to_collisions": 1
+    },
+    "held_eggcc": {
+      "labels": 1048,
+      "occupied": 980,
+      "unseen_labels": 1,
+      "unexposed_buckets": 1,
+      "unseen_labels_in_occupied_buckets": 0,
+      "excess_labels_due_to_collisions": 68
+    }
+  }
+}
