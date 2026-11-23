@@ -147,7 +147,7 @@ class InstructionActor(nn.Module):
                     logits = logits + (mem.fields[:,target] @ query) / math.sqrt(query.numel())
         return logits
 
-    def references(self, catalog, mem, h, rid, teacher=None):
+    def references(self, catalog, mem, h, rid, teacher=None, pointer=None):
         """Select a fresh anchor across all roles, then name every other parent in order."""
         atoms = catalog.atoms[rid]
         if not atoms:
@@ -163,7 +163,10 @@ class InstructionActor(nn.Module):
                                 dtype=torch.bool)
         if not mem.ports or not eligible.any().item():
             return None, []
-        logits = scores.masked_fill(~eligible, -torch.inf).flatten()
+        logits = scores.masked_fill(~eligible, -torch.inf)
+        if pointer is not None:
+            logits = pointer(rid, range(len(atoms)), (), logits)
+        logits = logits.flatten()
         losses = []
         if teacher is None:
             pick = int(logits.argmax())
@@ -188,6 +191,8 @@ class InstructionActor(nn.Module):
                 return None, []
             logits = (mem.keys @ self.query(h+roles[i]) / math.sqrt(self.width)).masked_fill(~mask,-torch.inf)
             logits = self.related_fields(catalog,mem,rid,selected,i,logits)
+            if pointer is not None:
+                logits = pointer(rid, (i,), selected, logits.unsqueeze(0))[0]
             j = where[teacher[i]] if teacher is not None else int(logits.argmax())
             if teacher is not None:
                 losses.append(-logits.log_softmax(0)[j])

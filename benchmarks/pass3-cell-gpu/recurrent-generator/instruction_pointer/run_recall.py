@@ -163,6 +163,8 @@ if __name__=='__main__':
     model = load_actor(a.weights,True)
     if a.live_receipts is None:
         a.live_receipts = getattr(model,'requires_receipts',False) and not (a.teacher_control or a.oracle_rules)
+    if a.oracle_rules and getattr(model,'conditioned_parents',False):
+        p.error('fixed-parent ceiling requires a history-independent parent decoder')
     if a.oracle_rules and a.live_receipts:
         p.error('oracle rules use fixed-snapshot diagnostics')
     if a.mask_receipts and not a.live_receipts:

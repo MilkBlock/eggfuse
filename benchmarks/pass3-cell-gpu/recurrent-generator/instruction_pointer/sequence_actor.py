@@ -49,6 +49,7 @@ class SequenceActor(RuleReadActor):
         by_address = {p.address:i for i,p in enumerate(mem.ports)}
         rules = list(mem.rules)
         past = nodes.new_zeros(1,self.width)
+        pointer = self.parent_history(by_address)
         for _ in range(limit):
             wave = []
             for i in range(len(lanes)):
@@ -61,7 +62,9 @@ class SequenceActor(RuleReadActor):
                     yield state,None,None
                     return
                 rid = rules[action-1]
-                refs,_ = self.references(catalog,mem,lanes[i],rid)
+                refs,_ = self.references(catalog,mem,lanes[i],rid,pointer=pointer)
+                if refs is not None and pointer is not None:
+                    pointer.issue(rid,refs)
                 if refs is not None and receive:
                     wave.append((rid,refs))
                 yield state,rid,refs
@@ -70,7 +73,12 @@ class SequenceActor(RuleReadActor):
                 past = hidden[0]
             if receive and wave:
                 verdicts = receive(wave)
+                if pointer is not None:
+                    pointer.resolve(wave,verdicts)
                 past = self.after_receipts(past, verdicts)
+
+    def parent_history(self, lookup):
+        return None
 
     def after_receipts(self, past, verdicts):
         return past
