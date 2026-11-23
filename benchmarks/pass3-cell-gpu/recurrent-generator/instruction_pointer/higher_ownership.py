@@ -14,11 +14,15 @@ class HigherOwnership:
         for root in frame['accepted']:
             if 'unit' not in root or root['token'] >= 1 << 61:
                 continue
-            op, child = self.units[root['unit']]['hops'][0]
-            token = root['token']
-            row = history.visible.get((token,op))
-            if row:
-                self.pending[child].add((child,token,op,row['version']))
+            for branch in [root['unit']]+([root['closed_branch']] if 'closed_branch' in root else []):
+                unit=self.units[branch]
+                if unit.get('side') and len(unit['hops'])==1:
+                    continue
+                op, child = unit['hops'][0]
+                token = root['token']
+                row = history.visible.get((token,op))
+                if row:
+                    self.pending[child].add((child,token,op,row['version']))
         current = set()
         for rule,_ in frame['rules']:
             current.update(self.pending.pop(rule,()))

@@ -72,7 +72,7 @@ def propose(actor, catalog, snapshot, nodes):
 
 
 @torch.no_grad()
-def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=None, live_receipts=None, teacher_tape=None, observe_packets=None, mask_receipts=False, prefix_policy=None, shadow_runs=None, run_limit=None, observe_snapshot=None, assist=False, audit=True, frame_observer=None, rule_screen=None, activation_observer=None, project_ports=None, higher_catalog=None, higher_choices=None, omit_rules=(), higher_ownership=None, audit_ept=False):
+def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=None, live_receipts=None, teacher_tape=None, observe_packets=None, mask_receipts=False, prefix_policy=None, shadow_runs=None, run_limit=None, observe_snapshot=None, assist=False, audit=True, frame_observer=None, rule_screen=None, activation_observer=None, project_ports=None, higher_catalog=None, higher_choices=None, omit_rules=(), higher_ownership=None, audit_ept=False, side_pointer=None):
     if wave_limit is None:
         wave_limit = getattr(actor,'default_waves',1)
     if live_receipts is None:
@@ -94,6 +94,7 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
     nodes = actor.template_graph(catalog)
     encoding = perf_counter()-before
     next_token = 1
+    side_seconds = 0.
     inference = 0.
     calls = issued = 0
     endings = {}
@@ -142,7 +143,7 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
                     observe_snapshot(catalog,history,snapshot)
                 owned = higher_ownership.advance(frame,history) if higher_ownership else ()
                 def packets(actions):
-                    nonlocal next_token, issued
+                    nonlocal next_token, issued, side_seconds
                     out = []
                     for rid,refs in actions:
                         parents = []
@@ -150,12 +151,17 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
                             token = history.inverse[alias]
                             row = history.visible[token,pc]
                             parents.append(dict(address=dict(token=token,op=pc),version=row['version']))
-                        if higher_ownership and rid not in higher_choices and higher_ownership.covered(owned,rid,parents):
+                        proposal=dict(run=snapshot.run,rule=rid,parents=parents,token=next_token)
+                        if higher_choices and rid in higher_choices:
+                            proposal['unit'] = higher_choices[rid]
+                        if side_pointer is not None:
+                            side_start = perf_counter()
+                            side_pointer.choose(proposal,history,snapshot)
+                            side_seconds += perf_counter()-side_start
+                        if higher_ownership and 'unit' not in proposal and higher_ownership.covered(owned,rid,parents):
                             next_token += 1
                             continue
-                        out.append(dict(run=snapshot.run,rule=rid,parents=parents,token=next_token))
-                        if higher_choices and rid in higher_choices:
-                            out[-1]["unit"] = higher_choices[rid]
+                        out.append(proposal)
                         next_token += 1
                     issued += len(out)
                     if observe_packets is not None:
@@ -222,7 +228,7 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
                 detail=errors.read().strip()
                 if code and detail=='Error: "source panic"':
                     raise SourcePanic(history.run,dict(issued=issued,neural_waves=calls,
-                        wall_seconds=perf_counter()-start,network_seconds=inference+encoding))
+                        wall_seconds=perf_counter()-start,network_seconds=inference+encoding+side_seconds))
                 raise RuntimeError(f'native verifier exited without a final report ({code}): {detail}')
         finally:
             p.stdin.close()
@@ -242,16 +248,16 @@ def execute(binary, program, actor, seed, wave_limit=None, observe_proposals=Non
         raise ValueError('wave receipts differ from final verifier ledger')
     if assist and report['assist']['residual_commits'] + counts['accepted'] != report['matches']:
         raise ValueError('assist ownership differs from committed source bindings')
-    return dict(**({'ept':report['ept']} if audit_ept else {}), **({'higher':higher,'withheld_owned_requests':higher_ownership.omitted if higher_ownership else 0} if higher else {}), **(dict(visible_port_visits=port_projection.full,encoded_port_visits=port_projection.encoded) if port_projection else {}),
+    return dict(**({'side_pointer':dict(side_pointer.counts),'side_seconds':side_seconds} if side_pointer else {}), **({'ept':report['ept']} if audit_ept else {}), **({'higher':higher,'withheld_owned_requests':higher_ownership.omitted if higher_ownership else 0} if higher else {}), **(dict(visible_port_visits=port_projection.full,encoded_port_visits=port_projection.encoded) if port_projection else {}),
                 **(dict(assist=report['assist'],resume_audit=report.get('resumes',[]),event_audit=report.get('events',[])) if assist else {}),partial_proof_counts={f'{kind}_{depth}': dict(c) for (kind,depth),c in prefix_counts.items()},
                 native_partial_reads=report.get('prefix_reads',0),native_partial_probes=report.get('prefixes_checked',0),
                 native_partial_seconds=report.get('prefix_verify_seconds',0),
                 shadow_report=report if teacher_tape else None,live_receipts=live_receipts,receipt_counts=receipt_counts,wave_receipt_seconds=receipt_seconds,
                 receipt_batches=report.get('wave_batches',0),mode='assist' if assist else 'shadow' if teacher_tape else 'exclusive',wave_limit=wave_limit,wave_endings=endings,state_sha=report['state_sha'],runs=report['runs'],neural_waves=calls,
                 issued=issued,counts=report['counts'],native_runtime_events=len(report['runtime_events']),
-                independent_search_calls=report['assist']['exact_rule_calls'] if assist else 0,network_seconds=inference+encoding,
+                independent_search_calls=report['assist']['exact_rule_calls'] if assist else 0,network_seconds=inference+encoding+side_seconds,
                 rhs_by_run=report.get('rhs',[]),writes_by_run=report.get('writes',[]),source_schedule=report['schedule'],
-                remaining_process_seconds_including_ipc=report['seconds']-report['verify_seconds']-inference,
+                remaining_process_seconds_including_ipc=report['seconds']-report['verify_seconds']-inference-side_seconds,
                 native_verify_seconds=report['verify_seconds'],native_repair_seconds=report['repair_phase_seconds'],
                 wall_seconds=perf_counter()-start)
 

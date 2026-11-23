@@ -89,7 +89,7 @@ def compile_catalog(donor, training):
                             training_steps=scores[i]) for r,i in sorted(best.items())])
 
 
-def run(folder, binary, weight, policy, seed, arm, ept, audit=True, exclusive=False):
+def run(folder, binary, weight, policy, seed, arm, ept, audit=True, exclusive=False, side_head=None, keep_closed=False):
     started = perf_counter()
     units = policy['units']
     rules = read(folder/'program.json')['recipe']['rules']
@@ -97,15 +97,21 @@ def run(folder, binary, weight, policy, seed, arm, ept, audit=True, exclusive=Fa
                   if int(rid)<len(rules) and fingerprint(rules[int(rid)])==sig}
     units = [u for u in units if {u['root'], *(r for _,r in u['hops'])} <= compatible]
     choices = {u['root']:i for i,u in enumerate(units)}
+    side_pointer=None
+    if side_head is not None:
+        if arm!='owned': raise ValueError('side head requires the owned higher-Cell arm')
+        from side_pointer import LiveSide
+        side_pointer=LiveSide(side_head,keep_closed)
+        side_pointer.extend(units,rules)
     omit = {r for u in units for _,r in u['hops']} - choices.keys()
     attach = arm in ('add','replace','owned')
     model = load_actor(weight,True)
     with TemporaryDirectory() as tmp:
         catalog = Path(tmp)/'catalog.json'
-        catalog.write_text(json.dumps([dict(root=u['root'],hops=u['hops']) for u in units]))
+        catalog.write_text(json.dumps([{k:u[k] for k in ('root','hops','side') if k in u} for u in units]))
         def execute_live(limit=None):
             return execute(binary,folder/'program.json',model,seed,assist=not exclusive,prefix_policy=Policy(32),
-                           run_limit=limit,audit=audit,audit_ept=ept,higher_catalog=catalog if attach else None,
+                           run_limit=limit,audit=audit,audit_ept=ept,side_pointer=side_pointer,higher_catalog=catalog if attach else None,
                            higher_choices=choices if attach else None,
                            higher_ownership=HigherOwnership(units) if arm=='owned' else None,
                            omit_rules=omit if arm in ('replace','withhold') else ())
@@ -152,7 +158,7 @@ def run(folder, binary, weight, policy, seed, arm, ept, audit=True, exclusive=Fa
         ledger['per_external_request'] = signed / report['issued']
         ledger['per_decoded_request'] = signed / (report['issued'] + report.get('withheld_owned_requests',0))
     report.pop('partial_proof_counts')
-    return dict(arm=arm,compatible_units=[u['bake_id'] for u in units],program=digest(folder/'program.json'),binary=digest(binary),weights=digest(weight),
+    return dict(arm=arm,keep_closed=keep_closed,side_weights=side_pointer.spec['weights'] if side_pointer else None,compatible_units=[u['bake_id'] for u in units],program=digest(folder/'program.json'),binary=digest(binary),weights=digest(weight),
                 reference_commits=ref['matches'],omitted_standalone_rules=sorted(omit) if arm in ('replace','withhold') else [],
                 execution=report)
 
@@ -165,6 +171,8 @@ if __name__=='__main__':
     test=sub.add_parser('run')
     for key in ('root','binary','weights','catalog','out'): test.add_argument(key,type=Path)
     test.add_argument('--case',required=True)
+    test.add_argument('--keep-closed',action='store_true')
+    test.add_argument('--side-head',type=Path)
     test.add_argument('--exclusive',action='store_true')
     test.add_argument('--ept',action='store_true')
     test.add_argument('--arm',choices=['base','add','withhold','replace','owned'],required=True)
@@ -178,5 +186,5 @@ if __name__=='__main__':
     else:
         torch.set_num_threads(1)
         seed=1703+next((r['seed'] for r in manifest if r['directory']==args.case),0)
-        result=run(args.root/args.case,args.binary,args.weights,read(args.catalog),seed,args.arm,args.ept,exclusive=args.exclusive)
+        result=run(args.root/args.case,args.binary,args.weights,read(args.catalog),seed,args.arm,args.ept,exclusive=args.exclusive,side_head=args.side_head,keep_closed=args.keep_closed)
     args.out.write_text(json.dumps(result,indent=2)+'\n')
