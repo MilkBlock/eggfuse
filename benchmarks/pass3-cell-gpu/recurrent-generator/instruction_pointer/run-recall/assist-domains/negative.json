@@ -1,0 +1,168 @@
+{
+  "baseline": "3982b0c163470cdb7d0966409379b2a486d470b7ebb7ec70612f05361115fb12",
+  "treatment": "3751bc0683e6e7b1a83a8212cd688e896a4cb565658f164df8b49f6e67c2e25c",
+  "groups": {
+    "held_program/complete": {
+      "programs": 48,
+      "issued": 360,
+      "verified": 360,
+      "rejected": 0,
+      "residual": 0,
+      "point_domain_skips": 48,
+      "delta_domain_skips": 0
+    },
+    "held_program/holes": {
+      "programs": 48,
+      "issued": 216,
+      "verified": 202,
+      "rejected": 14,
+      "residual": 158,
+      "point_domain_skips": 0,
+      "delta_domain_skips": 0
+    },
+    "held_program/wrong_versions": {
+      "programs": 48,
+      "issued": 360,
+      "verified": 0,
+      "rejected": 360,
+      "residual": 360,
+      "point_domain_skips": 0,
+      "delta_domain_skips": 0
+    },
+    "held_merge/complete": {
+      "programs": 48,
+      "issued": 360,
+      "verified": 360,
+      "rejected": 0,
+      "residual": 0,
+      "point_domain_skips": 48,
+      "delta_domain_skips": 0
+    },
+    "held_merge/holes": {
+      "programs": 48,
+      "issued": 216,
+      "verified": 201,
+      "rejected": 15,
+      "residual": 159,
+      "point_domain_skips": 0,
+      "delta_domain_skips": 0
+    },
+    "held_merge/wrong_versions": {
+      "programs": 48,
+      "issued": 360,
+      "verified": 0,
+      "rejected": 360,
+      "residual": 360,
+      "point_domain_skips": 0,
+      "delta_domain_skips": 0
+    },
+    "held_result_pc/complete": {
+      "programs": 48,
+      "issued": 360,
+      "verified": 360,
+      "rejected": 0,
+      "residual": 0,
+      "point_domain_skips": 48,
+      "delta_domain_skips": 0
+    },
+    "held_result_pc/holes": {
+      "programs": 48,
+      "issued": 216,
+      "verified": 194,
+      "rejected": 22,
+      "residual": 166,
+      "point_domain_skips": 0,
+      "delta_domain_skips": 0
+    },
+    "held_result_pc/wrong_versions": {
+      "programs": 48,
+      "issued": 360,
+      "verified": 0,
+      "rejected": 360,
+      "residual": 360,
+      "point_domain_skips": 0,
+      "delta_domain_skips": 0
+    },
+    "fact/complete": {
+      "programs": 1,
+      "issued": 3814,
+      "verified": 1242,
+      "rejected": 302,
+      "residual": 426,
+      "point_domain_skips": 4,
+      "delta_domain_skips": 35
+    },
+    "fact/holes": {
+      "programs": 1,
+      "issued": 2542,
+      "verified": 2,
+      "rejected": 2540,
+      "residual": 1666,
+      "point_domain_skips": 0,
+      "delta_domain_skips": 0
+    },
+    "fact/wrong_versions": {
+      "programs": 1,
+      "issued": 3814,
+      "verified": 2,
+      "rejected": 3812,
+      "residual": 1666,
+      "point_domain_skips": 0,
+      "delta_domain_skips": 0
+    },
+    "loopfact/complete": {
+      "programs": 1,
+      "issued": 3756,
+      "verified": 1040,
+      "rejected": 297,
+      "residual": 379,
+      "point_domain_skips": 8,
+      "delta_domain_skips": 43
+    },
+    "loopfact/holes": {
+      "programs": 1,
+      "issued": 2504,
+      "verified": 3,
+      "rejected": 2501,
+      "residual": 1416,
+      "point_domain_skips": 0,
+      "delta_domain_skips": 0
+    },
+    "loopfact/wrong_versions": {
+      "programs": 1,
+      "issued": 3756,
+      "verified": 2,
+      "rejected": 3754,
+      "residual": 1417,
+      "point_domain_skips": 0,
+      "delta_domain_skips": 0
+    },
+    "sum-divisors/complete": {
+      "programs": 1,
+      "issued": 24855,
+      "verified": 8558,
+      "rejected": 2153,
+      "residual": 8783,
+      "point_domain_skips": 13,
+      "delta_domain_skips": 229
+    },
+    "sum-divisors/holes": {
+      "programs": 1,
+      "issued": 16570,
+      "verified": 3,
+      "rejected": 16567,
+      "residual": 17338,
+      "point_domain_skips": 1,
+      "delta_domain_skips": 0
+    },
+    "sum-divisors/wrong_versions": {
+      "programs": 1,
+      "issued": 24855,
+      "verified": 2,
+      "rejected": 24853,
+      "residual": 17339,
+      "point_domain_skips": 0,
+      "delta_domain_skips": 0
+    }
+  }
+}

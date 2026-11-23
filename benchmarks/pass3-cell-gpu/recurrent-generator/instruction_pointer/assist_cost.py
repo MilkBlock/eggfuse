@@ -17,12 +17,12 @@ def read(path):
     return json.loads(path.read_bytes())
 
 
-def measure(folder, binary, weight, seed, arm, audit):
+def measure(folder, binary, weight, seed, arm, audit, project_ports=False):
     program = folder/'program.json'
     start = perf_counter()
     if arm == 'assist':
         actor = load_actor(weight, True)
-        result = execute(binary, program, actor, seed, prefix_policy=Policy(32), assist=True, audit=audit)
+        result = execute(binary, program, actor, seed, prefix_policy=Policy(32), assist=True, audit=audit, project_ports=project_ports)
         elapsed = perf_counter()-start
         checks = dict(schedule=result['source_schedule'],rhs=result['rhs_by_run'],writes=result['writes_by_run'],
                       resumes=result['resume_audit'],events=result['event_audit'],state_sha=result['state_sha'])
@@ -47,7 +47,7 @@ def measure(folder, binary, weight, seed, arm, audit):
     return dict(arm=arm,wall=elapsed,**row,state_sha=checks['state_sha'])
 
 
-def main(root,binary,weights,out,names,repeats):
+def main(root,binary,weights,out,names,repeats,project_ports=False):
     torch.set_num_threads(1)
     manifest = {r['directory']:r for r in read(root/'manifest.json')}
     out.mkdir(parents=True,exist_ok=True)
@@ -55,6 +55,8 @@ def main(root,binary,weights,out,names,repeats):
         seed=1703+manifest.get(name,{}).get('seed',0)
         path=out/(name+'.json')
         spec=dict(program=digest(root/name/'program.json'),binary=digest(binary),weights=digest(weights),seed=seed)
+        if project_ports:
+            spec['project_ports'] = True
         report=read(path) if path.exists() else dict(spec=spec, audit={},pairs=[])
         if report['spec']!=spec:raise ValueError('changed timing inputs')
         def save():
@@ -63,11 +65,11 @@ def main(root,binary,weights,out,names,repeats):
             temp.replace(path)
         for arm in ('exact','oracle','assist'):
             if arm not in report['audit']:
-                report['audit'][arm]=measure(root/name,binary,weights,seed,arm,True)
+                report['audit'][arm]=measure(root/name,binary,weights,seed,arm,True,project_ports)
                 save()
         for i in range(len(report['pairs']),repeats):
             order = ('exact','assist','oracle') if i%2==0 else ('oracle','assist','exact')
-            trial=[measure(root/name,binary,weights,seed,a,False) for a in order]
+            trial=[measure(root/name,binary,weights,seed,a,False,project_ports) for a in order]
             report['pairs'].append(trial)
             save()
             print(name, i+1,[(r['arm'],round(r['wall'],3)) for r in trial],flush=True)
@@ -78,5 +80,6 @@ if __name__=='__main__':
     for key in ('root','binary','weights','out'):p.add_argument(key,type=Path)
     p.add_argument('--cases',nargs='+',required=True)
     p.add_argument('--repeats',type=int,default=4)
+    p.add_argument('--project-ports', action='store_true')
     a=p.parse_args()
-    main(a.root,a.binary,a.weights,a.out,a.cases,a.repeats)
+    main(a.root,a.binary,a.weights,a.out,a.cases,a.repeats,a.project_ports)

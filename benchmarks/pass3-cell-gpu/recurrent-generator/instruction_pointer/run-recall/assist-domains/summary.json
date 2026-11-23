@@ -1,0 +1,695 @@
+{
+  "assist": {
+    "fact": {
+      "receiver": "3751bc0683e6e7b1a83a8212cd688e896a4cb565658f164df8b49f6e67c2e25c",
+      "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "program": "f4da1650af5393f3f07d5d20d092e26270ae58090266dd197113dd295ffaf900",
+      "requests_sha256": "613862b10cae5f6904072147cb2f29cb09411ac95e04b7d2ccbcba12a0ee9dc3",
+      "observation_sha256": "3388a2791934e6325ec0f1abd7e58842b06565f081f178b526527a80f7e35742",
+      "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d",
+      "runs": 634,
+      "waves": 634,
+      "required": 1668,
+      "issued": 3814,
+      "verdicts": {
+        "accepted": 1242,
+        "calls": 2703,
+        "duplicates": 2270,
+        "reads": 7402,
+        "reads_by_kind": {
+          "generated": 7368,
+          "initial": 34
+        },
+        "rejected": {
+          "binding": 51,
+          "guard": 251
+        }
+      },
+      "ports_full": 1769135,
+      "ports_encoded": 79060,
+      "native_search": {
+        "baseline": {
+          "duplicate_reads": 4641,
+          "duplicate_seconds": 0.0009601360000000022,
+          "exact_candidates": 1848,
+          "exact_rows": 1573,
+          "exact_rule_calls": 2681,
+          "exact_seconds": 0.004873814000000004,
+          "rejected_reads": 540,
+          "rejected_seconds": 0.00012149099999999988,
+          "residual_commits": 426,
+          "skipped_rule_calls": 22
+        },
+        "treatment": {
+          "certified_bindings": 354,
+          "delta_domain_skips": 35,
+          "delta_members_checked": 571,
+          "duplicate_reads": 4641,
+          "duplicate_seconds": 0.0009578439999999999,
+          "exact_candidates": 1845,
+          "exact_rows": 1314,
+          "exact_rule_calls": 2642,
+          "exact_seconds": 0.005472727000000005,
+          "point_domain_skips": 4,
+          "rejected_reads": 540,
+          "rejected_seconds": 0.00013358300000000003,
+          "residual_commits": 426,
+          "skipped_rule_calls": 61
+        }
+      },
+      "median_seconds": {
+        "exact": {
+          "wall": 0.1455646454996895,
+          "inference": 0.0,
+          "verify": 0.0,
+          "exact": 0.00276218100000002
+        },
+        "oracle": {
+          "wall": 0.14312322899968422,
+          "inference": 0.0,
+          "verify": 0.0008893849999999999,
+          "exact": 0.0
+        },
+        "assist": {
+          "wall": 2.6451025210008083,
+          "inference": 1.7054334154709068,
+          "verify": 0.0026394855,
+          "exact": 0.006334248499999988,
+          "rejected_seconds": 0.0001522105000000001,
+          "duplicate_seconds": 0.0010096769999999975
+        }
+      },
+      "wins_over_exact": {
+        "assist": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "oracle": [
+          true,
+          false,
+          false,
+          true
+        ]
+      },
+      "native_oracle_ms": {
+        "reference": 7.9382295,
+        "replay": 7.025479499999999,
+        "verification_ms": 0.9177264999999999,
+        "event_registration_ms": 0.0,
+        "native_repair_phase_ms": 0.27776350000000216,
+        "remaining_native_ms": 6.112041
+      },
+      "paired_wall_seconds": [
+        [
+          [
+            "exact",
+            0.15022037499875296
+          ],
+          [
+            "assist",
+            2.610491750001529
+          ],
+          [
+            "oracle",
+            0.1416326670005219
+          ]
+        ],
+        [
+          [
+            "oracle",
+            0.14168866600084584
+          ],
+          [
+            "assist",
+            2.6275719170007505
+          ],
+          [
+            "exact",
+            0.1413726669998141
+          ]
+        ],
+        [
+          [
+            "exact",
+            0.14278475000173785
+          ],
+          [
+            "assist",
+            2.662633125000866
+          ],
+          [
+            "oracle",
+            0.1445952079993731
+          ]
+        ],
+        [
+          [
+            "oracle",
+            0.1445577919985226
+          ],
+          [
+            "assist",
+            2.672932540997863
+          ],
+          [
+            "exact",
+            0.14834454099764116
+          ]
+        ]
+      ],
+      "audited_encoder_pairs_seconds": {
+        "full": [
+          21.73461687500094,
+          21.60164729099779,
+          21.83274883299964,
+          21.563302292001026
+        ],
+        "projected": [
+          3.11669512500157,
+          2.7247746249995544,
+          2.8880249579997326,
+          2.74434116699922
+        ]
+      },
+      "rule_screen": {
+        "plain": {
+          "gate": null,
+          "activations": {
+            "active": 2462,
+            "productive": 453,
+            "productive_active": 451
+          },
+          "issued": 3814,
+          "counts": {
+            "accepted": 1242,
+            "calls": 2703,
+            "duplicates": 2270,
+            "reads": 7402,
+            "reads_by_kind": {
+              "generated": 7368,
+              "initial": 34
+            },
+            "rejected": {
+              "binding": 51,
+              "guard": 251
+            }
+          },
+          "residual": 426
+        },
+        "screen": {
+          "gate": "514d37cfd563cb193b6e6eca4ebbf27fd9a419e14427ef781487aaf9a0d90022",
+          "activations": {
+            "active": 2361,
+            "productive": 453,
+            "productive_active": 451
+          },
+          "issued": 3814,
+          "counts": {
+            "accepted": 1242,
+            "calls": 2703,
+            "duplicates": 2270,
+            "reads": 7402,
+            "reads_by_kind": {
+              "generated": 7368,
+              "initial": 34
+            },
+            "rejected": {
+              "binding": 51,
+              "guard": 251
+            }
+          },
+          "residual": 426
+        }
+      }
+    },
+    "loopfact": {
+      "receiver": "3751bc0683e6e7b1a83a8212cd688e896a4cb565658f164df8b49f6e67c2e25c",
+      "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "program": "8f6d2b1a5f5a593b73119d0bfded0aefee97315191cc5f3efcd6e35320beacba",
+      "requests_sha256": "cafe3471cc0fd661c3f43edb9ca075bc3a2c4ddf3804046ba01f3df82f61817d",
+      "observation_sha256": "989f94a1581dfc9bf948b73f0de14e9d55d2932e0d824969343acd5b8a42bec0",
+      "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724",
+      "runs": 618,
+      "waves": 618,
+      "required": 1419,
+      "issued": 3756,
+      "verdicts": {
+        "accepted": 1040,
+        "calls": 2432,
+        "duplicates": 2419,
+        "reads": 7466,
+        "reads_by_kind": {
+          "generated": 7450,
+          "initial": 16
+        },
+        "rejected": {
+          "binding": 33,
+          "guard": 264
+        }
+      },
+      "ports_full": 1718698,
+      "ports_encoded": 70913,
+      "native_search": {
+        "baseline": {
+          "duplicate_reads": 4991,
+          "duplicate_seconds": 0.0010459380000000017,
+          "exact_candidates": 1634,
+          "exact_rows": 1348,
+          "exact_rule_calls": 2406,
+          "exact_seconds": 0.0054291810000000025,
+          "rejected_reads": 577,
+          "rejected_seconds": 0.00014000200000000005,
+          "residual_commits": 379,
+          "skipped_rule_calls": 26
+        },
+        "treatment": {
+          "certified_bindings": 258,
+          "delta_domain_skips": 43,
+          "delta_members_checked": 511,
+          "duplicate_reads": 4991,
+          "duplicate_seconds": 0.0010171619999999983,
+          "exact_candidates": 1626,
+          "exact_rows": 1161,
+          "exact_rule_calls": 2355,
+          "exact_seconds": 0.004357515000000015,
+          "point_domain_skips": 8,
+          "rejected_reads": 577,
+          "rejected_seconds": 0.00013712700000000002,
+          "residual_commits": 379,
+          "skipped_rule_calls": 77
+        }
+      },
+      "median_seconds": {
+        "exact": {
+          "wall": 0.1467417710009613,
+          "inference": 0.0,
+          "verify": 0.0,
+          "exact": 0.0027054760000000174
+        },
+        "oracle": {
+          "wall": 0.1484048120000807,
+          "inference": 0.0,
+          "verify": 0.0008110904999999999,
+          "exact": 0.0
+        },
+        "assist": {
+          "wall": 2.7143176250010583,
+          "inference": 1.748543999512549,
+          "verify": 0.002981371,
+          "exact": 0.007420439999999992,
+          "rejected_seconds": 0.00017350350000000026,
+          "duplicate_seconds": 0.001152865499999995
+        }
+      },
+      "wins_over_exact": {
+        "assist": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "oracle": [
+          false,
+          false,
+          true,
+          true
+        ]
+      },
+      "native_oracle_ms": {
+        "reference": 7.958583500000001,
+        "replay": 6.4484375,
+        "verification_ms": 0.801091,
+        "event_registration_ms": 0.0,
+        "native_repair_phase_ms": 0.24433100000000182,
+        "remaining_native_ms": 5.652283
+      },
+      "paired_wall_seconds": [
+        [
+          [
+            "exact",
+            0.14322070799971698
+          ],
+          [
+            "assist",
+            2.746847374997742
+          ],
+          [
+            "oracle",
+            0.15227562499785563
+          ]
+        ],
+        [
+          [
+            "oracle",
+            0.1497257080009149
+          ],
+          [
+            "assist",
+            2.699283000001742
+          ],
+          [
+            "exact",
+            0.14672599999903468
+          ]
+        ],
+        [
+          [
+            "exact",
+            0.15747483300219756
+          ],
+          [
+            "assist",
+            2.7293522500003746
+          ],
+          [
+            "oracle",
+            0.14708391599924653
+          ]
+        ],
+        [
+          [
+            "oracle",
+            0.1448520420017303
+          ],
+          [
+            "assist",
+            2.626147625000158
+          ],
+          [
+            "exact",
+            0.14675754200288793
+          ]
+        ]
+      ],
+      "audited_encoder_pairs_seconds": {
+        "full": [
+          21.309232457999315,
+          20.942040666999674,
+          21.48784783299925,
+          21.912221916998533
+        ],
+        "projected": [
+          2.60778987500089,
+          2.5728916249972826,
+          2.6538336669982527,
+          2.6307939589969465
+        ]
+      },
+      "rule_screen": {
+        "plain": {
+          "gate": null,
+          "activations": {
+            "active": 2191,
+            "productive": 476,
+            "productive_active": 473
+          },
+          "issued": 3756,
+          "counts": {
+            "accepted": 1040,
+            "calls": 2432,
+            "duplicates": 2419,
+            "reads": 7466,
+            "reads_by_kind": {
+              "generated": 7450,
+              "initial": 16
+            },
+            "rejected": {
+              "binding": 33,
+              "guard": 264
+            }
+          },
+          "residual": 379
+        },
+        "screen": {
+          "gate": "514d37cfd563cb193b6e6eca4ebbf27fd9a419e14427ef781487aaf9a0d90022",
+          "activations": {
+            "active": 2148,
+            "productive": 476,
+            "productive_active": 472
+          },
+          "issued": 3756,
+          "counts": {
+            "accepted": 1040,
+            "calls": 2432,
+            "duplicates": 2419,
+            "reads": 7466,
+            "reads_by_kind": {
+              "generated": 7450,
+              "initial": 16
+            },
+            "rejected": {
+              "binding": 33,
+              "guard": 264
+            }
+          },
+          "residual": 379
+        }
+      }
+    },
+    "sum-divisors": {
+      "receiver": "3751bc0683e6e7b1a83a8212cd688e896a4cb565658f164df8b49f6e67c2e25c",
+      "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "program": "3b904063c8c7e580ec2030b452d831ee53478a28c3dfaecf17eeb7e853a0aaf8",
+      "requests_sha256": "6c51ad8cc69ea02cd09ee7523fe101044959006b6c4f5771b89bb064b0cbacdf",
+      "observation_sha256": "8e0137912949dfaa99dab32113732c32724374a6629cc1b0c7e1afa1ccf7fe45",
+      "state_sha": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e",
+      "runs": 1644,
+      "waves": 1644,
+      "required": 17341,
+      "issued": 24855,
+      "verdicts": {
+        "accepted": 8558,
+        "calls": 9714,
+        "duplicates": 14144,
+        "reads": 47887,
+        "reads_by_kind": {
+          "generated": 47588,
+          "initial": 278,
+          "repair": 21
+        },
+        "rejected": {
+          "binding": 982,
+          "guard": 1171
+        }
+      },
+      "ports_full": 36307164,
+      "ports_encoded": 2524397,
+      "native_search": {
+        "baseline": {
+          "duplicate_reads": 28838,
+          "duplicate_seconds": 0.0065924580000002305,
+          "exact_candidates": 22685,
+          "exact_rows": 17179,
+          "exact_rule_calls": 9689,
+          "exact_seconds": 0.0495360549999985,
+          "rejected_reads": 3646,
+          "rejected_seconds": 0.0010065840000000167,
+          "residual_commits": 8783,
+          "skipped_rule_calls": 25
+        },
+        "treatment": {
+          "certified_bindings": 1230,
+          "delta_domain_skips": 229,
+          "delta_members_checked": 2813,
+          "duplicate_reads": 28838,
+          "duplicate_seconds": 0.0063587500000001785,
+          "exact_candidates": 22677,
+          "exact_rows": 16111,
+          "exact_rule_calls": 9447,
+          "exact_seconds": 0.04352938799999896,
+          "point_domain_skips": 13,
+          "rejected_reads": 3646,
+          "rejected_seconds": 0.0010159570000000092,
+          "residual_commits": 8783,
+          "skipped_rule_calls": 267
+        }
+      },
+      "median_seconds": {
+        "exact": {
+          "wall": 0.22993120850151172,
+          "inference": 0.0,
+          "verify": 0.0,
+          "exact": 0.023100748500000184
+        },
+        "oracle": {
+          "wall": 0.22770964600022126,
+          "inference": 0.0,
+          "verify": 0.0099834265,
+          "exact": 0.0
+        },
+        "assist": {
+          "wall": 49.646327416499844,
+          "inference": 33.26042894645798,
+          "verify": 0.017982059,
+          "exact": 0.04928233449999876,
+          "rejected_seconds": 0.0011255780000000032,
+          "duplicate_seconds": 0.0065372375000001814
+        }
+      },
+      "wins_over_exact": {
+        "assist": [
+          false,
+          false,
+          false,
+          false
+        ],
+        "oracle": [
+          false,
+          true,
+          true,
+          false
+        ]
+      },
+      "native_oracle_ms": {
+        "reference": 58.1221455,
+        "replay": 49.861853999999994,
+        "verification_ms": 9.902298,
+        "event_registration_ms": 0.000771,
+        "native_repair_phase_ms": 6.585394499999923,
+        "remaining_native_ms": 39.958847999999996
+      },
+      "paired_wall_seconds": [
+        [
+          [
+            "exact",
+            0.2136981659969024
+          ],
+          [
+            "assist",
+            48.835556207999616
+          ],
+          [
+            "oracle",
+            0.23733670900037396
+          ]
+        ],
+        [
+          [
+            "oracle",
+            0.22589191699807998
+          ],
+          [
+            "assist",
+            50.45709862500007
+          ],
+          [
+            "exact",
+            0.24481350000132807
+          ]
+        ],
+        [
+          [
+            "exact",
+            0.2454831249997369
+          ],
+          [
+            "assist",
+            51.19692270900123
+          ],
+          [
+            "oracle",
+            0.22444491600253968
+          ]
+        ],
+        [
+          [
+            "oracle",
+            0.22952737500236253
+          ],
+          [
+            "assist",
+            47.16651645800084
+          ],
+          [
+            "exact",
+            0.21504891700169537
+          ]
+        ]
+      ],
+      "rule_screen": {
+        "plain": {
+          "gate": null,
+          "activations": {
+            "active": 9259,
+            "productive": 2166,
+            "productive_active": 2131
+          },
+          "issued": 24855,
+          "counts": {
+            "accepted": 8558,
+            "calls": 9714,
+            "duplicates": 14144,
+            "reads": 47887,
+            "reads_by_kind": {
+              "generated": 47588,
+              "initial": 278,
+              "repair": 21
+            },
+            "rejected": {
+              "binding": 982,
+              "guard": 1171
+            }
+          },
+          "residual": 8783
+        },
+        "screen": {
+          "gate": "514d37cfd563cb193b6e6eca4ebbf27fd9a419e14427ef781487aaf9a0d90022",
+          "activations": {
+            "active": 8697,
+            "productive": 2166,
+            "productive_active": 2116
+          },
+          "issued": 24833,
+          "counts": {
+            "accepted": 8549,
+            "calls": 9714,
+            "duplicates": 14131,
+            "reads": 47837,
+            "reads_by_kind": {
+              "generated": 47544,
+              "initial": 272,
+              "repair": 21
+            },
+            "rejected": {
+              "binding": 982,
+              "guard": 1171
+            }
+          },
+          "residual": 8792
+        }
+      }
+    }
+  },
+  "exclusive": {
+    "eggcc": {
+      "fact": {
+        "common_runs": 6,
+        "final_equal": false,
+        "failure": null
+      },
+      "loopfact": {
+        "common_runs": 7,
+        "final_equal": false,
+        "failure": null
+      },
+      "sum-divisors": {
+        "common_runs": 10,
+        "final_equal": false,
+        "failure": {
+          "kind": "source_panic",
+          "run": 85,
+          "charged": {
+            "issued": 1908,
+            "neural_waves": 85,
+            "wall_seconds": 0.7715668339988042,
+            "network_seconds": 0.46570582900676527
+          }
+        }
+      }
+    },
+    "generated": 144,
+    "generated_equal": 143
+  }
+}
