@@ -109,7 +109,7 @@ class History:
         return Snapshot(run,frame['epoch'],dict(frame['rules']),ports,[])
 
 
-def stream(directory, seed, runs=None, catalog_type=Catalog):
+def stream(directory, seed, runs=None, catalog_type=Catalog, supervision=None):
     raw = (directory/'program.json').read_bytes()
     tape = json.loads((directory/'tape.json').read_bytes())
     if hashlib.sha256(raw).hexdigest() != tape['program_sha256']:
@@ -117,7 +117,7 @@ def stream(directory, seed, runs=None, catalog_type=Catalog):
     catalog = catalog_type(json.loads(raw))
     history = History(catalog,seed)
     actions = defaultdict(list)
-    for req in tape['requests']:
+    for req in (tape['requests'] if supervision is None else supervision):
         actions[req['run']].append(req)
     with (directory/'memory.jsonl').open() as records:
         for line in records:
