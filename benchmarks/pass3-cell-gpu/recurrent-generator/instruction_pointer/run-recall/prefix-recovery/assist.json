@@ -1,0 +1,3443 @@
+{
+  "baseline": {
+    "fact": {
+      "mode": "native assist",
+      "program": "fact",
+      "tape": "e34de3bf62e6a0c89bd95ec97838c12f306bffcc6930ed45b1f4da9f2a0c7c42",
+      "binary": "3a825656d58f92c9be9914860c372428a37945919946842165e747988a25aa9d",
+      "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "policy": "0f059e25d0f02fd4b3abaad5685b1c362bea8f922487607d50be8a7bddc4ca04",
+      "scorer": "d8756ef211ba2f75596676d37a14947579cb0a43e99c68e50d63c68b54b93abb",
+      "reader": "2cc8736ac5e5d5897bf69b26b6dad7c6a4b15aeb1b032910d94400fb6924d83c",
+      "catalog": "71f07dbf34d5e379850623b911c73ab44a047ac95fe96404b6a9c221a5cfb718",
+      "omit": true,
+      "attach": true,
+      "explore": false,
+      "seed": 1703,
+      "withheld_layouts": 654,
+      "held_issued": 37,
+      "held_complete": 4,
+      "reference_commits": 1668,
+      "issuer": {
+        "counts": {
+          "materialized_steps": 0,
+          "root_packets": 3790,
+          "root_decisions": 3328,
+          "named_independent_slots": 150,
+          "pointer_scores": 17255,
+          "empty_input_type": 9
+        },
+        "steps": {
+          "2": {
+            "issued": 411,
+            "complete": 69
+          },
+          "5": {
+            "issued": 17,
+            "complete": 1
+          },
+          "3": {
+            "issued": 315,
+            "complete": 33
+          },
+          "6": {
+            "issued": 17
+          },
+          "4": {
+            "issued": 4
+          }
+        },
+        "distinct_issued": 50,
+        "distinct_complete": 21,
+        "outstanding": 0,
+        "seconds": 0.5519093569819233
+      },
+      "credit": {
+        "attempts": 442,
+        "accepted": 182,
+        "owned_valid": 30,
+        "failed_steps": 260,
+        "uncontested": 16,
+        "uncontested_effects": 7,
+        "externally_reproposed": 136,
+        "published_steps": 322,
+        "set_layout_decisions": 3328,
+        "matching_plain_roots": 31,
+        "matching_roots_with_successors": 99,
+        "omitted_packets": 31,
+        "omitted_valid_packets": 30
+      },
+      "execution": {
+        "layouts": {
+          "counts": {
+            "accepted_steps": 182,
+            "attached_roots": 99,
+            "boundary_reads": 1356,
+            "completed_layouts": {
+              "1763": 1,
+              "1822": 20,
+              "1930": 1,
+              "2040": 3,
+              "2052": 2,
+              "2069": 19,
+              "2487": 1,
+              "2535": 1,
+              "2574": 2,
+              "2593": 1,
+              "2842": 2,
+              "292": 10,
+              "295": 14,
+              "3011": 1,
+              "341": 6,
+              "3668": 3,
+              "3672": 1,
+              "515": 4,
+              "532": 7,
+              "876": 1,
+              "910": 3
+            },
+            "completed_sizes": {
+              "2": 69,
+              "3": 33,
+              "5": 1
+            },
+            "invalid_boundary": 0,
+            "issued_layouts": {
+              "1017": 2,
+              "1155": 1,
+              "1165": 5,
+              "1166": 22,
+              "1182": 3,
+              "140": 3,
+              "1453": 4,
+              "1536": 14,
+              "1613": 21,
+              "1626": 16,
+              "1635": 1,
+              "1756": 2,
+              "1760": 1,
+              "1763": 2,
+              "1778": 1,
+              "1822": 93,
+              "1930": 3,
+              "2040": 23,
+              "2052": 16,
+              "2069": 181,
+              "2478": 1,
+              "2487": 61,
+              "2520": 10,
+              "2535": 1,
+              "2574": 11,
+              "2593": 9,
+              "2601": 1,
+              "2622": 1,
+              "2842": 2,
+              "292": 15,
+              "295": 21,
+              "3011": 1,
+              "3214": 1,
+              "340": 2,
+              "341": 15,
+              "3443": 1,
+              "3668": 37,
+              "3672": 8,
+              "430": 71,
+              "515": 30,
+              "532": 21,
+              "612": 3,
+              "635": 2,
+              "636": 6,
+              "796": 2,
+              "797": 4,
+              "876": 3,
+              "878": 3,
+              "910": 3,
+              "950": 4
+            },
+            "issued_steps": 442,
+            "missing_returns": 15,
+            "rejected_groups": 646,
+            "signed_layouts": 764
+          },
+          "outstanding": 0
+        },
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "eab7b3ced15fa4f043dbe761377891fed751dc31c6601a5cdf01f8f774e7de25",
+          "runs": 634,
+          "signed_external": [
+            507,
+            156,
+            35,
+            0
+          ],
+          "signed_internal": [
+            103,
+            69,
+            48,
+            0
+          ],
+          "uncredited": [
+            253,
+            136,
+            60,
+            0
+          ]
+        },
+        "visible_port_visits": 1769135,
+        "encoded_port_visits": 79060,
+        "assist": {
+          "certified_bindings": 361,
+          "delta_domain_skips": 36,
+          "delta_members_checked": 575,
+          "duplicate_reads": 4714,
+          "duplicate_seconds": 0.0011067609999999967,
+          "exact_candidates": 1845,
+          "exact_rows": 1307,
+          "exact_rule_calls": 2640,
+          "exact_seconds": 0.007441766999999992,
+          "point_domain_skips": 4,
+          "rejected_reads": 762,
+          "rejected_seconds": 0.0002570290000000003,
+          "residual_commits": 411,
+          "skipped_rule_calls": 63
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 634
+        },
+        "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d",
+        "runs": 634,
+        "neural_waves": 634,
+        "issued": 3759,
+        "counts": {
+          "accepted": 1257,
+          "calls": 2703,
+          "duplicates": 2366,
+          "reads": 7718,
+          "reads_by_kind": {
+            "generated": 7685,
+            "initial": 33
+          },
+          "rejected": {
+            "binding": 82,
+            "guard": 273,
+            "untriggered_rule": 35,
+            "version": 19,
+            "watermark": 70
+          }
+        },
+        "native_runtime_events": 0,
+        "independent_search_calls": 2640,
+        "network_seconds": 1.9858161579795706,
+        "remaining_process_seconds_including_ipc": 1.374816552020862,
+        "native_verify_seconds": 0.003347123,
+        "native_repair_seconds": 0.0008263350000000031,
+        "wall_seconds": 3.588627000000997
+      }
+    },
+    "loopfact": {
+      "mode": "native assist",
+      "program": "loopfact",
+      "tape": "d877d81138ba44674aace8d33c447075e5fd5c8c1e76eaac7b8bb64f00675a20",
+      "binary": "3a825656d58f92c9be9914860c372428a37945919946842165e747988a25aa9d",
+      "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "policy": "0f059e25d0f02fd4b3abaad5685b1c362bea8f922487607d50be8a7bddc4ca04",
+      "scorer": "d8756ef211ba2f75596676d37a14947579cb0a43e99c68e50d63c68b54b93abb",
+      "reader": "2cc8736ac5e5d5897bf69b26b6dad7c6a4b15aeb1b032910d94400fb6924d83c",
+      "catalog": "71f07dbf34d5e379850623b911c73ab44a047ac95fe96404b6a9c221a5cfb718",
+      "omit": true,
+      "attach": true,
+      "explore": false,
+      "seed": 1703,
+      "withheld_layouts": 654,
+      "held_issued": 59,
+      "held_complete": 8,
+      "reference_commits": 1419,
+      "issuer": {
+        "counts": {
+          "materialized_steps": 0,
+          "root_packets": 3703,
+          "root_decisions": 3201,
+          "named_independent_slots": 305,
+          "pointer_scores": 25375,
+          "empty_input_type": 14
+        },
+        "steps": {
+          "2": {
+            "issued": 464,
+            "complete": 62
+          },
+          "5": {
+            "issued": 50,
+            "complete": 2
+          },
+          "3": {
+            "issued": 364,
+            "complete": 35
+          },
+          "6": {
+            "issued": 12
+          },
+          "4": {
+            "issued": 9,
+            "complete": 1
+          }
+        },
+        "distinct_issued": 59,
+        "distinct_complete": 30,
+        "outstanding": 0,
+        "seconds": 0.5899063710094197
+      },
+      "credit": {
+        "attempts": 511,
+        "accepted": 179,
+        "owned_valid": 26,
+        "failed_steps": 332,
+        "externally_reproposed": 130,
+        "uncontested": 23,
+        "uncontested_effects": 46,
+        "published_steps": 325,
+        "set_layout_decisions": 3201,
+        "matching_plain_roots": 26,
+        "matching_roots_with_successors": 89,
+        "omitted_packets": 26,
+        "omitted_valid_packets": 26
+      },
+      "execution": {
+        "layouts": {
+          "counts": {
+            "accepted_steps": 179,
+            "attached_roots": 89,
+            "boundary_reads": 1817,
+            "completed_layouts": {
+              "1756": 1,
+              "1771": 2,
+              "1830": 11,
+              "1998": 1,
+              "2053": 1,
+              "2076": 4,
+              "2083": 26,
+              "2494": 1,
+              "2495": 2,
+              "2506": 1,
+              "2515": 2,
+              "2563": 1,
+              "2602": 2,
+              "2621": 2,
+              "2629": 1,
+              "2650": 1,
+              "2870": 2,
+              "292": 6,
+              "295": 9,
+              "2950": 1,
+              "3039": 1,
+              "3242": 1,
+              "341": 1,
+              "3697": 2,
+              "3701": 2,
+              "399": 1,
+              "515": 2,
+              "532": 7,
+              "876": 2,
+              "912": 4
+            },
+            "completed_sizes": {
+              "2": 62,
+              "3": 35,
+              "4": 1,
+              "5": 2
+            },
+            "invalid_boundary": 0,
+            "issued_layouts": {
+              "1025": 3,
+              "1163": 2,
+              "1173": 45,
+              "1174": 32,
+              "1260": 1,
+              "1397": 3,
+              "1444": 2,
+              "1461": 4,
+              "1487": 4,
+              "1544": 11,
+              "1555": 1,
+              "1621": 12,
+              "1634": 11,
+              "1643": 1,
+              "1756": 1,
+              "1768": 1,
+              "1771": 4,
+              "1786": 1,
+              "1830": 66,
+              "1998": 9,
+              "2005": 3,
+              "2053": 10,
+              "2076": 4,
+              "2083": 215,
+              "2381": 22,
+              "2494": 5,
+              "2495": 11,
+              "2506": 2,
+              "2515": 81,
+              "2563": 1,
+              "2602": 23,
+              "2621": 3,
+              "2629": 7,
+              "2650": 6,
+              "2688": 6,
+              "2870": 2,
+              "292": 9,
+              "295": 16,
+              "2950": 1,
+              "3039": 1,
+              "3242": 1,
+              "3261": 5,
+              "341": 8,
+              "3471": 4,
+              "3557": 1,
+              "3697": 66,
+              "3701": 16,
+              "399": 1,
+              "430": 43,
+              "515": 31,
+              "532": 15,
+              "636": 31,
+              "675": 3,
+              "795": 1,
+              "796": 15,
+              "847": 2,
+              "876": 6,
+              "912": 4,
+              "958": 4
+            },
+            "issued_steps": 511,
+            "missing_returns": 9,
+            "rejected_groups": 790,
+            "signed_layouts": 899
+          },
+          "outstanding": 0
+        },
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "da3eb13aeb22993cf38dbfa9356415bee92959ab1143f4ff46e65e55fc758703",
+          "runs": 618,
+          "signed_external": [
+            410,
+            154,
+            37,
+            0
+          ],
+          "signed_internal": [
+            103,
+            108,
+            31,
+            0
+          ],
+          "uncredited": [
+            283,
+            161,
+            58,
+            0
+          ]
+        },
+        "visible_port_visits": 1718698,
+        "encoded_port_visits": 70913,
+        "assist": {
+          "certified_bindings": 271,
+          "delta_domain_skips": 44,
+          "delta_members_checked": 512,
+          "duplicate_reads": 5087,
+          "duplicate_seconds": 0.0011701309999999942,
+          "exact_candidates": 1626,
+          "exact_rows": 1148,
+          "exact_rule_calls": 2350,
+          "exact_seconds": 0.007435627999999986,
+          "point_domain_skips": 8,
+          "rejected_reads": 850,
+          "rejected_seconds": 0.00029911399999999974,
+          "residual_commits": 359,
+          "skipped_rule_calls": 82
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 618
+        },
+        "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724",
+        "runs": 618,
+        "neural_waves": 618,
+        "issued": 3677,
+        "counts": {
+          "accepted": 1060,
+          "calls": 2432,
+          "duplicates": 2519,
+          "reads": 7871,
+          "reads_by_kind": {
+            "generated": 7855,
+            "initial": 16
+          },
+          "rejected": {
+            "binding": 66,
+            "guard": 275,
+            "untriggered_rule": 22,
+            "version": 19,
+            "watermark": 138
+          }
+        },
+        "native_runtime_events": 0,
+        "independent_search_calls": 2350,
+        "network_seconds": 1.8386819860133983,
+        "remaining_process_seconds_including_ipc": 1.3866491889863224,
+        "native_verify_seconds": 0.00333245,
+        "native_repair_seconds": 0.0009260410000000017,
+        "wall_seconds": 3.446854166999401
+      }
+    },
+    "sum-divisors": {
+      "mode": "native assist",
+      "program": "sum-divisors",
+      "tape": "30da140008a764b2a6931777ee359bc657ce201a9667f1cf3d71ceb6cb6b484f",
+      "binary": "3a825656d58f92c9be9914860c372428a37945919946842165e747988a25aa9d",
+      "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "policy": "0f059e25d0f02fd4b3abaad5685b1c362bea8f922487607d50be8a7bddc4ca04",
+      "scorer": "d8756ef211ba2f75596676d37a14947579cb0a43e99c68e50d63c68b54b93abb",
+      "reader": "2cc8736ac5e5d5897bf69b26b6dad7c6a4b15aeb1b032910d94400fb6924d83c",
+      "catalog": "71f07dbf34d5e379850623b911c73ab44a047ac95fe96404b6a9c221a5cfb718",
+      "omit": true,
+      "attach": true,
+      "explore": false,
+      "seed": 1703,
+      "withheld_layouts": 654,
+      "held_issued": 222,
+      "held_complete": 29,
+      "reference_commits": 17341,
+      "issuer": {
+        "counts": {
+          "materialized_steps": 0,
+          "root_packets": 24709,
+          "root_decisions": 21052,
+          "named_independent_slots": 858,
+          "pointer_scores": 699943,
+          "empty_input_type": 14
+        },
+        "steps": {
+          "2": {
+            "issued": 3552,
+            "complete": 655
+          },
+          "5": {
+            "issued": 72,
+            "complete": 3
+          },
+          "4": {
+            "issued": 48,
+            "complete": 2
+          },
+          "6": {
+            "issued": 110,
+            "complete": 1
+          },
+          "3": {
+            "issued": 1377,
+            "complete": 161
+          },
+          "8": {
+            "issued": 2
+          },
+          "9": {
+            "issued": 1
+          }
+        },
+        "distinct_issued": 107,
+        "distinct_complete": 52,
+        "outstanding": 0,
+        "seconds": 8.228971040010947
+      },
+      "credit": {
+        "attempts": 2954,
+        "accepted": 1269,
+        "owned_valid": 160,
+        "externally_reproposed": 724,
+        "failed_steps": 1685,
+        "uncontested": 385,
+        "uncontested_effects": 571,
+        "published_steps": 2214,
+        "set_layout_decisions": 21052,
+        "matching_plain_roots": 164,
+        "matching_roots_with_successors": 548,
+        "omitted_packets": 164,
+        "omitted_valid_packets": 160
+      },
+      "execution": {
+        "layouts": {
+          "counts": {
+            "accepted_steps": 1269,
+            "attached_roots": 548,
+            "boundary_reads": 9836,
+            "completed_layouts": {
+              "1398": 1,
+              "140": 1,
+              "1541": 1,
+              "1619": 1,
+              "1632": 1,
+              "1761": 1,
+              "1769": 1,
+              "1828": 112,
+              "1936": 35,
+              "200": 1,
+              "2005": 1,
+              "2025": 6,
+              "2047": 4,
+              "2059": 2,
+              "2070": 2,
+              "2071": 50,
+              "2077": 110,
+              "2088": 9,
+              "2145": 14,
+              "2149": 1,
+              "2206": 1,
+              "2251": 4,
+              "2261": 1,
+              "2269": 46,
+              "2297": 12,
+              "2317": 17,
+              "2352": 1,
+              "2368": 1,
+              "2494": 64,
+              "2527": 1,
+              "2542": 1,
+              "2579": 10,
+              "2598": 2,
+              "2606": 6,
+              "2847": 5,
+              "292": 57,
+              "2927": 1,
+              "295": 41,
+              "3016": 1,
+              "3219": 1,
+              "341": 9,
+              "346": 1,
+              "3674": 9,
+              "3678": 8,
+              "3718": 2,
+              "430": 10,
+              "515": 23,
+              "532": 2,
+              "533": 117,
+              "880": 6,
+              "914": 7,
+              "954": 1
+            },
+            "completed_sizes": {
+              "2": 655,
+              "3": 161,
+              "4": 2,
+              "5": 3,
+              "6": 1
+            },
+            "invalid_boundary": 0,
+            "issued_layouts": {
+              "1021": 32,
+              "1147": 3,
+              "1160": 4,
+              "1170": 37,
+              "1171": 98,
+              "1187": 1,
+              "1257": 5,
+              "1343": 1,
+              "1394": 14,
+              "1398": 8,
+              "140": 13,
+              "1441": 22,
+              "1484": 3,
+              "1486": 14,
+              "1538": 1,
+              "1541": 59,
+              "1558": 1,
+              "1619": 113,
+              "1632": 92,
+              "1641": 4,
+              "1645": 1,
+              "1688": 1,
+              "1761": 5,
+              "1769": 25,
+              "1784": 3,
+              "179": 18,
+              "1828": 581,
+              "1936": 142,
+              "1997": 1,
+              "200": 1,
+              "2004": 12,
+              "2005": 4,
+              "2025": 80,
+              "2047": 101,
+              "2059": 27,
+              "2070": 4,
+              "2071": 51,
+              "2077": 634,
+              "2082": 3,
+              "2088": 177,
+              "2121": 13,
+              "2123": 3,
+              "2145": 273,
+              "2149": 20,
+              "2194": 18,
+              "2206": 73,
+              "2208": 32,
+              "2236": 3,
+              "2251": 10,
+              "2261": 3,
+              "2269": 258,
+              "2297": 28,
+              "2317": 46,
+              "2352": 18,
+              "2368": 13,
+              "2485": 5,
+              "2494": 417,
+              "2527": 3,
+              "2542": 5,
+              "2579": 51,
+              "2598": 9,
+              "2606": 9,
+              "2627": 11,
+              "2652": 1,
+              "2665": 5,
+              "2680": 1,
+              "2691": 1,
+              "2847": 26,
+              "292": 81,
+              "2927": 1,
+              "295": 131,
+              "3016": 1,
+              "3094": 2,
+              "3174": 1,
+              "3207": 1,
+              "3219": 4,
+              "3238": 1,
+              "340": 1,
+              "3406": 1,
+              "341": 20,
+              "3446": 34,
+              "346": 4,
+              "3532": 1,
+              "3674": 63,
+              "3678": 38,
+              "3718": 3,
+              "3723": 3,
+              "399": 2,
+              "404": 3,
+              "430": 323,
+              "515": 279,
+              "532": 7,
+              "533": 177,
+              "612": 1,
+              "613": 8,
+              "637": 6,
+              "676": 5,
+              "717": 1,
+              "799": 15,
+              "800": 103,
+              "801": 9,
+              "851": 11,
+              "853": 5,
+              "880": 44,
+              "914": 11,
+              "920": 2,
+              "954": 8
+            },
+            "issued_steps": 2954,
+            "missing_returns": 224,
+            "rejected_groups": 4116,
+            "signed_layouts": 5162
+          },
+          "outstanding": 0
+        },
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "94510dbed2b574e97152cf38a32dd2308aee25aa3728fbc31e4ec946eb94ffe0",
+          "runs": 1644,
+          "signed_external": [
+            2977,
+            904,
+            249,
+            40
+          ],
+          "signed_internal": [
+            519,
+            491,
+            326,
+            0
+          ],
+          "uncredited": [
+            4076,
+            1621,
+            2212,
+            94
+          ]
+        },
+        "visible_port_visits": 36307164,
+        "encoded_port_visits": 2524397,
+        "assist": {
+          "certified_bindings": 1250,
+          "delta_domain_skips": 233,
+          "delta_members_checked": 2823,
+          "duplicate_reads": 29523,
+          "duplicate_seconds": 0.007210505000000209,
+          "exact_candidates": 22677,
+          "exact_rows": 16091,
+          "exact_rule_calls": 9441,
+          "exact_seconds": 0.05058151099999867,
+          "point_domain_skips": 13,
+          "rejected_reads": 4937,
+          "rejected_seconds": 0.0019229309999999897,
+          "residual_commits": 8413,
+          "skipped_rule_calls": 273
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 1644
+        },
+        "state_sha": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e",
+        "runs": 1644,
+        "neural_waves": 1644,
+        "issued": 24545,
+        "counts": {
+          "accepted": 8928,
+          "calls": 9714,
+          "duplicates": 14738,
+          "reads": 50567,
+          "reads_by_kind": {
+            "generated": 50268,
+            "initial": 278,
+            "repair": 21
+          },
+          "rejected": {
+            "binding": 1309,
+            "guard": 1138,
+            "retired": 57,
+            "untriggered_rule": 232,
+            "version": 76,
+            "watermark": 473
+          }
+        },
+        "native_runtime_events": 1,
+        "independent_search_calls": 9441,
+        "network_seconds": 35.626529333945655,
+        "remaining_process_seconds_including_ipc": 25.508525263053173,
+        "native_verify_seconds": 0.021811403,
+        "native_repair_seconds": 0.012146717999999954,
+        "wall_seconds": 61.443713250002475
+      }
+    }
+  },
+  "learned": {
+    "fact": {
+      "mode": "native assist",
+      "program": "fact",
+      "tape": "e34de3bf62e6a0c89bd95ec97838c12f306bffcc6930ed45b1f4da9f2a0c7c42",
+      "binary": "3a825656d58f92c9be9914860c372428a37945919946842165e747988a25aa9d",
+      "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "policy": "0f059e25d0f02fd4b3abaad5685b1c362bea8f922487607d50be8a7bddc4ca04",
+      "scorer": "d8756ef211ba2f75596676d37a14947579cb0a43e99c68e50d63c68b54b93abb",
+      "reader": "2cc8736ac5e5d5897bf69b26b6dad7c6a4b15aeb1b032910d94400fb6924d83c",
+      "catalog": "71f07dbf34d5e379850623b911c73ab44a047ac95fe96404b6a9c221a5cfb718",
+      "omit": true,
+      "attach": true,
+      "explore": false,
+      "seed": 1703,
+      "withheld_layouts": 654,
+      "held_issued": 37,
+      "held_complete": 4,
+      "reference_commits": 1668,
+      "issuer": {
+        "counts": {
+          "materialized_steps": 0,
+          "root_packets": 4507,
+          "root_decisions": 3871,
+          "named_independent_slots": 164,
+          "pointer_scores": 19331,
+          "empty_input_type": 9
+        },
+        "steps": {
+          "2": {
+            "issued": 439,
+            "complete": 71
+          },
+          "5": {
+            "issued": 18,
+            "complete": 1
+          },
+          "3": {
+            "issued": 318,
+            "complete": 33
+          },
+          "6": {
+            "issued": 17
+          },
+          "4": {
+            "issued": 4
+          }
+        },
+        "distinct_issued": 54,
+        "distinct_complete": 22,
+        "outstanding": 0,
+        "seconds": 0.5699405360137462
+      },
+      "credit": {
+        "attempts": 454,
+        "accepted": 184,
+        "owned_valid": 44,
+        "failed_steps": 270,
+        "externally_reproposed": 132,
+        "uncontested": 8,
+        "uncontested_effects": 6,
+        "published_steps": 330,
+        "set_layout_decisions": 3871,
+        "matching_plain_roots": 45,
+        "matching_roots_with_successors": 100,
+        "omitted_packets": 45,
+        "omitted_valid_packets": 44
+      },
+      "execution": {
+        "layouts": {
+          "counts": {
+            "accepted_steps": 184,
+            "attached_roots": 100,
+            "boundary_reads": 1437,
+            "completed_layouts": {
+              "1755": 1,
+              "1763": 2,
+              "1822": 20,
+              "1930": 1,
+              "2040": 3,
+              "2052": 2,
+              "2069": 19,
+              "2487": 1,
+              "2535": 1,
+              "2574": 2,
+              "2593": 1,
+              "2842": 2,
+              "292": 10,
+              "295": 14,
+              "3011": 1,
+              "341": 6,
+              "3668": 3,
+              "3672": 1,
+              "515": 4,
+              "532": 7,
+              "876": 1,
+              "910": 3
+            },
+            "completed_sizes": {
+              "2": 71,
+              "3": 33,
+              "5": 1
+            },
+            "invalid_boundary": 0,
+            "issued_layouts": {
+              "1017": 2,
+              "1155": 2,
+              "1165": 6,
+              "1166": 23,
+              "1182": 3,
+              "140": 3,
+              "1453": 4,
+              "1536": 14,
+              "1613": 21,
+              "1626": 16,
+              "1635": 1,
+              "1755": 1,
+              "1756": 2,
+              "1760": 1,
+              "1763": 6,
+              "1778": 1,
+              "1822": 93,
+              "1930": 3,
+              "2040": 29,
+              "2052": 20,
+              "2069": 181,
+              "2347": 2,
+              "2478": 1,
+              "2487": 61,
+              "2520": 10,
+              "2535": 1,
+              "2574": 11,
+              "2593": 9,
+              "2601": 1,
+              "2622": 1,
+              "2842": 2,
+              "292": 15,
+              "295": 21,
+              "3011": 1,
+              "3214": 1,
+              "340": 2,
+              "341": 15,
+              "3443": 1,
+              "3668": 42,
+              "3672": 10,
+              "399": 4,
+              "430": 71,
+              "464": 1,
+              "515": 30,
+              "532": 21,
+              "612": 3,
+              "635": 2,
+              "636": 6,
+              "796": 2,
+              "797": 4,
+              "876": 3,
+              "878": 3,
+              "910": 3,
+              "950": 4
+            },
+            "issued_steps": 454,
+            "missing_returns": 15,
+            "rejected_groups": 676,
+            "signed_layouts": 796
+          },
+          "outstanding": 0
+        },
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "eab7b3ced15fa4f043dbe761377891fed751dc31c6601a5cdf01f8f774e7de25",
+          "runs": 634,
+          "signed_external": [
+            572,
+            186,
+            36,
+            0
+          ],
+          "signed_internal": [
+            105,
+            69,
+            48,
+            0
+          ],
+          "uncredited": [
+            186,
+            106,
+            59,
+            0
+          ]
+        },
+        "visible_port_visits": 1769135,
+        "encoded_port_visits": 79060,
+        "assist": {
+          "certified_bindings": 390,
+          "delta_domain_skips": 37,
+          "delta_members_checked": 628,
+          "duplicate_reads": 5966,
+          "duplicate_seconds": 0.0012804499999999955,
+          "exact_candidates": 1838,
+          "exact_rows": 1278,
+          "exact_rule_calls": 2630,
+          "exact_seconds": 0.006788251999999998,
+          "point_domain_skips": 7,
+          "rejected_reads": 962,
+          "rejected_seconds": 0.00030541400000000016,
+          "residual_commits": 294,
+          "skipped_rule_calls": 73
+        },
+        "partial_proof_counts": {
+          "partial_1": {
+            "scored": 62741,
+            "above_threshold": 44080,
+            "after_cap": 27578,
+            "recovery_scored": 34309,
+            "recovery_qualified": 42,
+            "recovery_added": 19
+          },
+          "complete_2": {
+            "scored": 342046,
+            "above_threshold": 5161,
+            "recovery_scored": 342046,
+            "recovery_qualified": 7744,
+            "recovery_added": 287,
+            "after_cap": 3300
+          },
+          "complete_1": {
+            "scored": 686,
+            "above_threshold": 550,
+            "after_cap": 544,
+            "recovery_scored": 178,
+            "recovery_qualified": 63,
+            "recovery_added": 42
+          },
+          "partial_2": {
+            "scored": 318098,
+            "above_threshold": 8487,
+            "recovery_scored": 318002,
+            "recovery_qualified": 1634,
+            "recovery_added": 413,
+            "after_cap": 3874
+          },
+          "complete_3": {
+            "scored": 28809,
+            "above_threshold": 708,
+            "recovery_scored": 28809,
+            "recovery_qualified": 448,
+            "recovery_added": 41,
+            "after_cap": 649
+          },
+          "partial_3": {
+            "scored": 80446,
+            "above_threshold": 1426,
+            "recovery_scored": 80446,
+            "recovery_qualified": 264,
+            "recovery_added": 24,
+            "after_cap": 1358
+          },
+          "complete_4": {
+            "scored": 368,
+            "above_threshold": 10,
+            "recovery_scored": 368,
+            "recovery_qualified": 0,
+            "recovery_added": 0,
+            "after_cap": 10
+          },
+          "partial_4": {
+            "scored": 43929,
+            "above_threshold": 1219,
+            "recovery_scored": 43929,
+            "recovery_qualified": 48,
+            "recovery_added": 8,
+            "after_cap": 733
+          },
+          "partial_5": {
+            "scored": 16844,
+            "above_threshold": 1279,
+            "recovery_scored": 16844,
+            "recovery_qualified": 0,
+            "recovery_added": 0,
+            "after_cap": 404
+          },
+          "complete_5": {
+            "scored": 484,
+            "above_threshold": 0,
+            "recovery_scored": 484,
+            "recovery_qualified": 2,
+            "recovery_added": 2,
+            "after_cap": 2
+          },
+          "partial_6": {}
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 634
+        },
+        "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d",
+        "runs": 634,
+        "neural_waves": 634,
+        "issued": 4462,
+        "counts": {
+          "accepted": 1374,
+          "calls": 2703,
+          "duplicates": 2872,
+          "reads": 9487,
+          "reads_by_kind": {
+            "generated": 9412,
+            "initial": 75
+          },
+          "rejected": {
+            "binding": 91,
+            "guard": 348,
+            "untriggered_rule": 38,
+            "version": 19,
+            "watermark": 74
+          }
+        },
+        "native_runtime_events": 0,
+        "independent_search_calls": 2630,
+        "network_seconds": 2.252314281056897,
+        "remaining_process_seconds_including_ipc": 1.3770549429427819,
+        "native_verify_seconds": 0.00371186,
+        "native_repair_seconds": 0.000990944000000001,
+        "wall_seconds": 3.847591290999844
+      },
+      "recovery": {
+        "checkpoint": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+        "margin_only": false,
+        "cut": 1.5,
+        "budget": 4
+      }
+    },
+    "loopfact": {
+      "mode": "native assist",
+      "program": "loopfact",
+      "tape": "d877d81138ba44674aace8d33c447075e5fd5c8c1e76eaac7b8bb64f00675a20",
+      "binary": "3a825656d58f92c9be9914860c372428a37945919946842165e747988a25aa9d",
+      "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "policy": "0f059e25d0f02fd4b3abaad5685b1c362bea8f922487607d50be8a7bddc4ca04",
+      "scorer": "d8756ef211ba2f75596676d37a14947579cb0a43e99c68e50d63c68b54b93abb",
+      "reader": "2cc8736ac5e5d5897bf69b26b6dad7c6a4b15aeb1b032910d94400fb6924d83c",
+      "catalog": "71f07dbf34d5e379850623b911c73ab44a047ac95fe96404b6a9c221a5cfb718",
+      "omit": true,
+      "attach": true,
+      "explore": false,
+      "seed": 1703,
+      "withheld_layouts": 654,
+      "held_issued": 63,
+      "held_complete": 8,
+      "reference_commits": 1419,
+      "issuer": {
+        "counts": {
+          "materialized_steps": 0,
+          "root_packets": 4336,
+          "root_decisions": 3633,
+          "named_independent_slots": 328,
+          "pointer_scores": 27236,
+          "empty_input_type": 15
+        },
+        "steps": {
+          "2": {
+            "issued": 514,
+            "complete": 66
+          },
+          "5": {
+            "issued": 51,
+            "complete": 2
+          },
+          "4": {
+            "issued": 10,
+            "complete": 1
+          },
+          "3": {
+            "issued": 367,
+            "complete": 35
+          },
+          "6": {
+            "issued": 12
+          }
+        },
+        "distinct_issued": 66,
+        "distinct_complete": 32,
+        "outstanding": 0,
+        "seconds": 0.6098711339909642
+      },
+      "credit": {
+        "attempts": 531,
+        "accepted": 184,
+        "owned_valid": 35,
+        "failed_steps": 347,
+        "externally_reproposed": 136,
+        "uncontested": 13,
+        "uncontested_effects": 29,
+        "published_steps": 343,
+        "set_layout_decisions": 3633,
+        "matching_plain_roots": 35,
+        "matching_roots_with_successors": 97,
+        "omitted_packets": 35,
+        "omitted_valid_packets": 35
+      },
+      "execution": {
+        "layouts": {
+          "counts": {
+            "accepted_steps": 184,
+            "attached_roots": 97,
+            "boundary_reads": 1974,
+            "completed_layouts": {
+              "1756": 1,
+              "1771": 2,
+              "1830": 11,
+              "1938": 1,
+              "1998": 1,
+              "2053": 1,
+              "2076": 4,
+              "2083": 26,
+              "2367": 1,
+              "2494": 1,
+              "2495": 2,
+              "2506": 1,
+              "2515": 2,
+              "2563": 1,
+              "2602": 2,
+              "2621": 2,
+              "2629": 1,
+              "2650": 1,
+              "2870": 2,
+              "292": 6,
+              "295": 9,
+              "2950": 1,
+              "3039": 1,
+              "3242": 1,
+              "341": 1,
+              "3697": 2,
+              "3701": 2,
+              "399": 3,
+              "515": 2,
+              "532": 7,
+              "876": 2,
+              "912": 4
+            },
+            "completed_sizes": {
+              "2": 66,
+              "3": 35,
+              "4": 1,
+              "5": 2
+            },
+            "invalid_boundary": 0,
+            "issued_layouts": {
+              "1025": 3,
+              "1163": 2,
+              "1173": 45,
+              "1174": 32,
+              "1260": 1,
+              "1397": 3,
+              "1444": 2,
+              "1461": 4,
+              "1487": 13,
+              "1544": 13,
+              "1555": 1,
+              "1566": 1,
+              "1621": 12,
+              "1634": 11,
+              "1643": 1,
+              "1756": 1,
+              "1768": 1,
+              "1771": 8,
+              "1786": 1,
+              "1830": 66,
+              "1938": 6,
+              "1998": 12,
+              "2005": 3,
+              "2053": 11,
+              "2076": 4,
+              "2083": 216,
+              "2367": 4,
+              "2377": 1,
+              "2381": 22,
+              "2494": 5,
+              "2495": 11,
+              "2506": 2,
+              "2515": 81,
+              "2563": 1,
+              "2602": 23,
+              "2621": 3,
+              "2629": 7,
+              "2650": 7,
+              "2688": 7,
+              "2752": 1,
+              "2870": 2,
+              "292": 9,
+              "295": 16,
+              "2950": 1,
+              "3039": 1,
+              "3242": 1,
+              "3261": 5,
+              "341": 8,
+              "3471": 4,
+              "3557": 1,
+              "3697": 71,
+              "3701": 16,
+              "399": 13,
+              "404": 1,
+              "430": 43,
+              "515": 31,
+              "532": 15,
+              "58": 1,
+              "636": 32,
+              "675": 3,
+              "795": 1,
+              "796": 15,
+              "847": 2,
+              "876": 6,
+              "912": 4,
+              "958": 4
+            },
+            "issued_steps": 531,
+            "missing_returns": 9,
+            "rejected_groups": 841,
+            "signed_layouts": 954
+          },
+          "outstanding": 0
+        },
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "da3eb13aeb22993cf38dbfa9356415bee92959ab1143f4ff46e65e55fc758703",
+          "runs": 618,
+          "signed_external": [
+            470,
+            180,
+            36,
+            0
+          ],
+          "signed_internal": [
+            108,
+            108,
+            32,
+            0
+          ],
+          "uncredited": [
+            218,
+            135,
+            58,
+            0
+          ]
+        },
+        "visible_port_visits": 1718698,
+        "encoded_port_visits": 70913,
+        "assist": {
+          "certified_bindings": 316,
+          "delta_domain_skips": 51,
+          "delta_members_checked": 579,
+          "duplicate_reads": 6090,
+          "duplicate_seconds": 0.0013673259999999945,
+          "exact_candidates": 1619,
+          "exact_rows": 1103,
+          "exact_rule_calls": 2336,
+          "exact_seconds": 0.007059105000000009,
+          "point_domain_skips": 11,
+          "rejected_reads": 1131,
+          "rejected_seconds": 0.0004134129999999996,
+          "residual_commits": 253,
+          "skipped_rule_calls": 96
+        },
+        "partial_proof_counts": {
+          "partial_1": {
+            "scored": 50903,
+            "above_threshold": 36909,
+            "after_cap": 25168,
+            "recovery_scored": 26728,
+            "recovery_qualified": 71,
+            "recovery_added": 51
+          },
+          "complete_2": {
+            "scored": 365004,
+            "above_threshold": 4995,
+            "recovery_scored": 365004,
+            "recovery_qualified": 12695,
+            "recovery_added": 206,
+            "after_cap": 3167
+          },
+          "complete_1": {
+            "scored": 569,
+            "above_threshold": 417,
+            "after_cap": 464,
+            "recovery_scored": 185,
+            "recovery_qualified": 66,
+            "recovery_added": 47
+          },
+          "partial_2": {
+            "scored": 279865,
+            "above_threshold": 12034,
+            "recovery_scored": 279606,
+            "recovery_qualified": 1266,
+            "recovery_added": 574,
+            "after_cap": 4275
+          },
+          "complete_3": {
+            "scored": 47055,
+            "above_threshold": 722,
+            "recovery_scored": 47055,
+            "recovery_qualified": 478,
+            "recovery_added": 45,
+            "after_cap": 677
+          },
+          "partial_3": {
+            "scored": 84234,
+            "above_threshold": 2703,
+            "recovery_scored": 84231,
+            "recovery_qualified": 554,
+            "recovery_added": 116,
+            "after_cap": 2048
+          },
+          "complete_4": {
+            "scored": 14678,
+            "above_threshold": 16,
+            "recovery_scored": 14678,
+            "recovery_qualified": 0,
+            "recovery_added": 0,
+            "after_cap": 16
+          },
+          "partial_4": {
+            "scored": 47982,
+            "above_threshold": 4306,
+            "recovery_scored": 47982,
+            "recovery_qualified": 10,
+            "recovery_added": 10,
+            "after_cap": 566
+          },
+          "partial_5": {
+            "scored": 12202,
+            "above_threshold": 704,
+            "recovery_scored": 12170,
+            "recovery_qualified": 1,
+            "recovery_added": 1,
+            "after_cap": 202
+          },
+          "complete_5": {
+            "scored": 2304,
+            "above_threshold": 8,
+            "recovery_scored": 2304,
+            "recovery_qualified": 0,
+            "recovery_added": 0,
+            "after_cap": 8
+          },
+          "partial_6": {
+            "scored": 416,
+            "above_threshold": 0,
+            "recovery_scored": 416,
+            "recovery_qualified": 0,
+            "recovery_added": 0,
+            "after_cap": 0
+          },
+          "complete_6": {
+            "scored": 35,
+            "above_threshold": 2,
+            "recovery_scored": 35,
+            "recovery_qualified": 0,
+            "recovery_added": 0,
+            "after_cap": 2
+          }
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 618
+        },
+        "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724",
+        "runs": 618,
+        "neural_waves": 618,
+        "issued": 4301,
+        "counts": {
+          "accepted": 1166,
+          "calls": 2432,
+          "duplicates": 2922,
+          "reads": 9445,
+          "reads_by_kind": {
+            "generated": 9414,
+            "initial": 31
+          },
+          "rejected": {
+            "binding": 104,
+            "guard": 358,
+            "untriggered_rule": 22,
+            "version": 19,
+            "watermark": 144
+          }
+        },
+        "native_runtime_events": 0,
+        "independent_search_calls": 2336,
+        "network_seconds": 2.1524560660254792,
+        "remaining_process_seconds_including_ipc": 1.3447254509737792,
+        "native_verify_seconds": 0.0039484,
+        "native_repair_seconds": 0.0008715520000000044,
+        "wall_seconds": 3.7174467500008177
+      },
+      "recovery": {
+        "checkpoint": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+        "margin_only": false,
+        "cut": 1.5,
+        "budget": 4
+      }
+    },
+    "sum-divisors": {
+      "mode": "native assist",
+      "program": "sum-divisors",
+      "tape": "30da140008a764b2a6931777ee359bc657ce201a9667f1cf3d71ceb6cb6b484f",
+      "binary": "3a825656d58f92c9be9914860c372428a37945919946842165e747988a25aa9d",
+      "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "policy": "0f059e25d0f02fd4b3abaad5685b1c362bea8f922487607d50be8a7bddc4ca04",
+      "scorer": "d8756ef211ba2f75596676d37a14947579cb0a43e99c68e50d63c68b54b93abb",
+      "reader": "2cc8736ac5e5d5897bf69b26b6dad7c6a4b15aeb1b032910d94400fb6924d83c",
+      "catalog": "71f07dbf34d5e379850623b911c73ab44a047ac95fe96404b6a9c221a5cfb718",
+      "omit": true,
+      "attach": true,
+      "explore": false,
+      "seed": 1703,
+      "withheld_layouts": 654,
+      "held_issued": 270,
+      "held_complete": 36,
+      "reference_commits": 17341,
+      "issuer": {
+        "counts": {
+          "materialized_steps": 0,
+          "root_packets": 27922,
+          "root_decisions": 23361,
+          "named_independent_slots": 921,
+          "pointer_scores": 736362,
+          "empty_input_type": 14
+        },
+        "steps": {
+          "2": {
+            "issued": 3865,
+            "complete": 696
+          },
+          "5": {
+            "issued": 81,
+            "complete": 3
+          },
+          "4": {
+            "issued": 49,
+            "complete": 2
+          },
+          "6": {
+            "issued": 115,
+            "complete": 1
+          },
+          "3": {
+            "issued": 1436,
+            "complete": 161
+          },
+          "8": {
+            "issued": 2
+          },
+          "9": {
+            "issued": 1
+          }
+        },
+        "distinct_issued": 111,
+        "distinct_complete": 54,
+        "outstanding": 0,
+        "seconds": 7.445992630051478
+      },
+      "credit": {
+        "attempts": 3064,
+        "accepted": 1314,
+        "owned_valid": 198,
+        "failed_steps": 1750,
+        "externally_reproposed": 734,
+        "uncontested": 382,
+        "uncontested_effects": 585,
+        "published_steps": 2292,
+        "set_layout_decisions": 23361,
+        "matching_plain_roots": 202,
+        "matching_roots_with_successors": 559,
+        "omitted_packets": 202,
+        "omitted_valid_packets": 198
+      },
+      "execution": {
+        "layouts": {
+          "counts": {
+            "accepted_steps": 1314,
+            "attached_roots": 559,
+            "boundary_reads": 10943,
+            "completed_layouts": {
+              "1398": 1,
+              "140": 1,
+              "1541": 1,
+              "1619": 1,
+              "1632": 1,
+              "1761": 1,
+              "1769": 1,
+              "1828": 112,
+              "1936": 44,
+              "200": 1,
+              "2004": 2,
+              "2005": 1,
+              "2025": 6,
+              "2047": 4,
+              "2059": 2,
+              "2070": 2,
+              "2071": 50,
+              "2077": 110,
+              "2088": 9,
+              "2145": 14,
+              "2149": 1,
+              "2206": 1,
+              "2251": 8,
+              "2261": 1,
+              "2269": 50,
+              "2297": 19,
+              "2317": 27,
+              "2352": 3,
+              "2368": 1,
+              "2494": 64,
+              "2527": 1,
+              "2542": 1,
+              "2579": 11,
+              "2598": 2,
+              "2606": 6,
+              "2847": 5,
+              "292": 57,
+              "2927": 1,
+              "295": 41,
+              "3016": 1,
+              "3219": 1,
+              "341": 9,
+              "346": 1,
+              "3674": 9,
+              "3678": 9,
+              "3718": 2,
+              "399": 1,
+              "430": 10,
+              "515": 23,
+              "532": 2,
+              "533": 117,
+              "880": 6,
+              "914": 7,
+              "954": 1
+            },
+            "completed_sizes": {
+              "2": 696,
+              "3": 161,
+              "4": 2,
+              "5": 3,
+              "6": 1
+            },
+            "invalid_boundary": 0,
+            "issued_layouts": {
+              "1021": 32,
+              "1147": 3,
+              "1160": 4,
+              "1170": 42,
+              "1171": 97,
+              "1257": 5,
+              "1343": 1,
+              "1394": 15,
+              "1398": 8,
+              "140": 15,
+              "1441": 22,
+              "1486": 22,
+              "1538": 1,
+              "1541": 62,
+              "1558": 1,
+              "1619": 113,
+              "1632": 92,
+              "1641": 4,
+              "1645": 1,
+              "1688": 1,
+              "1761": 5,
+              "1766": 2,
+              "1769": 28,
+              "1784": 3,
+              "179": 21,
+              "1828": 583,
+              "1936": 186,
+              "1997": 4,
+              "200": 1,
+              "2004": 22,
+              "2005": 4,
+              "2025": 87,
+              "2047": 106,
+              "2059": 35,
+              "2070": 6,
+              "2071": 54,
+              "2077": 658,
+              "2082": 3,
+              "2088": 180,
+              "2121": 13,
+              "2123": 3,
+              "2145": 274,
+              "2149": 20,
+              "2194": 23,
+              "2206": 77,
+              "2208": 32,
+              "2236": 3,
+              "2251": 42,
+              "2261": 9,
+              "2269": 267,
+              "2297": 53,
+              "2317": 89,
+              "2352": 48,
+              "2368": 15,
+              "2449": 24,
+              "2485": 5,
+              "2494": 417,
+              "2527": 3,
+              "2542": 5,
+              "2579": 53,
+              "2598": 9,
+              "2606": 12,
+              "2627": 11,
+              "2652": 1,
+              "2665": 4,
+              "2680": 1,
+              "2691": 1,
+              "2729": 2,
+              "2847": 26,
+              "292": 82,
+              "2927": 1,
+              "295": 131,
+              "3016": 1,
+              "3094": 2,
+              "3174": 1,
+              "3207": 1,
+              "3219": 4,
+              "3238": 1,
+              "340": 1,
+              "3406": 1,
+              "341": 20,
+              "3446": 33,
+              "346": 4,
+              "3532": 1,
+              "3674": 65,
+              "3678": 47,
+              "3718": 3,
+              "3723": 3,
+              "399": 32,
+              "404": 7,
+              "430": 325,
+              "464": 6,
+              "465": 11,
+              "468": 2,
+              "515": 273,
+              "532": 7,
+              "533": 177,
+              "612": 1,
+              "613": 8,
+              "637": 8,
+              "676": 5,
+              "717": 2,
+              "799": 15,
+              "800": 107,
+              "801": 9,
+              "851": 11,
+              "853": 5,
+              "880": 44,
+              "914": 11,
+              "920": 2,
+              "954": 8
+            },
+            "issued_steps": 3064,
+            "missing_returns": 230,
+            "rejected_groups": 4456,
+            "signed_layouts": 5549
+          },
+          "outstanding": 0
+        },
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "94510dbed2b574e97152cf38a32dd2308aee25aa3728fbc31e4ec946eb94ffe0",
+          "runs": 1644,
+          "signed_external": [
+            3405,
+            1109,
+            274,
+            41
+          ],
+          "signed_internal": [
+            526,
+            493,
+            354,
+            0
+          ],
+          "uncredited": [
+            3641,
+            1414,
+            2159,
+            93
+          ]
+        },
+        "visible_port_visits": 36307164,
+        "encoded_port_visits": 2524397,
+        "assist": {
+          "certified_bindings": 1351,
+          "delta_domain_skips": 254,
+          "delta_members_checked": 3140,
+          "duplicate_reads": 34790,
+          "duplicate_seconds": 0.00792681500000033,
+          "exact_candidates": 22670,
+          "exact_rows": 15990,
+          "exact_rule_calls": 9405,
+          "exact_seconds": 0.04622616699999874,
+          "point_domain_skips": 17,
+          "rejected_reads": 5958,
+          "rejected_seconds": 0.0021720999999999685,
+          "residual_commits": 7687,
+          "skipped_rule_calls": 309
+        },
+        "partial_proof_counts": {
+          "partial_1": {
+            "scored": 528686,
+            "above_threshold": 369813,
+            "after_cap": 147424,
+            "recovery_scored": 313233,
+            "recovery_qualified": 504,
+            "recovery_added": 120
+          },
+          "complete_2": {
+            "scored": 23061392,
+            "above_threshold": 50151,
+            "recovery_scored": 23061274,
+            "recovery_qualified": 465317,
+            "recovery_added": 1083,
+            "after_cap": 20705
+          },
+          "complete_1": {
+            "scored": 7666,
+            "above_threshold": 6183,
+            "after_cap": 3707,
+            "recovery_scored": 2846,
+            "recovery_qualified": 805,
+            "recovery_added": 155
+          },
+          "partial_2": {
+            "scored": 17468211,
+            "above_threshold": 482726,
+            "recovery_scored": 17467857,
+            "recovery_qualified": 29275,
+            "recovery_added": 2830,
+            "after_cap": 19708
+          },
+          "complete_3": {
+            "scored": 1780863,
+            "above_threshold": 7402,
+            "recovery_scored": 1780775,
+            "recovery_qualified": 9721,
+            "recovery_added": 225,
+            "after_cap": 3235
+          },
+          "partial_3": {
+            "scored": 2456453,
+            "above_threshold": 43661,
+            "recovery_scored": 2456453,
+            "recovery_qualified": 7500,
+            "recovery_added": 395,
+            "after_cap": 5716
+          },
+          "partial_4": {
+            "scored": 1165209,
+            "above_threshold": 110355,
+            "recovery_scored": 1165209,
+            "recovery_qualified": 140,
+            "recovery_added": 31,
+            "after_cap": 2774
+          },
+          "partial_5": {
+            "scored": 293685,
+            "above_threshold": 7543,
+            "recovery_scored": 293653,
+            "recovery_qualified": 1,
+            "recovery_added": 1,
+            "after_cap": 945
+          },
+          "complete_4": {
+            "scored": 94753,
+            "above_threshold": 92,
+            "recovery_scored": 94753,
+            "recovery_qualified": 52,
+            "recovery_added": 8,
+            "after_cap": 100
+          },
+          "complete_5": {
+            "scored": 42434,
+            "above_threshold": 729,
+            "recovery_scored": 42434,
+            "recovery_qualified": 12,
+            "recovery_added": 8,
+            "after_cap": 133
+          },
+          "partial_6": {
+            "scored": 5065,
+            "above_threshold": 7,
+            "recovery_scored": 5065,
+            "recovery_qualified": 0,
+            "recovery_added": 0,
+            "after_cap": 7
+          },
+          "complete_6": {
+            "scored": 311,
+            "above_threshold": 155,
+            "recovery_scored": 156,
+            "recovery_qualified": 1,
+            "recovery_added": 1,
+            "after_cap": 33
+          },
+          "complete_7": {
+            "scored": 798,
+            "above_threshold": 7,
+            "recovery_scored": 798,
+            "recovery_qualified": 0,
+            "recovery_added": 0,
+            "after_cap": 7
+          }
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 1644
+        },
+        "state_sha": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e",
+        "runs": 1644,
+        "neural_waves": 1644,
+        "issued": 27720,
+        "counts": {
+          "accepted": 9654,
+          "calls": 9714,
+          "duplicates": 16771,
+          "reads": 58716,
+          "reads_by_kind": {
+            "generated": 58270,
+            "initial": 418,
+            "repair": 28
+          },
+          "rejected": {
+            "binding": 1433,
+            "guard": 1480,
+            "retired": 56,
+            "untriggered_rule": 241,
+            "version": 76,
+            "watermark": 514
+          }
+        },
+        "native_runtime_events": 1,
+        "independent_search_calls": 9405,
+        "network_seconds": 39.89249859109623,
+        "remaining_process_seconds_including_ipc": 23.49765885190397,
+        "native_verify_seconds": 0.02332064,
+        "native_repair_seconds": 0.011499886999999957,
+        "wall_seconds": 63.67574766699909
+      },
+      "recovery": {
+        "checkpoint": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+        "margin_only": false,
+        "cut": 1.5,
+        "budget": 4
+      }
+    }
+  },
+  "margin": {
+    "fact": {
+      "mode": "native assist",
+      "program": "fact",
+      "tape": "e34de3bf62e6a0c89bd95ec97838c12f306bffcc6930ed45b1f4da9f2a0c7c42",
+      "binary": "3a825656d58f92c9be9914860c372428a37945919946842165e747988a25aa9d",
+      "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "policy": "0f059e25d0f02fd4b3abaad5685b1c362bea8f922487607d50be8a7bddc4ca04",
+      "scorer": "d8756ef211ba2f75596676d37a14947579cb0a43e99c68e50d63c68b54b93abb",
+      "reader": "2cc8736ac5e5d5897bf69b26b6dad7c6a4b15aeb1b032910d94400fb6924d83c",
+      "catalog": "71f07dbf34d5e379850623b911c73ab44a047ac95fe96404b6a9c221a5cfb718",
+      "omit": true,
+      "attach": true,
+      "explore": false,
+      "seed": 1703,
+      "withheld_layouts": 654,
+      "held_issued": 39,
+      "held_complete": 4,
+      "reference_commits": 1668,
+      "issuer": {
+        "counts": {
+          "materialized_steps": 0,
+          "root_packets": 4985,
+          "root_decisions": 4215,
+          "named_independent_slots": 166,
+          "pointer_scores": 18421,
+          "empty_input_type": 13
+        },
+        "steps": {
+          "2": {
+            "issued": 461,
+            "complete": 74
+          },
+          "5": {
+            "issued": 20,
+            "complete": 1
+          },
+          "9": {
+            "issued": 1
+          },
+          "3": {
+            "issued": 319,
+            "complete": 33
+          },
+          "6": {
+            "issued": 17
+          },
+          "4": {
+            "issued": 5
+          }
+        },
+        "distinct_issued": 60,
+        "distinct_complete": 23,
+        "outstanding": 0,
+        "seconds": 0.5676158270798624
+      },
+      "credit": {
+        "attempts": 465,
+        "accepted": 187,
+        "owned_valid": 40,
+        "failed_steps": 278,
+        "externally_reproposed": 135,
+        "uncontested": 12,
+        "uncontested_effects": 6,
+        "published_steps": 338,
+        "set_layout_decisions": 4215,
+        "matching_plain_roots": 43,
+        "matching_roots_with_successors": 102,
+        "omitted_packets": 43,
+        "omitted_valid_packets": 40
+      },
+      "execution": {
+        "layouts": {
+          "counts": {
+            "accepted_steps": 187,
+            "attached_roots": 102,
+            "boundary_reads": 1517,
+            "completed_layouts": {
+              "1755": 1,
+              "1763": 2,
+              "1822": 21,
+              "1930": 1,
+              "2040": 3,
+              "2052": 2,
+              "2069": 19,
+              "2487": 1,
+              "2535": 1,
+              "2574": 2,
+              "2593": 1,
+              "2842": 2,
+              "292": 10,
+              "295": 14,
+              "3011": 1,
+              "341": 6,
+              "3668": 3,
+              "3672": 1,
+              "399": 2,
+              "515": 4,
+              "532": 7,
+              "876": 1,
+              "910": 3
+            },
+            "completed_sizes": {
+              "2": 74,
+              "3": 33,
+              "5": 1
+            },
+            "invalid_boundary": 0,
+            "issued_layouts": {
+              "1017": 2,
+              "1155": 2,
+              "1165": 7,
+              "1166": 24,
+              "1182": 2,
+              "1389": 1,
+              "140": 4,
+              "1453": 6,
+              "1481": 3,
+              "1536": 14,
+              "1613": 21,
+              "1626": 16,
+              "1635": 1,
+              "1755": 1,
+              "1756": 2,
+              "1760": 1,
+              "1763": 6,
+              "1778": 1,
+              "1822": 93,
+              "1930": 13,
+              "2040": 25,
+              "2052": 18,
+              "2069": 180,
+              "2347": 2,
+              "2478": 1,
+              "2487": 61,
+              "2520": 10,
+              "2535": 1,
+              "2574": 13,
+              "2593": 9,
+              "2601": 1,
+              "2622": 1,
+              "2724": 4,
+              "2842": 2,
+              "292": 15,
+              "295": 21,
+              "3011": 1,
+              "3089": 1,
+              "3214": 1,
+              "340": 2,
+              "341": 15,
+              "3443": 1,
+              "3668": 40,
+              "3672": 8,
+              "399": 10,
+              "430": 71,
+              "515": 35,
+              "532": 21,
+              "612": 3,
+              "635": 2,
+              "636": 4,
+              "795": 1,
+              "796": 2,
+              "797": 4,
+              "847": 1,
+              "876": 3,
+              "878": 3,
+              "910": 3,
+              "94": 1,
+              "950": 6
+            },
+            "issued_steps": 465,
+            "missing_returns": 15,
+            "rejected_groups": 700,
+            "signed_layouts": 823
+          },
+          "outstanding": 0
+        },
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "eab7b3ced15fa4f043dbe761377891fed751dc31c6601a5cdf01f8f774e7de25",
+          "runs": 634,
+          "signed_external": [
+            588,
+            192,
+            39,
+            0
+          ],
+          "signed_internal": [
+            111,
+            69,
+            49,
+            0
+          ],
+          "uncredited": [
+            164,
+            100,
+            55,
+            0
+          ]
+        },
+        "visible_port_visits": 1769135,
+        "encoded_port_visits": 79060,
+        "assist": {
+          "certified_bindings": 404,
+          "delta_domain_skips": 38,
+          "delta_members_checked": 658,
+          "duplicate_reads": 6075,
+          "duplicate_seconds": 0.0012830269999999934,
+          "exact_candidates": 1834,
+          "exact_rows": 1264,
+          "exact_rule_calls": 2630,
+          "exact_seconds": 0.006278197999999999,
+          "point_domain_skips": 8,
+          "rejected_reads": 1927,
+          "rejected_seconds": 0.0005627039999999997,
+          "residual_commits": 272,
+          "skipped_rule_calls": 73
+        },
+        "partial_proof_counts": {
+          "partial_1": {
+            "scored": 62741,
+            "above_threshold": 44183,
+            "after_cap": 29230,
+            "recovery_scored": 34613,
+            "recovery_qualified": 16186,
+            "recovery_added": 1554
+          },
+          "complete_2": {
+            "scored": 343278,
+            "above_threshold": 5226,
+            "recovery_scored": 343278,
+            "recovery_qualified": 2059,
+            "recovery_added": 498,
+            "after_cap": 3555
+          },
+          "complete_1": {
+            "scored": 686,
+            "above_threshold": 550,
+            "after_cap": 559,
+            "recovery_scored": 178,
+            "recovery_qualified": 112,
+            "recovery_added": 57
+          },
+          "partial_2": {
+            "scored": 335740,
+            "above_threshold": 9174,
+            "recovery_scored": 335652,
+            "recovery_qualified": 14608,
+            "recovery_added": 1647,
+            "after_cap": 5229
+          },
+          "complete_3": {
+            "scored": 35206,
+            "above_threshold": 719,
+            "recovery_scored": 35206,
+            "recovery_qualified": 439,
+            "recovery_added": 115,
+            "after_cap": 753
+          },
+          "partial_3": {
+            "scored": 126058,
+            "above_threshold": 1785,
+            "recovery_scored": 126058,
+            "recovery_qualified": 9361,
+            "recovery_added": 560,
+            "after_cap": 2191
+          },
+          "partial_4": {
+            "scored": 73457,
+            "above_threshold": 1717,
+            "recovery_scored": 73457,
+            "recovery_qualified": 13316,
+            "recovery_added": 314,
+            "after_cap": 1378
+          },
+          "complete_4": {
+            "scored": 1344,
+            "above_threshold": 50,
+            "recovery_scored": 1344,
+            "recovery_qualified": 6,
+            "recovery_added": 6,
+            "after_cap": 56
+          },
+          "partial_5": {
+            "scored": 25121,
+            "above_threshold": 1750,
+            "recovery_scored": 25098,
+            "recovery_qualified": 2829,
+            "recovery_added": 82,
+            "after_cap": 664
+          },
+          "complete_5": {
+            "scored": 2550,
+            "above_threshold": 25,
+            "recovery_scored": 2550,
+            "recovery_qualified": 59,
+            "recovery_added": 20,
+            "after_cap": 45
+          },
+          "partial_6": {
+            "scored": 1923,
+            "above_threshold": 0,
+            "recovery_scored": 1923,
+            "recovery_qualified": 23,
+            "recovery_added": 19,
+            "after_cap": 19
+          },
+          "complete_6": {
+            "scored": 646,
+            "above_threshold": 2,
+            "recovery_scored": 646,
+            "recovery_qualified": 13,
+            "recovery_added": 13,
+            "after_cap": 15
+          },
+          "partial_7": {
+            "scored": 24,
+            "above_threshold": 0,
+            "recovery_scored": 24,
+            "recovery_qualified": 0,
+            "recovery_added": 0,
+            "after_cap": 0
+          },
+          "complete_7": {
+            "scored": 39,
+            "above_threshold": 0,
+            "recovery_scored": 39,
+            "recovery_qualified": 0,
+            "recovery_added": 0,
+            "after_cap": 0
+          }
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 634
+        },
+        "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d",
+        "runs": 634,
+        "neural_waves": 634,
+        "issued": 4942,
+        "counts": {
+          "accepted": 1396,
+          "calls": 2703,
+          "duplicates": 2882,
+          "reads": 10644,
+          "reads_by_kind": {
+            "generated": 10547,
+            "initial": 97
+          },
+          "rejected": {
+            "binding": 497,
+            "guard": 393,
+            "untriggered_rule": 37,
+            "version": 19,
+            "watermark": 81
+          }
+        },
+        "native_runtime_events": 0,
+        "independent_search_calls": 2630,
+        "network_seconds": 1.8889968810435676,
+        "remaining_process_seconds_including_ipc": 1.30963763695638,
+        "native_verify_seconds": 0.003869857,
+        "native_repair_seconds": 0.000740910000000004,
+        "wall_seconds": 3.4092822919992614
+      },
+      "recovery": {
+        "checkpoint": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+        "margin_only": true,
+        "cut": -1.0,
+        "budget": 4
+      }
+    },
+    "loopfact": {
+      "mode": "native assist",
+      "program": "loopfact",
+      "tape": "d877d81138ba44674aace8d33c447075e5fd5c8c1e76eaac7b8bb64f00675a20",
+      "binary": "3a825656d58f92c9be9914860c372428a37945919946842165e747988a25aa9d",
+      "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "policy": "0f059e25d0f02fd4b3abaad5685b1c362bea8f922487607d50be8a7bddc4ca04",
+      "scorer": "d8756ef211ba2f75596676d37a14947579cb0a43e99c68e50d63c68b54b93abb",
+      "reader": "2cc8736ac5e5d5897bf69b26b6dad7c6a4b15aeb1b032910d94400fb6924d83c",
+      "catalog": "71f07dbf34d5e379850623b911c73ab44a047ac95fe96404b6a9c221a5cfb718",
+      "omit": true,
+      "attach": true,
+      "explore": false,
+      "seed": 1703,
+      "withheld_layouts": 654,
+      "held_issued": 62,
+      "held_complete": 8,
+      "reference_commits": 1419,
+      "issuer": {
+        "counts": {
+          "materialized_steps": 0,
+          "root_packets": 4843,
+          "root_decisions": 3968,
+          "named_independent_slots": 342,
+          "pointer_scores": 28482,
+          "empty_input_type": 16
+        },
+        "steps": {
+          "2": {
+            "issued": 559,
+            "complete": 69
+          },
+          "5": {
+            "issued": 55,
+            "complete": 2
+          },
+          "4": {
+            "issued": 13,
+            "complete": 1
+          },
+          "3": {
+            "issued": 373,
+            "complete": 35
+          },
+          "6": {
+            "issued": 15
+          }
+        },
+        "distinct_issued": 69,
+        "distinct_complete": 31,
+        "outstanding": 0,
+        "seconds": 0.617940946991439
+      },
+      "credit": {
+        "attempts": 543,
+        "accepted": 189,
+        "owned_valid": 33,
+        "failed_steps": 354,
+        "externally_reproposed": 143,
+        "uncontested": 13,
+        "uncontested_effects": 26,
+        "published_steps": 347,
+        "set_layout_decisions": 3968,
+        "matching_plain_roots": 37,
+        "matching_roots_with_successors": 99,
+        "omitted_packets": 37,
+        "omitted_valid_packets": 33
+      },
+      "execution": {
+        "layouts": {
+          "counts": {
+            "accepted_steps": 189,
+            "attached_roots": 99,
+            "boundary_reads": 2148,
+            "completed_layouts": {
+              "1756": 1,
+              "1771": 2,
+              "1830": 11,
+              "1938": 2,
+              "1998": 1,
+              "2053": 1,
+              "2076": 4,
+              "2083": 26,
+              "2494": 1,
+              "2495": 2,
+              "2506": 1,
+              "2515": 2,
+              "2563": 1,
+              "2602": 2,
+              "2621": 2,
+              "2629": 1,
+              "2650": 1,
+              "2870": 2,
+              "292": 6,
+              "295": 9,
+              "2950": 1,
+              "3039": 1,
+              "3242": 1,
+              "341": 1,
+              "3697": 2,
+              "3701": 2,
+              "399": 6,
+              "515": 2,
+              "532": 7,
+              "876": 2,
+              "912": 4
+            },
+            "completed_sizes": {
+              "2": 69,
+              "3": 35,
+              "4": 1,
+              "5": 2
+            },
+            "invalid_boundary": 0,
+            "issued_layouts": {
+              "1025": 3,
+              "1163": 2,
+              "1173": 45,
+              "1174": 33,
+              "1260": 3,
+              "1397": 3,
+              "1444": 2,
+              "1461": 4,
+              "1487": 26,
+              "1489": 2,
+              "1544": 13,
+              "1555": 1,
+              "1566": 1,
+              "1621": 12,
+              "1634": 11,
+              "1643": 1,
+              "1756": 1,
+              "1768": 1,
+              "1771": 7,
+              "1786": 1,
+              "1830": 66,
+              "1938": 11,
+              "1998": 14,
+              "2005": 3,
+              "2053": 11,
+              "2076": 4,
+              "2083": 218,
+              "2367": 4,
+              "2381": 22,
+              "2494": 5,
+              "2495": 11,
+              "2506": 2,
+              "2515": 81,
+              "2548": 3,
+              "2563": 2,
+              "2602": 23,
+              "2621": 3,
+              "2629": 7,
+              "2650": 7,
+              "2688": 7,
+              "2752": 1,
+              "2870": 2,
+              "292": 9,
+              "295": 16,
+              "2950": 1,
+              "3039": 1,
+              "3242": 1,
+              "3261": 6,
+              "341": 8,
+              "3471": 6,
+              "3557": 1,
+              "3697": 73,
+              "3701": 16,
+              "399": 25,
+              "402": 3,
+              "404": 4,
+              "430": 43,
+              "515": 35,
+              "531": 1,
+              "532": 15,
+              "58": 2,
+              "636": 31,
+              "675": 3,
+              "795": 2,
+              "796": 17,
+              "847": 2,
+              "876": 6,
+              "912": 4,
+              "958": 5
+            },
+            "issued_steps": 543,
+            "missing_returns": 9,
+            "rejected_groups": 899,
+            "signed_layouts": 1015
+          },
+          "outstanding": 0
+        },
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "da3eb13aeb22993cf38dbfa9356415bee92959ab1143f4ff46e65e55fc758703",
+          "runs": 618,
+          "signed_external": [
+            481,
+            190,
+            34,
+            0
+          ],
+          "signed_internal": [
+            114,
+            108,
+            35,
+            0
+          ],
+          "uncredited": [
+            201,
+            125,
+            57,
+            0
+          ]
+        },
+        "visible_port_visits": 1718698,
+        "encoded_port_visits": 70913,
+        "assist": {
+          "certified_bindings": 310,
+          "delta_domain_skips": 50,
+          "delta_members_checked": 591,
+          "duplicate_reads": 6643,
+          "duplicate_seconds": 0.0013442169999999967,
+          "exact_candidates": 1615,
+          "exact_rows": 1109,
+          "exact_rule_calls": 2337,
+          "exact_seconds": 0.006329551000000013,
+          "point_domain_skips": 12,
+          "rejected_reads": 1909,
+          "rejected_seconds": 0.0005535910000000008,
+          "residual_commits": 222,
+          "skipped_rule_calls": 95
+        },
+        "partial_proof_counts": {
+          "partial_1": {
+            "scored": 50903,
+            "above_threshold": 36858,
+            "after_cap": 26813,
+            "recovery_scored": 26735,
+            "recovery_qualified": 12131,
+            "recovery_added": 1734
+          },
+          "complete_2": {
+            "scored": 367377,
+            "above_threshold": 5091,
+            "recovery_scored": 367377,
+            "recovery_qualified": 1820,
+            "recovery_added": 352,
+            "after_cap": 3369
+          },
+          "complete_1": {
+            "scored": 569,
+            "above_threshold": 414,
+            "after_cap": 483,
+            "recovery_scored": 185,
+            "recovery_qualified": 137,
+            "recovery_added": 69
+          },
+          "partial_2": {
+            "scored": 290170,
+            "above_threshold": 12730,
+            "recovery_scored": 289901,
+            "recovery_qualified": 9106,
+            "recovery_added": 1849,
+            "after_cap": 5630
+          },
+          "complete_3": {
+            "scored": 52992,
+            "above_threshold": 737,
+            "recovery_scored": 52992,
+            "recovery_qualified": 357,
+            "recovery_added": 114,
+            "after_cap": 786
+          },
+          "partial_3": {
+            "scored": 115938,
+            "above_threshold": 3314,
+            "recovery_scored": 115935,
+            "recovery_qualified": 9166,
+            "recovery_added": 643,
+            "after_cap": 2952
+          },
+          "partial_4": {
+            "scored": 64079,
+            "above_threshold": 4321,
+            "recovery_scored": 64075,
+            "recovery_qualified": 6680,
+            "recovery_added": 234,
+            "after_cap": 873
+          },
+          "complete_4": {
+            "scored": 16069,
+            "above_threshold": 45,
+            "recovery_scored": 16069,
+            "recovery_qualified": 15,
+            "recovery_added": 15,
+            "after_cap": 60
+          },
+          "partial_5": {
+            "scored": 15362,
+            "above_threshold": 747,
+            "recovery_scored": 15326,
+            "recovery_qualified": 2067,
+            "recovery_added": 73,
+            "after_cap": 331
+          },
+          "complete_5": {
+            "scored": 2927,
+            "above_threshold": 79,
+            "recovery_scored": 2927,
+            "recovery_qualified": 24,
+            "recovery_added": 14,
+            "after_cap": 93
+          },
+          "partial_6": {
+            "scored": 3248,
+            "above_threshold": 8,
+            "recovery_scored": 3248,
+            "recovery_qualified": 32,
+            "recovery_added": 16,
+            "after_cap": 24
+          },
+          "complete_6": {
+            "scored": 294,
+            "above_threshold": 42,
+            "recovery_scored": 264,
+            "recovery_qualified": 12,
+            "recovery_added": 8,
+            "after_cap": 50
+          },
+          "partial_7": {
+            "scored": 96,
+            "above_threshold": 0,
+            "recovery_scored": 96,
+            "recovery_qualified": 0,
+            "recovery_added": 0,
+            "after_cap": 0
+          }
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 618
+        },
+        "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724",
+        "runs": 618,
+        "neural_waves": 618,
+        "issued": 4806,
+        "counts": {
+          "accepted": 1197,
+          "calls": 2432,
+          "duplicates": 3030,
+          "reads": 10907,
+          "reads_by_kind": {
+            "generated": 10837,
+            "initial": 70
+          },
+          "rejected": {
+            "binding": 453,
+            "guard": 376,
+            "untriggered_rule": 22,
+            "version": 19,
+            "watermark": 153
+          }
+        },
+        "native_runtime_events": 0,
+        "independent_search_calls": 2337,
+        "network_seconds": 1.8194228439897415,
+        "remaining_process_seconds_including_ipc": 1.3501618860080593,
+        "native_verify_seconds": 0.003822646,
+        "native_repair_seconds": 0.0008575060000000035,
+        "wall_seconds": 3.378968666998844
+      },
+      "recovery": {
+        "checkpoint": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+        "margin_only": true,
+        "cut": -1.0,
+        "budget": 4
+      }
+    },
+    "sum-divisors": {
+      "mode": "native assist",
+      "program": "sum-divisors",
+      "tape": "30da140008a764b2a6931777ee359bc657ce201a9667f1cf3d71ceb6cb6b484f",
+      "binary": "3a825656d58f92c9be9914860c372428a37945919946842165e747988a25aa9d",
+      "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+      "policy": "0f059e25d0f02fd4b3abaad5685b1c362bea8f922487607d50be8a7bddc4ca04",
+      "scorer": "d8756ef211ba2f75596676d37a14947579cb0a43e99c68e50d63c68b54b93abb",
+      "reader": "2cc8736ac5e5d5897bf69b26b6dad7c6a4b15aeb1b032910d94400fb6924d83c",
+      "catalog": "71f07dbf34d5e379850623b911c73ab44a047ac95fe96404b6a9c221a5cfb718",
+      "omit": true,
+      "attach": true,
+      "explore": false,
+      "seed": 1703,
+      "withheld_layouts": 654,
+      "held_issued": 318,
+      "held_complete": 36,
+      "reference_commits": 17341,
+      "issuer": {
+        "counts": {
+          "materialized_steps": 0,
+          "root_packets": 31049,
+          "root_decisions": 25840,
+          "named_independent_slots": 1014,
+          "pointer_scores": 743961,
+          "empty_input_type": 15
+        },
+        "steps": {
+          "2": {
+            "issued": 4144,
+            "complete": 719
+          },
+          "5": {
+            "issued": 110,
+            "complete": 3
+          },
+          "3": {
+            "issued": 1495,
+            "complete": 161
+          },
+          "4": {
+            "issued": 61,
+            "complete": 2
+          },
+          "6": {
+            "issued": 122,
+            "complete": 2
+          },
+          "10": {
+            "issued": 3
+          },
+          "8": {
+            "issued": 2
+          },
+          "9": {
+            "issued": 1
+          }
+        },
+        "distinct_issued": 124,
+        "distinct_complete": 56,
+        "outstanding": 0,
+        "seconds": 7.519744266010093
+      },
+      "credit": {
+        "attempts": 3155,
+        "accepted": 1335,
+        "owned_valid": 193,
+        "failed_steps": 1820,
+        "externally_reproposed": 749,
+        "uncontested": 393,
+        "uncontested_effects": 599,
+        "published_steps": 2329,
+        "set_layout_decisions": 25840,
+        "matching_plain_roots": 199,
+        "matching_roots_with_successors": 578,
+        "omitted_packets": 199,
+        "omitted_valid_packets": 193
+      },
+      "execution": {
+        "layouts": {
+          "counts": {
+            "accepted_steps": 1335,
+            "attached_roots": 578,
+            "boundary_reads": 12006,
+            "completed_layouts": {
+              "1398": 1,
+              "140": 1,
+              "1541": 1,
+              "1619": 1,
+              "1632": 1,
+              "1761": 1,
+              "1769": 1,
+              "1828": 120,
+              "1936": 40,
+              "200": 1,
+              "2004": 2,
+              "2005": 1,
+              "2025": 6,
+              "2047": 4,
+              "2059": 2,
+              "2070": 2,
+              "2071": 52,
+              "2077": 110,
+              "2088": 9,
+              "2145": 15,
+              "2149": 1,
+              "2194": 1,
+              "2206": 1,
+              "2251": 6,
+              "2261": 1,
+              "2269": 48,
+              "2297": 18,
+              "2317": 25,
+              "2352": 3,
+              "2368": 1,
+              "2494": 64,
+              "2527": 1,
+              "2542": 1,
+              "2579": 11,
+              "2598": 2,
+              "2606": 6,
+              "2847": 5,
+              "292": 56,
+              "2927": 1,
+              "295": 41,
+              "3016": 1,
+              "3219": 1,
+              "341": 9,
+              "346": 1,
+              "3674": 9,
+              "3678": 8,
+              "3718": 2,
+              "399": 22,
+              "402": 1,
+              "430": 10,
+              "515": 26,
+              "532": 2,
+              "533": 117,
+              "880": 6,
+              "914": 7,
+              "954": 1
+            },
+            "completed_sizes": {
+              "2": 719,
+              "3": 161,
+              "4": 2,
+              "5": 3,
+              "6": 2
+            },
+            "invalid_boundary": 0,
+            "issued_layouts": {
+              "1021": 48,
+              "1147": 3,
+              "1160": 4,
+              "1170": 46,
+              "1171": 106,
+              "1187": 1,
+              "1257": 5,
+              "1343": 3,
+              "1394": 21,
+              "1398": 8,
+              "140": 15,
+              "1441": 25,
+              "1458": 1,
+              "1484": 8,
+              "1485": 2,
+              "1486": 52,
+              "1538": 1,
+              "154": 11,
+              "1541": 62,
+              "1558": 1,
+              "1619": 113,
+              "1632": 92,
+              "1641": 4,
+              "1645": 1,
+              "1688": 1,
+              "1761": 5,
+              "1769": 32,
+              "1784": 3,
+              "179": 29,
+              "1828": 585,
+              "1936": 218,
+              "1997": 3,
+              "200": 1,
+              "2004": 24,
+              "2005": 4,
+              "2025": 102,
+              "2047": 109,
+              "2059": 35,
+              "2070": 4,
+              "2071": 55,
+              "2077": 661,
+              "2082": 3,
+              "2088": 216,
+              "2121": 15,
+              "2123": 6,
+              "2145": 287,
+              "2149": 22,
+              "2191": 1,
+              "2194": 41,
+              "2206": 77,
+              "2208": 32,
+              "2236": 2,
+              "2251": 36,
+              "2261": 6,
+              "2269": 267,
+              "2297": 67,
+              "2317": 103,
+              "2352": 48,
+              "2368": 15,
+              "2449": 10,
+              "2485": 5,
+              "2494": 417,
+              "2523": 1,
+              "2527": 5,
+              "2542": 9,
+              "2579": 51,
+              "2598": 10,
+              "2606": 12,
+              "2627": 14,
+              "2652": 1,
+              "2665": 8,
+              "2680": 1,
+              "2687": 1,
+              "2691": 1,
+              "2727": 1,
+              "2729": 16,
+              "2847": 26,
+              "292": 84,
+              "2927": 1,
+              "295": 130,
+              "3016": 1,
+              "3094": 2,
+              "3174": 1,
+              "3207": 1,
+              "3219": 4,
+              "3238": 1,
+              "340": 1,
+              "3406": 1,
+              "341": 20,
+              "3446": 34,
+              "346": 4,
+              "3532": 1,
+              "357": 1,
+              "3674": 71,
+              "3678": 38,
+              "3718": 3,
+              "3723": 3,
+              "381": 1,
+              "399": 84,
+              "402": 1,
+              "404": 30,
+              "430": 324,
+              "464": 7,
+              "465": 11,
+              "515": 294,
+              "532": 7,
+              "533": 177,
+              "612": 1,
+              "613": 8,
+              "637": 6,
+              "676": 5,
+              "717": 2,
+              "799": 16,
+              "800": 114,
+              "801": 9,
+              "819": 4,
+              "850": 1,
+              "851": 12,
+              "853": 6,
+              "880": 44,
+              "914": 11,
+              "920": 2,
+              "954": 19,
+              "984": 3
+            },
+            "issued_steps": 3155,
+            "missing_returns": 230,
+            "rejected_groups": 4821,
+            "signed_layouts": 5938
+          },
+          "outstanding": 0
+        },
+        "ept": {
+          "kinds": [
+            "visible_birth",
+            "function_write",
+            "effective_union",
+            "visibility_change"
+          ],
+          "ledger_sha256": "94510dbed2b574e97152cf38a32dd2308aee25aa3728fbc31e4ec946eb94ffe0",
+          "runs": 1644,
+          "signed_external": [
+            3526,
+            1093,
+            265,
+            39
+          ],
+          "signed_internal": [
+            548,
+            493,
+            360,
+            0
+          ],
+          "uncredited": [
+            3498,
+            1430,
+            2162,
+            95
+          ]
+        },
+        "visible_port_visits": 36307164,
+        "encoded_port_visits": 2524397,
+        "assist": {
+          "certified_bindings": 1378,
+          "delta_domain_skips": 254,
+          "delta_members_checked": 3256,
+          "duplicate_reads": 36692,
+          "duplicate_seconds": 0.008226056000000363,
+          "exact_candidates": 22674,
+          "exact_rows": 15963,
+          "exact_rule_calls": 9408,
+          "exact_seconds": 0.046638726999998485,
+          "point_domain_skips": 15,
+          "rejected_reads": 11068,
+          "rejected_seconds": 0.0035725809999999298,
+          "residual_commits": 7498,
+          "skipped_rule_calls": 306
+        },
+        "partial_proof_counts": {
+          "partial_1": {
+            "scored": 528686,
+            "above_threshold": 369795,
+            "after_cap": 150800,
+            "recovery_scored": 312965,
+            "recovery_qualified": 140582,
+            "recovery_added": 3442
+          },
+          "complete_2": {
+            "scored": 23156630,
+            "above_threshold": 50417,
+            "recovery_scored": 23156512,
+            "recovery_qualified": 72081,
+            "recovery_added": 2446,
+            "after_cap": 22382
+          },
+          "complete_1": {
+            "scored": 7666,
+            "above_threshold": 6182,
+            "after_cap": 3768,
+            "recovery_scored": 2849,
+            "recovery_qualified": 1170,
+            "recovery_added": 213
+          },
+          "partial_2": {
+            "scored": 18098090,
+            "above_threshold": 502982,
+            "recovery_scored": 18097750,
+            "recovery_qualified": 419636,
+            "recovery_added": 7504,
+            "after_cap": 25257
+          },
+          "complete_3": {
+            "scored": 2162470,
+            "above_threshold": 7860,
+            "recovery_scored": 2162382,
+            "recovery_qualified": 9240,
+            "recovery_added": 514,
+            "after_cap": 4188
+          },
+          "partial_3": {
+            "scored": 4944494,
+            "above_threshold": 66796,
+            "recovery_scored": 4944494,
+            "recovery_qualified": 279613,
+            "recovery_added": 2169,
+            "after_cap": 9540
+          },
+          "partial_4": {
+            "scored": 2300736,
+            "above_threshold": 314427,
+            "recovery_scored": 2300736,
+            "recovery_qualified": 169621,
+            "recovery_added": 574,
+            "after_cap": 4464
+          },
+          "complete_4": {
+            "scored": 119144,
+            "above_threshold": 239,
+            "recovery_scored": 119144,
+            "recovery_qualified": 87,
+            "recovery_added": 70,
+            "after_cap": 309
+          },
+          "partial_5": {
+            "scored": 662930,
+            "above_threshold": 16423,
+            "recovery_scored": 662880,
+            "recovery_qualified": 66620,
+            "recovery_added": 216,
+            "after_cap": 1876
+          },
+          "complete_5": {
+            "scored": 88269,
+            "above_threshold": 863,
+            "recovery_scored": 88269,
+            "recovery_qualified": 91,
+            "recovery_added": 30,
+            "after_cap": 291
+          },
+          "partial_6": {
+            "scored": 125129,
+            "above_threshold": 25,
+            "recovery_scored": 125129,
+            "recovery_qualified": 831,
+            "recovery_added": 96,
+            "after_cap": 121
+          },
+          "complete_6": {
+            "scored": 19931,
+            "above_threshold": 170,
+            "recovery_scored": 19776,
+            "recovery_qualified": 24,
+            "recovery_added": 17,
+            "after_cap": 64
+          },
+          "complete_7": {
+            "scored": 1202,
+            "above_threshold": 9,
+            "recovery_scored": 1202,
+            "recovery_qualified": 5,
+            "recovery_added": 4,
+            "after_cap": 13
+          },
+          "partial_7": {
+            "scored": 12244,
+            "above_threshold": 8,
+            "recovery_scored": 12244,
+            "recovery_qualified": 148,
+            "recovery_added": 36,
+            "after_cap": 44
+          },
+          "partial_8": {
+            "scored": 54096,
+            "above_threshold": 0,
+            "recovery_scored": 54096,
+            "recovery_qualified": 8393,
+            "recovery_added": 28,
+            "after_cap": 28
+          },
+          "partial_9": {
+            "scored": 15452,
+            "above_threshold": 6,
+            "recovery_scored": 15452,
+            "recovery_qualified": 38,
+            "recovery_added": 24,
+            "after_cap": 30
+          },
+          "partial_10": {
+            "scored": 40122,
+            "above_threshold": 34,
+            "recovery_scored": 40122,
+            "recovery_qualified": 2159,
+            "recovery_added": 20,
+            "after_cap": 54
+          },
+          "partial_11": {
+            "scored": 27738,
+            "above_threshold": 106,
+            "recovery_scored": 27738,
+            "recovery_qualified": 152,
+            "recovery_added": 8,
+            "after_cap": 114
+          },
+          "complete_12": {
+            "scored": 14860,
+            "above_threshold": 68,
+            "recovery_scored": 14860,
+            "recovery_qualified": 12,
+            "after_cap": 32
+          },
+          "partial_12": {
+            "scored": 13002,
+            "above_threshold": 62,
+            "recovery_scored": 13002,
+            "recovery_qualified": 146,
+            "after_cap": 54,
+            "recovery_added": 4
+          },
+          "partial_13": {
+            "scored": 26618,
+            "above_threshold": 84,
+            "recovery_scored": 26618,
+            "recovery_qualified": 26,
+            "after_cap": 64
+          },
+          "partial_14": {
+            "scored": 38464,
+            "above_threshold": 138,
+            "recovery_scored": 38464,
+            "recovery_qualified": 22,
+            "after_cap": 64
+          },
+          "partial_15": {
+            "scored": 45088,
+            "above_threshold": 192,
+            "recovery_scored": 45088,
+            "recovery_qualified": 0,
+            "after_cap": 64
+          },
+          "partial_16": {
+            "scored": 37056,
+            "above_threshold": 128,
+            "recovery_scored": 37056,
+            "recovery_qualified": 0,
+            "after_cap": 32,
+            "recovery_added": 0
+          },
+          "partial_17": {
+            "scored": 16544,
+            "above_threshold": 96,
+            "recovery_scored": 16544,
+            "recovery_qualified": 0,
+            "after_cap": 32
+          },
+          "partial_18": {
+            "scored": 19200,
+            "above_threshold": 128,
+            "recovery_scored": 19200,
+            "recovery_qualified": 0,
+            "after_cap": 32
+          },
+          "partial_19": {
+            "scored": 512,
+            "above_threshold": 0,
+            "recovery_scored": 512,
+            "recovery_qualified": 0,
+            "recovery_added": 0,
+            "after_cap": 0
+          }
+        },
+        "native_partial_reads": 0,
+        "native_partial_probes": 0,
+        "native_partial_seconds": 0,
+        "shadow_report": null,
+        "live_receipts": false,
+        "receipt_counts": {},
+        "wave_receipt_seconds": 0.0,
+        "receipt_batches": 0,
+        "mode": "assist",
+        "wave_limit": 1,
+        "wave_endings": {
+          "single_batch": 1644
+        },
+        "state_sha": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e",
+        "runs": 1644,
+        "neural_waves": 1644,
+        "issued": 30850,
+        "counts": {
+          "accepted": 9843,
+          "calls": 9714,
+          "duplicates": 17198,
+          "reads": 66376,
+          "reads_by_kind": {
+            "generated": 65736,
+            "initial": 616,
+            "repair": 24
+          },
+          "rejected": {
+            "binding": 3775,
+            "guard": 1678,
+            "retired": 58,
+            "untriggered_rule": 264,
+            "version": 76,
+            "watermark": 535
+          }
+        },
+        "native_runtime_events": 1,
+        "independent_search_calls": 9408,
+        "network_seconds": 32.86182914694291,
+        "remaining_process_seconds_including_ipc": 23.347838081055265,
+        "native_verify_seconds": 0.025680606,
+        "native_repair_seconds": 0.01147787999999999,
+        "wall_seconds": 56.49683083299897
+      },
+      "recovery": {
+        "checkpoint": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+        "margin_only": true,
+        "cut": -1.0,
+        "budget": 4
+      }
+    }
+  }
+}

@@ -1,0 +1,157 @@
+{
+  "baseline": {
+    "fact": {
+      "signed": 1257,
+      "required": 1668,
+      "paid": 3759,
+      "operations": 918,
+      "ept": 0.24421388667198723,
+      "recall": 0.7535971223021583,
+      "complete": 66,
+      "nonempty": 163,
+      "equal_prefix": 6,
+      "final_equal": false,
+      "panic": null
+    },
+    "loopfact": {
+      "signed": 1060,
+      "required": 1419,
+      "paid": 3677,
+      "operations": 843,
+      "ept": 0.2292629861299973,
+      "recall": 0.7470049330514447,
+      "complete": 85,
+      "nonempty": 166,
+      "equal_prefix": 7,
+      "final_equal": false,
+      "panic": null
+    },
+    "sum-divisors": {
+      "signed": 8928,
+      "required": 17341,
+      "paid": 24545,
+      "operations": 5506,
+      "ept": 0.22432267264208597,
+      "recall": 0.514849201314803,
+      "complete": 218,
+      "nonempty": 627,
+      "equal_prefix": 10,
+      "final_equal": false,
+      "panic": {
+        "run": 85,
+        "charged": {
+          "issued": 1924,
+          "neural_waves": 85,
+          "wall_seconds": 1.0581114999986312,
+          "network_seconds": 0.515723791992059
+        }
+      }
+    }
+  },
+  "learned": {
+    "fact": {
+      "signed": 1374,
+      "required": 1668,
+      "paid": 4462,
+      "operations": 1016,
+      "ept": 0.22770058269834156,
+      "recall": 0.8237410071942446,
+      "complete": 96,
+      "nonempty": 163,
+      "equal_prefix": 8,
+      "final_equal": false,
+      "panic": {
+        "run": 72,
+        "charged": {
+          "issued": 1186,
+          "neural_waves": 72,
+          "wall_seconds": 0.7615659170005529,
+          "network_seconds": 0.36819370900047943
+        }
+      }
+    },
+    "loopfact": {
+      "signed": 1166,
+      "required": 1419,
+      "paid": 4301,
+      "operations": 934,
+      "ept": 0.2171588002790049,
+      "recall": 0.8217054263565892,
+      "complete": 97,
+      "nonempty": 166,
+      "equal_prefix": 9,
+      "final_equal": false,
+      "panic": {
+        "run": 58,
+        "charged": {
+          "issued": 821,
+          "neural_waves": 58,
+          "wall_seconds": 0.6902186250008526,
+          "network_seconds": 0.36245329499070067
+        }
+      }
+    },
+    "sum-divisors": {
+      "signed": 9654,
+      "required": 17341,
+      "paid": 27720,
+      "operations": 6202,
+      "ept": 0.22373737373737373,
+      "recall": 0.5567152990023644,
+      "complete": 247,
+      "nonempty": 627,
+      "equal_prefix": 10,
+      "final_equal": false,
+      "panic": {
+        "run": 101,
+        "charged": {
+          "issued": 2539,
+          "neural_waves": 101,
+          "wall_seconds": 1.381662833999144,
+          "network_seconds": 0.8002730849839281
+        }
+      }
+    }
+  },
+  "margin": {
+    "fact": {
+      "signed": 1396,
+      "required": 1668,
+      "paid": 4942,
+      "operations": 1048,
+      "ept": 0.2120598947794415,
+      "recall": 0.8369304556354916,
+      "complete": 105,
+      "nonempty": 163,
+      "equal_prefix": 11,
+      "final_equal": false,
+      "panic": null
+    },
+    "loopfact": {
+      "signed": 1197,
+      "required": 1419,
+      "paid": 4806,
+      "operations": 962,
+      "ept": 0.20016645859342488,
+      "recall": 0.8435517970401691,
+      "complete": 114,
+      "nonempty": 166,
+      "equal_prefix": 12,
+      "final_equal": false,
+      "panic": null
+    },
+    "sum-divisors": {
+      "signed": 9843,
+      "required": 17341,
+      "paid": 30850,
+      "operations": 6324,
+      "ept": 0.20499189627228526,
+      "recall": 0.5676143244334236,
+      "complete": 279,
+      "nonempty": 627,
+      "equal_prefix": 11,
+      "final_equal": false,
+      "panic": null
+    }
+  }
+}

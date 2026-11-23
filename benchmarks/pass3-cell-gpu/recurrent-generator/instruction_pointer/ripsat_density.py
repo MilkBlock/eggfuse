@@ -17,7 +17,7 @@ from online import execute
 from prefix_policy import Policy
 
 
-def compare(folder,donor,binary,weights,baked,audits,seed,learned=None,base_bake=None,base_policy=None,additional=None):
+def compare(folder,donor,binary,weights,baked,audits,seed,learned=None,base_bake=None,base_policy=None,additional=None,recovery_dir=None):
     results=[]
     if learned:
         from layout_credit import CreditIssuer
@@ -55,13 +55,21 @@ def compare(folder,donor,binary,weights,baked,audits,seed,learned=None,base_bake
                                     attach=True,seed=1703,explore=False,policy=policy)
             else:
                 issuer=None if arm=='control' else GraphIssuer(actor,donor,read(folder/'program.json'),baked,True)
+            prefix=Policy(32)
+            settings=records[arm].get('recovery')
+            if settings:
+                from prefix_recovery import Recovery
+                recovery=Recovery(recovery_dir,weights,margin_only=settings['margin_only'])
+                if (recovery.checkpoint,recovery.cut,recovery.budget)!=(settings['checkpoint'],settings['cut'],settings['budget']):
+                    raise ValueError('recovery head differs from audited execution')
+                prefix=Policy(32,recovery=recovery)
             with TemporaryDirectory() as tmp:
                 layout_file=None
                 if issuer:
                     layout_file=Path(tmp)/'layouts.json'
                     layout_file.write_text(json.dumps(issuer.receiver_layouts(),separators=(',',':')))
                 r=execute(binary,folder/'program.json',actor,seed,assist=True,audit=False,
-                          graph_issuer=issuer,layout_file=layout_file,prefix_policy=Policy(32))
+                          graph_issuer=issuer,layout_file=layout_file,prefix_policy=prefix)
             wall=perf_counter()-start
             expected=records[arm]['execution']
             if any(r.get(k)!=expected.get(k) for k in ('issued','state_sha','counts','layouts','runs')):
@@ -81,6 +89,7 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     for k in ('root','donor','binary','weights','baked','audits','out'):
         p.add_argument(k,type=Path)
+    p.add_argument('--recovery-dir',type=Path)
     p.add_argument('--policy',type=Path)
     p.add_argument('--additional-policy',type=Path)
     p.add_argument('--base-bake',type=Path)
@@ -96,5 +105,5 @@ if __name__=='__main__':
     donor=read(a.donor/'program.json')
     reports={}
     for name in a.cases:
-        reports[name]=compare(a.root/name,donor,a.binary,a.weights,a.baked,a.audits,1703+seeds.get(name,0),a.policy,a.base_bake,a.base_policy,a.additional_policy)
+        reports[name]=compare(a.root/name,donor,a.binary,a.weights,a.baked,a.audits,1703+seeds.get(name,0),a.policy,a.base_bake,a.base_policy,a.additional_policy,a.recovery_dir)
         a.out.write_text(json.dumps(reports,indent=2)+'\n')
