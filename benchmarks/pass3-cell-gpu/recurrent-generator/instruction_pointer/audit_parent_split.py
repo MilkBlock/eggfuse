@@ -1,6 +1,7 @@
 """Verify the saved checkpoint lineage, program identities and per-Run label exposure."""
 import argparse
 from collections import Counter
+import hashlib
 import json
 from pathlib import Path
 
@@ -15,7 +16,16 @@ def audit(root, calibration):
     train = {r['directory'] for r, _ in selected}
     held = {'fact', 'loopfact', 'sum-divisors'}
     program = {n:digest(root/n/'program.json') for n in train | held}
-    if train & held or {program[n] for n in train} & {program[n] for n in held}:
+    source = {}
+    for n in train | held:
+        compiled = read(root/n/'program.json')
+        identity = (json.dumps(compiled['initial'],sort_keys=True).encode() +
+                    json.dumps(compiled['source_core'],sort_keys=True).encode())
+        source[n] = hashlib.sha256(identity).hexdigest()
+        if read(root/n/'tape.json')['program_sha256'] != program[n]:
+            raise ValueError('teacher tape refers to a different program')
+    if ({source[n] for n in train} & {source[n] for n in held}
+        or train & held or {program[n] for n in train} & {program[n] for n in held}):
         raise ValueError('workload identity overlap')
     lineage_root = calibration.parent
     foundation = read(lineage_root/'expanded'/'structural'/'training.json')
@@ -54,7 +64,7 @@ def audit(root, calibration):
         raise ValueError('incorrect final recalibration')
     return dict(held_programs={n:program[n] for n in sorted(held)}, training_programs={n:program[n] for n in sorted(train)},
                 terminal=exposure, calibration=calibrations, field_training_programs=sorted(field['native']),
-                foundation_hash=foundation_hash, field_hash=field_hash)
+                foundation_hash=foundation_hash, field_hash=field_hash, source_hashes=dict(sorted(source.items())))
 
 
 if __name__ == '__main__':
