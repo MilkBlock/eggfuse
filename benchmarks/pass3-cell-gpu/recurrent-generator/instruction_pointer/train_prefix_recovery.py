@@ -14,13 +14,14 @@ from anchor_set import Domains
 from anchor_set_audit import check,load_actor
 from higher_cell import read
 from history import History
+from prefix_policy import Policy,generate
 from prefix_recovery import RecoveryHead,features
 from ripsat_layout import signatures
 from side_boundary import address
 
 
 @torch.no_grad()
-def collect(root,name,weights,binary,out):
+def collect(root,name,weights,binary,out,*,commit_sets=False):
     training={r['directory']:r['seed'] for r in read(root/'manifest.json') if
               r['origin']=='eggcc' and r['split']=='train'}
     if name not in training:
@@ -40,6 +41,7 @@ def collect(root,name,weights,binary,out):
     contexts=[];keys=[];evidence=[];labels=[];validation=[]
     requests=[]
     positions=[]
+    baseline=[]
     stats=Counter()
     with (folder/'memory.jsonl').open() as frames:
         for line in frames:
@@ -51,6 +53,11 @@ def collect(root,name,weights,binary,out):
             mem=model.memory(cat,snap,nodes)
             dom=Domains(mem)
             index={p.address:j for j,p in enumerate(mem.ports)}
+            if commit_sets:
+                for rid,refs in generate(model,cat,mem,Policy(32),selected_rules=set(snap.rules)-held):
+                    parents=[dict(address=dict(token=hist.inverse[a],op=pc),
+                                  version=mem.ports[index[a,pc]].version) for a,pc in refs]
+                    baseline.append(dict(token=len(baseline)+1,run=snap.run,rule=rid,parents=parents))
             truth=defaultdict(set)
             for req in commits[snap.run]:
                 rid=req['rule']
@@ -118,6 +125,7 @@ def collect(root,name,weights,binary,out):
                             positions.append(pos)
                             requests.append(dict(token=len(requests)+1,run=snap.run,rule=rid,parents=pp))
     verdicts=check(folder,binary,tape,requests)['recall_verdicts']
+    winners=torch.full((len(labels),),-1,dtype=torch.long) if commit_sets else None
     if {row[1] for row in verdicts}!=set(range(1,len(requests)+1)):
         raise ValueError('incomplete native label set')
     for run,token,winner,reason in verdicts:
@@ -127,9 +135,21 @@ def collect(root,name,weights,binary,out):
         if labels[pos] and winner is None:raise ValueError('native rejected the teacher proof')
         stats['alternative_native_positive']+=int(not labels[pos] and winner is not None)
         labels[pos]=winner is not None
+        if commit_sets:
+            winners[pos]=winner or 0
     out.mkdir(parents=True,exist_ok=True)
     tensors=dict(ctx=torch.cat(contexts),ports=torch.cat(keys),ev=torch.cat(evidence),
                  y=torch.tensor(labels),reserved=torch.tensor(validation))
+    if commit_sets:
+        base_verdicts=check(folder,binary,tape,baseline)['recall_verdicts']
+        covered=set()
+        for run,t,w,_ in base_verdicts:
+            if baseline[t-1]['run']!=run:
+                raise ValueError('baseline proposal label is from another Run')
+            if w is not None:
+                covered.add(w)
+        tensors.update(winner=winners,covered=torch.tensor(sorted(covered),dtype=torch.long))
+        stats.update(baseline_proposals=len(baseline),baseline_distinct=len(covered))
     torch.save(tensors,out/(name+'.pt'))
     report=dict(data=digest(out/(name+'.pt')),program=digest(folder/'program.json'),
                 tape=digest(folder/'tape.json'),base=digest(weights),receiver=digest(binary),
@@ -196,9 +216,10 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     for key in ('root','weights','binary','data','out'):p.add_argument(key,type=Path)
     p.add_argument('--collect',nargs='+')
+    p.add_argument('--commit-sets',action='store_true',help='record native proof equivalence and base-policy coverage for training')
     a=p.parse_args()
     torch.set_num_threads(1)
     if a.collect:
-        for name in a.collect:collect(a.root,name,a.weights,a.binary,a.data)
+        for name in a.collect:collect(a.root,name,a.weights,a.binary,a.data,commit_sets=a.commit_sets)
     else:
         fit(a.root,a.data,a.weights,a.out)
