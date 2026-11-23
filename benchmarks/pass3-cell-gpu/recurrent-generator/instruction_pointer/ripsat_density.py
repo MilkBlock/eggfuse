@@ -61,14 +61,16 @@ def compare(folder,donor,binary,weights,baked,audits,seed,learned=None,base_bake
                         raise ValueError('timed field pointer differs from work audit')
             else:
                 issuer=None if arm=='control' else GraphIssuer(actor,donor,read(folder/'program.json'),baked,True)
-            prefix=Policy(32)
+            prefix=Policy(records[arm].get('root_budget',32))
             settings=records[arm].get('recovery')
             if settings:
                 from prefix_recovery import Recovery
                 recovery=Recovery(recovery_dir,weights,margin_only=settings['margin_only'])
+                if recovery.refinements!=settings.get('refinements',0):
+                    raise ValueError('timed recovery depth differs from work audit')
                 if (recovery.checkpoint,recovery.cut,recovery.budget)!=(settings['checkpoint'],settings['cut'],settings['budget']):
                     raise ValueError('recovery head differs from audited execution')
-                prefix=Policy(32,recovery=recovery,read_order=records[arm].get('read_order','source'))
+                prefix=Policy(records[arm].get('root_budget',32),recovery=recovery,read_order=records[arm].get('read_order','source'))
             with TemporaryDirectory() as tmp:
                 layout_file=None
                 if issuer:

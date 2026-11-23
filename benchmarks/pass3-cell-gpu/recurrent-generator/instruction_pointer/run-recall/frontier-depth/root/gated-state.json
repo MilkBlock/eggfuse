@@ -1,0 +1,29 @@
+{
+  "mode": "root-only shadow on teacher snapshots",
+  "program": "fe75547eb3111fc0be1b93f434d950ef57efb956e6f5942f90f564d019b6ee0d",
+  "tape": "fa37f28bbfeb5f669357796c07c9dda663c28cefbb44aa5789ce0d3de43cd65d",
+  "memory": "71428813cc7aae9c719150c9e52c76369eef1a013ba6e232bd02af01488a257a",
+  "binary": "9baee8273937950f151f9f640ff325254ad4a4556fd994db7a6a26665472499d",
+  "actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+  "head": "bfa0b4bf442c074aa35a17573a1d6c0ca0a524717f7407cf08958c7282c37270",
+  "seed": 3434,
+  "budget": 32,
+  "runs": 1163,
+  "required": 6118,
+  "nonempty_rule_runs": 1066,
+  "optimistic_capacity": 6038,
+  "paid": 13856,
+  "signed_if_submitted": 4241,
+  "distinct_via_alternate_only": 1092,
+  "duplicate": 8480,
+  "repeat_with_identical_parent_fields": 8480,
+  "missed": {
+    "anchor": 135,
+    "qualified_but_pruned": 1083,
+    "later_parent": 659
+  },
+  "rejections": {
+    "binding": 419,
+    "guard": 716
+  }
+}

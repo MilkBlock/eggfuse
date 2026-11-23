@@ -1,0 +1,8 @@
+{
+  "mode": "oracle allocation on teacher snapshots",
+  "budget": 128,
+  "verified": 6118,
+  "reference": 6118,
+  "tape": "fa37f28bbfeb5f669357796c07c9dda663c28cefbb44aa5789ce0d3de43cd65d",
+  "binary": "9baee8273937950f151f9f640ff325254ad4a4556fd994db7a6a26665472499d"
+}

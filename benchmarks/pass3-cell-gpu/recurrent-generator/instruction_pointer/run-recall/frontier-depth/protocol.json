@@ -1,0 +1,10 @@
+{
+  "question": "Does inference budget or more shared-weight refinement in the recovery pointer increase distinct commits?",
+  "training": ["sum", "dot"],
+  "validation": ["affine-twins", "gated-state"],
+  "beam_sizes": [32, 64, 128],
+  "trained_refinement_steps": [1, 3],
+  "refinement_beam": 32,
+  "deployment": "Diagnostic comparison only. No calibration on the two validation programs and no new test program.",
+  "primary_measures": ["distinct signed commits", "duplicate verdicts", "paid requests", "signed effective operations", "exclusive common source Runs"]
+}

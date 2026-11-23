@@ -1,0 +1,132 @@
+{
+  "source": {
+    "affine-twins": {
+      "accepted": 3345,
+      "paid": 11291,
+      "required": 4215,
+      "duplicate": 7570,
+      "signed_ops": 2355,
+      "covered_runs": 189,
+      "held_layout_completions": 2,
+      "residual_candidates": 5355,
+      "common_runs": 14,
+      "final_equal": false
+    },
+    "gated-state": {
+      "accepted": 4490,
+      "paid": 14098,
+      "required": 6118,
+      "duplicate": 9214,
+      "signed_ops": 3023,
+      "covered_runs": 205,
+      "held_layout_completions": 3,
+      "residual_candidates": 7678,
+      "common_runs": 10,
+      "final_equal": false
+    }
+  },
+  "beam64": {
+    "affine-twins": {
+      "accepted": 3413,
+      "paid": 14556,
+      "required": 4215,
+      "duplicate": 10636,
+      "signed_ops": 2382,
+      "covered_runs": 197,
+      "held_layout_completions": 2,
+      "residual_candidates": 5355,
+      "common_runs": 14,
+      "final_equal": false
+    },
+    "gated-state": {
+      "accepted": 4760,
+      "paid": 20064,
+      "required": 6118,
+      "duplicate": 14641,
+      "signed_ops": 3172,
+      "covered_runs": 215,
+      "held_layout_completions": 3,
+      "residual_candidates": 7671,
+      "common_runs": 10,
+      "final_equal": false
+    }
+  },
+  "beam128": {
+    "affine-twins": {
+      "accepted": 3448,
+      "paid": 17624,
+      "required": 4215,
+      "duplicate": 13585,
+      "signed_ops": 2399,
+      "covered_runs": 197,
+      "held_layout_completions": 2,
+      "residual_candidates": 5355,
+      "common_runs": 14,
+      "final_equal": false
+    },
+    "gated-state": {
+      "accepted": 4910,
+      "paid": 25819,
+      "required": 6118,
+      "duplicate": 19984,
+      "signed_ops": 3221,
+      "covered_runs": 219,
+      "held_layout_completions": 4,
+      "residual_candidates": 7671,
+      "common_runs": 10,
+      "final_equal": false
+    }
+  },
+  "steps1": {
+    "affine-twins": {
+      "accepted": 3259,
+      "paid": 10957,
+      "required": 4215,
+      "duplicate": 7398,
+      "signed_ops": 2281,
+      "covered_runs": 183,
+      "held_layout_completions": 2,
+      "residual_candidates": 5359,
+      "common_runs": 14,
+      "final_equal": false
+    },
+    "gated-state": {
+      "accepted": 4364,
+      "paid": 13601,
+      "required": 6118,
+      "duplicate": 8946,
+      "signed_ops": 2952,
+      "covered_runs": 200,
+      "held_layout_completions": 3,
+      "residual_candidates": 7680,
+      "common_runs": 10,
+      "final_equal": false
+    }
+  },
+  "steps3": {
+    "affine-twins": {
+      "accepted": 3300,
+      "paid": 11107,
+      "required": 4215,
+      "duplicate": 7445,
+      "signed_ops": 2319,
+      "covered_runs": 187,
+      "held_layout_completions": 2,
+      "residual_candidates": 5355,
+      "common_runs": 12,
+      "final_equal": false
+    },
+    "gated-state": {
+      "accepted": 4406,
+      "paid": 13790,
+      "required": 6118,
+      "duplicate": 9073,
+      "signed_ops": 2976,
+      "covered_runs": 203,
+      "held_layout_completions": 3,
+      "residual_candidates": 7678,
+      "common_runs": 10,
+      "final_equal": false
+    }
+  }
+}

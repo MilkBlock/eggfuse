@@ -235,11 +235,13 @@ def rollout(root,donor,binary,weights,baked,out,name,seed,omit,explore,policy=No
                 withheld_layouts=len(issuer.withheld),held_issued=held_issued,held_complete=held_complete,reference_commits=ref['matches'],issuer=issuer.report(),credit=counts,execution=result)
     if recovery is not None:
         report['recovery']=dict(checkpoint=recovery.checkpoint,margin_only=recovery.margin_only,cut=recovery.cut,
-                                budget=recovery.budget)
+                                budget=recovery.budget,refinements=recovery.refinements)
     if field_reader is not None:
         if not issuer.counts['routed_reads']:
             raise ValueError('loaded field reader never ran')
         report['field_reader']=field_reader.checkpoint
+    if prefix is not None:
+        report['root_budget']=prefix.top_k
     if prefix is not None and prefix.read_order!='source':
         report['read_order']=prefix.read_order
     ordinary=ref.get('residual_candidates')
@@ -271,6 +273,7 @@ if __name__=='__main__':
     p.add_argument('--field-reader',type=Path)
     p.add_argument('--training-bake',type=Path)
     p.add_argument('--recovery',type=Path)
+    p.add_argument('--root-budget',type=int,default=32,help='maximum prefixes per rule, anchor role and depth')
     p.add_argument('--read-order',choices=('source','connected'))
     p.add_argument('--margin-only',action='store_true')
     p.add_argument('--run-recall',action='store_true')
@@ -287,11 +290,11 @@ if __name__=='__main__':
     prefix=None
     if args.recovery:
         from prefix_recovery import Recovery
-        prefix=Policy(32,recovery=Recovery(args.recovery,args.weights,margin_only=args.margin_only),read_order=args.read_order)
+        prefix=Policy(args.root_budget,recovery=Recovery(args.recovery,args.weights,margin_only=args.margin_only),read_order=args.read_order)
     elif args.margin_only:
         p.error('--margin-only requires a recovery head')
-    elif args.read_order:
-        prefix=Policy(32,read_order=args.read_order)
+    elif args.read_order or args.root_budget!=32:
+        prefix=Policy(args.root_budget,read_order=args.read_order)
     if args.policy:
         if args.explore: raise ValueError('frozen deployment requires a separate exploration arm')
         policy=load_policy(args.policy,args.baked,args.training_bake)
