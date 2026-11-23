@@ -1,0 +1,10 @@
+{
+  "reference_sha": "0e7719056641409665743a32fe89e9401cacbd57638b4c59ec414f16e6f26eb0",
+  "program_sha": "45299764d9a1d3d0f430bd515431360e42d0c58fed4d555c3535e2c35e74d9f7",
+  "state_sha": "e9f2f5f9e1618c614488b56bafa49320a1aa4536d102e91a687188fbad619b6e",
+  "reference_candidates": 10084,
+  "assist_candidates": 10067,
+  "assist_fallback_candidates": 10067,
+  "candidate_visits_saved": 17,
+  "fraction_saved": 0.0016858389527965093
+}

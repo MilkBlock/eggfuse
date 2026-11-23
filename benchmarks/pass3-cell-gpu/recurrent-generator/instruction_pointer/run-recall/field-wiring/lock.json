@@ -1,0 +1,61 @@
+{
+  "protocol": "d43a82285e889ea768e66e4a523bdcfb4b03f113e845704e21f8058275d97f51",
+  "field_reader": "4a4c178f8da34f2819657eb51ee14280634db7662d1fd93ba1744b1dfad0bfeb",
+  "selected": "field",
+  "validation": {
+    "base": {
+      "programs": {
+        "affine-twins": {
+          "required": 4215,
+          "signed": 3337,
+          "paid": 11352,
+          "ops": 2338,
+          "complete_runs": 188,
+          "held_complete": 1,
+          "held_issued": 428,
+          "audit": "09de32b1173f525b99a109d80e80ac3c10c5f4c5b4db01ad150f3878a5172e37"
+        },
+        "gated-state": {
+          "required": 6118,
+          "signed": 4448,
+          "paid": 14005,
+          "ops": 2997,
+          "complete_runs": 200,
+          "held_complete": 3,
+          "held_issued": 560,
+          "audit": "bc24e1a480d07306ab82af69f04ca9b028eb9706e7a85a43c1c902a96fb8b3fb"
+        }
+      },
+      "worst": 0.7270349787512259,
+      "macro": 0.7593656507042013,
+      "paid_per_signed": 3.257161207450225
+    },
+    "field": {
+      "programs": {
+        "affine-twins": {
+          "required": 4215,
+          "signed": 3345,
+          "paid": 11291,
+          "ops": 2355,
+          "complete_runs": 189,
+          "held_complete": 2,
+          "held_issued": 427,
+          "audit": "280d00448cb911c9e6ce3db82b5750f2321b334ee4cbe491c0844ec2e0819edd"
+        },
+        "gated-state": {
+          "required": 6118,
+          "signed": 4490,
+          "paid": 14098,
+          "ops": 3023,
+          "complete_runs": 205,
+          "held_complete": 3,
+          "held_issued": 564,
+          "audit": "218b8a2ef063d4699fc07605755a4849613adea0164cf61c95bac1d431905667"
+        }
+      },
+      "worst": 0.7338999673095783,
+      "macro": 0.7637471366797002,
+      "paid_per_signed": 3.2404594767070836
+    }
+  }
+}

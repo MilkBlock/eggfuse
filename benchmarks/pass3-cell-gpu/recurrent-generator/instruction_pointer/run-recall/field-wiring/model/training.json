@@ -1,0 +1,36 @@
+{
+  "catalog.json": "02496f372c3b9475ff569e60140ecc82b41dcd1a1d71c5360358aa77d4c3687d",
+  "codes.pt": "4d813c56cf08effd5bd7323210ecbcb4b6f4b6e512e9f625601c81bb0d0a7910",
+  "boundary.pt": "8c66f9f2adb9bcfc3e77dac26271890fdf766583bee49efd21a35ad411827641",
+  "fixed.json": "30bc9cc1147b86c9936e77d0d82d2ce4b0749714a455563683b0e964d214c3e3",
+  "protocol": "d43a82285e889ea768e66e4a523bdcfb4b03f113e845704e21f8058275d97f51",
+  "routes": "b2487e893f1db239567270054447079ce72aaa1010f79bc9ad6c788339439d8c",
+  "weights": "fe1367c7cc10b5324b78db01a5f77b37c180e2ffa2e6b24ea59e95b439d57d77",
+  "coefficients": [
+    3.493886709213257,
+    2.8694510459899902,
+    2.309588670730591
+  ],
+  "layouts": 54156,
+  "withheld": 6719,
+  "unique_slot_programs": 9118,
+  "trained": {
+    "sum": {
+      "ready_layouts": 4727,
+      "all_slots_from_root": 889,
+      "needs_pointer": 3838,
+      "routed_training_reads": 12856
+    },
+    "dot": {
+      "ready_layouts": 3030,
+      "needs_pointer": 2866,
+      "all_slots_from_root": 164,
+      "routed_training_reads": 9823
+    }
+  },
+  "training_tapes": {
+    "sum": "856765e48910fe600548e17c7f18b7f3859c1355e5bc57420a15463e111ad792",
+    "dot": "7f8cd9a9904f160448d8639f61b3486b47bf3a83a736d815dea884572e13df97"
+  },
+  "device": "mps"
+}
