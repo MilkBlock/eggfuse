@@ -20,8 +20,7 @@ from prefix_policy import Policy
 def compare(folder,donor,binary,weights,baked,audits,seed,learned=None,base_bake=None,base_policy=None,additional=None,recovery_dir=None):
     results=[]
     if learned:
-        from layout_credit import CreditIssuer
-        from train_layout_bandit import LearnedChoice
+        from layout_credit import CreditIssuer,load_policy
         arms=('original','refit') if base_bake else ('attach','rl')
         if additional:
             arms=(*arms,'additional')
@@ -48,7 +47,7 @@ def compare(folder,donor,binary,weights,baked,audits,seed,learned=None,base_bake
                 checkpoint=base_policy if arm=='original' else learned
                 if arm=='additional':
                     checkpoint=additional
-                policy=None if arm=='attach' else LearnedChoice(checkpoint,catalog(arm))
+                policy=None if arm=='attach' else load_policy(checkpoint,catalog(arm))
                 if records[arm]['policy']!=(policy.checkpoint if policy else None):
                     raise ValueError('timed layout policy differs from the audit')
                 issuer=CreditIssuer(actor,donor,read(folder/'program.json'),catalog(arm),omit=True,

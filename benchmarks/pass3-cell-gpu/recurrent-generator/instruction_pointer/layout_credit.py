@@ -148,6 +148,16 @@ class CreditIssuer(GraphIssuer):
         return returns,totals
 
 
+def load_policy(folder,baked,training_bake=None):
+    if read(folder/'training.json').get('objective')=='native_receipt_value':
+        from receipt_value import ReceiptChoice
+        if training_bake:
+            raise ValueError('receipt values require their frozen Bake catalog')
+        return ReceiptChoice(folder,baked)
+    from train_layout_bandit import LearnedChoice
+    return LearnedChoice(folder,baked,training_bake)
+
+
 def rollout(root,donor,binary,weights,baked,out,name,seed,omit,explore,policy=None,attach=False,run_recall=False,prefix=None):
     actor=load_actor(weights,True)
     folder=root/name
@@ -258,8 +268,7 @@ if __name__=='__main__':
         p.error('--margin-only requires a recovery head')
     if args.policy:
         if args.explore: raise ValueError('frozen deployment requires a separate exploration arm')
-        from train_layout_bandit import LearnedChoice
-        policy=LearnedChoice(args.policy,args.baked,args.training_bake)
+        policy=load_policy(args.policy,args.baked,args.training_bake)
     for name in args.cases:
         if args.exclusive:
             if args.explore:
