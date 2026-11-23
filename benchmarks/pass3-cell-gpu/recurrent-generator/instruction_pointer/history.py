@@ -60,7 +60,7 @@ class History:
             self.inverse[alias] = token
         return self.names[token], pc
 
-    def snapshot(self, frame):
+    def snapshot(self, frame, materialize=True):
         run = frame['run']
         if run != self.run + 1:
             raise ValueError('missing snapshot')
@@ -96,6 +96,8 @@ class History:
                 parents.append(Parent(catalog.outputs[self.templates[src],pc],pc,(value,)))
             self.templates[event['token']] = tpl
             self.inputs[event['token']] = tuple(zip(catalog.inputs[tpl], parents, strict=True))
+        if not materialize:
+            return None
         ports = []
         for a,row in self.visible.items():
             token,pc = a
@@ -107,7 +109,7 @@ class History:
         return Snapshot(run,frame['epoch'],dict(frame['rules']),ports,[])
 
 
-def load(directory, seed):
+def stream(directory, seed, runs=None):
     raw = (directory/'program.json').read_bytes()
     tape = json.loads((directory/'tape.json').read_bytes())
     if hashlib.sha256(raw).hexdigest() != tape['program_sha256']:
@@ -117,10 +119,12 @@ def load(directory, seed):
     actions = defaultdict(list)
     for req in tape['requests']:
         actions[req['run']].append(req)
-    snapshots = []
     with (directory/'memory.jsonl').open() as records:
         for line in records:
-            s = history.snapshot(json.loads(line))
+            frame = json.loads(line)
+            s = history.snapshot(frame, runs is None or frame['run'] in runs)
+            if s is None:
+                continue
             for req in actions[s.run]:
                 refs = []
                 for item in req['parents']:
@@ -129,5 +133,12 @@ def load(directory, seed):
                         raise ValueError('teacher label does not name the current port version')
                     refs.append(history.rename(a))
                 s.targets.append((req['rule'],tuple(refs)))
-            snapshots.append(s)
-    return catalog,snapshots
+            yield catalog,s
+            if runs is not None and s.run == max(runs):
+                break
+
+
+def load(directory, seed, runs=None):
+    pairs = iter(stream(directory,seed,runs))
+    catalog,first = next(pairs)
+    return catalog,[first,*(snapshot for _,snapshot in pairs)]
