@@ -23,7 +23,7 @@ def output_table(rule, pc):
     return effect.get('call',{}).get('table') if effect['op'] in ('let','set') else None
 
 
-def capture(folder, donor, limit):
+def capture(folder, donor, limit, *, each_parent_first=False):
     """Layout contains (rule, relative Run group, atom sources) in source order.
     A source is (previous step, result PC) or (-1, independent boundary slot).
     Exact obligations include every table atom, including external repair ports.
@@ -110,17 +110,30 @@ def capture(folder, donor, limit):
     for j,req in enumerate(refs):
         if mapped[req['rule']] is None:
             continue
-        selected={j}
-        todo=deque(parents(j))
-        while todo and len(selected)<limit:
-            pred=todo.popleft()
-            if pred is None or pred in selected:
-                continue
-            selected.add(pred)
-            todo.extend(parents(pred))
-            layout,root,boundary,ready,first_schedule,tokens=encode(selected)
-            by_root[root].setdefault(layout,[]).append((boundary,ready,first_schedule,tokens))
-            counts[len(layout)]+=1
+        direct=parents(j)
+        # The default follows atom order. Alternative starting producers expose
+        # entry layouts otherwise lost when several atoms have distinct owners.
+        orders=[direct]
+        if each_parent_first:
+            unique=list(dict.fromkeys(k for k in direct if k is not None))
+            orders.extend([k]+[p for p in direct if p!=k] for k in unique[1:])
+        seen=set()
+        for order in orders:
+            selected={j}
+            todo=deque(order)
+            while todo and len(selected)<limit:
+                pred=todo.popleft()
+                if pred is None or pred in selected:
+                    continue
+                selected.add(pred)
+                todo.extend(parents(pred))
+                key=frozenset(selected)
+                if key in seen:
+                    continue
+                seen.add(key)
+                layout,root,boundary,ready,first_schedule,tokens=encode(selected)
+                by_root[root].setdefault(layout,[]).append((boundary,ready,first_schedule,tokens))
+                counts[len(layout)]+=1
     return refs,mapped,by_root,counts
 
 

@@ -51,11 +51,22 @@ def logging_prior(options,baseline,sizes):
 
 
 class LearnedChoice:
-    def __init__(self,folder,baked):
+    def __init__(self,folder,baked,training_bake=None):
+        training=training_bake or baked
         info=read(folder/'training.json')
         for name in ('codes.pt','catalog.json','shared.pt','boundary.pt'):
-            if info['bake'][name]!=digest(baked/name):
+            if info['bake'][name]!=digest(training/name):
                 raise ValueError('policy trained on different Bake data')
+        if training_bake is not None:
+            extension=read(baked/'study.json')
+            original=read(training/'catalog.json')
+            if (extension.get('parent_catalog')!=info['bake']['catalog.json'] or
+                read(baked/'catalog.json')[:len(original)]!=original or
+                any(digest(baked/k)!=info['bake'][k] for k in ('shared.pt','boundary.pt'))):
+                raise ValueError('deployment Bake does not extend the frozen training catalog')
+            original_codes=torch.load(training/'codes.pt',map_location='cpu',weights_only=True)['codes']
+            codes=torch.load(baked/'codes.pt',map_location='cpu',weights_only=True)['codes']
+            torch.testing.assert_close(codes[:len(original)],original_codes)
         if info['policy']!=digest(folder/'policy.pt'):
             raise ValueError('policy checkpoint changed')
         self.checkpoint=info['policy']

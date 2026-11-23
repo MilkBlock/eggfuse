@@ -201,6 +201,7 @@ if __name__=='__main__':
     p.add_argument('--seeds',nargs='+',type=int,default=[1703])
     p.add_argument('--omit',action='store_true')
     p.add_argument('--policy',type=Path)
+    p.add_argument('--training-bake',type=Path)
     p.add_argument('--exclusive',action='store_true')
     p.add_argument('--attach',action='store_true')
     p.add_argument('--explore',action='store_true')
@@ -210,7 +211,7 @@ if __name__=='__main__':
     if args.policy:
         if args.explore: raise ValueError('frozen deployment requires a separate exploration arm')
         from train_layout_bandit import LearnedChoice
-        policy=LearnedChoice(args.policy,args.baked)
+        policy=LearnedChoice(args.policy,args.baked,args.training_bake)
     for name in args.cases:
         if args.exclusive:
             if args.explore:
