@@ -88,10 +88,11 @@ if __name__=='__main__':
     parser.add_argument('program',type=Path)
     parser.add_argument('--weights',type=Path)
     parser.add_argument('--seed',type=int,default=1703)
+    parser.add_argument('--field-pointer',action='store_true')
     a=parser.parse_args()
     torch.set_num_threads(1)
     torch.manual_seed(a.seed)
-    model=InstructionActor().eval()
+    model=InstructionActor(field_pointer=a.field_pointer).eval()
     if a.weights:
         model.load_state_dict(torch.load(a.weights,map_location='cpu',weights_only=True))
     print(json.dumps(execute(a.binary.resolve(),a.program.resolve(),model,a.seed)))

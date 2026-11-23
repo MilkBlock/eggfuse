@@ -37,14 +37,14 @@ def align(targets,proposals):
     return [(t,pred[j]) for t,j in zip(target,order) if t is not None]
 
 
-def assess(root,binary,weights,seed):
+def assess(root,binary,weights,seed, field_pointer=False):
     torch.manual_seed(seed)
     torch.set_num_threads(1)
-    actor=InstructionActor().eval()
+    actor=InstructionActor(field_pointer=field_pointer).eval()
     if weights:
         actor.load_state_dict(torch.load(weights,map_location='cpu',weights_only=True))
     numbers = b''.join(t.detach().numpy().tobytes() for t in actor.state_dict().values())
-    result=dict(provider='trained' if weights else 'random_initialization',seed=seed,
+    result=dict(field_pointer=field_pointer,provider='trained' if weights else 'random_initialization',seed=seed,
                 build_sha256=sha(binary.read_bytes()),weights_sha256=sha(numbers),device='single-thread CPU',
                 snapshot_metric='address equality to one reference certificate; each proposal used at most once',
                 exclusive_credit='common complete Run prefix lower bound; divergent suffix is uncredited',splits={})
@@ -110,5 +110,6 @@ if __name__=='__main__':
     parser.add_argument('output',type=Path)
     parser.add_argument('--weights',type=Path)
     parser.add_argument('--seed',type=int,default=1703)
+    parser.add_argument('--field-pointer',action='store_true')
     a=parser.parse_args()
-    a.output.write_text(json.dumps(assess(a.corpus,a.receiver.resolve(),a.weights,a.seed),indent=2)+'\n')
+    a.output.write_text(json.dumps(assess(a.corpus,a.receiver.resolve(),a.weights,a.seed,a.field_pointer),indent=2)+'\n')

@@ -14,9 +14,9 @@ from online import propose
 
 
 @torch.no_grad()
-def study(root,binary,weights,seed):
+def study(root,binary,weights,seed, field_pointer=False):
     torch.set_num_threads(1)
-    actor=InstructionActor().eval()
+    actor=InstructionActor(field_pointer=field_pointer).eval()
     actor.load_state_dict(torch.load(weights,map_location='cpu',weights_only=True))
     manifest=json.loads((root/'manifest.json').read_bytes())
     results=[]
@@ -81,7 +81,7 @@ def study(root,binary,weights,seed):
                     actual_new_events=sum(e['run']==run for e in replay['runtime_events']),
                     reference_new_events=sum(e['run']==run for e in tape['repair_events']),
                     required_event_consumers=len(needed),verified_reference_event_consumers=len(accepted_event&needed)))
-    return dict(mode='assist',assistance='exact signed prefix provided; only one Run per trial issued by frozen Actor',
+    return dict(field_pointer=field_pointer,mode='assist',assistance='exact signed prefix provided; only one Run per trial issued by frozen Actor',
                 build_sha256=hashlib.sha256(binary.read_bytes()).hexdigest(),
                 weights_file_sha256=hashlib.sha256(weights.read_bytes()).hexdigest(),
                 independent_verifier_search_calls=0,results=results)
@@ -91,5 +91,6 @@ if __name__=='__main__':
     ap=argparse.ArgumentParser(description=__doc__)
     for name in ('corpus','receiver','weights','output'):
         ap.add_argument(name,type=Path)
+    ap.add_argument('--field-pointer',action='store_true')
     a=ap.parse_args()
-    a.output.write_text(json.dumps(study(a.corpus,a.receiver.resolve(),a.weights,1703),indent=2)+'\n')
+    a.output.write_text(json.dumps(study(a.corpus,a.receiver.resolve(),a.weights,1703,a.field_pointer),indent=2)+'\n')

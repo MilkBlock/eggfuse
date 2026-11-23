@@ -39,14 +39,16 @@ class Memory:
     keys: torch.Tensor
     ports: list
     rules: dict
+    fields: torch.Tensor | None = None
 
 
 class InstructionActor(nn.Module):
-    def __init__(self, width=32, lanes=4):
+    def __init__(self, width=32, lanes=4, field_pointer=False):
         super().__init__()
         if width % 2:
             raise ValueError('rotary width must be even')
         self.width = width
+        self.field_pointer = field_pointer
         self.static = nn.Embedding(8192, width)
         self.msg = nn.Linear(width, width, bias=False)
         self.update = nn.Linear(width, width)
@@ -102,7 +104,17 @@ class InstructionActor(nn.Module):
                 base = base.index_add(0, idx([i for i,_ in selected]),
                                       self.latent(torch.stack([v for _,v in selected])))
         keys = (nodes[idx([p.node for p in ports])] + rotate(base, pc)).tanh()
-        return Memory(nodes, keys, ports, snapshot.rules)
+        fields = None
+        if self.field_pointer:
+            # A port is encoded in isolation. Keep the columns separate so a
+            # subsequent pointer can read a selected field without GRU compression.
+            arity = max(len(p.hashes) for p in ports)
+            raw = [[list(v.to_bytes(8, "little")) for v in p.hashes] +
+                   [[0]*8]*(arity-len(p.hashes)) for p in ports]
+            octets = nodes.new_tensor(raw, dtype=torch.int32)
+            shifts = torch.arange(8, dtype=torch.int32, device=nodes.device)
+            fields = (((octets[..., None] >> shifts) & 1).flatten(-2).to(nodes.dtype)*2-1)
+        return Memory(nodes, keys, ports, snapshot.rules, fields)
 
     def actions(self, catalog, memory, lane):
         rules = list(memory.rules)
@@ -145,6 +157,7 @@ class InstructionActor(nn.Module):
         out = [None]*len(atoms)
         out[anchor] = mem.ports[first].address
         h = self.next_read(mem.keys[first]+roles[anchor],h)
+        selected = [(anchor, first)]
         for i,(table,_) in enumerate(atoms):
             if i == anchor:
                 continue
@@ -152,9 +165,17 @@ class InstructionActor(nn.Module):
             if not mask.any().item():
                 return None, []
             logits = (mem.keys @ self.query(h+roles[i]) / math.sqrt(self.width)).masked_fill(~mask,-torch.inf)
+            if mem.fields is not None:
+                # Wiring is static. Only already selected ports provide queries;
+                # no candidate tuple or value-dependent mask is supplied by the host.
+                for previous, index in selected:
+                    for a, b in catalog.field_links[rid, previous, i]:
+                        query = mem.fields[index, a]
+                        logits = logits + (mem.fields[:, b] @ query) / math.sqrt(query.numel())
             j = where[teacher[i]] if teacher is not None else int(logits.argmax())
             if teacher is not None:
                 losses.append(-logits.log_softmax(0)[j])
+            selected.append((i,j))
             out[i] = mem.ports[j].address
             h = self.next_read(mem.keys[j]+roles[i],h)
         return tuple(out), losses

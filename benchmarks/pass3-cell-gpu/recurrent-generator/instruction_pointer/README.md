@@ -41,3 +41,9 @@ python "$tools/prefix_probe.py" /tmp/pointer-corpus "$bin" /tmp/actor.pt /tmp/pr
 ```
 
 The initial job queue and two PyTorch installations in the agent session both returned Metal compiler service error 141. The same external workspace and trainer succeeded from the logged-in macOS session. Dataset expansion, CPU inference, negative controls and native validation completed through the local job queue once the weights were available.
+
+### Field pointers with frozen weights
+
+The optional `--field-pointer` head retains each receipt field's 64 signed hash bits. After a lane selects a parent port, its selected fields become queries against the other ports' field vectors. Bake determines the column pairs from repeated query variables. The model adds scaled dot products to its existing pointer logits. The host never enumerates pairs of candidate ports. The shared field representation and attention bias are architectural choices. The original trained weights remain frozen for this comparison. Scores do not prove equality, and the same port may be issued for two roles.
+
+On the same 96 held-out programs, correct exclusive final states increased from 8 to 28. Given the exact history before collision, accepted distinct-endpoint actions increased from 1/48 to 46/48, and 46/48 same-endpoint controls were accepted without producing any repair event. On the held-out changed-operand/PC task the event read remained 0/16 on correct history. The field changes do not address the first unconditional port choice. These CPU comparisons measure semantic outcomes; no throughput improvement is established. The [mode-separated record](field-results.json) retains model, verifier and issuance counts. Reproduce with the original checkpoint and corpus by adding `--field-pointer` to the evaluate and prefix-probe commands above.
