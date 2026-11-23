@@ -55,20 +55,28 @@ class AnchorSetActor(SemanticActor):
         h=torch.cat((root,mem.nodes[cat.atoms[rid][role][1]]))
         return self.anchor_key(mem.keys[ids])@self.anchor_query(h)/math.sqrt(self.width)+self.anchor_bias(h)
 
-    def pair_scores(self,cat,mem,rid,ordered,prefix,role,ids):
+    def pair_components(self,cat,mem,rid,ordered,prefix,role,ids,measure=False):
         roles=[mem.nodes[node] for _,node in cat.atoms[rid]]
         h=mem.nodes[cat.roots['generated',rid]].expand(len(prefix),-1)
         fields=mem.keys.new_zeros((len(prefix),len(ids)))
         same=torch.zeros_like(fields)
+        discrepancy=torch.zeros_like(fields) if measure else None
         for j,prior in enumerate(ordered):
             previous=prefix[:,j]
             h=self.next_read(mem.keys[previous]+roles[prior],h)
             same=same+(previous[:,None]==ids[None,:])
             for src,dst in cat.field_links[rid,prior,role]:
-                fields=fields+mem.fields[previous,src]@mem.fields[ids,dst].T/64
+                similarity=mem.fields[previous,src]@mem.fields[ids,dst].T/64
+                fields=fields+similarity
+                if measure:
+                    discrepancy=torch.maximum(discrepancy,1-similarity)
         query=torch.cat((h,roles[role].expand_as(h)),-1)
         base=self.pair_query(query)@self.pair_key(mem.keys[ids]).T/math.sqrt(self.width)
-        return base+self.pair_bias(query)+self.field_comparison(torch.stack((fields,same),-1)).squeeze(-1)
+        scores=base+self.pair_bias(query)+self.field_comparison(torch.stack((fields,same),-1)).squeeze(-1)
+        return scores,discrepancy
+
+    def pair_scores(self,cat,mem,rid,ordered,prefix,role,ids):
+        return self.pair_components(cat,mem,rid,ordered,prefix,role,ids)[0]
 
     def expand(self,cat,mem,dom,rid,anchor,first):
         order=[anchor]+[j for j in range(len(cat.atoms[rid])) if j!=anchor]
@@ -124,3 +132,13 @@ class AnchorSetActor(SemanticActor):
         if limit!=1:
             raise ValueError('parallel anchor decoder runs once per sealed Run')
         return list(self.generate(cat,self.memory(cat,snapshot,nodes))),1,'single_batch'
+
+class DisagreementActor(AnchorSetActor):
+    """Retain the worst shared-field discrepancy alongside the existing sum of similarities."""
+    def __init__(self,vocabulary,names='structural',width=32):
+        super().__init__(vocabulary,names,width)
+        self.disagreement_scale=nn.Parameter(torch.zeros(()))
+
+    def pair_scores(self,cat,mem,rid,ordered,prefix,role,ids):
+        scores,delta=self.pair_components(cat,mem,rid,ordered,prefix,role,ids,measure=True)
+        return scores-self.disagreement_scale.clamp_min(0)*delta
