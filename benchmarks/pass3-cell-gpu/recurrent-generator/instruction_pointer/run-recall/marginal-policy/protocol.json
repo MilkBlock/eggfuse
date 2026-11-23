@@ -1,0 +1,30 @@
+{
+  "train": {
+    "sum": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+    "dot": "c0d1da51c3aca3e61c945b39dc7da9e3ed135d77c57330ffd34dbbed8adc1159"
+  },
+  "validation": {
+    "affine-twins": "93b519c9b2220e6ff479fc01733043a080717e301404c660b4824b35fb55d69c",
+    "gated-state": "fe75547eb3111fc0be1b93f434d950ef57efb956e6f5942f90f564d019b6ee0d"
+  },
+  "test": {
+    "clamped-ramp": "97fdf7fd28825d1ef06ea109dfae46f421791c4c4676c7937441a1365bb766d3"
+  },
+  "development_only": [
+    "fact",
+    "loopfact",
+    "sum-divisors"
+  ],
+  "strengths": [
+    0,
+    0.25,
+    1.0
+  ],
+  "selection": "maximum minimum per-program signed/reference, then macro recall, then pooled EPT, then smaller strength",
+  "training_target": "whole-episode difference in signed commits plus 0.25 times saved external packets",
+  "selection_mode": "native assist",
+  "test_mode": [
+    "native assist",
+    "exclusive"
+  ]
+}
