@@ -30,6 +30,7 @@ pub struct Counts {
     pub forks_issued: usize,
     pub forks_accepted: usize,
     pub side_steps_accepted: usize,
+    pub side_verdicts: BTreeMap<&'static str, usize>,
     pub by_depth: BTreeMap<usize, usize>,
 }
 
@@ -132,6 +133,14 @@ impl Higher {
             return Err("unexpected standalone side".into());
         }
         Ok(())
+    }
+    pub fn verdict(&mut self, req: &Request, reason: &'static str) {
+        if let Some(recipe) = req.unit.map(|i| &self.recipes[i])
+            && req.step == recipe.hops.len()
+            && recipe.side.is_some()
+        {
+            *self.counts.side_verdicts.entry(reason).or_default() += 1;
+        }
     }
     pub fn accepted(&mut self, req: &Request) {
         if let Some(unit) = req.unit {

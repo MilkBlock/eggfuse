@@ -277,7 +277,7 @@ impl History {
         let mut audit = RecallAudit::default();
         let mut ids = BTreeSet::new();
         for p in proposals {
-            if !ids.insert(p.token) || p.token <= 0 || p.run == 0 {
+            if p.unit.is_some() || p.side.is_some() || p.closed_branch.is_some() || !ids.insert(p.token) || p.token <= 0 || p.run == 0 {
                 return Err("invalid recall proposal identity".into());
             }
             audit.queue.entry((p.run,p.rule)).or_default().push(p);
@@ -297,6 +297,9 @@ impl History {
             }
         }
         if let Some(packets) = self.queue.remove(&(run, rid)) {
+            if let Some(higher)=&mut self.higher {
+                for p in &packets {higher.verdict(p,"untriggered_rule");}
+            }
             *self.counts.rejected.entry("untriggered_rule").or_default() += packets.len();
         }
     }
@@ -452,7 +455,7 @@ impl History {
                 };
                 let id = packet.token;
                 let memory = self.memory.as_mut().expect("wave memory");
-                if packet.run != run || id <= 0 || !memory.online_ids.as_mut().expect("online").insert(id) {
+                if packet.unit.is_some() || packet.side.is_some() || packet.closed_branch.is_some() || packet.run != run || id <= 0 || !memory.online_ids.as_mut().expect("online").insert(id) {
                     return Err("invalid wave request identity".into());
                 }
                 if shadow {
@@ -690,6 +693,7 @@ impl History {
             for packet in self.queue.remove(&(run, rid)).unwrap_or_default() {
                 let meter = self.assist.as_ref().map(|_| (Instant::now(), self.counts.reads));
                 let (answer, verdict) = self.admit(g,rid,wm,&packet)?;
+                if let Some(higher)=&mut self.higher {higher.verdict(&packet,verdict);}
                 if let Some((clock, reads)) = meter && answer.is_none() {
                     let stats = self.assist.as_mut().unwrap();
                     if verdict == "duplicate" {
