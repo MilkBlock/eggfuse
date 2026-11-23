@@ -2,6 +2,7 @@
 from dataclasses import dataclass
 import math
 
+import numpy as np
 import torch
 from torch import nn
 
@@ -23,14 +24,19 @@ def rotate(values, positions):
 
 def row_features(rows, width, device):
     """Encode port fields independently of every other port. Input order is significant."""
-    projected = []
-    for row in rows:
-        values = [0.] * width
-        for field, bits in enumerate(row):
-            for d in range(width):
-                values[d] += (1. if (bits >> ((d + 7 * field) % 64)) & 1 else -1.) / (1 + field)
-        projected.append(values)
-    return torch.tensor(projected, device=device, dtype=torch.float32).reshape(-1, width)
+    # Encode each distinct input row once, then gather in original port order.
+    # No rows are removed from either the memory or the pointer action space.
+    unique = list(dict.fromkeys(rows))
+    row_ids = {row:i for i,row in enumerate(unique)}
+    values = np.zeros((len(unique),width), dtype=np.float64)
+    for col in range(max(map(len,unique),default=0)):
+        present = [i for i,row in enumerate(unique) if col < len(row)]
+        bits = np.array([unique[i][col] for i in present],dtype=np.uint64)
+        shifts = (np.arange(width,dtype=np.uint64)+7*col)%64
+        signed = 2.*((bits[:,None] >> shifts) & 1)-1.
+        values[present] += signed / (1+col)
+    indices = np.fromiter((row_ids[row] for row in rows),dtype=np.intp,count=len(rows))
+    return torch.from_numpy(values.astype(np.float32)[indices]).to(device)
 
 
 @dataclass
@@ -131,6 +137,14 @@ class InstructionActor(nn.Module):
         logits = torch.cat((self.stop(h), memory.nodes[roots] @ self.query(h) / math.sqrt(self.width)))
         return h, rules, logits
 
+    def related_fields(self,catalog,mem,rid,selected,role,logits):
+        if mem.fields is not None:
+            for previous,index in selected:
+                for source,target in catalog.field_links[rid,previous,role]:
+                    query = mem.fields[index,source]
+                    logits = logits + (mem.fields[:,target] @ query) / math.sqrt(query.numel())
+        return logits
+
     def references(self, catalog, mem, h, rid, teacher=None):
         """Select a fresh anchor across all roles, then name every other parent in order."""
         atoms = catalog.atoms[rid]
@@ -171,13 +185,7 @@ class InstructionActor(nn.Module):
             if not mask.any().item():
                 return None, []
             logits = (mem.keys @ self.query(h+roles[i]) / math.sqrt(self.width)).masked_fill(~mask,-torch.inf)
-            if mem.fields is not None:
-                # Wiring is static. Only already selected ports provide queries;
-                # no candidate tuple or value-dependent mask is supplied by the host.
-                for previous, index in selected:
-                    for a, b in catalog.field_links[rid, previous, i]:
-                        query = mem.fields[index, a]
-                        logits = logits + (mem.fields[:, b] @ query) / math.sqrt(query.numel())
+            logits = self.related_fields(catalog,mem,rid,selected,i,logits)
             j = where[teacher[i]] if teacher is not None else int(logits.argmax())
             if teacher is not None:
                 losses.append(-logits.log_softmax(0)[j])

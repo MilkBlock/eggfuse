@@ -12,6 +12,16 @@ from catalog import Catalog
 from history import History
 
 
+def lane_choice(actor,catalog,memory,state):
+    h,rules,logits=state
+    action=int(logits.argmax())
+    if action == 0:
+        return None,None
+    rid=rules[action-1]
+    refs,_=actor.references(catalog,memory,h,rid)
+    return rid,refs
+
+
 def issue_run(actor, catalog, snapshot, nodes, wave_limit=1):
     """All waves name ports from one sealed snapshot; issued proofs are returned for charging."""
     if wave_limit < 1:
@@ -22,18 +32,15 @@ def issue_run(actor, catalog, snapshot, nodes, wave_limit=1):
     issued, seen = [], set()
     for wave in range(1,wave_limit+1):
         actions, feedback = [], []
-        for h,rules,logits in state:
-            action = int(logits.argmax())
-            if action:
-                rid = rules[action-1]
-                refs,_ = actor.references(catalog,memory,h,rid)
-                if refs is not None:
-                    actions.append((rid,refs))
-                    if wave < wave_limit:
-                        embedding = nodes[catalog.roots['generated',rid]]
-                        for addr in refs:
-                            embedding = actor.next_read(memory.keys[by_address[addr]], embedding)
-                        feedback.append(embedding)
+        for lane_state in state:
+            rid,refs = lane_choice(actor,catalog,memory,lane_state)
+            if refs is not None:
+                actions.append((rid,refs))
+                if wave < wave_limit:
+                    embedding = nodes[catalog.roots['generated',rid]]
+                    for addr in refs:
+                        embedding = actor.next_read(memory.keys[by_address[addr]], embedding)
+                    feedback.append(embedding)
         issued.extend(actions)
         if not actions:
             reason = 'stop' if all(int(logits.argmax())==0 for _,_,logits in state) else 'no_complete_request'
