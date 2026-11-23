@@ -1,0 +1,57 @@
+{
+  "bake": {
+    "codes.pt": "fc54d71dee68069d0ef41779203ff1502d32a722967c53770783036eb512fb08",
+    "catalog.json": "ee476c5b73a7357fab4a18711a0dc59bbc705514ff1e8723850b70d7c45d8a39",
+    "shared.pt": "d8756ef211ba2f75596676d37a14947579cb0a43e99c68e50d63c68b54b93abb",
+    "boundary.pt": "2cc8736ac5e5d5897bf69b26b6dad7c6a4b15aeb1b032910d94400fb6924d83c"
+  },
+  "policy": "e6c619b861d4990c49f296b9d188e4fe36c2fb8389a02f14e86f9d688b0a621b",
+  "binary": "3a825656d58f92c9be9914860c372428a37945919946842165e747988a25aa9d",
+  "data": {
+    "critic": {
+      "samples": 75214,
+      "positive": 700,
+      "distinct_sampled_layouts": 2243,
+      "files": [
+        "dot-1703",
+        "dot-1721",
+        "dot-1741",
+        "sum-1703",
+        "sum-1721",
+        "sum-1741"
+      ]
+    },
+    "policy": {
+      "samples": 75161,
+      "positive": 681,
+      "distinct_sampled_layouts": 2233,
+      "files": [
+        "dot-1709",
+        "dot-1733",
+        "dot-1753",
+        "sum-1709",
+        "sum-1733",
+        "sum-1753"
+      ]
+    }
+  },
+  "device": "mps",
+  "epochs": 3,
+  "importance_cap": 8,
+  "kl": 0.03,
+  "penalty_per_failed_step": 0.0625,
+  "trajectories": {
+    "dot-1703.json": "63e99b227945b5ba7e357faa2759ad490569e0a11a1f448ae13ae36b2846d942",
+    "dot-1709.json": "bfc3b0a7de3dcaf86b519cf13f19f9c582745ba128efa1ebd76fb266a4611597",
+    "dot-1721.json": "b89d59ea05848edd32b293ad73226d7a3f0502c470a1ea77f903c45bca45a626",
+    "dot-1733.json": "e4fc53476b15c24b9c0677c810ceb6f9fec45c8950f30f5714067c254535d4d4",
+    "dot-1741.json": "26c58185bbadff357a867426f0c6b9a1c9362b4cbeb3531902296d1b3c7db68a",
+    "dot-1753.json": "177aaa010d3c0b59a1fdb6135b911c8d23ee2e89b7a8e19c654e07d1f8a35e7f",
+    "sum-1703.json": "404842b409fd02aa11b377bf02e33e7a115ed717e863302d1ba8be3ccc26d24b",
+    "sum-1709.json": "a5f1d5c08fa828a4fd1f486dff48427ba1dedc97a28a7c676cd3643d35168d17",
+    "sum-1721.json": "30c2b459540408e093915a5da5f5c7f80f929fee24ec0f1bf6d98924dd108668",
+    "sum-1733.json": "a4672500fabc895ff41b4c5bd058066acda62fd231410b4dd36a19c107375b6d",
+    "sum-1741.json": "b0b6ad23bb18e0bdbb855ea62c8703d5ba371fdc5ced7ce172e91cc1dbf8cff9",
+    "sum-1753.json": "a26675c1303fd071f564b2a3a7eab25e9e04fbcae9d5989dcc6f4eeb1ad26a97"
+  }
+}

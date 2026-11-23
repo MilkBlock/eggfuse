@@ -1,0 +1,376 @@
+{
+  "attach": {
+    "programs": {
+      "fact": {
+        "accepted": 1264,
+        "reference": 1668,
+        "signed_operations": 908,
+        "paid": 3803,
+        "ept": 0.23875887457270575,
+        "coverage": 0.7577937649880095,
+        "completed_by_size": {
+          "2": 121,
+          "3": 1,
+          "9": 1
+        },
+        "held_issued": 165,
+        "held_completed": 5,
+        "step_credit": {
+          "attempts": 754,
+          "accepted": 145,
+          "owned_valid": 11,
+          "externally_reproposed": 108,
+          "failed_steps": 609,
+          "uncontested": 26,
+          "uncontested_effects": 4,
+          "published_steps": 314,
+          "matching_plain_roots": 11,
+          "matching_roots_with_successors": 97,
+          "omitted_packets": 11,
+          "omitted_valid_packets": 11
+        }
+      },
+      "loopfact": {
+        "accepted": 1050,
+        "reference": 1419,
+        "signed_operations": 813,
+        "paid": 3732,
+        "ept": 0.21784565916398713,
+        "coverage": 0.7399577167019028,
+        "completed_by_size": {
+          "2": 85,
+          "3": 1
+        },
+        "held_issued": 195,
+        "held_completed": 6,
+        "step_credit": {
+          "attempts": 597,
+          "accepted": 93,
+          "owned_valid": 10,
+          "externally_reproposed": 70,
+          "failed_steps": 504,
+          "uncontested": 13,
+          "uncontested_effects": 10,
+          "published_steps": 229,
+          "matching_plain_roots": 10,
+          "matching_roots_with_successors": 64,
+          "omitted_packets": 10,
+          "omitted_valid_packets": 10
+        }
+      },
+      "sum-divisors": {
+        "accepted": 8721,
+        "reference": 17341,
+        "signed_operations": 5013,
+        "paid": 24812,
+        "ept": 0.20203933580525552,
+        "coverage": 0.5029121734617381,
+        "completed_by_size": {
+          "2": 698,
+          "3": 6
+        },
+        "held_issued": 1454,
+        "held_completed": 20,
+        "step_credit": {
+          "attempts": 5980,
+          "accepted": 767,
+          "owned_valid": 29,
+          "externally_reproposed": 572,
+          "failed_steps": 5213,
+          "uncontested": 166,
+          "uncontested_effects": 92,
+          "published_steps": 2464,
+          "matching_plain_roots": 32,
+          "matching_roots_with_successors": 442,
+          "omitted_packets": 32,
+          "omitted_valid_packets": 29
+        }
+      }
+    },
+    "distinct_issued": 105,
+    "distinct_complete": 54,
+    "held_complete": 5
+  },
+  "plain": {
+    "programs": {
+      "fact": {
+        "accepted": 1263,
+        "reference": 1668,
+        "signed_operations": 907,
+        "paid": 3808,
+        "ept": 0.23818277310924368,
+        "coverage": 0.7571942446043165,
+        "completed_by_size": {
+          "2": 91,
+          "3": 1,
+          "9": 1
+        },
+        "held_issued": 164,
+        "held_completed": 5,
+        "step_credit": {
+          "attempts": 691,
+          "accepted": 116,
+          "owned_valid": 5,
+          "externally_reproposed": 86,
+          "failed_steps": 575,
+          "uncontested": 25,
+          "uncontested_effects": 3,
+          "published_steps": 252,
+          "matching_plain_roots": 5,
+          "matching_roots_with_successors": 70,
+          "omitted_packets": 5,
+          "omitted_valid_packets": 5
+        }
+      },
+      "loopfact": {
+        "accepted": 1053,
+        "reference": 1419,
+        "signed_operations": 815,
+        "paid": 3750,
+        "ept": 0.21733333333333332,
+        "coverage": 0.7420718816067653,
+        "completed_by_size": {
+          "2": 62,
+          "3": 1
+        },
+        "held_issued": 193,
+        "held_completed": 6,
+        "step_credit": {
+          "attempts": 559,
+          "accepted": 72,
+          "owned_valid": 2,
+          "externally_reproposed": 57,
+          "failed_steps": 487,
+          "uncontested": 13,
+          "uncontested_effects": 10,
+          "published_steps": 193,
+          "matching_plain_roots": 2,
+          "matching_roots_with_successors": 48,
+          "omitted_packets": 2,
+          "omitted_valid_packets": 2
+        }
+      },
+      "sum-divisors": {
+        "accepted": 8702,
+        "reference": 17341,
+        "signed_operations": 5014,
+        "paid": 24811,
+        "ept": 0.2020877836443513,
+        "coverage": 0.5018165042385099,
+        "completed_by_size": {
+          "2": 580,
+          "3": 7
+        },
+        "held_issued": 1448,
+        "held_completed": 20,
+        "step_credit": {
+          "attempts": 5747,
+          "accepted": 653,
+          "owned_valid": 22,
+          "externally_reproposed": 487,
+          "failed_steps": 5094,
+          "uncontested": 144,
+          "uncontested_effects": 90,
+          "published_steps": 2232,
+          "matching_plain_roots": 25,
+          "matching_roots_with_successors": 350,
+          "omitted_packets": 25,
+          "omitted_valid_packets": 22
+        }
+      }
+    },
+    "distinct_issued": 104,
+    "distinct_complete": 54,
+    "held_complete": 5
+  },
+  "retain": {
+    "programs": {
+      "fact": {
+        "accepted": 1263,
+        "reference": 1668,
+        "signed_operations": 907,
+        "paid": 3813,
+        "ept": 0.23787044322056125,
+        "coverage": 0.7571942446043165,
+        "completed_by_size": {
+          "2": 91,
+          "3": 1,
+          "9": 1
+        },
+        "held_issued": 164,
+        "held_completed": 5,
+        "step_credit": {
+          "attempts": 691,
+          "accepted": 116,
+          "externally_reproposed": 91,
+          "failed_steps": 575,
+          "uncontested": 25,
+          "uncontested_effects": 3,
+          "published_steps": 252,
+          "matching_plain_roots": 5,
+          "matching_roots_with_successors": 70,
+          "omitted_packets": 0,
+          "omitted_valid_packets": 0
+        }
+      },
+      "loopfact": {
+        "accepted": 1053,
+        "reference": 1419,
+        "signed_operations": 815,
+        "paid": 3752,
+        "ept": 0.21721748400852878,
+        "coverage": 0.7420718816067653,
+        "completed_by_size": {
+          "2": 62,
+          "3": 1
+        },
+        "held_issued": 193,
+        "held_completed": 6,
+        "step_credit": {
+          "attempts": 559,
+          "accepted": 72,
+          "externally_reproposed": 59,
+          "failed_steps": 487,
+          "uncontested": 13,
+          "uncontested_effects": 10,
+          "published_steps": 193,
+          "matching_plain_roots": 2,
+          "matching_roots_with_successors": 48,
+          "omitted_packets": 0,
+          "omitted_valid_packets": 0
+        }
+      },
+      "sum-divisors": {
+        "accepted": 8702,
+        "reference": 17341,
+        "signed_operations": 5014,
+        "paid": 24836,
+        "ept": 0.20188436141085522,
+        "coverage": 0.5018165042385099,
+        "completed_by_size": {
+          "2": 580,
+          "3": 7
+        },
+        "held_issued": 1448,
+        "held_completed": 20,
+        "step_credit": {
+          "attempts": 5747,
+          "accepted": 653,
+          "externally_reproposed": 509,
+          "failed_steps": 5094,
+          "uncontested": 144,
+          "uncontested_effects": 90,
+          "published_steps": 2232,
+          "matching_plain_roots": 25,
+          "matching_roots_with_successors": 350,
+          "omitted_packets": 0,
+          "omitted_valid_packets": 0
+        }
+      }
+    },
+    "distinct_issued": 104,
+    "distinct_complete": 54,
+    "held_complete": 5
+  },
+  "rl": {
+    "programs": {
+      "fact": {
+        "accepted": 1261,
+        "reference": 1668,
+        "signed_operations": 911,
+        "paid": 3787,
+        "ept": 0.2405598098758912,
+        "coverage": 0.7559952038369304,
+        "completed_by_size": {
+          "2": 115,
+          "3": 7,
+          "9": 1
+        },
+        "held_issued": 9,
+        "held_completed": 5,
+        "step_credit": {
+          "attempts": 361,
+          "accepted": 161,
+          "owned_valid": 19,
+          "externally_reproposed": 120,
+          "failed_steps": 200,
+          "uncontested": 22,
+          "uncontested_effects": 4,
+          "published_steps": 341,
+          "matching_plain_roots": 19,
+          "changed_layout_decisions": 685,
+          "new_graph_issuance_decisions": 97,
+          "matching_roots_with_successors": 109,
+          "omitted_packets": 19,
+          "omitted_valid_packets": 19
+        }
+      },
+      "loopfact": {
+        "accepted": 1058,
+        "reference": 1419,
+        "signed_operations": 831,
+        "paid": 3755,
+        "ept": 0.22130492676431424,
+        "coverage": 0.7455954897815363,
+        "completed_by_size": {
+          "2": 89,
+          "3": 15,
+          "4": 2
+        },
+        "held_issued": 10,
+        "held_completed": 6,
+        "step_credit": {
+          "attempts": 276,
+          "accepted": 137,
+          "owned_valid": 16,
+          "externally_reproposed": 102,
+          "uncontested": 19,
+          "uncontested_effects": 24,
+          "failed_steps": 139,
+          "published_steps": 274,
+          "changed_layout_decisions": 587,
+          "new_graph_issuance_decisions": 147,
+          "matching_plain_roots": 16,
+          "matching_roots_with_successors": 85,
+          "omitted_packets": 16,
+          "omitted_valid_packets": 16
+        }
+      },
+      "sum-divisors": {
+        "accepted": 8758,
+        "reference": 17341,
+        "signed_operations": 5167,
+        "paid": 24715,
+        "ept": 0.20906332186931015,
+        "coverage": 0.5050458451069719,
+        "completed_by_size": {
+          "2": 703,
+          "3": 44,
+          "4": 1,
+          "6": 2
+        },
+        "held_issued": 342,
+        "held_completed": 21,
+        "step_credit": {
+          "attempts": 2696,
+          "accepted": 910,
+          "owned_valid": 87,
+          "externally_reproposed": 598,
+          "failed_steps": 1786,
+          "uncontested": 225,
+          "uncontested_effects": 245,
+          "published_steps": 2571,
+          "changed_layout_decisions": 4394,
+          "matching_plain_roots": 91,
+          "new_graph_issuance_decisions": 407,
+          "matching_roots_with_successors": 510,
+          "omitted_packets": 91,
+          "omitted_valid_packets": 87
+        }
+      }
+    },
+    "distinct_issued": 91,
+    "distinct_complete": 57,
+    "held_complete": 6
+  }
+}

@@ -17,23 +17,37 @@ from online import execute
 from prefix_policy import Policy
 
 
-def compare(folder,donor,binary,weights,baked,audits,seed):
+def compare(folder,donor,binary,weights,baked,audits,seed,learned=None):
     results=[]
-    records={arm:read(audits/f'{folder.name}-{arm}.json') for arm in ('control','native')}
+    if learned:
+        from layout_credit import CreditIssuer
+        from train_layout_bandit import LearnedChoice
+        arms=('attach','rl')
+        records={arm:read(audits/arm/(folder.name+'.json')) for arm in arms}
+    else:
+        arms=('control','native')
+        records={arm:read(audits/f'{folder.name}-{arm}.json') for arm in arms}
     for arm,record in records.items():
         if any(record[k]!=digest(path) for k,path in [('binary',binary),('actor',weights),
                 ('scorer',baked/'shared.pt'),('reader',baked/'boundary.pt'),('catalog',baked/'catalog.json')]):
             raise ValueError('timing inputs differ from the work audit')
     for turn in range(4):
         pair={}
-        order=['exact','control','native','oracle']
+        order=['exact',*arms,'oracle']
         for arm in (reversed(order) if turn%2 else order):
             if arm not in records:
                 pair[arm]=measure(folder,binary,weights,seed,arm,False)
                 continue
             start=perf_counter()
             actor=load_actor(weights,True)
-            issuer=None if arm=='control' else GraphIssuer(actor,donor,read(folder/'program.json'),baked,True)
+            if learned:
+                policy=LearnedChoice(learned,baked) if arm=='rl' else None
+                if records[arm]['policy']!=(policy.checkpoint if policy else None):
+                    raise ValueError('timed layout policy differs from the audit')
+                issuer=CreditIssuer(actor,donor,read(folder/'program.json'),baked,omit=True,
+                                    attach=True,seed=1703,explore=False,policy=policy)
+            else:
+                issuer=None if arm=='control' else GraphIssuer(actor,donor,read(folder/'program.json'),baked,True)
             with TemporaryDirectory() as tmp:
                 layout_file=None
                 if issuer:
@@ -53,13 +67,14 @@ def compare(folder,donor,binary,weights,baked,audits,seed):
         results.append(pair)
     return dict(binary=digest(binary),weights=digest(weights),reader=digest(baked/'boundary.pt'),
                 pairs=results,median_eps={k:median(p[k]['eps'] for p in results) for k in records},
-                native_eps_wins=sum(p['native']['eps']>p['control']['eps'] for p in results))
+                **{arms[1]+'_eps_wins':sum(p[arms[1]]['eps']>p[arms[0]]['eps'] for p in results)})
 
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     for k in ('root','donor','binary','weights','baked','audits','out'):
         p.add_argument(k,type=Path)
+    p.add_argument('--policy',type=Path)
     p.add_argument('--cases',required=True,nargs='+')
     a=p.parse_args()
     torch.set_num_threads(1)
@@ -67,5 +82,5 @@ if __name__=='__main__':
     donor=read(a.donor/'program.json')
     reports={}
     for name in a.cases:
-        reports[name]=compare(a.root/name,donor,a.binary,a.weights,a.baked,a.audits,1703+seeds.get(name,0))
+        reports[name]=compare(a.root/name,donor,a.binary,a.weights,a.baked,a.audits,1703+seeds.get(name,0),a.policy)
         a.out.write_text(json.dumps(reports,indent=2)+'\n')
