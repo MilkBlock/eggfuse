@@ -268,6 +268,8 @@ def evaluate(root,donor,binary,weights,baked,name,out,control,native,exclusive=F
         if prefix is not None and prefix.recovery is not None:
             field_audit.update(root_budget=prefix.top_k,read_order=prefix.read_order,
                                refinements=prefix.recovery.refinements,recovery=prefix.recovery.checkpoint)
+        if prefix is not None and prefix.allocation is not None:
+            field_audit['allocation']=prefix.allocation.record(run['partial_proof_counts'])
         if getattr(issuer,'field_reader',None) is not None:
             if not issuer.counts['routed_reads']:
                 raise ValueError('loaded field reader never ran on exclusive prefix')

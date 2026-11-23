@@ -17,7 +17,7 @@ from online import execute
 from prefix_policy import Policy
 
 
-def compare(folder,donor,binary,weights,baked,audits,seed,learned=None,base_bake=None,base_policy=None,additional=None,recovery_dir=None,field_dir=None):
+def compare(folder,donor,binary,weights,baked,audits,seed,learned=None,base_bake=None,base_policy=None,additional=None,recovery_dir=None,field_dir=None,sibling_dir=None):
     results=[]
     if learned:
         from layout_credit import CreditIssuer,load_policy
@@ -70,7 +70,19 @@ def compare(folder,donor,binary,weights,baked,audits,seed,learned=None,base_bake
                     raise ValueError('timed recovery depth differs from work audit')
                 if (recovery.checkpoint,recovery.cut,recovery.budget)!=(settings['checkpoint'],settings['cut'],settings['budget']):
                     raise ValueError('recovery head differs from audited execution')
-                prefix=Policy(records[arm].get('root_budget',32),recovery=recovery,read_order=records[arm].get('read_order','source'))
+                allocation=None
+                if alloc:=records[arm].get('allocation'):
+                    from sibling_issue import Allocation
+                    folder=None
+                    if alloc['checkpoint']:
+                        if sibling_dir is None:
+                            raise ValueError('timing requires the audited sibling head directory')
+                        folder=sibling_dir/arm if (sibling_dir/arm).is_dir() else sibling_dir
+                    allocation=Allocation(alloc['cap'],folder=folder,recovery=recovery.checkpoint)
+                    if (allocation.checkpoint,allocation.with_context)!=(alloc['checkpoint'],alloc['context']):
+                        raise ValueError('timed sibling allocation differs from work audit')
+                prefix=Policy(records[arm].get('root_budget',32),recovery=recovery,
+                              read_order=records[arm].get('read_order','source'),allocation=allocation)
             with TemporaryDirectory() as tmp:
                 layout_file=None
                 if issuer:
@@ -101,6 +113,7 @@ if __name__=='__main__':
         p.add_argument(k,type=Path)
     p.add_argument('--recovery-dir',type=Path)
     p.add_argument('--field-reader',type=Path)
+    p.add_argument('--sibling-dir',type=Path)
     p.add_argument('--policy',type=Path)
     p.add_argument('--additional-policy',type=Path)
     p.add_argument('--base-bake',type=Path)
@@ -116,5 +129,5 @@ if __name__=='__main__':
     donor=read(a.donor/'program.json')
     reports={}
     for name in a.cases:
-        reports[name]=compare(a.root/name,donor,a.binary,a.weights,a.baked,a.audits,1703+seeds.get(name,0),a.policy,a.base_bake,a.base_policy,a.additional_policy,a.recovery_dir,a.field_reader)
+        reports[name]=compare(a.root/name,donor,a.binary,a.weights,a.baked,a.audits,1703+seeds.get(name,0),a.policy,a.base_bake,a.base_policy,a.additional_policy,a.recovery_dir,a.field_reader,a.sibling_dir)
         a.out.write_text(json.dumps(reports,indent=2)+'\n')

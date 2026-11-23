@@ -82,12 +82,12 @@ class Recovery:
         return self.head(ctx[:,None],ports[None,:],ev)
 
 
-def bounded(points,scores,k):
+def bounded_indices(scores,k):
     if len(scores)<=k:
-        return points
+        return torch.arange(len(scores),device=scores.device)
     values,indices=scores.topk(k+1)
     # Omit the entire tie crossing the boundary. Never sort opaque addresses.
-    return points[indices[:k][values[:k]>values[k]]]
+    return indices[:k][values[:k]>values[k]]
 
 
 def select(model,cat,mem,dom,rid,anchor,order,depth,frontier,policy,count):
@@ -118,11 +118,23 @@ def select(model,cat,mem,dom,rid,anchor,order,depth,frontier,policy,count):
         extra_scores.append(recovery[i,j])
     if not normal:
         return frontier.new_empty((0,depth+1))
-    points=bounded(torch.cat(normal),torch.cat(normal_scores),k)
+    normal_scores=torch.cat(normal_scores)
+    which=bounded_indices(normal_scores,k)
+    points=torch.cat(normal)[which]
+    allocate=policy.allocation is not None and depth+1==len(order)
+    if allocate:
+        priorities=normal_scores[which]-cut
     available=min(max(0,k-sum(map(len,normal))),policy.recovery.budget)
     if available and extra:
-        take=bounded(torch.cat(extra),torch.cat(extra_scores),available)
+        extra_scores=torch.cat(extra_scores)
+        which=bounded_indices(extra_scores,available)
+        take=torch.cat(extra)[which]
+        if allocate:
+            margin=extra_scores[which]-policy.recovery.cut
+            priorities=torch.cat((priorities,-1/(1+margin)))
         count['recovery_added']+=len(take)
         points=torch.cat((points,take))
+    if allocate and len(points):
+        points=policy.allocation.select(cat,mem,rid,order,points,priorities,count)
     count['after_cap']+=len(points)
     return points

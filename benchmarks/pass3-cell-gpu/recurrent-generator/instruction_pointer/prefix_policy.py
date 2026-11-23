@@ -13,10 +13,13 @@ class Policy:
     audit: bool = False
     recovery: object = None
     read_order: str | None = None
+    allocation: object = None
 
     def __post_init__(self):
         if self.top_k is not None and self.top_k < 1:
             raise ValueError('top-k must be positive')
+        if self.allocation is not None and (self.recovery is None or self.top_k <= self.allocation.cap):
+            raise ValueError('batch allocation needs a larger learned pointer frontier')
         mode=self.read_order or getattr(self.recovery,'read_order','source')
         if mode not in ('source','connected','delta'):
             raise ValueError('unknown pointer read order')

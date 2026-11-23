@@ -242,6 +242,8 @@ def rollout(root,donor,binary,weights,baked,out,name,seed,omit,explore,policy=No
         report['field_reader']=field_reader.checkpoint
     if prefix is not None:
         report['root_budget']=prefix.top_k
+        if prefix.allocation is not None:
+            report['allocation']=prefix.allocation.record(result['partial_proof_counts'])
     if prefix is not None and prefix.read_order!='source':
         report['read_order']=prefix.read_order
     ordinary=ref.get('residual_candidates')
@@ -274,6 +276,8 @@ if __name__=='__main__':
     p.add_argument('--training-bake',type=Path)
     p.add_argument('--recovery',type=Path)
     p.add_argument('--root-budget',type=int,default=32,help='maximum prefixes per rule, anchor role and depth')
+    p.add_argument('--batch-cap',type=int,help='maximum completed root tuples per anchor across both batches')
+    p.add_argument('--sibling-head',type=Path)
     p.add_argument('--read-order',choices=('source','connected','delta'))
     p.add_argument('--margin-only',action='store_true')
     p.add_argument('--run-recall',action='store_true')
@@ -288,9 +292,16 @@ if __name__=='__main__':
         from field_wiring import FieldReader
         reader=FieldReader(args.field_reader,args.baked)
     prefix=None
+    if args.sibling_head and args.batch_cap is None or args.batch_cap is not None and not args.recovery:
+        p.error('a sibling head requires a batch cap and a recovery pointer')
     if args.recovery:
         from prefix_recovery import Recovery
-        prefix=Policy(args.root_budget,recovery=Recovery(args.recovery,args.weights,margin_only=args.margin_only),read_order=args.read_order)
+        recovery=Recovery(args.recovery,args.weights,margin_only=args.margin_only)
+        allocation=None
+        if args.batch_cap is not None:
+            from sibling_issue import Allocation
+            allocation=Allocation(args.batch_cap,folder=args.sibling_head,recovery=recovery.checkpoint)
+        prefix=Policy(args.root_budget,recovery=recovery,read_order=args.read_order,allocation=allocation)
     elif args.margin_only:
         p.error('--margin-only requires a recovery head')
     elif args.read_order or args.root_budget!=32:
