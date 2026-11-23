@@ -1,4 +1,4 @@
-//! Static, single-source suffixes for an explicitly issued composite token.
+//! Static suffixes for an explicitly issued composite token.
 use super::{Address, Premise, Request};
 use crate::program::{Call, Op, Program, Result};
 use serde::{Deserialize, Serialize};
@@ -12,6 +12,9 @@ pub struct Recipe {
     pub root: usize,
     /// (actual return PC of previous step, consumer rule)
     pub hops: Vec<(usize, usize)>,
+    /// Final internal pivot role and externally named side table.
+    #[serde(default)]
+    pub side: Option<(usize, usize)>,
 }
 
 #[derive(Default, Serialize)]
@@ -21,14 +24,20 @@ pub struct Counts {
     pub missing_exports: usize,
     pub issued_steps: usize,
     pub accepted_steps: usize,
+    pub side_reads_at_issue: usize,
+    pub side_invalid_at_issue: usize,
+    pub side_steps_issued: usize,
+    pub forks_issued: usize,
+    pub forks_accepted: usize,
+    pub side_steps_accepted: usize,
     pub by_depth: BTreeMap<usize, usize>,
 }
 
 pub(super) struct Higher {
     recipes: Vec<Recipe>,
     // Accepted steps acquire their result version at the first sealed boundary.
-    capture: Vec<(i64, usize, usize)>,
-    waiting: BTreeMap<usize, Vec<(Premise, usize, usize)>>,
+    capture: Vec<(i64, usize, usize, Option<Premise>)>,
+    waiting: BTreeMap<usize, Vec<(Premise, usize, usize, Option<Premise>)>>,
     next: i64,
     pub counts: Counts,
 }
@@ -40,7 +49,7 @@ impl Higher {
             if recipe.hops.is_empty() {
                 return Err("empty higher token".into());
             }
-            for &(pc, child) in &recipe.hops {
+            for (index, &(pc, child)) in recipe.hops.iter().enumerate() {
                 let producer = program.rules.get(prior).ok_or("invalid producer rule")?;
                 let ops = &program.templates[producer.template].ops;
                 let table = match ops.get(pc) {
@@ -48,11 +57,24 @@ impl Higher {
                     _ => return Err("higher edge needs a returned table port".into()),
                 };
                 let rule = program.rules.get(child).ok_or("invalid child rule")?;
-                let mut inputs = rule.query.iter().filter_map(|a| match a.call {
-                    Call::Table(t) => Some(t),
-                    _ => None,
-                });
-                if inputs.next() != Some(table) || inputs.next().is_some() {
+                let inputs: Vec<_> = rule
+                    .query
+                    .iter()
+                    .filter_map(|a| match a.call {
+                        Call::Table(t) => Some(t),
+                        _ => None,
+                    })
+                    .collect();
+                let valid = match recipe.side.filter(|_| index + 1 == recipe.hops.len()) {
+                    Some((pivot, side)) => {
+                        pivot < 2
+                            && inputs.len() == 2
+                            && inputs[pivot] == table
+                            && inputs[1 - pivot] == side
+                    }
+                    None => inputs == [table],
+                };
+                if !valid {
                     return Err(
                         "higher edge leaves an independent parent or disagrees on type".into(),
                     );
@@ -68,12 +90,46 @@ impl Higher {
             counts: Counts::default(),
         })
     }
-    pub fn issue(&mut self, req: &Request) -> Result<()> {
+    pub fn issue(
+        &mut self,
+        req: &mut Request,
+        visible: &BTreeMap<Address, super::PortObservation>,
+    ) -> Result<()> {
+        if let Some(branch) = req.closed_branch {
+            let closed = self.recipes.get(branch).ok_or("unknown closed branch")?;
+            if closed.root != req.rule
+                || closed.side.is_some()
+                || req.side.is_none()
+                || req.unit == Some(branch)
+                || req.unit.is_none()
+            {
+                return Err("invalid signed fork".into());
+            }
+            self.counts.forks_issued += 1;
+        }
         if let Some(unit) = req.unit {
             if self.recipes.get(unit).map(|r| r.root) != Some(req.rule) {
                 return Err("higher template does not start at requested rule".into());
             }
             self.counts.issued_roots += 1;
+            match (self.recipes[unit].side, &req.side) {
+                (None, None) => (),
+                (Some((_, table)), Some(side)) => {
+                    self.counts.side_reads_at_issue += 1;
+                    if !visible
+                        .get(&side.address)
+                        .is_some_and(|p| p.table == table && p.version == side.version)
+                    {
+                        self.counts.side_invalid_at_issue += 1;
+                        req.unit = req.closed_branch.take();
+                        req.side = None;
+                    }
+                }
+                _ => return Err("higher root has incorrect side arity".into()),
+            }
+        }
+        if req.unit.is_none() && req.side.is_some() {
+            return Err("unexpected standalone side".into());
         }
         Ok(())
     }
@@ -81,12 +137,20 @@ impl Higher {
         if let Some(unit) = req.unit {
             if req.step == 0 {
                 self.counts.accepted_roots += 1;
+                if let Some(branch) = req.closed_branch {
+                    self.counts.forks_accepted += 1;
+                    self.capture.push((req.token, branch, 0, None));
+                }
             } else {
                 self.counts.accepted_steps += 1;
+                if req.step == self.recipes[unit].hops.len() && self.recipes[unit].side.is_some() {
+                    self.counts.side_steps_accepted += 1;
+                }
                 *self.counts.by_depth.entry(req.step + 1).or_default() += 1;
             }
             if req.step < self.recipes[unit].hops.len() {
-                self.capture.push((req.token, unit, req.step));
+                self.capture
+                    .push((req.token, unit, req.step, req.side.clone()));
             }
         }
     }
@@ -100,7 +164,7 @@ impl Higher {
         rules: &[(usize, u64)],
         queue: &mut BTreeMap<(usize, usize), Vec<Request>>,
     ) -> Result<()> {
-        for (token, unit, index) in self.capture.drain(..) {
+        for (token, unit, index, side) in self.capture.drain(..) {
             let (op, child) = self.recipes[unit].hops[index];
             let address = Address { token, op };
             if let Some(row) = visible.get(&address) {
@@ -111,21 +175,32 @@ impl Higher {
                     },
                     unit,
                     index + 1,
+                    side,
                 ));
             } else {
                 self.counts.missing_exports += 1;
             }
         }
         for &(rule, _) in rules {
-            for (parent, unit, step) in self.waiting.remove(&rule).unwrap_or_default() {
+            for (parent, unit, step, mut side) in self.waiting.remove(&rule).unwrap_or_default() {
                 if self.next >= i64::MAX / 2 {
                     return Err("higher token namespace exhausted".into());
                 }
+                let mut parents = vec![parent];
+                if let Some((pivot, _)) = self.recipes[unit]
+                    .side
+                    .filter(|_| step == self.recipes[unit].hops.len())
+                {
+                    parents.insert(1 - pivot, side.take().ok_or("missing signed side")?);
+                    self.counts.side_steps_issued += 1;
+                }
                 queue.entry((run, rule)).or_default().push(Request {
                     token: self.next,
+                    closed_branch: None,
                     run,
                     rule,
-                    parents: vec![parent],
+                    parents,
+                    side,
                     unit: Some(unit),
                     step,
                 });
@@ -147,6 +222,7 @@ mod tests {
         let mut state = Higher {
             recipes: vec![Recipe {
                 root: 3,
+                side: None,
                 hops: vec![(2, 5), (0, 9)],
             }],
             capture: vec![],
@@ -156,13 +232,15 @@ mod tests {
         };
         let mut root = Request {
             token: 4,
+            closed_branch: None,
+            side: None,
             run: 1,
             rule: 3,
             parents: vec![],
             unit: Some(0),
             step: 0,
         };
-        state.issue(&root).unwrap();
+        state.issue(&mut root, &BTreeMap::new()).unwrap();
         state.accepted(&root);
         root.token += 1;
         state.accepted(&root);
@@ -192,6 +270,79 @@ mod tests {
         assert_eq!(state.remaining(), 0);
         assert_eq!(queue.len(), 1);
         root.rule = 5;
-        assert!(state.issue(&root).is_err());
+        assert!(state.issue(&mut root, &BTreeMap::new()).is_err());
+    }
+    #[test]
+    fn a_fork_freezes_its_side_at_the_root_and_keeps_the_other_branch_on_failure() {
+        for pivot in [0, 1] {
+            let mut state = Higher {
+                recipes: vec![
+                    Recipe {
+                        root: 3,
+                        hops: vec![(1, 4), (2, 5)],
+                        side: Some((pivot, 8)),
+                    },
+                    Recipe {
+                        root: 3,
+                        hops: vec![(1, 6)],
+                        side: None,
+                    },
+                ],
+                capture: vec![],
+                waiting: BTreeMap::new(),
+                next: INTERNAL,
+                counts: Counts::default(),
+            };
+            let side = Premise {
+                address: Address { token: 7, op: 1 },
+                version: 1,
+            };
+            let row = |table, version| PortObservation {
+                table,
+                version,
+                forwarded: false,
+                hashes: vec![],
+            };
+            let mut visible = BTreeMap::from([(side.address, row(8, 1))]);
+            let mut root = Request {
+                token: 8,
+                run: 1,
+                rule: 3,
+                parents: vec![],
+                unit: Some(0),
+                step: 0,
+                side: Some(side.clone()),
+                closed_branch: Some(1),
+            };
+            state.issue(&mut root, &visible).unwrap();
+            state.accepted(&root);
+            visible.insert(Address { token: 8, op: 1 }, row(9, 2));
+            let mut queue = BTreeMap::new();
+            state
+                .dispatch(&visible, 2, &[(4, 0), (6, 0)], &mut queue)
+                .unwrap();
+            let mid = &queue[&(2, 4)][0];
+            assert_eq!(mid.parents.len(), 1);
+            assert!(queue[&(2, 6)][0].side.is_none());
+            state.accepted(mid);
+            visible.insert(
+                Address {
+                    token: mid.token,
+                    op: 2,
+                },
+                row(9, 3),
+            );
+            visible.insert(side.address, row(8, 3));
+            state.dispatch(&visible, 3, &[(5, 0)], &mut queue).unwrap();
+            let child = &queue[&(3, 5)][0];
+            assert_eq!(child.parents[1 - pivot].address, side.address);
+            assert_eq!(child.parents[1 - pivot].version, 1);
+            assert_eq!(child.parents[pivot].version, 3);
+            assert_eq!(state.counts.side_steps_issued, 1);
+            state.issue(&mut root, &visible).unwrap();
+            assert_eq!(root.unit, Some(1));
+            assert!(root.side.is_none() && root.closed_branch.is_none());
+            assert_eq!(state.counts.side_invalid_at_issue, 1);
+        }
     }
 }

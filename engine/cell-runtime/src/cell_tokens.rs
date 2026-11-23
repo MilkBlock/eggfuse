@@ -36,6 +36,10 @@ pub struct Request {
     pub parents: Vec<Premise>,
     #[serde(default, skip_serializing_if="Option::is_none")]
     pub unit: Option<usize>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub side: Option<Premise>,
+    #[serde(default,skip_serializing_if="Option::is_none")]
+    pub closed_branch: Option<usize>,
     #[serde(skip)]
     step: usize,
 }
@@ -259,7 +263,7 @@ impl History {
         let mut h = Self::new(g, false)?;
         let mut ids = BTreeSet::new();
         for packet in tape {
-            if packet.unit.is_some() || packet.token <= 0 || !ids.insert(packet.token) {
+            if packet.closed_branch.is_some() || packet.side.is_some() || packet.unit.is_some() || packet.token <= 0 || !ids.insert(packet.token) {
                 return Err("duplicate token or collision with seed namespace".into());
             }
             h.queue
@@ -385,9 +389,9 @@ impl History {
                 .read_line(&mut line)
                 .map_err(|e| e.to_string())?;
             let proposals: Vec<Request> = serde_json::from_str(&line).map_err(|e| e.to_string())?;
-            for request in proposals {
-                if let Some(higher) = &mut self.higher { higher.issue(&request)?; }
-                if request.unit.is_some() && self.higher.is_none() { return Err("missing higher catalog".into()); }
+            for mut request in proposals {
+                if let Some(higher) = &mut self.higher { higher.issue(&mut request,&memory.previous)?; }
+                if (request.unit.is_some() || request.side.is_some() || request.closed_branch.is_some()) && self.higher.is_none() { return Err("missing higher catalog".into()); }
                 if request.run != run
                     || (self.higher.is_some() && request.token >= higher::INTERNAL)
                     || (self.assist.is_some() && request.token >= i64::MAX / 2)
@@ -603,7 +607,7 @@ impl History {
             (rid, b.input_values(&rule.inputs).cloned().collect()),
             token,
         );
-        let request = Request { token, rule: rid, run, parents, unit: None, step: 0 };
+        let request = Request { token, rule: rid, run, parents, unit: None, side: None, closed_branch: None, step: 0 };
         if let Some(memory) = &mut self.memory {
             memory.accepted.push(request.clone());
         }
