@@ -8,11 +8,12 @@ from actor import InstructionActor, ints
 
 
 class RuleReadActor(InstructionActor):
-    def __init__(self, mode, field_pointer=True):
+    def __init__(self, mode, field_pointer=True, mask_anchors=False):
         super().__init__(field_pointer=field_pointer)
         if mode not in ('global', 'typed'):
             raise ValueError('unknown rule read mode')
         self.read_mode = mode
+        self.mask_anchors = mask_anchors
         width = self.width
         self.read_key = nn.Linear(3 * width + 2, width)
         self.read_query = nn.Linear(width, width)
@@ -25,7 +26,24 @@ class RuleReadActor(InstructionActor):
     def memory(self, catalog, snapshot, nodes=None, issued_latents=None):
         mem = super().memory(catalog, snapshot, nodes, issued_latents)
         mem.rule_inputs = self.rule_inputs(catalog, mem)
+        if self.mask_anchors:
+            mem.rule_support = self.anchor_support(catalog, mem)
         return mem
+
+    @staticmethod
+    def anchor_support(catalog, mem):
+        """Only the union of single-atom delta domains. No tests across parents."""
+        latest = {}
+        for port in mem.ports:
+            latest[port.table] = max(latest.get(port.table, -1), port.version)
+        supported = []
+        for rid, wm in mem.rules.items():
+            atoms = catalog.atoms[rid]
+            # Native proof epochs start at zero for a zero-table-parent request.
+            newest = max((latest.get(table, -1) for table, _ in atoms), default=0)
+            minimum = wm if catalog.seminaive[rid] else 0
+            supported.append(newest >= minimum)
+        return torch.tensor(supported, device=mem.nodes.device, dtype=torch.bool)
 
     def rule_inputs(self, catalog, mem):
         nodes, keys = mem.nodes, mem.keys
@@ -85,13 +103,16 @@ class RuleReadActor(InstructionActor):
     def action_logits(self, catalog, memory, h, rules):
         _, _, logits = super().action_logits(catalog, memory, h, rules)
         residual = self.correction(memory.rule_inputs, h.unsqueeze(0)).squeeze(0)
-        return h, rules, torch.cat((logits[:1], logits[1:] + residual))
+        scores = logits[1:] + residual
+        if memory.rule_support is not None:
+            scores = scores.masked_fill(~memory.rule_support, -torch.inf)
+        return h, rules, torch.cat((logits[:1], scores))
 
 
 def load_actor(weights, field_pointer):
     state = torch.load(weights, map_location='cpu', weights_only=True) if weights else None
     if state is not None and state.get('format') == 'rule-read-v1':
-        actor = RuleReadActor(state['read_mode'], field_pointer)
+        actor = RuleReadActor(state['read_mode'], field_pointer, state.get('mask_anchors', False))
         actor.load_state_dict(state['parameters'])
     else:
         actor = InstructionActor(field_pointer=field_pointer)

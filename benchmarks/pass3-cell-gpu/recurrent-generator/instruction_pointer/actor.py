@@ -47,6 +47,7 @@ class Memory:
     rules: dict
     fields: torch.Tensor | None = None
     rule_inputs: torch.Tensor | None = None
+    rule_support: torch.Tensor | None = None
 
 
 class InstructionActor(nn.Module):

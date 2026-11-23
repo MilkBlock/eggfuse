@@ -117,7 +117,10 @@ def held_rule_census(root, weights, output, seed, field):
                     # Diagnostic only: on a busy reference Run, remove Stop
                     # for this ranking read. Never submit its result.
                     forced['stopped_lanes_on_busy_runs'] += 1
-                    forced['best_rule_has_winner'] += int(rules[int(logits[1:].argmax())] in expected)
+                    if logits[1:].isfinite().any():
+                        forced['best_rule_has_winner'] += int(rules[int(logits[1:].argmax())] in expected)
+                    else:
+                        forced['no_rule_with_anchor'] += 1
                 counts['lane_decisions'] += 1
                 if action == 0:
                     counts['stop'] += 1
