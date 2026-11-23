@@ -70,6 +70,16 @@ class LearnedChoice:
         if info['policy']!=digest(folder/'policy.pt'):
             raise ValueError('policy checkpoint changed')
         self.checkpoint=info['policy']
+        self.direct=info.get('objective')=='within_root_set'
+        self.static_scores=None
+        if 'static_scores' in info and training_bake is None:
+            if digest(folder/'scores.pt')!=info['static_scores']:
+                raise ValueError('compiled action scores changed')
+            scores=torch.load(folder/'scores.pt',map_location='cpu',weights_only=True)
+            if len(scores)!=1+len(read(baked/'catalog.json')) or scores[0]!=0 or not torch.isfinite(scores).all():
+                raise ValueError('invalid compiled action scores')
+            self.static_scores=scores.tolist()
+            return
         self.graph,self.sizes=fixed_features(baked)
         self.model=Utility(self.graph.shape[1]-4,self.graph.shape[1])
         self.model.load_state_dict(torch.load(folder/'policy.pt',map_location='cpu',weights_only=True))
@@ -77,15 +87,30 @@ class LearnedChoice:
         self.keys=self.model.key(self.graph).detach()
         self.bias=self.model.bias(self.keys).squeeze(-1).detach()
 
+        if 'static_scores' in info:
+            # A new catalog needs its own evaluation of the trained constant query.
+            with torch.no_grad():
+                self.static_scores=self.model(torch.zeros(1,self.graph.shape[1]-4),self.graph)[0].tolist()
+
+    def static_choice(self,options):
+        winner=max(options,key=lambda u:self.static_scores[u+1])
+        return winner if self.static_scores[winner+1]>0 else None
+
     def select(self,req,options,context,issuer):
+        if self.static_scores is not None:
+            return self.static_choice(options)
+        ids=[u+1 for u in options]
+        q=self.model.query(context)
+        logits=F.pad((self.keys[ids]@q[:-1])/4+self.bias[ids]+q[-1],(1,0))
+        if self.direct:
+            action=int(logits.argmax())
+            issuer.claim_counts['set_layout_decisions']+=1
+            return options[action-1] if action else None
         ready=issuer.model(context.expand(len(options),-1),issuer.codes[options])[:,1]
         j=int(ready.argmax())
-        ids=[u+1 for u in options]
         baseline=ids[j] if ready[j]>0 else 0
         prior=context.new_tensor(logging_prior(ids,baseline,self.sizes))
-        q=self.model.query(context)
-        logits=(self.keys[ids]@q[:-1])/4+self.bias[ids]+q[-1]
-        action=int((prior.log()+F.pad(logits,(1,0))).argmax())
+        action=int((prior.log()+logits).argmax())
         winner=ids[action-1] if action else 0
         if winner!=baseline:
             issuer.claim_counts['changed_layout_decisions']+=1

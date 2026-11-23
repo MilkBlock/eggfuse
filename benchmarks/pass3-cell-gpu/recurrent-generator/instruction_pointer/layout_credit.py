@@ -13,7 +13,7 @@ from alternate_proofs import digest
 from anchor_set_audit import load_actor
 from higher_cell import read
 from live_ripsat import GraphIssuer,evaluate
-from online import execute
+from online import RESIDUAL,execute
 from prefix_policy import Policy
 from train_ripsat import layout_id
 
@@ -40,6 +40,21 @@ class CreditIssuer(GraphIssuer):
         self.alternatives=set()
         self.claim_counts=Counter()
         self.run=0
+        self.run_choices={}
+
+    def select(self,req,options,history,domains):
+        if self.policy is None or self.policy.static_scores is None:
+            return super().select(req,options,history,domains)
+        if not options:
+            return None
+        self.counts['root_decisions']+=1
+        rid=req['rule']
+        # GraphIssuer builds a single eligible menu per rule on this source Run.
+        if rid not in self.run_choices:
+            self.run_choices[rid]=self.policy.static_choice(options)
+            self.claim_counts['static_menu_decisions']+=1
+        uid=self.run_choices[rid]
+        return self.bind_layout(req,uid,history,domains) if uid is not None else None
 
     def choose_layout(self,req,options,context):
         if self.policy is not None:
@@ -68,6 +83,7 @@ class CreditIssuer(GraphIssuer):
         return action
 
     def batch(self,frame,history,snap,roots,next_token):
+        self.run_choices.clear()
         feedback=frame['layout_feedback']
         owners={}
         for root,token,rule,parents in feedback['claims']:
@@ -132,7 +148,7 @@ class CreditIssuer(GraphIssuer):
         return returns,totals
 
 
-def rollout(root,donor,binary,weights,baked,out,name,seed,omit,explore,policy=None,attach=False):
+def rollout(root,donor,binary,weights,baked,out,name,seed,omit,explore,policy=None,attach=False,run_recall=False):
     actor=load_actor(weights,True)
     folder=root/name
     issuer=CreditIssuer(actor,read(donor/'program.json'),read(folder/'program.json'),baked,
@@ -144,11 +160,22 @@ def rollout(root,donor,binary,weights,baked,out,name,seed,omit,explore,policy=No
     ref=read(folder/'capture.json')
     manifest=read(root/'manifest.json')
     rename=1703+next((r['seed'] for r in manifest if r['directory']==name),0)
+    accepted=Counter()
+    committed=Counter()
+    seen=set()
+    def observe(frame):
+        for req in frame['accepted']:
+            if req['run']!=frame['run']-1 or req['token'] in seen:
+                raise ValueError('invalid sealed commit receipt')
+            seen.add(req['token'])
+            committed[req['run']]+=1
+            if req['token']<RESIDUAL:
+                accepted[req['run']]+=1
     with TemporaryDirectory() as tmp:
         spec=Path(tmp)/'layouts.json'
         spec.write_text(json.dumps(issuer.receiver_layouts(),separators=(',',':')))
         result=execute(binary,folder/'program.json',actor,rename,assist=True,prefix_policy=Policy(32),
-                       graph_issuer=issuer,layout_file=spec,audit_ept=True)
+                       graph_issuer=issuer,layout_file=spec,audit_ept=True,frame_observer=observe if run_recall else None)
     for key,target in [('source_schedule','schedule'),('rhs_by_run','rhs'),('writes_by_run','writes'),
                        ('resume_audit','resumes'),('event_audit','events')]:
         if result.pop(key)!=ref[target]:
@@ -190,6 +217,11 @@ def rollout(root,donor,binary,weights,baked,out,name,seed,omit,explore,policy=No
                 actor=digest(weights),policy=policy.checkpoint if policy else None,scorer=digest(baked/'shared.pt'),reader=digest(baked/'boundary.pt'),
                 catalog=digest(baked/'catalog.json'),omit=omit,attach=attach,explore=explore,seed=seed,
                 withheld_layouts=len(issuer.withheld),held_issued=held_issued,held_complete=held_complete,reference_commits=ref['matches'],issuer=issuer.report(),credit=counts,execution=result)
+    if run_recall:
+        reference=Counter(req['run'] for req in read(folder/'tape.json')['requests'])
+        if reference!=committed or sum(accepted.values())!=result['counts']['accepted']:
+            raise ValueError('per-Run commit attribution differs from reference')
+        report['recall_by_nonempty_run']=[(r,accepted[r],reference[r]) for r in sorted(reference)]
     (out/(stem+'.json')).write_text(json.dumps(report,indent=2)+'\n')
 
 
@@ -202,6 +234,7 @@ if __name__=='__main__':
     p.add_argument('--omit',action='store_true')
     p.add_argument('--policy',type=Path)
     p.add_argument('--training-bake',type=Path)
+    p.add_argument('--run-recall',action='store_true')
     p.add_argument('--exclusive',action='store_true')
     p.add_argument('--attach',action='store_true')
     p.add_argument('--explore',action='store_true')
@@ -225,4 +258,4 @@ if __name__=='__main__':
             continue
         for seed in args.seeds:
             rollout(args.root,args.donor,args.binary,args.weights,args.baked,args.out,name,seed,
-                    args.omit,args.explore,policy=policy,attach=args.attach)
+                    args.omit,args.explore,policy=policy,attach=args.attach,run_recall=args.run_recall)

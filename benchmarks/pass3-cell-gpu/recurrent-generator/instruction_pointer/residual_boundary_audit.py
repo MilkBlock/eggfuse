@@ -49,6 +49,7 @@ def audit(folder,trace,donor,binary,weights,base,baked,old,new,seed):
     proven=defaultdict(set)
     counts=Counter()
     receipts=[]
+    context_groups=defaultdict(list)
     def snapshot(catalog,history,snap):
         if snap.run not in runs:
             return
@@ -61,7 +62,10 @@ def audit(folder,trace,donor,binary,weights,base,baked,old,new,seed):
             if not targets.keys()<=set(eligible):
                 raise ValueError('observed graph is not eligible at the root')
             fields=[tuple(history.visible[address(p)]['hashes']) for p in req['parents']]
-            selected=probe.choose_layout(req,eligible,root_context(fields,actor.width))
+            context=root_context(fields,actor.width)
+            selected=probe.choose_layout(req,eligible,context)
+            observed={}
+            reproduced={}
             counts['roots']+=1
             counts['roots_selecting_observed_target']+=selected in targets
             for u,alternatives in targets.items():
@@ -69,6 +73,8 @@ def audit(folder,trace,donor,binary,weights,base,baked,old,new,seed):
                 proposal=probe.bind_layout(req,u,history,domains)
                 predicted=tuple((*address(p),p['version']) for p in proposal.boundary) if proposal else None
                 counts['pairs_with_observed_boundary']+=predicted in alternatives
+                observed[u]=set().union(*alternatives.values())
+                reproduced[u]=alternatives.get(predicted,set())
                 for boundary,residual in alternatives.items():
                     proven['given_layout_and_boundary'].update(residual)
                     if selected==u:
@@ -77,6 +83,8 @@ def audit(folder,trace,donor,binary,weights,base,baked,old,new,seed):
                         proven['given_layout_learned_boundary'].update(residual)
                         if selected==u:
                             proven['learned_layout_and_boundary'].update(residual)
+            context_groups[(tuple(eligible),len(fields))].append(
+                (req,context,selected,observed,reproduced))
     with TemporaryDirectory() as tmp:
         path=Path(tmp)/'base.json'
         path.write_text(json.dumps(live.receiver_layouts(),separators=(',',':')))
@@ -85,7 +93,21 @@ def audit(folder,trace,donor,binary,weights,base,baked,old,new,seed):
                     frame_observer=lambda frame:receipts.extend(frame['accepted']))
     if receipts!=refs or run['state_sha']!=read(trace/'opportunity.json')['native']['state_sha']:
         raise ValueError('the fixed intervention history differs from the archived trace')
-    return dict(mode='offline intervention on original assist snapshots',roots=counts,
+    shuffled=Counter()
+    joint=set()
+    layouts_only=set()
+    for (eligible,_),rows in context_groups.items():
+        for j,(req,actual,choice,observed,reproduced) in enumerate(rows):
+            other=rows[(j+1)%len(rows)][1]
+            changed=not torch.equal(actual,other)
+            shuffled['roots_with_changed_input']+=changed
+            alternative=probe.choose_layout(req,list(eligible),other)
+            shuffled['changed_selections']+=alternative!=choice
+            layouts_only.update(observed.get(alternative,()))
+            joint.update(reproduced.get(alternative,()))
+    shuffled['residuals_given_boundary']=len(layouts_only)
+    shuffled['residuals_learned_boundary']=len(joint)
+    return dict(context_permutation=shuffled,mode='offline intervention on original assist snapshots',roots=counts,
                 distinct_residual={k:len(proven[k]) for k in ('given_layout_and_boundary',
                     'learned_layout_given_boundary','given_layout_learned_boundary','learned_layout_and_boundary')},
                 checked_commits=len(receipts),state_sha=run['state_sha'])
@@ -95,6 +117,7 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     for key in ('root','donor','binary','weights','base','experiment','old','out'):
         p.add_argument(key,type=Path)
+    p.add_argument('--policy',type=Path,help='layout selector for the offline intervention')
     p.add_argument('--cases',nargs='+',required=True)
     a=p.parse_args()
     torch.set_num_threads(1)
@@ -103,5 +126,5 @@ if __name__=='__main__':
     result={}
     for name in a.cases:
         result[name]=audit(a.root/name,a.experiment/name,donors,a.binary,a.weights,a.base,
-                           a.experiment/'expanded',a.old,a.experiment/'refit',1703+seeds.get(name,0))
+                           a.experiment/'expanded',a.old,a.policy or a.experiment/'refit',1703+seeds.get(name,0))
         a.out.write_text(json.dumps(result,indent=2)+'\n')

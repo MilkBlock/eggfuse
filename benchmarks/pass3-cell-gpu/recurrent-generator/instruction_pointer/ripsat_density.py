@@ -17,12 +17,14 @@ from online import execute
 from prefix_policy import Policy
 
 
-def compare(folder,donor,binary,weights,baked,audits,seed,learned=None,base_bake=None,base_policy=None):
+def compare(folder,donor,binary,weights,baked,audits,seed,learned=None,base_bake=None,base_policy=None,additional=None):
     results=[]
     if learned:
         from layout_credit import CreditIssuer
         from train_layout_bandit import LearnedChoice
         arms=('original','refit') if base_bake else ('attach','rl')
+        if additional:
+            arms=(*arms,'additional')
         records={arm:read(audits/arm/(folder.name+'.json')) for arm in arms}
     else:
         arms=('control','native')
@@ -44,6 +46,8 @@ def compare(folder,donor,binary,weights,baked,audits,seed,learned=None,base_bake
             actor=load_actor(weights,True)
             if learned:
                 checkpoint=base_policy if arm=='original' else learned
+                if arm=='additional':
+                    checkpoint=additional
                 policy=None if arm=='attach' else LearnedChoice(checkpoint,catalog(arm))
                 if records[arm]['policy']!=(policy.checkpoint if policy else None):
                     raise ValueError('timed layout policy differs from the audit')
@@ -70,7 +74,7 @@ def compare(folder,donor,binary,weights,baked,audits,seed,learned=None,base_bake
         results.append(pair)
     return dict(binary=digest(binary),weights=digest(weights),reader=digest(baked/'boundary.pt'),
                 pairs=results,median_eps={k:median(p[k]['eps'] for p in results) for k in records},
-                **{arms[1]+'_eps_wins':sum(p[arms[1]]['eps']>p[arms[0]]['eps'] for p in results)})
+                **{arm+'_eps_wins':sum(p[arm]['eps']>p[arms[0]]['eps'] for p in results) for arm in arms[1:]})
 
 
 if __name__=='__main__':
@@ -78,10 +82,13 @@ if __name__=='__main__':
     for k in ('root','donor','binary','weights','baked','audits','out'):
         p.add_argument(k,type=Path)
     p.add_argument('--policy',type=Path)
+    p.add_argument('--additional-policy',type=Path)
     p.add_argument('--base-bake',type=Path)
     p.add_argument('--base-policy',type=Path)
     p.add_argument('--cases',required=True,nargs='+')
     a=p.parse_args()
+    if a.additional_policy and not a.policy:
+        p.error('additional selector requires a primary policy')
     if bool(a.base_bake)!=bool(a.base_policy) or (a.base_bake and not a.policy):
         p.error('comparison across catalogs requires base and new checkpoints')
     torch.set_num_threads(1)
@@ -89,5 +96,5 @@ if __name__=='__main__':
     donor=read(a.donor/'program.json')
     reports={}
     for name in a.cases:
-        reports[name]=compare(a.root/name,donor,a.binary,a.weights,a.baked,a.audits,1703+seeds.get(name,0),a.policy,a.base_bake,a.base_policy)
+        reports[name]=compare(a.root/name,donor,a.binary,a.weights,a.baked,a.audits,1703+seeds.get(name,0),a.policy,a.base_bake,a.base_policy,a.additional_policy)
         a.out.write_text(json.dumps(reports,indent=2)+'\n')
