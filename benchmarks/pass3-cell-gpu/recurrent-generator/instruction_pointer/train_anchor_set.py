@@ -112,7 +112,7 @@ def objective(scores,ids,positive,groups=None):
     return (positive_loss*n*gain+negative_loss)/(n*gain+len(scores)-n)
 
 
-def reads(cat,s,mem,model,roots,children,rng,credit=None,tally=None):
+def reads(cat,s,mem,model,roots,children,rng,credit=None,tally=None,focus=None):
     credited_roots,credited_children=(roots,children) if credit is None else credit[:2]
     groups={} if credit is None or len(credit)==2 else credit[2]
 
@@ -137,11 +137,13 @@ def reads(cat,s,mem,model,roots,children,rng,credit=None,tally=None):
     positives=list(roots)
     negatives=[x for x in legal if x not in roots]
     rows=[]
-    for rid,anchor in rng.sample(positives,min(3,len(positives)))+rng.sample(negatives,min(3,len(negatives))):
+    positive_reads=rng.sample(positives,min(3,len(positives))) if focus is None else [focus[0]]
+    for rid,anchor in positive_reads+rng.sample(negatives,min(3,len(negatives))):
         ids=ints(mem.nodes,[0]) if anchor is None else dom.role(cat,mem,rid,anchor,anchor)
         scores=model.root_scores(cat,mem,rid,anchor,ids,dom)
         rows.append(term(int(anchor is not None),(rid,anchor),scores,ids))
-    for rid,anchor,prefix in rng.sample(list(children),min(6,len(children))):
+    prefixes=rng.sample(list(children),min(6,len(children))) if focus is None else focus[1]
+    for rid,anchor,prefix in prefixes:
         order=[anchor]+[j for j in range(len(cat.atoms[rid])) if j!=anchor]
         depth=len(prefix)
         role=order[depth]
