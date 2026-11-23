@@ -17,8 +17,27 @@ class RecoveryHead(nn.Module):
         self.evidence=nn.Linear(8,24,bias=False)
         self.output=nn.Linear(24,1)
 
+    def inputs(self,context,port,evidence):
+        return self.context(context)+self.port(port)+self.evidence(evidence)
+
     def forward(self,context,port,evidence):
-        return self.output((self.context(context)+self.port(port)+self.evidence(evidence)).tanh()).squeeze(-1)
+        return self.output(self.inputs(context,port,evidence).tanh()).squeeze(-1)
+
+
+class RecurrentRecoveryHead(RecoveryHead):
+    def __init__(self,width,steps):
+        super().__init__(width)
+        if steps < 1:
+            raise ValueError('expected a positive number of recurrent steps')
+        self.steps=steps
+        self.refine=nn.Linear(self.output.in_features,self.output.in_features,bias=False)
+
+    def forward(self,context,port,evidence):
+        inputs=self.inputs(context,port,evidence)
+        state=inputs.tanh()
+        for _ in range(self.steps):
+            state=(inputs+self.refine(state)).tanh()
+        return self.output(state).squeeze(-1)
 
 
 def features(cat,mem,rid,order,depth,prefix,ids,margin):
@@ -46,7 +65,9 @@ class Recovery:
         meta=read(folder/'training.json')
         if meta['base']!=digest(weights) or meta['head']!=digest(folder/'head.pt'):
             raise ValueError('prefix recovery checkpoint differs from its frozen Actor')
-        self.head=RecoveryHead(meta['width']).eval()
+        self.refinements=meta.get('refinements',0)
+        width=meta['width']
+        self.head=(RecurrentRecoveryHead(width,self.refinements) if self.refinements else RecoveryHead(width)).eval()
         self.head.load_state_dict(torch.load(folder/'head.pt',map_location='cpu',weights_only=True))
         self.margin_only=margin_only
         self.cut=meta['margin_cut'] if margin_only else meta['cut']
