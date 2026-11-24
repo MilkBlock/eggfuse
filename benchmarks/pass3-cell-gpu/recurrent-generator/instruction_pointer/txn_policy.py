@@ -134,11 +134,25 @@ class ResponseStream(GuardStream):
         self.joint_index = {}
         self.choices = {}
 
+    def programs(self, depth):
+        return plans(self.rd, self.rule, depth, self.study.chains)
+
+    def issue_program(self, plan, inputs):
+        if plan.prerequisites:
+            self.stats["chain_prefixes"] += len(inputs[0])
+            return self.transaction.compute_chain(
+                self.rule, tuple(i for i, _ in plan.steps), inputs
+            )
+        return self.transaction.compute(self.rule, plan.atom, inputs[0])
+
+    def select_query(self, success, occupancy, narrowed):
+        return torch.ones(len(narrowed), dtype=torch.bool)
+
     def children(self, paths, depth, block):
         if depth not in self.choices:
             self.choices[depth] = [
                 plan
-                for plan in plans(self.rd, self.rule, depth, self.study.chains)
+                for plan in self.programs(depth)
                 if len(plan.steps) <= self.transaction.capacity
             ]
         choices = self.choices[depth]
@@ -232,13 +246,7 @@ class ResponseStream(GuardStream):
                             torch.cat((addr, addr.new_full((len(addr), 1), col)), 1)
                         )
                 inputs.append(torch.stack(refs, 1))
-            if plan.prerequisites:
-                self.stats["chain_prefixes"] += len(selected)
-                reply = self.transaction.compute_chain(
-                    self.rule, tuple(i for i, _ in plan.steps), inputs
-                )
-            else:
-                reply = self.transaction.compute(self.rule, plan.atom, inputs[0])
+            reply = self.issue_program(plan, inputs)
             success = reply[:, 1] == 14
             selected = selected[success]
             self.stats["computed_valid"] += len(selected)
@@ -250,14 +258,21 @@ class ResponseStream(GuardStream):
                 key = self.rd.index.encoder(raw)
                 learned = self.study.net.code(key)
                 width = 2**self.study.net.width
-                slot[selected] = (
+                query_slot = (
                     shift[selected]
                     + 256
                     + j * 256 * width
                     + direct[selected] * width
                     + learned
                 )
-                self.stats["response_queries"] += len(selected)
+                retain = self.select_query(
+                    success,
+                    occupancy[selected],
+                    offsets[query_slot + 1] - offsets[query_slot],
+                )
+                slot[selected[retain]] = query_slot[retain]
+                self.stats["response_queries"] += int(retain.sum())
+                self.stats["response_direct_queries"] += int((~retain).sum())
         self.stats["direct_only_queries"] += int((~use).sum())
         self.stats["bucket_probes"] += len(slot)
         ends = (offsets[slot + 1] - offsets[slot]).cumsum(0)

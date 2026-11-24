@@ -67,7 +67,7 @@ def execute(
     ):
         if protocol == "ccp-v0.1":
             digest = hashlib.sha256((d / "program.json").read_bytes()).hexdigest()
-            txn = Client(proc, capacity, digest)
+            txn = getattr(study, "client_type", Client)(proc, capacity, digest)
         else:
             txn = Transaction(proc, capacity)
         try:
@@ -89,7 +89,8 @@ def execute(
                     raise RuntimeError(
                         "CCP publication did not acknowledge the expected sealed Run"
                     )
-                if sealed is not None:
+                acknowledged = sealed is not None
+                if acknowledged:
                     trace.append(dict(**sealed, elapsed=perf_counter() - start))
                     sealed = None
                 if "role" in frame:
@@ -111,18 +112,25 @@ def execute(
                 t = perf_counter()
                 update_memory(rd, frame, publication, repair_types)
                 stats["memory_update_seconds"] += perf_counter() - t
+                if acknowledged:
+                    trace[-1]["elapsed"] = perf_counter() - start
                 if frame.get("final_publication"):
                     current = committed
                     continue
                 if perf_counter() >= deadline:
                     raise TimeoutError
-                for rule, wm in frame["rules"]:
-                    if perf_counter() >= deadline:
-                        raise TimeoutError
-                    stream = study.stream(rd, pol.model, rule, wm, stats)
-                    stream.transaction = txn
-                    for paths in stream.path_batches("stream", 0.0, deadline):
-                        txn.proofs_from_paths(stream, paths)
+                if hasattr(study, "run_snapshot"):
+                    study.run_snapshot(
+                        frame, publication, rd, pol.model, txn, stats, deadline
+                    )
+                else:
+                    for rule, wm in frame["rules"]:
+                        if perf_counter() >= deadline:
+                            raise TimeoutError
+                        stream = study.stream(rd, pol.model, rule, wm, stats)
+                        stream.transaction = txn
+                        for paths in stream.path_batches("stream", 0.0, deadline):
+                            txn.proofs_from_paths(stream, paths)
                 txn.seal()
                 sealed = {
                     "run": current,
@@ -131,6 +139,7 @@ def execute(
                     "visits": stats["visits"],
                     "interface_reads": stats["interface_reads"],
                     "waves": sum(txn.sizes.values()),
+                    "controls": stats["neural_controls"],
                     "replies": dict(txn.verdicts),
                 }
         except TimeoutError:
@@ -159,6 +168,8 @@ def execute(
                 )
             error = msg.strip()
     wall = perf_counter() - start
+    if end is not None and trace:
+        trace[-1]["elapsed"] = wall
     ref = read(d / "capture.json")
     tape = work / "issued.json"
     schema = {
