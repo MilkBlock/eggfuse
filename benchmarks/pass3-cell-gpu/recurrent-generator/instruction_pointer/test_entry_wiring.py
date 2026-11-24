@@ -1,11 +1,13 @@
 """Regressions for the 48-layout entry selector and censored rank labels."""
 from pathlib import Path
+from types import SimpleNamespace
 import unittest
 
+import numpy as np
 import torch
 
 from entry_model import scores
-from entry_wiring import terminal_codes
+from entry_wiring import use_wiring
 from event_templates import BranchNet
 from receipt_bake import read
 
@@ -21,7 +23,11 @@ class EntryWiringTest(unittest.TestCase):
         self.assertNotEqual(layouts[a][1][2], layouts[b][1][2])
         path = REPORT / "entry-wiring"
         graph = torch.load(path / "graph.pt", weights_only=True)
-        code = torch.from_numpy(terminal_codes(graph["baked"][[a, b]], 0))
+        key = (layouts[a][0][0], 0)
+        family = SimpleNamespace(structural_keys=graph["structural_keys"], menu={key[0]: [a, b]},
+                                 codes={key: np.zeros((3, 30), np.float32)})
+        use_wiring(family, graph)
+        code = torch.from_numpy(family.codes[key][1:])
         self.assertFalse(torch.equal(code[0], code[1]))
         net = BranchNet().eval()
         net.load_state_dict(torch.load(REPORT / "cell-events/template.pt", weights_only=True))
