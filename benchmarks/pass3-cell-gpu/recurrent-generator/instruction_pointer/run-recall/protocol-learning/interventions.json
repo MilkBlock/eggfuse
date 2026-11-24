@@ -1,0 +1,212 @@
+{
+  "grammar-25112473": {
+    "B": {
+      "substituted_values": 0,
+      "derived": 0,
+      "paid": 14,
+      "state_sha": "12b1699f1be1d1794879dbd1a396b9e97127232a4f7a119d3bee282c27e92f6d",
+      "controls": 0,
+      "seal_early": 0,
+      "accepted": 0,
+      "observes": 0,
+      "queries": 0
+    },
+    "B-same-type": {
+      "substituted_values": 222,
+      "derived": 200,
+      "paid": 402,
+      "state_sha": "6da6141c35edb154fbafae8142dbaf756fb008419c53f8ef77bdb210ff09d466",
+      "controls": 0,
+      "seal_early": 0,
+      "accepted": 110,
+      "observes": 0,
+      "queries": 196
+    },
+    "D": {
+      "substituted_values": 0,
+      "derived": 200,
+      "paid": 402,
+      "state_sha": "6da6141c35edb154fbafae8142dbaf756fb008419c53f8ef77bdb210ff09d466",
+      "controls": 97,
+      "seal_early": 4,
+      "accepted": 110,
+      "observes": 15,
+      "queries": 196
+    }
+  },
+  "grammar-stride2-25112473": {
+    "B": {
+      "substituted_values": 0,
+      "derived": 0,
+      "paid": 14,
+      "state_sha": "4172eb8657a84c768d3ca62efb2ac9996eb9a57adef65a7e9d6f3befdb942d14",
+      "controls": 0,
+      "seal_early": 0,
+      "accepted": 0,
+      "observes": 0,
+      "queries": 0
+    },
+    "B-same-type": {
+      "substituted_values": 99,
+      "derived": 200,
+      "paid": 704,
+      "state_sha": "4b45070ea37b6dfd261b4ef3c73d2453cd38c90be1e6c221af346a395d14de9f",
+      "controls": 0,
+      "seal_early": 0,
+      "accepted": 110,
+      "observes": 0,
+      "queries": 74
+    },
+    "D": {
+      "substituted_values": 0,
+      "derived": 200,
+      "paid": 704,
+      "state_sha": "4b45070ea37b6dfd261b4ef3c73d2453cd38c90be1e6c221af346a395d14de9f",
+      "controls": 95,
+      "seal_early": 4,
+      "accepted": 110,
+      "observes": 15,
+      "queries": 74
+    }
+  },
+  "grammar-stride3-split-7300147": {
+    "B": {
+      "substituted_values": 0,
+      "derived": 0,
+      "paid": 14,
+      "state_sha": "359239b7cecb440340a981d62a13f96c2b67393f634076c4286dc904138ced61",
+      "controls": 0,
+      "seal_early": 0,
+      "accepted": 0,
+      "observes": 0,
+      "queries": 0
+    },
+    "B-same-type": {
+      "substituted_values": 112,
+      "derived": 256,
+      "paid": 1100,
+      "state_sha": "d0bb6af5b34e68195d9c51712e158df00da0b225314a4341c48a51a7de0318ae",
+      "controls": 0,
+      "seal_early": 0,
+      "accepted": 152,
+      "observes": 0,
+      "queries": 88
+    },
+    "D": {
+      "substituted_values": 0,
+      "derived": 256,
+      "paid": 1372,
+      "state_sha": "d0bb6af5b34e68195d9c51712e158df00da0b225314a4341c48a51a7de0318ae",
+      "controls": 89,
+      "seal_early": 4,
+      "accepted": 152,
+      "observes": 15,
+      "queries": 0
+    }
+  },
+  "fact": {
+    "B": {
+      "substituted_values": 0,
+      "derived": 32,
+      "paid": 68,
+      "state_sha": "e4e4d4e6ace2e9c43c63ede17e156ce6ab58b6853f287fef7d86b7c35db3a0fc",
+      "controls": 0,
+      "seal_early": 0,
+      "accepted": 2,
+      "observes": 0,
+      "queries": 0
+    },
+    "B-same-type": {
+      "substituted_values": 257,
+      "derived": 232,
+      "paid": 1149,
+      "state_sha": "77541292ffc05599b6276a95ab69a349a2226e2aa18056e021f0de8e088a71d3",
+      "controls": 0,
+      "seal_early": 0,
+      "accepted": 348,
+      "observes": 0,
+      "queries": 0
+    },
+    "D": {
+      "substituted_values": 0,
+      "derived": 181,
+      "paid": 877,
+      "state_sha": "0846f5358632a9356ba755adeb956c92da25499f632561918f867367db5dc0bc",
+      "controls": 965,
+      "seal_early": 221,
+      "accepted": 293,
+      "observes": 71,
+      "queries": 0
+    }
+  },
+  "sum-divisors": {
+    "B": {
+      "substituted_values": 0,
+      "derived": 101,
+      "paid": 151,
+      "state_sha": "7af6752aaa0435971ec17ad49d49471b528d285012a20964b202661f557ad1e8",
+      "controls": 0,
+      "seal_early": 0,
+      "accepted": 2,
+      "observes": 0,
+      "queries": 0
+    },
+    "B-same-type": {
+      "substituted_values": 795,
+      "derived": 764,
+      "paid": 4694,
+      "state_sha": "d01d2facf7ee7ee77bbf653afff9d2678ced9a5458d2bc8cfc04ea93e26c04c7",
+      "controls": 0,
+      "seal_early": 0,
+      "accepted": 962,
+      "observes": 0,
+      "queries": 82
+    },
+    "D": {
+      "substituted_values": 0,
+      "derived": 642,
+      "paid": 4086,
+      "state_sha": "1cea2992e58303a6ff2095aaa0cfcf44bbff795e3675e01c6cc0665b7b8c00ad",
+      "controls": 1291,
+      "seal_early": 235,
+      "accepted": 865,
+      "observes": 106,
+      "queries": 82
+    }
+  },
+  "cyk801": {
+    "B": {
+      "substituted_values": 0,
+      "derived": 0,
+      "paid": 801,
+      "state_sha": "7079a468da0fcd8d33dfe2a4a9d99a0496b55e85e35430973b019caa75f87741",
+      "controls": 0,
+      "seal_early": 0,
+      "accepted": 0,
+      "observes": 0,
+      "queries": 0
+    },
+    "B-same-type": {
+      "substituted_values": 18801,
+      "derived": 6567,
+      "paid": 55201,
+      "state_sha": "2bad5f36b3dd70837b4677a4581a107bad02a9d423e60a866a4e3c7425242d94",
+      "controls": 0,
+      "seal_early": 0,
+      "accepted": 4991,
+      "observes": 0,
+      "queries": 17694
+    },
+    "D": {
+      "substituted_values": 0,
+      "derived": 6567,
+      "paid": 55201,
+      "state_sha": "2bad5f36b3dd70837b4677a4581a107bad02a9d423e60a866a4e3c7425242d94",
+      "controls": 583,
+      "seal_early": 0,
+      "accepted": 4991,
+      "observes": 91,
+      "queries": 17694
+    }
+  }
+}

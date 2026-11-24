@@ -26,3 +26,5 @@ python ccp_compare.py "$ROOT" "$OUT" grammar-7300147 grammar-stride3-split-73001
 ```
 
 [Normative wire format and visibility rules](../../../../../../docs/CELL_COMMUNICATION_PROTOCOL_V0_1.md)
+
+[Learning the frozen protocol on independent neural rollouts](../protocol-learning/README.md)
