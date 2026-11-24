@@ -1,0 +1,9 @@
+{
+  "recursive_rollout.py": "e405011986507f3f7af05a0b69e0d8862157061dc7511b2f9d12325a2f4c6b27",
+  "recursive_corpus.py": "2533ca2e85e7f4bd55d7ca4b9a9e4ddc180d402d225056dcaf647cc8fdbf75d8",
+  "recursive_train.py": "30a31aaffa3914301730b09ed94ddb39be9f07e27bda5866d301491cd4cca44e",
+  "recursive_agent.py": "bfb9da4b622dd745c28b3fd630843b4d53e417ec1c379c22a486ec90b361ab6a",
+  "recursive_coverage.py": "b96cd6600aa43065968fb96b152b749bdeba1287b1de108cc4406e1d57f0ae8a",
+  "dagger.pt": "8516ece09c29572e644ac73dd24cee374e2fa00b2d82253f20359f49b9aad906",
+  "program.json": "66202ca10e10288845101d4623a338020fae31d7127e2baf27a19364a17cff0c"
+}

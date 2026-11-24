@@ -1,0 +1,3247 @@
+{
+  "exclusive": [
+    {
+      "case": "fact",
+      "arm": "legacy",
+      "termination": "budget_exhausted",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 1668,
+      "reference_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d",
+      "state_sha": "a8b82e8d83e1f195b2cb6e1914549afe65da4a7b0490e39d51265851a841d20a",
+      "exact_endpoint": false,
+      "runs": 340,
+      "first_divergent": 6,
+      "all": [
+        276,
+        1249
+      ],
+      "derived": [
+        147,
+        1120
+      ],
+      "first_missed": 973,
+      "later_recovered": 0,
+      "paid": 1744,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "7c679b4cf1ab4675c775e7a54785a0ee471534b34bd46e5ba112a2c42fb275f6",
+        "runs": 340,
+        "signed_external": [
+          213,
+          66,
+          3,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 282,
+      "certified_prefix_ops": 77,
+      "ept": 0.16169724770642202,
+      "eps": 200.54152740580673,
+      "wall": 1.4061925410060212,
+      "visits": 12035,
+      "visits_per_op": 42.677304964539005,
+      "duplicates": 346,
+      "reject": {
+        "binding": 1008,
+        "guard": 174
+      },
+      "duplicate_rate": 0.19839449541284404,
+      "reject_rate": 0.6777522935779816,
+      "accepted": 216,
+      "unobserved": 0,
+      "pool": [
+        0,
+        0
+      ],
+      "frontier_mean": 29.70294117647059,
+      "frontier_max": 93,
+      "work": {
+        "events": 1439,
+        "typed_positions_tested": 10100,
+        "postings_visited": 1935,
+        "index_lookups": 13554,
+        "retrieval_vector_scores": 2466,
+        "candidates": 2356,
+        "compose_scores": 2356
+      },
+      "read_work": {}
+    },
+    {
+      "case": "fact",
+      "arm": "two",
+      "termination": "budget_exhausted",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 1668,
+      "reference_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d",
+      "state_sha": "058dacca7956eecde7880a4914d04a124389b734944d5848042399137e3355a8",
+      "exact_endpoint": false,
+      "runs": 419,
+      "first_divergent": 9,
+      "all": [
+        308,
+        1249
+      ],
+      "derived": [
+        179,
+        1120
+      ],
+      "first_missed": 944,
+      "later_recovered": 3,
+      "paid": 423,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "91e031fe778fbab1cdc8f465c9b83138b4dff87b1d3f570ef4ab89632646f7e8",
+        "runs": 419,
+        "signed_external": [
+          190,
+          63,
+          15,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          3,
+          0
+        ]
+      },
+      "signed_ops": 268,
+      "certified_prefix_ops": 87,
+      "ept": 0.6335697399527187,
+      "eps": 202.76221911965715,
+      "wall": 1.321745249995729,
+      "visits": 158287,
+      "visits_per_op": 590.6231343283582,
+      "duplicates": 100,
+      "reject": {
+        "binding": 105,
+        "guard": 61
+      },
+      "duplicate_rate": 0.2364066193853428,
+      "reject_rate": 0.39243498817966904,
+      "accepted": 157,
+      "unobserved": 0,
+      "pool": [
+        0,
+        0
+      ],
+      "frontier_mean": 23.2673031026253,
+      "frontier_max": 54,
+      "work": {
+        "bounded_runs": 75,
+        "expansions": 23025
+      },
+      "read_work": {
+        "visited": 111689,
+        "reads": 23025,
+        "scored_ports": 48892,
+        "bucket_visits": 46598
+      }
+    },
+    {
+      "case": "fact",
+      "arm": "free",
+      "termination": "budget_exhausted",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 1668,
+      "reference_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d",
+      "state_sha": "7ba65bc44aa941027ef0faf32b7f8c088f5aa9eb0ed3b52e2c1fb975d83dd164",
+      "exact_endpoint": false,
+      "runs": 399,
+      "first_divergent": 9,
+      "all": [
+        298,
+        1249
+      ],
+      "derived": [
+        169,
+        1120
+      ],
+      "first_missed": 954,
+      "later_recovered": 3,
+      "paid": 412,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "2fb3e6023e4682de1c62a9a9b2e46d828a1cf18459163eff99e096fd34317c31",
+        "runs": 399,
+        "signed_external": [
+          196,
+          48,
+          13,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          3,
+          0
+        ]
+      },
+      "signed_ops": 257,
+      "certified_prefix_ops": 87,
+      "ept": 0.6237864077669902,
+      "eps": 206.90381814839992,
+      "wall": 1.2421230420004576,
+      "visits": 117869,
+      "visits_per_op": 458.6342412451362,
+      "duplicates": 98,
+      "reject": {
+        "binding": 122,
+        "guard": 38
+      },
+      "duplicate_rate": 0.23786407766990292,
+      "reject_rate": 0.3883495145631068,
+      "accepted": 154,
+      "unobserved": 0,
+      "pool": [
+        0,
+        0
+      ],
+      "frontier_mean": 20.736842105263158,
+      "frontier_max": 53,
+      "work": {
+        "bounded_runs": 73,
+        "expansions": 21622
+      },
+      "read_work": {
+        "visited": 84553,
+        "reads": 21622,
+        "scored_ports": 42711,
+        "bucket_visits": 33316
+      }
+    },
+    {
+      "case": "fact",
+      "arm": "pending",
+      "termination": "budget_exhausted",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 1668,
+      "reference_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d",
+      "state_sha": "dc116af0dc6edc24bbda169ced708c690d16509e35d6cce22ee5adb644ae6869",
+      "exact_endpoint": false,
+      "runs": 415,
+      "first_divergent": 9,
+      "all": [
+        307,
+        1249
+      ],
+      "derived": [
+        178,
+        1120
+      ],
+      "first_missed": 946,
+      "later_recovered": 4,
+      "paid": 530,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "eb839d6207e04a588bb713adbfcd091b7a54b5c035668a4fb03e1784156fd5e7",
+        "runs": 415,
+        "signed_external": [
+          202,
+          59,
+          14,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          3,
+          0
+        ]
+      },
+      "signed_ops": 275,
+      "certified_prefix_ops": 87,
+      "ept": 0.5188679245283019,
+      "eps": 263.81596181462766,
+      "wall": 1.0423933340061922,
+      "visits": 69520,
+      "visits_per_op": 252.8,
+      "duplicates": 139,
+      "reject": {
+        "binding": 168,
+        "guard": 57
+      },
+      "duplicate_rate": 0.2622641509433962,
+      "reject_rate": 0.42452830188679247,
+      "accepted": 166,
+      "unobserved": 0,
+      "pool": [
+        512,
+        500
+      ],
+      "frontier_mean": 22.93253012048193,
+      "frontier_max": 55,
+      "work": {
+        "bounded_runs": 67,
+        "expansions": 22658,
+        "event_wakes": 277,
+        "event_notifications": 1156,
+        "resumed": 471,
+        "proactive_wakes": 191,
+        "closed_attempt_limit": 538,
+        "invalidated": 17,
+        "fair_wakes": 3,
+        "evicted": 1341
+      },
+      "read_work": {
+        "visited": 59297,
+        "reads": 13704,
+        "scored_ports": 47666,
+        "bucket_visits": 10223
+      }
+    },
+    {
+      "case": "loopfact",
+      "arm": "legacy",
+      "termination": "budget_exhausted",
+      "failure": "rule 439, roles (0, 1, 2, 4, 5, 6, 7, 8, 9, 10): more than 250000 typed projections",
+      "failure_run": 140,
+      "reference_commits": 1419,
+      "reference_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724",
+      "state_sha": "72b4d584b8e1e52064471577c1c0c5fdde193ae08e54ff773a78579f1d7fdc31",
+      "exact_endpoint": false,
+      "runs": 139,
+      "first_divergent": 7,
+      "all": [
+        327,
+        1241
+      ],
+      "derived": [
+        198,
+        1112
+      ],
+      "first_missed": 909,
+      "later_recovered": 1,
+      "paid": 1583,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "98d024ee7bd473852106afdab7d3250871faa0143e2e5fbad1e603e37e235067",
+        "runs": 139,
+        "signed_external": [
+          176,
+          80,
+          3,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 259,
+      "certified_prefix_ops": 58,
+      "ept": 0.16361339229311433,
+      "eps": 223.94817301649408,
+      "wall": 1.1565175840078155,
+      "visits": 10130,
+      "visits_per_op": 39.11196911196911,
+      "duplicates": 339,
+      "reject": {
+        "binding": 882,
+        "guard": 174
+      },
+      "duplicate_rate": 0.21415034744156664,
+      "reject_rate": 0.6670878079595705,
+      "accepted": 188,
+      "unobserved": 0,
+      "pool": [
+        0,
+        0
+      ],
+      "frontier_mean": 23.762589928057555,
+      "frontier_max": 64,
+      "work": {
+        "events": 1042,
+        "typed_positions_tested": 8202,
+        "postings_visited": 1927,
+        "index_lookups": 8244,
+        "retrieval_vector_scores": 2161,
+        "candidates": 2056,
+        "compose_scores": 2056
+      },
+      "read_work": {}
+    },
+    {
+      "case": "loopfact",
+      "arm": "two",
+      "termination": "budget_exhausted",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 1419,
+      "reference_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724",
+      "state_sha": "6d1ec36629b6c9d2749bfb61f9e70d1fcceda8bd9a9e8a896ed7caad20ba41b2",
+      "exact_endpoint": false,
+      "runs": 347,
+      "first_divergent": 4,
+      "all": [
+        301,
+        1241
+      ],
+      "derived": [
+        172,
+        1112
+      ],
+      "first_missed": 941,
+      "later_recovered": 1,
+      "paid": 364,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "605c3cfc4f0fdaae847f52a1811e40b12dd320edb7caddba7a2c730bcc74f63b",
+        "runs": 347,
+        "signed_external": [
+          147,
+          61,
+          15,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          3,
+          0
+        ]
+      },
+      "signed_ops": 223,
+      "certified_prefix_ops": 55,
+      "ept": 0.6126373626373627,
+      "eps": 207.8154933920763,
+      "wall": 1.0730672499921639,
+      "visits": 87571,
+      "visits_per_op": 392.695067264574,
+      "duplicates": 63,
+      "reject": {
+        "binding": 118,
+        "guard": 51
+      },
+      "duplicate_rate": 0.17307692307692307,
+      "reject_rate": 0.4642857142857143,
+      "accepted": 132,
+      "unobserved": 0,
+      "pool": [
+        0,
+        0
+      ],
+      "frontier_mean": 22.097982708933717,
+      "frontier_max": 49,
+      "work": {
+        "bounded_runs": 64,
+        "expansions": 18812
+      },
+      "read_work": {
+        "visited": 61321,
+        "reads": 18812,
+        "scored_ports": 34140,
+        "bucket_visits": 26250
+      }
+    },
+    {
+      "case": "loopfact",
+      "arm": "free",
+      "termination": "budget_exhausted",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 1419,
+      "reference_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724",
+      "state_sha": "eeb0f4b8f2dcb9079d7da35200fe4572c0645f6c0594adc9c702074b4d6b8de1",
+      "exact_endpoint": false,
+      "runs": 321,
+      "first_divergent": 4,
+      "all": [
+        297,
+        1241
+      ],
+      "derived": [
+        168,
+        1112
+      ],
+      "first_missed": 944,
+      "later_recovered": 0,
+      "paid": 369,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "23ce2713e5eabd24e17e801786830103c0fdc6439c8202e0163aee5e7aa6d7aa",
+        "runs": 321,
+        "signed_external": [
+          142,
+          55,
+          11,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 208,
+      "certified_prefix_ops": 55,
+      "ept": 0.5636856368563685,
+      "eps": 213.92943772805933,
+      "wall": 0.9722832080005901,
+      "visits": 74400,
+      "visits_per_op": 357.6923076923077,
+      "duplicates": 65,
+      "reject": {
+        "binding": 140,
+        "guard": 42
+      },
+      "duplicate_rate": 0.17615176151761516,
+      "reject_rate": 0.4932249322493225,
+      "accepted": 122,
+      "unobserved": 0,
+      "pool": [
+        0,
+        0
+      ],
+      "frontier_mean": 20.13707165109034,
+      "frontier_max": 46,
+      "work": {
+        "bounded_runs": 56,
+        "expansions": 17059
+      },
+      "read_work": {
+        "visited": 52617,
+        "reads": 17059,
+        "scored_ports": 29274,
+        "bucket_visits": 21783
+      }
+    },
+    {
+      "case": "loopfact",
+      "arm": "pending",
+      "termination": "budget_exhausted",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 1419,
+      "reference_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724",
+      "state_sha": "c0fd8ba99db0ebb52b405e3098ba1eaaf0ec3f339862592cf7f58ad6e61e4c4f",
+      "exact_endpoint": false,
+      "runs": 322,
+      "first_divergent": 8,
+      "all": [
+        305,
+        1241
+      ],
+      "derived": [
+        176,
+        1112
+      ],
+      "first_missed": 936,
+      "later_recovered": 0,
+      "paid": 444,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "f30fbd5def802d27a8b807cbfab3631eb6213966847e3a5ae5976c9419396443",
+        "runs": 322,
+        "signed_external": [
+          142,
+          63,
+          12,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 217,
+      "certified_prefix_ops": 67,
+      "ept": 0.48873873873873874,
+      "eps": 257.70972948037735,
+      "wall": 0.8420326249906793,
+      "visits": 44732,
+      "visits_per_op": 206.13824884792626,
+      "duplicates": 73,
+      "reject": {
+        "binding": 178,
+        "guard": 61
+      },
+      "duplicate_rate": 0.16441441441441443,
+      "reject_rate": 0.5382882882882883,
+      "accepted": 132,
+      "unobserved": 0,
+      "pool": [
+        512,
+        512
+      ],
+      "frontier_mean": 20.944099378881987,
+      "frontier_max": 50,
+      "work": {
+        "bounded_runs": 51,
+        "expansions": 17175,
+        "event_wakes": 192,
+        "event_notifications": 471,
+        "resumed": 334,
+        "proactive_wakes": 139,
+        "closed_attempt_limit": 339,
+        "fair_wakes": 3,
+        "evicted": 1679,
+        "invalidated": 8
+      },
+      "read_work": {
+        "visited": 37297,
+        "reads": 11146,
+        "scored_ports": 30291,
+        "bucket_visits": 7435
+      }
+    },
+    {
+      "case": "sum-divisors",
+      "arm": "legacy",
+      "termination": "budget_exhausted",
+      "failure": "rule 438, roles (0, 1, 2, 3, 4, 5, 6, 8, 9): more than 250000 typed projections",
+      "failure_run": 127,
+      "reference_commits": 17341,
+      "reference_sha": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e",
+      "state_sha": "d219c0864af2e99ab88f2d2d1de4590b79de02e5c432b0bf1de4220d3fbf1067",
+      "exact_endpoint": false,
+      "runs": 126,
+      "first_divergent": 11,
+      "all": [
+        428,
+        8147
+      ],
+      "derived": [
+        299,
+        8018
+      ],
+      "first_missed": 3885,
+      "later_recovered": 0,
+      "paid": 1812,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "6afe367b14601f65f9a8a82569a34438abc78258b0cdab58a44ede2d1b96214a",
+        "runs": 126,
+        "signed_external": [
+          413,
+          121,
+          24,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 558,
+      "certified_prefix_ops": 211,
+      "ept": 0.3079470198675497,
+      "eps": 372.5922975546782,
+      "wall": 1.4976155000040308,
+      "visits": 23444,
+      "visits_per_op": 42.01433691756272,
+      "duplicates": 325,
+      "reject": {
+        "binding": 1047,
+        "guard": 157
+      },
+      "duplicate_rate": 0.1793598233995585,
+      "reject_rate": 0.6644591611479028,
+      "accepted": 283,
+      "unobserved": 0,
+      "pool": [
+        0,
+        0
+      ],
+      "frontier_mean": 42.476190476190474,
+      "frontier_max": 127,
+      "work": {
+        "events": 1758,
+        "typed_positions_tested": 20973,
+        "postings_visited": 2470,
+        "index_lookups": 17127,
+        "retrieval_vector_scores": 4534,
+        "candidates": 4590,
+        "compose_scores": 4590
+      },
+      "read_work": {}
+    },
+    {
+      "case": "sum-divisors",
+      "arm": "two",
+      "termination": "budget_exhausted",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 17341,
+      "reference_sha": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e",
+      "state_sha": "ef1176c20c7d2b3d20cca0120e3cb02a4c118490ab3cbb0c58caaed60f6710df",
+      "exact_endpoint": false,
+      "runs": 386,
+      "first_divergent": 4,
+      "all": [
+        384,
+        8147
+      ],
+      "derived": [
+        255,
+        8018
+      ],
+      "first_missed": 7765,
+      "later_recovered": 2,
+      "paid": 370,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "5246d7801d6d9c6cd0aa0b06c8311d626f77feb2881477888abb6eead33d6ce1",
+        "runs": 386,
+        "signed_external": [
+          323,
+          59,
+          12,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          1,
+          0
+        ]
+      },
+      "signed_ops": 394,
+      "certified_prefix_ops": 202,
+      "ept": 1.0648648648648649,
+      "eps": 262.9876283382196,
+      "wall": 1.4981693340087077,
+      "visits": 188637,
+      "visits_per_op": 478.7741116751269,
+      "duplicates": 80,
+      "reject": {
+        "binding": 90,
+        "guard": 38
+      },
+      "duplicate_rate": 0.21621621621621623,
+      "reject_rate": 0.34594594594594597,
+      "accepted": 162,
+      "unobserved": 0,
+      "pool": [
+        0,
+        0
+      ],
+      "frontier_mean": 25.5,
+      "frontier_max": 63,
+      "work": {
+        "bounded_runs": 69,
+        "expansions": 21880
+      },
+      "read_work": {
+        "visited": 150847,
+        "reads": 21880,
+        "scored_ports": 71843,
+        "bucket_visits": 37790
+      }
+    },
+    {
+      "case": "sum-divisors",
+      "arm": "free",
+      "termination": "budget_exhausted",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 17341,
+      "reference_sha": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e",
+      "state_sha": "eba1b14189e3d9856e7428f65d40d4a4a64392997e678f6565e06f27a7804fba",
+      "exact_endpoint": false,
+      "runs": 449,
+      "first_divergent": 4,
+      "all": [
+        421,
+        8147
+      ],
+      "derived": [
+        292,
+        8018
+      ],
+      "first_missed": 7733,
+      "later_recovered": 7,
+      "paid": 645,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "7d3bcc840ad58b17a61d054556ef7b37a6d2426b7eb60b2de45e50fc4b00cb01",
+        "runs": 449,
+        "signed_external": [
+          342,
+          78,
+          15,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          4,
+          0
+        ]
+      },
+      "signed_ops": 435,
+      "certified_prefix_ops": 202,
+      "ept": 0.6744186046511628,
+      "eps": 249.14154158166116,
+      "wall": 1.7459954579971964,
+      "visits": 259721,
+      "visits_per_op": 597.0597701149426,
+      "duplicates": 169,
+      "reject": {
+        "binding": 212,
+        "guard": 72
+      },
+      "duplicate_rate": 0.262015503875969,
+      "reject_rate": 0.44031007751937984,
+      "accepted": 192,
+      "unobserved": 0,
+      "pool": [
+        0,
+        0
+      ],
+      "frontier_mean": 29.031180400890868,
+      "frontier_max": 57,
+      "work": {
+        "bounded_runs": 76,
+        "expansions": 25825
+      },
+      "read_work": {
+        "visited": 198830,
+        "reads": 25825,
+        "scored_ports": 83204,
+        "bucket_visits": 60891
+      }
+    },
+    {
+      "case": "sum-divisors",
+      "arm": "pending",
+      "termination": "execution_failure",
+      "failure": "Error: \"source panic\"\n",
+      "failure_run": 177,
+      "reference_commits": 17341,
+      "reference_sha": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e",
+      "state_sha": "4d5f10cb28817f8c79cb942730605cffc9ec7664c1808d02801d9407e5afabac",
+      "exact_endpoint": false,
+      "runs": 176,
+      "first_divergent": 4,
+      "all": [
+        439,
+        8147
+      ],
+      "derived": [
+        310,
+        8018
+      ],
+      "first_missed": 3944,
+      "later_recovered": 6,
+      "paid": 725,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "dd7dea3a245e4278d71319f7c983618f30584495681f8431a704f983256ba035",
+        "runs": 176,
+        "signed_external": [
+          354,
+          94,
+          17,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          4,
+          0
+        ]
+      },
+      "signed_ops": 465,
+      "certified_prefix_ops": 202,
+      "ept": 0.6413793103448275,
+      "eps": 596.2659969119616,
+      "wall": 0.7798532909946516,
+      "visits": 59861,
+      "visits_per_op": 128.73333333333332,
+      "duplicates": 181,
+      "reject": {
+        "binding": 254,
+        "guard": 82
+      },
+      "duplicate_rate": 0.2496551724137931,
+      "reject_rate": 0.463448275862069,
+      "accepted": 205,
+      "unobserved": 3,
+      "pool": [
+        512,
+        511
+      ],
+      "frontier_mean": 25.852272727272727,
+      "frontier_max": 60,
+      "work": {
+        "bounded_runs": 27,
+        "expansions": 10419,
+        "event_wakes": 367,
+        "event_notifications": 1847,
+        "resumed": 459,
+        "proactive_wakes": 91,
+        "closed_attempt_limit": 295,
+        "invalidated": 21,
+        "fair_wakes": 1,
+        "evicted": 766
+      },
+      "read_work": {
+        "visited": 48800,
+        "reads": 7606,
+        "scored_ports": 32968,
+        "bucket_visits": 10563
+      }
+    },
+    {
+      "case": "jacobi",
+      "arm": "legacy",
+      "termination": "budget_exhausted",
+      "failure": "rule 438, roles (0, 1, 2, 3, 5, 8, 9): more than 250000 typed projections",
+      "failure_run": 128,
+      "reference_commits": 41319,
+      "reference_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+      "state_sha": "9e2715482a0a8e6442745b5e54998c4ff747e5af7d471eec32a394271b11adc6",
+      "exact_endpoint": false,
+      "runs": 127,
+      "first_divergent": 15,
+      "all": [
+        507,
+        20404
+      ],
+      "derived": [
+        378,
+        20275
+      ],
+      "first_missed": 11645,
+      "later_recovered": 0,
+      "paid": 2114,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "4015318e50e4d1738bfb73e9a80eb1934cd17d1f26f551566571dc1310c5299f",
+        "runs": 127,
+        "signed_external": [
+          800,
+          187,
+          28,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 1015,
+      "certified_prefix_ops": 587,
+      "ept": 0.48013245033112584,
+      "eps": 142.04999531057433,
+      "wall": 7.145371584003442,
+      "visits": 38224,
+      "visits_per_op": 37.65911330049261,
+      "duplicates": 335,
+      "reject": {
+        "binding": 1296,
+        "guard": 152
+      },
+      "duplicate_rate": 0.1584673604541154,
+      "reject_rate": 0.684957426679281,
+      "accepted": 331,
+      "unobserved": 0,
+      "pool": [
+        0,
+        0
+      ],
+      "frontier_mean": 47.125984251968504,
+      "frontier_max": 144,
+      "work": {
+        "events": 1920,
+        "typed_positions_tested": 33646,
+        "postings_visited": 4570,
+        "index_lookups": 13212,
+        "retrieval_vector_scores": 11355,
+        "candidates": 10557,
+        "compose_scores": 10557
+      },
+      "read_work": {}
+    },
+    {
+      "case": "jacobi",
+      "arm": "two",
+      "termination": "budget_exhausted",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 41319,
+      "reference_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+      "state_sha": "d0b10a373950b864b296fddc0989ddf05ab25f24b0c33eb68b60ab74c37f71f4",
+      "exact_endpoint": false,
+      "runs": 456,
+      "first_divergent": 3,
+      "all": [
+        417,
+        20404
+      ],
+      "derived": [
+        288,
+        20275
+      ],
+      "first_missed": 19989,
+      "later_recovered": 2,
+      "paid": 429,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "7c19fda99c57baeef34c0809d11f0b252a66ea71ecde36ba9d2afcc368f6db32",
+        "runs": 456,
+        "signed_external": [
+          700,
+          86,
+          23,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 809,
+      "certified_prefix_ops": 550,
+      "ept": 1.8857808857808858,
+      "eps": 261.3748790080997,
+      "wall": 3.0951712079986464,
+      "visits": 628056,
+      "visits_per_op": 776.336217552534,
+      "duplicates": 65,
+      "reject": {
+        "binding": 138,
+        "guard": 30
+      },
+      "duplicate_rate": 0.15151515151515152,
+      "reject_rate": 0.3916083916083916,
+      "accepted": 196,
+      "unobserved": 0,
+      "pool": [
+        0,
+        0
+      ],
+      "frontier_mean": 23.969298245614034,
+      "frontier_max": 46,
+      "work": {
+        "bounded_runs": 95,
+        "expansions": 27836
+      },
+      "read_work": {
+        "visited": 547598,
+        "reads": 27836,
+        "scored_ports": 236244,
+        "bucket_visits": 80458
+      }
+    },
+    {
+      "case": "jacobi",
+      "arm": "free",
+      "termination": "budget_exhausted",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 41319,
+      "reference_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+      "state_sha": "e05175a93f3c3ccf37ad4c2b24cf3d2cfd75cde3131fce677f2bf24291a2d661",
+      "exact_endpoint": false,
+      "runs": 456,
+      "first_divergent": 3,
+      "all": [
+        419,
+        20404
+      ],
+      "derived": [
+        290,
+        20275
+      ],
+      "first_missed": 19987,
+      "later_recovered": 2,
+      "paid": 486,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "1891fb5130b0b360072e939926a872e65a97f0fe1e04072bf3cad8f731069905",
+        "runs": 456,
+        "signed_external": [
+          704,
+          87,
+          23,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 814,
+      "certified_prefix_ops": 550,
+      "ept": 1.6748971193415638,
+      "eps": 280.1114062248117,
+      "wall": 2.905986625002697,
+      "visits": 591072,
+      "visits_per_op": 726.1326781326782,
+      "duplicates": 73,
+      "reject": {
+        "binding": 191,
+        "guard": 30
+      },
+      "duplicate_rate": 0.15020576131687244,
+      "reject_rate": 0.4547325102880658,
+      "accepted": 192,
+      "unobserved": 0,
+      "pool": [
+        0,
+        0
+      ],
+      "frontier_mean": 23.848684210526315,
+      "frontier_max": 51,
+      "work": {
+        "bounded_runs": 94,
+        "expansions": 27880
+      },
+      "read_work": {
+        "visited": 522930,
+        "reads": 27880,
+        "scored_ports": 223864,
+        "bucket_visits": 68142
+      }
+    },
+    {
+      "case": "jacobi",
+      "arm": "pending",
+      "termination": "budget_exhausted",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 41319,
+      "reference_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+      "state_sha": "9813c22524fd60e12c1c8719f9d10727048f07fe14540765bf0655d7a0ac432f",
+      "exact_endpoint": false,
+      "runs": 456,
+      "first_divergent": 3,
+      "all": [
+        414,
+        20404
+      ],
+      "derived": [
+        285,
+        20275
+      ],
+      "first_missed": 19992,
+      "later_recovered": 2,
+      "paid": 501,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "ea383ebf9723bacd7b6b9a4c2ad0ef3772384f2a352f252a610b1a42410329f4",
+        "runs": 456,
+        "signed_external": [
+          703,
+          81,
+          22,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 806,
+      "certified_prefix_ops": 550,
+      "ept": 1.6087824351297406,
+      "eps": 291.4713617172925,
+      "wall": 2.7652802500088,
+      "visits": 335224,
+      "visits_per_op": 415.9106699751861,
+      "duplicates": 78,
+      "reject": {
+        "binding": 199,
+        "guard": 30
+      },
+      "duplicate_rate": 0.15568862275449102,
+      "reject_rate": 0.45708582834331335,
+      "accepted": 194,
+      "unobserved": 0,
+      "pool": [
+        512,
+        512
+      ],
+      "frontier_mean": 22.640350877192983,
+      "frontier_max": 63,
+      "work": {
+        "bounded_runs": 97,
+        "expansions": 27923,
+        "event_wakes": 218,
+        "event_notifications": 1022,
+        "resumed": 366,
+        "proactive_wakes": 148,
+        "closed_attempt_limit": 350,
+        "evicted": 5701,
+        "invalidated": 23
+      },
+      "read_work": {
+        "visited": 300647,
+        "reads": 17805,
+        "scored_ports": 228272,
+        "bucket_visits": 34577
+      }
+    },
+    {
+      "case": "cyk801",
+      "arm": "legacy",
+      "termination": "budget_exhausted",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 4991,
+      "reference_sha": "2bad5f36b3dd70837b4677a4581a107bad02a9d423e60a866a4e3c7425242d94",
+      "state_sha": "21dab414ee1809bd4da1b48b74c5c35374ee63bc78b997c46ba791c64b33e957",
+      "exact_endpoint": false,
+      "runs": 2,
+      "first_divergent": 1,
+      "all": [
+        967,
+        7402
+      ],
+      "derived": [
+        132,
+        6567
+      ],
+      "first_missed": 3406,
+      "later_recovered": 0,
+      "paid": 128,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "1dcce3dd293ee4b3b05af5266765e0078b6fa68f9d3c5eed7e533cdf409a0750",
+        "runs": 2,
+        "signed_external": [
+          71,
+          61,
+          0,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 132,
+      "certified_prefix_ops": 0,
+      "ept": 1.03125,
+      "eps": 2199.044038517295,
+      "wall": 0.060026083010598086,
+      "visits": 13193,
+      "visits_per_op": 99.9469696969697,
+      "duplicates": 0,
+      "reject": {
+        "binding": 67
+      },
+      "duplicate_rate": 0.0,
+      "reject_rate": 0.5234375,
+      "accepted": 61,
+      "unobserved": 0,
+      "pool": [
+        0,
+        0
+      ],
+      "frontier_mean": 857,
+      "frontier_max": 896,
+      "work": {
+        "events": 30,
+        "typed_positions_tested": 11486,
+        "postings_visited": 1707,
+        "index_lookups": 414,
+        "retrieval_vector_scores": 1771,
+        "candidates": 325,
+        "compose_scores": 325
+      },
+      "read_work": {}
+    },
+    {
+      "case": "cyk801",
+      "arm": "two",
+      "termination": "neural_quiescence",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 4991,
+      "reference_sha": "2bad5f36b3dd70837b4677a4581a107bad02a9d423e60a866a4e3c7425242d94",
+      "state_sha": "7ac957016b43acc2b1392a07dd2bbea3d55a0b846a33c3c93a810e4976352f9b",
+      "exact_endpoint": false,
+      "runs": 2,
+      "first_divergent": 1,
+      "all": [
+        849,
+        7402
+      ],
+      "derived": [
+        14,
+        6567
+      ],
+      "first_missed": 3524,
+      "later_recovered": 0,
+      "paid": 6,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "23f715474b2b0fd75d77e95651ce7fdd1717062cf43a2992742416427938c69c",
+        "runs": 2,
+        "signed_external": [
+          8,
+          6,
+          0,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 14,
+      "certified_prefix_ops": 0,
+      "ept": 2.3333333333333335,
+      "eps": 389.1496732373596,
+      "wall": 0.035975874998257495,
+      "visits": 1126,
+      "visits_per_op": 80.42857142857143,
+      "duplicates": 0,
+      "reject": {},
+      "duplicate_rate": 0.0,
+      "reject_rate": 0.0,
+      "accepted": 6,
+      "unobserved": 0,
+      "pool": [
+        0,
+        0
+      ],
+      "frontier_mean": 150,
+      "frontier_max": 266,
+      "work": {
+        "bounded_runs": 0,
+        "expansions": 30
+      },
+      "read_work": {
+        "visited": 614,
+        "reads": 30,
+        "scored_ports": 334,
+        "bucket_visits": 512
+      }
+    },
+    {
+      "case": "cyk801",
+      "arm": "free",
+      "termination": "neural_quiescence",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 4991,
+      "reference_sha": "2bad5f36b3dd70837b4677a4581a107bad02a9d423e60a866a4e3c7425242d94",
+      "state_sha": "7ac957016b43acc2b1392a07dd2bbea3d55a0b846a33c3c93a810e4976352f9b",
+      "exact_endpoint": false,
+      "runs": 2,
+      "first_divergent": 1,
+      "all": [
+        849,
+        7402
+      ],
+      "derived": [
+        14,
+        6567
+      ],
+      "first_missed": 3524,
+      "later_recovered": 0,
+      "paid": 6,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "23f715474b2b0fd75d77e95651ce7fdd1717062cf43a2992742416427938c69c",
+        "runs": 2,
+        "signed_external": [
+          8,
+          6,
+          0,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 14,
+      "certified_prefix_ops": 0,
+      "ept": 2.3333333333333335,
+      "eps": 346.9278841817818,
+      "wall": 0.04035420800209977,
+      "visits": 1126,
+      "visits_per_op": 80.42857142857143,
+      "duplicates": 0,
+      "reject": {},
+      "duplicate_rate": 0.0,
+      "reject_rate": 0.0,
+      "accepted": 6,
+      "unobserved": 0,
+      "pool": [
+        0,
+        0
+      ],
+      "frontier_mean": 150,
+      "frontier_max": 266,
+      "work": {
+        "bounded_runs": 0,
+        "expansions": 30
+      },
+      "read_work": {
+        "visited": 614,
+        "reads": 30,
+        "scored_ports": 334,
+        "bucket_visits": 512
+      }
+    },
+    {
+      "case": "cyk801",
+      "arm": "pending",
+      "termination": "neural_quiescence",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 4991,
+      "reference_sha": "2bad5f36b3dd70837b4677a4581a107bad02a9d423e60a866a4e3c7425242d94",
+      "state_sha": "7ac957016b43acc2b1392a07dd2bbea3d55a0b846a33c3c93a810e4976352f9b",
+      "exact_endpoint": false,
+      "runs": 2,
+      "first_divergent": 1,
+      "all": [
+        849,
+        7402
+      ],
+      "derived": [
+        14,
+        6567
+      ],
+      "first_missed": 3524,
+      "later_recovered": 0,
+      "paid": 6,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "23f715474b2b0fd75d77e95651ce7fdd1717062cf43a2992742416427938c69c",
+        "runs": 2,
+        "signed_external": [
+          8,
+          6,
+          0,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 14,
+      "certified_prefix_ops": 0,
+      "ept": 2.3333333333333335,
+      "eps": 374.2448340584942,
+      "wall": 0.037408666001283564,
+      "visits": 1230,
+      "visits_per_op": 87.85714285714286,
+      "duplicates": 0,
+      "reject": {},
+      "duplicate_rate": 0.0,
+      "reject_rate": 0.0,
+      "accepted": 6,
+      "unobserved": 0,
+      "pool": [
+        12,
+        12
+      ],
+      "frontier_mean": 150,
+      "frontier_max": 266,
+      "work": {
+        "event_wakes": 2,
+        "bounded_runs": 0,
+        "expansions": 33,
+        "event_notifications": 8,
+        "proactive_wakes": 1,
+        "resumed": 3
+      },
+      "read_work": {
+        "visited": 666,
+        "reads": 36,
+        "scored_ports": 337,
+        "bucket_visits": 564
+      }
+    },
+    {
+      "case": "grammar-17122",
+      "arm": "legacy",
+      "termination": "budget_exhausted",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 76,
+      "reference_sha": "1ed4d431107ce8a5b5c439c587e1dd3436255e8cb6b35008290d29f7d8665335",
+      "state_sha": "4bf81e087697a60dd8b22d9c38b56d97dfe89b713ea152d112ee4426210fc38a",
+      "exact_endpoint": false,
+      "runs": 2,
+      "first_divergent": 2,
+      "all": [
+        98,
+        167
+      ],
+      "derived": [
+        60,
+        129
+      ],
+      "first_missed": 54,
+      "later_recovered": 0,
+      "paid": 90,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "a9a6c83e8fd40b682b13a89bcf16fa55bcba5185758e4ef3d3753755468f6006",
+        "runs": 2,
+        "signed_external": [
+          34,
+          26,
+          0,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 60,
+      "certified_prefix_ops": 60,
+      "ept": 0.6666666666666666,
+      "eps": 2630.4636534547103,
+      "wall": 0.022809667003457434,
+      "visits": 705,
+      "visits_per_op": 11.75,
+      "duplicates": 0,
+      "reject": {
+        "binding": 64
+      },
+      "duplicate_rate": 0.0,
+      "reject_rate": 0.7111111111111111,
+      "accepted": 26,
+      "unobserved": 0,
+      "pool": [
+        0,
+        0
+      ],
+      "frontier_mean": 40,
+      "frontier_max": 64,
+      "work": {
+        "events": 35,
+        "typed_positions_tested": 546,
+        "postings_visited": 159,
+        "index_lookups": 486,
+        "retrieval_vector_scores": 222,
+        "candidates": 124,
+        "compose_scores": 124
+      },
+      "read_work": {}
+    },
+    {
+      "case": "grammar-17122",
+      "arm": "two",
+      "termination": "neural_quiescence",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 76,
+      "reference_sha": "1ed4d431107ce8a5b5c439c587e1dd3436255e8cb6b35008290d29f7d8665335",
+      "state_sha": "d1757a79fa9514064529860d3118b24c44808e80d69b9e6255c80679a90240df",
+      "exact_endpoint": false,
+      "runs": 2,
+      "first_divergent": 1,
+      "all": [
+        53,
+        167
+      ],
+      "derived": [
+        15,
+        129
+      ],
+      "first_missed": 99,
+      "later_recovered": 0,
+      "paid": 6,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "bb6aad42c65036279364ec2fbd24e1dce37684b606d43ee8c5d3a2b1fa4824a3",
+        "runs": 2,
+        "signed_external": [
+          9,
+          6,
+          0,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 15,
+      "certified_prefix_ops": 0,
+      "ept": 2.5,
+      "eps": 715.5308062014452,
+      "wall": 0.02096345799509436,
+      "visits": 220,
+      "visits_per_op": 14.666666666666666,
+      "duplicates": 0,
+      "reject": {},
+      "duplicate_rate": 0.0,
+      "reject_rate": 0.0,
+      "accepted": 6,
+      "unobserved": 0,
+      "pool": [
+        0,
+        0
+      ],
+      "frontier_mean": 35,
+      "frontier_max": 36,
+      "work": {
+        "bounded_runs": 0,
+        "expansions": 42
+      },
+      "read_work": {
+        "visited": 162,
+        "reads": 42,
+        "scored_ports": 152,
+        "bucket_visits": 58
+      }
+    },
+    {
+      "case": "grammar-17122",
+      "arm": "free",
+      "termination": "neural_quiescence",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 76,
+      "reference_sha": "1ed4d431107ce8a5b5c439c587e1dd3436255e8cb6b35008290d29f7d8665335",
+      "state_sha": "315dce9213223a66473fa3dc7599e0f97b863c3edf7a09c3354fea0be7afa885",
+      "exact_endpoint": false,
+      "runs": 3,
+      "first_divergent": 1,
+      "all": [
+        56,
+        167
+      ],
+      "derived": [
+        18,
+        129
+      ],
+      "first_missed": 102,
+      "later_recovered": 0,
+      "paid": 18,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "a716366c77880ff35d2cad3ea0650165e4cd6cceb4bc448afe823c4373b03e21",
+        "runs": 3,
+        "signed_external": [
+          11,
+          7,
+          0,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 18,
+      "certified_prefix_ops": 0,
+      "ept": 1.0,
+      "eps": 751.7096066504594,
+      "wall": 0.023945417007780634,
+      "visits": 368,
+      "visits_per_op": 20.444444444444443,
+      "duplicates": 0,
+      "reject": {
+        "binding": 6,
+        "guard": 4
+      },
+      "duplicate_rate": 0.0,
+      "reject_rate": 0.5555555555555556,
+      "accepted": 8,
+      "unobserved": 0,
+      "pool": [
+        0,
+        0
+      ],
+      "frontier_mean": 35,
+      "frontier_max": 36,
+      "work": {
+        "bounded_runs": 0,
+        "expansions": 69
+      },
+      "read_work": {
+        "visited": 262,
+        "reads": 69,
+        "scored_ports": 224,
+        "bucket_visits": 106
+      }
+    },
+    {
+      "case": "grammar-17122",
+      "arm": "pending",
+      "termination": "neural_quiescence",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 76,
+      "reference_sha": "1ed4d431107ce8a5b5c439c587e1dd3436255e8cb6b35008290d29f7d8665335",
+      "state_sha": "315dce9213223a66473fa3dc7599e0f97b863c3edf7a09c3354fea0be7afa885",
+      "exact_endpoint": false,
+      "runs": 3,
+      "first_divergent": 1,
+      "all": [
+        56,
+        167
+      ],
+      "derived": [
+        18,
+        129
+      ],
+      "first_missed": 102,
+      "later_recovered": 0,
+      "paid": 24,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "a716366c77880ff35d2cad3ea0650165e4cd6cceb4bc448afe823c4373b03e21",
+        "runs": 3,
+        "signed_external": [
+          11,
+          7,
+          0,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 18,
+      "certified_prefix_ops": 0,
+      "ept": 0.75,
+      "eps": 738.0489876979556,
+      "wall": 0.024388625010033138,
+      "visits": 394,
+      "visits_per_op": 21.88888888888889,
+      "duplicates": 0,
+      "reject": {
+        "binding": 12,
+        "guard": 4
+      },
+      "duplicate_rate": 0.0,
+      "reject_rate": 0.6666666666666666,
+      "accepted": 8,
+      "unobserved": 0,
+      "pool": [
+        31,
+        31
+      ],
+      "frontier_mean": 34.333333333333336,
+      "frontier_max": 36,
+      "work": {
+        "event_wakes": 4,
+        "bounded_runs": 0,
+        "expansions": 71,
+        "event_notifications": 34,
+        "resumed": 6,
+        "proactive_wakes": 2,
+        "closed_attempt_limit": 1
+      },
+      "read_work": {
+        "visited": 275,
+        "reads": 78,
+        "scored_ports": 228,
+        "bucket_visits": 119
+      }
+    },
+    {
+      "case": "grammar-91627433",
+      "arm": "legacy",
+      "termination": "budget_exhausted",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 117,
+      "reference_sha": "1af51eb06bd1aff43ab0dabab3476aebf7d4b99258c3c636ab02293dbd6840e7",
+      "state_sha": "c0cefabf4ea0680b9a875254b11c9cd87c4f1fe57eb1e622a4b95f0be2e51fa8",
+      "exact_endpoint": false,
+      "runs": 2,
+      "first_divergent": 2,
+      "all": [
+        174,
+        270
+      ],
+      "derived": [
+        111,
+        207
+      ],
+      "first_missed": 69,
+      "later_recovered": 0,
+      "paid": 113,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "b9abbf24b206ff6f6cff06c341a1749acd66c0647313113a6f76d5d9947c902b",
+        "runs": 2,
+        "signed_external": [
+          62,
+          49,
+          0,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 111,
+      "certified_prefix_ops": 111,
+      "ept": 0.9823008849557522,
+      "eps": 3686.564562350023,
+      "wall": 0.030109332990832627,
+      "visits": 1096,
+      "visits_per_op": 9.873873873873874,
+      "duplicates": 0,
+      "reject": {
+        "binding": 64
+      },
+      "duplicate_rate": 0.0,
+      "reject_rate": 0.5663716814159292,
+      "accepted": 49,
+      "unobserved": 0,
+      "pool": [
+        0,
+        0
+      ],
+      "frontier_mean": 69,
+      "frontier_max": 112,
+      "work": {
+        "events": 42,
+        "typed_positions_tested": 930,
+        "postings_visited": 166,
+        "index_lookups": 522,
+        "retrieval_vector_scores": 185,
+        "candidates": 117,
+        "compose_scores": 117
+      },
+      "read_work": {}
+    },
+    {
+      "case": "grammar-91627433",
+      "arm": "two",
+      "termination": "neural_quiescence",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 117,
+      "reference_sha": "1af51eb06bd1aff43ab0dabab3476aebf7d4b99258c3c636ab02293dbd6840e7",
+      "state_sha": "4e878c50b8aca13cc224e8d027dc4be03e3bd10b8e2e4758125c62c64be6b005",
+      "exact_endpoint": false,
+      "runs": 2,
+      "first_divergent": 1,
+      "all": [
+        78,
+        270
+      ],
+      "derived": [
+        15,
+        207
+      ],
+      "first_missed": 165,
+      "later_recovered": 0,
+      "paid": 6,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "32307fd2a275bfa4b3f37ed123bb09e0d7bcf0d69c1e31aad493b578af464c67",
+        "runs": 2,
+        "signed_external": [
+          9,
+          6,
+          0,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 15,
+      "certified_prefix_ops": 0,
+      "ept": 2.5,
+      "eps": 727.0832449045461,
+      "wall": 0.02063037500192877,
+      "visits": 242,
+      "visits_per_op": 16.133333333333333,
+      "duplicates": 0,
+      "reject": {},
+      "duplicate_rate": 0.0,
+      "reject_rate": 0.0,
+      "accepted": 6,
+      "unobserved": 0,
+      "pool": [
+        0,
+        0
+      ],
+      "frontier_mean": 54.5,
+      "frontier_max": 59,
+      "work": {
+        "bounded_runs": 0,
+        "expansions": 30
+      },
+      "read_work": {
+        "visited": 208,
+        "reads": 30,
+        "scored_ports": 191,
+        "bucket_visits": 34
+      }
+    },
+    {
+      "case": "grammar-91627433",
+      "arm": "free",
+      "termination": "neural_quiescence",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 117,
+      "reference_sha": "1af51eb06bd1aff43ab0dabab3476aebf7d4b99258c3c636ab02293dbd6840e7",
+      "state_sha": "4e878c50b8aca13cc224e8d027dc4be03e3bd10b8e2e4758125c62c64be6b005",
+      "exact_endpoint": false,
+      "runs": 2,
+      "first_divergent": 1,
+      "all": [
+        78,
+        270
+      ],
+      "derived": [
+        15,
+        207
+      ],
+      "first_missed": 165,
+      "later_recovered": 0,
+      "paid": 6,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "32307fd2a275bfa4b3f37ed123bb09e0d7bcf0d69c1e31aad493b578af464c67",
+        "runs": 2,
+        "signed_external": [
+          9,
+          6,
+          0,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 15,
+      "certified_prefix_ops": 0,
+      "ept": 2.5,
+      "eps": 698.127681894792,
+      "wall": 0.02148604100511875,
+      "visits": 242,
+      "visits_per_op": 16.133333333333333,
+      "duplicates": 0,
+      "reject": {},
+      "duplicate_rate": 0.0,
+      "reject_rate": 0.0,
+      "accepted": 6,
+      "unobserved": 0,
+      "pool": [
+        0,
+        0
+      ],
+      "frontier_mean": 54.5,
+      "frontier_max": 59,
+      "work": {
+        "bounded_runs": 0,
+        "expansions": 30
+      },
+      "read_work": {
+        "visited": 208,
+        "reads": 30,
+        "scored_ports": 191,
+        "bucket_visits": 34
+      }
+    },
+    {
+      "case": "grammar-91627433",
+      "arm": "pending",
+      "termination": "neural_quiescence",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 117,
+      "reference_sha": "1af51eb06bd1aff43ab0dabab3476aebf7d4b99258c3c636ab02293dbd6840e7",
+      "state_sha": "4e878c50b8aca13cc224e8d027dc4be03e3bd10b8e2e4758125c62c64be6b005",
+      "exact_endpoint": false,
+      "runs": 2,
+      "first_divergent": 1,
+      "all": [
+        78,
+        270
+      ],
+      "derived": [
+        15,
+        207
+      ],
+      "first_missed": 165,
+      "later_recovered": 0,
+      "paid": 6,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "32307fd2a275bfa4b3f37ed123bb09e0d7bcf0d69c1e31aad493b578af464c67",
+        "runs": 2,
+        "signed_external": [
+          9,
+          6,
+          0,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 15,
+      "certified_prefix_ops": 0,
+      "ept": 2.5,
+      "eps": 693.024706490675,
+      "wall": 0.02164424999500625,
+      "visits": 252,
+      "visits_per_op": 16.8,
+      "duplicates": 0,
+      "reject": {},
+      "duplicate_rate": 0.0,
+      "reject_rate": 0.0,
+      "accepted": 6,
+      "unobserved": 0,
+      "pool": [
+        14,
+        14
+      ],
+      "frontier_mean": 54.5,
+      "frontier_max": 59,
+      "work": {
+        "event_wakes": 2,
+        "bounded_runs": 0,
+        "expansions": 33,
+        "event_notifications": 8,
+        "resumed": 3,
+        "proactive_wakes": 1
+      },
+      "read_work": {
+        "visited": 213,
+        "reads": 36,
+        "scored_ports": 194,
+        "bucket_visits": 39
+      }
+    },
+    {
+      "case": "grammar-72102993",
+      "arm": "legacy",
+      "termination": "budget_exhausted",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 98,
+      "reference_sha": "a21ac6083bc7733c4f4ab509ffc2a4c51a3c74002cd04a42b17da67b52f50f59",
+      "state_sha": "ffb5070f1156f3b5c21324d505ea790ce14460c38c625c4772ed1f46363a8698",
+      "exact_endpoint": false,
+      "runs": 2,
+      "first_divergent": 2,
+      "all": [
+        174,
+        250
+      ],
+      "derived": [
+        106,
+        182
+      ],
+      "first_missed": 46,
+      "later_recovered": 0,
+      "paid": 110,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "f59e8763690258e18ddfcbc888bb9ec4cb3ab7b1cd54200f95dab8cb1612a5e3",
+        "runs": 2,
+        "signed_external": [
+          60,
+          46,
+          0,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 106,
+      "certified_prefix_ops": 106,
+      "ept": 0.9636363636363636,
+      "eps": 3879.598207681985,
+      "wall": 0.02732241699413862,
+      "visits": 1197,
+      "visits_per_op": 11.29245283018868,
+      "duplicates": 0,
+      "reject": {
+        "binding": 60,
+        "guard": 4
+      },
+      "duplicate_rate": 0.0,
+      "reject_rate": 0.5818181818181818,
+      "accepted": 46,
+      "unobserved": 0,
+      "pool": [
+        0,
+        0
+      ],
+      "frontier_mean": 71,
+      "frontier_max": 114,
+      "work": {
+        "events": 44,
+        "typed_positions_tested": 1032,
+        "postings_visited": 165,
+        "index_lookups": 540,
+        "retrieval_vector_scores": 178,
+        "candidates": 112,
+        "compose_scores": 112
+      },
+      "read_work": {}
+    },
+    {
+      "case": "grammar-72102993",
+      "arm": "two",
+      "termination": "neural_quiescence",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 98,
+      "reference_sha": "a21ac6083bc7733c4f4ab509ffc2a4c51a3c74002cd04a42b17da67b52f50f59",
+      "state_sha": "5880fc358bfabb801f71000382a48ed7f47e97ee5c73efcd1ccd683a148b04dd",
+      "exact_endpoint": false,
+      "runs": 2,
+      "first_divergent": 1,
+      "all": [
+        83,
+        250
+      ],
+      "derived": [
+        15,
+        182
+      ],
+      "first_missed": 137,
+      "later_recovered": 0,
+      "paid": 8,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "d7a5510a7275da4eb4c2f0fafdc82495c7ed993c6af0dc934a0f8ad4503f4a19",
+        "runs": 2,
+        "signed_external": [
+          9,
+          6,
+          0,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 15,
+      "certified_prefix_ops": 0,
+      "ept": 1.875,
+      "eps": 639.1931779848637,
+      "wall": 0.023467084000003524,
+      "visits": 244,
+      "visits_per_op": 16.266666666666666,
+      "duplicates": 0,
+      "reject": {
+        "guard": 2
+      },
+      "duplicate_rate": 0.0,
+      "reject_rate": 0.25,
+      "accepted": 6,
+      "unobserved": 0,
+      "pool": [
+        0,
+        0
+      ],
+      "frontier_mean": 58.5,
+      "frontier_max": 62,
+      "work": {
+        "bounded_runs": 0,
+        "expansions": 32
+      },
+      "read_work": {
+        "visited": 216,
+        "reads": 32,
+        "scored_ports": 204,
+        "bucket_visits": 28
+      }
+    },
+    {
+      "case": "grammar-72102993",
+      "arm": "free",
+      "termination": "neural_quiescence",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 98,
+      "reference_sha": "a21ac6083bc7733c4f4ab509ffc2a4c51a3c74002cd04a42b17da67b52f50f59",
+      "state_sha": "5880fc358bfabb801f71000382a48ed7f47e97ee5c73efcd1ccd683a148b04dd",
+      "exact_endpoint": false,
+      "runs": 2,
+      "first_divergent": 1,
+      "all": [
+        83,
+        250
+      ],
+      "derived": [
+        15,
+        182
+      ],
+      "first_missed": 137,
+      "later_recovered": 0,
+      "paid": 8,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "d7a5510a7275da4eb4c2f0fafdc82495c7ed993c6af0dc934a0f8ad4503f4a19",
+        "runs": 2,
+        "signed_external": [
+          9,
+          6,
+          0,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 15,
+      "certified_prefix_ops": 0,
+      "ept": 1.875,
+      "eps": 776.5080439015228,
+      "wall": 0.01931724998576101,
+      "visits": 244,
+      "visits_per_op": 16.266666666666666,
+      "duplicates": 0,
+      "reject": {
+        "guard": 2
+      },
+      "duplicate_rate": 0.0,
+      "reject_rate": 0.25,
+      "accepted": 6,
+      "unobserved": 0,
+      "pool": [
+        0,
+        0
+      ],
+      "frontier_mean": 58.5,
+      "frontier_max": 62,
+      "work": {
+        "bounded_runs": 0,
+        "expansions": 32
+      },
+      "read_work": {
+        "visited": 216,
+        "reads": 32,
+        "scored_ports": 204,
+        "bucket_visits": 28
+      }
+    },
+    {
+      "case": "grammar-72102993",
+      "arm": "pending",
+      "termination": "neural_quiescence",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 98,
+      "reference_sha": "a21ac6083bc7733c4f4ab509ffc2a4c51a3c74002cd04a42b17da67b52f50f59",
+      "state_sha": "5880fc358bfabb801f71000382a48ed7f47e97ee5c73efcd1ccd683a148b04dd",
+      "exact_endpoint": false,
+      "runs": 2,
+      "first_divergent": 1,
+      "all": [
+        83,
+        250
+      ],
+      "derived": [
+        15,
+        182
+      ],
+      "first_missed": 137,
+      "later_recovered": 0,
+      "paid": 8,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "d7a5510a7275da4eb4c2f0fafdc82495c7ed993c6af0dc934a0f8ad4503f4a19",
+        "runs": 2,
+        "signed_external": [
+          9,
+          6,
+          0,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 15,
+      "certified_prefix_ops": 0,
+      "ept": 1.875,
+      "eps": 750.8368828686417,
+      "wall": 0.019977707997895777,
+      "visits": 252,
+      "visits_per_op": 16.8,
+      "duplicates": 0,
+      "reject": {
+        "guard": 2
+      },
+      "duplicate_rate": 0.0,
+      "reject_rate": 0.25,
+      "accepted": 6,
+      "unobserved": 0,
+      "pool": [
+        16,
+        16
+      ],
+      "frontier_mean": 58.5,
+      "frontier_max": 62,
+      "work": {
+        "event_wakes": 2,
+        "bounded_runs": 0,
+        "expansions": 35,
+        "event_notifications": 8,
+        "resumed": 3,
+        "proactive_wakes": 1
+      },
+      "read_work": {
+        "visited": 220,
+        "reads": 38,
+        "scored_ports": 207,
+        "bucket_visits": 32
+      }
+    },
+    {
+      "case": "grammar-layout-832749",
+      "arm": "legacy",
+      "termination": "neural_quiescence",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 85,
+      "reference_sha": "adafa32b1faf682ae557432ae3fe314ee39bb21f828a44e9dfcac29f0201c429",
+      "state_sha": "d8ce9a1f04a646566d18eb8f8d500094c77c8e063eaa7a3d06c22495b5e0bf4f",
+      "exact_endpoint": false,
+      "runs": 2,
+      "first_divergent": 2,
+      "all": [
+        165,
+        235
+      ],
+      "derived": [
+        81,
+        151
+      ],
+      "first_missed": 49,
+      "later_recovered": 0,
+      "paid": 35,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "2a3fcb3f79817f8aadd50759ac5d07c8b90ba3128bb129b2a35c27ed0f411f11",
+        "runs": 2,
+        "signed_external": [
+          46,
+          35,
+          0,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 81,
+      "certified_prefix_ops": 81,
+      "ept": 2.3142857142857145,
+      "eps": 3520.610239261597,
+      "wall": 0.023007374998996966,
+      "visits": 312,
+      "visits_per_op": 3.8518518518518516,
+      "duplicates": 0,
+      "reject": {},
+      "duplicate_rate": 0.0,
+      "reject_rate": 0.0,
+      "accepted": 35,
+      "unobserved": 0,
+      "pool": [
+        0,
+        0
+      ],
+      "frontier_mean": 22,
+      "frontier_max": 22,
+      "work": {
+        "events": 22,
+        "typed_positions_tested": 242,
+        "postings_visited": 70,
+        "index_lookups": 198,
+        "retrieval_vector_scores": 35,
+        "candidates": 35,
+        "compose_scores": 35
+      },
+      "read_work": {}
+    },
+    {
+      "case": "grammar-layout-832749",
+      "arm": "two",
+      "termination": "neural_quiescence",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 85,
+      "reference_sha": "adafa32b1faf682ae557432ae3fe314ee39bb21f828a44e9dfcac29f0201c429",
+      "state_sha": "7e44558ff13e1bce32c1f4e990766913a9c9e0f3701235531f3c1e32f7ae4a68",
+      "exact_endpoint": false,
+      "runs": 2,
+      "first_divergent": 1,
+      "all": [
+        99,
+        235
+      ],
+      "derived": [
+        15,
+        151
+      ],
+      "first_missed": 115,
+      "later_recovered": 0,
+      "paid": 6,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "89bfd8fac7a97cba576c7b386e0118abf679efeeb8cdb56a3992c0cf496ee705",
+        "runs": 2,
+        "signed_external": [
+          9,
+          6,
+          0,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 15,
+      "certified_prefix_ops": 0,
+      "ept": 2.5,
+      "eps": 737.2320619452671,
+      "wall": 0.02034637500764802,
+      "visits": 494,
+      "visits_per_op": 32.93333333333333,
+      "duplicates": 0,
+      "reject": {},
+      "duplicate_rate": 0.0,
+      "reject_rate": 0.0,
+      "accepted": 6,
+      "unobserved": 0,
+      "pool": [
+        0,
+        0
+      ],
+      "frontier_mean": 65.5,
+      "frontier_max": 69,
+      "work": {
+        "bounded_runs": 0,
+        "expansions": 54
+      },
+      "read_work": {
+        "visited": 276,
+        "reads": 54,
+        "scored_ports": 265,
+        "bucket_visits": 218
+      }
+    },
+    {
+      "case": "grammar-layout-832749",
+      "arm": "free",
+      "termination": "neural_quiescence",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 85,
+      "reference_sha": "adafa32b1faf682ae557432ae3fe314ee39bb21f828a44e9dfcac29f0201c429",
+      "state_sha": "7e44558ff13e1bce32c1f4e990766913a9c9e0f3701235531f3c1e32f7ae4a68",
+      "exact_endpoint": false,
+      "runs": 2,
+      "first_divergent": 1,
+      "all": [
+        99,
+        235
+      ],
+      "derived": [
+        15,
+        151
+      ],
+      "first_missed": 115,
+      "later_recovered": 0,
+      "paid": 6,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "89bfd8fac7a97cba576c7b386e0118abf679efeeb8cdb56a3992c0cf496ee705",
+        "runs": 2,
+        "signed_external": [
+          9,
+          6,
+          0,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 15,
+      "certified_prefix_ops": 0,
+      "ept": 2.5,
+      "eps": 745.3385409794267,
+      "wall": 0.020125082999584265,
+      "visits": 494,
+      "visits_per_op": 32.93333333333333,
+      "duplicates": 0,
+      "reject": {},
+      "duplicate_rate": 0.0,
+      "reject_rate": 0.0,
+      "accepted": 6,
+      "unobserved": 0,
+      "pool": [
+        0,
+        0
+      ],
+      "frontier_mean": 65.5,
+      "frontier_max": 69,
+      "work": {
+        "bounded_runs": 0,
+        "expansions": 62
+      },
+      "read_work": {
+        "visited": 276,
+        "reads": 62,
+        "scored_ports": 265,
+        "bucket_visits": 218
+      }
+    },
+    {
+      "case": "grammar-layout-832749",
+      "arm": "pending",
+      "termination": "neural_quiescence",
+      "failure": null,
+      "failure_run": null,
+      "reference_commits": 85,
+      "reference_sha": "adafa32b1faf682ae557432ae3fe314ee39bb21f828a44e9dfcac29f0201c429",
+      "state_sha": "7e44558ff13e1bce32c1f4e990766913a9c9e0f3701235531f3c1e32f7ae4a68",
+      "exact_endpoint": false,
+      "runs": 2,
+      "first_divergent": 1,
+      "all": [
+        99,
+        235
+      ],
+      "derived": [
+        15,
+        151
+      ],
+      "first_missed": 115,
+      "later_recovered": 0,
+      "paid": 6,
+      "effective_ops": {
+        "kinds": [
+          "visible_birth",
+          "function_write",
+          "effective_union",
+          "visibility_change"
+        ],
+        "ledger_sha256": "89bfd8fac7a97cba576c7b386e0118abf679efeeb8cdb56a3992c0cf496ee705",
+        "runs": 2,
+        "signed_external": [
+          9,
+          6,
+          0,
+          0
+        ],
+        "signed_internal": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "uncredited": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "signed_ops": 15,
+      "certified_prefix_ops": 0,
+      "ept": 2.5,
+      "eps": 726.1768605756039,
+      "wall": 0.02065612499427516,
+      "visits": 502,
+      "visits_per_op": 33.46666666666667,
+      "duplicates": 0,
+      "reject": {},
+      "duplicate_rate": 0.0,
+      "reject_rate": 0.0,
+      "accepted": 6,
+      "unobserved": 0,
+      "pool": [
+        48,
+        48
+      ],
+      "frontier_mean": 64,
+      "frontier_max": 69,
+      "work": {
+        "event_wakes": 2,
+        "bounded_runs": 0,
+        "expansions": 69,
+        "event_notifications": 12,
+        "resumed": 3,
+        "proactive_wakes": 1
+      },
+      "read_work": {
+        "visited": 282,
+        "reads": 74,
+        "scored_ports": 262,
+        "bucket_visits": 220
+      }
+    }
+  ],
+  "shadow": [
+    {
+      "case": "fact",
+      "arm": "free",
+      "first": [
+        4,
+        6
+      ],
+      "higher": [
+        13,
+        84
+      ],
+      "paid": 382,
+      "hits": 133,
+      "target_union": 84,
+      "funnel": {
+        "rule_read": 47,
+        "first_retrieved": 47,
+        "partial_retrieved": 14,
+        "complete_tuple_scored": 12
+      },
+      "original_issued": 12,
+      "distinct_verified_targets": 13
+    },
+    {
+      "case": "fact",
+      "arm": "pending",
+      "first": [
+        4,
+        6
+      ],
+      "higher": [
+        12,
+        84
+      ],
+      "paid": 391,
+      "hits": 136,
+      "target_union": 84,
+      "funnel": {
+        "rule_read": 54,
+        "first_retrieved": 54,
+        "partial_retrieved": 13,
+        "complete_tuple_scored": 10
+      },
+      "original_issued": 10,
+      "distinct_verified_targets": 12
+    },
+    {
+      "case": "fact",
+      "arm": "two",
+      "first": [
+        0,
+        6
+      ],
+      "higher": [
+        0,
+        84
+      ],
+      "paid": 301,
+      "hits": 136,
+      "target_union": 84,
+      "funnel": {
+        "rule_read": 54,
+        "first_retrieved": 54,
+        "partial_retrieved": 22
+      },
+      "original_issued": 0,
+      "distinct_verified_targets": 0
+    },
+    {
+      "case": "loopfact",
+      "arm": "free",
+      "first": [
+        4,
+        4
+      ],
+      "higher": [
+        29,
+        79
+      ],
+      "paid": 380,
+      "hits": 134,
+      "target_union": 79,
+      "funnel": {
+        "rule_read": 58,
+        "first_retrieved": 58,
+        "partial_retrieved": 35,
+        "complete_tuple_scored": 28
+      },
+      "original_issued": 24,
+      "distinct_verified_targets": 29
+    },
+    {
+      "case": "loopfact",
+      "arm": "pending",
+      "first": [
+        4,
+        4
+      ],
+      "higher": [
+        28,
+        79
+      ],
+      "paid": 459,
+      "hits": 142,
+      "target_union": 79,
+      "funnel": {
+        "rule_read": 61,
+        "first_retrieved": 61,
+        "partial_retrieved": 31,
+        "complete_tuple_scored": 24
+      },
+      "original_issued": 21,
+      "distinct_verified_targets": 28
+    },
+    {
+      "case": "loopfact",
+      "arm": "two",
+      "first": [
+        0,
+        4
+      ],
+      "higher": [
+        0,
+        79
+      ],
+      "paid": 350,
+      "hits": 142,
+      "target_union": 79,
+      "funnel": {
+        "rule_read": 52,
+        "first_retrieved": 52,
+        "partial_retrieved": 32
+      },
+      "original_issued": 0,
+      "distinct_verified_targets": 0
+    },
+    {
+      "case": "sum-divisors",
+      "arm": "free",
+      "first": [
+        4,
+        18
+      ],
+      "higher": [
+        52,
+        911
+      ],
+      "paid": 2049,
+      "hits": 470,
+      "target_union": 911,
+      "funnel": {
+        "rule_read": 468,
+        "first_retrieved": 389,
+        "partial_retrieved": 82,
+        "complete_tuple_scored": 53
+      },
+      "original_issued": 36,
+      "distinct_verified_targets": 52
+    },
+    {
+      "case": "sum-divisors",
+      "arm": "pending",
+      "first": [
+        4,
+        18
+      ],
+      "higher": [
+        27,
+        911
+      ],
+      "paid": 2355,
+      "hits": 453,
+      "target_union": 911,
+      "funnel": {
+        "rule_read": 487,
+        "first_retrieved": 390,
+        "partial_retrieved": 48,
+        "complete_tuple_scored": 19
+      },
+      "original_issued": 15,
+      "distinct_verified_targets": 27
+    },
+    {
+      "case": "sum-divisors",
+      "arm": "two",
+      "first": [
+        0,
+        18
+      ],
+      "higher": [
+        0,
+        911
+      ],
+      "paid": 1579,
+      "hits": 442,
+      "target_union": 911,
+      "funnel": {
+        "rule_read": 286,
+        "first_retrieved": 248,
+        "partial_retrieved": 51
+      },
+      "original_issued": 0,
+      "distinct_verified_targets": 0
+    }
+  ]
+}

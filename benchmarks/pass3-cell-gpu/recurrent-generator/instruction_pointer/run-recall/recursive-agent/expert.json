@@ -1,0 +1,58 @@
+[
+  {
+    "case": "fact",
+    "probes": 1445,
+    "expert_visits": 57098,
+    "positive": 180,
+    "off_policy": 24
+  },
+  {
+    "case": "loopfact",
+    "probes": 1750,
+    "expert_visits": 27631,
+    "positive": 236,
+    "off_policy": 105
+  },
+  {
+    "case": "sum-divisors",
+    "probes": 2399,
+    "expert_visits": 94693,
+    "positive": 454,
+    "off_policy": 270
+  },
+  {
+    "case": "jacobi",
+    "probes": 3533,
+    "expert_visits": 217974,
+    "positive": 672,
+    "off_policy": 516
+  },
+  {
+    "case": "grammar-17118",
+    "probes": 48,
+    "expert_visits": 729,
+    "positive": 24,
+    "off_policy": 18
+  },
+  {
+    "case": "grammar-17119",
+    "probes": 108,
+    "expert_visits": 1902,
+    "positive": 26,
+    "off_policy": 19
+  },
+  {
+    "case": "grammar-17120",
+    "probes": 50,
+    "expert_visits": 833,
+    "positive": 24,
+    "off_policy": 19
+  },
+  {
+    "case": "grammar-17121",
+    "probes": 58,
+    "expert_visits": 632,
+    "positive": 17,
+    "off_policy": 11
+  }
+]

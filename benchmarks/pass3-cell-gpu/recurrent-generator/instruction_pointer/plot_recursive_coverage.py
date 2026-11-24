@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 
 
 def plot(path):
+    plt.rcParams.update({"svg.hashsalt": "eggfuse-coverage", "svg.fonttype": "none"})
     traces = defaultdict(list)
     with (path / "runs.csv").open() as stream:
         for row in csv.DictReader(stream):
@@ -42,6 +43,8 @@ def plot(path):
     )
     fig.savefig(path / "coverage.svg", metadata={"Date": None})
     plt.close(fig)
+    svg = path / "coverage.svg"
+    svg.write_text("\n".join(line.rstrip() for line in svg.read_text().splitlines()) + "\n")
 
 
 if __name__ == "__main__":

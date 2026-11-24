@@ -1,0 +1,12 @@
+{
+  "teacher": {
+    "identical": true,
+    "params": 5419,
+    "max_abs_diff": 0.0
+  },
+  "dagger": {
+    "identical": true,
+    "params": 5419,
+    "max_abs_diff": 0.0
+  }
+}
