@@ -30,6 +30,7 @@ STATUS = (
     "computed",
     "bad_dependency",
     "invalid_computation",
+    "pending_port",
 )
 
 
@@ -49,7 +50,7 @@ def read_matrix(pipe, rows, cols, dtype="<i8"):
 class PortView:
     """Lightweight index entry into the immutable native publication buffers."""
 
-    __slots__ = ("row", "hashes")
+    __slots__ = ("hashes", "row")
 
     def __init__(self, row, hashes):
         self.row = row
@@ -85,7 +86,7 @@ def memory_frame(pipe, frame):
     return rows, hashes, retired, accepted
 
 
-def update_memory(reader, frame, publication):
+def update_memory(reader, frame, publication, repair_types=None):
     rows, hashes, retired, accepted = publication
     store = reader.store
     if store.rng is not None:
@@ -94,11 +95,10 @@ def update_memory(reader, frame, publication):
         )
     for t, r in accepted:
         store.types[int(t)] = ("generated", int(r))
-    for event in frame["repair_events"]:
-        store.types[event["token"]] = (
-            "repair",
-            reader.iface.tables[event["merge_table"]],
-        )
+    if repair_types is None:
+        repair_types = ((e["token"], e["merge_table"]) for e in frame["repair_events"])
+    for token, table in repair_types:
+        store.types[int(token)] = ("repair", reader.iface.tables[int(table)])
     changed = set()
     retire = [(int(t), int(op)) for t, op in retired]
     for addr in retire:
@@ -164,23 +164,8 @@ class Transaction:
         to this transaction. The result matrix remains live after the next call.
         """
         t = perf_counter()
-        op = np.ascontiguousarray(operations, dtype="<i8").copy()
-        refs = np.ascontiguousarray(references, dtype="<i8")
+        op, refs = self._prepare(operations, references)
         n = len(op)
-        if not (
-            1 <= n <= self.capacity
-            and op.shape == (n, 5)
-            and refs.ndim == 2
-            and refs.shape[1] == 4
-        ):
-            raise ValueError("invalid typed transaction shape")
-        op[:, 1] = np.arange(self.paid + 1, self.paid + 1 + n)
-        self.paid += n
-        proof = op[:, 0] == 0
-        proofs = int(proof.sum())
-        self.proofs += proofs
-        self.computations += n - proofs
-        self.sizes[n] += 1
         header = struct.pack("<4I", MAGIC, n, len(refs), 0)
         self.costs["pack_seconds"] += perf_counter() - t
         t = perf_counter()
@@ -195,6 +180,29 @@ class Transaction:
         self.costs["receipt_read_seconds"] += perf_counter() - t
         self.costs["request_bytes"] += len(header) + op.nbytes + refs.nbytes
         self.costs["response_bytes"] += response.nbytes
+        return self._record(op, refs, response, self.run)
+
+    def _prepare(self, operations, references):
+        op = np.ascontiguousarray(operations, dtype="<i8").copy()
+        refs = np.ascontiguousarray(references, dtype="<i8")
+        n = len(op)
+        if not (
+            1 <= n <= self.capacity
+            and op.shape == (n, 5)
+            and refs.ndim == 2
+            and refs.shape[1] == 4
+            and len(refs) <= 1048576
+        ):
+            raise ValueError("invalid typed transaction shape")
+        op[:, 1] = np.arange(self.paid + 1, self.paid + 1 + n)
+        self.paid += n
+        proofs = int(np.count_nonzero(op[:, 0] == 0))
+        self.proofs += proofs
+        self.computations += n - proofs
+        self.sizes[n] += 1
+        return op, refs
+
+    def _record(self, op, refs, response, run):
         t = perf_counter()
         if not np.array_equal(response[:, 0], op[:, 1]):
             raise RuntimeError("transaction reply ID mismatch")
@@ -205,12 +213,12 @@ class Transaction:
         self.verdicts.update(
             {STATUS[i]: int(counts[i]) for i in np.flatnonzero(counts)}
         )
-        keep = proof & (status == 0)
+        keep = (op[:, 0] == 0) & (status == 0)
         if keep.any():
             widths = np.diff(op[:, 4], prepend=0)
             self.accepted.append(
                 (
-                    self.run,
+                    run,
                     op[keep][:, 1:3],
                     widths[keep],
                     refs[np.repeat(keep, widths)],
@@ -252,9 +260,12 @@ class Transaction:
         op[:, 4] = op[:, 4].cumsum()
         refs = np.concatenate(groups)
         self.costs["pack_seconds"] += perf_counter() - t
-        self.submit(op, refs)
+        self.send_proofs(op, refs)
         self.chunks.clear()
         self.used = 0
+
+    def send_proofs(self, operations, references):
+        self.submit(operations, references)
 
     def compute(self, rule, atom, refs):
         """Batched independent scalar queries; use submit for a local DAG."""
@@ -320,13 +331,18 @@ class Transaction:
                 fields[:, :, 1] += local * (np.arange(size)[:, None] * depth)
                 offset += width
             self.costs["pack_seconds"] += perf_counter() - t
-            all_results = self.submit(ops.reshape(-1, 5), refs.reshape(-1, 4))
+            all_results = self.submit_chain(
+                ops.reshape(-1, 5), refs.reshape(-1, 4), depth
+            )
             responses.append(all_results[depth - 1 :: depth])
         return (
             torch.cat(responses)
             if responses
             else torch.empty((0, 4), dtype=torch.int64)
         )
+
+    def submit_chain(self, ops, refs, depth):
+        return self.submit(ops, refs)
 
     def seal(self):
         self.flush()
@@ -345,8 +361,8 @@ class Transaction:
             start = 0
             for (token, rule), width in zip(ops.tolist(), widths, strict=True):
                 parents = [
-                    dict(address=dict(token=t, op=op), version=v)
+                    {"address": {"token": t, "op": op}, "version": v}
                     for t, op, v, _ in refs[start : start + width].tolist()
                 ]
                 start += width
-                yield dict(run=run, rule=rule, token=token, parents=parents)
+                yield {"run": run, "rule": rule, "token": token, "parents": parents}

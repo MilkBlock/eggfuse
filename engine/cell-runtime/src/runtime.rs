@@ -1257,9 +1257,27 @@ impl Executor {
         Ok(())
     }
     #[cfg(feature = "cell-token-replay")]
+    pub fn enable_ccp_v01(&mut self) -> Result<()> {
+        self.enable_transaction_profile(true)
+    }
+    #[cfg(feature = "cell-token-replay")]
+    pub fn finish_ccp_v01(&mut self) -> Result<()> {
+        let history = self.token_history.as_mut().ok_or("missing CCP session")?;
+        if !history.waves.as_ref().and_then(|w| w.transactions.as_ref()).is_some_and(|m| m.ccp) {
+            return Err("final publication requires CCP".into());
+        }
+        history.advance(&self.graph);
+        history.observe(&self.graph, self.steps.len() + 1, &[], &[], false, true)
+    }
+    #[cfg(feature = "cell-token-replay")]
     pub fn enable_token_transactions(&mut self) -> Result<()> {
+        self.enable_transaction_profile(false)
+    }
+    #[cfg(feature = "cell-token-replay")]
+    fn enable_transaction_profile(&mut self, ccp: bool) -> Result<()> {
         self.enable_token_waves(false)?;
-        self.token_history.as_mut().unwrap().waves.as_mut().unwrap().transactions=Some(Default::default());
+        let waves = self.token_history.as_mut().unwrap().waves.as_mut().unwrap();
+        waves.transactions.get_or_insert_with(Default::default).ccp = ccp;
         Ok(())
     }
     #[cfg(feature = "cell-token-replay")]
@@ -2811,7 +2829,7 @@ impl Executor {
                 (rid, wm)
             }).collect();
             let check_dirty = !cfg!(any(feature="family-survey", feature="family-overlap")) && !self.profile_queries;
-            h.observe(&self.graph, self.steps.len()+1, &scheduled, &self.dirty, check_dirty)?;
+            h.observe(&self.graph, self.steps.len()+1, &scheduled, &self.dirty, check_dirty, false)?;
         }
         #[cfg(feature = "sparse-cells")]
         if rules.is_empty() && !self.audit && !cfg!(feature="projection-semijoin")

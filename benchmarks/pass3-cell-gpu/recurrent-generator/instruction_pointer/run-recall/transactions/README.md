@@ -2,6 +2,8 @@
 
 **Neural Execution, exclusive.** Single-thread CPU Torch inference, native Rust execution, offline PyTorch/Metal training. The experiment separates transport from candidate discovery. The control uses the previous shared 8-bit LSH with rule-watermark-aware postings and dense recurrent scoring inside each bucket. The new policy still enumerates the selected postings.
 
+The measurements below use the original CTX1 transport. The current typed client defaults to [CCP v0.1](../../../../../../docs/CELL_COMMUNICATION_PROTOCOL_V0_1.md).
+
 ## Execution contract
 
 The CPU decoder emits an integer tensor of selected positions per proof role. The typed client gathers owner/op/version columns, packs an i64 operation matrix and a separate i64 reference matrix, and submits both buffers through a synchronous pipe to Rust. One header declares matrix lengths. The normal online path has no per-proof Python dict or list conversion. The JSON control and the offline accepted-proof export retain their original object format.

@@ -86,7 +86,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     match role.as_str() {
         "replay" | "capture" | "shadow-waves" => engine.start_tokens(packets)?,
-        "online" | "online-waves" | "online-transactions" => engine.start_tokens(Some(Vec::new()))?,
+        "online" | "online-waves" | "online-transactions" | "online-ccp-v0.1" => engine.start_tokens(Some(Vec::new()))?,
         "assist" => engine.start_token_assist()?,
         "reference" => (),
         "anchor-census" => engine.enable_anchor_census(),
@@ -107,8 +107,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
         engine.audit_token_recall(probes.requests)?;
     }
+    if role == "online-ccp-v0.1" && memory_path.is_some() {
+        return Err("CCP requires the online typed publication stream".into());
+    }
     if let Some(path) = memory_path {
         engine.export_token_memory(Some(std::path::Path::new(path)))?;
+    } else if role == "online-ccp-v0.1" {
+        engine.enable_ccp_v01()?;
+        println!("{}",json!({"protocol":"Cell Communication Protocol","version":[0,1],"program_sha256":digest,"commit_scope":"source_run","transport":"ordered-pipe"}));
     } else if role == "online-transactions" {
         engine.enable_token_transactions()?;
     } else if role == "online-waves" || role == "shadow-waves" {
@@ -147,6 +153,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     } else {
         engine.execute_until(limit)?;
     }
+    if role == "online-ccp-v0.1" { engine.finish_ccp_v01()?; }
     if exact_next {
         let mut bytes = Vec::new();
         engine.graph.write_export(&mut bytes)?;
@@ -175,6 +182,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "runs":engine.steps.len(),
         "schedule":engine.steps.iter().map(|s|json!([s.ruleset,s.path,s.iterations,s.epoch,s.executed_bindings,s.changed])).collect::<Vec<_>>()
     });
+    if role=="online-ccp-v0.1" {report["committed_through_run"]=json!(engine.steps.len());}
     if let Some(rows)=engine.anchor_coverage() {report["anchor_coverage"]=json!(rows);}
     if let Some(history)=engine.tokens() {report["anchor_verify_seconds"]=json!(history.anchor_verify_time.as_secs_f64());}
     if let Some(rows)=engine.anchor_census_rows() {report["anchor_census"]=json!(rows);}
@@ -199,7 +207,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             report["wave_requests"] = json!(w.requests);
             if w.shadow { report["wave_checks"] = json!(w.checks); }
         }
-        report["runtime_events"] = json!(h.repair_events);
+        if role != "online-ccp-v0.1" { report["runtime_events"] = json!(h.repair_events); }
         report["event_registration_seconds"] = json!(h.event_time.as_secs_f64());
         report["counts"] = json!(h.counts);
         report["verify_seconds"] = json!(h.verify_time.as_secs_f64());

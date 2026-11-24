@@ -355,6 +355,7 @@ impl History {
         rules: &[(usize, u64)],
         dirty: &[bool],
         check_dirty: bool,
+        terminal: bool,
     ) -> Result<()> {
         if self.memory.is_none() {
             return Ok(());
@@ -367,7 +368,7 @@ impl History {
             let Some(row) = graph.row(witness)? else {
                 continue;
             };
-            if row.hidden || row.epoch >= graph.epoch {
+            if row.hidden || (!terminal && row.epoch >= graph.epoch) {
                 continue;
             }
             let hashes = row.values.iter().map(value_hash).collect();
@@ -392,15 +393,24 @@ impl History {
             .filter(|a| !visible.contains_key(a))
             .collect();
         let typed=self.waves.as_ref().is_some_and(|w| w.transactions.is_some());
+        let repairs=&self.repair_events[self.repair_events.partition_point(|e| e.visible_from_run < run)..];
         let mut frame=if typed {
             serde_json::json!({"run":run,"epoch":graph.epoch,"rules":rules,"typed_rows":updates.len(),
             "typed_hashes":updates.iter().map(|(_,row)|row.hashes.len()).sum::<usize>(),"typed_retired":retired.len(),
-            "typed_accepted":memory.accepted.len(),"repair_events":&self.repair_events[self.repair_events.partition_point(|e| e.visible_from_run < run)..]})
+            "typed_accepted":memory.accepted.len()})
         } else { serde_json::json!({
             "run":run, "epoch":graph.epoch, "rules":rules, "updates":updates, "retired":retired,
             "accepted":memory.accepted,
             "repair_events":&self.repair_events[self.repair_events.partition_point(|e| e.visible_from_run < run)..],
         }) };
+        if self.waves.as_ref().and_then(|w|w.transactions.as_ref()).is_some_and(|m|m.ccp) {
+            frame["typed_repairs"]=serde_json::json!(repairs.len());
+            frame["typed_repair_ops"]=serde_json::json!(repairs.iter().map(|e| e.operations.len()).sum::<usize>());
+            frame["final_publication"]=serde_json::json!(terminal);
+            frame["committed_through_run"]=serde_json::json!(run.saturating_sub(1));
+        } else if typed {
+            frame["repair_events"]=serde_json::json!(repairs);
+        }
         if let Some(layouts)=&mut self.layouts {
             layouts.advance(&visible,&memory.accepted,run,rules,&mut self.queue)?;
             if let Some(feedback)=layouts.snapshot(run,&self.queue) {
@@ -412,7 +422,7 @@ impl History {
         memory.writer.write_all(b"\n").map_err(|e|e.to_string())?;
         if typed {
             let m=self.waves.as_mut().unwrap().transactions.as_mut().unwrap();
-            transaction::publish(&mut memory.writer,&memory.accepted,&updates,&retired,m)?;
+            transaction::publish(&mut memory.writer,&memory.accepted,&updates,&retired,repairs,m)?;
         }
         memory.writer.flush()
             .map_err(|e| e.to_string())?;
@@ -421,6 +431,7 @@ impl History {
         }
         memory.previous = visible;
         memory.accepted.clear();
+        if terminal { return Ok(()); }
         if self.selected_anchors.is_some() {
             let mut line = String::new();
             std::io::stdin().read_line(&mut line).map_err(|e|e.to_string())?;

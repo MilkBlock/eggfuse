@@ -66,6 +66,12 @@ impl ScalarContext {
             zero.map_or(0, |x| if x < 0 { 2 } else { 1 }),
         ))
     }
+    #[cfg(feature = "cell-token-replay")]
+    pub(crate) fn snapshot(&self) -> Self {
+        Self(std::sync::atomic::AtomicU8::new(
+            self.0.load(std::sync::atomic::Ordering::Relaxed),
+        ))
+    }
     fn intern(&self, x: FloatBits) -> FloatBits {
         if x.get().0 != 0.0 {
             return x;
