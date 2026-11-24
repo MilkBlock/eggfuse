@@ -1,0 +1,627 @@
+{
+  "run": 1145,
+  "rules": {
+    "0": {
+      "roles": [
+        29,
+        2901,
+        2901,
+        487,
+        487,
+        619,
+        619,
+        514,
+        3523,
+        514,
+        3523,
+        788
+      ],
+      "full": false,
+      "issued": 65833200,
+      "penultimate": 13166640,
+      "partial_scores": 13487510,
+      "seconds": 15.00115308399836
+    },
+    "1": {
+      "roles": [
+        2,
+        1,
+        2901,
+        2901,
+        195,
+        2901,
+        195,
+        59,
+        14,
+        4,
+        201,
+        9,
+        9,
+        2,
+        1
+      ],
+      "full": true,
+      "issued": 0,
+      "penultimate": 0,
+      "partial_scores": 15608,
+      "seconds": 0.0923144999978831
+    },
+    "2": {
+      "roles": [
+        4,
+        195,
+        0,
+        0,
+        29,
+        201,
+        201
+      ],
+      "full": true,
+      "issued": 0
+    },
+    "3": {
+      "roles": [
+        4,
+        195,
+        0,
+        0,
+        29,
+        201,
+        201
+      ],
+      "full": true,
+      "issued": 0
+    },
+    "4": {
+      "roles": [
+        29,
+        0,
+        201,
+        201,
+        0
+      ],
+      "full": true,
+      "issued": 0
+    },
+    "5": {
+      "roles": [
+        29,
+        0,
+        19,
+        19,
+        788,
+        785
+      ],
+      "full": true,
+      "issued": 0
+    },
+    "6": {
+      "roles": [
+        29,
+        0,
+        201,
+        2901,
+        788,
+        785,
+        12,
+        12,
+        6
+      ],
+      "full": true,
+      "issued": 0
+    },
+    "7": {
+      "roles": [
+        29,
+        0,
+        201,
+        2901,
+        788,
+        785,
+        12,
+        12,
+        6
+      ],
+      "full": true,
+      "issued": 0
+    },
+    "8": {
+      "roles": [
+        1,
+        195,
+        29,
+        583,
+        235,
+        201,
+        619,
+        1
+      ],
+      "full": true,
+      "issued": 0,
+      "penultimate": 0,
+      "partial_scores": 1,
+      "seconds": 0.009574291005264968
+    },
+    "9": {
+      "roles": [
+        1,
+        195,
+        29,
+        583,
+        235,
+        201,
+        619,
+        619,
+        1
+      ],
+      "full": true,
+      "issued": 0,
+      "penultimate": 0,
+      "partial_scores": 1,
+      "seconds": 0.011389750012313016
+    },
+    "10": {
+      "roles": [
+        2,
+        788,
+        7,
+        195,
+        2901,
+        14,
+        7,
+        195,
+        788,
+        12,
+        201,
+        59,
+        235,
+        1
+      ],
+      "full": true,
+      "issued": 0,
+      "penultimate": 0,
+      "partial_scores": 1574,
+      "seconds": 0.027695917000528425
+    },
+    "11": {
+      "roles": [
+        29,
+        0,
+        785,
+        785,
+        235,
+        788,
+        788,
+        7,
+        583,
+        312,
+        487,
+        7,
+        583,
+        788,
+        487,
+        514,
+        619,
+        514,
+        2023,
+        619,
+        16
+      ],
+      "full": true,
+      "issued": 0
+    },
+    "12": {
+      "roles": [
+        0,
+        788,
+        788,
+        0,
+        29,
+        785,
+        785,
+        235,
+        788,
+        195,
+        195,
+        487,
+        583,
+        583,
+        312,
+        487,
+        514,
+        619,
+        514,
+        2023,
+        619,
+        16
+      ],
+      "full": true,
+      "issued": 0
+    },
+    "13": {
+      "roles": [
+        8,
+        195,
+        195,
+        195,
+        12,
+        2,
+        0
+      ],
+      "full": true,
+      "issued": 0
+    },
+    "14": {
+      "roles": [
+        29,
+        2901,
+        0,
+        201,
+        201,
+        2,
+        2901,
+        0,
+        2901,
+        195,
+        59,
+        2,
+        0
+      ],
+      "full": true,
+      "issued": 0
+    },
+    "15": {
+      "roles": [
+        0,
+        29,
+        2,
+        788,
+        785,
+        583,
+        2901,
+        583,
+        312,
+        5,
+        201,
+        59,
+        1
+      ],
+      "full": true,
+      "issued": 0
+    },
+    "16": {
+      "roles": [
+        0,
+        29,
+        2,
+        2901,
+        19,
+        2,
+        2901,
+        195,
+        59,
+        12,
+        0
+      ],
+      "full": true,
+      "issued": 0
+    },
+    "17": {
+      "roles": [
+        29,
+        788,
+        12,
+        14
+      ],
+      "full": true,
+      "issued": 0,
+      "penultimate": 0,
+      "partial_scores": 294,
+      "seconds": 0.006277458000113256
+    },
+    "18": {
+      "roles": [
+        29,
+        788,
+        12,
+        14
+      ],
+      "full": true,
+      "issued": 0,
+      "penultimate": 0,
+      "partial_scores": 294,
+      "seconds": 0.005641042007482611
+    },
+    "19": {
+      "roles": [
+        6,
+        12,
+        0
+      ],
+      "full": true,
+      "issued": 0
+    },
+    "20": {
+      "roles": [
+        6,
+        12,
+        0,
+        785,
+        788
+      ],
+      "full": true,
+      "issued": 0
+    },
+    "21": {
+      "roles": [
+        14,
+        195,
+        195,
+        2
+      ],
+      "full": true,
+      "issued": 0,
+      "penultimate": 0,
+      "partial_scores": 1722,
+      "seconds": 0.004029417003039271
+    },
+    "22": {
+      "roles": [
+        2,
+        195,
+        195,
+        14
+      ],
+      "full": true,
+      "issued": 0,
+      "penultimate": 0,
+      "partial_scores": 124,
+      "seconds": 0.002299957996001467
+    },
+    "23": {
+      "roles": [
+        1,
+        0
+      ],
+      "full": true,
+      "issued": 0
+    },
+    "24": {
+      "roles": [
+        1,
+        195,
+        195
+      ],
+      "full": true,
+      "issued": 0,
+      "penultimate": 0,
+      "partial_scores": 1,
+      "seconds": 0.0017266659997403622
+    },
+    "25": {
+      "roles": [
+        12,
+        195,
+        2
+      ],
+      "full": true,
+      "issued": 0,
+      "penultimate": 600,
+      "partial_scores": 612,
+      "seconds": 0.0016988340066745877
+    },
+    "26": {
+      "roles": [
+        12,
+        195,
+        2
+      ],
+      "full": true,
+      "issued": 0,
+      "penultimate": 600,
+      "partial_scores": 612,
+      "seconds": 0.0016770000074757263
+    },
+    "27": {
+      "roles": [
+        12,
+        195,
+        2
+      ],
+      "full": true,
+      "issued": 0,
+      "penultimate": 600,
+      "partial_scores": 612,
+      "seconds": 0.001728750008624047
+    },
+    "28": {
+      "roles": [
+        12,
+        195,
+        2
+      ],
+      "full": true,
+      "issued": 0,
+      "penultimate": 600,
+      "partial_scores": 612,
+      "seconds": 0.0016834589914651588
+    },
+    "29": {
+      "roles": [
+        14,
+        195,
+        2
+      ],
+      "full": true,
+      "issued": 0,
+      "penultimate": 798,
+      "partial_scores": 812,
+      "seconds": 0.0019488749967422336
+    },
+    "30": {
+      "roles": [
+        14,
+        195,
+        2
+      ],
+      "full": true,
+      "issued": 0,
+      "penultimate": 798,
+      "partial_scores": 812,
+      "seconds": 0.0018597500020405278
+    },
+    "31": {
+      "roles": [
+        12,
+        195,
+        9,
+        9
+      ],
+      "full": true,
+      "issued": 0,
+      "penultimate": 0,
+      "partial_scores": 612,
+      "seconds": 0.0017841249937191606
+    },
+    "32": {
+      "roles": [
+        14,
+        195,
+        9,
+        9
+      ],
+      "full": true,
+      "issued": 0,
+      "penultimate": 0,
+      "partial_scores": 812,
+      "seconds": 0.0019457500020507723
+    },
+    "33": {
+      "roles": [
+        1,
+        195,
+        11
+      ],
+      "full": true,
+      "issued": 0,
+      "penultimate": 0,
+      "partial_scores": 1,
+      "seconds": 0.0009111249964917079
+    },
+    "34": {
+      "roles": [
+        1,
+        195,
+        11
+      ],
+      "full": true,
+      "issued": 0,
+      "penultimate": 0,
+      "partial_scores": 1,
+      "seconds": 0.0008885830029612407
+    },
+    "35": {
+      "roles": [
+        1,
+        195,
+        0
+      ],
+      "full": true,
+      "issued": 0
+    },
+    "36": {
+      "roles": [
+        1,
+        195,
+        0
+      ],
+      "full": true,
+      "issued": 0
+    },
+    "37": {
+      "roles": [
+        1,
+        195,
+        0
+      ],
+      "full": true,
+      "issued": 0
+    },
+    "38": {
+      "roles": [
+        1,
+        195,
+        0
+      ],
+      "full": true,
+      "issued": 0
+    },
+    "39": {
+      "roles": [
+        1,
+        195,
+        11
+      ],
+      "full": true,
+      "issued": 0,
+      "penultimate": 0,
+      "partial_scores": 1,
+      "seconds": 0.00089533299615141
+    },
+    "40": {
+      "roles": [
+        1,
+        195,
+        11
+      ],
+      "full": true,
+      "issued": 0,
+      "penultimate": 0,
+      "partial_scores": 1,
+      "seconds": 0.0008826669945847243
+    },
+    "41": {
+      "roles": [
+        2,
+        195,
+        785,
+        788
+      ],
+      "full": true,
+      "issued": 1344,
+      "penultimate": 112,
+      "partial_scores": 304,
+      "seconds": 0.010043457994470373
+    },
+    "42": {
+      "roles": [
+        14,
+        195,
+        195,
+        12,
+        785,
+        788
+      ],
+      "full": true,
+      "issued": 0,
+      "penultimate": 0,
+      "partial_scores": 1722,
+      "seconds": 0.011506166003528051
+    },
+    "43": {
+      "roles": [
+        14,
+        195,
+        195,
+        9,
+        9
+      ],
+      "full": true,
+      "issued": 0,
+      "penultimate": 0,
+      "partial_scores": 46298,
+      "seconds": 0.06233541599067394
+    }
+  },
+  "previous_complete": 1144
+}
