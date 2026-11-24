@@ -163,6 +163,15 @@ def decode(model, rd, rule, depth, capacity, stats, example=None):
                 ]
 
             ox = torch.tensor([features(opt, i) for opt in opts], dtype=torch.float)
+            if getattr(model, "graph_operands", False):
+                arg = atoms[pc]["args"][i].get("slot")
+                # Compile-time variable identity within the template. The
+                # dynamic value and its equality to other ports are unknown.
+                origin = [
+                    opt is None or opt[0] != "local" or outputs[opt[1]] == arg
+                    for opt in opts
+                ]
+                ox = torch.cat((ox, torch.tensor(origin, dtype=ox.dtype)[:, None]), 1)
             if example is not None:
                 which = opts.index(teacher[step][1][i])
                 if len(opts) > 1:

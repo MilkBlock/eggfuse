@@ -91,6 +91,9 @@ class CellStream:
         z = self.model.cell(self.model.encode(x), h)
         return self.model.score(z).flatten() + 2 * x[:, WIDTH], z
 
+    def score_children(self, h, depth, paths, parents):
+        return self.logits(h, depth, paths)
+
     def children(self, paths, depth, block):
         size = len(self.roles[depth])
         for start in range(0, len(paths) * size, block):
@@ -146,7 +149,7 @@ class CellStream:
                 if not len(col):
                     continue
                 paths = torch.cat((p[parent], col[:, None]), 1)
-                s, z = self.logits(h[parent], j, paths)
+                s, z = self.score_children(h[parent], j, paths, parent)
                 keep = ok[parent] & (s >= cutoff)
                 self.stats["visits"] += len(s)
                 if not j:

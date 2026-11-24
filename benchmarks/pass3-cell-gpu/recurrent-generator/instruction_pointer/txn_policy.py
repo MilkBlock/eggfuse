@@ -137,6 +137,9 @@ class ResponseStream(GuardStream):
     def programs(self, depth):
         return plans(self.rd, self.rule, depth, self.study.chains)
 
+    def route_logits(self, features):
+        return self.study.net.route(features).flatten()
+
     def issue_program(self, plan, inputs):
         if plan.prerequisites:
             self.stats["chain_prefixes"] += len(inputs[0])
@@ -144,6 +147,9 @@ class ResponseStream(GuardStream):
                 self.rule, tuple(i for i, _ in plan.steps), inputs
             )
         return self.transaction.compute(self.rule, plan.atom, inputs[0])
+
+    def remember_response(self, depth, selected, success):
+        pass
 
     def select_query(self, success, occupancy, narrowed):
         return torch.ones(len(narrowed), dtype=torch.bool)
@@ -213,9 +219,9 @@ class ResponseStream(GuardStream):
         occupancy = offsets[direct_slot + 1] - offsets[direct_slot]
         scores = torch.stack(
             [
-                self.study.net.route(
+                self.route_logits(
                     route_features(len(self.roles[depth]), occupancy, depth, p)
-                ).flatten()
+                )
                 for p in choices
             ],
             1,
@@ -252,6 +258,7 @@ class ResponseStream(GuardStream):
             self.stats["computed_valid"] += len(selected)
             self.stats["computed_fallback"] += int((~success).sum())
             if len(selected):
+                self.remember_response(depth, selected, success)
                 raw = (
                     (reply[success, 3, None] >> torch.arange(63, -1, -1)) & 1
                 ).float() * 2 - 1
