@@ -126,6 +126,7 @@ struct PrefixProbe {
 
 #[derive(Default)]
 pub struct WaveReceiver {
+    pub guard_failures: BTreeMap<(usize, usize, usize, &'static str), usize>,
     pub shadow: bool,
     pub prefix_reads: usize,
     pub prefixes_checked: usize,
@@ -914,7 +915,7 @@ impl History {
         if rule.seminaive && epoch < wm {
             return Ok(Err("watermark"));
         }
-        for atom in atoms.iter() {
+        for (pc, atom) in atoms.iter().enumerate() {
             if let Call::Primitive(name, sort) = &atom.call {
                 let (out, args) = atom.args.split_last().ok_or("primitive without result")?;
                 let Some(values) = args
@@ -925,9 +926,15 @@ impl History {
                     return Ok(Err("unbound_primitive"));
                 };
                 let Some(v) = g.primitive(name, &values, sort)? else {
+                    if let Some(w) = &mut self.waves {
+                        *w.guard_failures.entry((p.run, rid, pc, "undefined")).or_default() += 1;
+                    }
                     return Ok(Err("guard"));
                 };
                 if !bind_query(out, &v, &mut env, g) {
+                    if let Some(w) = &mut self.waves {
+                        *w.guard_failures.entry((p.run, rid, pc, "result_mismatch")).or_default() += 1;
+                    }
                     return Ok(Err("guard"));
                 }
             }

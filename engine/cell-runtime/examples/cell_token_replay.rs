@@ -191,6 +191,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             report["prefixes_checked"] = json!(w.prefixes_checked);
             report["prefix_reads"] = json!(w.prefix_reads);
             report["prefix_verify_seconds"] = json!(w.prefix_time.as_secs_f64());
+            report["guard_failures"] = json!(w.guard_failures.iter().map(|(&(run, rule, pc, reason), &count)| (run, rule, pc, reason, count)).collect::<Vec<_>>());
             report["wave_batches"] = json!(w.batches);
             report["wave_requests"] = json!(w.requests);
             if w.shadow { report["wave_checks"] = json!(w.checks); }
