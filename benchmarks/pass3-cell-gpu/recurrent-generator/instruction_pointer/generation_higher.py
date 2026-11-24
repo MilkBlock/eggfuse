@@ -90,7 +90,7 @@ def contexts(rd, rule, addresses):
     )
 
 
-def fit(root, out, donor_dir):
+def fit(root, out, donor_dir, include=None):
     donor = read(donor_dir / "program.json")
     torch.manual_seed(40177)
     rng = random.Random(40177)
@@ -111,12 +111,15 @@ def fit(root, out, donor_dir):
             rd.advance(frame)
             for idx, q in byrun[frame["run"]]:
                 menu = cat.by[q["rule"]]
+                if include is not None:
+                    menu = [i for i in menu if include(cat.original[i])]
                 if not menu:
                     continue
                 positive = {
                     cat.index[l]
                     for l, instances in occ.get(idx, {}).items()
                     if l in cat.index
+                    and (include is None or include(cat.original[cat.index[l]]))
                     and any(ready and first for _, ready, first, _ in instances)
                 }
                 ctx = contexts(
@@ -159,7 +162,10 @@ def fit(root, out, donor_dir):
 
 
 @torch.no_grad()
-def run(root, out, case, arm, repeat):
+def run(root, out, case, arm, repeat, verified_receiver=None):
+    from replacement_stream import ReplacementStream
+
+    pending = set()
     d = folder(root, case)
     prog = read(d / "program.json")
     cat = Layouts(prog)
@@ -181,15 +187,16 @@ def run(root, out, case, arm, repeat):
         dump(layouts, cat.units)
         target = Target(prog, snapshot(root, d, "reference", "-", None, state)[0])
         seed = target.match(snapshot(root, d, "reference", "-", 0, state)[0])
+        receiver = verified_receiver or binary(root)
         cmd = [
-            binary(root),
+            receiver,
             "online",
             d / "program.json",
             "-",
             "time",
             "--export",
             state,
-            "--layouts",
+            "--verified-layouts" if verified_receiver else "--layouts",
             layouts,
             "--ept",
         ]
@@ -202,7 +209,30 @@ def run(root, out, case, arm, repeat):
                 for line in p.stdout:
                     f = json.loads(line)
                     if "role" in f:
+                        if pending:
+                            raise ValueError(
+                                "unconfirmed preverified layout steps at shutdown"
+                            )
                         break
+                    certified = defaultdict(set)
+                    if verified_receiver:
+                        accepted = {p["token"] for p in f["accepted"]}
+                        if not pending <= accepted:
+                            raise ValueError("accepted layout did not commit")
+                        pending.clear()
+                        for token, rule, parents in f["verified_steps"]:
+                            pending.add(token)
+                            certified[rule].add(
+                                tuple(
+                                    (
+                                        a["address"]["token"],
+                                        a["address"]["op"],
+                                        a["version"],
+                                    )
+                                    for a in parents
+                                )
+                            )
+                        counts["verified_steps"] += len(pending)
                     rd.advance(f)
                     batch = []
                     scheduled = set(dict(f["rules"]))
@@ -215,15 +245,28 @@ def run(root, out, case, arm, repeat):
                                     r in scheduled for r, g, w in cat.units[i] if g == 0
                                 )
                             ]
-                            if arm != "atomic"
+                            if arm not in ("atomic", "A")
                             else []
                         )
                         if arm == "higher" and not menu:
                             continue
-                        stream = GuardStream(rd, compose, rid, wm, stats, study=policy)
+                        stream = ReplacementStream(
+                            rd, compose, rid, wm, stats, study=policy
+                        )
+                        covered = (
+                            stream.covered_paths(certified[rid])
+                            if arm in ("C", "D")
+                            else set()
+                        )
+                        stream.exclusions = covered if arm == "D" else set()
                         for paths in stream.path_batches("stream", 0, float("inf")):
+                            if covered and (arm == "C" or not paths.shape[1]):
+                                paths = stream.remove_scored(paths, covered, counts)
+                            if not len(paths):
+                                continue
                             selected = [None] * len(paths)
                             if menu and arm != "atomic":
+                                tick = perf_counter()
                                 ctx = (
                                     torch.stack(
                                         [
@@ -247,6 +290,7 @@ def run(root, out, case, arm, repeat):
                                     for a, k in zip(val.tolist(), col.tolist())
                                 ]
                                 counts["recognition_scores"] += logits.numel()
+                                counts["recognition_seconds"] += perf_counter() - tick
                             refs = [
                                 stream.port_refs(j)[paths[:, j]]
                                 for j in sorted(
@@ -305,7 +349,7 @@ def run(root, out, case, arm, repeat):
             sha=f["state_sha"],
             verify=f["verify_seconds"],
             runs=f["runs"],
-            build=digest(binary(root)),
+            build=digest(receiver),
         )
         dump(out / f"higher_{case}_{arm}_{repeat}.json", m)
         print(case, arm, m["coverage"], paid, f["ept"]["signed_internal"], flush=True)
@@ -318,12 +362,17 @@ if __name__ == "__main__":
     p.add_argument("--donor", type=Path)
     p.add_argument("--cases", nargs="*", default=[])
     p.add_argument("--reps", type=int, default=1)
+    p.add_argument("--verified-receiver", type=Path)
     a = p.parse_args()
     torch.set_num_threads(1)
     if a.donor:
         fit(a.root, a.out, a.donor)
     for c in a.cases:
         for i in range(a.reps):
+            if a.verified_receiver:
+                for arm in "ABCD" if i % 2 == 0 else "DCBA":
+                    run(a.root, a.out, c, arm, i, a.verified_receiver)
+                continue
             for arm in (
                 ("atomic", "higher", "mixed")
                 if i % 2 == 0

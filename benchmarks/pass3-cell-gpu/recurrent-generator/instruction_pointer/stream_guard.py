@@ -73,10 +73,15 @@ class GuardStream(CellStream):
         starts = torch.cat((ends.new_zeros(1), ends[:-1]))
         total = int(ends[-1])
         self.stats["bucket_items"] += total
+        yield from self.posting_batches(
+            paths, depth, order, offsets[code], starts, ends, total, block
+        )
+
+    def posting_batches(self, paths, depth, order, base, starts, ends, total, block):
         for i in range(0, total, block):
             ix = torch.arange(i, min(i + block, total))
             parent = torch.searchsorted(ends, ix, right=True)
-            yield parent, order[offsets[code[parent]] + ix - starts[parent]]
+            yield parent, order[base[parent] + ix - starts[parent]]
 
     def features(self, p):
         # Static operand roles select individually encoded fields. Pool across
