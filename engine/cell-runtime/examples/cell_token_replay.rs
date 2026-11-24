@@ -24,6 +24,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         [rest @ .., flag] if flag == "--ept" => (rest, true, false),
         _ => (rest, false, false),
     };
+    let (rest, named_next) = match rest {
+        [rest @ .., flag] if flag == "--audit-next-proofs" && role=="replay" => (rest,true),
+        _ => (rest,false),
+    };
     let (rest, exact_next) = match rest {
         [rest @ .., flag] if flag == "--audit-exact-next" && role == "replay" => (rest, true),
         _ => (rest, false),
@@ -33,7 +37,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         [rest @ .., flag, path] if flag == "--row-history" && matches!(role.as_str(), "reference" | "replay") => (rest, Some(path)),
         _ => (rest, None),
     };
+    let verified_layouts=matches!(rest,[..,flag,_] if flag=="--verified-layouts" && role=="online");
     let (rest, layout_path) = match rest {
+        [rest @ ..,_,path] if verified_layouts => (rest,Some((path,false))),
         [rest @ ..,flag,path] if (flag=="--layouts" || flag=="--layout-feedback") && (role=="assist" || role=="online") => (rest,Some((path,flag=="--layout-feedback"))),
         _ => (rest,None),
     };
@@ -96,6 +102,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if let Some((path,feedback)) = layout_path {
         if higher_path.is_some() { return Err("choose a single higher Cell ABI".into()); }
         engine.configure_layout_tokens(serde_json::from_slice(&fs::read(path)?)?,feedback)?;
+        if verified_layouts {engine.verify_layouts_before_proposals()?;}
     }
     if let Some(path) = higher_path {
         engine.enable_higher_tokens(serde_json::from_slice(&fs::read(path)?)?)?;
@@ -154,6 +161,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         engine.execute_until(limit)?;
     }
     if role == "online-ccp-v0.1" { engine.finish_ccp_v01()?; }
+    if named_next {
+        println!("{}",serde_json::to_string(&engine.audit_next_named_run()?)?);
+        return Ok(());
+    }
     if exact_next {
         let mut bytes = Vec::new();
         engine.graph.write_export(&mut bytes)?;

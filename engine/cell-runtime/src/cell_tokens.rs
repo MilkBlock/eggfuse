@@ -175,6 +175,8 @@ pub struct History {
     pub assist: Option<AssistCounts>,
     higher: Option<higher::Higher>,
     layouts:Option<graph_tokens::Receiver>,
+    verified_layouts: bool,
+    verified_ready: BTreeMap<(usize,usize),Vec<(Request,Instance)>>,
     pub recall: Option<RecallAudit>,
     pub waves: Option<WaveReceiver>,
     pub(crate) selected_anchors: Option<BTreeMap<(usize,usize),BTreeSet<Dependency>>>,
@@ -223,7 +225,7 @@ impl History {
         let mut history = Self {
             assist: None,
             higher: None,
-            layouts:None,
+            layouts:None, verified_layouts:false, verified_ready:BTreeMap::new(),
             memory: None,
             recall: None,
             waves: None,
@@ -274,6 +276,13 @@ impl History {
         self.layouts=Some(receiver);
         Ok(())
     }
+    pub(crate) fn verify_layouts_before_proposals(&mut self) -> Result<()> {
+        if self.layouts.is_none() || self.teacher.is_some() || self.assist.is_some() || self.waves.is_some() {
+            return Err("early layout receipts require exclusive layout execution".into());
+        }
+        self.verified_layouts = true;
+        Ok(())
+    }
     pub fn layout_report(&self)->Option<serde_json::Value> {
         self.layouts.as_ref().map(graph_tokens::Receiver::report)
     }
@@ -290,6 +299,8 @@ impl History {
             if packet.closed_branch.is_some() || packet.side.is_some() || packet.unit.is_some() || packet.token <= 0 || !ids.insert(packet.token) {
                 return Err("duplicate token or collision with seed namespace".into());
             }
+            // Reserve identities even for requests that never returned a port.
+            h.next = h.next.max(packet.token);
             h.queue
                 .entry((packet.run, packet.rule))
                 .or_default()
@@ -312,6 +323,7 @@ impl History {
 
     pub fn unused(&self) -> usize {
         self.queue.values().map(Vec::len).sum::<usize>()
+            + self.verified_ready.values().map(Vec::len).sum::<usize>()
             + self.waves.as_ref().map_or(0, |w| w.ready.values().map(Vec::len).sum())
     }
     pub(crate) fn reject_untriggered(&mut self, run: usize, rid: usize) {
@@ -382,6 +394,25 @@ impl History {
                 },
             );
         }
+        let mut preverified=Vec::new();
+        if self.verified_layouts && !terminal {
+            self.layouts.as_mut().ok_or("missing baked layouts")?.advance(
+                &visible,&self.memory.as_ref().unwrap().accepted,run,rules,&mut self.queue)?;
+            let tick=Instant::now();
+            for &(rid,wm) in rules {
+                if check_dirty && !dirty[rid] {continue;}
+                for req in self.queue.remove(&(run,rid)).unwrap_or_default() {
+                    if req.token < higher::INTERNAL {return Err("unexpected external request before snapshot".into());}
+                    let (answer,reason)=self.admit(graph,rid,wm,&req)?;
+                    self.layouts.as_mut().unwrap().completed_step(req.token,reason);
+                    if let Some(binding)=answer {
+                        preverified.push((req.token,rid,req.parents.clone()));
+                        self.verified_ready.entry((run,rid)).or_default().push((req,binding));
+                    }
+                }
+            }
+            self.verify_time+=tick.elapsed();
+        }
         let memory = self.memory.as_mut().expect("enabled observation");
         let updates: Vec<_> = visible
             .iter()
@@ -412,7 +443,8 @@ impl History {
             frame["repair_events"]=serde_json::json!(repairs);
         }
         if let Some(layouts)=&mut self.layouts {
-            layouts.advance(&visible,&memory.accepted,run,rules,&mut self.queue)?;
+            if !self.verified_layouts || terminal {layouts.advance(&visible,&memory.accepted,run,rules,&mut self.queue)?;}
+            if self.verified_layouts {frame["verified_steps"]=serde_json::json!(preverified);}
             if let Some(feedback)=layouts.snapshot(run,&self.queue) {
                 frame["layout_feedback"]=feedback;
             }
@@ -586,6 +618,21 @@ impl History {
                 .map_err(|e| e.to_string())?;
             writer.write_all(b"\n").and_then(|_| writer.flush()).map_err(|e| e.to_string())?;
         }
+    }
+    /// Switch an isolated, consumed replay prefix into a one-Run teacher.
+    pub(crate) fn prepare_audit_fork(&mut self) -> Result<()> {
+        if self.teacher.is_some() || self.memory.is_some() || self.waves.is_some() || self.layouts.is_some() {
+            return Err("audit fork requires an offline replay".into());
+        }
+        let mut named=BTreeMap::new();
+        for &address in self.returns.keys() {
+            if let Some(row)=self.resolve(address) { named.entry(row).or_insert(address); }
+        }
+        self.next = self.next.checked_add(1).ok_or("audit token namespace exhausted")?;
+        self.queue.clear();
+        self.tape.clear();
+        self.teacher=Some(named);
+        Ok(())
     }
     pub(crate) fn is_teacher(&self) -> bool {
         self.teacher.is_some()
@@ -770,6 +817,12 @@ impl History {
         let rule = &g.program.rules[rid];
         self.counts.calls += 1;
         let mut answers = Vec::new();
+        if self.verified_layouts {
+            for (req,binding) in self.verified_ready.remove(&(run,rid)).unwrap_or_default() {
+                self.memory.as_mut().unwrap().accepted.push(req);
+                answers.push(binding);
+            }
+        }
         if let Some(receiver) = &mut self.waves && !receiver.shadow {
             for (packet, answer) in receiver.ready.remove(&(run,rid)).unwrap_or_default() {
                 answers.push(answer);

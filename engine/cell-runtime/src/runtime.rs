@@ -1205,6 +1205,13 @@ impl Executor {
         Ok(self.steps.get(n).map(|s| (s.executed_bindings, s.changed)))
     }
     #[cfg(feature = "cell-token-replay")]
+    pub fn audit_next_named_run(mut self) -> Result<Vec<crate::cell_tokens::Request>> {
+        self.token_history.as_mut().ok_or("expected replay prefix")?.prepare_audit_fork()?;
+        let run=self.steps.len()+1;
+        self.execute_until(Some(run))?;
+        Ok(self.token_history.take().unwrap().tape)
+    }
+    #[cfg(feature = "cell-token-replay")]
     pub fn start_tokens(&mut self, packets: Option<Vec<crate::cell_tokens::Request>>) -> Result<()> {
         if !self.steps.is_empty() || self.token_history.is_some() { return Err("token history already started".into()); }
         self.token_history = Some(match packets {
@@ -1228,6 +1235,10 @@ impl Executor {
             point_pivots, ..Default::default()
         });
         self.export_token_memory(None)
+    }
+    #[cfg(feature = "cell-token-replay")]
+    pub fn verify_layouts_before_proposals(&mut self) -> Result<()> {
+        self.token_history.as_mut().ok_or("expected token execution")?.verify_layouts_before_proposals()
     }
     #[cfg(feature = "cell-token-replay")]
     pub fn enable_layout_tokens(&mut self, layouts: Vec<crate::cell_tokens::Layout>) -> Result<()> {
