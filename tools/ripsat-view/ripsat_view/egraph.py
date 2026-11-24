@@ -47,7 +47,7 @@ class Graph:
             group = members[self.root(result)]
             if node not in group:
                 group.append(node)
-        out = ['digraph G {rankdir=BT; compound=true; bgcolor="white"; graph [fontname="Helvetica",nodesep=.22,ranksep=.45]; node [fontname="Helvetica",shape=box,style="rounded,filled",fillcolor="#eef4f2"]; edge [color="#74877e",fontsize=9];']
+        out = ['digraph G {rankdir=TB; compound=true; bgcolor="white"; graph [fontname="Helvetica",nodesep=.22,ranksep=.45]; node [fontname="Helvetica",shape=box,style="rounded,filled",fillcolor="#eef4f2"]; edge [color="#74877e",fontsize=9];']
         for i,nodes in members.items():
             label = "e"+str(i)+"  "+self.labels[i]
             out.append('subgraph cluster_%d {label=%s; color="#a0b5a8"; style="rounded,dashed";'%(i,quote(label)))
