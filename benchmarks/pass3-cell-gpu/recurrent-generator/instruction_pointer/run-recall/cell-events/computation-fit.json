@@ -1,0 +1,27 @@
+{
+  "steps": 260,
+  "seed": 55191,
+  "device": "mps",
+  "source_examples": {
+    "loopfact": {
+      "0": 11
+    },
+    "grammar-17118": {
+      "0": 40
+    },
+    "grammar-17119": {
+      "0": 72
+    },
+    "grammar-benefit-left-17118": {
+      "0": 40
+    },
+    "grammar-benefit-large-fork-17120": {
+      "4": 234
+    },
+    "grammar-benefit-large-twice-17120": {
+      "3": 234
+    }
+  },
+  "instruction_examples": 26,
+  "operand_examples": 12
+}

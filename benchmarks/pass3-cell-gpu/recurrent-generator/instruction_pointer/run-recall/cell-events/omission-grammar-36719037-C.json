@@ -1,0 +1,12 @@
+{
+  "case": "grammar-36719037",
+  "mode": "C",
+  "first": 1,
+  "missed": 5,
+  "rules": {
+    "0": 5
+  },
+  "deepest": {
+    "address_selection": 5
+  }
+}

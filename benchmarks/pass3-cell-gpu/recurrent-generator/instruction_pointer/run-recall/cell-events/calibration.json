@@ -1,0 +1,14 @@
+{
+  "boot": {
+    "n": 2,
+    "threshold": null
+  },
+  "event": {
+    "n": 7081,
+    "threshold": -3.2098803520202637
+  },
+  "address": {
+    "n": 10831,
+    "threshold": 1.7452893257141113
+  }
+}

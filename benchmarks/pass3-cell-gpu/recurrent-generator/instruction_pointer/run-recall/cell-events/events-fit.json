@@ -1,0 +1,31 @@
+{
+  "programs": {
+    "sum": {
+      "index_port_reads": 454187,
+      "posting_index_reads": 416258,
+      "named_partner_labels": 11532,
+      "samples": 50902
+    },
+    "loopfact": {
+      "index_port_reads": 32073,
+      "posting_index_reads": 30232,
+      "named_partner_labels": 2360,
+      "samples": 13967
+    },
+    "grammar-17118": {
+      "index_port_reads": 472,
+      "posting_index_reads": 402,
+      "named_partner_labels": 216,
+      "samples": 366
+    },
+    "grammar-17119": {
+      "index_port_reads": 1454,
+      "posting_index_reads": 1304,
+      "named_partner_labels": 396,
+      "samples": 608
+    }
+  },
+  "steps": 800,
+  "device": "mps",
+  "seed": 4371
+}

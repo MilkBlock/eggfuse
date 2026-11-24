@@ -1,0 +1,12 @@
+{
+  "case": "fact",
+  "mode": "B",
+  "first": 20,
+  "missed": 1,
+  "rules": {
+    "518": 1
+  },
+  "deepest": {
+    "parent_score": 1
+  }
+}

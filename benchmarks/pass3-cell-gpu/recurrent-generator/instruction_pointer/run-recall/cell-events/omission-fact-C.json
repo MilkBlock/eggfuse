@@ -1,0 +1,12 @@
+{
+  "case": "fact",
+  "mode": "C",
+  "first": 20,
+  "missed": 2,
+  "rules": {
+    "518": 2
+  },
+  "deepest": {
+    "address_selection": 2
+  }
+}

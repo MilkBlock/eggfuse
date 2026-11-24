@@ -1,0 +1,12 @@
+{
+  "case": "grammar-benefit-held-deep-11901379",
+  "mode": "D",
+  "first": 1,
+  "missed": 6,
+  "rules": {
+    "0": 6
+  },
+  "deepest": {
+    "address_selection": 6
+  }
+}

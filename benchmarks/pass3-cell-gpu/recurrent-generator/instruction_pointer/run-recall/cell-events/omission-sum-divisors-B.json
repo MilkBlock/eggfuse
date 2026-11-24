@@ -1,0 +1,12 @@
+{
+  "case": "sum-divisors",
+  "mode": "B",
+  "first": 12,
+  "missed": 1,
+  "rules": {
+    "294": 1
+  },
+  "deepest": {
+    "parent_score": 1
+  }
+}

@@ -1,0 +1,553 @@
+{
+  "case": "fact",
+  "arm": "stream",
+  "phase": "multi",
+  "runs": 536,
+  "last_run": 536,
+  "termination": "schedule_end",
+  "exact_endpoint": false,
+  "state_sha": "c45d3cdbfec18a63caad2b24ae37a7e9c0c7d48b3261303cfe2a1a8d1913b9ef",
+  "paid": 5594,
+  "proof_paid": 5594,
+  "compute_paid": 0,
+  "committed_tokens": 1055,
+  "verdicts": {
+    "accepted": 1055,
+    "duplicate": 2202,
+    "untriggered_rule": 72,
+    "binding": 1435,
+    "guard": 830
+  },
+  "work": {
+    "boundary_wait_seconds": 0.25162344105774537,
+    "header_decode_seconds": 0.011670228923321702,
+    "boundary_decode_seconds": 0.020282680765376426,
+    "memory_update_seconds": 0.05863140500150621,
+    "schedule_metadata_nodes": 1789168,
+    "source_port_reads": 9487,
+    "template_branch_scores": 91496,
+    "generated_templates": 25524,
+    "named_parent_reads": 62205,
+    "generated_proofs": 5594,
+    "live_pending": 24361,
+    "peak_pending": 24361,
+    "index_port_reads": 13991,
+    "old_port_wakes": 71392,
+    "woken_templates": 71392,
+    "query_field_reads": 77667,
+    "posting_index_reads": 23076,
+    "addressable_positions": 312545,
+    "prefix_vector_reads": 98816,
+    "pointer_instructions": 77739,
+    "span_positions_issued": 42918,
+    "visits": 42918,
+    "old_only_paths": 20924,
+    "retired_opportunities": 585,
+    "pack_seconds": 0.015828472998691723,
+    "request_write_seconds": 0.02017501016962342,
+    "request_bytes": 734362,
+    "max_outstanding": 1,
+    "collection_barriers": 1193,
+    "receipt_wait_seconds": 0.035788401306490414,
+    "receipt_read_seconds": 0.016485212050611153,
+    "response_bytes": 226728,
+    "receipt_decode_audit_seconds": 0.02889066285570152,
+    "seals": 536,
+    "index_update_seconds": 0.05051546398317441,
+    "index_writes": 7397,
+    "index_removes": 337
+  },
+  "transaction_sizes": {
+    "1": 379,
+    "6": 49,
+    "5": 70,
+    "2": 261,
+    "4": 118,
+    "3": 104,
+    "11": 11,
+    "10": 24,
+    "7": 21,
+    "20": 4,
+    "18": 3,
+    "14": 16,
+    "12": 9,
+    "8": 27,
+    "9": 16,
+    "16": 8,
+    "13": 4,
+    "97": 2,
+    "25": 11,
+    "72": 1,
+    "55": 1,
+    "15": 42,
+    "27": 1,
+    "40": 3,
+    "22": 1,
+    "31": 1,
+    "56": 2,
+    "26": 1,
+    "124": 1,
+    "28": 1,
+    "35": 1
+  },
+  "synchronizations": 1729,
+  "protocol": "ccp-v0.1",
+  "txn_stats": {
+    "batches": 1193,
+    "cache_hits": 0,
+    "ccp": true,
+    "compute_ops": 0,
+    "computed": 0,
+    "decode_ns": 1098795,
+    "encode_ns": 659681,
+    "execute_ns": 7368919,
+    "local_reads": 0,
+    "port_bytes": 198480,
+    "proof_ops": 5594,
+    "publication_encode_ns": 241226,
+    "publication_write_ns": 76040,
+    "request_bytes": 734362,
+    "response_bytes": 226728,
+    "response_write_ns": 1571627,
+    "sequence": 1729
+  },
+  "wall": 2.070444041994051,
+  "signed_ops": 887,
+  "ept": 0.15856274579907043,
+  "eps": 428.4105158165625,
+  "native_verify_seconds": 0.006394962,
+  "guard_failures": [
+    [
+      13,
+      577,
+      2,
+      "undefined",
+      2
+    ],
+    [
+      13,
+      578,
+      2,
+      "undefined",
+      6
+    ],
+    [
+      14,
+      577,
+      2,
+      "undefined",
+      10
+    ],
+    [
+      14,
+      578,
+      2,
+      "undefined",
+      6
+    ],
+    [
+      15,
+      577,
+      2,
+      "undefined",
+      8
+    ],
+    [
+      15,
+      578,
+      2,
+      "undefined",
+      8
+    ],
+    [
+      46,
+      251,
+      3,
+      "undefined",
+      10
+    ],
+    [
+      50,
+      57,
+      4,
+      "undefined",
+      6
+    ],
+    [
+      50,
+      138,
+      1,
+      "undefined",
+      10
+    ],
+    [
+      50,
+      144,
+      1,
+      "result_mismatch",
+      4
+    ],
+    [
+      54,
+      138,
+      1,
+      "undefined",
+      14
+    ],
+    [
+      58,
+      57,
+      4,
+      "undefined",
+      14
+    ],
+    [
+      58,
+      138,
+      1,
+      "undefined",
+      7
+    ],
+    [
+      58,
+      144,
+      1,
+      "result_mismatch",
+      1
+    ],
+    [
+      61,
+      62,
+      2,
+      "undefined",
+      3
+    ],
+    [
+      61,
+      138,
+      1,
+      "undefined",
+      4
+    ],
+    [
+      65,
+      57,
+      4,
+      "undefined",
+      5
+    ],
+    [
+      65,
+      138,
+      1,
+      "undefined",
+      2
+    ],
+    [
+      65,
+      144,
+      1,
+      "result_mismatch",
+      1
+    ],
+    [
+      69,
+      57,
+      4,
+      "undefined",
+      16
+    ],
+    [
+      69,
+      138,
+      1,
+      "undefined",
+      3
+    ],
+    [
+      72,
+      138,
+      1,
+      "undefined",
+      1
+    ],
+    [
+      92,
+      351,
+      2,
+      "undefined",
+      20
+    ],
+    [
+      92,
+      352,
+      3,
+      "undefined",
+      19
+    ],
+    [
+      92,
+      353,
+      2,
+      "undefined",
+      10
+    ],
+    [
+      92,
+      354,
+      3,
+      "undefined",
+      5
+    ],
+    [
+      92,
+      355,
+      3,
+      "undefined",
+      17
+    ],
+    [
+      92,
+      356,
+      3,
+      "undefined",
+      20
+    ],
+    [
+      92,
+      371,
+      2,
+      "undefined",
+      174
+    ],
+    [
+      158,
+      508,
+      0,
+      "undefined",
+      10
+    ],
+    [
+      165,
+      509,
+      1,
+      "undefined",
+      18
+    ],
+    [
+      167,
+      509,
+      1,
+      "undefined",
+      21
+    ],
+    [
+      169,
+      507,
+      2,
+      "undefined",
+      46
+    ],
+    [
+      174,
+      508,
+      0,
+      "undefined",
+      6
+    ],
+    [
+      181,
+      509,
+      1,
+      "undefined",
+      17
+    ],
+    [
+      183,
+      509,
+      1,
+      "undefined",
+      19
+    ],
+    [
+      185,
+      507,
+      2,
+      "undefined",
+      28
+    ],
+    [
+      191,
+      507,
+      2,
+      "undefined",
+      10
+    ],
+    [
+      191,
+      508,
+      0,
+      "undefined",
+      7
+    ],
+    [
+      194,
+      510,
+      1,
+      "undefined",
+      6
+    ],
+    [
+      196,
+      510,
+      1,
+      "undefined",
+      9
+    ],
+    [
+      198,
+      507,
+      2,
+      "undefined",
+      12
+    ],
+    [
+      201,
+      509,
+      1,
+      "undefined",
+      17
+    ],
+    [
+      203,
+      509,
+      1,
+      "undefined",
+      19
+    ],
+    [
+      205,
+      507,
+      2,
+      "undefined",
+      23
+    ],
+    [
+      211,
+      507,
+      2,
+      "undefined",
+      19
+    ],
+    [
+      211,
+      508,
+      0,
+      "undefined",
+      5
+    ],
+    [
+      214,
+      510,
+      1,
+      "undefined",
+      11
+    ],
+    [
+      216,
+      510,
+      1,
+      "undefined",
+      12
+    ],
+    [
+      218,
+      507,
+      2,
+      "undefined",
+      24
+    ],
+    [
+      221,
+      509,
+      1,
+      "undefined",
+      16
+    ],
+    [
+      223,
+      509,
+      1,
+      "undefined",
+      17
+    ],
+    [
+      225,
+      507,
+      2,
+      "undefined",
+      6
+    ],
+    [
+      230,
+      507,
+      2,
+      "undefined",
+      10
+    ],
+    [
+      230,
+      508,
+      0,
+      "undefined",
+      2
+    ],
+    [
+      251,
+      376,
+      4,
+      "undefined",
+      17
+    ],
+    [
+      292,
+      507,
+      2,
+      "undefined",
+      5
+    ],
+    [
+      292,
+      508,
+      0,
+      "undefined",
+      1
+    ],
+    [
+      295,
+      510,
+      1,
+      "undefined",
+      2
+    ],
+    [
+      297,
+      510,
+      1,
+      "undefined",
+      3
+    ],
+    [
+      299,
+      507,
+      2,
+      "undefined",
+      6
+    ]
+  ],
+  "neural_tokens": 5594,
+  "mode": "C",
+  "repeat": 7,
+  "facts": 600,
+  "reference": 1120
+}

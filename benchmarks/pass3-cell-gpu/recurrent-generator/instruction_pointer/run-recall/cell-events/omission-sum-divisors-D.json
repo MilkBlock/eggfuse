@@ -1,0 +1,12 @@
+{
+  "case": "sum-divisors",
+  "mode": "D",
+  "first": 11,
+  "missed": 4,
+  "rules": {
+    "289": 4
+  },
+  "deepest": {
+    "address_selection": 4
+  }
+}

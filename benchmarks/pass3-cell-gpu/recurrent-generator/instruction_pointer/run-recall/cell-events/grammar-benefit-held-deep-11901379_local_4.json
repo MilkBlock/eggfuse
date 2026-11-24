@@ -1,0 +1,148 @@
+{
+  "case": "grammar-benefit-held-deep-11901379",
+  "arm": "stream",
+  "phase": "multi",
+  "runs": 6,
+  "last_run": 6,
+  "termination": "schedule_end",
+  "exact_endpoint": true,
+  "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+  "paid": 204,
+  "proof_paid": 204,
+  "compute_paid": 0,
+  "committed_tokens": 44,
+  "verdicts": {
+    "accepted": 44,
+    "guard": 160
+  },
+  "work": {
+    "boundary_wait_seconds": 0.000507083983393386,
+    "header_decode_seconds": 0.0001820839970605448,
+    "boundary_decode_seconds": 0.00036533400998450816,
+    "memory_update_seconds": 0.0030285419925348833,
+    "interface_reads": 852,
+    "typed_products": 162952,
+    "traversed_positions": 830,
+    "learned_prefix_additions": 0,
+    "visits": 830,
+    "root_scored": 228,
+    "index_items": 1660,
+    "bucket_build_seconds": 0.00034566698013804853,
+    "bucket_probes": 588,
+    "bucket_items": 602,
+    "tuple_scored": 208,
+    "learned_index_keys": 268,
+    "txn_index_seconds": 0.0013435420260066167,
+    "transaction_decisions": 360,
+    "direct_only_queries": 360,
+    "tensor_conversion_seconds": 0.0004735810070997104,
+    "pack_seconds": 0.00018496002303436399,
+    "request_write_seconds": 0.00030000199330970645,
+    "request_bytes": 27900,
+    "max_outstanding": 1,
+    "seals": 6,
+    "collection_barriers": 5,
+    "receipt_wait_seconds": 0.0004011249984614551,
+    "receipt_read_seconds": 0.00041649799095466733,
+    "response_bytes": 6728,
+    "receipt_decode_audit_seconds": 0.0002734599984250963,
+    "index_update_seconds": 0.002731084998231381,
+    "index_writes": 482,
+    "index_removes": 0
+  },
+  "transaction_sizes": {
+    "18": 2,
+    "158": 1,
+    "4": 1,
+    "6": 1
+  },
+  "synchronizations": 11,
+  "protocol": "ccp-v0.1",
+  "txn_stats": {
+    "batches": 5,
+    "cache_hits": 0,
+    "ccp": true,
+    "compute_ops": 0,
+    "computed": 0,
+    "decode_ns": 13000,
+    "encode_ns": 13625,
+    "execute_ns": 299876,
+    "local_reads": 0,
+    "port_bytes": 10848,
+    "proof_ops": 204,
+    "publication_encode_ns": 20499,
+    "publication_write_ns": 4415,
+    "request_bytes": 27900,
+    "response_bytes": 6728,
+    "response_write_ns": 10375,
+    "sequence": 11
+  },
+  "wall": 0.02783399999316316,
+  "signed_ops": 83,
+  "ept": 0.4068627450980392,
+  "eps": 2981.9645045766765,
+  "native_verify_seconds": 0.000288451,
+  "guard_failures": [
+    [
+      2,
+      1,
+      6,
+      "result_mismatch",
+      71
+    ],
+    [
+      2,
+      2,
+      6,
+      "result_mismatch",
+      71
+    ],
+    [
+      3,
+      1,
+      6,
+      "result_mismatch",
+      6
+    ],
+    [
+      3,
+      2,
+      6,
+      "result_mismatch",
+      6
+    ],
+    [
+      4,
+      1,
+      6,
+      "result_mismatch",
+      1
+    ],
+    [
+      4,
+      2,
+      6,
+      "result_mismatch",
+      1
+    ],
+    [
+      5,
+      1,
+      6,
+      "result_mismatch",
+      2
+    ],
+    [
+      5,
+      2,
+      6,
+      "result_mismatch",
+      2
+    ]
+  ],
+  "neural_tokens": 204,
+  "mode": "local",
+  "repeat": 4,
+  "facts": 83,
+  "reference": 83
+}
