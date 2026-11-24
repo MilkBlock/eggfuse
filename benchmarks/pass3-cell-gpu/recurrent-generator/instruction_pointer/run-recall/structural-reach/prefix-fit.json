@@ -1,0 +1,27 @@
+{
+  "seed": 32071,
+  "device": "mps",
+  "steps": 420,
+  "programs": {
+    "loopfact": [
+      6395,
+      1458
+    ],
+    "grammar-17118": [
+      362,
+      86
+    ],
+    "grammar-17119": [
+      688,
+      154
+    ],
+    "grammar-stride2-17118": [
+      366,
+      86
+    ],
+    "grammar-benefit-fork-17120": [
+      336,
+      77
+    ]
+  }
+}

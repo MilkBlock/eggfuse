@@ -1,0 +1,224 @@
+{
+  "runs": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    21,
+    24,
+    28,
+    33,
+    41,
+    42,
+    45,
+    61,
+    66,
+    81,
+    93,
+    95,
+    99,
+    101,
+    102,
+    104,
+    110,
+    115,
+    118,
+    120,
+    121,
+    126,
+    129,
+    133,
+    136,
+    139,
+    141,
+    145,
+    147,
+    150,
+    152,
+    162,
+    170,
+    173,
+    178,
+    182,
+    197,
+    202,
+    217,
+    222,
+    242,
+    262,
+    282,
+    302,
+    323,
+    343,
+    363,
+    383,
+    403,
+    423,
+    443,
+    464
+  ],
+  "fork_errors": {},
+  "targets": 210,
+  "first_loss": {
+    "accepted_binding": 178,
+    "prefix_gate": 32
+  },
+  "by_run": {
+    "1": {
+      "accepted_binding": 1
+    },
+    "2": {
+      "accepted_binding": 1
+    },
+    "3": {
+      "accepted_binding": 2
+    },
+    "4": {
+      "accepted_binding": 1,
+      "prefix_gate": 1
+    },
+    "6": {
+      "accepted_binding": 10
+    },
+    "7": {
+      "accepted_binding": 4
+    },
+    "9": {
+      "accepted_binding": 21
+    },
+    "12": {
+      "prefix_gate": 8,
+      "accepted_binding": 6
+    },
+    "13": {
+      "accepted_binding": 1
+    },
+    "14": {
+      "accepted_binding": 1
+    },
+    "16": {
+      "accepted_binding": 3,
+      "prefix_gate": 5
+    },
+    "24": {
+      "accepted_binding": 3,
+      "prefix_gate": 1
+    },
+    "28": {
+      "accepted_binding": 1
+    },
+    "33": {
+      "accepted_binding": 25,
+      "prefix_gate": 6
+    },
+    "41": {
+      "accepted_binding": 3
+    },
+    "42": {
+      "prefix_gate": 1
+    },
+    "45": {
+      "prefix_gate": 1
+    },
+    "66": {
+      "prefix_gate": 5
+    },
+    "93": {
+      "accepted_binding": 5
+    },
+    "95": {
+      "accepted_binding": 5
+    },
+    "99": {
+      "accepted_binding": 5
+    },
+    "102": {
+      "accepted_binding": 3
+    },
+    "104": {
+      "accepted_binding": 3
+    },
+    "110": {
+      "accepted_binding": 7
+    },
+    "115": {
+      "accepted_binding": 4
+    },
+    "118": {
+      "accepted_binding": 3
+    },
+    "120": {
+      "accepted_binding": 3
+    },
+    "126": {
+      "accepted_binding": 9
+    },
+    "129": {
+      "accepted_binding": 1
+    },
+    "133": {
+      "accepted_binding": 1
+    },
+    "136": {
+      "accepted_binding": 3
+    },
+    "139": {
+      "accepted_binding": 3
+    },
+    "145": {
+      "prefix_gate": 3,
+      "accepted_binding": 3
+    },
+    "147": {
+      "accepted_binding": 3
+    },
+    "150": {
+      "prefix_gate": 1,
+      "accepted_binding": 1
+    },
+    "152": {
+      "accepted_binding": 1
+    },
+    "170": {
+      "accepted_binding": 5
+    },
+    "173": {
+      "accepted_binding": 3
+    },
+    "178": {
+      "accepted_binding": 11
+    },
+    "197": {
+      "accepted_binding": 12
+    },
+    "217": {
+      "accepted_binding": 1
+    }
+  },
+  "won_by_any_proof": {
+    "issued": 178,
+    "prefix_gate": 8
+  },
+  "native_reference_checks": {
+    "match": 186,
+    "off_reference": 24
+  },
+  "teacher_parent_visibility": {
+    "same_provenance_and_version": 48,
+    "recorded_parent_lineage_absent": 15,
+    "different_schedule": 118
+  },
+  "sha": "3347924d8839357889e7146b2417b7fba1caec8a6896dbc5aee046a219aa334a"
+}

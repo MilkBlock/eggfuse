@@ -1,0 +1,42 @@
+{
+  "runs": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "fork_errors": {},
+  "targets": 44,
+  "first_loss": {
+    "accepted_binding": 44
+  },
+  "by_run": {
+    "1": {
+      "accepted_binding": 18
+    },
+    "2": {
+      "accepted_binding": 16
+    },
+    "3": {
+      "accepted_binding": 6
+    },
+    "4": {
+      "accepted_binding": 2
+    },
+    "5": {
+      "accepted_binding": 2
+    }
+  },
+  "won_by_any_proof": {
+    "issued": 44
+  },
+  "native_reference_checks": {
+    "match": 44
+  },
+  "teacher_parent_visibility": {
+    "same_provenance_and_version": 44
+  },
+  "sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d"
+}

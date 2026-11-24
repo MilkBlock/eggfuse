@@ -1,0 +1,136 @@
+{
+  "case": "sum-divisors",
+  "arm": "D",
+  "repeat": 2,
+  "wall": 13.323320124996826,
+  "coverage": 1404,
+  "reference": 8018,
+  "paid": 376657,
+  "signed": 2024,
+  "ept": 0.005373589233705998,
+  "eps": 151.9140860544685,
+  "visits": 727640,
+  "work": {
+    "interface_reads": 1836687,
+    "typed_products": 16619656263928312684087600,
+    "traversed_positions": 730761,
+    "visits": 727640,
+    "root_scored": 127251,
+    "index_items": 254224,
+    "bucket_build_seconds": 0.08977391292864922,
+    "bucket_probes": 201670,
+    "bucket_items": 600368,
+    "tuple_scored": 460288,
+    "omitted_positions": 124,
+    "receipt_posting_lookups": 9
+  },
+  "generation": {
+    "verified_steps": 124,
+    "recognition_scores": 851318,
+    "recognition_seconds": 0.16522511992661748,
+    "higher_issued": 211280
+  },
+  "counts": {
+    "accepted": 1811,
+    "calls": 1560,
+    "duplicates": 330187,
+    "reads": 1472885,
+    "reads_by_kind": {
+      "generated": 1472801,
+      "initial": 84
+    },
+    "rejected": {
+      "binding": 3649,
+      "guard": 41136,
+      "untriggered_rule": 54,
+      "watermark": 7
+    }
+  },
+  "layouts": {
+    "counts": {
+      "accepted_steps": 124,
+      "attached_roots": 0,
+      "boundary_reads": 1055342,
+      "completed_layouts": {
+        "110": 34,
+        "115": 2,
+        "122": 5,
+        "124": 3,
+        "126": 2,
+        "181": 7,
+        "193": 2,
+        "194": 1,
+        "196": 5,
+        "203": 1,
+        "208": 1,
+        "36": 1,
+        "42": 5,
+        "45": 3,
+        "6": 51,
+        "97": 1
+      },
+      "completed_sizes": {
+        "2": 124
+      },
+      "invalid_boundary": 0,
+      "issued_layouts": {
+        "110": 34,
+        "115": 3,
+        "122": 10,
+        "124": 23,
+        "126": 10,
+        "181": 202836,
+        "19": 4,
+        "193": 8160,
+        "194": 107,
+        "196": 5,
+        "203": 1,
+        "208": 1,
+        "36": 2,
+        "42": 15,
+        "45": 3,
+        "6": 51,
+        "70": 8,
+        "74": 3,
+        "97": 4
+      },
+      "issued_steps": 187,
+      "missing_returns": 0,
+      "rejected_groups": 211156,
+      "signed_layouts": 211280
+    },
+    "outstanding": 0
+  },
+  "ledger": {
+    "kinds": [
+      "visible_birth",
+      "function_write",
+      "effective_union",
+      "visibility_change"
+    ],
+    "ledger_sha256": "b2dd288d0535c28532dc903b1369a2c60aedb59692846820ec31bf6591f3c81a",
+    "runs": 547,
+    "signed_external": [
+      1039,
+      765,
+      91,
+      0
+    ],
+    "signed_internal": [
+      68,
+      9,
+      52,
+      0
+    ],
+    "uncredited": [
+      0,
+      0,
+      7,
+      0
+    ]
+  },
+  "sha": "29c0fac3a9e6bbd73bcb191e4ebe689acba61efeffea4e6b6f063f748e531a12",
+  "verify": 0.202958615,
+  "runs": 547,
+  "build": "a886b6db01d782757ae7c430f3796e548703190cbaf3c9c444d3aa8a8493f027"
+}

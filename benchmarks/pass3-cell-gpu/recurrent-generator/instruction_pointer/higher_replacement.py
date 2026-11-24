@@ -39,8 +39,19 @@ def send(txn, rule, rows):
     return txn.collect(txn.enqueue(op, refs.reshape(-1, 4), 0)).rows.numpy()
 
 
+class LearnedReplacementStream(ReplacementStream):
+    def score_children(self, h, depth, paths, parents):
+        score, z = super().score_children(h, depth, paths, parents)
+        if depth + 1 < len(self.roles):
+            model = self.study.prefix
+            score = torch.maximum(
+                score, model(model.evidence(self, depth, paths, z, look=False))
+            )
+        return score, z
+
+
 class Policy:
-    def __init__(self, case, root, out, arm, blind):
+    def __init__(self, case, root, out, arm, blind, learned_prefix):
         self.arm = arm
         self.cat = Layouts(read(folder(root, case) / "program.json"))
         units = unpack(read(BAKE / "catalog.json"))
@@ -48,6 +59,15 @@ class Policy:
         self.net = Recognizer(self.cat.codes.shape[1]).eval()
         self.net.load_state_dict(torch.load(out / "higher.pt", weights_only=True))
         self.study = Study(bits=8, symmetric=True, delta_buckets=True)
+        self.stream = ReplacementStream
+        if learned_prefix:
+            from train_reachability import Prefix
+
+            self.study.prefix = Prefix().eval()
+            self.study.prefix.load_state_dict(
+                torch.load(out / "prefix.pt", weights_only=True)
+            )
+            self.stream = LearnedReplacementStream
         self.waiting = []
         self.expected = set()
         self.internal = set()
@@ -133,7 +153,7 @@ class Policy:
         rules = dict(frame["rules"])
         done = self.advance(rd, pub, txn, rules)
         for rid, wm in rules.items():
-            s = ReplacementStream(rd, model, rid, wm, stats, study=self.study)
+            s = self.stream(rd, model, rid, wm, stats, study=self.study)
             covered = s.covered_paths(done[rid]) if self.arm in ("C", "D") else set()
             s.exclusions = covered if self.arm == "D" else set()
             menu = self.menu.get(rid, ()) if self.arm != "A" else ()
@@ -183,9 +203,10 @@ class Policy:
                         )
 
 
-def run(root, out, case, arm, rep, blind=None):
-    policy = Policy(case, root, out, arm, blind)
-    series = "replacement/" + arm + (blind or "")
+def run(root, out, case, arm, rep, blind=None, learned_prefix=False):
+    policy = Policy(case, root, out, arm, blind, learned_prefix)
+    tag = (blind or "") + ("-learned" if learned_prefix else "")
+    series = "replacement/" + arm + tag
     m = execute(root, case, study=policy, series=series, seconds=200)
     assert m["termination"] == "schedule_end"
     work = root / series / (case + "-stream-multi")
@@ -202,13 +223,14 @@ def run(root, out, case, arm, rep, blind=None):
     m.update(
         arm=arm,
         blind=blind,
+        learned_prefix=learned_prefix,
         repeat=rep,
         derived=len(t.match(read(work / "state.json")) - seed),
         den=len(t.gold) - len(seed),
         replacement=dict(policy.count),
         internal_committed=len(policy.internal),
     )
-    dump(out / f"higher-{case}-{arm}{blind or ''}-{rep}.json", m)
+    dump(out / f"higher-{case}-{arm}{tag}-{rep}.json", m)
     print(
         case,
         arm,
@@ -228,6 +250,7 @@ if __name__ == "__main__":
     p.add_argument("--donor", type=Path)
     p.add_argument("--cases", nargs="*", default=[])
     p.add_argument("--arms", nargs="+", default=list("ABCD"))
+    p.add_argument("--learned-prefix", action="store_true")
     p.add_argument("--blind", choices=("layout", "pair", "unseen-long"))
     p.add_argument("--reps", type=int, default=1)
     a = p.parse_args()
@@ -238,4 +261,4 @@ if __name__ == "__main__":
     for c in a.cases:
         for rep in range(a.reps):
             for arm in a.arms if rep % 2 == 0 else a.arms[::-1]:
-                run(a.root, a.out, c, arm, rep, a.blind)
+                run(a.root, a.out, c, arm, rep, a.blind, a.learned_prefix)
