@@ -2,7 +2,7 @@ import unittest
 from collections import Counter, OrderedDict, defaultdict
 from types import SimpleNamespace
 
-from recursive_agent import Policy
+from recursive_agent import POOL, Policy
 from recursive_coverage import Target
 
 
@@ -14,6 +14,7 @@ class PendingTests(unittest.TestCase):
         )
         p.next_table = lambda r, n: 2
         p.persistent = True
+        p.pool_limit = POOL
         p.pool = OrderedDict()
         p.closed = OrderedDict()
         p.wait = defaultdict(OrderedDict)
