@@ -15,13 +15,13 @@ class Side:
     rows: list
     owners: np.ndarray
     first: np.ndarray
-    vectors: torch.Tensor
+    vectors: torch.Tensor | None
     positions: dict
 
 
 def make_side(store, model, rid, roles, other, rows, wm, side):
     parts = []
-    for start in range(0, len(rows), 256):
+    for start in range(0, len(rows) if model is not None else 0, 256):
         x, f = encode(store, rid, roles, rows[start : start + 256], wm, other)
         parts.append(
             model.vectors(x, f, side) if other else model.unary(model.encoder(x))
@@ -45,19 +45,21 @@ def make_side(store, model, rid, roles, other, rows, wm, side):
         rows,
         np.array([r[0][0] for r in rows]),
         first,
-        torch.cat(parts),
+        torch.cat(parts) if parts else None,
         {r: i for i, r in enumerate(rows)},
     )
 
 
-def panels(store, model, rid, wm):
+def layout_sides(store, model, rid, wm, limit=math.inf, project=None):
     cache = {}
-    events = []
-    old_budget = 0
     for left, right in store.iface.layouts(rid):
         for side in (left, right):
             if side and side not in cache:
-                cache[side] = store.projections(rid, side, math.inf)
+                cache[side] = (project or store.projections)(rid, side, limit)
+                if cache[side] is None:
+                    raise OverflowError(
+                        f"rule {rid}, roles {side}: more than {limit} typed projections"
+                    )
         a = cache[left]
         b = cache[right] if right else [()]
         if not a or not b:
@@ -65,7 +67,14 @@ def panels(store, model, rid, wm):
         within_old = max(len(a), len(b)) <= 2048 and len(a) * len(b) <= 65536
         aa = make_side(store, model, rid, left, right, a, wm, 0)
         bb = make_side(store, model, rid, right, left, b, wm, 1) if right else None
-        for src, dst in [(aa, bb), (bb, aa)] if right else [(aa, None)]:
+        yield aa, bb, within_old
+
+
+def panels(store, model, rid, wm):
+    events = []
+    old_budget = 0
+    for aa, bb, within_old in layout_sides(store, model, rid, wm):
+        for src, dst in [(aa, bb), (bb, aa)] if bb else [(aa, None)]:
             for i in np.flatnonzero(src.first < len(store.iface.roles[rid])):
                 ix = (
                     np.flatnonzero(
