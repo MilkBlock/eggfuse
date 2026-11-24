@@ -1,0 +1,46 @@
+{
+  "B": {
+    "subsumed": false,
+    "table": "B",
+    "values": [
+      {
+        "sort": "i64",
+        "value": 801
+      },
+      {
+        "sort": "i64",
+        "value": 1
+      },
+      {
+        "sort": "String",
+        "value": "VAL"
+      },
+      {
+        "eq": "Cell(21582210662414)",
+        "sort": "tree"
+      }
+    ]
+  },
+  "P": {
+    "subsumed": false,
+    "table": "P",
+    "values": [
+      {
+        "sort": "i64",
+        "value": 801
+      },
+      {
+        "sort": "i64",
+        "value": 1
+      },
+      {
+        "sort": "String",
+        "value": "VAL"
+      },
+      {
+        "eq": "Cell(21573620727820)",
+        "sort": "@PSort"
+      }
+    ]
+  }
+}

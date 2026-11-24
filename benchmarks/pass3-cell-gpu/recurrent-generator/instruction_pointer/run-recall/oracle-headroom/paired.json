@@ -1,0 +1,758 @@
+{
+  "3mm": {
+    "scope": "full schedule",
+    "program": "8d81462db16dcee0689b2e8dc11ac3e068c9dc976a2e69f5005a8acad06905af",
+    "receiver": "d1b8a14fb1fcaca8825712ed0b02d811895000622e7c5d5b097e31eb77a9a62a",
+    "tape": "e0d20179c638d2706c05436e98de297290887b737d58b81c376aab02d9f8424b",
+    "runs": 4260,
+    "commits": 294917,
+    "state_sha": "2725a41c2e89eb7e3ea11697cd6fe13cabfe75948ed3b8d6b073e29dc7830cf0",
+    "rounds": [
+      {
+        "reference": {
+          "seconds": 0.9926295,
+          "wall": 1.6891372920072172,
+          "source_search_phase_seconds": 0.40914847700000717,
+          "rhs_phase_seconds": 0.2749035999999979,
+          "repair_phase_seconds": 0.11149844200000572
+        },
+        "replay": {
+          "seconds": 0.838894541,
+          "wall": 1.4487569170014467,
+          "source_search_phase_seconds": 0.27254004399999926,
+          "rhs_phase_seconds": 0.3553581449999926,
+          "repair_phase_seconds": 0.1090721580000059,
+          "verify_seconds": 0.212552321
+        }
+      },
+      {
+        "replay": {
+          "seconds": 0.837046584,
+          "wall": 1.444304832999478,
+          "source_search_phase_seconds": 0.27231718299999985,
+          "rhs_phase_seconds": 0.35126816999999133,
+          "repair_phase_seconds": 0.1097332200000058,
+          "verify_seconds": 0.21297013
+        },
+        "reference": {
+          "seconds": 1.038287834,
+          "wall": 1.5849138329940615,
+          "source_search_phase_seconds": 0.42436012400000817,
+          "rhs_phase_seconds": 0.29501495699999686,
+          "repair_phase_seconds": 0.11437673200000555
+        }
+      },
+      {
+        "reference": {
+          "seconds": 1.075334083,
+          "wall": 1.622888417012291,
+          "source_search_phase_seconds": 0.43813517200000746,
+          "rhs_phase_seconds": 0.30386869399999666,
+          "repair_phase_seconds": 0.12012339400000549
+        },
+        "replay": {
+          "seconds": 0.908596084,
+          "wall": 1.545898042008048,
+          "source_search_phase_seconds": 0.292942007999999,
+          "rhs_phase_seconds": 0.38392103799999167,
+          "repair_phase_seconds": 0.11887934300000727,
+          "verify_seconds": 0.231371794
+        }
+      },
+      {
+        "replay": {
+          "seconds": 0.852601125,
+          "wall": 1.4762792080000509,
+          "source_search_phase_seconds": 0.2751597900000015,
+          "rhs_phase_seconds": 0.35629947799999356,
+          "repair_phase_seconds": 0.11385548600000586,
+          "verify_seconds": 0.21576302
+        },
+        "reference": {
+          "seconds": 0.9869555,
+          "wall": 1.5195923749997746,
+          "source_search_phase_seconds": 0.4109113120000078,
+          "rhs_phase_seconds": 0.27745735799999693,
+          "repair_phase_seconds": 0.10749671400000571
+        }
+      }
+    ],
+    "engine_ratio": 1.1833853335015414,
+    "wall_ratio": 1.0735785557801405,
+    "oracle_wall_wins": 4,
+    "oracle_engine_wins": 4,
+    "zero_search_bound": 1.696220750789455
+  },
+  "conjugate-gradient": {
+    "scope": "full schedule",
+    "program": "decf722a0df14dddb3ed40eeadee5fad00743eceb695bdf7237932eddb94e428",
+    "receiver": "d1b8a14fb1fcaca8825712ed0b02d811895000622e7c5d5b097e31eb77a9a62a",
+    "tape": "b0fb6ff0d2b7dddfc9af843b5cb30c476e9359f707e4291e1d108d2a5617cb39",
+    "runs": 2896,
+    "commits": 131371,
+    "state_sha": "b7570d9b37d8c9c775f0affc241431567c47b30847c1c86764b1d265d2dc3a05",
+    "rounds": [
+      {
+        "reference": {
+          "seconds": 0.376806334,
+          "wall": 0.6571297499904176,
+          "source_search_phase_seconds": 0.16075098099999865,
+          "rhs_phase_seconds": 0.0989209590000021,
+          "repair_phase_seconds": 0.04022813499999896
+        },
+        "replay": {
+          "seconds": 0.317072042,
+          "wall": 0.6427493749943096,
+          "source_search_phase_seconds": 0.10496585299999898,
+          "rhs_phase_seconds": 0.12932534400000317,
+          "repair_phase_seconds": 0.040037656999998894,
+          "verify_seconds": 0.079972371
+        }
+      },
+      {
+        "replay": {
+          "seconds": 0.326046834,
+          "wall": 0.6477359580021584,
+          "source_search_phase_seconds": 0.11041985899999894,
+          "rhs_phase_seconds": 0.13222820300000343,
+          "repair_phase_seconds": 0.04013093299999896,
+          "verify_seconds": 0.084359702
+        },
+        "reference": {
+          "seconds": 0.375719125,
+          "wall": 0.6554423750058049,
+          "source_search_phase_seconds": 0.1592507769999984,
+          "rhs_phase_seconds": 0.09944663700000259,
+          "repair_phase_seconds": 0.040256056999999
+        }
+      },
+      {
+        "reference": {
+          "seconds": 0.380388583,
+          "wall": 0.6796002909977688,
+          "source_search_phase_seconds": 0.16333530499999854,
+          "rhs_phase_seconds": 0.10004683000000231,
+          "repair_phase_seconds": 0.04016168299999912
+        },
+        "replay": {
+          "seconds": 0.323595666,
+          "wall": 0.638026084008743,
+          "source_search_phase_seconds": 0.10872071199999885,
+          "rhs_phase_seconds": 0.13130900700000306,
+          "repair_phase_seconds": 0.03993517199999891,
+          "verify_seconds": 0.082722009
+        }
+      },
+      {
+        "replay": {
+          "seconds": 0.324019667,
+          "wall": 0.6426492080063326,
+          "source_search_phase_seconds": 0.10797713599999872,
+          "rhs_phase_seconds": 0.13084240400000366,
+          "repair_phase_seconds": 0.041354187999998904,
+          "verify_seconds": 0.082313041
+        },
+        "reference": {
+          "seconds": 0.381714166,
+          "wall": 0.6667328750045272,
+          "source_search_phase_seconds": 0.16160674899999872,
+          "rhs_phase_seconds": 0.10079163500000234,
+          "repair_phase_seconds": 0.04054609099999895
+        }
+      }
+    ],
+    "engine_ratio": 1.176782217722149,
+    "wall_ratio": 1.0299244132388168,
+    "oracle_wall_wins": 4,
+    "oracle_engine_wins": 4,
+    "zero_search_bound": 1.739851900573738
+  },
+  "cykjson-rows": {
+    "scope": "all inference Runs; trailing check executed only by full reference",
+    "program": "cfe2ae8b80052f59d1378a6a36480c637fee00f56503d5519874a8b439d88c8e",
+    "receiver": "d1b8a14fb1fcaca8825712ed0b02d811895000622e7c5d5b097e31eb77a9a62a",
+    "tape": "b8b8726337a859e7c1d53aae21d541cd6600817eda41aa93f038215b17239f58",
+    "runs": 43,
+    "commits": 4991,
+    "state_sha": "2bad5f36b3dd70837b4677a4581a107bad02a9d423e60a866a4e3c7425242d94",
+    "rounds": [
+      {
+        "reference": {
+          "seconds": 0.100821084,
+          "wall": 0.12678666699503083,
+          "source_search_phase_seconds": 0.09314725100000001,
+          "rhs_phase_seconds": 0.004550041,
+          "repair_phase_seconds": 9.166000000000005e-06
+        },
+        "replay": {
+          "seconds": 0.012788792,
+          "wall": 0.04541604199039284,
+          "source_search_phase_seconds": 0.005309039999999999,
+          "rhs_phase_seconds": 0.005494878000000002,
+          "repair_phase_seconds": 4.373000000000001e-06,
+          "verify_seconds": 0.004922041
+        }
+      },
+      {
+        "replay": {
+          "seconds": 0.012794166,
+          "wall": 0.048352958998293616,
+          "source_search_phase_seconds": 0.005313710000000002,
+          "rhs_phase_seconds": 0.005464458000000001,
+          "repair_phase_seconds": 4.456000000000001e-06,
+          "verify_seconds": 0.004939166
+        },
+        "reference": {
+          "seconds": 0.098972125,
+          "wall": 0.12342674999672454,
+          "source_search_phase_seconds": 0.09141820900000003,
+          "rhs_phase_seconds": 0.004398125,
+          "repair_phase_seconds": 9.24900000000001e-06
+        }
+      },
+      {
+        "reference": {
+          "seconds": 0.096236583,
+          "wall": 0.12064845798886381,
+          "source_search_phase_seconds": 0.08913892300000001,
+          "rhs_phase_seconds": 0.004105996,
+          "repair_phase_seconds": 5.790999999999998e-06
+        },
+        "replay": {
+          "seconds": 0.013469167,
+          "wall": 0.04088524999679066,
+          "source_search_phase_seconds": 0.005635752,
+          "rhs_phase_seconds": 0.005867795999999999,
+          "repair_phase_seconds": 8.203000000000001e-06,
+          "verify_seconds": 0.005257417
+        }
+      },
+      {
+        "replay": {
+          "seconds": 0.012107625,
+          "wall": 0.03787674999330193,
+          "source_search_phase_seconds": 0.005080706000000001,
+          "rhs_phase_seconds": 0.005129795000000003,
+          "repair_phase_seconds": 3.579000000000004e-06,
+          "verify_seconds": 0.004723301
+        },
+        "reference": {
+          "seconds": 0.097666042,
+          "wall": 0.1316132909996668,
+          "source_search_phase_seconds": 0.09030653999999999,
+          "rhs_phase_seconds": 0.004349125999999998,
+          "repair_phase_seconds": 7.876000000000002e-06
+        }
+      }
+    ],
+    "engine_ratio": 7.8096366421573915,
+    "wall_ratio": 2.8712878413102634,
+    "oracle_wall_wins": 4,
+    "oracle_engine_wins": 4,
+    "zero_search_bound": 13.204517948467615
+  },
+  "deriche": {
+    "scope": "full schedule",
+    "program": "78e06bc3718067d2214d5d1eecf4676139bdd1b678e3bcb2a22464f0c50700ab",
+    "receiver": "d1b8a14fb1fcaca8825712ed0b02d811895000622e7c5d5b097e31eb77a9a62a",
+    "tape": "20a910078a8c93f03d5dc7f40f83f382579069fcabe6f9911e4af61c457ec372",
+    "runs": 5687,
+    "commits": 635818,
+    "state_sha": "f9181c677ec837e878719ee601dddf7a0700ed236f8eac364d3ecfb40712b7b8",
+    "rounds": [
+      {
+        "reference": {
+          "seconds": 1.632351875,
+          "wall": 2.2931311249994906,
+          "source_search_phase_seconds": 0.6881371000000104,
+          "rhs_phase_seconds": 0.4515804649999956,
+          "repair_phase_seconds": 0.16221670500000593
+        },
+        "replay": {
+          "seconds": 1.505610834,
+          "wall": 2.377343792002648,
+          "source_search_phase_seconds": 0.5237173020000038,
+          "rhs_phase_seconds": 0.6145709890000013,
+          "repair_phase_seconds": 0.1691127280000088,
+          "verify_seconds": 0.417466503
+        }
+      },
+      {
+        "replay": {
+          "seconds": 1.498513792,
+          "wall": 2.54428529200959,
+          "source_search_phase_seconds": 0.5257467930000019,
+          "rhs_phase_seconds": 0.612854356,
+          "repair_phase_seconds": 0.16737760000000595,
+          "verify_seconds": 0.417380116
+        },
+        "reference": {
+          "seconds": 1.6746645839999998,
+          "wall": 2.3398450829990907,
+          "source_search_phase_seconds": 0.703479065000011,
+          "rhs_phase_seconds": 0.4657438709999967,
+          "repair_phase_seconds": 0.16761005900000597
+        }
+      },
+      {
+        "reference": {
+          "seconds": 1.666702125,
+          "wall": 2.325042541997391,
+          "source_search_phase_seconds": 0.6912809730000088,
+          "rhs_phase_seconds": 0.4710400979999966,
+          "repair_phase_seconds": 0.1676332300000064
+        },
+        "replay": {
+          "seconds": 1.519243,
+          "wall": 2.3667419999983395,
+          "source_search_phase_seconds": 0.5277864170000054,
+          "rhs_phase_seconds": 0.625446798999999,
+          "repair_phase_seconds": 0.16828224500000946,
+          "verify_seconds": 0.420687857
+        }
+      },
+      {
+        "replay": {
+          "seconds": 1.5822434589999999,
+          "wall": 2.435480000000098,
+          "source_search_phase_seconds": 0.5578447530000034,
+          "rhs_phase_seconds": 0.6385987170000003,
+          "repair_phase_seconds": 0.17522793700000935,
+          "verify_seconds": 0.442282179
+        },
+        "reference": {
+          "seconds": 1.6925251669999999,
+          "wall": 2.365034957998432,
+          "source_search_phase_seconds": 0.7101141420000088,
+          "rhs_phase_seconds": 0.46546925799999583,
+          "repair_phase_seconds": 0.17115679000000678
+        }
+      }
+    ],
+    "engine_ratio": 1.090620035818315,
+    "wall_ratio": 0.9678262460916451,
+    "oracle_wall_wins": 0,
+    "oracle_engine_wins": 4,
+    "zero_search_bound": 1.7235894018568163
+  },
+  "eqsat-basic": {
+    "scope": "all inference Runs; trailing check executed only by full reference",
+    "program": "a9c5b3b8f31f98bc62f30c56ba688c422d06a5bd74e5910c5c4a0c76a9e6727f",
+    "receiver": "d1b8a14fb1fcaca8825712ed0b02d811895000622e7c5d5b097e31eb77a9a62a",
+    "tape": "c51aeb43409cc0f58307307631fa20eb2714b149e2582eb37fbc77cd53dffce9",
+    "runs": 3,
+    "commits": 11,
+    "state_sha": "287367e217e77076f3936028e31b62887fa1a67ac80d5abbd8704516fdfe15de",
+    "rounds": [
+      {
+        "reference": {
+          "seconds": 0.000218083,
+          "wall": 0.00713174999691546,
+          "source_search_phase_seconds": 5.7625e-05,
+          "rhs_phase_seconds": 2.4957999999999997e-05,
+          "repair_phase_seconds": 1.9917000000000003e-05
+        },
+        "replay": {
+          "seconds": 0.000147833,
+          "wall": 0.005110124999191612,
+          "source_search_phase_seconds": 2.2416000000000004e-05,
+          "rhs_phase_seconds": 2.2542999999999997e-05,
+          "repair_phase_seconds": 1.0791e-05,
+          "verify_seconds": 1.3123e-05
+        }
+      },
+      {
+        "replay": {
+          "seconds": 0.000165084,
+          "wall": 0.006111750000854954,
+          "source_search_phase_seconds": 2.2708e-05,
+          "rhs_phase_seconds": 2.9085e-05,
+          "repair_phase_seconds": 1.4665000000000001e-05,
+          "verify_seconds": 1.3334e-05
+        },
+        "reference": {
+          "seconds": 0.000199416,
+          "wall": 0.006490083003882319,
+          "source_search_phase_seconds": 5.325e-05,
+          "rhs_phase_seconds": 2.6416e-05,
+          "repair_phase_seconds": 1.5376e-05
+        }
+      },
+      {
+        "reference": {
+          "seconds": 0.000210083,
+          "wall": 0.0065681250125635415,
+          "source_search_phase_seconds": 5.7583e-05,
+          "rhs_phase_seconds": 2.7042000000000003e-05,
+          "repair_phase_seconds": 1.6e-05
+        },
+        "replay": {
+          "seconds": 0.000177875,
+          "wall": 0.006589999989955686,
+          "source_search_phase_seconds": 2.5751e-05,
+          "rhs_phase_seconds": 2.7791000000000002e-05,
+          "repair_phase_seconds": 1.4375e-05,
+          "verify_seconds": 1.4918e-05
+        }
+      },
+      {
+        "replay": {
+          "seconds": 0.000202834,
+          "wall": 0.006192874992848374,
+          "source_search_phase_seconds": 3.2458e-05,
+          "rhs_phase_seconds": 3.2667e-05,
+          "repair_phase_seconds": 1.5083000000000001e-05,
+          "verify_seconds": 1.8334e-05
+        },
+        "reference": {
+          "seconds": 0.000172916,
+          "wall": 0.005798999991384335,
+          "source_search_phase_seconds": 4.8542e-05,
+          "rhs_phase_seconds": 2.3041e-05,
+          "repair_phase_seconds": 1.2875e-05
+        }
+      }
+    ],
+    "engine_ratio": 1.1945189150239544,
+    "wall_ratio": 1.0292915726376877,
+    "oracle_wall_wins": 2,
+    "oracle_engine_wins": 3,
+    "zero_search_bound": 1.3709526262414866
+  },
+  "jacobi-1d": {
+    "scope": "full schedule",
+    "program": "36394e6af88e962527a232db783fbb39e8ffb95e0fabf8087c68c013f4c43a95",
+    "receiver": "d1b8a14fb1fcaca8825712ed0b02d811895000622e7c5d5b097e31eb77a9a62a",
+    "tape": "71ce6f101f9de7d8081768cbe81d5f57cbd3950dd14dd2639f1086ee56013865",
+    "runs": 1990,
+    "commits": 41319,
+    "state_sha": "5d0697aca8a7dc341194762971ed851bf3baf442e2948dfaa471c740543ee2d5",
+    "rounds": [
+      {
+        "reference": {
+          "seconds": 0.128944625,
+          "wall": 0.3217387499898905,
+          "source_search_phase_seconds": 0.05373936699999877,
+          "rhs_phase_seconds": 0.03339951099999944,
+          "repair_phase_seconds": 0.013241946999999926
+        },
+        "replay": {
+          "seconds": 0.105234,
+          "wall": 0.3061249169986695,
+          "source_search_phase_seconds": 0.03403145999999998,
+          "rhs_phase_seconds": 0.04397008499999943,
+          "repair_phase_seconds": 0.012566294999999946,
+          "verify_seconds": 0.025108936
+        }
+      },
+      {
+        "replay": {
+          "seconds": 0.103670583,
+          "wall": 0.30417108300025575,
+          "source_search_phase_seconds": 0.033585627000000014,
+          "rhs_phase_seconds": 0.042705103999999425,
+          "repair_phase_seconds": 0.01245316799999993,
+          "verify_seconds": 0.024819403
+        },
+        "reference": {
+          "seconds": 0.125578375,
+          "wall": 0.3131777090020478,
+          "source_search_phase_seconds": 0.05226892899999878,
+          "rhs_phase_seconds": 0.03269015499999948,
+          "repair_phase_seconds": 0.013068490999999963
+        }
+      },
+      {
+        "reference": {
+          "seconds": 0.124666042,
+          "wall": 0.31905537500279024,
+          "source_search_phase_seconds": 0.05183121099999873,
+          "rhs_phase_seconds": 0.032574380999999486,
+          "repair_phase_seconds": 0.01276395299999997
+        },
+        "replay": {
+          "seconds": 0.10467725,
+          "wall": 0.30259700000169687,
+          "source_search_phase_seconds": 0.03336934199999991,
+          "rhs_phase_seconds": 0.043678189999999374,
+          "repair_phase_seconds": 0.012848443999999973,
+          "verify_seconds": 0.02491102
+        }
+      },
+      {
+        "replay": {
+          "seconds": 0.1044785,
+          "wall": 0.30313050000404473,
+          "source_search_phase_seconds": 0.03327101999999989,
+          "rhs_phase_seconds": 0.04319864299999941,
+          "repair_phase_seconds": 0.01312340299999994,
+          "verify_seconds": 0.024625013
+        },
+        "reference": {
+          "seconds": 0.12594475,
+          "wall": 0.3125670830049785,
+          "source_search_phase_seconds": 0.05321741899999876,
+          "rhs_phase_seconds": 0.03276094899999951,
+          "repair_phase_seconds": 0.012784150999999943
+        }
+      }
+    ],
+    "engine_ratio": 1.2083910660562087,
+    "wall_ratio": 1.0410676035933066,
+    "oracle_wall_wins": 4,
+    "oracle_engine_wins": 4,
+    "zero_search_bound": 1.7137798244013813
+  },
+  "path-chain160": {
+    "scope": "all inference Runs; trailing check executed only by full reference",
+    "program": "c3f7ffa353ca73a13458bb3fb69a86dd470e21e6839190b53cc3d9a8ee8555b5",
+    "receiver": "d1b8a14fb1fcaca8825712ed0b02d811895000622e7c5d5b097e31eb77a9a62a",
+    "tape": "c9292394283308f08125adca5f1940ec74dcfc7c63a76ca1fd49630347d82b80",
+    "runs": 161,
+    "commits": 12880,
+    "state_sha": "336ab039b8d3a5308505f16d08ee2cfb7acb79ca6dc8e32806664f5c6f4e79aa",
+    "rounds": [
+      {
+        "reference": {
+          "seconds": 0.013735958,
+          "wall": 0.045660250005312264,
+          "source_search_phase_seconds": 0.005027499000000002,
+          "rhs_phase_seconds": 0.006036083000000001,
+          "repair_phase_seconds": 6.377000000000001e-06
+        },
+        "replay": {
+          "seconds": 0.01869,
+          "wall": 0.05220020900014788,
+          "source_search_phase_seconds": 0.006041255,
+          "rhs_phase_seconds": 0.008755078,
+          "repair_phase_seconds": 8.501000000000002e-06,
+          "verify_seconds": 0.005668747
+        }
+      },
+      {
+        "replay": {
+          "seconds": 0.017821083,
+          "wall": 0.05175870801031124,
+          "source_search_phase_seconds": 0.005917419999999997,
+          "rhs_phase_seconds": 0.008160297999999998,
+          "repair_phase_seconds": 7.661999999999999e-06,
+          "verify_seconds": 0.005526913
+        },
+        "reference": {
+          "seconds": 0.014800167,
+          "wall": 0.046711082992260344,
+          "source_search_phase_seconds": 0.005224040000000002,
+          "rhs_phase_seconds": 0.006650251999999999,
+          "repair_phase_seconds": 7.248999999999999e-06
+        }
+      },
+      {
+        "reference": {
+          "seconds": 0.014348792,
+          "wall": 0.04680312499112915,
+          "source_search_phase_seconds": 0.005166293999999999,
+          "rhs_phase_seconds": 0.006412163999999998,
+          "repair_phase_seconds": 6.668e-06
+        },
+        "replay": {
+          "seconds": 0.016465875,
+          "wall": 0.05036441600532271,
+          "source_search_phase_seconds": 0.005603376,
+          "rhs_phase_seconds": 0.007606666999999998,
+          "repair_phase_seconds": 7.248999999999999e-06,
+          "verify_seconds": 0.005250126
+        }
+      },
+      {
+        "replay": {
+          "seconds": 0.0184445,
+          "wall": 0.0513725000055274,
+          "source_search_phase_seconds": 0.006014957999999998,
+          "rhs_phase_seconds": 0.008528131,
+          "repair_phase_seconds": 8.830000000000009e-06,
+          "verify_seconds": 0.005636582
+        },
+        "reference": {
+          "seconds": 0.013986834,
+          "wall": 0.045039207994705066,
+          "source_search_phase_seconds": 0.004910967999999994,
+          "rhs_phase_seconds": 0.006313113000000003,
+          "repair_phase_seconds": 7.126999999999996e-06
+        }
+      }
+    ],
+    "engine_ratio": 0.7944032187850842,
+    "wall_ratio": 0.8895980032228807,
+    "oracle_wall_wins": 0,
+    "oracle_engine_wins": 0,
+    "zero_search_bound": 1.554075730877897
+  },
+  "points-to": {
+    "scope": "all inference Runs; trailing check executed only by full reference",
+    "program": "b1b57803314ea72fe1e63accfd5f95bf301cd6d5ba71ea74f1b7320c51c76c9c",
+    "receiver": "d1b8a14fb1fcaca8825712ed0b02d811895000622e7c5d5b097e31eb77a9a62a",
+    "tape": "a2ae747cd6ac6c53c2593bd83946afb786a6c3259494c5da270882c0ac4e0a78",
+    "runs": 3,
+    "commits": 5,
+    "state_sha": "1fc7470f0369d6d2b9c89b95b61070de505a22b5f1f9a548d86ba826065f91a9",
+    "rounds": [
+      {
+        "reference": {
+          "seconds": 0.000156542,
+          "wall": 0.006962625004234724,
+          "source_search_phase_seconds": 4.2749999999999996e-05,
+          "rhs_phase_seconds": 1.2166e-05,
+          "repair_phase_seconds": 1.125e-06
+        },
+        "replay": {
+          "seconds": 0.000178333,
+          "wall": 0.00799270800780505,
+          "source_search_phase_seconds": 1.5917e-05,
+          "rhs_phase_seconds": 1.6499e-05,
+          "repair_phase_seconds": 1.9590000000000002e-06,
+          "verify_seconds": 1.017e-05
+        }
+      },
+      {
+        "replay": {
+          "seconds": 0.000165666,
+          "wall": 0.007797625003149733,
+          "source_search_phase_seconds": 1.8375e-05,
+          "rhs_phase_seconds": 1.6334e-05,
+          "repair_phase_seconds": 1.416e-06,
+          "verify_seconds": 1.2291e-05
+        },
+        "reference": {
+          "seconds": 0.0001865,
+          "wall": 0.007511082993005402,
+          "source_search_phase_seconds": 5.4833e-05,
+          "rhs_phase_seconds": 1.5042e-05,
+          "repair_phase_seconds": 1.1240000000000002e-06
+        }
+      },
+      {
+        "reference": {
+          "seconds": 0.000179292,
+          "wall": 0.007024500009720214,
+          "source_search_phase_seconds": 4.1125e-05,
+          "rhs_phase_seconds": 1.2625e-05,
+          "repair_phase_seconds": 1.1250000000000002e-06
+        },
+        "replay": {
+          "seconds": 0.0001515,
+          "wall": 0.007285874991794117,
+          "source_search_phase_seconds": 1.3666e-05,
+          "rhs_phase_seconds": 1.5542e-05,
+          "repair_phase_seconds": 1.4170000000000002e-06,
+          "verify_seconds": 8.209e-06
+        }
+      },
+      {
+        "replay": {
+          "seconds": 0.000152875,
+          "wall": 0.0074570419965311885,
+          "source_search_phase_seconds": 1.3874e-05,
+          "rhs_phase_seconds": 1.5125e-05,
+          "repair_phase_seconds": 1.542e-06,
+          "verify_seconds": 8.084e-06
+        },
+        "reference": {
+          "seconds": 0.00017425,
+          "wall": 0.006900333013618365,
+          "source_search_phase_seconds": 4.7333e-05,
+          "rhs_phase_seconds": 1.3374000000000001e-05,
+          "repair_phase_seconds": 1.126e-06
+        }
+      }
+    ],
+    "engine_ratio": 1.1327895859265606,
+    "wall_ratio": 0.9442985923599807,
+    "oracle_wall_wins": 0,
+    "oracle_engine_wins": 3,
+    "zero_search_bound": 1.374314991995358
+  },
+  "points-to-256": {
+    "scope": "all inference Runs; trailing check executed only by full reference",
+    "program": "0879f1bb02616bb31baf518b480f8980fdf0e9a6909b3ae557c57f15276e2c85",
+    "receiver": "d1b8a14fb1fcaca8825712ed0b02d811895000622e7c5d5b097e31eb77a9a62a",
+    "tape": "ded9b3f32e061c49e8c91fdbaeaf8c99e1a3536ff1a5cf8896bc70106710bbb8",
+    "runs": 4,
+    "commits": 1285,
+    "state_sha": "2e38884901826676df38ab39680521a778bbbdd36a6bb91110b3718d9474f8b3",
+    "rounds": [
+      {
+        "reference": {
+          "seconds": 0.00582725,
+          "wall": 0.02448387500771787,
+          "source_search_phase_seconds": 0.0018200000000000002,
+          "rhs_phase_seconds": 0.0008021660000000001,
+          "repair_phase_seconds": 1.751e-06
+        },
+        "replay": {
+          "seconds": 0.004649792,
+          "wall": 0.025467582992860116,
+          "source_search_phase_seconds": 0.000655666,
+          "rhs_phase_seconds": 0.000887876,
+          "repair_phase_seconds": 1.791e-06,
+          "verify_seconds": 0.000613042
+        }
+      },
+      {
+        "replay": {
+          "seconds": 0.004684292,
+          "wall": 0.024901249998947605,
+          "source_search_phase_seconds": 0.0007006269999999999,
+          "rhs_phase_seconds": 0.000896291,
+          "repair_phase_seconds": 1.9170000000000005e-06,
+          "verify_seconds": 0.000649875
+        },
+        "reference": {
+          "seconds": 0.005633209,
+          "wall": 0.024621375006972812,
+          "source_search_phase_seconds": 0.001791124,
+          "rhs_phase_seconds": 0.000819583,
+          "repair_phase_seconds": 2.126e-06
+        }
+      },
+      {
+        "reference": {
+          "seconds": 0.005618041,
+          "wall": 0.024785458997939713,
+          "source_search_phase_seconds": 0.0017356250000000002,
+          "rhs_phase_seconds": 0.0007735000000000001,
+          "repair_phase_seconds": 1.667e-06
+        },
+        "replay": {
+          "seconds": 0.005143167,
+          "wall": 0.024256125005194917,
+          "source_search_phase_seconds": 0.0007025429999999999,
+          "rhs_phase_seconds": 0.000948416,
+          "repair_phase_seconds": 2.291e-06,
+          "verify_seconds": 0.000653374
+        }
+      },
+      {
+        "replay": {
+          "seconds": 0.004786417,
+          "wall": 0.025232207990484312,
+          "source_search_phase_seconds": 0.000712291,
+          "rhs_phase_seconds": 0.000987333,
+          "repair_phase_seconds": 2.041e-06,
+          "verify_seconds": 0.000666373
+        },
+        "reference": {
+          "seconds": 0.005347416,
+          "wall": 0.024645707992021926,
+          "source_search_phase_seconds": 0.0016405,
+          "rhs_phase_seconds": 0.000739459,
+          "repair_phase_seconds": 4.873999999999999e-06
+        }
+      }
+    ],
+    "engine_ratio": 1.1598903623125714,
+    "wall_ratio": 0.9827582517063733,
+    "oracle_wall_wins": 1,
+    "oracle_engine_wins": 4,
+    "zero_search_bound": 1.450612233823196
+  }
+}

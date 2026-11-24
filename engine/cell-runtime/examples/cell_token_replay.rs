@@ -120,6 +120,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     let search: f64 = engine.steps.iter().map(|s| s.phases.search).sum();
     let mut report = json!({
+        "rhs_phase_seconds": engine.steps.iter().map(|s| s.phases.rhs).sum::<f64>(),
         "source_search_phase_seconds": search, "repair_phase_seconds":engine.steps.iter().map(|s|s.phases.repair).sum::<f64>(),
         "role":role,"run_limit":limit,"seconds":elapsed,"state_sha":format!("{:x}",Sha256::digest(export)),
         "matches":engine.steps.iter().map(|s|s.executed_bindings).sum::<usize>(),
