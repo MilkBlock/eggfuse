@@ -45,6 +45,14 @@ Before optimizing the Cell CPU path, check whether a new iteration can learn fro
 
 ## Recursive neural Cell generation and verification
 
+Declare the research track and execution mode of each experiment.
+
+- **Neural Execution** applies B2. The generator chooses named proofs from typed, seminaive-visible ports. Its verifier may check only the named evidence.
+- **Symbolic Execution** permits compiled exact joins. Charge candidate discovery to the symbolic executor, including in hybrid controls where a network ranks those candidates.
+- **Neural Compilation** permits exact execution of proposed and Bake-checked structures. Compare selection with equal-budget compiler heuristics and distinguish offline packaging opportunities from executed takeovers.
+
+Report each track separately when running shared workloads.
+
 Use single-threaded CPU policy inference with the authoritative Rust Cell runtime as
 the primary baseline for new neural studies. Train in PyTorch offline and export
 the checkpoint and static compiler features. The current two-level forest can
