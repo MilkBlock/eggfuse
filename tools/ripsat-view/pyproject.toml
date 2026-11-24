@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ripsat-view"
-version = "0.1.1"
+version = "0.2.0"
 description = "Offline RipSat Bake catalog viewer"
 requires-python = ">=3.8"
 
@@ -12,4 +12,4 @@ requires-python = ">=3.8"
 ripsat-view = "ripsat_view.__main__:main"
 
 [tool.setuptools.package-data]
-ripsat_view = ["viewer.html"]
+ripsat_view = ["viewer.html", "egraph.html"]
