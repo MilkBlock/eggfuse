@@ -1,6 +1,7 @@
 """Independent native threshold sweeps and budget prefixes of the same live stream."""
 
 import argparse
+import json
 from pathlib import Path
 from time import perf_counter
 import torch
@@ -102,7 +103,17 @@ def experiment(root, out, case, arm, cut, repeat=0):
     if prior.exists():
         reference = read(prior)["arms"]["A"][0]
     else:
-        base = m if arm == "A" and cut == 0 else read(out / f"{case}_A_0_0.json")
+        if arm == "A" and cut == 0:
+            base = m
+        elif (out / f"{case}_A_0_0.json").exists():
+            base = read(out / f"{case}_A_0_0.json")
+        else:
+            with (out / f"rollouts-{case}.jsonl").open() as archive:
+                base = next(
+                    row
+                    for row in map(json.loads, archive)
+                    if row["arm"] == "A" and row["threshold"] == 0
+                )
         reference = dict(
             work=base["work"],
             all_paid=base["paid"] + base["work"].get("neural_controls", 0),

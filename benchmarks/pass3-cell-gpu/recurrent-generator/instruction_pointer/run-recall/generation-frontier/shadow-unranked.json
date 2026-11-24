@@ -1,0 +1,394 @@
+{
+  "cyk801": {
+    "0.0": {
+      "runs": 24,
+      "reference": 4799,
+      "matched": 4799,
+      "first_fraction_per_run": {
+        "1": {
+          "probes": 282,
+          "distinct_teacher": 43,
+          "later_consumed": 31
+        },
+        "10": {
+          "probes": 2715,
+          "distinct_teacher": 483,
+          "later_consumed": 357
+        },
+        "50": {
+          "probes": 13530,
+          "distinct_teacher": 2400,
+          "later_consumed": 1819
+        },
+        "100": {
+          "probes": 27059,
+          "distinct_teacher": 4799,
+          "later_consumed": 3544
+        }
+      },
+      "literal_proposals": 4799,
+      "proposed": 27059,
+      "by_run": {
+        "1": [
+          1445,
+          1445
+        ],
+        "2": [
+          634,
+          634
+        ],
+        "3": [
+          856,
+          856
+        ],
+        "4": [
+          346,
+          346
+        ],
+        "5": [
+          184,
+          184
+        ],
+        "6": [
+          164,
+          164
+        ],
+        "7": [
+          162,
+          162
+        ],
+        "8": [
+          164,
+          164
+        ],
+        "9": [
+          104,
+          104
+        ],
+        "10": [
+          80,
+          80
+        ],
+        "11": [
+          100,
+          100
+        ],
+        "12": [
+          100,
+          100
+        ],
+        "13": [
+          100,
+          100
+        ],
+        "14": [
+          40,
+          40
+        ],
+        "15": [
+          40,
+          40
+        ],
+        "16": [
+          40,
+          40
+        ],
+        "17": [
+          40,
+          40
+        ],
+        "18": [
+          40,
+          40
+        ],
+        "19": [
+          20,
+          20
+        ],
+        "20": [
+          20,
+          20
+        ],
+        "21": [
+          40,
+          40
+        ],
+        "22": [
+          40,
+          40
+        ],
+        "23": [
+          20,
+          20
+        ],
+        "24": [
+          20,
+          20
+        ]
+      }
+    }
+  },
+  "grammar-benefit-held-deep-11901379": {
+    "0.0": {
+      "runs": 6,
+      "reference": 44,
+      "matched": 44,
+      "first_fraction_per_run": {
+        "1": {
+          "probes": 6,
+          "distinct_teacher": 4,
+          "later_consumed": 4
+        },
+        "10": {
+          "probes": 22,
+          "distinct_teacher": 7,
+          "later_consumed": 6
+        },
+        "50": {
+          "probes": 102,
+          "distinct_teacher": 22,
+          "later_consumed": 11
+        },
+        "100": {
+          "probes": 204,
+          "distinct_teacher": 44,
+          "later_consumed": 25
+        }
+      },
+      "literal_proposals": 44,
+      "proposed": 204,
+      "by_run": {
+        "1": [
+          18,
+          18
+        ],
+        "2": [
+          16,
+          16
+        ],
+        "3": [
+          6,
+          6
+        ],
+        "4": [
+          2,
+          2
+        ],
+        "5": [
+          2,
+          2
+        ]
+      }
+    }
+  },
+  "fact": {
+    "0.0": {
+      "runs": 24,
+      "reference": 112,
+      "matched": 66,
+      "first_fraction_per_run": {
+        "1": {
+          "probes": 16,
+          "distinct_teacher": 16,
+          "later_consumed": 8
+        },
+        "10": {
+          "probes": 27,
+          "distinct_teacher": 23,
+          "later_consumed": 10
+        },
+        "50": {
+          "probes": 91,
+          "distinct_teacher": 50,
+          "later_consumed": 22
+        },
+        "100": {
+          "probes": 173,
+          "distinct_teacher": 66,
+          "later_consumed": 30
+        }
+      },
+      "literal_proposals": 58,
+      "proposed": 173,
+      "by_run": {
+        "1": [
+          1,
+          1
+        ],
+        "2": [
+          1,
+          1
+        ],
+        "3": [
+          2,
+          2
+        ],
+        "4": [
+          1,
+          2
+        ],
+        "6": [
+          10,
+          10
+        ],
+        "7": [
+          4,
+          4
+        ],
+        "9": [
+          21,
+          21
+        ],
+        "12": [
+          6,
+          14
+        ],
+        "13": [
+          2,
+          4
+        ],
+        "14": [
+          3,
+          4
+        ],
+        "15": [
+          3,
+          4
+        ],
+        "17": [
+          3,
+          20
+        ],
+        "20": [
+          1,
+          17
+        ],
+        "21": [
+          2,
+          2
+        ],
+        "22": [
+          2,
+          2
+        ],
+        "23": [
+          4,
+          4
+        ]
+      }
+    }
+  },
+  "sum-divisors": {
+    "0.0": {
+      "runs": 24,
+      "reference": 269,
+      "matched": 117,
+      "first_fraction_per_run": {
+        "1": {
+          "probes": 15,
+          "distinct_teacher": 13,
+          "later_consumed": 7
+        },
+        "10": {
+          "probes": 38,
+          "distinct_teacher": 25,
+          "later_consumed": 11
+        },
+        "50": {
+          "probes": 151,
+          "distinct_teacher": 76,
+          "later_consumed": 36
+        },
+        "100": {
+          "probes": 295,
+          "distinct_teacher": 117,
+          "later_consumed": 61
+        }
+      },
+      "literal_proposals": 109,
+      "proposed": 295,
+      "by_run": {
+        "1": [
+          1,
+          1
+        ],
+        "2": [
+          1,
+          1
+        ],
+        "3": [
+          2,
+          2
+        ],
+        "4": [
+          1,
+          2
+        ],
+        "5": [
+          0,
+          2
+        ],
+        "6": [
+          0,
+          1
+        ],
+        "7": [
+          0,
+          1
+        ],
+        "8": [
+          0,
+          1
+        ],
+        "9": [
+          0,
+          2
+        ],
+        "11": [
+          36,
+          36
+        ],
+        "12": [
+          25,
+          25
+        ],
+        "14": [
+          39,
+          39
+        ],
+        "17": [
+          3,
+          62
+        ],
+        "18": [
+          3,
+          26
+        ],
+        "19": [
+          2,
+          25
+        ],
+        "20": [
+          2,
+          11
+        ],
+        "21": [
+          0,
+          8
+        ],
+        "22": [
+          0,
+          8
+        ],
+        "23": [
+          1,
+          8
+        ],
+        "24": [
+          1,
+          8
+        ]
+      }
+    }
+  }
+}

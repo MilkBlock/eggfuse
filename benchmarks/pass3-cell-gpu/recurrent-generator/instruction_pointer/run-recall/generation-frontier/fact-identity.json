@@ -1,0 +1,176 @@
+{
+  "fact": {
+    "zero": {
+      "shared": 363,
+      "gained": 0,
+      "lost": 0,
+      "gained_by_table": {},
+      "lost_by_table": {}
+    },
+    "against_any_A": {
+      "shared": 378,
+      "gained": 0,
+      "lost": 6,
+      "gained_by_table": {},
+      "lost_by_table": {
+        "ExprIsResolved": 2,
+        "ExprIsPure": 3,
+        "CellSpineApplied183": 1
+      }
+    },
+    "against_any_baseline": {
+      "shared": 378,
+      "gained": 0,
+      "lost": 6,
+      "gained_by_table": {},
+      "lost_by_table": {
+        "ExprIsResolved": 2,
+        "ExprIsPure": 3,
+        "CellSpineApplied183": 1
+      }
+    },
+    "counts": {
+      "A": {
+        "-6.0": 382,
+        "-3.0": 363,
+        "-1.0": 363,
+        "0.0": 363,
+        "1.0": 150,
+        "3.0": 32
+      },
+      "B": {
+        "-6.0": 363,
+        "-3.0": 344,
+        "-1.0": 245,
+        "0.0": 227,
+        "1.0": 189,
+        "3.0": 44
+      },
+      "residual": {
+        "-6.0": 382,
+        "-3.0": 363,
+        "-1.0": 363,
+        "0.0": 363,
+        "1.0": 150,
+        "3.0": 32
+      },
+      "fixed": {
+        "0": 363
+      },
+      "trained": {
+        "-6.0": 363,
+        "-3.0": 363,
+        "-1.0": 363,
+        "0.0": 363,
+        "1.0": 373,
+        "3.0": 296
+      }
+    }
+  },
+  "sum-divisors": {
+    "zero": {
+      "shared": 1362,
+      "gained": 221,
+      "lost": 42,
+      "gained_by_table": {
+        "SubTuple": 15,
+        "CellSpineView16": 7,
+        "CellSpineView9": 7,
+        "ExtractedExprCache": 14,
+        "CellSpineApplied119": 14,
+        "ExprIsResolved": 15,
+        "Concat": 31,
+        "Smaller": 7,
+        "leading-Expr": 7,
+        "Expr-size": 15,
+        "PotentialExtractedExpr": 14,
+        "CellSpineView8": 14,
+        "TermConcat": 7,
+        "CellSpineApplied122": 7,
+        "CellSpineView28": 7,
+        "ContextOf": 15,
+        "BodyContainsExpr": 4,
+        "ExtractedExpr": 14,
+        "TCPair": 7
+      },
+      "lost_by_table": {
+        "Expr-size": 10,
+        "CellSpineView28": 4,
+        "PotentialExtractedExpr": 7,
+        "ExtractedExpr": 2,
+        "CellSpineView8": 7,
+        "ExtractedExprCache": 2,
+        "TCPair": 4,
+        "CellSpineApplied119": 2,
+        "TermBop": 4
+      }
+    },
+    "against_any_A": {
+      "shared": 1613,
+      "gained": 0,
+      "lost": 15,
+      "gained_by_table": {},
+      "lost_by_table": {
+        "ExprIsPure": 2,
+        "PotentialExtractedExpr": 3,
+        "CellSpineApplied183": 1,
+        "ExtractedExpr": 2,
+        "CellSpineView8": 3,
+        "ExtractedExprCache": 2,
+        "CellSpineApplied119": 2
+      }
+    },
+    "against_any_baseline": {
+      "shared": 1613,
+      "gained": 0,
+      "lost": 15,
+      "gained_by_table": {},
+      "lost_by_table": {
+        "ExprIsPure": 2,
+        "PotentialExtractedExpr": 3,
+        "CellSpineApplied183": 1,
+        "ExtractedExpr": 2,
+        "CellSpineView8": 3,
+        "ExtractedExprCache": 2,
+        "CellSpineApplied119": 2
+      }
+    },
+    "counts": {
+      "A": {
+        "-6.0": 1611,
+        "-3.0": 1613,
+        "-1.0": 1613,
+        "0.0": 1404,
+        "1.0": 325,
+        "3.0": 101
+      },
+      "B": {
+        "-6.0": 1613,
+        "-3.0": 1429,
+        "-1.0": 911,
+        "0.0": 770,
+        "1.0": 674,
+        "3.0": 132
+      },
+      "residual": {
+        "-6.0": 1611,
+        "-3.0": 1613,
+        "-1.0": 1613,
+        "0.0": 1404,
+        "1.0": 325,
+        "3.0": 101
+      },
+      "fixed": {
+        "0": 1404
+      },
+      "trained": {
+        "-6.0": 1613,
+        "-3.0": 1613,
+        "-1.0": 1605,
+        "0.0": 1583,
+        "1.0": 1569,
+        "3.0": 816
+      }
+    }
+  }
+}

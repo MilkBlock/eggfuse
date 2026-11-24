@@ -1,0 +1,82 @@
+{
+  "case": "sum-divisors",
+  "arm": "higher",
+  "repeat": 3,
+  "wall": 0.15818387499894015,
+  "coverage": 3,
+  "reference": 8018,
+  "paid": 1,
+  "signed": 3,
+  "ept": 3.0,
+  "eps": 18.965270638490175,
+  "visits": 0,
+  "work": {},
+  "generation": {
+    "recognition_scores": 1,
+    "higher_issued": 1
+  },
+  "counts": {
+    "accepted": 2,
+    "calls": 588,
+    "duplicates": 0,
+    "reads": 1,
+    "reads_by_kind": {
+      "generated": 1
+    },
+    "rejected": {}
+  },
+  "layouts": {
+    "counts": {
+      "accepted_steps": 1,
+      "attached_roots": 0,
+      "boundary_reads": 0,
+      "completed_layouts": {
+        "208": 1
+      },
+      "completed_sizes": {
+        "2": 1
+      },
+      "invalid_boundary": 0,
+      "issued_layouts": {
+        "208": 1
+      },
+      "issued_steps": 1,
+      "missing_returns": 0,
+      "rejected_groups": 0,
+      "signed_layouts": 1
+    },
+    "outstanding": 0
+  },
+  "ledger": {
+    "kinds": [
+      "visible_birth",
+      "function_write",
+      "effective_union",
+      "visibility_change"
+    ],
+    "ledger_sha256": "e3912ab80f17fedad6c38a85e38b94d5a162b056d93699f4c829ca2e88319aa8",
+    "runs": 272,
+    "signed_external": [
+      1,
+      1,
+      0,
+      0
+    ],
+    "signed_internal": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "uncredited": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "sha": "718d07b4dc790ea211b01afe5ce2845ca02036a51f131e53559c5c7eb3364690",
+  "verify": 1.5013e-05,
+  "runs": 272,
+  "build": "63bbdf76844f124e190b20b64707e6d6c8adf1849a4d20f56fc30ea10760f0d0"
+}

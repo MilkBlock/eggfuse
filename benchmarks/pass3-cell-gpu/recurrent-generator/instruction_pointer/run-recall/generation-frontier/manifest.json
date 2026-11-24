@@ -1,0 +1,100 @@
+{
+  "weights_and_build": {
+    "native": "63bbdf76844f124e190b20b64707e6d6c8adf1849a4d20f56fc30ea10760f0d0",
+    "compose": "193103af9bb00441686225df42bea2266882dc0df36930c4bffe551382399184",
+    "field": "2ba121556a2e659559d133efa9cd078eed38b065ac4182e4bc6f1cd7e4522a3d",
+    "route": "3ec618ef5d5e6737c4c6bd171ca0341ddf8824b09082f25234f7ac95886e2be7",
+    "chain_route": "2772a18cb16d79fd0f74b6a23d42e84fd533dfa1a4460718d1589e2afbc1cc01",
+    "typed": "5d39ee15329b6c22b7b6768bfc2f48b8f2c49af5e98bb7ef3586bfc776a70b8a",
+    "residual": "81ce235016b570329d9efd7b3f8b74773515f48197bf5d126889bc84ede570a8",
+    "outcomes": "cf052033c9752f12503ccc56aefdc3062c7b971895903bbf60e9b26a8ff9d402",
+    "higher": "d9a90a11ef40fab65c33c29f447fbd6fa4b97c44ffbbe81730ed0153b062b448",
+    "catalog": "ee476c5b73a7357fab4a18711a0dc59bbc705514ff1e8723850b70d7c45d8a39",
+    "codes": "fc54d71dee68069d0ef41779203ff1502d32a722967c53770783036eb512fb08"
+  },
+  "programs": {
+    "cyk801": {
+      "program": "6be25ea2956abf9043d505b514be90019f35ea607a2761d606c225fc1c2929eb",
+      "teacher": "447b56adba57621580cc01179a2df6afad7e96c15a0cb5eaafc7042758afe05c"
+    },
+    "grammar-benefit-held-deep-11901379": {
+      "program": "9ec09a121ade333a5ae98bb41aafb196520f00503b77896500a09db71406e1ef",
+      "teacher": "421c3a81f669b9643e4c0b35d488c08cc59bc01c8f3711d0a63064c8052c7f41"
+    },
+    "fact": {
+      "program": "f4da1650af5393f3f07d5d20d092e26270ae58090266dd197113dd295ffaf900",
+      "teacher": "e34de3bf62e6a0c89bd95ec97838c12f306bffcc6930ed45b1f4da9f2a0c7c42"
+    },
+    "sum-divisors": {
+      "program": "3b904063c8c7e580ec2030b452d831ee53478a28c3dfaecf17eeb7e853a0aaf8",
+      "teacher": "30da140008a764b2a6931777ee359bc657ce201a9667f1cf3d71ceb6cb6b484f"
+    },
+    "grammar-17122": {
+      "program": "6d7947748c942afd11210e03048410d19cda0780611799d020e74d233d27fa86",
+      "teacher": "ab1d0bd1a0686efd1e5baa1dcfb3faef29b4983351d9e9fa61957499044aea17"
+    },
+    "grammar-36719037": {
+      "program": "af489ca0dad7a55fdfdd706b00d0e74a4fd83d62f724394fd15c23711ed6391f",
+      "teacher": "f04f41470f154141559ea9355e97ca9e90882d6f58a41ad4964fd21976004e67"
+    },
+    "loopfact": {
+      "program": "8f6d2b1a5f5a593b73119d0bfded0aefee97315191cc5f3efcd6e35320beacba",
+      "teacher": "d877d81138ba44674aace8d33c447075e5fd5c8c1e76eaac7b8bb64f00675a20"
+    },
+    "grammar-17118": {
+      "program": "ae1d42f4769c5908cc7b867406a8800964ed30f3aa119f88279812b171568611",
+      "teacher": "c5ef1abe248d8ffadd389da0fe072f70954000295b9c070c810be02ae4d9bcf2"
+    },
+    "grammar-17119": {
+      "program": "e1a07251c05d1fb6f7abb04c901b6b08f7a604fba6fe2e323986c2eb4f7711c1",
+      "teacher": "56aac140c3f8fb1cf5a7a8ed5e8ae119967364972916c2f1e848a79bc886813a"
+    },
+    "grammar-stride2-17118": {
+      "program": "603be1852248748ca7c7ec026d4e7ae4580b2947b3caec5a349d625c2d9b0b84",
+      "teacher": "0dbdfabc143d661db6b12c1cc63ef82f81a1f78ddc822029a57b4690eb5182e8"
+    },
+    "grammar-benefit-fork-17120": {
+      "program": "61a035ee1da05c350173542d3761b66a7726b16ed8919679ea568900107c9224",
+      "teacher": "e0361fc5c8d9edae9e89ee23e46c79f3a55f1722a9561c9b3e73e645f0930581"
+    }
+  },
+  "layout_donor": "b3a14110b1543ee36a4048fb831ac54f165dee409e2ef5bde35838d37f29a574",
+  "layout_recognition": {
+    "fact": {
+      "eligible": 208,
+      "sizes": {
+        "2": 133,
+        "4": 22,
+        "3": 36,
+        "6": 5,
+        "5": 11,
+        "7": 1
+      },
+      "positive_training_layouts": 844,
+      "issued_layouts": {
+        "seen": 1690
+      },
+      "completed_layouts": {
+        "seen": 47
+      }
+    },
+    "sum-divisors": {
+      "eligible": 209,
+      "sizes": {
+        "2": 134,
+        "4": 22,
+        "3": 36,
+        "6": 5,
+        "5": 11,
+        "7": 1
+      },
+      "positive_training_layouts": 844,
+      "issued_layouts": {
+        "seen": 211277
+      },
+      "completed_layouts": {
+        "seen": 121
+      }
+    }
+  }
+}

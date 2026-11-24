@@ -1,0 +1,686 @@
+[
+  {
+    "arm": "A",
+    "threshold": 0,
+    "repeat": 1,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 204,
+    "signed_ops": 83,
+    "ept": 0.4068627450980392,
+    "eps": 2664.7581433196906,
+    "wall": 0.031147292000241578,
+    "native_verify_seconds": 0.000308885,
+    "verdicts": {
+      "accepted": 44,
+      "guard": 160
+    },
+    "visits": 830
+  },
+  {
+    "arm": "B",
+    "threshold": 0,
+    "repeat": 1,
+    "state_sha": "ef9f25fd3cb21fac1c79036058407fa6b7e8b2aec45b870eb11fa87627183680",
+    "coverage": 44,
+    "reference": 83,
+    "paid_total": 52,
+    "signed_ops": 44,
+    "ept": 0.8461538461538461,
+    "eps": 2056.3430523791826,
+    "wall": 0.0213972079945961,
+    "native_verify_seconds": 3.3796e-05,
+    "verdicts": {
+      "computed": 34,
+      "accepted": 18
+    },
+    "visits": 290
+  },
+  {
+    "arm": "residual",
+    "threshold": 0,
+    "repeat": 1,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 444,
+    "signed_ops": 83,
+    "ept": 0.18693693693693694,
+    "eps": 2133.443004144625,
+    "wall": 0.03890425000281539,
+    "native_verify_seconds": 0.000137497,
+    "verdicts": {
+      "accepted": 44,
+      "computed": 380
+    },
+    "visits": 668
+  },
+  {
+    "arm": "fixed",
+    "threshold": 0,
+    "repeat": 1,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 424,
+    "signed_ops": 83,
+    "ept": 0.1957547169811321,
+    "eps": 2434.823872262287,
+    "wall": 0.034088707994669676,
+    "native_verify_seconds": 0.000154871,
+    "verdicts": {
+      "accepted": 44,
+      "computed": 380
+    },
+    "visits": 668
+  },
+  {
+    "arm": "trained",
+    "threshold": 0,
+    "repeat": 1,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 204,
+    "signed_ops": 83,
+    "ept": 0.4068627450980392,
+    "eps": 2641.5559714404694,
+    "wall": 0.0314208750060061,
+    "native_verify_seconds": 0.000299389,
+    "verdicts": {
+      "accepted": 44,
+      "guard": 160
+    },
+    "visits": 830
+  },
+  {
+    "arm": "unranked",
+    "threshold": 0,
+    "repeat": 1,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 204,
+    "signed_ops": 83,
+    "ept": 0.4068627450980392,
+    "eps": 2489.0231077119115,
+    "wall": 0.03334641600667965,
+    "native_verify_seconds": 0.000313253,
+    "verdicts": {
+      "accepted": 44,
+      "guard": 160
+    },
+    "visits": 830
+  },
+  {
+    "arm": "A",
+    "threshold": -3,
+    "repeat": 1,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 204,
+    "signed_ops": 83,
+    "ept": 0.4068627450980392,
+    "eps": 2728.0869702091013,
+    "wall": 0.03042424999875948,
+    "native_verify_seconds": 0.000333455,
+    "verdicts": {
+      "accepted": 44,
+      "guard": 160
+    },
+    "visits": 830
+  },
+  {
+    "arm": "trained",
+    "threshold": -3,
+    "repeat": 1,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 204,
+    "signed_ops": 83,
+    "ept": 0.4068627450980392,
+    "eps": 2756.734702883842,
+    "wall": 0.030108083999948576,
+    "native_verify_seconds": 0.000310451,
+    "verdicts": {
+      "accepted": 44,
+      "guard": 160
+    },
+    "visits": 830
+  },
+  {
+    "arm": "A",
+    "threshold": -1,
+    "repeat": 1,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 204,
+    "signed_ops": 83,
+    "ept": 0.4068627450980392,
+    "eps": 2786.4036931966025,
+    "wall": 0.029787499996018596,
+    "native_verify_seconds": 0.000302114,
+    "verdicts": {
+      "accepted": 44,
+      "guard": 160
+    },
+    "visits": 830
+  },
+  {
+    "arm": "A",
+    "threshold": -1,
+    "repeat": 2,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 204,
+    "signed_ops": 83,
+    "ept": 0.4068627450980392,
+    "eps": 2767.270023750916,
+    "wall": 0.029993459000252187,
+    "native_verify_seconds": 0.000285448,
+    "verdicts": {
+      "accepted": 44,
+      "guard": 160
+    },
+    "visits": 830
+  },
+  {
+    "arm": "trained",
+    "threshold": -3,
+    "repeat": 2,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 204,
+    "signed_ops": 83,
+    "ept": 0.4068627450980392,
+    "eps": 2688.092294900352,
+    "wall": 0.030876916003762744,
+    "native_verify_seconds": 0.000309527,
+    "verdicts": {
+      "accepted": 44,
+      "guard": 160
+    },
+    "visits": 830
+  },
+  {
+    "arm": "A",
+    "threshold": -3,
+    "repeat": 2,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 204,
+    "signed_ops": 83,
+    "ept": 0.4068627450980392,
+    "eps": 2728.531707328274,
+    "wall": 0.030419290997087955,
+    "native_verify_seconds": 0.000309666,
+    "verdicts": {
+      "accepted": 44,
+      "guard": 160
+    },
+    "visits": 830
+  },
+  {
+    "arm": "unranked",
+    "threshold": 0,
+    "repeat": 2,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 204,
+    "signed_ops": 83,
+    "ept": 0.4068627450980392,
+    "eps": 2582.980826447324,
+    "wall": 0.032133417000295594,
+    "native_verify_seconds": 0.000333249,
+    "verdicts": {
+      "accepted": 44,
+      "guard": 160
+    },
+    "visits": 830
+  },
+  {
+    "arm": "trained",
+    "threshold": 0,
+    "repeat": 2,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 204,
+    "signed_ops": 83,
+    "ept": 0.4068627450980392,
+    "eps": 2550.34762660927,
+    "wall": 0.032544582994887605,
+    "native_verify_seconds": 0.000328664,
+    "verdicts": {
+      "accepted": 44,
+      "guard": 160
+    },
+    "visits": 830
+  },
+  {
+    "arm": "fixed",
+    "threshold": 0,
+    "repeat": 2,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 424,
+    "signed_ops": 83,
+    "ept": 0.1957547169811321,
+    "eps": 2492.3209482520565,
+    "wall": 0.03330229200946633,
+    "native_verify_seconds": 0.000152458,
+    "verdicts": {
+      "accepted": 44,
+      "computed": 380
+    },
+    "visits": 668
+  },
+  {
+    "arm": "residual",
+    "threshold": 0,
+    "repeat": 2,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 444,
+    "signed_ops": 83,
+    "ept": 0.18693693693693694,
+    "eps": 2218.524680669783,
+    "wall": 0.03741225000703707,
+    "native_verify_seconds": 0.000145584,
+    "verdicts": {
+      "accepted": 44,
+      "computed": 380
+    },
+    "visits": 668
+  },
+  {
+    "arm": "B",
+    "threshold": 0,
+    "repeat": 2,
+    "state_sha": "ef9f25fd3cb21fac1c79036058407fa6b7e8b2aec45b870eb11fa87627183680",
+    "coverage": 44,
+    "reference": 83,
+    "paid_total": 52,
+    "signed_ops": 44,
+    "ept": 0.8461538461538461,
+    "eps": 2235.398541777261,
+    "wall": 0.019683291000546888,
+    "native_verify_seconds": 2.3753e-05,
+    "verdicts": {
+      "computed": 34,
+      "accepted": 18
+    },
+    "visits": 290
+  },
+  {
+    "arm": "A",
+    "threshold": 0,
+    "repeat": 2,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 204,
+    "signed_ops": 83,
+    "ept": 0.4068627450980392,
+    "eps": 2778.1148144860836,
+    "wall": 0.029876375003368594,
+    "native_verify_seconds": 0.000299039,
+    "verdicts": {
+      "accepted": 44,
+      "guard": 160
+    },
+    "visits": 830
+  },
+  {
+    "arm": "trained",
+    "threshold": 0,
+    "repeat": 3,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 204,
+    "signed_ops": 83,
+    "ept": 0.4068627450980392,
+    "eps": 2594.331049155586,
+    "wall": 0.03199283299909439,
+    "native_verify_seconds": 0.000314708,
+    "verdicts": {
+      "accepted": 44,
+      "guard": 160
+    },
+    "visits": 830
+  },
+  {
+    "arm": "unranked",
+    "threshold": 0,
+    "repeat": 3,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 204,
+    "signed_ops": 83,
+    "ept": 0.4068627450980392,
+    "eps": 2654.7151179887514,
+    "wall": 0.03126512499875389,
+    "native_verify_seconds": 0.000320631,
+    "verdicts": {
+      "accepted": 44,
+      "guard": 160
+    },
+    "visits": 830
+  },
+  {
+    "arm": "A",
+    "threshold": -3,
+    "repeat": 3,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 204,
+    "signed_ops": 83,
+    "ept": 0.4068627450980392,
+    "eps": 2712.5734315352292,
+    "wall": 0.03059824999945704,
+    "native_verify_seconds": 0.000327202,
+    "verdicts": {
+      "accepted": 44,
+      "guard": 160
+    },
+    "visits": 830
+  },
+  {
+    "arm": "trained",
+    "threshold": -3,
+    "repeat": 3,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 204,
+    "signed_ops": 83,
+    "ept": 0.4068627450980392,
+    "eps": 1466.5325867416416,
+    "wall": 0.056596082999021746,
+    "native_verify_seconds": 0.000325462,
+    "verdicts": {
+      "accepted": 44,
+      "guard": 160
+    },
+    "visits": 830
+  },
+  {
+    "arm": "A",
+    "threshold": -1,
+    "repeat": 3,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 204,
+    "signed_ops": 83,
+    "ept": 0.4068627450980392,
+    "eps": 2621.5045244797416,
+    "wall": 0.03166120799141936,
+    "native_verify_seconds": 0.00033887,
+    "verdicts": {
+      "accepted": 44,
+      "guard": 160
+    },
+    "visits": 830
+  },
+  {
+    "arm": "A",
+    "threshold": 0,
+    "repeat": 3,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 204,
+    "signed_ops": 83,
+    "ept": 0.4068627450980392,
+    "eps": 2495.289989917027,
+    "wall": 0.03326266699878033,
+    "native_verify_seconds": 0.000334005,
+    "verdicts": {
+      "accepted": 44,
+      "guard": 160
+    },
+    "visits": 830
+  },
+  {
+    "arm": "B",
+    "threshold": 0,
+    "repeat": 3,
+    "state_sha": "ef9f25fd3cb21fac1c79036058407fa6b7e8b2aec45b870eb11fa87627183680",
+    "coverage": 44,
+    "reference": 83,
+    "paid_total": 52,
+    "signed_ops": 44,
+    "ept": 0.8461538461538461,
+    "eps": 2024.4777759152196,
+    "wall": 0.021734000009018928,
+    "native_verify_seconds": 3.9709e-05,
+    "verdicts": {
+      "computed": 34,
+      "accepted": 18
+    },
+    "visits": 290
+  },
+  {
+    "arm": "residual",
+    "threshold": 0,
+    "repeat": 3,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 444,
+    "signed_ops": 83,
+    "ept": 0.18693693693693694,
+    "eps": 1849.767664653664,
+    "wall": 0.044870500001707114,
+    "native_verify_seconds": 0.000177294,
+    "verdicts": {
+      "accepted": 44,
+      "computed": 380
+    },
+    "visits": 668
+  },
+  {
+    "arm": "fixed",
+    "threshold": 0,
+    "repeat": 3,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 424,
+    "signed_ops": 83,
+    "ept": 0.1957547169811321,
+    "eps": 2147.884875482553,
+    "wall": 0.038642667001113296,
+    "native_verify_seconds": 0.000179581,
+    "verdicts": {
+      "accepted": 44,
+      "computed": 380
+    },
+    "visits": 668
+  },
+  {
+    "arm": "fixed",
+    "threshold": 0,
+    "repeat": 4,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 424,
+    "signed_ops": 83,
+    "ept": 0.1957547169811321,
+    "eps": 2528.531662605353,
+    "wall": 0.03282537499035243,
+    "native_verify_seconds": 0.000131624,
+    "verdicts": {
+      "accepted": 44,
+      "computed": 380
+    },
+    "visits": 668
+  },
+  {
+    "arm": "residual",
+    "threshold": 0,
+    "repeat": 4,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 444,
+    "signed_ops": 83,
+    "ept": 0.18693693693693694,
+    "eps": 2090.8402584420173,
+    "wall": 0.039696958992863074,
+    "native_verify_seconds": 0.000143794,
+    "verdicts": {
+      "accepted": 44,
+      "computed": 380
+    },
+    "visits": 668
+  },
+  {
+    "arm": "B",
+    "threshold": 0,
+    "repeat": 4,
+    "state_sha": "ef9f25fd3cb21fac1c79036058407fa6b7e8b2aec45b870eb11fa87627183680",
+    "coverage": 44,
+    "reference": 83,
+    "paid_total": 52,
+    "signed_ops": 44,
+    "ept": 0.8461538461538461,
+    "eps": 1965.2837097133977,
+    "wall": 0.022388625002349727,
+    "native_verify_seconds": 3.0084e-05,
+    "verdicts": {
+      "computed": 34,
+      "accepted": 18
+    },
+    "visits": 290
+  },
+  {
+    "arm": "A",
+    "threshold": 0,
+    "repeat": 4,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 204,
+    "signed_ops": 83,
+    "ept": 0.4068627450980392,
+    "eps": 2682.355061741387,
+    "wall": 0.030942957993829623,
+    "native_verify_seconds": 0.000314709,
+    "verdicts": {
+      "accepted": 44,
+      "guard": 160
+    },
+    "visits": 830
+  },
+  {
+    "arm": "A",
+    "threshold": -1,
+    "repeat": 4,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 204,
+    "signed_ops": 83,
+    "ept": 0.4068627450980392,
+    "eps": 2675.323024282723,
+    "wall": 0.031024290990899317,
+    "native_verify_seconds": 0.000319568,
+    "verdicts": {
+      "accepted": 44,
+      "guard": 160
+    },
+    "visits": 830
+  },
+  {
+    "arm": "trained",
+    "threshold": -3,
+    "repeat": 4,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 204,
+    "signed_ops": 83,
+    "ept": 0.4068627450980392,
+    "eps": 2420.245546123685,
+    "wall": 0.03429404100461397,
+    "native_verify_seconds": 0.000357632,
+    "verdicts": {
+      "accepted": 44,
+      "guard": 160
+    },
+    "visits": 830
+  },
+  {
+    "arm": "A",
+    "threshold": -3,
+    "repeat": 4,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 204,
+    "signed_ops": 83,
+    "ept": 0.4068627450980392,
+    "eps": 2667.3201070284326,
+    "wall": 0.031117374994209968,
+    "native_verify_seconds": 0.00030813,
+    "verdicts": {
+      "accepted": 44,
+      "guard": 160
+    },
+    "visits": 830
+  },
+  {
+    "arm": "unranked",
+    "threshold": 0,
+    "repeat": 4,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 204,
+    "signed_ops": 83,
+    "ept": 0.4068627450980392,
+    "eps": 2629.696054003407,
+    "wall": 0.03156258301169146,
+    "native_verify_seconds": 0.000298584,
+    "verdicts": {
+      "accepted": 44,
+      "guard": 160
+    },
+    "visits": 830
+  },
+  {
+    "arm": "trained",
+    "threshold": 0,
+    "repeat": 4,
+    "state_sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "coverage": 83,
+    "reference": 83,
+    "paid_total": 204,
+    "signed_ops": 83,
+    "ept": 0.4068627450980392,
+    "eps": 2510.7038415348384,
+    "wall": 0.03305845899740234,
+    "native_verify_seconds": 0.000313377,
+    "verdicts": {
+      "accepted": 44,
+      "guard": 160
+    },
+    "visits": 830
+  }
+]

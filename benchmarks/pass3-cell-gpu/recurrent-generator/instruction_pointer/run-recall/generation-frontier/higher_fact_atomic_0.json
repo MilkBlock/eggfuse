@@ -1,0 +1,88 @@
+{
+  "case": "fact",
+  "arm": "atomic",
+  "repeat": 0,
+  "wall": 1.9664997910003876,
+  "coverage": 363,
+  "reference": 1120,
+  "paid": 9947,
+  "signed": 562,
+  "ept": 0.05649944706946818,
+  "eps": 285.78696146929275,
+  "visits": 33181,
+  "work": {
+    "interface_reads": 342613,
+    "typed_products": 1266848497603726341,
+    "traversed_positions": 33672,
+    "visits": 33181,
+    "root_scored": 14488,
+    "index_items": 28965,
+    "bucket_build_seconds": 0.017074920775485225,
+    "bucket_probes": 16906,
+    "bucket_items": 18673,
+    "tuple_scored": 12975
+  },
+  "generation": {},
+  "counts": {
+    "accepted": 494,
+    "calls": 1301,
+    "duplicates": 7227,
+    "reads": 28574,
+    "reads_by_kind": {
+      "generated": 28532,
+      "initial": 42
+    },
+    "rejected": {
+      "binding": 13,
+      "guard": 2213
+    }
+  },
+  "layouts": {
+    "counts": {
+      "accepted_steps": 0,
+      "attached_roots": 0,
+      "boundary_reads": 0,
+      "completed_layouts": {},
+      "completed_sizes": {},
+      "invalid_boundary": 0,
+      "issued_layouts": {},
+      "issued_steps": 0,
+      "missing_returns": 0,
+      "rejected_groups": 0,
+      "signed_layouts": 0
+    },
+    "outstanding": 0
+  },
+  "ledger": {
+    "kinds": [
+      "visible_birth",
+      "function_write",
+      "effective_union",
+      "visibility_change"
+    ],
+    "ledger_sha256": "c8afe37806fc02dca5dafafc2b08d4010749cdb81b5bf27a8494df945ca0ae5c",
+    "runs": 464,
+    "signed_external": [
+      356,
+      159,
+      47,
+      0
+    ],
+    "signed_internal": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "uncredited": [
+      0,
+      0,
+      3,
+      0
+    ]
+  },
+  "sha": "3347924d8839357889e7146b2417b7fba1caec8a6896dbc5aee046a219aa334a",
+  "verify": 0.005075356,
+  "runs": 464,
+  "build": "63bbdf76844f124e190b20b64707e6d6c8adf1849a4d20f56fc30ea10760f0d0"
+}

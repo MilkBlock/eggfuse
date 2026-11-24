@@ -1,0 +1,22 @@
+[
+  {
+    "reference": 0.01291991698963102,
+    "sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "replay": 0.012592625003890134
+  },
+  {
+    "replay": 0.012790209002560005,
+    "sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "reference": 0.01189966699166689
+  },
+  {
+    "reference": 0.013719958005822264,
+    "sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "replay": 0.013216332998126745
+  },
+  {
+    "replay": 0.013293291995069012,
+    "sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+    "reference": 0.013739834001171403
+  }
+]
