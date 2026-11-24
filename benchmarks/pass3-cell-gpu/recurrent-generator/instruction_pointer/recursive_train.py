@@ -68,7 +68,7 @@ def native_labels(root, d, tape, probes, out):
     ], rep["state_sha"]
 
 
-def samples(root, d, frames, labels, seed):
+def samples(root, d, frames, labels, seed, all_positives=False):
     rd = Reader(read(d / "program.json"), root, rename_seed=seed)
     by = defaultdict(list)
     for q in labels:
@@ -101,7 +101,14 @@ def samples(root, d, frames, labels, seed):
                         seq = tuple(alias(a) for a in raw_prefix)
                         k = alias(k)
                         pos = {alias(x[j]) for x in paths if x[:j] == raw_prefix}
-                        domain, x = rd.read(r, seq, wm[r], 0, cap=20, force=[k])
+                        domain, x = rd.read(
+                            r,
+                            seq,
+                            wm[r],
+                            0,
+                            cap=20,
+                            force=sorted(pos) if all_positives else [k],
+                        )
                         order = list(range(len(domain)))
                         rng.shuffle(order)
                         ix = order.index(domain.index(k))
@@ -175,6 +182,8 @@ def fit(root, phase):
     model = Compose()
     if phase == "dagger":
         model.load_state_dict(torch.load(out / "teacher.pt", weights_only=True))
+    if phase == "multi":
+        model.load_state_dict(torch.load(out / "dagger.pt", weights_only=True))
     allrows = []
     records = {}
     rule_rows = []
@@ -186,6 +195,28 @@ def fit(root, phase):
         if not rule_file.exists():
             torch.save(rule_samples(d, root), rule_file)
         rule_rows += torch.load(rule_file, weights_only=True)
+        if phase == "multi":
+            # Include every original winner on each sampled Run plus all available
+            # verified alternative addresses on the independent learner trajectory.
+            teacher = read(d / "tape.json")["requests"]
+            runs = sorted({q["run"] for q in teacher})
+            chosen = set(data_rng.sample(runs, min(48, len(runs))))
+            labels = [q for q in teacher if q["run"] in chosen]
+            rows = samples(root, d, d / "memory.jsonl", labels, 1703, True)
+            own = out / ("own-" + case)
+            rows += samples(
+                root, d, own / "memory.jsonl", read(own / "labels.json"), 445, True
+            )
+            allrows += rows
+            records[case] = dict(
+                runs=len(chosen),
+                teacher=len(labels),
+                examples=len(rows),
+                multiple=sum(
+                    int(y.sum()) > 1 for _, steps in rows for _, y, _ in steps
+                ),
+            )
+            continue
         f = work / "samples.pt"
         # Cache the data RNG continuation independently of optimizer sampling.
         cursor = work / "sampling-state.pt"
@@ -243,10 +274,20 @@ def fit(root, phase):
                 h[ii, None, :].expand(-1, X.size(1), -1).reshape(-1, h.size(1)),
             ).view(len(ix), X.size(1), -1)
             raw = model.score(z).squeeze(-1) + 2 * X[:, :, 24]
-            loss += (
-                raw.masked_fill(~mask, -1e4).logsumexp(1)
-                - raw.masked_fill(~positive, -1e4).logsumexp(1)
-            ).sum()
+            if phase == "multi":
+                neg = mask & ~positive
+                pos_loss = F.softplus(-raw).masked_fill(~positive, 0).sum(
+                    1
+                ) / positive.sum(1).clamp_min(1)
+                neg_loss = F.softplus(raw).masked_fill(~neg, 0).sum(1) / neg.sum(
+                    1
+                ).clamp_min(1)
+                loss += (pos_loss + neg_loss).sum()
+            else:
+                loss += (
+                    raw.masked_fill(~mask, -1e4).logsumexp(1)
+                    - raw.masked_fill(~positive, -1e4).logsumexp(1)
+                ).sum()
             # Retry utility predicts multiple verified next options at this prefix.
             loss += 0.2 * F.binary_cross_entropy_with_logits(
                 model.retry(h[ii]).flatten(),
@@ -284,7 +325,7 @@ def fit(root, phase):
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("root", type=Path)
-    p.add_argument("phase", choices=("teacher", "dagger"))
+    p.add_argument("phase", choices=("teacher", "dagger", "multi"))
     a = p.parse_args()
     torch.set_num_threads(1)
     fit(a.root.resolve(), a.phase)
