@@ -86,7 +86,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     match role.as_str() {
         "replay" | "capture" | "shadow-waves" => engine.start_tokens(packets)?,
-        "online" | "online-waves" => engine.start_tokens(Some(Vec::new()))?,
+        "online" | "online-waves" | "online-transactions" => engine.start_tokens(Some(Vec::new()))?,
         "assist" => engine.start_token_assist()?,
         "reference" => (),
         "anchor-census" => engine.enable_anchor_census(),
@@ -109,6 +109,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     if let Some(path) = memory_path {
         engine.export_token_memory(Some(std::path::Path::new(path)))?;
+    } else if role == "online-transactions" {
+        engine.enable_token_transactions()?;
     } else if role == "online-waves" || role == "shadow-waves" {
         engine.enable_token_waves(role == "shadow-waves")?;
     } else if role == "online" {
@@ -188,6 +190,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             report["unused_recall"] = json!(audit.pending());
         }
         if let Some(w) = &h.waves {
+            if let Some(m)=&w.transactions {report["txn_stats"]=json!(m);}
             report["prefixes_checked"] = json!(w.prefixes_checked);
             report["prefix_reads"] = json!(w.prefix_reads);
             report["prefix_verify_seconds"] = json!(w.prefix_time.as_secs_f64());

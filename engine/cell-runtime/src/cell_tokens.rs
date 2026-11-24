@@ -1,5 +1,7 @@
 //! Direct replay of certificates naming independent source premises by token and operation.
 //! The inverse index used by the offline teacher is absent from the receiver.
+#[path = "token_transaction.rs"]
+mod transaction;
 #[path = "higher_tokens.rs"]
 mod higher;
 #[path = "graph_tokens.rs"]
@@ -126,6 +128,7 @@ struct PrefixProbe {
 
 #[derive(Default)]
 pub struct WaveReceiver {
+    pub transactions: Option<transaction::Metrics>,
     pub guard_failures: BTreeMap<(usize, usize, usize, &'static str), usize>,
     pub shadow: bool,
     pub prefix_reads: usize,
@@ -388,11 +391,16 @@ impl History {
             .keys()
             .filter(|a| !visible.contains_key(a))
             .collect();
-        let mut frame=serde_json::json!({
+        let typed=self.waves.as_ref().is_some_and(|w| w.transactions.is_some());
+        let mut frame=if typed {
+            serde_json::json!({"run":run,"epoch":graph.epoch,"rules":rules,"typed_rows":updates.len(),
+            "typed_hashes":updates.iter().map(|(_,row)|row.hashes.len()).sum::<usize>(),"typed_retired":retired.len(),
+            "typed_accepted":memory.accepted.len(),"repair_events":&self.repair_events[self.repair_events.partition_point(|e| e.visible_from_run < run)..]})
+        } else { serde_json::json!({
             "run":run, "epoch":graph.epoch, "rules":rules, "updates":updates, "retired":retired,
             "accepted":memory.accepted,
             "repair_events":&self.repair_events[self.repair_events.partition_point(|e| e.visible_from_run < run)..],
-        });
+        }) };
         if let Some(layouts)=&mut self.layouts {
             layouts.advance(&visible,&memory.accepted,run,rules,&mut self.queue)?;
             if let Some(feedback)=layouts.snapshot(run,&self.queue) {
@@ -401,10 +409,12 @@ impl History {
         }
         serde_json::to_writer(&mut memory.writer,&frame)
         .map_err(|e| e.to_string())?;
-        memory
-            .writer
-            .write_all(b"\n")
-            .and_then(|_| memory.writer.flush())
+        memory.writer.write_all(b"\n").map_err(|e|e.to_string())?;
+        if typed {
+            let m=self.waves.as_mut().unwrap().transactions.as_mut().unwrap();
+            transaction::publish(&mut memory.writer,&memory.accepted,&updates,&retired,m)?;
+        }
+        memory.writer.flush()
             .map_err(|e| e.to_string())?;
         if let Some(higher) = &mut self.higher {
             higher.dispatch(&visible, run, rules, &mut self.queue)?;
@@ -476,6 +486,9 @@ impl History {
     fn receive_waves(
         &mut self, graph: &Graph, run: usize, rules: &[(usize, u64)], dirty: &[bool], check_dirty: bool,
     ) -> Result<()> {
+        if self.waves.as_ref().unwrap().transactions.is_some() {
+            return self.receive_transactions(graph,run,rules,dirty,check_dirty);
+        }
         let shadow = self.waves.as_ref().unwrap().shadow;
         let mut seen = BTreeSet::new();
         loop {

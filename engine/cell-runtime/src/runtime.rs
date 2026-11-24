@@ -1257,6 +1257,12 @@ impl Executor {
         Ok(())
     }
     #[cfg(feature = "cell-token-replay")]
+    pub fn enable_token_transactions(&mut self) -> Result<()> {
+        self.enable_token_waves(false)?;
+        self.token_history.as_mut().unwrap().waves.as_mut().unwrap().transactions=Some(Default::default());
+        Ok(())
+    }
+    #[cfg(feature = "cell-token-replay")]
     pub fn export_token_memory(&mut self, path: Option<&std::path::Path>) -> Result<()> {
         self.token_history.as_mut().ok_or("token history not active")?.export_memory(path)
     }
