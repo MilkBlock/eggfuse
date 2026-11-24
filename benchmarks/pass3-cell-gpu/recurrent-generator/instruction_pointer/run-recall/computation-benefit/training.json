@@ -1,0 +1,3734 @@
+{
+  "device": "mps",
+  "seed": 49177,
+  "train": [
+    "grammar-17118",
+    "grammar-stride2-17118",
+    "grammar-stride3-17119",
+    "grammar-benefit-left-17118",
+    "grammar-benefit-left-17119",
+    "grammar-benefit-left-17120",
+    "grammar-benefit-twice-17118",
+    "grammar-benefit-twice-17119",
+    "grammar-benefit-twice-17120",
+    "grammar-benefit-large-twice-17120",
+    "grammar-benefit-fork-17118",
+    "grammar-benefit-fork-17119",
+    "grammar-benefit-fork-17120",
+    "grammar-benefit-large-fork-17120",
+    "grammar-benefit-swap-17118",
+    "grammar-benefit-swap-17119",
+    "grammar-benefit-swap-17120",
+    "loopfact"
+  ],
+  "interval_examples": 2874,
+  "weighted_instruction_rows": 292,
+  "weighted_operand_rows": 254,
+  "proof_examples": 27037,
+  "proof_trainable": {
+    "residual": 2417,
+    "full": 7836
+  },
+  "cases": {
+    "grammar-17118": {
+      "intervals": [
+        {
+          "interval": [
+            0,
+            3
+          ],
+          "comparable": true,
+          "gain": 0.3481197946754284
+        },
+        {
+          "interval": [
+            3,
+            12
+          ],
+          "comparable": true,
+          "gain": 0.01677265858478445
+        },
+        {
+          "interval": [
+            12,
+            1000000000
+          ],
+          "comparable": true,
+          "gain": 0.004327877379887814
+        }
+      ],
+      "instructions": 4,
+      "ambiguous": 0,
+      "rollouts": [
+        {
+          "cut": 0,
+          "rep": 0,
+          "sha": "30f9f8e0b614695b082c43e667134e8fb18ba1d607aa5431840039c73d2ce8e0",
+          "wall": 0.045247083995491266,
+          "paid": 234,
+          "visits": 1090,
+          "failures": 0,
+          "accepted": 72,
+          "issued_plan_counts": [
+            [
+              1,
+              1,
+              2,
+              81
+            ],
+            [
+              2,
+              1,
+              2,
+              81
+            ]
+          ],
+          "native": 0.000278792,
+          "encode": 0.0005938739923294634,
+          "ipc": 0.0015635029994882643
+        },
+        {
+          "cut": 3,
+          "rep": 0,
+          "sha": "30f9f8e0b614695b082c43e667134e8fb18ba1d607aa5431840039c73d2ce8e0",
+          "wall": 0.03363499999977648,
+          "paid": 352,
+          "visits": 1392,
+          "failures": 270,
+          "accepted": 72,
+          "issued_plan_counts": [
+            [
+              1,
+              1,
+              2,
+              5
+            ],
+            [
+              2,
+              1,
+              2,
+              5
+            ]
+          ],
+          "native": 0.000343405,
+          "encode": 0.00012162599887233227,
+          "ipc": 0.0011148780322400853
+        },
+        {
+          "cut": 12,
+          "rep": 0,
+          "sha": "30f9f8e0b614695b082c43e667134e8fb18ba1d607aa5431840039c73d2ce8e0",
+          "wall": 0.030972499997005798,
+          "paid": 360,
+          "visits": 1430,
+          "failures": 288,
+          "accepted": 72,
+          "issued_plan_counts": [],
+          "native": 0.000295086,
+          "encode": 0,
+          "ipc": 0.0008140849822666496
+        },
+        {
+          "cut": 1000000000,
+          "rep": 0,
+          "sha": "30f9f8e0b614695b082c43e667134e8fb18ba1d607aa5431840039c73d2ce8e0",
+          "wall": 0.031798625001101755,
+          "paid": 360,
+          "visits": 1430,
+          "failures": 288,
+          "accepted": 72,
+          "issued_plan_counts": [],
+          "native": 0.000326785,
+          "encode": 0,
+          "ipc": 0.0009047930361703038
+        },
+        {
+          "cut": 1000000000,
+          "rep": 1,
+          "sha": "30f9f8e0b614695b082c43e667134e8fb18ba1d607aa5431840039c73d2ce8e0",
+          "wall": 0.029045292001683265,
+          "paid": 360,
+          "visits": 1430,
+          "failures": 288,
+          "accepted": 72,
+          "issued_plan_counts": [],
+          "native": 0.000304509,
+          "encode": 0,
+          "ipc": 0.0007308310159714893
+        },
+        {
+          "cut": 12,
+          "rep": 1,
+          "sha": "30f9f8e0b614695b082c43e667134e8fb18ba1d607aa5431840039c73d2ce8e0",
+          "wall": 0.028794249999918975,
+          "paid": 360,
+          "visits": 1430,
+          "failures": 288,
+          "accepted": 72,
+          "issued_plan_counts": [],
+          "native": 0.000291716,
+          "encode": 0,
+          "ipc": 0.0007233780197566375
+        },
+        {
+          "cut": 3,
+          "rep": 1,
+          "sha": "30f9f8e0b614695b082c43e667134e8fb18ba1d607aa5431840039c73d2ce8e0",
+          "wall": 0.029063125009997748,
+          "paid": 352,
+          "visits": 1392,
+          "failures": 270,
+          "accepted": 72,
+          "issued_plan_counts": [
+            [
+              1,
+              1,
+              2,
+              5
+            ],
+            [
+              2,
+              1,
+              2,
+              5
+            ]
+          ],
+          "native": 0.00026338,
+          "encode": 7.516599725931883e-05,
+          "ipc": 0.0007852099515730515
+        },
+        {
+          "cut": 0,
+          "rep": 1,
+          "sha": "30f9f8e0b614695b082c43e667134e8fb18ba1d607aa5431840039c73d2ce8e0",
+          "wall": 0.031009500002255663,
+          "paid": 234,
+          "visits": 1090,
+          "failures": 0,
+          "accepted": 72,
+          "issued_plan_counts": [
+            [
+              1,
+              1,
+              2,
+              81
+            ],
+            [
+              2,
+              1,
+              2,
+              81
+            ]
+          ],
+          "native": 0.000149129,
+          "encode": 0.0003198329941369593,
+          "ipc": 0.0009001689759315923
+        }
+      ]
+    },
+    "grammar-stride2-17118": {
+      "intervals": [
+        {
+          "interval": [
+            0,
+            3
+          ],
+          "comparable": true,
+          "gain": 0.239409007960934
+        },
+        {
+          "interval": [
+            3,
+            12
+          ],
+          "comparable": true,
+          "gain": 0.006108443586833629
+        },
+        {
+          "interval": [
+            12,
+            1000000000
+          ],
+          "comparable": true,
+          "gain": 0.00522372008698608
+        }
+      ],
+      "instructions": 6,
+      "ambiguous": 2,
+      "rollouts": [
+        {
+          "cut": 0,
+          "rep": 0,
+          "sha": "75a95f84884d1abb87998d47068e8a5a875403a38a6532300370445746287fbf",
+          "wall": 0.03404229199804831,
+          "paid": 396,
+          "visits": 1090,
+          "failures": 0,
+          "accepted": 72,
+          "issued_plan_counts": [
+            [
+              1,
+              2,
+              3,
+              81
+            ],
+            [
+              2,
+              2,
+              3,
+              81
+            ]
+          ],
+          "native": 0.000162627,
+          "encode": 0.00038791599217802286,
+          "ipc": 0.0011345030507072806
+        },
+        {
+          "cut": 3,
+          "rep": 0,
+          "sha": "75a95f84884d1abb87998d47068e8a5a875403a38a6532300370445746287fbf",
+          "wall": 0.03220875000988599,
+          "paid": 362,
+          "visits": 1392,
+          "failures": 270,
+          "accepted": 72,
+          "issued_plan_counts": [
+            [
+              1,
+              2,
+              3,
+              5
+            ],
+            [
+              2,
+              2,
+              3,
+              5
+            ]
+          ],
+          "native": 0.000333498,
+          "encode": 7.845700019970536e-05,
+          "ipc": 0.0009454980317968875
+        },
+        {
+          "cut": 12,
+          "rep": 0,
+          "sha": "75a95f84884d1abb87998d47068e8a5a875403a38a6532300370445746287fbf",
+          "wall": 0.02908695800579153,
+          "paid": 360,
+          "visits": 1430,
+          "failures": 288,
+          "accepted": 72,
+          "issued_plan_counts": [],
+          "native": 0.000320518,
+          "encode": 0,
+          "ipc": 0.0008115399978123605
+        },
+        {
+          "cut": 1000000000,
+          "rep": 0,
+          "sha": "75a95f84884d1abb87998d47068e8a5a875403a38a6532300370445746287fbf",
+          "wall": 0.031248625004081987,
+          "paid": 360,
+          "visits": 1430,
+          "failures": 288,
+          "accepted": 72,
+          "issued_plan_counts": [],
+          "native": 0.000346145,
+          "encode": 0,
+          "ipc": 0.0009612919675419107
+        },
+        {
+          "cut": 1000000000,
+          "rep": 1,
+          "sha": "75a95f84884d1abb87998d47068e8a5a875403a38a6532300370445746287fbf",
+          "wall": 0.03198345900455024,
+          "paid": 360,
+          "visits": 1430,
+          "failures": 288,
+          "accepted": 72,
+          "issued_plan_counts": [],
+          "native": 0.000389733,
+          "encode": 0,
+          "ipc": 0.0008863350230967626
+        },
+        {
+          "cut": 12,
+          "rep": 1,
+          "sha": "75a95f84884d1abb87998d47068e8a5a875403a38a6532300370445746287fbf",
+          "wall": 0.032884041997021995,
+          "paid": 360,
+          "visits": 1430,
+          "failures": 288,
+          "accepted": 72,
+          "issued_plan_counts": [],
+          "native": 0.000351791,
+          "encode": 0,
+          "ipc": 0.0008711650007171556
+        },
+        {
+          "cut": 3,
+          "rep": 1,
+          "sha": "75a95f84884d1abb87998d47068e8a5a875403a38a6532300370445746287fbf",
+          "wall": 0.03359991700563114,
+          "paid": 362,
+          "visits": 1392,
+          "failures": 270,
+          "accepted": 72,
+          "issued_plan_counts": [
+            [
+              1,
+              2,
+              3,
+              5
+            ],
+            [
+              2,
+              2,
+              3,
+              5
+            ]
+          ],
+          "native": 0.000306712,
+          "encode": 6.087399378884584e-05,
+          "ipc": 0.0009096670110011473
+        },
+        {
+          "cut": 0,
+          "rep": 1,
+          "sha": "75a95f84884d1abb87998d47068e8a5a875403a38a6532300370445746287fbf",
+          "wall": 0.04752854099206161,
+          "paid": 396,
+          "visits": 1090,
+          "failures": 0,
+          "accepted": 72,
+          "issued_plan_counts": [
+            [
+              1,
+              2,
+              3,
+              81
+            ],
+            [
+              2,
+              2,
+              3,
+              81
+            ]
+          ],
+          "native": 0.000162409,
+          "encode": 0.00032737401488702744,
+          "ipc": 0.0009189999691443518
+        }
+      ],
+      "alternative": {
+        "equal_state": true,
+        "sha": "75a95f84884d1abb87998d47068e8a5a875403a38a6532300370445746287fbf",
+        "paid": 396,
+        "wall": 0.03203608299372718,
+        "visits": 1090,
+        "accepted": 72,
+        "signed": 123
+      }
+    },
+    "grammar-stride3-17119": {
+      "intervals": [
+        {
+          "interval": [
+            0,
+            3
+          ],
+          "comparable": true,
+          "gain": 0.2124833885567301
+        },
+        {
+          "interval": [
+            3,
+            12
+          ],
+          "comparable": true,
+          "gain": 0.30587171644861116
+        },
+        {
+          "interval": [
+            12,
+            1000000000
+          ],
+          "comparable": true,
+          "gain": -0.0037763733853768628
+        }
+      ],
+      "instructions": 6,
+      "ambiguous": 2,
+      "rollouts": [
+        {
+          "cut": 0,
+          "rep": 0,
+          "sha": "6f8c277a0be906216f2a7d4bb5c23d01ebba20b957d6d2b0a65ec802c34283ec",
+          "wall": 0.05817716600722633,
+          "paid": 728,
+          "visits": 3300,
+          "failures": 20,
+          "accepted": 136,
+          "issued_plan_counts": [
+            [
+              1,
+              2,
+              3,
+              143
+            ],
+            [
+              2,
+              2,
+              3,
+              143
+            ]
+          ],
+          "native": 0.000280959,
+          "encode": 0.0004610409669112414,
+          "ipc": 0.0016060850175563246
+        },
+        {
+          "cut": 3,
+          "rep": 0,
+          "sha": "6f8c277a0be906216f2a7d4bb5c23d01ebba20b957d6d2b0a65ec802c34283ec",
+          "wall": 0.05272908299230039,
+          "paid": 692,
+          "visits": 3514,
+          "failures": 228,
+          "accepted": 136,
+          "issued_plan_counts": [
+            [
+              1,
+              2,
+              3,
+              82
+            ],
+            [
+              2,
+              2,
+              3,
+              82
+            ]
+          ],
+          "native": 0.000425168,
+          "encode": 0.00017108299653045833,
+          "ipc": 0.001164417015388608
+        },
+        {
+          "cut": 12,
+          "rep": 0,
+          "sha": "6f8c277a0be906216f2a7d4bb5c23d01ebba20b957d6d2b0a65ec802c34283ec",
+          "wall": 0.061367875008727424,
+          "paid": 956,
+          "visits": 4188,
+          "failures": 820,
+          "accepted": 136,
+          "issued_plan_counts": [],
+          "native": 0.000808598,
+          "encode": 0,
+          "ipc": 0.001309376020799391
+        },
+        {
+          "cut": 1000000000,
+          "rep": 0,
+          "sha": "6f8c277a0be906216f2a7d4bb5c23d01ebba20b957d6d2b0a65ec802c34283ec",
+          "wall": 0.060111166996648535,
+          "paid": 956,
+          "visits": 4188,
+          "failures": 820,
+          "accepted": 136,
+          "issued_plan_counts": [],
+          "native": 0.000887718,
+          "encode": 0,
+          "ipc": 0.0011295839794911444
+        },
+        {
+          "cut": 1000000000,
+          "rep": 1,
+          "sha": "6f8c277a0be906216f2a7d4bb5c23d01ebba20b957d6d2b0a65ec802c34283ec",
+          "wall": 0.05114020798646379,
+          "paid": 956,
+          "visits": 4188,
+          "failures": 820,
+          "accepted": 136,
+          "issued_plan_counts": [],
+          "native": 0.00070687,
+          "encode": 0,
+          "ipc": 0.0009235409961547703
+        },
+        {
+          "cut": 12,
+          "rep": 1,
+          "sha": "6f8c277a0be906216f2a7d4bb5c23d01ebba20b957d6d2b0a65ec802c34283ec",
+          "wall": 0.05164283298654482,
+          "paid": 956,
+          "visits": 4188,
+          "failures": 820,
+          "accepted": 136,
+          "issued_plan_counts": [],
+          "native": 0.000722815,
+          "encode": 0,
+          "ipc": 0.000950415909755975
+        },
+        {
+          "cut": 3,
+          "rep": 1,
+          "sha": "6f8c277a0be906216f2a7d4bb5c23d01ebba20b957d6d2b0a65ec802c34283ec",
+          "wall": 0.05226333299651742,
+          "paid": 692,
+          "visits": 3514,
+          "failures": 228,
+          "accepted": 136,
+          "issued_plan_counts": [
+            [
+              1,
+              2,
+              3,
+              82
+            ],
+            [
+              2,
+              2,
+              3,
+              82
+            ]
+          ],
+          "native": 0.000385969,
+          "encode": 0.00016637600492686033,
+          "ipc": 0.0011306669912301004
+        },
+        {
+          "cut": 0,
+          "rep": 1,
+          "sha": "6f8c277a0be906216f2a7d4bb5c23d01ebba20b957d6d2b0a65ec802c34283ec",
+          "wall": 0.05524345800222363,
+          "paid": 728,
+          "visits": 3300,
+          "failures": 20,
+          "accepted": 136,
+          "issued_plan_counts": [
+            [
+              1,
+              2,
+              3,
+              143
+            ],
+            [
+              2,
+              2,
+              3,
+              143
+            ]
+          ],
+          "native": 0.000295756,
+          "encode": 0.00048562497249804437,
+          "ipc": 0.0015574590506730601
+        }
+      ],
+      "alternative": {
+        "equal_state": true,
+        "sha": "6f8c277a0be906216f2a7d4bb5c23d01ebba20b957d6d2b0a65ec802c34283ec",
+        "paid": 728,
+        "wall": 0.0529919590044301,
+        "visits": 3300,
+        "accepted": 136,
+        "signed": 233
+      }
+    },
+    "grammar-benefit-left-17118": {
+      "intervals": [
+        {
+          "interval": [
+            0,
+            3
+          ],
+          "comparable": true,
+          "gain": 0.2488055738164653
+        },
+        {
+          "interval": [
+            3,
+            12
+          ],
+          "comparable": true,
+          "gain": 0.01868809808419795
+        },
+        {
+          "interval": [
+            12,
+            1000000000
+          ],
+          "comparable": true,
+          "gain": -0.002159109939361935
+        }
+      ],
+      "instructions": 6,
+      "ambiguous": 2,
+      "rollouts": [
+        {
+          "cut": 0,
+          "rep": 0,
+          "sha": "75a95f84884d1abb87998d47068e8a5a875403a38a6532300370445746287fbf",
+          "wall": 0.03293295898765791,
+          "paid": 396,
+          "visits": 1090,
+          "failures": 0,
+          "accepted": 72,
+          "issued_plan_counts": [
+            [
+              1,
+              2,
+              3,
+              81
+            ],
+            [
+              2,
+              2,
+              3,
+              81
+            ]
+          ],
+          "native": 0.000141913,
+          "encode": 0.00030016800155863166,
+          "ipc": 0.0009280010272050276
+        },
+        {
+          "cut": 3,
+          "rep": 0,
+          "sha": "75a95f84884d1abb87998d47068e8a5a875403a38a6532300370445746287fbf",
+          "wall": 0.029627042007632554,
+          "paid": 362,
+          "visits": 1392,
+          "failures": 270,
+          "accepted": 72,
+          "issued_plan_counts": [
+            [
+              1,
+              2,
+              3,
+              5
+            ],
+            [
+              2,
+              2,
+              3,
+              5
+            ]
+          ],
+          "native": 0.000322811,
+          "encode": 7.083300442900509e-05,
+          "ipc": 0.0008125440654112026
+        },
+        {
+          "cut": 12,
+          "rep": 0,
+          "sha": "75a95f84884d1abb87998d47068e8a5a875403a38a6532300370445746287fbf",
+          "wall": 0.02856354099640157,
+          "paid": 360,
+          "visits": 1430,
+          "failures": 288,
+          "accepted": 72,
+          "issued_plan_counts": [],
+          "native": 0.000305634,
+          "encode": 0,
+          "ipc": 0.0006843339797342196
+        },
+        {
+          "cut": 1000000000,
+          "rep": 0,
+          "sha": "75a95f84884d1abb87998d47068e8a5a875403a38a6532300370445746287fbf",
+          "wall": 0.026958999995258637,
+          "paid": 360,
+          "visits": 1430,
+          "failures": 288,
+          "accepted": 72,
+          "issued_plan_counts": [],
+          "native": 0.000304578,
+          "encode": 0,
+          "ipc": 0.0006724200356984511
+        },
+        {
+          "cut": 1000000000,
+          "rep": 1,
+          "sha": "75a95f84884d1abb87998d47068e8a5a875403a38a6532300370445746287fbf",
+          "wall": 0.031941749999532476,
+          "paid": 360,
+          "visits": 1430,
+          "failures": 288,
+          "accepted": 72,
+          "issued_plan_counts": [],
+          "native": 0.000399965,
+          "encode": 0,
+          "ipc": 0.0009021240111906081
+        },
+        {
+          "cut": 12,
+          "rep": 1,
+          "sha": "75a95f84884d1abb87998d47068e8a5a875403a38a6532300370445746287fbf",
+          "wall": 0.03069916598906275,
+          "paid": 360,
+          "visits": 1430,
+          "failures": 288,
+          "accepted": 72,
+          "issued_plan_counts": [],
+          "native": 0.00035417,
+          "encode": 0,
+          "ipc": 0.0008828749996609986
+        },
+        {
+          "cut": 3,
+          "rep": 1,
+          "sha": "75a95f84884d1abb87998d47068e8a5a875403a38a6532300370445746287fbf",
+          "wall": 0.03013725001073908,
+          "paid": 362,
+          "visits": 1392,
+          "failures": 270,
+          "accepted": 72,
+          "issued_plan_counts": [
+            [
+              1,
+              2,
+              3,
+              5
+            ],
+            [
+              2,
+              2,
+              3,
+              5
+            ]
+          ],
+          "native": 0.000328075,
+          "encode": 7.77910026954487e-05,
+          "ipc": 0.0008443749975413084
+        },
+        {
+          "cut": 0,
+          "rep": 1,
+          "sha": "75a95f84884d1abb87998d47068e8a5a875403a38a6532300370445746287fbf",
+          "wall": 0.03636966701014899,
+          "paid": 396,
+          "visits": 1090,
+          "failures": 0,
+          "accepted": 72,
+          "issued_plan_counts": [
+            [
+              1,
+              2,
+              3,
+              81
+            ],
+            [
+              2,
+              2,
+              3,
+              81
+            ]
+          ],
+          "native": 0.000167879,
+          "encode": 0.0003971690166508779,
+          "ipc": 0.0010330060176784173
+        }
+      ],
+      "alternative": {
+        "equal_state": true,
+        "sha": "75a95f84884d1abb87998d47068e8a5a875403a38a6532300370445746287fbf",
+        "paid": 396,
+        "wall": 0.028156416999991052,
+        "visits": 1090,
+        "accepted": 72,
+        "signed": 123
+      }
+    },
+    "grammar-benefit-left-17119": {
+      "intervals": [
+        {
+          "interval": [
+            0,
+            3
+          ],
+          "comparable": true,
+          "gain": 0.2522651937630215
+        },
+        {
+          "interval": [
+            3,
+            12
+          ],
+          "comparable": true,
+          "gain": 0.3033906403404907
+        },
+        {
+          "interval": [
+            12,
+            1000000000
+          ],
+          "comparable": true,
+          "gain": -0.02168561497045146
+        }
+      ],
+      "instructions": 6,
+      "ambiguous": 2,
+      "rollouts": [
+        {
+          "cut": 0,
+          "rep": 0,
+          "sha": "b22a87ff503ef956505d0f443029100fe79bef8366a75916012c0f4d017f86a0",
+          "wall": 0.05322287499438971,
+          "paid": 708,
+          "visits": 3278,
+          "failures": 0,
+          "accepted": 136,
+          "issued_plan_counts": [
+            [
+              1,
+              2,
+              3,
+              143
+            ],
+            [
+              2,
+              2,
+              3,
+              143
+            ]
+          ],
+          "native": 0.000220253,
+          "encode": 0.00045066801249049604,
+          "ipc": 0.0013784639741061255
+        },
+        {
+          "cut": 3,
+          "rep": 0,
+          "sha": "b22a87ff503ef956505d0f443029100fe79bef8366a75916012c0f4d017f86a0",
+          "wall": 0.051064082988887094,
+          "paid": 678,
+          "visits": 3498,
+          "failures": 214,
+          "accepted": 136,
+          "issued_plan_counts": [
+            [
+              1,
+              2,
+              3,
+              82
+            ],
+            [
+              2,
+              2,
+              3,
+              82
+            ]
+          ],
+          "native": 0.000349064,
+          "encode": 0.00014387401461135596,
+          "ipc": 0.0010406659275759012
+        },
+        {
+          "cut": 12,
+          "rep": 0,
+          "sha": "b22a87ff503ef956505d0f443029100fe79bef8366a75916012c0f4d017f86a0",
+          "wall": 0.05493383300199639,
+          "paid": 956,
+          "visits": 4188,
+          "failures": 820,
+          "accepted": 136,
+          "issued_plan_counts": [],
+          "native": 0.000800859,
+          "encode": 0,
+          "ipc": 0.001152377066318877
+        },
+        {
+          "cut": 1000000000,
+          "rep": 0,
+          "sha": "b22a87ff503ef956505d0f443029100fe79bef8366a75916012c0f4d017f86a0",
+          "wall": 0.04935291700530797,
+          "paid": 956,
+          "visits": 4188,
+          "failures": 820,
+          "accepted": 136,
+          "issued_plan_counts": [],
+          "native": 0.000731268,
+          "encode": 0,
+          "ipc": 0.0009214180026901886
+        },
+        {
+          "cut": 1000000000,
+          "rep": 1,
+          "sha": "b22a87ff503ef956505d0f443029100fe79bef8366a75916012c0f4d017f86a0",
+          "wall": 0.050938500004122034,
+          "paid": 956,
+          "visits": 4188,
+          "failures": 820,
+          "accepted": 136,
+          "issued_plan_counts": [],
+          "native": 0.000743305,
+          "encode": 0,
+          "ipc": 0.0009641669748816639
+        },
+        {
+          "cut": 12,
+          "rep": 1,
+          "sha": "b22a87ff503ef956505d0f443029100fe79bef8366a75916012c0f4d017f86a0",
+          "wall": 0.05488420800247695,
+          "paid": 956,
+          "visits": 4188,
+          "failures": 820,
+          "accepted": 136,
+          "issued_plan_counts": [],
+          "native": 0.00083219,
+          "encode": 0,
+          "ipc": 0.0011875439813593403
+        },
+        {
+          "cut": 3,
+          "rep": 1,
+          "sha": "b22a87ff503ef956505d0f443029100fe79bef8366a75916012c0f4d017f86a0",
+          "wall": 0.056726124996203,
+          "paid": 678,
+          "visits": 3498,
+          "failures": 214,
+          "accepted": 136,
+          "issued_plan_counts": [
+            [
+              1,
+              2,
+              3,
+              82
+            ],
+            [
+              2,
+              2,
+              3,
+              82
+            ]
+          ],
+          "native": 0.000427457,
+          "encode": 0.00017512397607788444,
+          "ipc": 0.001474873031838797
+        },
+        {
+          "cut": 0,
+          "rep": 1,
+          "sha": "b22a87ff503ef956505d0f443029100fe79bef8366a75916012c0f4d017f86a0",
+          "wall": 0.05572533400845714,
+          "paid": 708,
+          "visits": 3278,
+          "failures": 0,
+          "accepted": 136,
+          "issued_plan_counts": [
+            [
+              1,
+              2,
+              3,
+              143
+            ],
+            [
+              2,
+              2,
+              3,
+              143
+            ]
+          ],
+          "native": 0.000246331,
+          "encode": 0.0004429999826243147,
+          "ipc": 0.00143862004915718
+        }
+      ],
+      "alternative": {
+        "equal_state": true,
+        "sha": "b22a87ff503ef956505d0f443029100fe79bef8366a75916012c0f4d017f86a0",
+        "paid": 708,
+        "wall": 0.050495540999691,
+        "visits": 3278,
+        "accepted": 136,
+        "signed": 233
+      }
+    },
+    "grammar-benefit-left-17120": {
+      "intervals": [
+        {
+          "interval": [
+            0,
+            3
+          ],
+          "comparable": true,
+          "gain": 0.17339763022433077
+        },
+        {
+          "interval": [
+            3,
+            12
+          ],
+          "comparable": true,
+          "gain": 0.20085329489138715
+        },
+        {
+          "interval": [
+            12,
+            1000000000
+          ],
+          "comparable": true,
+          "gain": 0.021205803011463298
+        }
+      ],
+      "instructions": 6,
+      "ambiguous": 2,
+      "rollouts": [
+        {
+          "cut": 0,
+          "rep": 0,
+          "sha": "a450aff261cf201bdae91ee3cc956e637b8bb44236f1c03511772a3e3e7ec3db",
+          "wall": 0.039412792000803165,
+          "paid": 451,
+          "visits": 1568,
+          "failures": 0,
+          "accepted": 63,
+          "issued_plan_counts": [
+            [
+              1,
+              2,
+              3,
+              97
+            ],
+            [
+              2,
+              2,
+              3,
+              97
+            ]
+          ],
+          "native": 0.000143251,
+          "encode": 0.00038745799975004047,
+          "ipc": 0.0011431279563112184
+        },
+        {
+          "cut": 3,
+          "rep": 0,
+          "sha": "a450aff261cf201bdae91ee3cc956e637b8bb44236f1c03511772a3e3e7ec3db",
+          "wall": 0.035704666006495245,
+          "paid": 297,
+          "visits": 1790,
+          "failures": 150,
+          "accepted": 63,
+          "issued_plan_counts": [
+            [
+              1,
+              2,
+              3,
+              21
+            ],
+            [
+              2,
+              2,
+              3,
+              21
+            ]
+          ],
+          "native": 0.000233995,
+          "encode": 0.0001325410121353343,
+          "ipc": 0.0007970029255375266
+        },
+        {
+          "cut": 12,
+          "rep": 0,
+          "sha": "a450aff261cf201bdae91ee3cc956e637b8bb44236f1c03511772a3e3e7ec3db",
+          "wall": 0.03523416600364726,
+          "paid": 369,
+          "visits": 1954,
+          "failures": 306,
+          "accepted": 63,
+          "issued_plan_counts": [],
+          "native": 0.000311817,
+          "encode": 0,
+          "ipc": 0.0007272910152096301
+        },
+        {
+          "cut": 1000000000,
+          "rep": 0,
+          "sha": "a450aff261cf201bdae91ee3cc956e637b8bb44236f1c03511772a3e3e7ec3db",
+          "wall": 0.038510499987751245,
+          "paid": 369,
+          "visits": 1954,
+          "failures": 306,
+          "accepted": 63,
+          "issued_plan_counts": [],
+          "native": 0.000387873,
+          "encode": 0,
+          "ipc": 0.0010756270057754591
+        },
+        {
+          "cut": 1000000000,
+          "rep": 1,
+          "sha": "a450aff261cf201bdae91ee3cc956e637b8bb44236f1c03511772a3e3e7ec3db",
+          "wall": 0.04029254199122079,
+          "paid": 369,
+          "visits": 1954,
+          "failures": 306,
+          "accepted": 63,
+          "issued_plan_counts": [],
+          "native": 0.000394777,
+          "encode": 0,
+          "ipc": 0.0010904569790000096
+        },
+        {
+          "cut": 12,
+          "rep": 1,
+          "sha": "a450aff261cf201bdae91ee3cc956e637b8bb44236f1c03511772a3e3e7ec3db",
+          "wall": 0.03688499999407213,
+          "paid": 369,
+          "visits": 1954,
+          "failures": 306,
+          "accepted": 63,
+          "issued_plan_counts": [],
+          "native": 0.000354214,
+          "encode": 0,
+          "ipc": 0.0008740399644011632
+        },
+        {
+          "cut": 3,
+          "rep": 1,
+          "sha": "a450aff261cf201bdae91ee3cc956e637b8bb44236f1c03511772a3e3e7ec3db",
+          "wall": 0.03532508300850168,
+          "paid": 297,
+          "visits": 1790,
+          "failures": 150,
+          "accepted": 63,
+          "issued_plan_counts": [
+            [
+              1,
+              2,
+              3,
+              21
+            ],
+            [
+              2,
+              2,
+              3,
+              21
+            ]
+          ],
+          "native": 0.000230752,
+          "encode": 0.0001621659757802263,
+          "ipc": 0.0007790820236550644
+        },
+        {
+          "cut": 0,
+          "rep": 1,
+          "sha": "a450aff261cf201bdae91ee3cc956e637b8bb44236f1c03511772a3e3e7ec3db",
+          "wall": 0.03855829199892469,
+          "paid": 451,
+          "visits": 1568,
+          "failures": 0,
+          "accepted": 63,
+          "issued_plan_counts": [
+            [
+              1,
+              2,
+              3,
+              97
+            ],
+            [
+              2,
+              2,
+              3,
+              97
+            ]
+          ],
+          "native": 0.000135164,
+          "encode": 0.00035766797373071313,
+          "ipc": 0.0010322099551558495
+        }
+      ],
+      "alternative": {
+        "equal_state": true,
+        "sha": "a450aff261cf201bdae91ee3cc956e637b8bb44236f1c03511772a3e3e7ec3db",
+        "paid": 451,
+        "wall": 0.03567579199443571,
+        "visits": 1568,
+        "accepted": 63,
+        "signed": 119
+      }
+    },
+    "grammar-benefit-twice-17118": {
+      "intervals": [
+        {
+          "interval": [
+            0,
+            3
+          ],
+          "comparable": true,
+          "gain": 0.207091493359018
+        },
+        {
+          "interval": [
+            3,
+            12
+          ],
+          "comparable": true,
+          "gain": -0.004908037465671662
+        },
+        {
+          "interval": [
+            12,
+            1000000000
+          ],
+          "comparable": true,
+          "gain": 0.028846393176376703
+        }
+      ],
+      "instructions": 8,
+      "ambiguous": 4,
+      "rollouts": [
+        {
+          "cut": 0,
+          "rep": 0,
+          "sha": "e3eb08581f4bcfa6575aa1c73a6461bab84ba7519b79ff7a22a8e2dfa3218d02",
+          "wall": 0.03148262499598786,
+          "paid": 558,
+          "visits": 1090,
+          "failures": 0,
+          "accepted": 72,
+          "issued_plan_counts": [
+            [
+              1,
+              3,
+              4,
+              81
+            ],
+            [
+              2,
+              3,
+              4,
+              81
+            ]
+          ],
+          "native": 0.000145876,
+          "encode": 0.0002695829898584634,
+          "ipc": 0.0008474560308968648
+        },
+        {
+          "cut": 3,
+          "rep": 0,
+          "sha": "e3eb08581f4bcfa6575aa1c73a6461bab84ba7519b79ff7a22a8e2dfa3218d02",
+          "wall": 0.030193832993973047,
+          "paid": 372,
+          "visits": 1392,
+          "failures": 270,
+          "accepted": 72,
+          "issued_plan_counts": [
+            [
+              1,
+              3,
+              4,
+              5
+            ],
+            [
+              2,
+              3,
+              4,
+              5
+            ]
+          ],
+          "native": 0.000382206,
+          "encode": 6.762600969523191e-05,
+          "ipc": 0.0008599180146120489
+        },
+        {
+          "cut": 12,
+          "rep": 0,
+          "sha": "e3eb08581f4bcfa6575aa1c73a6461bab84ba7519b79ff7a22a8e2dfa3218d02",
+          "wall": 0.027427082997746766,
+          "paid": 360,
+          "visits": 1430,
+          "failures": 288,
+          "accepted": 72,
+          "issued_plan_counts": [],
+          "native": 0.000376166,
+          "encode": 0,
+          "ipc": 0.0007494989840779454
+        },
+        {
+          "cut": 1000000000,
+          "rep": 0,
+          "sha": "e3eb08581f4bcfa6575aa1c73a6461bab84ba7519b79ff7a22a8e2dfa3218d02",
+          "wall": 0.031505332997767255,
+          "paid": 360,
+          "visits": 1430,
+          "failures": 288,
+          "accepted": 72,
+          "issued_plan_counts": [],
+          "native": 0.000388877,
+          "encode": 0,
+          "ipc": 0.0008519599941791967
+        },
+        {
+          "cut": 1000000000,
+          "rep": 1,
+          "sha": "e3eb08581f4bcfa6575aa1c73a6461bab84ba7519b79ff7a22a8e2dfa3218d02",
+          "wall": 0.0324665410007583,
+          "paid": 360,
+          "visits": 1430,
+          "failures": 288,
+          "accepted": 72,
+          "issued_plan_counts": [],
+          "native": 0.000447259,
+          "encode": 0,
+          "ipc": 0.0009536660072626546
+        },
+        {
+          "cut": 12,
+          "rep": 1,
+          "sha": "e3eb08581f4bcfa6575aa1c73a6461bab84ba7519b79ff7a22a8e2dfa3218d02",
+          "wall": 0.029176875003031455,
+          "paid": 360,
+          "visits": 1430,
+          "failures": 288,
+          "accepted": 72,
+          "issued_plan_counts": [],
+          "native": 0.000389697,
+          "encode": 0,
+          "ipc": 0.0008388760179514065
+        },
+        {
+          "cut": 3,
+          "rep": 1,
+          "sha": "e3eb08581f4bcfa6575aa1c73a6461bab84ba7519b79ff7a22a8e2dfa3218d02",
+          "wall": 0.031080959000973962,
+          "paid": 372,
+          "visits": 1392,
+          "failures": 270,
+          "accepted": 72,
+          "issued_plan_counts": [
+            [
+              1,
+              3,
+              4,
+              5
+            ],
+            [
+              2,
+              3,
+              4,
+              5
+            ]
+          ],
+          "native": 0.000381052,
+          "encode": 6.991600093897432e-05,
+          "ipc": 0.000888417984242551
+        },
+        {
+          "cut": 0,
+          "rep": 1,
+          "sha": "e3eb08581f4bcfa6575aa1c73a6461bab84ba7519b79ff7a22a8e2dfa3218d02",
+          "wall": 0.033405041991500184,
+          "paid": 558,
+          "visits": 1090,
+          "failures": 0,
+          "accepted": 72,
+          "issued_plan_counts": [
+            [
+              1,
+              3,
+              4,
+              81
+            ],
+            [
+              2,
+              3,
+              4,
+              81
+            ]
+          ],
+          "native": 0.000166042,
+          "encode": 0.0003995000006398186,
+          "ipc": 0.0010917509789578617
+        }
+      ],
+      "alternative": {
+        "equal_state": false,
+        "sha": "5f72ea42b12d544e286f2630b8397d1b8cb027873393642a06f64176187ff5bb",
+        "paid": 306,
+        "wall": 0.015208291006274521,
+        "visits": 210,
+        "accepted": 26,
+        "signed": 62
+      }
+    },
+    "grammar-benefit-twice-17119": {
+      "intervals": [
+        {
+          "interval": [
+            0,
+            3
+          ],
+          "comparable": true,
+          "gain": 0.19994422281048624
+        },
+        {
+          "interval": [
+            3,
+            12
+          ],
+          "comparable": true,
+          "gain": 0.27953531028460843
+        },
+        {
+          "interval": [
+            12,
+            1000000000
+          ],
+          "comparable": true,
+          "gain": -0.035527256184174946
+        }
+      ],
+      "instructions": 8,
+      "ambiguous": 4,
+      "rollouts": [
+        {
+          "cut": 0,
+          "rep": 0,
+          "sha": "6f45cc529e3e44ed90d460b754a9f5cf20c6183984afcf424bb64e6a3f77db3f",
+          "wall": 0.06056337500922382,
+          "paid": 994,
+          "visits": 3278,
+          "failures": 0,
+          "accepted": 136,
+          "issued_plan_counts": [
+            [
+              1,
+              3,
+              4,
+              143
+            ],
+            [
+              2,
+              3,
+              4,
+              143
+            ]
+          ],
+          "native": 0.000305908,
+          "encode": 0.000491956016048789,
+          "ipc": 0.0018247090192744508
+        },
+        {
+          "cut": 3,
+          "rep": 0,
+          "sha": "6f45cc529e3e44ed90d460b754a9f5cf20c6183984afcf424bb64e6a3f77db3f",
+          "wall": 0.054500792000908405,
+          "paid": 842,
+          "visits": 3498,
+          "failures": 214,
+          "accepted": 136,
+          "issued_plan_counts": [
+            [
+              1,
+              3,
+              4,
+              82
+            ],
+            [
+              2,
+              3,
+              4,
+              82
+            ]
+          ],
+          "native": 0.000491459,
+          "encode": 0.0001694579841569066,
+          "ipc": 0.0014118349936325103
+        },
+        {
+          "cut": 12,
+          "rep": 0,
+          "sha": "6f45cc529e3e44ed90d460b754a9f5cf20c6183984afcf424bb64e6a3f77db3f",
+          "wall": 0.05060800000501331,
+          "paid": 956,
+          "visits": 4188,
+          "failures": 820,
+          "accepted": 136,
+          "issued_plan_counts": [],
+          "native": 0.000912006,
+          "encode": 0,
+          "ipc": 0.0010577110369922593
+        },
+        {
+          "cut": 1000000000,
+          "rep": 0,
+          "sha": "6f45cc529e3e44ed90d460b754a9f5cf20c6183984afcf424bb64e6a3f77db3f",
+          "wall": 0.04934162499557715,
+          "paid": 956,
+          "visits": 4188,
+          "failures": 820,
+          "accepted": 136,
+          "issued_plan_counts": [],
+          "native": 0.000884041,
+          "encode": 0,
+          "ipc": 0.0010447069944348186
+        },
+        {
+          "cut": 1000000000,
+          "rep": 1,
+          "sha": "6f45cc529e3e44ed90d460b754a9f5cf20c6183984afcf424bb64e6a3f77db3f",
+          "wall": 0.04990495799575001,
+          "paid": 956,
+          "visits": 4188,
+          "failures": 820,
+          "accepted": 136,
+          "issued_plan_counts": [],
+          "native": 0.000909009,
+          "encode": 0,
+          "ipc": 0.0010726259934017435
+        },
+        {
+          "cut": 12,
+          "rep": 1,
+          "sha": "6f45cc529e3e44ed90d460b754a9f5cf20c6183984afcf424bb64e6a3f77db3f",
+          "wall": 0.06736583399469964,
+          "paid": 956,
+          "visits": 4188,
+          "failures": 820,
+          "accepted": 136,
+          "issued_plan_counts": [],
+          "native": 0.00094768,
+          "encode": 0,
+          "ipc": 0.0010421229962958023
+        },
+        {
+          "cut": 3,
+          "rep": 1,
+          "sha": "6f45cc529e3e44ed90d460b754a9f5cf20c6183984afcf424bb64e6a3f77db3f",
+          "wall": 0.04973933300061617,
+          "paid": 842,
+          "visits": 3498,
+          "failures": 214,
+          "accepted": 136,
+          "issued_plan_counts": [
+            [
+              1,
+              3,
+              4,
+              82
+            ],
+            [
+              2,
+              3,
+              4,
+              82
+            ]
+          ],
+          "native": 0.000450966,
+          "encode": 0.0001582910044817254,
+          "ipc": 0.0011131300416309386
+        },
+        {
+          "cut": 0,
+          "rep": 1,
+          "sha": "6f45cc529e3e44ed90d460b754a9f5cf20c6183984afcf424bb64e6a3f77db3f",
+          "wall": 0.05654087501170579,
+          "paid": 994,
+          "visits": 3278,
+          "failures": 0,
+          "accepted": 136,
+          "issued_plan_counts": [
+            [
+              1,
+              3,
+              4,
+              143
+            ],
+            [
+              2,
+              3,
+              4,
+              143
+            ]
+          ],
+          "native": 0.000242154,
+          "encode": 0.0004503750242292881,
+          "ipc": 0.0016190850437851623
+        }
+      ],
+      "alternative": {
+        "equal_state": false,
+        "sha": "dbaac6a36962d21a944ebe85387cce33ecbf2e07c7ac2e28fdf418738e86f576",
+        "paid": 710,
+        "wall": 0.019284249996417202,
+        "visits": 454,
+        "accepted": 54,
+        "signed": 122
+      }
+    },
+    "grammar-benefit-twice-17120": {
+      "intervals": [
+        {
+          "interval": [
+            0,
+            3
+          ],
+          "comparable": true,
+          "gain": 0.1453858832426199
+        },
+        {
+          "interval": [
+            3,
+            12
+          ],
+          "comparable": true,
+          "gain": 0.1968028749839159
+        },
+        {
+          "interval": [
+            12,
+            1000000000
+          ],
+          "comparable": true,
+          "gain": -0.03171671820772243
+        }
+      ],
+      "instructions": 8,
+      "ambiguous": 4,
+      "rollouts": [
+        {
+          "cut": 0,
+          "rep": 0,
+          "sha": "d679243928cc74b498c6abb7aa20be6bc148befba7bcb8888b1f10b2bc7585a8",
+          "wall": 0.03820608300156891,
+          "paid": 645,
+          "visits": 1568,
+          "failures": 0,
+          "accepted": 63,
+          "issued_plan_counts": [
+            [
+              1,
+              3,
+              4,
+              97
+            ],
+            [
+              2,
+              3,
+              4,
+              97
+            ]
+          ],
+          "native": 0.000172163,
+          "encode": 0.00037325000448618084,
+          "ipc": 0.0011323439393891022
+        },
+        {
+          "cut": 3,
+          "rep": 0,
+          "sha": "d679243928cc74b498c6abb7aa20be6bc148befba7bcb8888b1f10b2bc7585a8",
+          "wall": 0.03470870800083503,
+          "paid": 339,
+          "visits": 1790,
+          "failures": 150,
+          "accepted": 63,
+          "issued_plan_counts": [
+            [
+              1,
+              3,
+              4,
+              21
+            ],
+            [
+              2,
+              3,
+              4,
+              21
+            ]
+          ],
+          "native": 0.000269415,
+          "encode": 0.000132458982989192,
+          "ipc": 0.0008564609743189067
+        },
+        {
+          "cut": 12,
+          "rep": 0,
+          "sha": "d679243928cc74b498c6abb7aa20be6bc148befba7bcb8888b1f10b2bc7585a8",
+          "wall": 0.0337803750007879,
+          "paid": 369,
+          "visits": 1954,
+          "failures": 306,
+          "accepted": 63,
+          "issued_plan_counts": [],
+          "native": 0.000372341,
+          "encode": 0,
+          "ipc": 0.0007530429866164923
+        },
+        {
+          "cut": 1000000000,
+          "rep": 0,
+          "sha": "d679243928cc74b498c6abb7aa20be6bc148befba7bcb8888b1f10b2bc7585a8",
+          "wall": 0.03428350000467617,
+          "paid": 369,
+          "visits": 1954,
+          "failures": 306,
+          "accepted": 63,
+          "issued_plan_counts": [],
+          "native": 0.000434786,
+          "encode": 0,
+          "ipc": 0.0009121269831666723
+        },
+        {
+          "cut": 1000000000,
+          "rep": 1,
+          "sha": "d679243928cc74b498c6abb7aa20be6bc148befba7bcb8888b1f10b2bc7585a8",
+          "wall": 0.03355758399993647,
+          "paid": 369,
+          "visits": 1954,
+          "failures": 306,
+          "accepted": 63,
+          "issued_plan_counts": [],
+          "native": 0.000407071,
+          "encode": 0,
+          "ipc": 0.0007726659969193861
+        },
+        {
+          "cut": 12,
+          "rep": 1,
+          "sha": "d679243928cc74b498c6abb7aa20be6bc148befba7bcb8888b1f10b2bc7585a8",
+          "wall": 0.0458693339896854,
+          "paid": 369,
+          "visits": 1954,
+          "failures": 306,
+          "accepted": 63,
+          "issued_plan_counts": [],
+          "native": 0.000407213,
+          "encode": 0,
+          "ipc": 0.0008094220247585326
+        },
+        {
+          "cut": 3,
+          "rep": 1,
+          "sha": "d679243928cc74b498c6abb7aa20be6bc148befba7bcb8888b1f10b2bc7585a8",
+          "wall": 0.034351584006799385,
+          "paid": 339,
+          "visits": 1790,
+          "failures": 150,
+          "accepted": 63,
+          "issued_plan_counts": [
+            [
+              1,
+              3,
+              4,
+              21
+            ],
+            [
+              2,
+              3,
+              4,
+              21
+            ]
+          ],
+          "native": 0.000275257,
+          "encode": 0.00012841698480769992,
+          "ipc": 0.0008058350067585707
+        },
+        {
+          "cut": 0,
+          "rep": 1,
+          "sha": "d679243928cc74b498c6abb7aa20be6bc148befba7bcb8888b1f10b2bc7585a8",
+          "wall": 0.03595445801329333,
+          "paid": 645,
+          "visits": 1568,
+          "failures": 0,
+          "accepted": 63,
+          "issued_plan_counts": [
+            [
+              1,
+              3,
+              4,
+              97
+            ],
+            [
+              2,
+              3,
+              4,
+              97
+            ]
+          ],
+          "native": 0.000156548,
+          "encode": 0.00036887399619445205,
+          "ipc": 0.0011678330629365519
+        }
+      ],
+      "alternative": {
+        "equal_state": false,
+        "sha": "3fad4a65331dcbb93f3daa4dcd99a32047e1c8b90c2d5b3b059c491fa456a6be",
+        "paid": 407,
+        "wall": 0.015692624991061166,
+        "visits": 248,
+        "accepted": 29,
+        "signed": 69
+      }
+    },
+    "grammar-benefit-large-twice-17120": {
+      "intervals": [
+        {
+          "interval": [
+            0,
+            3
+          ],
+          "comparable": true,
+          "gain": 0.004810197421107256
+        },
+        {
+          "interval": [
+            3,
+            12
+          ],
+          "comparable": true,
+          "gain": 0.2881039868692886
+        },
+        {
+          "interval": [
+            12,
+            1000000000
+          ],
+          "comparable": true,
+          "gain": 0.6286814623803598
+        }
+      ],
+      "instructions": 8,
+      "ambiguous": 4,
+      "rollouts": [
+        {
+          "cut": 0,
+          "rep": 0,
+          "sha": "a2800982970a33b7f55e0b6ccc18a2ace191c935686978c2a675719fca0a92ca",
+          "wall": 0.12111349999031518,
+          "paid": 6259,
+          "visits": 11116,
+          "failures": 454,
+          "accepted": 567,
+          "issued_plan_counts": [
+            [
+              1,
+              3,
+              4,
+              873
+            ],
+            [
+              2,
+              3,
+              4,
+              873
+            ]
+          ],
+          "native": 0.001133519,
+          "encode": 0.0006558369932463393,
+          "ipc": 0.004635746925487183
+        },
+        {
+          "cut": 3,
+          "rep": 0,
+          "sha": "a2800982970a33b7f55e0b6ccc18a2ace191c935686978c2a675719fca0a92ca",
+          "wall": 0.12014483299572021,
+          "paid": 6259,
+          "visits": 11116,
+          "failures": 454,
+          "accepted": 567,
+          "issued_plan_counts": [
+            [
+              1,
+              3,
+              4,
+              873
+            ],
+            [
+              2,
+              3,
+              4,
+              873
+            ]
+          ],
+          "native": 0.001194516,
+          "encode": 0.0006174580048536882,
+          "ipc": 0.004560213026707061
+        },
+        {
+          "cut": 12,
+          "rep": 0,
+          "sha": "a2800982970a33b7f55e0b6ccc18a2ace191c935686978c2a675719fca0a92ca",
+          "wall": 0.11863412499951664,
+          "paid": 6745,
+          "visits": 15018,
+          "failures": 2290,
+          "accepted": 567,
+          "issued_plan_counts": [
+            [
+              1,
+              3,
+              4,
+              648
+            ],
+            [
+              2,
+              3,
+              4,
+              648
+            ]
+          ],
+          "native": 0.00259851,
+          "encode": 0.00034479300666134804,
+          "ipc": 0.004466920931008644
+        },
+        {
+          "cut": 1000000000,
+          "rep": 0,
+          "sha": "a2800982970a33b7f55e0b6ccc18a2ace191c935686978c2a675719fca0a92ca",
+          "wall": 0.15805266698589548,
+          "paid": 27801,
+          "visits": 44410,
+          "failures": 27234,
+          "accepted": 567,
+          "issued_plan_counts": [],
+          "native": 0.022851616,
+          "encode": 0,
+          "ipc": 0.01162778603611514
+        },
+        {
+          "cut": 1000000000,
+          "rep": 1,
+          "sha": "a2800982970a33b7f55e0b6ccc18a2ace191c935686978c2a675719fca0a92ca",
+          "wall": 0.1497173749958165,
+          "paid": 27801,
+          "visits": 44410,
+          "failures": 27234,
+          "accepted": 567,
+          "issued_plan_counts": [],
+          "native": 0.023080947,
+          "encode": 0,
+          "ipc": 0.011585837040911429
+        },
+        {
+          "cut": 12,
+          "rep": 1,
+          "sha": "a2800982970a33b7f55e0b6ccc18a2ace191c935686978c2a675719fca0a92ca",
+          "wall": 0.1332797500072047,
+          "paid": 6745,
+          "visits": 15018,
+          "failures": 2290,
+          "accepted": 567,
+          "issued_plan_counts": [
+            [
+              1,
+              3,
+              4,
+              648
+            ],
+            [
+              2,
+              3,
+              4,
+              648
+            ]
+          ],
+          "native": 0.002602941,
+          "encode": 0.0003716240025823936,
+          "ipc": 0.0043527979869395494
+        },
+        {
+          "cut": 3,
+          "rep": 1,
+          "sha": "a2800982970a33b7f55e0b6ccc18a2ace191c935686978c2a675719fca0a92ca",
+          "wall": 0.1265940830053296,
+          "paid": 6259,
+          "visits": 11116,
+          "failures": 454,
+          "accepted": 567,
+          "issued_plan_counts": [
+            [
+              1,
+              3,
+              4,
+              873
+            ],
+            [
+              2,
+              3,
+              4,
+              873
+            ]
+          ],
+          "native": 0.00131357,
+          "encode": 0.0007279190031113103,
+          "ipc": 0.004837215048610233
+        },
+        {
+          "cut": 0,
+          "rep": 1,
+          "sha": "a2800982970a33b7f55e0b6ccc18a2ace191c935686978c2a675719fca0a92ca",
+          "wall": 0.12071004199970048,
+          "paid": 6259,
+          "visits": 11116,
+          "failures": 454,
+          "accepted": 567,
+          "issued_plan_counts": [
+            [
+              1,
+              3,
+              4,
+              873
+            ],
+            [
+              2,
+              3,
+              4,
+              873
+            ]
+          ],
+          "native": 0.001201828,
+          "encode": 0.0006317070219665766,
+          "ipc": 0.004655004042433575
+        }
+      ],
+      "alternative": {
+        "equal_state": false,
+        "sha": "cd67b799b8f2ed9018627a721267b535c17bd8ad935645c018745d50cebcbb63",
+        "paid": 4093,
+        "wall": 0.04135637498984579,
+        "visits": 2118,
+        "accepted": 261,
+        "signed": 533
+      }
+    },
+    "grammar-benefit-fork-17118": {
+      "intervals": [
+        {
+          "interval": [
+            0,
+            3
+          ],
+          "comparable": true,
+          "gain": 0.1120811002507775
+        },
+        {
+          "interval": [
+            3,
+            12
+          ],
+          "comparable": true,
+          "gain": 0.009496093892362008
+        },
+        {
+          "interval": [
+            12,
+            1000000000
+          ],
+          "comparable": true,
+          "gain": 0.02138223372541713
+        }
+      ],
+      "instructions": 10,
+      "ambiguous": 8,
+      "rollouts": [
+        {
+          "cut": 0,
+          "rep": 0,
+          "sha": "12000b574e7ad820aa2b9e7f26525ca388220d36867ef4b3b9cdac55af7dce2b",
+          "wall": 0.036034167002071626,
+          "paid": 730,
+          "visits": 1100,
+          "failures": 10,
+          "accepted": 72,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              81
+            ],
+            [
+              2,
+              4,
+              5,
+              81
+            ]
+          ],
+          "native": 0.000184415,
+          "encode": 0.00033025004086084664,
+          "ipc": 0.001089248020434752
+        },
+        {
+          "cut": 3,
+          "rep": 0,
+          "sha": "12000b574e7ad820aa2b9e7f26525ca388220d36867ef4b3b9cdac55af7dce2b",
+          "wall": 0.030967416998464614,
+          "paid": 382,
+          "visits": 1392,
+          "failures": 270,
+          "accepted": 72,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              5
+            ],
+            [
+              2,
+              4,
+              5,
+              5
+            ]
+          ],
+          "native": 0.00041771,
+          "encode": 6.637499609496444e-05,
+          "ipc": 0.0008804980025161058
+        },
+        {
+          "cut": 12,
+          "rep": 0,
+          "sha": "12000b574e7ad820aa2b9e7f26525ca388220d36867ef4b3b9cdac55af7dce2b",
+          "wall": 0.032630959001835436,
+          "paid": 360,
+          "visits": 1430,
+          "failures": 288,
+          "accepted": 72,
+          "issued_plan_counts": [],
+          "native": 0.000477869,
+          "encode": 0,
+          "ipc": 0.000925542030017823
+        },
+        {
+          "cut": 1000000000,
+          "rep": 0,
+          "sha": "12000b574e7ad820aa2b9e7f26525ca388220d36867ef4b3b9cdac55af7dce2b",
+          "wall": 0.03425245800463017,
+          "paid": 360,
+          "visits": 1430,
+          "failures": 288,
+          "accepted": 72,
+          "issued_plan_counts": [],
+          "native": 0.000530509,
+          "encode": 0,
+          "ipc": 0.0011050840403186157
+        },
+        {
+          "cut": 1000000000,
+          "rep": 1,
+          "sha": "12000b574e7ad820aa2b9e7f26525ca388220d36867ef4b3b9cdac55af7dce2b",
+          "wall": 0.03328329199575819,
+          "paid": 360,
+          "visits": 1430,
+          "failures": 288,
+          "accepted": 72,
+          "issued_plan_counts": [],
+          "native": 0.000495128,
+          "encode": 0,
+          "ipc": 0.0010111659648828208
+        },
+        {
+          "cut": 12,
+          "rep": 1,
+          "sha": "12000b574e7ad820aa2b9e7f26525ca388220d36867ef4b3b9cdac55af7dce2b",
+          "wall": 0.029165542000555433,
+          "paid": 360,
+          "visits": 1430,
+          "failures": 288,
+          "accepted": 72,
+          "issued_plan_counts": [],
+          "native": 0.000425464,
+          "encode": 0,
+          "ipc": 0.000838626001495868
+        },
+        {
+          "cut": 3,
+          "rep": 1,
+          "sha": "12000b574e7ad820aa2b9e7f26525ca388220d36867ef4b3b9cdac55af7dce2b",
+          "wall": 0.030316834003315307,
+          "paid": 382,
+          "visits": 1392,
+          "failures": 270,
+          "accepted": 72,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              5
+            ],
+            [
+              2,
+              4,
+              5,
+              5
+            ]
+          ],
+          "native": 0.000452622,
+          "encode": 5.93330041738227e-05,
+          "ipc": 0.0009208370029227808
+        },
+        {
+          "cut": 0,
+          "rep": 1,
+          "sha": "12000b574e7ad820aa2b9e7f26525ca388220d36867ef4b3b9cdac55af7dce2b",
+          "wall": 0.04698704199108761,
+          "paid": 730,
+          "visits": 1100,
+          "failures": 10,
+          "accepted": 72,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              81
+            ],
+            [
+              2,
+              4,
+              5,
+              81
+            ]
+          ],
+          "native": 0.000190832,
+          "encode": 0.000283957997453399,
+          "ipc": 0.0009809970069909468
+        }
+      ],
+      "alternative": {
+        "equal_state": false,
+        "sha": "1f6984ad9287d5ee6ba916820df804856fade40a275d7401d6ec857a593b5c4e",
+        "paid": 386,
+        "wall": 0.01490458300395403,
+        "visits": 200,
+        "accepted": 26,
+        "signed": 62
+      }
+    },
+    "grammar-benefit-fork-17119": {
+      "intervals": [
+        {
+          "interval": [
+            0,
+            3
+          ],
+          "comparable": true,
+          "gain": 0.1766527110875426
+        },
+        {
+          "interval": [
+            3,
+            12
+          ],
+          "comparable": true,
+          "gain": 0.19911776540501494
+        },
+        {
+          "interval": [
+            12,
+            1000000000
+          ],
+          "comparable": true,
+          "gain": 0.01798622875914599
+        }
+      ],
+      "instructions": 10,
+      "ambiguous": 8,
+      "rollouts": [
+        {
+          "cut": 0,
+          "rep": 0,
+          "sha": "6cc40029f5cd7d97c9e73068f608e97e3280093aaa388c5c9e12851b4557c293",
+          "wall": 0.05711291699844878,
+          "paid": 1292,
+          "visits": 3290,
+          "failures": 12,
+          "accepted": 136,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              143
+            ],
+            [
+              2,
+              4,
+              5,
+              143
+            ]
+          ],
+          "native": 0.000303003,
+          "encode": 0.00045291897549759597,
+          "ipc": 0.0018133299454348162
+        },
+        {
+          "cut": 3,
+          "rep": 0,
+          "sha": "6cc40029f5cd7d97c9e73068f608e97e3280093aaa388c5c9e12851b4557c293",
+          "wall": 0.05273129200213589,
+          "paid": 1018,
+          "visits": 3510,
+          "failures": 226,
+          "accepted": 136,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              82
+            ],
+            [
+              2,
+              4,
+              5,
+              82
+            ]
+          ],
+          "native": 0.000524117,
+          "encode": 0.00015354201605077833,
+          "ipc": 0.0014128319890005514
+        },
+        {
+          "cut": 12,
+          "rep": 0,
+          "sha": "6cc40029f5cd7d97c9e73068f608e97e3280093aaa388c5c9e12851b4557c293",
+          "wall": 0.04966466699261218,
+          "paid": 956,
+          "visits": 4188,
+          "failures": 820,
+          "accepted": 136,
+          "issued_plan_counts": [],
+          "native": 0.00098562,
+          "encode": 0,
+          "ipc": 0.0010430009715491906
+        },
+        {
+          "cut": 1000000000,
+          "rep": 0,
+          "sha": "6cc40029f5cd7d97c9e73068f608e97e3280093aaa388c5c9e12851b4557c293",
+          "wall": 0.05671458400320262,
+          "paid": 956,
+          "visits": 4188,
+          "failures": 820,
+          "accepted": 136,
+          "issued_plan_counts": [],
+          "native": 0.001208703,
+          "encode": 0,
+          "ipc": 0.0012501669552875683
+        },
+        {
+          "cut": 1000000000,
+          "rep": 1,
+          "sha": "6cc40029f5cd7d97c9e73068f608e97e3280093aaa388c5c9e12851b4557c293",
+          "wall": 0.05247525000595488,
+          "paid": 956,
+          "visits": 4188,
+          "failures": 820,
+          "accepted": 136,
+          "issued_plan_counts": [],
+          "native": 0.001090128,
+          "encode": 0,
+          "ipc": 0.0011390830477466807
+        },
+        {
+          "cut": 12,
+          "rep": 1,
+          "sha": "6cc40029f5cd7d97c9e73068f608e97e3280093aaa388c5c9e12851b4557c293",
+          "wall": 0.05144754100183491,
+          "paid": 956,
+          "visits": 4188,
+          "failures": 820,
+          "accepted": 136,
+          "issued_plan_counts": [],
+          "native": 0.001064139,
+          "encode": 0,
+          "ipc": 0.001178999023977667
+        },
+        {
+          "cut": 3,
+          "rep": 1,
+          "sha": "6cc40029f5cd7d97c9e73068f608e97e3280093aaa388c5c9e12851b4557c293",
+          "wall": 0.05142991700267885,
+          "paid": 1018,
+          "visits": 3510,
+          "failures": 226,
+          "accepted": 136,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              82
+            ],
+            [
+              2,
+              4,
+              5,
+              82
+            ]
+          ],
+          "native": 0.000505954,
+          "encode": 0.000158374008606188,
+          "ipc": 0.0013120810472173616
+        },
+        {
+          "cut": 0,
+          "rep": 1,
+          "sha": "6cc40029f5cd7d97c9e73068f608e97e3280093aaa388c5c9e12851b4557c293",
+          "wall": 0.05746825000096578,
+          "paid": 1292,
+          "visits": 3290,
+          "failures": 12,
+          "accepted": 136,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              143
+            ],
+            [
+              2,
+              4,
+              5,
+              143
+            ]
+          ],
+          "native": 0.000309578,
+          "encode": 0.00046504204510711133,
+          "ipc": 0.0018485870386939496
+        }
+      ],
+      "alternative": {
+        "equal_state": false,
+        "sha": "602503a5bc32d7aabd2365fa3574c5a5c5396efc79df1d69eac2c0d1693449c6",
+        "paid": 910,
+        "wall": 0.01861591600754764,
+        "visits": 436,
+        "accepted": 54,
+        "signed": 122
+      }
+    },
+    "grammar-benefit-fork-17120": {
+      "intervals": [
+        {
+          "interval": [
+            0,
+            3
+          ],
+          "comparable": true,
+          "gain": 0.11035104181246863
+        },
+        {
+          "interval": [
+            3,
+            12
+          ],
+          "comparable": true,
+          "gain": 0.11942783571191193
+        },
+        {
+          "interval": [
+            12,
+            1000000000
+          ],
+          "comparable": true,
+          "gain": -0.012575394284131323
+        }
+      ],
+      "instructions": 10,
+      "ambiguous": 8,
+      "rollouts": [
+        {
+          "cut": 0,
+          "rep": 0,
+          "sha": "001dc2da124e4beb717b12e2540bcb33c844222c2ebab6daa2999546bcc6e1c8",
+          "wall": 0.04138979100389406,
+          "paid": 847,
+          "visits": 1578,
+          "failures": 8,
+          "accepted": 63,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              97
+            ],
+            [
+              2,
+              4,
+              5,
+              97
+            ]
+          ],
+          "native": 0.000257209,
+          "encode": 0.000412086010328494,
+          "ipc": 0.0013084980164421722
+        },
+        {
+          "cut": 3,
+          "rep": 0,
+          "sha": "001dc2da124e4beb717b12e2540bcb33c844222c2ebab6daa2999546bcc6e1c8",
+          "wall": 0.03582116699544713,
+          "paid": 389,
+          "visits": 1798,
+          "failures": 158,
+          "accepted": 63,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              21
+            ],
+            [
+              2,
+              4,
+              5,
+              21
+            ]
+          ],
+          "native": 0.000351543,
+          "encode": 0.00014800000644754618,
+          "ipc": 0.0009542909683659673
+        },
+        {
+          "cut": 12,
+          "rep": 0,
+          "sha": "001dc2da124e4beb717b12e2540bcb33c844222c2ebab6daa2999546bcc6e1c8",
+          "wall": 0.03472929100098554,
+          "paid": 369,
+          "visits": 1954,
+          "failures": 306,
+          "accepted": 63,
+          "issued_plan_counts": [],
+          "native": 0.000476908,
+          "encode": 0,
+          "ipc": 0.0008820399816613644
+        },
+        {
+          "cut": 1000000000,
+          "rep": 0,
+          "sha": "001dc2da124e4beb717b12e2540bcb33c844222c2ebab6daa2999546bcc6e1c8",
+          "wall": 0.032846166999661364,
+          "paid": 369,
+          "visits": 1954,
+          "failures": 306,
+          "accepted": 63,
+          "issued_plan_counts": [],
+          "native": 0.000444584,
+          "encode": 0,
+          "ipc": 0.0008276269945781678
+        },
+        {
+          "cut": 1000000000,
+          "rep": 1,
+          "sha": "001dc2da124e4beb717b12e2540bcb33c844222c2ebab6daa2999546bcc6e1c8",
+          "wall": 0.034096000003046356,
+          "paid": 369,
+          "visits": 1954,
+          "failures": 306,
+          "accepted": 63,
+          "issued_plan_counts": [],
+          "native": 0.0004623,
+          "encode": 0,
+          "ipc": 0.0008831259765429422
+        },
+        {
+          "cut": 12,
+          "rep": 1,
+          "sha": "001dc2da124e4beb717b12e2540bcb33c844222c2ebab6daa2999546bcc6e1c8",
+          "wall": 0.03575429199554492,
+          "paid": 369,
+          "visits": 1954,
+          "failures": 306,
+          "accepted": 63,
+          "issued_plan_counts": [],
+          "native": 0.000455537,
+          "encode": 0,
+          "ipc": 0.0008507919264957309
+        },
+        {
+          "cut": 3,
+          "rep": 1,
+          "sha": "001dc2da124e4beb717b12e2540bcb33c844222c2ebab6daa2999546bcc6e1c8",
+          "wall": 0.03717670901096426,
+          "paid": 389,
+          "visits": 1798,
+          "failures": 158,
+          "accepted": 63,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              21
+            ],
+            [
+              2,
+              4,
+              5,
+              21
+            ]
+          ],
+          "native": 0.000333038,
+          "encode": 0.0001484600070398301,
+          "ipc": 0.0009371279884362593
+        },
+        {
+          "cut": 0,
+          "rep": 1,
+          "sha": "001dc2da124e4beb717b12e2540bcb33c844222c2ebab6daa2999546bcc6e1c8",
+          "wall": 0.038913707991014235,
+          "paid": 847,
+          "visits": 1578,
+          "failures": 8,
+          "accepted": 63,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              97
+            ],
+            [
+              2,
+              4,
+              5,
+              97
+            ]
+          ],
+          "native": 0.000188876,
+          "encode": 0.00037070999678689986,
+          "ipc": 0.0012095460260752589
+        }
+      ],
+      "alternative": {
+        "equal_state": false,
+        "sha": "015c8ca9f74ab49998853cc64c0a13c7bc7c0063a063144c241b03a6c1a0235b",
+        "paid": 517,
+        "wall": 0.025355125006171875,
+        "visits": 236,
+        "accepted": 29,
+        "signed": 69
+      }
+    },
+    "grammar-benefit-large-fork-17120": {
+      "intervals": [
+        {
+          "interval": [
+            0,
+            3
+          ],
+          "comparable": true,
+          "gain": 0.005961750100496016
+        },
+        {
+          "interval": [
+            3,
+            12
+          ],
+          "comparable": true,
+          "gain": 0.25568716790739293
+        },
+        {
+          "interval": [
+            12,
+            1000000000
+          ],
+          "comparable": true,
+          "gain": 0.6225791662511763
+        }
+      ],
+      "instructions": 10,
+      "ambiguous": 8,
+      "rollouts": [
+        {
+          "cut": 0,
+          "rep": 0,
+          "sha": "9f507052bfab69312f74ebc7eafb282e1f52ae2e75e44d3b59051e26eddf519e",
+          "wall": 0.1222482500015758,
+          "paid": 7951,
+          "visits": 11048,
+          "failures": 400,
+          "accepted": 567,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              873
+            ],
+            [
+              2,
+              4,
+              5,
+              873
+            ]
+          ],
+          "native": 0.001242924,
+          "encode": 0.0006632500299019739,
+          "ipc": 0.005457759034470655
+        },
+        {
+          "cut": 3,
+          "rep": 0,
+          "sha": "9f507052bfab69312f74ebc7eafb282e1f52ae2e75e44d3b59051e26eddf519e",
+          "wall": 0.1486827920016367,
+          "paid": 7951,
+          "visits": 11048,
+          "failures": 400,
+          "accepted": 567,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              873
+            ],
+            [
+              2,
+              4,
+              5,
+              873
+            ]
+          ],
+          "native": 0.001361906,
+          "encode": 0.0008181680022971705,
+          "ipc": 0.005820541016873904
+        },
+        {
+          "cut": 12,
+          "rep": 0,
+          "sha": "9f507052bfab69312f74ebc7eafb282e1f52ae2e75e44d3b59051e26eddf519e",
+          "wall": 0.12767866700596642,
+          "paid": 7993,
+          "visits": 14968,
+          "failures": 2242,
+          "accepted": 567,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              648
+            ],
+            [
+              2,
+              4,
+              5,
+              648
+            ]
+          ],
+          "native": 0.002862639,
+          "encode": 0.00039858500531408936,
+          "ipc": 0.005425087962066755
+        },
+        {
+          "cut": 1000000000,
+          "rep": 0,
+          "sha": "9f507052bfab69312f74ebc7eafb282e1f52ae2e75e44d3b59051e26eddf519e",
+          "wall": 0.16272816598939244,
+          "paid": 27801,
+          "visits": 44410,
+          "failures": 27234,
+          "accepted": 567,
+          "issued_plan_counts": [],
+          "native": 0.026009911,
+          "encode": 0,
+          "ipc": 0.013649749977048486
+        },
+        {
+          "cut": 1000000000,
+          "rep": 1,
+          "sha": "9f507052bfab69312f74ebc7eafb282e1f52ae2e75e44d3b59051e26eddf519e",
+          "wall": 0.14893758299876936,
+          "paid": 27801,
+          "visits": 44410,
+          "failures": 27234,
+          "accepted": 567,
+          "issued_plan_counts": [],
+          "native": 0.026145017,
+          "encode": 0,
+          "ipc": 0.013486965035554022
+        },
+        {
+          "cut": 12,
+          "rep": 1,
+          "sha": "9f507052bfab69312f74ebc7eafb282e1f52ae2e75e44d3b59051e26eddf519e",
+          "wall": 0.12227904199971817,
+          "paid": 7993,
+          "visits": 14968,
+          "failures": 2242,
+          "accepted": 567,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              648
+            ],
+            [
+              2,
+              4,
+              5,
+              648
+            ]
+          ],
+          "native": 0.002953626,
+          "encode": 0.00037116598105058074,
+          "ipc": 0.005360709939850494
+        },
+        {
+          "cut": 3,
+          "rep": 1,
+          "sha": "9f507052bfab69312f74ebc7eafb282e1f52ae2e75e44d3b59051e26eddf519e",
+          "wall": 0.12114229099825025,
+          "paid": 7951,
+          "visits": 11048,
+          "failures": 400,
+          "accepted": 567,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              873
+            ],
+            [
+              2,
+              4,
+              5,
+              873
+            ]
+          ],
+          "native": 0.001265416,
+          "encode": 0.0006223750242497772,
+          "ipc": 0.005396044012741186
+        },
+        {
+          "cut": 0,
+          "rep": 1,
+          "sha": "9f507052bfab69312f74ebc7eafb282e1f52ae2e75e44d3b59051e26eddf519e",
+          "wall": 0.1392596249934286,
+          "paid": 7951,
+          "visits": 11048,
+          "failures": 400,
+          "accepted": 567,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              873
+            ],
+            [
+              2,
+              4,
+              5,
+              873
+            ]
+          ],
+          "native": 0.001244568,
+          "encode": 0.0006695410120300949,
+          "ipc": 0.005580713026574813
+        }
+      ],
+      "alternative": {
+        "equal_state": false,
+        "sha": "b7183b368a4ed2002355903ed19a2dfa467e9e4d96ab965e78cff49bc748b6f4",
+        "paid": 6315,
+        "wall": 0.05280008399859071,
+        "visits": 3882,
+        "accepted": 269,
+        "signed": 544
+      }
+    },
+    "grammar-benefit-swap-17118": {
+      "intervals": [
+        {
+          "interval": [
+            0,
+            3
+          ],
+          "comparable": true,
+          "gain": 0.1759342751707899
+        },
+        {
+          "interval": [
+            3,
+            12
+          ],
+          "comparable": true,
+          "gain": 0.02515004393217897
+        },
+        {
+          "interval": [
+            12,
+            1000000000
+          ],
+          "comparable": true,
+          "gain": -0.04594952508091286
+        }
+      ],
+      "instructions": 10,
+      "ambiguous": 10,
+      "rollouts": [
+        {
+          "cut": 0,
+          "rep": 0,
+          "sha": "12000b574e7ad820aa2b9e7f26525ca388220d36867ef4b3b9cdac55af7dce2b",
+          "wall": 0.03287925000768155,
+          "paid": 730,
+          "visits": 1100,
+          "failures": 10,
+          "accepted": 72,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              81
+            ],
+            [
+              2,
+              4,
+              5,
+              81
+            ]
+          ],
+          "native": 0.00018092,
+          "encode": 0.0002985019964398816,
+          "ipc": 0.0009623359655961394
+        },
+        {
+          "cut": 3,
+          "rep": 0,
+          "sha": "12000b574e7ad820aa2b9e7f26525ca388220d36867ef4b3b9cdac55af7dce2b",
+          "wall": 0.03330949999508448,
+          "paid": 382,
+          "visits": 1392,
+          "failures": 270,
+          "accepted": 72,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              5
+            ],
+            [
+              2,
+              4,
+              5,
+              5
+            ]
+          ],
+          "native": 0.000471115,
+          "encode": 6.349998875521123e-05,
+          "ipc": 0.0009677900379756466
+        },
+        {
+          "cut": 12,
+          "rep": 0,
+          "sha": "12000b574e7ad820aa2b9e7f26525ca388220d36867ef4b3b9cdac55af7dce2b",
+          "wall": 0.029323165988898836,
+          "paid": 360,
+          "visits": 1430,
+          "failures": 288,
+          "accepted": 72,
+          "issued_plan_counts": [],
+          "native": 0.000423466,
+          "encode": 0,
+          "ipc": 0.0008102920255623758
+        },
+        {
+          "cut": 1000000000,
+          "rep": 0,
+          "sha": "12000b574e7ad820aa2b9e7f26525ca388220d36867ef4b3b9cdac55af7dce2b",
+          "wall": 0.02817316699656658,
+          "paid": 360,
+          "visits": 1430,
+          "failures": 288,
+          "accepted": 72,
+          "issued_plan_counts": [],
+          "native": 0.000439469,
+          "encode": 0,
+          "ipc": 0.0008389579743379727
+        },
+        {
+          "cut": 1000000000,
+          "rep": 1,
+          "sha": "12000b574e7ad820aa2b9e7f26525ca388220d36867ef4b3b9cdac55af7dce2b",
+          "wall": 0.0318647090025479,
+          "paid": 360,
+          "visits": 1430,
+          "failures": 288,
+          "accepted": 72,
+          "issued_plan_counts": [],
+          "native": 0.000445818,
+          "encode": 0,
+          "ipc": 0.0010027089883806184
+        },
+        {
+          "cut": 12,
+          "rep": 1,
+          "sha": "12000b574e7ad820aa2b9e7f26525ca388220d36867ef4b3b9cdac55af7dce2b",
+          "wall": 0.04744441599177662,
+          "paid": 360,
+          "visits": 1430,
+          "failures": 288,
+          "accepted": 72,
+          "issued_plan_counts": [],
+          "native": 0.000501214,
+          "encode": 0,
+          "ipc": 0.0009890860237646848
+        },
+        {
+          "cut": 3,
+          "rep": 1,
+          "sha": "12000b574e7ad820aa2b9e7f26525ca388220d36867ef4b3b9cdac55af7dce2b",
+          "wall": 0.03520791599294171,
+          "paid": 382,
+          "visits": 1392,
+          "failures": 270,
+          "accepted": 72,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              5
+            ],
+            [
+              2,
+              4,
+              5,
+              5
+            ]
+          ],
+          "native": 0.000472369,
+          "encode": 9.133300045505166e-05,
+          "ipc": 0.0010730029898695648
+        },
+        {
+          "cut": 0,
+          "rep": 1,
+          "sha": "12000b574e7ad820aa2b9e7f26525ca388220d36867ef4b3b9cdac55af7dce2b",
+          "wall": 0.03511933400295675,
+          "paid": 730,
+          "visits": 1100,
+          "failures": 10,
+          "accepted": 72,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              81
+            ],
+            [
+              2,
+              4,
+              5,
+              81
+            ]
+          ],
+          "native": 0.000195876,
+          "encode": 0.0003182919754181057,
+          "ipc": 0.0011007530556526035
+        }
+      ],
+      "alternative": {
+        "equal_state": false,
+        "sha": "1f6984ad9287d5ee6ba916820df804856fade40a275d7401d6ec857a593b5c4e",
+        "paid": 406,
+        "wall": 0.016524041988304816,
+        "visits": 220,
+        "accepted": 26,
+        "signed": 62
+      }
+    },
+    "grammar-benefit-swap-17119": {
+      "intervals": [
+        {
+          "interval": [
+            0,
+            3
+          ],
+          "comparable": true,
+          "gain": 0.1823654512653492
+        },
+        {
+          "interval": [
+            3,
+            12
+          ],
+          "comparable": true,
+          "gain": 0.18755535618228525
+        },
+        {
+          "interval": [
+            12,
+            1000000000
+          ],
+          "comparable": true,
+          "gain": 0.0008953591252415468
+        }
+      ],
+      "instructions": 10,
+      "ambiguous": 10,
+      "rollouts": [
+        {
+          "cut": 0,
+          "rep": 0,
+          "sha": "6cc40029f5cd7d97c9e73068f608e97e3280093aaa388c5c9e12851b4557c293",
+          "wall": 0.059910583004239015,
+          "paid": 1292,
+          "visits": 3290,
+          "failures": 12,
+          "accepted": 136,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              143
+            ],
+            [
+              2,
+              4,
+              5,
+              143
+            ]
+          ],
+          "native": 0.000352091,
+          "encode": 0.0004603760171448812,
+          "ipc": 0.0019992490124423057
+        },
+        {
+          "cut": 3,
+          "rep": 0,
+          "sha": "6cc40029f5cd7d97c9e73068f608e97e3280093aaa388c5c9e12851b4557c293",
+          "wall": 0.05658712500007823,
+          "paid": 1018,
+          "visits": 3510,
+          "failures": 226,
+          "accepted": 136,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              82
+            ],
+            [
+              2,
+              4,
+              5,
+              82
+            ]
+          ],
+          "native": 0.000615364,
+          "encode": 0.00016954299644567072,
+          "ipc": 0.001586873026099056
+        },
+        {
+          "cut": 12,
+          "rep": 0,
+          "sha": "6cc40029f5cd7d97c9e73068f608e97e3280093aaa388c5c9e12851b4557c293",
+          "wall": 0.0504827909899177,
+          "paid": 956,
+          "visits": 4188,
+          "failures": 820,
+          "accepted": 136,
+          "issued_plan_counts": [],
+          "native": 0.001082849,
+          "encode": 0,
+          "ipc": 0.0011703369236784056
+        },
+        {
+          "cut": 1000000000,
+          "rep": 0,
+          "sha": "6cc40029f5cd7d97c9e73068f608e97e3280093aaa388c5c9e12851b4557c293",
+          "wall": 0.05120258299575653,
+          "paid": 956,
+          "visits": 4188,
+          "failures": 820,
+          "accepted": 136,
+          "issued_plan_counts": [],
+          "native": 0.001060741,
+          "encode": 0,
+          "ipc": 0.0011362070217728615
+        },
+        {
+          "cut": 1000000000,
+          "rep": 1,
+          "sha": "6cc40029f5cd7d97c9e73068f608e97e3280093aaa388c5c9e12851b4557c293",
+          "wall": 0.04951816699758638,
+          "paid": 956,
+          "visits": 4188,
+          "failures": 820,
+          "accepted": 136,
+          "issued_plan_counts": [],
+          "native": 0.001030925,
+          "encode": 0,
+          "ipc": 0.0011532540520420298
+        },
+        {
+          "cut": 12,
+          "rep": 1,
+          "sha": "6cc40029f5cd7d97c9e73068f608e97e3280093aaa388c5c9e12851b4557c293",
+          "wall": 0.04986195798846893,
+          "paid": 956,
+          "visits": 4188,
+          "failures": 820,
+          "accepted": 136,
+          "issued_plan_counts": [],
+          "native": 0.001057222,
+          "encode": 0,
+          "ipc": 0.001193963980767876
+        },
+        {
+          "cut": 3,
+          "rep": 1,
+          "sha": "6cc40029f5cd7d97c9e73068f608e97e3280093aaa388c5c9e12851b4557c293",
+          "wall": 0.052071750003960915,
+          "paid": 1018,
+          "visits": 3510,
+          "failures": 226,
+          "accepted": 136,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              82
+            ],
+            [
+              2,
+              4,
+              5,
+              82
+            ]
+          ],
+          "native": 0.000481282,
+          "encode": 0.00017183196905534714,
+          "ipc": 0.0013788720243610442
+        },
+        {
+          "cut": 0,
+          "rep": 1,
+          "sha": "6cc40029f5cd7d97c9e73068f608e97e3280093aaa388c5c9e12851b4557c293",
+          "wall": 0.056637624991708435,
+          "paid": 1292,
+          "visits": 3290,
+          "failures": 12,
+          "accepted": 136,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              143
+            ],
+            [
+              2,
+              4,
+              5,
+              143
+            ]
+          ],
+          "native": 0.000330117,
+          "encode": 0.00044716500269714743,
+          "ipc": 0.0017025019333232194
+        }
+      ],
+      "alternative": {
+        "equal_state": false,
+        "sha": "602503a5bc32d7aabd2365fa3574c5a5c5396efc79df1d69eac2c0d1693449c6",
+        "paid": 960,
+        "wall": 0.019731167005375028,
+        "visits": 486,
+        "accepted": 54,
+        "signed": 122
+      }
+    },
+    "grammar-benefit-swap-17120": {
+      "intervals": [
+        {
+          "interval": [
+            0,
+            3
+          ],
+          "comparable": true,
+          "gain": 0.1248481307577815
+        },
+        {
+          "interval": [
+            3,
+            12
+          ],
+          "comparable": true,
+          "gain": 0.10937548427362809
+        },
+        {
+          "interval": [
+            12,
+            1000000000
+          ],
+          "comparable": true,
+          "gain": -0.001031754007667135
+        }
+      ],
+      "instructions": 10,
+      "ambiguous": 10,
+      "rollouts": [
+        {
+          "cut": 0,
+          "rep": 0,
+          "sha": "001dc2da124e4beb717b12e2540bcb33c844222c2ebab6daa2999546bcc6e1c8",
+          "wall": 0.03932395800075028,
+          "paid": 847,
+          "visits": 1578,
+          "failures": 8,
+          "accepted": 63,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              97
+            ],
+            [
+              2,
+              4,
+              5,
+              97
+            ]
+          ],
+          "native": 0.000182086,
+          "encode": 0.0004033750155940652,
+          "ipc": 0.0012962510081706569
+        },
+        {
+          "cut": 3,
+          "rep": 0,
+          "sha": "001dc2da124e4beb717b12e2540bcb33c844222c2ebab6daa2999546bcc6e1c8",
+          "wall": 0.036414541013073176,
+          "paid": 389,
+          "visits": 1798,
+          "failures": 158,
+          "accepted": 63,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              21
+            ],
+            [
+              2,
+              4,
+              5,
+              21
+            ]
+          ],
+          "native": 0.00032009,
+          "encode": 0.0001354160049231723,
+          "ipc": 0.0008564970194129273
+        },
+        {
+          "cut": 12,
+          "rep": 0,
+          "sha": "001dc2da124e4beb717b12e2540bcb33c844222c2ebab6daa2999546bcc6e1c8",
+          "wall": 0.03472216699447017,
+          "paid": 369,
+          "visits": 1954,
+          "failures": 306,
+          "accepted": 63,
+          "issued_plan_counts": [],
+          "native": 0.000487195,
+          "encode": 0,
+          "ipc": 0.0008802090014796704
+        },
+        {
+          "cut": 1000000000,
+          "rep": 0,
+          "sha": "001dc2da124e4beb717b12e2540bcb33c844222c2ebab6daa2999546bcc6e1c8",
+          "wall": 0.03447766700992361,
+          "paid": 369,
+          "visits": 1954,
+          "failures": 306,
+          "accepted": 63,
+          "issued_plan_counts": [],
+          "native": 0.00047463,
+          "encode": 0,
+          "ipc": 0.0008595410181442276
+        },
+        {
+          "cut": 1000000000,
+          "rep": 1,
+          "sha": "001dc2da124e4beb717b12e2540bcb33c844222c2ebab6daa2999546bcc6e1c8",
+          "wall": 0.033362916990881786,
+          "paid": 369,
+          "visits": 1954,
+          "failures": 306,
+          "accepted": 63,
+          "issued_plan_counts": [],
+          "native": 0.000466577,
+          "encode": 0,
+          "ipc": 0.000866585032781586
+        },
+        {
+          "cut": 12,
+          "rep": 1,
+          "sha": "001dc2da124e4beb717b12e2540bcb33c844222c2ebab6daa2999546bcc6e1c8",
+          "wall": 0.03340341600414831,
+          "paid": 369,
+          "visits": 1954,
+          "failures": 306,
+          "accepted": 63,
+          "issued_plan_counts": [],
+          "native": 0.000471953,
+          "encode": 0,
+          "ipc": 0.0008702509512659162
+        },
+        {
+          "cut": 3,
+          "rep": 1,
+          "sha": "001dc2da124e4beb717b12e2540bcb33c844222c2ebab6daa2999546bcc6e1c8",
+          "wall": 0.03722600000037346,
+          "paid": 389,
+          "visits": 1798,
+          "failures": 158,
+          "accepted": 63,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              21
+            ],
+            [
+              2,
+              4,
+              5,
+              21
+            ]
+          ],
+          "native": 0.000308421,
+          "encode": 0.00014062499394640326,
+          "ipc": 0.0009054169931914657
+        },
+        {
+          "cut": 0,
+          "rep": 1,
+          "sha": "001dc2da124e4beb717b12e2540bcb33c844222c2ebab6daa2999546bcc6e1c8",
+          "wall": 0.03682454099180177,
+          "paid": 847,
+          "visits": 1578,
+          "failures": 8,
+          "accepted": 63,
+          "issued_plan_counts": [
+            [
+              1,
+              4,
+              5,
+              97
+            ],
+            [
+              2,
+              4,
+              5,
+              97
+            ]
+          ],
+          "native": 0.000181416,
+          "encode": 0.0003512090042931959,
+          "ipc": 0.0011743329814635217
+        }
+      ],
+      "alternative": {
+        "equal_state": false,
+        "sha": "015c8ca9f74ab49998853cc64c0a13c7bc7c0063a063144c241b03a6c1a0235b",
+        "paid": 555,
+        "wall": 0.016114041005494073,
+        "visits": 274,
+        "accepted": 29,
+        "signed": 69
+      }
+    },
+    "loopfact": {
+      "intervals": [
+        {
+          "interval": [
+            0,
+            3
+          ],
+          "comparable": true,
+          "gain": 0.0007443751980600165
+        },
+        {
+          "interval": [
+            3,
+            12
+          ],
+          "comparable": true,
+          "gain": -0.0026951221090390177
+        },
+        {
+          "interval": [
+            12,
+            1000000000
+          ],
+          "comparable": true,
+          "gain": 0.014239092569111465
+        }
+      ],
+      "instructions": 2,
+      "ambiguous": 0,
+      "rollouts": [
+        {
+          "cut": 0,
+          "rep": 0,
+          "sha": "2b784f49ae3c7a88417b762d888c1dd8e1b9f4e1cc6814ad0af4f824679e4e6c",
+          "wall": 1.9898155420087278,
+          "paid": 16705,
+          "visits": 42120,
+          "failures": 16164,
+          "accepted": 465,
+          "issued_plan_counts": [
+            [
+              144,
+              1,
+              1,
+              76
+            ]
+          ],
+          "native": 0.009241458,
+          "encode": 0.00016975098697002977,
+          "ipc": 0.012174873147159815
+        },
+        {
+          "cut": 3,
+          "rep": 0,
+          "sha": "2b784f49ae3c7a88417b762d888c1dd8e1b9f4e1cc6814ad0af4f824679e4e6c",
+          "wall": 1.9518260409968207,
+          "paid": 16651,
+          "visits": 42201,
+          "failures": 16164,
+          "accepted": 465,
+          "issued_plan_counts": [
+            [
+              144,
+              1,
+              1,
+              22
+            ]
+          ],
+          "native": 0.009162045,
+          "encode": 9.512598626315594e-05,
+          "ipc": 0.011528703107615001
+        },
+        {
+          "cut": 12,
+          "rep": 0,
+          "sha": "2b784f49ae3c7a88417b762d888c1dd8e1b9f4e1cc6814ad0af4f824679e4e6c",
+          "wall": 2.024730124991038,
+          "paid": 16629,
+          "visits": 42311,
+          "failures": 16164,
+          "accepted": 465,
+          "issued_plan_counts": [],
+          "native": 0.009332795,
+          "encode": 0,
+          "ipc": 0.012566180943395011
+        },
+        {
+          "cut": 1000000000,
+          "rep": 0,
+          "sha": "2b784f49ae3c7a88417b762d888c1dd8e1b9f4e1cc6814ad0af4f824679e4e6c",
+          "wall": 2.1155499160086038,
+          "paid": 16629,
+          "visits": 42311,
+          "failures": 16164,
+          "accepted": 465,
+          "issued_plan_counts": [],
+          "native": 0.009297361,
+          "encode": 0,
+          "ipc": 0.0127448800340062
+        },
+        {
+          "cut": 1000000000,
+          "rep": 1,
+          "sha": "2b784f49ae3c7a88417b762d888c1dd8e1b9f4e1cc6814ad0af4f824679e4e6c",
+          "wall": 2.1555429169966374,
+          "paid": 16629,
+          "visits": 42311,
+          "failures": 16164,
+          "accepted": 465,
+          "issued_plan_counts": [],
+          "native": 0.009670204,
+          "encode": 0,
+          "ipc": 0.01478384698566515
+        },
+        {
+          "cut": 12,
+          "rep": 1,
+          "sha": "2b784f49ae3c7a88417b762d888c1dd8e1b9f4e1cc6814ad0af4f824679e4e6c",
+          "wall": 2.0025357919948874,
+          "paid": 16629,
+          "visits": 42311,
+          "failures": 16164,
+          "accepted": 465,
+          "issued_plan_counts": [],
+          "native": 0.009063482,
+          "encode": 0,
+          "ipc": 0.01189128689293284
+        },
+        {
+          "cut": 3,
+          "rep": 1,
+          "sha": "2b784f49ae3c7a88417b762d888c1dd8e1b9f4e1cc6814ad0af4f824679e4e6c",
+          "wall": 2.130640332994517,
+          "paid": 16651,
+          "visits": 42201,
+          "failures": 16164,
+          "accepted": 465,
+          "issued_plan_counts": [
+            [
+              144,
+              1,
+              1,
+              22
+            ]
+          ],
+          "native": 0.009525758,
+          "encode": 9.49169771047309e-05,
+          "ipc": 0.0135247088765027
+        },
+        {
+          "cut": 0,
+          "rep": 1,
+          "sha": "2b784f49ae3c7a88417b762d888c1dd8e1b9f4e1cc6814ad0af4f824679e4e6c",
+          "wall": 2.071678416992654,
+          "paid": 16705,
+          "visits": 42120,
+          "failures": 16164,
+          "accepted": 465,
+          "issued_plan_counts": [
+            [
+              144,
+              1,
+              1,
+              76
+            ]
+          ],
+          "native": 0.009522664,
+          "encode": 0.00017212398233823478,
+          "ipc": 0.012751293266774155
+        }
+      ]
+    }
+  }
+}

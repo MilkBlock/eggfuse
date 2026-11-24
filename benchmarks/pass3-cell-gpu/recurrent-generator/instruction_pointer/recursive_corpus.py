@@ -58,6 +58,10 @@ def main(root, out, extra_blind=(), cases=None):
         from txn_chain_corpus import chain_sources
 
         sources.update(chain_sources(src))
+    if cases and any(name.startswith("grammar-benefit-") for name in cases):
+        from benefit_corpus import sources as benefit_sources
+
+        sources.update(benefit_sources(src))
     # Hold out a rule layout as well as its input. Materialize a redundant
     # four-column production certificate, preserving the reference parse.
     template_case = "grammar-layout-832749"
