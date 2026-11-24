@@ -37,14 +37,14 @@ def grammar(seed):
     return "\n".join(init) + "\n(run 10000)\n"
 
 
-def main(root, out):
+def main(root, out, extra_blind=()):
     tree = root / "model-tree"
     src = (tree / "egglog/tests/cykjson.egg").read_text().split("(input Prod")[0]
     # These seed groups are disjoint. No blind capture is used for fitting.
     split = {
         "train": [17118, 17119, 17120, 17121],
         "validation": [17122],
-        "blind": [91627433, 72102993],
+        "blind": [91627433, 72102993, *extra_blind],
     }
     out.mkdir(exist_ok=True, parents=True)
     (out / "split.json").write_text(json.dumps(split, indent=2))
@@ -142,5 +142,6 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("root", type=Path)
     p.add_argument("out", type=Path)
+    p.add_argument("--extra-blind", type=int, nargs="*", default=[])
     a = p.parse_args()
-    main(a.root.resolve(), a.out.resolve())
+    main(a.root.resolve(), a.out.resolve(), a.extra_blind)

@@ -1,0 +1,77 @@
+{
+  "device": "mps",
+  "training": [
+    "fact",
+    "loopfact",
+    "sum-divisors",
+    "jacobi",
+    "grammar-17118",
+    "grammar-17119",
+    "grammar-17120",
+    "grammar-17121"
+  ],
+  "validation": "grammar-17122",
+  "records": {
+    "fact": {
+      "accepted": 340,
+      "binding": 30,
+      "duplicate": 973,
+      "guard": 142
+    },
+    "loopfact": {
+      "accepted": 292,
+      "binding": 25,
+      "duplicate": 303,
+      "guard": 149
+    },
+    "sum-divisors": {
+      "accepted": 948,
+      "duplicate": 3062,
+      "binding": 148,
+      "guard": 373
+    },
+    "jacobi": {
+      "accepted": 2612,
+      "binding": 1065,
+      "duplicate": 2494,
+      "guard": 1383
+    },
+    "grammar-17118": {
+      "accepted": 72,
+      "guard": 288
+    },
+    "grammar-17119": {
+      "accepted": 136,
+      "guard": 820
+    },
+    "grammar-17120": {
+      "accepted": 63,
+      "guard": 306
+    },
+    "grammar-17121": {
+      "accepted": 47,
+      "guard": 150
+    },
+    "grammar-17122": {
+      "accepted": 76,
+      "guard": 272
+    }
+  },
+  "operating_points": {
+    "recall": {
+      "threshold": -6.591211782226562,
+      "valid_total": 76,
+      "valid_kept": 76,
+      "negative_total": 272,
+      "negative_kept": 272
+    },
+    "balanced": {
+      "threshold": -5.2776632173156734,
+      "valid_total": 76,
+      "valid_kept": 72,
+      "negative_total": 272,
+      "negative_kept": 266
+    }
+  },
+  "steps": 300
+}
