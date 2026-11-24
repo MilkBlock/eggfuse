@@ -51,13 +51,16 @@ class LearnedReplacementStream(ReplacementStream):
 
 
 class Policy:
-    def __init__(self, case, root, out, arm, blind, learned_prefix):
+    def __init__(
+        self, case, root, out, arm, blind, learned_prefix, route=None, fraction=1.0
+    ):
         self.arm = arm
         self.cat = Layouts(read(folder(root, case) / "program.json"))
         units = unpack(read(BAKE / "catalog.json"))
         self.groups = [split(units[i]) for i in self.cat.original]
         self.net = Recognizer(self.cat.codes.shape[1]).eval()
-        self.net.load_state_dict(torch.load(out / "higher.pt", weights_only=True))
+        weights = Path("run-recall/structural-reach") if route else out
+        self.net.load_state_dict(torch.load(weights / "higher.pt", weights_only=True))
         self.study = Study(bits=8, symmetric=True, delta_buckets=True)
         self.stream = ReplacementStream
         if learned_prefix:
@@ -65,7 +68,7 @@ class Policy:
 
             self.study.prefix = Prefix().eval()
             self.study.prefix.load_state_dict(
-                torch.load(out / "prefix.pt", weights_only=True)
+                torch.load(weights / "prefix.pt", weights_only=True)
             )
             self.stream = LearnedReplacementStream
         self.waiting = []
@@ -90,6 +93,13 @@ class Policy:
             ]
             for rid, lst in self.cat.by.items()
         }
+
+        self.dispatch = None
+        if route:
+            from template_routing import Dispatch
+
+            self.dispatch = Dispatch(self.cat, out, route, fraction, self.net)
+            self.menu = self.dispatch.menus
 
     def advance(self, rd, pub, txn, rules):
         accepted = set(map(int, pub[3][:, 0]))
@@ -172,14 +182,18 @@ class Policy:
                         else torch.zeros(len(paths), 24)
                     )
                     x = torch.cat((ctx, rd.meta(rid).expand(len(paths), -1)), 1)
-                    score, idx = self.net(
-                        x[:, None, :], self.cat.codes[menu][None, :, :]
-                    ).max(1)
-                    choices = torch.where(
-                        score > 0, torch.tensor(menu)[idx], -1
-                    ).numpy()
+                    if self.dispatch:
+                        choices = self.dispatch.select(rid, x, self.count).numpy()
+                    else:
+                        score, idx = self.net(
+                            x[:, None, :], self.cat.codes[menu][None, :, :]
+                        ).max(1)
+                        choices = torch.where(
+                            score > 0, torch.tensor(menu)[idx], -1
+                        ).numpy()
                     self.count["recognized"] += int((choices >= 0).sum())
-                    self.count["recognition_scores"] += len(paths) * len(menu)
+                    if not self.dispatch:
+                        self.count["recognition_scores"] += len(paths) * len(menu)
                     self.count["recognition_seconds"] += perf_counter() - tick
                 else:
                     choices = np.full(len(paths), -1)
@@ -203,10 +217,24 @@ class Policy:
                         )
 
 
-def run(root, out, case, arm, rep, blind=None, learned_prefix=False):
-    policy = Policy(case, root, out, arm, blind, learned_prefix)
+def run(
+    root,
+    out,
+    case,
+    arm,
+    rep,
+    blind=None,
+    learned_prefix=False,
+    route=None,
+    fraction=1.0,
+):
+    policy = Policy(case, root, out, arm, blind, learned_prefix, route, fraction)
     tag = (blind or "") + ("-learned" if learned_prefix else "")
+    if route:
+        tag += f"-{route}-{fraction:g}"
     series = "replacement/" + arm + tag
+    if route:
+        series += f"/repeat-{rep}"
     m = execute(root, case, study=policy, series=series, seconds=200)
     assert m["termination"] == "schedule_end"
     work = root / series / (case + "-stream-multi")
@@ -230,6 +258,12 @@ def run(root, out, case, arm, rep, blind=None, learned_prefix=False):
         replacement=dict(policy.count),
         internal_committed=len(policy.internal),
     )
+    if policy.dispatch:
+        m.update(
+            route=route,
+            compiled_layouts=sum(map(len, policy.menu.values())),
+            setup_seconds=policy.dispatch.setup,
+        )
     dump(out / f"higher-{case}-{arm}{tag}-{rep}.json", m)
     print(
         case,

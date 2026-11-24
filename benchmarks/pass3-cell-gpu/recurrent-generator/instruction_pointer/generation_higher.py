@@ -162,7 +162,7 @@ def fit(root, out, donor_dir, include=None):
 
 
 @torch.no_grad()
-def run(root, out, case, arm, repeat, verified_receiver=None):
+def run(root, out, case, arm, repeat, verified_receiver=None, route=None, fraction=1.0):
     from replacement_stream import ReplacementStream
 
     pending = set()
@@ -171,7 +171,13 @@ def run(root, out, case, arm, repeat, verified_receiver=None):
     cat = Layouts(prog)
     rd = Reader(prog, root)
     net = Recognizer(cat.codes.shape[1]).eval()
-    net.load_state_dict(torch.load(out / "higher.pt", weights_only=True))
+    weights = Path("run-recall/structural-reach") if route else out
+    net.load_state_dict(torch.load(weights / "higher.pt", weights_only=True))
+    dispatcher = None
+    if route:
+        from template_routing import Dispatch
+
+        dispatcher = Dispatch(cat, out, route, fraction, net)
     compose = Compose().eval()
     compose.load_state_dict(
         torch.load(root / "recursive-agent/multi.pt", weights_only=True)
@@ -238,15 +244,21 @@ def run(root, out, case, arm, repeat, verified_receiver=None):
                     scheduled = set(dict(f["rules"]))
                     for rid, wm in f["rules"]:
                         menu = (
-                            [
-                                i
-                                for i in cat.by[rid]
-                                if all(
-                                    r in scheduled for r, g, w in cat.units[i] if g == 0
-                                )
-                            ]
-                            if arm not in ("atomic", "A")
-                            else []
+                            dispatcher.menus.get(rid, ())
+                            if dispatcher and arm == "D"
+                            else (
+                                [
+                                    i
+                                    for i in cat.by[rid]
+                                    if all(
+                                        r in scheduled
+                                        for r, g, w in cat.units[i]
+                                        if g == 0
+                                    )
+                                ]
+                                if arm not in ("atomic", "A")
+                                else []
+                            )
                         )
                         if arm == "higher" and not menu:
                             continue
@@ -280,16 +292,22 @@ def run(root, out, case, arm, repeat, verified_receiver=None):
                                 xx = torch.cat(
                                     (ctx, rd.meta(rid).expand(len(paths), -1)), 1
                                 )
-                                # Vectorize over complete boundary instances and eligible templates.
-                                logits = net(
-                                    xx[:, None, :], cat.codes[menu][None, :, :]
-                                )
-                                val, col = logits.max(1)
-                                selected = [
-                                    menu[k] if a > 0 else None
-                                    for a, k in zip(val.tolist(), col.tolist())
-                                ]
-                                counts["recognition_scores"] += logits.numel()
+                                if dispatcher:
+                                    ids = dispatcher.select(rid, xx, counts)
+                                    selected = [
+                                        k if k >= 0 else None for k in ids.tolist()
+                                    ]
+                                else:
+                                    # Vectorize over complete boundary instances and eligible templates.
+                                    logits = net(
+                                        xx[:, None, :], cat.codes[menu][None, :, :]
+                                    )
+                                    val, col = logits.max(1)
+                                    selected = [
+                                        menu[k] if a > 0 else None
+                                        for a, k in zip(val.tolist(), col.tolist())
+                                    ]
+                                    counts["recognition_scores"] += logits.numel()
                                 counts["recognition_seconds"] += perf_counter() - tick
                             refs = [
                                 stream.port_refs(j)[paths[:, j]]
@@ -351,7 +369,14 @@ def run(root, out, case, arm, repeat, verified_receiver=None):
             runs=f["runs"],
             build=digest(receiver),
         )
-        dump(out / f"higher_{case}_{arm}_{repeat}.json", m)
+        tag = f"-{route}-{fraction:g}" if dispatcher else ""
+        if dispatcher:
+            m.update(
+                route=route,
+                compiled_layouts=sum(map(len, dispatcher.menus.values())),
+                setup_seconds=dispatcher.setup,
+            )
+        dump(out / f"higher_{case}_{arm}{tag}_{repeat}.json", m)
         print(case, arm, m["coverage"], paid, f["ept"]["signed_internal"], flush=True)
 
 
