@@ -128,7 +128,11 @@ class EventGenerator:
                     audit.window(
                         mem, r, order, depth, parents, post, start, n, lo, count
                     )
-                for owner, pos in pages(start + lo, count):
+                batches = pages(start + lo, count)
+                if (depth + 1 == len(order) and higher is not None
+                        and getattr(higher, "covered_rules", {}).get(r)):
+                    batches = higher.uncovered(mem, r, order, parents, post, start + lo, count)
+                for owner, pos in batches:
                     addr = pos if post is None else post[pos]
                     stats["visits"] += len(addr)
                     child = np.column_stack((parents[owner], addr))
@@ -150,6 +154,11 @@ class EventGenerator:
             if perf_counter() >= deadline:
                 raise TimeoutError
             order = mem.order(r, j)
+            if (len(order) == 1 and higher is not None
+                    and getattr(higher, "covered_rules", {}).get(r)):
+                ix = higher.uncovered_events(mem, r, j, ix)
+                if not len(ix):
+                    return
             if higher is not None:
                 higher.choose(r, j, ix, mem, woke)
             paths = ix[:, None] if order else np.empty((len(ix), 0), np.int64)
