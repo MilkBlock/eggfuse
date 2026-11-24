@@ -1,0 +1,23 @@
+{
+  "fact-recovered-local": {
+    "requests": 1668,
+    "named_inputs": 3442,
+    "roles_beyond_distinct_producers": 164,
+    "roles_witnessed_by_another_parent": 46
+  },
+  "grammar-36719037": {
+    "requests": 47,
+    "named_inputs": 126,
+    "roles_beyond_distinct_producers": 0
+  },
+  "grammar-benefit-held-deep-11901379": {
+    "requests": 44,
+    "named_inputs": 114,
+    "roles_beyond_distinct_producers": 0
+  },
+  "grammar-17118": {
+    "requests": 72,
+    "named_inputs": 190,
+    "roles_beyond_distinct_producers": 0
+  }
+}
