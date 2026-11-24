@@ -1,0 +1,27 @@
+# Teacher census for Cell composition
+
+This offline study reads native commits on their original sealed EggCC Runs. Sum-bits (sum) and dot-product (dot) supply the frozen trace dictionary. Fact, loopfact and sum-divisors supply evaluation. There is no model invocation, training or timing benchmark in this study.
+
+| Evaluation program | Commits | Zero parents | One | Two | Three or more | One or two after offline packing | Both new / two-parent |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| fact | 1,668 | 2 | 455 | 896 | 315 | 1,353 | 64 / 896 |
+| loopfact | 1,419 | 2 | 389 | 738 | 290 | 1,132 | 56 / 738 |
+| sum-divisors | 17,341 | 2 | 4,221 | 9,532 | 3,586 | 13,819 | 1,050 / 9,532 |
+
+**Owners and mappings.** Count distinct named token instances on each accepted teacher proof, including initial and repair tokens. Each named instruction must export the expected table and its captured version must be visible. Multiple alternative proofs can have different counts. Given the logical producer template and consumer atom's table, 35,126 of 43,410 premise occurrences have exactly one possible static instruction position. All positions are unique by that test in 13,375 commits. An operator that explicitly specifies a mapping resolves all its positions, at the cost of adding the mapping to the operator identity. Reuse and forwarding still require current actual returns. The JSON also distinguishes repeated citations of one port from multiple distinct instruction positions on one token.
+
+**Events.** A changed port inside the scheduled rule's watermark is fresh. A productive event is a (Run, consumer with mapped producer templates and PCs, named producer instance) triple. The first fresh premise in source order owns a multi-fresh proof. Across all arities, 18,465 productive events produced 20,422 dependent commits, mean 1.106. Of these events 17,566 produced one and one produced 33. Counting empty offers for operators observed on the respective program adds 419,482 zeros. For an offer, all required ports on the triggering instance must be visible and at least one referenced position fresh; availability and values of other instances are unconstrained. This denominator uses the program's observed catalog. A full static catalog gives more empty offers. Two distinct producers were fresh in 1,170 of 11,166 binary commits; distinct proofs or aliases can still yield the same binding.
+
+**Higher Cells.** We match the frozen 4,096-entry Bake catalog against connected teacher history using the existing capture routine, checking the initial boundary versions and group schedule. Pack eligible non-overlapping occurrences greedily by earliest completion, then longer group and stable trace order. For later consumers, group only already-complete producers, projecting the original named ports as a counterfactual packed interface. Every original consumer remains in the denominator, including internal commits. This assumes the grouping can expose the referenced outputs; it measures available structure, not actual native signatures, execution savings or minimum possible parent count. Only 137 commits reduce their parent count. Another view counts distinct external parents needed to issue each packed group itself. Only 1,400 of 3,740 groups have one or two external parents, including 437 with one. The complete transition and group-boundary histograms are in the summary.
+
+**Operator vocabulary.** A signature includes the consumer template, the partition of its ordered premise roles among distinct parents, each parent's template and each role's instruction position. Local parent numbers follow first occurrence. Portable signatures include structural hashes. There are 1,911 distinct unary/binary signatures in the sum and dot dictionary. Evaluation uses 625 of those and covers 12,236 dependent commits. Evaluation actually needs 2,115 distinct unary/binary signatures for its canonical teacher proofs; 1,250 occur once and the most frequent occurs 606 times. The higher-layout catalog and this trace dictionary have different units.
+
+| Program | Type-only unary / binary signature space | Observed unary + binary | Frozen dictionary hits | Commits with dictionary signature |
+|---|---:|---:|---:|---:|
+| fact | 2,893 / 457,509 | 473 | 193 | 966 |
+| loopfact | 2,821 / 56,666,735 | 416 | 228 | 837 |
+| sum-divisors | 10,315 / 18,456,789,718 | 1,664 | 613 | 10,433 |
+
+For the static ceiling, include declared initial templates, ordinary effect results and statically possible merge results. For producer types A and B with role-wise compatible export counts aᵢ and bᵢ, the assignments using both instances number ∏(aᵢ+bᵢ)−∏aᵢ−∏bᵢ. Sum over ordered types and divide by two to remove swapped instance labels. Allow two distinct instances of one type. This counts a type-compatible vocabulary without materializing it. It includes unreachable combinations. Per-consumer counts and exact frequency distributions are archived in [summary.json](summary.json) and [frequencies.json.gz](frequencies.json.gz).
+
+Reproduce with cell_composition_census.py CASE_FOLDER SUM_DONOR FROZEN_BAKE RAW/CASE.json for each of sum, dot, fact, loopfact and sum-divisors. Call publish(Path(RAW), Path(OUTPUT)) to freeze the two-source dictionary and summarize transfer. The source reads saved snapshots and compiler metadata only. The operator counting formula has a small exhaustive comparison in test_cell_composition_census.py.
