@@ -1,0 +1,1 @@
+{"train":{"rows":1972,"compatible":1361,"useful":302,"positive":850},"validation_before":{"rows":1958,"compatible":527,"useful":495,"positive":637},"validation_after":{"rows":1958,"compatible":1367,"useful":135,"positive":637},"seed":4021,"epochs":16,"held":[0,7,10,12,15,17,20,24,29,36,39]}
