@@ -1,0 +1,31 @@
+{
+  "case": "grammar-36719037",
+  "labels": {
+    "unowned_witness_prefixes": 0,
+    "feasible": 55,
+    "unknown": 77,
+    "dead": 120,
+    "probes": 3613
+  },
+  "feasible_known": 175,
+  "positive_prevalence": 0.3142857253551483,
+  "average_precision": 0.9969369173049927,
+  "brier": 0.027945036068558693,
+  "completions": {
+    "samples": 151,
+    "log_mae": 0.05759692192077637,
+    "mean_target": 0.25827813148498535,
+    "mean_pred": 0.28153252601623535
+  },
+  "visits": {
+    "samples": 151,
+    "log_mae": 0.28110677003860474,
+    "mean_target": 0.8410596251487732,
+    "mean_pred": 0.9039568305015564
+  },
+  "address_audit": {
+    "teacher_reads": 79,
+    "coarse_mismatch": 0,
+    "fine_mismatch": 0
+  }
+}

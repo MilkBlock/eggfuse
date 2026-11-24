@@ -1,0 +1,253 @@
+{
+  "run": 79,
+  "earliest": [
+    {
+      "rule": 251,
+      "parents": [
+        {
+          "address": {
+            "token": 1,
+            "op": 10
+          },
+          "version": 1
+        },
+        {
+          "address": {
+            "token": 73,
+            "op": 1
+          },
+          "version": 13
+        },
+        {
+          "address": {
+            "token": 1,
+            "op": 2
+          },
+          "version": 1
+        },
+        {
+          "address": {
+            "token": 17,
+            "op": 2
+          },
+          "version": 6
+        }
+      ],
+      "stage": "final_gate"
+    },
+    {
+      "rule": 251,
+      "parents": [
+        {
+          "address": {
+            "token": 1,
+            "op": 44
+          },
+          "version": 1
+        },
+        {
+          "address": {
+            "token": 82,
+            "op": 1
+          },
+          "version": 14
+        },
+        {
+          "address": {
+            "token": 1,
+            "op": 2
+          },
+          "version": 1
+        },
+        {
+          "address": {
+            "token": 20,
+            "op": 2
+          },
+          "version": 6
+        }
+      ],
+      "stage": "final_gate"
+    }
+  ],
+  "missing": 11,
+  "fact_detail": [
+    {
+      "row": 285,
+      "table": "CellSpineApplied183",
+      "values": [
+        [
+          "Expr",
+          "Cell(554050781207)"
+        ],
+        [
+          "Unit",
+          "0"
+        ]
+      ],
+      "recovered": true
+    },
+    {
+      "row": 286,
+      "table": "CellSpineApplied183",
+      "values": [
+        [
+          "Expr",
+          "Cell(554050781245)"
+        ],
+        [
+          "Unit",
+          "0"
+        ]
+      ],
+      "recovered": true
+    },
+    {
+      "row": 568,
+      "table": "ExprIsPure",
+      "values": [
+        [
+          "Expr",
+          "Cell(554050781207)"
+        ],
+        [
+          "___ExprIsPureSort",
+          "Cell(1756641624078)"
+        ]
+      ],
+      "recovered": true
+    },
+    {
+      "row": 569,
+      "table": "ExprIsPure",
+      "values": [
+        [
+          "Expr",
+          "Cell(554050781245)"
+        ],
+        [
+          "___ExprIsPureSort",
+          "Cell(1760936591374)"
+        ]
+      ],
+      "recovered": true
+    },
+    {
+      "row": 570,
+      "table": "ExprIsPure",
+      "values": [
+        [
+          "Expr",
+          "Cell(554050781249)"
+        ],
+        [
+          "___ExprIsPureSort",
+          "Cell(1997159792649)"
+        ]
+      ],
+      "recovered": true
+    },
+    {
+      "row": 571,
+      "table": "ExprIsPure",
+      "values": [
+        [
+          "Expr",
+          "Cell(554050781213)"
+        ],
+        [
+          "___ExprIsPureSort",
+          "Cell(2001454759945)"
+        ]
+      ],
+      "recovered": true
+    },
+    {
+      "row": 572,
+      "table": "ExprIsPure",
+      "values": [
+        [
+          "Expr",
+          "Cell(554050781219)"
+        ],
+        [
+          "___ExprIsPureSort",
+          "Cell(2005749727237)"
+        ]
+      ],
+      "recovered": true
+    },
+    {
+      "row": 574,
+      "table": "ExprIsPure",
+      "values": [
+        [
+          "Expr",
+          "Cell(1687922147333)"
+        ],
+        [
+          "___ExprIsPureSort",
+          "Cell(2014339661829)"
+        ]
+      ],
+      "recovered": true
+    },
+    {
+      "row": 575,
+      "table": "ExprIsPure",
+      "values": [
+        [
+          "Expr",
+          "Cell(554050781251)"
+        ],
+        [
+          "___ExprIsPureSort",
+          "Cell(2469606195205)"
+        ]
+      ],
+      "recovered": true
+    },
+    {
+      "row": 576,
+      "table": "ExprIsPure",
+      "values": [
+        [
+          "Expr",
+          "Cell(554050781259)"
+        ],
+        [
+          "___ExprIsPureSort",
+          "Cell(3075196583945)"
+        ]
+      ],
+      "recovered": true
+    },
+    {
+      "row": 1048,
+      "table": "SubTuple",
+      "values": [
+        [
+          "Expr",
+          "Cell(554050781253)"
+        ],
+        [
+          "i64",
+          "0"
+        ],
+        [
+          "i64",
+          "2"
+        ],
+        [
+          "Expr",
+          "Cell(554050781253)"
+        ]
+      ],
+      "recovered": false
+    }
+  ],
+  "recovered": 10,
+  "lost": 0,
+  "termination": "schedule_end",
+  "exact_endpoint": false
+}

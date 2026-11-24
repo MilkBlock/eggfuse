@@ -1,0 +1,171 @@
+{
+  "run": 12,
+  "earliest": [
+    {
+      "rule": 294,
+      "parents": [
+        {
+          "address": {
+            "token": 33,
+            "op": 2
+          },
+          "version": 11
+        },
+        {
+          "address": {
+            "token": 1,
+            "op": 84
+          },
+          "version": 1
+        }
+      ],
+      "stage": "final_gate"
+    },
+    {
+      "rule": 294,
+      "parents": [
+        {
+          "address": {
+            "token": 34,
+            "op": 2
+          },
+          "version": 11
+        },
+        {
+          "address": {
+            "token": 1,
+            "op": 88
+          },
+          "version": 1
+        }
+      ],
+      "stage": "final_gate"
+    },
+    {
+      "rule": 294,
+      "parents": [
+        {
+          "address": {
+            "token": 43,
+            "op": 2
+          },
+          "version": 11
+        },
+        {
+          "address": {
+            "token": 1,
+            "op": 166
+          },
+          "version": 1
+        }
+      ],
+      "stage": "final_gate"
+    },
+    {
+      "rule": 294,
+      "parents": [
+        {
+          "address": {
+            "token": 47,
+            "op": 2
+          },
+          "version": 11
+        },
+        {
+          "address": {
+            "token": 1,
+            "op": 246
+          },
+          "version": 1
+        }
+      ],
+      "stage": "final_gate"
+    },
+    {
+      "rule": 294,
+      "parents": [
+        {
+          "address": {
+            "token": 48,
+            "op": 2
+          },
+          "version": 11
+        },
+        {
+          "address": {
+            "token": 1,
+            "op": 252
+          },
+          "version": 1
+        }
+      ],
+      "stage": "final_gate"
+    },
+    {
+      "rule": 294,
+      "parents": [
+        {
+          "address": {
+            "token": 49,
+            "op": 2
+          },
+          "version": 11
+        },
+        {
+          "address": {
+            "token": 1,
+            "op": 260
+          },
+          "version": 1
+        }
+      ],
+      "stage": "final_gate"
+    },
+    {
+      "rule": 294,
+      "parents": [
+        {
+          "address": {
+            "token": 52,
+            "op": 2
+          },
+          "version": 11
+        },
+        {
+          "address": {
+            "token": 1,
+            "op": 378
+          },
+          "version": 1
+        }
+      ],
+      "stage": "final_gate"
+    },
+    {
+      "rule": 294,
+      "parents": [
+        {
+          "address": {
+            "token": 53,
+            "op": 2
+          },
+          "version": 11
+        },
+        {
+          "address": {
+            "token": 1,
+            "op": 380
+          },
+          "version": 1
+        }
+      ],
+      "stage": "final_gate"
+    }
+  ],
+  "missing": 4881,
+  "fact_detail": [],
+  "recovered": 8,
+  "lost": 0,
+  "termination": "schedule_end",
+  "exact_endpoint": false
+}

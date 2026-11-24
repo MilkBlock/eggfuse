@@ -1,0 +1,8 @@
+{
+  "seed": 9461,
+  "device": "mps",
+  "steps": 600,
+  "gates": 2638,
+  "positive_gates": 818,
+  "branch_labels": 965
+}

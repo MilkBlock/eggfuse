@@ -1,0 +1,31 @@
+{
+  "case": "fact",
+  "labels": {
+    "unowned_witness_prefixes": 0,
+    "feasible": 1056,
+    "dead": 1420,
+    "unknown": 2000,
+    "probes": 64998
+  },
+  "feasible_known": 2476,
+  "positive_prevalence": 0.4264943599700928,
+  "average_precision": 0.8117185831069946,
+  "brier": 0.15712809562683105,
+  "completions": {
+    "samples": 2005,
+    "log_mae": 0.22240936756134033,
+    "mean_target": 0.31571072340011597,
+    "mean_pred": 0.3096812665462494
+  },
+  "visits": {
+    "samples": 2005,
+    "log_mae": 0.33086922764778137,
+    "mean_target": 0.7850373983383179,
+    "mean_pred": 0.44923511147499084
+  },
+  "address_audit": {
+    "teacher_reads": 1774,
+    "coarse_mismatch": 0,
+    "fine_mismatch": 0
+  }
+}

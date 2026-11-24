@@ -1,0 +1,344 @@
+[
+  {
+    "fraction": 0.125,
+    "arm": "full",
+    "layouts": 64,
+    "seconds": 0.0011767079995479435,
+    "setup_seconds": 0.0004297909908927977,
+    "counts": {
+      "recognition_scores": 675,
+      "route_inputs": 562,
+      "all_root_states": 632,
+      "selected": 137,
+      "any_catalog_positive": 183
+    },
+    "positives": {
+      "any": 127,
+      "layout": 10,
+      "fit": 33,
+      "pair": 91,
+      "unseen_long": 19
+    },
+    "hits": {
+      "any": 73,
+      "layout": 3,
+      "fit": 20,
+      "pair": 50,
+      "unseen_long": 0
+    }
+  },
+  {
+    "fraction": 0.125,
+    "arm": "direct",
+    "layouts": 64,
+    "seconds": 0.0005993289669277146,
+    "setup_seconds": 0.08197941699472722,
+    "counts": {
+      "route_inputs": 562,
+      "route_logits": 1237,
+      "all_root_states": 632,
+      "selected": 14,
+      "any_catalog_positive": 183
+    },
+    "positives": {
+      "any": 127,
+      "layout": 10,
+      "fit": 33,
+      "pair": 91,
+      "unseen_long": 19
+    },
+    "hits": {
+      "any": 11,
+      "layout": 0,
+      "fit": 11,
+      "pair": 0,
+      "unseen_long": 0
+    }
+  },
+  {
+    "fraction": 0.125,
+    "arm": "sparse",
+    "layouts": 64,
+    "seconds": 0.001154119920101948,
+    "setup_seconds": 0.10230416599370074,
+    "counts": {
+      "route_inputs": 562,
+      "use_logits": 562,
+      "address_bits": 8,
+      "all_root_states": 632,
+      "selected": 20,
+      "any_catalog_positive": 183
+    },
+    "positives": {
+      "any": 127,
+      "layout": 10,
+      "fit": 33,
+      "pair": 91,
+      "unseen_long": 19
+    },
+    "hits": {
+      "any": 10,
+      "layout": 0,
+      "fit": 0,
+      "pair": 10,
+      "unseen_long": 0
+    }
+  },
+  {
+    "fraction": 0.125,
+    "arm": "tree",
+    "layouts": 64,
+    "seconds": 0.0013711280043935403,
+    "setup_seconds": 0.002619584003696218,
+    "counts": {
+      "use_logits": 562,
+      "route_inputs": 562,
+      "all_root_states": 632,
+      "selected": 78,
+      "any_catalog_positive": 183,
+      "tree_decisions": 22
+    },
+    "positives": {
+      "any": 127,
+      "layout": 10,
+      "fit": 33,
+      "pair": 91,
+      "unseen_long": 19
+    },
+    "hits": {
+      "any": 19,
+      "layout": 0,
+      "fit": 1,
+      "pair": 18,
+      "unseen_long": 0
+    }
+  },
+  {
+    "fraction": 0.5,
+    "arm": "full",
+    "layouts": 114,
+    "seconds": 0.0010551680315984413,
+    "setup_seconds": 0.0003564159997040406,
+    "counts": {
+      "recognition_scores": 1399,
+      "route_inputs": 562,
+      "all_root_states": 632,
+      "selected": 139,
+      "any_catalog_positive": 183
+    },
+    "positives": {
+      "any": 127,
+      "layout": 19,
+      "fit": 70,
+      "pair": 91,
+      "unseen_long": 35
+    },
+    "hits": {
+      "any": 75,
+      "layout": 3,
+      "fit": 48,
+      "pair": 24,
+      "unseen_long": 0
+    }
+  },
+  {
+    "fraction": 0.5,
+    "arm": "direct",
+    "layouts": 114,
+    "seconds": 0.000636168013443239,
+    "setup_seconds": 0.07699604200024623,
+    "counts": {
+      "route_inputs": 562,
+      "route_logits": 1961,
+      "all_root_states": 632,
+      "selected": 48,
+      "any_catalog_positive": 183
+    },
+    "positives": {
+      "any": 127,
+      "layout": 19,
+      "fit": 70,
+      "pair": 91,
+      "unseen_long": 35
+    },
+    "hits": {
+      "any": 39,
+      "layout": 0,
+      "fit": 39,
+      "pair": 0,
+      "unseen_long": 0
+    }
+  },
+  {
+    "fraction": 0.5,
+    "arm": "sparse",
+    "layouts": 114,
+    "seconds": 0.00107458999264054,
+    "setup_seconds": 0.07783850000123493,
+    "counts": {
+      "route_inputs": 562,
+      "use_logits": 562,
+      "address_bits": 38,
+      "all_root_states": 632,
+      "selected": 20,
+      "any_catalog_positive": 183
+    },
+    "positives": {
+      "any": 127,
+      "layout": 19,
+      "fit": 70,
+      "pair": 91,
+      "unseen_long": 35
+    },
+    "hits": {
+      "any": 10,
+      "layout": 1,
+      "fit": 0,
+      "pair": 9,
+      "unseen_long": 1
+    }
+  },
+  {
+    "fraction": 0.5,
+    "arm": "tree",
+    "layouts": 114,
+    "seconds": 0.001057375018717721,
+    "setup_seconds": 0.003842417005216703,
+    "counts": {
+      "use_logits": 562,
+      "route_inputs": 562,
+      "all_root_states": 632,
+      "selected": 78,
+      "any_catalog_positive": 183,
+      "tree_decisions": 66
+    },
+    "positives": {
+      "any": 127,
+      "layout": 19,
+      "fit": 70,
+      "pair": 91,
+      "unseen_long": 35
+    },
+    "hits": {
+      "any": 19,
+      "layout": 0,
+      "fit": 2,
+      "pair": 17,
+      "unseen_long": 0
+    }
+  },
+  {
+    "fraction": 1.0,
+    "arm": "full",
+    "layouts": 198,
+    "seconds": 0.0010829610255314037,
+    "setup_seconds": 0.00031075000879354775,
+    "counts": {
+      "recognition_scores": 2384,
+      "route_inputs": 562,
+      "all_root_states": 632,
+      "selected": 200,
+      "any_catalog_positive": 183
+    },
+    "positives": {
+      "any": 158,
+      "layout": 46,
+      "fit": 136,
+      "pair": 94,
+      "unseen_long": 57
+    },
+    "hits": {
+      "any": 124,
+      "layout": 3,
+      "fit": 108,
+      "pair": 13,
+      "unseen_long": 0
+    }
+  },
+  {
+    "fraction": 1.0,
+    "arm": "direct",
+    "layouts": 198,
+    "seconds": 0.0005475030193338171,
+    "setup_seconds": 0.07742887501080986,
+    "counts": {
+      "route_inputs": 562,
+      "route_logits": 2946,
+      "all_root_states": 632,
+      "selected": 127,
+      "any_catalog_positive": 183
+    },
+    "positives": {
+      "any": 158,
+      "layout": 46,
+      "fit": 136,
+      "pair": 94,
+      "unseen_long": 57
+    },
+    "hits": {
+      "any": 94,
+      "layout": 0,
+      "fit": 94,
+      "pair": 0,
+      "unseen_long": 0
+    }
+  },
+  {
+    "fraction": 1.0,
+    "arm": "sparse",
+    "layouts": 198,
+    "seconds": 0.00107150204712525,
+    "setup_seconds": 0.07737170900509227,
+    "counts": {
+      "route_inputs": 562,
+      "use_logits": 562,
+      "address_bits": 65,
+      "all_root_states": 632,
+      "selected": 20,
+      "any_catalog_positive": 183
+    },
+    "positives": {
+      "any": 158,
+      "layout": 46,
+      "fit": 136,
+      "pair": 94,
+      "unseen_long": 57
+    },
+    "hits": {
+      "any": 10,
+      "layout": 0,
+      "fit": 7,
+      "pair": 3,
+      "unseen_long": 0
+    }
+  },
+  {
+    "fraction": 1.0,
+    "arm": "tree",
+    "layouts": 198,
+    "seconds": 0.0012617520114872605,
+    "setup_seconds": 0.005489250004757196,
+    "counts": {
+      "use_logits": 562,
+      "route_inputs": 562,
+      "all_root_states": 632,
+      "selected": 78,
+      "any_catalog_positive": 183,
+      "tree_decisions": 104
+    },
+    "positives": {
+      "any": 158,
+      "layout": 46,
+      "fit": 136,
+      "pair": 94,
+      "unseen_long": 57
+    },
+    "hits": {
+      "any": 19,
+      "layout": 0,
+      "fit": 2,
+      "pair": 17,
+      "unseen_long": 0
+    }
+  }
+]

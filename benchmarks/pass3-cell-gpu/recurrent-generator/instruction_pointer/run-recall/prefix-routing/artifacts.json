@@ -1,0 +1,23 @@
+{
+  "machine": "arm64",
+  "torch": "2.15.0",
+  "macos": "27.0.1",
+  "training_device": "mps",
+  "independent_decode": "cpu",
+  "sha256": {
+    "continuation.pt": "1f4d61f87f3bb2de994d69ec767176dc37d0d9c96eb5cbd7d6ae166a17a93080",
+    "route.pt": "63d25a89228405638e4d5d8caba579b88729f8b082569fefdb1b4fe436fa8515",
+    "tree.pt": "8670e0049077a30bbb3949519498fc8991dd898b4c39555ae7201537eb7bec95",
+    "native_receiver": "ea7c34d059ff958830c1c499d6d0d351963f2b6459b90b951064e64345131218",
+    "local_prefix": "7d4fd3027b0d08749ffef7f9b47515ce02fe815f3fadf02eb7c5062e927a2c29",
+    "layout_recognizer": "785aa02d61fe3c1b92cd19967d62329ad96861f01e8d26926a2be2f5587dd959",
+    "catalog": "ee476c5b73a7357fab4a18711a0dc59bbc705514ff1e8723850b70d7c45d8a39",
+    "static_layout_codes": "fc54d71dee68069d0ef41779203ff1502d32a722967c53770783036eb512fb08",
+    "program/fact": "f4da1650af5393f3f07d5d20d092e26270ae58090266dd197113dd295ffaf900",
+    "program/sum-divisors": "3b904063c8c7e580ec2030b452d831ee53478a28c3dfaecf17eeb7e853a0aaf8",
+    "program/loopfact": "8f6d2b1a5f5a593b73119d0bfded0aefee97315191cc5f3efcd6e35320beacba",
+    "program/cyk801": "6be25ea2956abf9043d505b514be90019f35ea607a2761d606c225fc1c2929eb",
+    "program/grammar-36719037": "af489ca0dad7a55fdfdd706b00d0e74a4fd83d62f724394fd15c23711ed6391f",
+    "program/grammar-benefit-held-deep-11901379": "9ec09a121ade333a5ae98bb41aafb196520f00503b77896500a09db71406e1ef"
+  }
+}

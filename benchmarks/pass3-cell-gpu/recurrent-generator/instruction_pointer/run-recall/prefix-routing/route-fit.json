@@ -1,0 +1,8 @@
+{
+  "device": "mps",
+  "steps": 600,
+  "examples": 3482,
+  "positive": 845,
+  "depth": 10,
+  "library": 4096
+}

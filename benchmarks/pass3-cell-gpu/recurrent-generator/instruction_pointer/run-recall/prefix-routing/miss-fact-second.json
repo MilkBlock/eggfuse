@@ -1,0 +1,62 @@
+{
+  "run": 91,
+  "earliest": [
+    {
+      "rule": 144,
+      "parents": [
+        {
+          "address": {
+            "token": 1118,
+            "op": 2
+          },
+          "version": 87
+        },
+        {
+          "address": {
+            "token": 1119,
+            "op": 2
+          },
+          "version": 87
+        },
+        {
+          "address": {
+            "token": 1,
+            "op": 68
+          },
+          "version": 1
+        }
+      ],
+      "stage": "final_gate"
+    }
+  ],
+  "missing": 1,
+  "fact_detail": [
+    {
+      "row": 1048,
+      "table": "SubTuple",
+      "values": [
+        [
+          "Expr",
+          "Cell(554050781253)"
+        ],
+        [
+          "i64",
+          "0"
+        ],
+        [
+          "i64",
+          "2"
+        ],
+        [
+          "Expr",
+          "Cell(554050781253)"
+        ]
+      ],
+      "recovered": true
+    }
+  ],
+  "recovered": 1,
+  "lost": 0,
+  "termination": "schedule_end",
+  "exact_endpoint": true
+}

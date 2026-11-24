@@ -1,0 +1,43 @@
+{
+  "seed": 31037,
+  "device": "mps",
+  "steps": 650,
+  "programs": {
+    "loopfact": {
+      "unowned_witness_prefixes": 0,
+      "feasible": 1074,
+      "dead": 1493,
+      "unknown": 1818,
+      "probes": 57885
+    },
+    "grammar-17118": {
+      "unowned_witness_prefixes": 0,
+      "feasible": 70,
+      "unknown": 64,
+      "dead": 96,
+      "probes": 5038
+    },
+    "grammar-17119": {
+      "unowned_witness_prefixes": 0,
+      "feasible": 89,
+      "unknown": 274,
+      "dead": 24,
+      "probes": 2328
+    },
+    "grammar-stride2-17118": {
+      "unowned_witness_prefixes": 0,
+      "feasible": 70,
+      "unknown": 77,
+      "dead": 94,
+      "probes": 4970
+    },
+    "grammar-benefit-fork-17120": {
+      "unowned_witness_prefixes": 0,
+      "feasible": 76,
+      "unknown": 110,
+      "dead": 144,
+      "probes": 7052
+    }
+  },
+  "repeat_weights_identical": true
+}
