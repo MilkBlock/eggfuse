@@ -23,6 +23,6 @@ ripsat-view /path/to/deep-event-10000 /path/to/unified-consumers --program /path
 ripsat-view --egraph /path/to/saturated-rule-composition/cells /path/to/deep-event-10000 --program /path/to/sum/program.json
 ```
 
-该命令启动本机只读浏览器服务，逐 Cell 按需生成 SVG，Ctrl+C 退出。原生快照从 trigger-state.json 和 observed-saturated-state.json 的 values、rows 和 result 建立等价类，保留 RipenInput 构造子、字面量、多个等价算子以及环。入口与 Ripen 后的类编号各自局部有效。
+该命令启动本机只读浏览器服务，逐 Cell 按需生成 SVG，Ctrl+C 退出。原生快照从 trigger-state.json 和 observed-saturated-state.json 的 values、rows 和 result 建立等价类，结构视图将整数字面量提升为有类型的 IntParam，保留同一值在计算字段间的共享。RipenInput 的存储槽号从计算图擦除，即使槽号和某个计算常量同值，两者也不会因此连边。原始数值留在源导出中。入口与 Ripen 后的类编号各自局部有效。
 
 对于仅有布局的目录，视图展开 donor 的 query/effects、具名端口接线和显式 union，以参数化 RipenInput 标记外部字段。纯构造子执行同余闭包；图呈现条件成立的静态规则结构。mutable 写入的值表达式及其跨步接线表示配方里的写入意图。动态合并、guard 成败、可见性与修复后的返回值以实际运行快照为准。

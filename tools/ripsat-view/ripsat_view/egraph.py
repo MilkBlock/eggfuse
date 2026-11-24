@@ -64,15 +64,32 @@ class Graph:
         return '\n'.join(out+['}'])
 
 
+def integer_sort(sort):
+    return sort in {"i8","i16","i32","i64","i128","u8","u16","u32","u64","u128","BigInt"}
+
+
 def snapshot_graph(path):
     data = _load(path)
     g = Graph()
-    for v in data["values"]:
-        i = g.value(v["sort"])
+    # Marker arguments are the serializer's slot IDs. They belong to a
+    # different namespace from program operands, even if both equal e.g. 1.
+    marker_ops = {r["op"] for r in data["rows"] if r["op"].startswith("RipenInput")}
+    slot_ids = {a for r in data["rows"] if r["op"] in marker_ops for a in r["args"]}
+    operands = {a for r in data["rows"] if r["op"] not in marker_ops for a in r["args"]}
+    outputs = {r["result"] for r in data["rows"]}
+    index_only = slot_ids - operands - outputs
+    remap = {}
+    for old, v in enumerate(data["values"]):
+        if old in index_only:
+            continue
+        i = remap[old] = g.value(v["sort"])
         if v["literal"] is not None:
-            g.node(v["literal"], [], i)
+            g.node("IntParam" if integer_sort(v["sort"]) else v["literal"], [], i)
     for row in data["rows"]:
-        g.node(row["op"],row["args"],row["result"],row["op"].startswith("RipenInput"))
+        marker = row["op"] in marker_ops
+        op = "RipenInput" if marker else row["op"]
+        args = [] if marker else [remap[a] for a in row["args"]]
+        g.node(op,args,remap[row["result"]],marker)
     return g
 
 
@@ -90,7 +107,7 @@ def layout_graph(steps, rules, constructors):
             key = v["sort"]["name"],json.dumps(v["literal"],ensure_ascii=False)
             if key not in literals:
                 i = literals[key] = g.value(key[0])
-                g.node(key[1],[],i)
+                g.node("IntParam" if integer_sort(key[0]) else key[1],[],i)
             return literals[key]
 
         def call(op,args,out):
