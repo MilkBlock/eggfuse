@@ -1,0 +1,20 @@
+{
+  "proofs": 43,
+  "state_sha": "69d54008e64d882d776d614b4404be979f4f4c3c9db69cc61d89cf872a530794",
+  "txn_stats": {
+    "batches": 6,
+    "compute_ops": 6,
+    "computed": 3,
+    "decode_ns": 3293,
+    "encode_ns": 749,
+    "execute_ns": 65043,
+    "local_reads": 3,
+    "port_bytes": 10224,
+    "proof_ops": 43,
+    "publication_encode_ns": 9749,
+    "publication_write_ns": 6792,
+    "request_bytes": 6024,
+    "response_bytes": 1568,
+    "response_write_ns": 11166
+  }
+}

@@ -1,0 +1,162 @@
+[
+  {
+    "json-lsh": {
+      "wall": 9.832322458009003,
+      "ept": 0.006124715891338755,
+      "eps": 667.8991690972049,
+      "paid": 1072213,
+      "signed_ops": 6567,
+      "state_sha": "2bad5f36b3dd70837b4677a4581a107bad02a9d423e60a866a4e3c7425242d94",
+      "termination": "schedule_end",
+      "exact_endpoint": true
+    },
+    "typed-lsh": {
+      "wall": 4.955833500003791,
+      "ept": 0.006124715891338755,
+      "eps": 1325.1050504410562,
+      "paid": 1072213,
+      "signed_ops": 6567,
+      "state_sha": "2bad5f36b3dd70837b4677a4581a107bad02a9d423e60a866a4e3c7425242d94",
+      "termination": "schedule_end",
+      "exact_endpoint": true
+    },
+    "learned": {
+      "wall": 3.3186632080032723,
+      "ept": 0.13066836460592554,
+      "eps": 1978.808811982805,
+      "paid": 50257,
+      "signed_ops": 6567,
+      "state_sha": "2bad5f36b3dd70837b4677a4581a107bad02a9d423e60a866a4e3c7425242d94",
+      "termination": "schedule_end",
+      "exact_endpoint": true
+    },
+    "reference": {
+      "wall": 0.12939124999684282,
+      "engine_seconds": 0.097201292
+    },
+    "replay": {
+      "wall": 0.042359750004834495,
+      "engine_seconds": 0.011348167
+    }
+  },
+  {
+    "typed-lsh": {
+      "wall": 4.835553833996528,
+      "ept": 0.006124715891338755,
+      "eps": 1358.065740852781,
+      "paid": 1072213,
+      "signed_ops": 6567,
+      "state_sha": "2bad5f36b3dd70837b4677a4581a107bad02a9d423e60a866a4e3c7425242d94",
+      "termination": "schedule_end",
+      "exact_endpoint": true
+    },
+    "learned": {
+      "wall": 3.257906416998594,
+      "ept": 0.13066836460592554,
+      "eps": 2015.7116747539878,
+      "paid": 50257,
+      "signed_ops": 6567,
+      "state_sha": "2bad5f36b3dd70837b4677a4581a107bad02a9d423e60a866a4e3c7425242d94",
+      "termination": "schedule_end",
+      "exact_endpoint": true
+    },
+    "json-lsh": {
+      "wall": 9.961643208007445,
+      "ept": 0.006124715891338755,
+      "eps": 659.2285893878696,
+      "paid": 1072213,
+      "signed_ops": 6567,
+      "state_sha": "2bad5f36b3dd70837b4677a4581a107bad02a9d423e60a866a4e3c7425242d94",
+      "termination": "schedule_end",
+      "exact_endpoint": true
+    },
+    "replay": {
+      "wall": 0.04372195900941733,
+      "engine_seconds": 0.011233625
+    },
+    "reference": {
+      "wall": 0.1267540410044603,
+      "engine_seconds": 0.096447167
+    }
+  },
+  {
+    "json-lsh": {
+      "wall": 9.915073707990814,
+      "ept": 0.006124715891338755,
+      "eps": 662.3248796130971,
+      "paid": 1072213,
+      "signed_ops": 6567,
+      "state_sha": "2bad5f36b3dd70837b4677a4581a107bad02a9d423e60a866a4e3c7425242d94",
+      "termination": "schedule_end",
+      "exact_endpoint": true
+    },
+    "learned": {
+      "wall": 3.333107333004591,
+      "ept": 0.13066836460592554,
+      "eps": 1970.2335820311714,
+      "paid": 50257,
+      "signed_ops": 6567,
+      "state_sha": "2bad5f36b3dd70837b4677a4581a107bad02a9d423e60a866a4e3c7425242d94",
+      "termination": "schedule_end",
+      "exact_endpoint": true
+    },
+    "typed-lsh": {
+      "wall": 4.855952625002828,
+      "ept": 0.006124715891338755,
+      "eps": 1352.360804795985,
+      "paid": 1072213,
+      "signed_ops": 6567,
+      "state_sha": "2bad5f36b3dd70837b4677a4581a107bad02a9d423e60a866a4e3c7425242d94",
+      "termination": "schedule_end",
+      "exact_endpoint": true
+    },
+    "reference": {
+      "wall": 0.12874195899348706,
+      "engine_seconds": 0.097023834
+    },
+    "replay": {
+      "wall": 0.04530191599042155,
+      "engine_seconds": 0.012445042
+    }
+  },
+  {
+    "learned": {
+      "wall": 3.2890281669970136,
+      "ept": 0.13066836460592554,
+      "eps": 1996.6384191826116,
+      "paid": 50257,
+      "signed_ops": 6567,
+      "state_sha": "2bad5f36b3dd70837b4677a4581a107bad02a9d423e60a866a4e3c7425242d94",
+      "termination": "schedule_end",
+      "exact_endpoint": true
+    },
+    "typed-lsh": {
+      "wall": 4.77487249999831,
+      "ept": 0.006124715891338755,
+      "eps": 1375.3246814448605,
+      "paid": 1072213,
+      "signed_ops": 6567,
+      "state_sha": "2bad5f36b3dd70837b4677a4581a107bad02a9d423e60a866a4e3c7425242d94",
+      "termination": "schedule_end",
+      "exact_endpoint": true
+    },
+    "json-lsh": {
+      "wall": 9.723730875004549,
+      "ept": 0.006124715891338755,
+      "eps": 675.3580579734966,
+      "paid": 1072213,
+      "signed_ops": 6567,
+      "state_sha": "2bad5f36b3dd70837b4677a4581a107bad02a9d423e60a866a4e3c7425242d94",
+      "termination": "schedule_end",
+      "exact_endpoint": true
+    },
+    "replay": {
+      "wall": 0.045633125002495944,
+      "engine_seconds": 0.011871042
+    },
+    "reference": {
+      "wall": 0.12783966699498706,
+      "engine_seconds": 0.096422667
+    }
+  }
+]
