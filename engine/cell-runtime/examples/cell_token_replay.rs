@@ -24,6 +24,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         [rest @ .., flag] if flag == "--ept" => (rest, true, false),
         _ => (rest, false, false),
     };
+    // Offline observation only; never expose reference rows to an online policy.
+    let (rest, row_history) = match rest {
+        [rest @ .., flag, path] if flag == "--row-history" && matches!(role.as_str(), "reference" | "replay") => (rest, Some(path)),
+        _ => (rest, None),
+    };
     let (rest, layout_path) = match rest {
         [rest @ ..,flag,path] if (flag=="--layouts" || flag=="--layout-feedback") && (role=="assist" || role=="online") => (rest,Some((path,flag=="--layout-feedback"))),
         _ => (rest,None),
@@ -110,7 +115,32 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         transfer_audit::enable_write_audit();
         transfer_audit::enable_events();
     }
-    engine.execute_until(limit)?;
+    if let Some(path) = row_history {
+        use std::{collections::BTreeSet, io::{BufWriter, Write}};
+        let mut output = BufWriter::new(fs::File::create(path)?);
+        let mut previous = BTreeSet::new();
+        loop {
+            let run = engine.steps.len();
+            let mut bytes = Vec::new();
+            engine.graph.write_export(&mut bytes)?;
+            let state: serde_json::Value = serde_json::from_slice(&bytes)?;
+            let current = state["rows"].as_array().ok_or("missing exported rows")?
+                .iter().filter(|r| r["subsumed"] == false)
+                .map(serde_json::to_string).collect::<Result<BTreeSet<_>, _>>()?;
+            serde_json::to_writer(&mut output, &json!({
+                "run":run, "added":current.difference(&previous).collect::<Vec<_>>(),
+                "removed":previous.difference(&current).collect::<Vec<_>>()
+            }))?;
+            output.write_all(b"\n")?;
+            previous = current;
+            if limit.is_some_and(|n| run >= n) { break; }
+            engine.execute_until(Some(run + 1))?;
+            if run == engine.steps.len() { break; }
+        }
+        output.flush()?;
+    } else {
+        engine.execute_until(limit)?;
+    }
     let elapsed = started.elapsed().as_secs_f64();
     transfer_audit::set_active(false);
     let mut export = vec![];
