@@ -4,6 +4,7 @@ from collections import Counter, OrderedDict, defaultdict
 from dataclasses import dataclass, field
 from itertools import islice
 from math import log1p
+from time import perf_counter
 
 import torch
 from torch import nn
@@ -91,7 +92,9 @@ class Reader:
             self.live[row["table"]][a["token"], a["op"]] = None
             changed.add(row["table"])
         self.store.advance(f)
+        start = perf_counter()
         self.index.advance(frame)
+        self.count["index_update_seconds"] += perf_counter() - start
         for t in changed:
             self.versions[t] += 1
         return changed

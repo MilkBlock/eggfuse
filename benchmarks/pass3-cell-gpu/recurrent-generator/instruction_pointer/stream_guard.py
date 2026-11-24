@@ -1,6 +1,7 @@
 """Joint proposal readout and sparse addressing over trained field-vector buckets."""
 
 from collections import Counter
+from time import perf_counter
 
 import torch
 from torch import nn
@@ -33,6 +34,7 @@ class GuardStream(CellStream):
         bits = self.study.bits
         mask = (1 << bits) - 1
         if depth not in self.postings:
+            prepared_at = perf_counter()
             codes = torch.tensor(
                 [self.rd.index.rows[k][2][right] & mask for k in self.roles[depth]]
             )
@@ -58,6 +60,7 @@ class GuardStream(CellStream):
                 query_codes = self.rd.index.code(self.tables[a][2][:, col]) & mask
             self.stats["index_items"] += len(codes) + len(query_codes)
             self.postings[depth] = order, offsets, query_codes
+            self.stats["bucket_build_seconds"] += perf_counter() - prepared_at
         order, offsets, query_codes = self.postings[depth]
         code = query_codes[paths[:, a]]
         if self.study.delta_buckets and self.semi and depth + 1 == len(self.roles):

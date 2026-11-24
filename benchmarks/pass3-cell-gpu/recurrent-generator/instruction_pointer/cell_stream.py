@@ -38,6 +38,7 @@ class CellStream:
             )
         self.tables = []
         self.prepared = False
+        self._port_buffers = {}
 
     def prepare(self):
         if self.prepared:
@@ -99,10 +100,32 @@ class CellStream:
     def terminal(self, paths):
         return paths
 
+    def port_refs(self, depth):
+        if depth not in self._port_buffers:
+            store = self.rd.store
+            self._port_buffers[depth] = torch.tensor(
+                [
+                    (store.original.get(t, t), op, store.visible[t, op]["version"])
+                    for t, op in self.roles[depth]
+                ],
+                dtype=torch.int64,
+            ).reshape(-1, 3)
+        return self._port_buffers[depth]
+
     def batches(self, mode, cutoff, deadline, block=BLOCK):
+        for paths in self.path_batches(mode, cutoff, deadline, block):
+            t = perf_counter()
+            result = [
+                tuple(self.roles[n][idx] for n, idx in enumerate(row))
+                for row in paths.tolist()
+            ]
+            self.stats["tensor_conversion_seconds"] += perf_counter() - t
+            yield result
+
+    def path_batches(self, mode, cutoff, deadline, block=BLOCK):
         if not self.roles:
             if self.wm == 0 or not self.semi:
-                yield [()]
+                yield torch.empty((1, 0), dtype=torch.int64)
             return
         if not all(self.roles):
             return
@@ -130,11 +153,8 @@ class CellStream:
                     self.stats["root_scored"] += len(s)
                 if last:
                     self.stats["tuple_scored"] += len(s)
-                    out = [
-                        tuple(self.roles[n][idx] for n, idx in enumerate(row))
-                        for row in self.terminal(paths[keep]).tolist()
-                    ]
-                    if out:
+                    out = self.terminal(paths[keep])
+                    if len(out):
                         yield out
                 elif mode == "dense":
                     yield from extend(paths, z, keep, now, j + 1)

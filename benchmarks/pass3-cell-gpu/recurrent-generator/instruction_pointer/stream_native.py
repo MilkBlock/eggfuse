@@ -98,22 +98,35 @@ def execute(
 
         def send(batch, finish=False):
             nonlocal paid, verify_ipc
+            tick = perf_counter()
             for q in batch:
                 paid += 1
                 q["token"] = paid
-            tick = perf_counter()
-            proc.stdin.write(json.dumps(dict(requests=batch, finish=finish)) + "\n")
+            header = json.dumps(dict(requests=batch, finish=finish)) + "\n"
+            costs["json_encode_seconds"] += perf_counter() - tick
+            costs["request_bytes"] += len(header)
+            t = perf_counter()
+            proc.stdin.write(header)
             proc.stdin.flush()
+            costs["request_write_seconds"] += perf_counter() - t
             if batch:
-                reply = json.loads(proc.stdout.readline())["verdicts"]
-                for q, (t, v) in zip(batch, reply, strict=True):
-                    assert q["token"] == t
+                t = perf_counter()
+                line = proc.stdout.readline()
+                costs["receipt_read_seconds"] += perf_counter() - t
+                costs["response_bytes"] += len(line)
+                t = perf_counter()
+                reply = json.loads(line)["verdicts"]
+                for q, (token, v) in zip(batch, reply, strict=True):
+                    assert q["token"] == token
                     verdicts[v] += 1
                     if v == "accepted":
                         accepted.append(q)
                 if study is not None:
                     study.verdicts(batch, reply, rd)
+                costs["receipt_decode_audit_seconds"] += perf_counter() - t
                 costs["waves"] += 1
+            else:
+                costs["seals"] += 1
             verify_ipc += perf_counter() - tick
 
         try:
@@ -136,12 +149,16 @@ def execute(
                     batch = pol.issue(f) if arm == "fixed" else dynamic_wave(pol, f)
                     costs["visits"] = rd.count["visited"] + rd.count["bucket_visits"]
                 else:
+                    t = perf_counter()
                     rd.advance(f)
+                    costs["memory_update_seconds"] += perf_counter() - t
                     for r, wm in f["rules"]:
                         st = (study.stream if study is not None else CellStream)(
                             rd, pol.model, r, wm, costs
                         )
                         for block in st.batches(arm, 0.0, deadline):
+                            t = perf_counter()
+                            prior_ipc = verify_ipc
                             for path in block:
                                 batch.append(
                                     request(current, r, rd.addresses(r, path), rd.store)
@@ -149,6 +166,9 @@ def execute(
                                 if len(batch) == 256:
                                     send(batch)
                                     batch = []
+                            costs["pack_seconds"] += (
+                                perf_counter() - t - (verify_ipc - prior_ipc)
+                            )
                 if batch:
                     send(batch)
                 sealed = dict(
@@ -174,6 +194,9 @@ def execute(
                 raise RuntimeError(msg)
             error = msg.strip()
     wall = perf_counter() - start
+    costs["index_update_seconds"] = rd.count["index_update_seconds"]
+    costs["index_writes"] = rd.index.writes
+    costs["index_removes"] = rd.index.removes
     ref = read(d / "capture.json")
     if end is not None:
         schema["repair_events"] = end["runtime_events"]

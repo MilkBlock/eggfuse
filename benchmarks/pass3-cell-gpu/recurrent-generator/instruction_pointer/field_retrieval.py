@@ -39,6 +39,15 @@ class FieldIndex:
         return ((vectors @ self.planes >= 0).long() * (2 ** torch.arange(8))).sum(-1)
 
     def advance(self, frame):
+        self.advance_rows(
+            ((a["token"], a["op"]) for a in frame["retired"]),
+            (
+                ((a["token"], a["op"]), row["table"], tuple(row["hashes"]))
+                for a, row in frame["updates"]
+            ),
+        )
+
+    def advance_rows(self, retired, updates):
         def detach(address, column, table, code):
             bucket = (table, column, code)
             self.buckets[bucket].remove(address)
@@ -46,8 +55,7 @@ class FieldIndex:
                 del self.buckets[bucket]
             self.removes += 1
 
-        for addr in frame["retired"]:
-            address = (addr["token"], addr["op"])
+        for address in retired:
             table, hashes, codes = self.rows.pop(address)
             for col, code in enumerate(codes):
                 detach(address, col, table, code)
@@ -60,10 +68,7 @@ class FieldIndex:
                 del self.owners[address[0]]
 
         changed = []
-        for addr, row in frame["updates"]:
-            address = (addr["token"], addr["op"])
-            hashes = tuple(row["hashes"])
-            table = row["table"]
+        for address, table, hashes in updates:
             previous = self.rows.get(address)
             if previous is None:
                 n = len(hashes)
