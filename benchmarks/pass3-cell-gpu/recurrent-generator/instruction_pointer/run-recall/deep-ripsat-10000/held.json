@@ -1,0 +1,35 @@
+{
+  "layouts": 668,
+  "programs": {
+    "fact": {
+      "compatible_templates": 538,
+      "commits": 1668,
+      "selected_ready_distinct_steps": 10,
+      "ready_distinct_steps": 235,
+      "root_boundary_steps": 25,
+      "scores": 9486,
+      "selected_event_root_pairs": 339,
+      "matched_instances_with_repetition": 2
+    },
+    "loopfact": {
+      "compatible_templates": 545,
+      "commits": 1419,
+      "selected_ready_distinct_steps": 31,
+      "ready_distinct_steps": 289,
+      "root_boundary_steps": 50,
+      "scores": 7771,
+      "selected_event_root_pairs": 261,
+      "matched_instances_with_repetition": 10
+    },
+    "sum-divisors": {
+      "compatible_templates": 543,
+      "commits": 17341,
+      "selected_ready_distinct_steps": 263,
+      "ready_distinct_steps": 2756,
+      "root_boundary_steps": 617,
+      "scores": 93197,
+      "selected_event_root_pairs": 3861,
+      "matched_instances_with_repetition": 105
+    }
+  }
+}

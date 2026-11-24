@@ -1,0 +1,72 @@
+{
+  "4096": {
+    "fact": {
+      "compatible_templates": 3011,
+      "commits": 1668,
+      "selected_ready_distinct_steps": 166,
+      "first_in_menu_distinct_steps": 215,
+      "ready_distinct_steps": 837,
+      "root_boundary_steps": 163,
+      "scores": 52875,
+      "selected_event_root_pairs": 512,
+      "matched_instances_with_repetition": 39
+    },
+    "loopfact": {
+      "compatible_templates": 3053,
+      "commits": 1419,
+      "selected_ready_distinct_steps": 156,
+      "first_in_menu_distinct_steps": 187,
+      "ready_distinct_steps": 731,
+      "root_boundary_steps": 149,
+      "scores": 44622,
+      "selected_event_root_pairs": 405,
+      "matched_instances_with_repetition": 45
+    },
+    "sum-divisors": {
+      "compatible_templates": 3031,
+      "commits": 17341,
+      "selected_ready_distinct_steps": 1797,
+      "first_in_menu_distinct_steps": 2368,
+      "ready_distinct_steps": 7578,
+      "root_boundary_steps": 1439,
+      "scores": 546789,
+      "selected_event_root_pairs": 5954,
+      "matched_instances_with_repetition": 595
+    }
+  },
+  "10000": {
+    "fact": {
+      "compatible_templates": 7955,
+      "commits": 1668,
+      "selected_ready_distinct_steps": 168,
+      "first_in_menu_distinct_steps": 219,
+      "ready_distinct_steps": 858,
+      "root_boundary_steps": 163,
+      "scores": 176087,
+      "selected_event_root_pairs": 578,
+      "matched_instances_with_repetition": 40
+    },
+    "loopfact": {
+      "compatible_templates": 7997,
+      "commits": 1419,
+      "selected_ready_distinct_steps": 155,
+      "first_in_menu_distinct_steps": 191,
+      "ready_distinct_steps": 746,
+      "root_boundary_steps": 149,
+      "scores": 139512,
+      "selected_event_root_pairs": 446,
+      "matched_instances_with_repetition": 45
+    },
+    "sum-divisors": {
+      "compatible_templates": 8008,
+      "commits": 17341,
+      "selected_ready_distinct_steps": 1795,
+      "first_in_menu_distinct_steps": 2372,
+      "ready_distinct_steps": 7668,
+      "root_boundary_steps": 1439,
+      "scores": 1706421,
+      "selected_event_root_pairs": 6424,
+      "matched_instances_with_repetition": 595
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "fact": {
+    "ten_k_only": 0,
+    "matched_four_k_only": 0,
+    "same_sha": false
+  },
+  "loopfact": {
+    "ten_k_only": 0,
+    "matched_four_k_only": 0,
+    "same_sha": false
+  },
+  "sum-divisors": {
+    "ten_k_only": 0,
+    "matched_four_k_only": 0,
+    "same_sha": false
+  }
+}

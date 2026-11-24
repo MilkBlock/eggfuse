@@ -1,0 +1,40 @@
+{
+  "training": [
+    "sum",
+    "dot"
+  ],
+  "root_actor": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+  "depth": {
+    "3": 5059,
+    "4": 3049,
+    "5": 1096,
+    "6": 549,
+    "8": 52,
+    "7": 178,
+    "9": 13,
+    "10": 4
+  },
+  "gradient_layouts": 10000,
+  "observed_gradient_layouts": 10000,
+  "ready_gradient_layouts": 4790,
+  "pairs": 72434,
+  "device": "mps",
+  "deployable": 368,
+  "programs": {
+    "fact": {
+      "commits": 1668,
+      "ready_distinct_steps": 858,
+      "root_boundary_steps": 163
+    },
+    "loopfact": {
+      "commits": 1419,
+      "ready_distinct_steps": 746,
+      "root_boundary_steps": 149
+    },
+    "sum-divisors": {
+      "commits": 17341,
+      "ready_distinct_steps": 7668,
+      "root_boundary_steps": 1439
+    }
+  }
+}

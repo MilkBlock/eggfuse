@@ -9,8 +9,9 @@ from recursive_coverage import Target, snapshot
 from recursive_train import binary, folder, read
 
 
-def summarize(root, source, dest):
+def summarize(root, source, dest, matched_root=None):
     rows = []
+    matched = {}
     assert read(source / "catalog.json") == read(dest / "catalog.json")
     for case in ("fact", "loopfact", "sum-divisors"):
         d = folder(root, case)
@@ -30,6 +31,22 @@ def summarize(root, source, dest):
             )
 
         base = facts(0)
+        if matched_root:
+            full = facts(2)
+            control = (
+                target.match(
+                    read(
+                        matched_root / f"deep-ripsat/2/0/{case}-stream-multi/state.json"
+                    )
+                )
+                - seed
+            )
+            matched[case] = dict(
+                ten_k_only=len(full - control),
+                matched_four_k_only=len(control - full),
+                same_sha=read(source / f"{case}-2-0.json")["state_sha"]
+                == read(source / "matched-4096" / f"{case}-2-0.json")["state_sha"],
+            )
         for arm in (0, 1, 3, 2):
             hit = facts(arm)
             for group in ("", "size-pairs"):
@@ -74,7 +91,10 @@ def summarize(root, source, dest):
                             eps=dct["eps"],
                         )
                     )
+    if matched:
+        dump(dest / "matched-facts.json", matched)
     for group in ("trained-4096", "matched-4096"):
+        (dest / group).mkdir(exist_ok=True)
         for path in sorted((source / group).glob("*-2-0.json")):
             run = read(path)
             dump(dest / group / path.name, run)
@@ -98,5 +118,6 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser()
     for key in ("root", "source", "dest"):
         p.add_argument(key, type=Path)
+    p.add_argument("--matched-root", type=Path)
     a = p.parse_args()
-    summarize(a.root, a.source, a.dest)
+    summarize(a.root, a.source, a.dest, a.matched_root)
