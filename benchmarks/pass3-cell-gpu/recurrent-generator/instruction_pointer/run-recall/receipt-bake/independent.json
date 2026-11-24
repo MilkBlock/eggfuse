@@ -1,0 +1,127 @@
+{
+  "fact": {
+    "state_sha": "77b7be9dc9717a43612fe512b82b1e9ba39723d8c8073214f229a45871fa1233",
+    "facts": 768,
+    "reference": 1120,
+    "paid": 301740,
+    "signed_ops": 1098,
+    "ept": 0.0036388944124080332,
+    "visits": 8287473,
+    "boundary_scores": 257,
+    "verdicts": {
+      "accepted": 1281,
+      "duplicate": 281545,
+      "untriggered_rule": 85,
+      "binding": 1260,
+      "guard": 17556,
+      "watermark": 13
+    },
+    "samples": {
+      "control": [
+        {
+          "seconds": 14.644963333994383,
+          "eps": 74.9745817014977
+        },
+        {
+          "seconds": 17.814917333002086,
+          "eps": 61.633740952923645
+        }
+      ],
+      "specialized": [
+        {
+          "seconds": 14.004675707998103,
+          "eps": 78.40238666668516
+        },
+        {
+          "seconds": 13.922143458999926,
+          "eps": 78.86716605338536
+        }
+      ]
+    }
+  },
+  "loopfact": {
+    "state_sha": "1f1618000fa6a1c448b6f5531836a5f627906e57ca25e42caef6ec511b29ca75",
+    "facts": 946,
+    "reference": 1112,
+    "paid": 265910,
+    "signed_ops": 1132,
+    "ept": 0.004257079462976195,
+    "visits": 4013613,
+    "boundary_scores": 95,
+    "verdicts": {
+      "accepted": 1163,
+      "duplicate": 243299,
+      "untriggered_rule": 88,
+      "binding": 1225,
+      "guard": 20122,
+      "watermark": 13
+    },
+    "samples": {
+      "control": [
+        {
+          "seconds": 10.33337050001137,
+          "eps": 109.5479930772592
+        },
+        {
+          "seconds": 10.47420687500562,
+          "eps": 108.07500878193153
+        }
+      ],
+      "specialized": [
+        {
+          "seconds": 10.347191291002673,
+          "eps": 109.40166931912457
+        },
+        {
+          "seconds": 12.963510959001724,
+          "eps": 87.32202283625574
+        }
+      ]
+    }
+  },
+  "sum-divisors": {
+    "state_sha": "5cc62e8ee584af14af963229e15c52fea0339478e4b2e490112578d362052aaf",
+    "facts": 3089,
+    "reference": 8018,
+    "paid": 4951137,
+    "signed_ops": 4299,
+    "ept": 0.0008682854059582678,
+    "visits": 114745742,
+    "boundary_scores": 2844,
+    "verdicts": {
+      "accepted": 4615,
+      "duplicate": 4665771,
+      "untriggered_rule": 120,
+      "binding": 79721,
+      "guard": 200838,
+      "watermark": 71,
+      "retired": 1
+    },
+    "samples": {
+      "control": [
+        {
+          "seconds": 148.87721087499813,
+          "eps": 28.87614548078532
+        },
+        {
+          "seconds": 154.19707054199534,
+          "eps": 27.87990708830732
+        }
+      ],
+      "specialized": [
+        {
+          "seconds": 148.05941566599358,
+          "eps": 29.035640730192334
+        },
+        {
+          "seconds": 149.61881062499015,
+          "eps": 28.733018141516744
+        }
+      ]
+    }
+  },
+  "digests": {
+    "catalog.json": "a03a080cc6d4b57bade14e9dea24ba83eb5ba4be5b46d3b6f09f1cfb85077bf2",
+    "event-gnn.pt": "e758737a22b40533ca315bfe7a872a0c361e35fbe61e3affcd90e8afdd3af2e7"
+  }
+}
