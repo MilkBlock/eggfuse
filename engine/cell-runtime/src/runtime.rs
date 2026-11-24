@@ -1195,6 +1195,15 @@ impl Executor {
         }
         Ok(empty)
     }
+    /// Consume an offline named replay and audit exactly one next source Run.
+    /// The exact continuation can never feed a request back into this receiver.
+    #[cfg(feature = "cell-token-replay")]
+    pub fn audit_next_exact_run(mut self) -> Result<Option<(usize, bool)>> {
+        self.token_history.take().ok_or("expected a named replay")?;
+        let n = self.steps.len();
+        self.execute_until(Some(n + 1))?;
+        Ok(self.steps.get(n).map(|s| (s.executed_bindings, s.changed)))
+    }
     #[cfg(feature = "cell-token-replay")]
     pub fn start_tokens(&mut self, packets: Option<Vec<crate::cell_tokens::Request>>) -> Result<()> {
         if !self.steps.is_empty() || self.token_history.is_some() { return Err("token history already started".into()); }
@@ -2656,7 +2665,9 @@ impl Executor {
             #[cfg(not(feature = "view-consumers"))]
             let source = None;
             if !(crate::cell::RhsFrame { cell, receipts: &mut effect_receipts })
-                .execute(&mut self.graph, i, op, source)?
+                .execute(&mut self.graph, i, op, source)
+                .map_err(|error| format!("{error} (Run {}, rule {rid}, op {i}, {})",
+                    self.graph.epoch, self.graph.program.templates[template].name))?
             {
                 completed_prefix = i + 1;
                 completed = false;

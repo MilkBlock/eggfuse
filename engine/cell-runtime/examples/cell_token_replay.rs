@@ -24,6 +24,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         [rest @ .., flag] if flag == "--ept" => (rest, true, false),
         _ => (rest, false, false),
     };
+    let (rest, exact_next) = match rest {
+        [rest @ .., flag] if flag == "--audit-exact-next" && role == "replay" => (rest, true),
+        _ => (rest, false),
+    };
     // Offline observation only; never expose reference rows to an online policy.
     let (rest, row_history) = match rest {
         [rest @ .., flag, path] if flag == "--row-history" && matches!(role.as_str(), "reference" | "replay") => (rest, Some(path)),
@@ -140,6 +144,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         output.flush()?;
     } else {
         engine.execute_until(limit)?;
+    }
+    if exact_next {
+        let mut bytes = Vec::new();
+        engine.graph.write_export(&mut bytes)?;
+        let run = engine.steps.len() + 1;
+        let next = engine.audit_next_exact_run();
+        let result = match next {
+            Ok(step) => json!({"next":step}),
+            Err(source_error) => json!({"source_error":source_error}),
+        };
+        println!("{}", json!({"run":run,"prefix_sha":format!("{:x}",Sha256::digest(bytes)),"result":result}));
+        return Ok(());
     }
     let elapsed = started.elapsed().as_secs_f64();
     transfer_audit::set_active(false);

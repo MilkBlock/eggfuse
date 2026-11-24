@@ -129,6 +129,11 @@ def online(root, case, arm, out, phase="dagger", limit=None, collect=False):
             and "projections" not in failure
         ):
             raise RuntimeError((case, arm, code, failure))
+        # Replaying only the last completed prefix discards the failing request.
+        # Keep the original input tape independently of the prefix-state export.
+        failed_tape = read(d / "tape.json")
+        failed_tape["requests"] = sent
+        (out / "failed-issued.json").write_text(json.dumps(failed_tape))
         result = online(root, case, arm, out, phase, max(0, f["run"] - 1), collect)
         result.update(
             failure=failure,
