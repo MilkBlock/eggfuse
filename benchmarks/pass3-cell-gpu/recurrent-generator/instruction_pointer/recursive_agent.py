@@ -255,6 +255,8 @@ class Policy:
         self.active = defaultdict(OrderedDict)
         self.last_rule = {}
         self.observer = None
+        self.selection_observer = None
+        self.pool_limit = POOL
         self.closed = OrderedDict()
         self.by_ref = defaultdict(set)
         self.count = Counter()
@@ -286,7 +288,7 @@ class Policy:
         if old is not None and old[0] == rd.versions[t]:
             return
         if key not in self.pool:
-            if len(self.pool) >= POOL:
+            if len(self.pool) >= self.pool_limit:
                 self.forget(next(iter(self.pool)), "evicted")
             self.pool[key] = Obligation(*key)
             if old is not None:
@@ -304,7 +306,7 @@ class Policy:
         self.active[r][key] = None
         if ob.attempts >= 4:
             self.closed[key] = (rd.versions[t], ob.tried)
-            if len(self.closed) > POOL:
+            if len(self.closed) > self.pool_limit:
                 self.closed.popitem(last=False)
             self.forget(key, "closed_attempt_limit")
             return
@@ -449,6 +451,8 @@ class Policy:
                             self.save(
                                 r, seq, (), run, float(self.model.retry(h).item())
                             )
+                        if self.selection_observer is not None:
+                            self.selection_observer(r, seq, [domain[i] for i in ids], "fanout")
                         for i in ids:
                             path = seq + (domain[i],)
                             next_work.append((path, zz[i], score + ss[i].item(), seq))
@@ -457,6 +461,8 @@ class Policy:
                     for path, z, s, parent in next_work[:BEAM]:
                         if len(packets) >= RUN_PACKETS:
                             break
+                        if self.selection_observer is not None:
+                            self.selection_observer(r, parent, [path[-1]], "beam")
                         if parent and self.persistent:
                             key = (
                                 r,
