@@ -1,0 +1,164 @@
+{
+  "fact": {
+    "first_independent_A_B_state_difference": 6,
+    "stages": {
+      "scheduled_rule_runs": 14520,
+      "accepted_without_parents": 2,
+      "root_scored": 14488,
+      "recursive_scored": 18668,
+      "postings_linked": 283,
+      "postings_original": 283,
+      "postings_flipped": 0,
+      "matched_rank_budget": 1221,
+      "routed_computations": 7,
+      "B_reverts_to_direct": 0
+    },
+    "readouts": {
+      "A": {
+        "complete_scored": 12972,
+        "eligible_for_issue": 9945,
+        "native_A_winners_retained": 492,
+        "matched_budget_A_winners": 366
+      },
+      "B": {
+        "complete_scored": 12972,
+        "eligible_for_issue": 1221,
+        "native_A_winners_retained": 373,
+        "matched_budget_A_winners": 373
+      },
+      "type_only": {
+        "complete_scored": 12972,
+        "eligible_for_issue": 0,
+        "native_A_winners_retained": 0
+      },
+      "no_type_tag": {
+        "complete_scored": 12972,
+        "eligible_for_issue": 2642,
+        "native_A_winners_retained": 423
+      },
+      "same_type_replacement": {
+        "complete_scored": 12972,
+        "eligible_for_issue": 1215,
+        "native_A_winners_retained": 371
+      },
+      "no_status": {
+        "complete_scored": 12972,
+        "eligible_for_issue": 4968,
+        "native_A_winners_retained": 458
+      },
+      "no_decision_keys": {
+        "complete_scored": 12972,
+        "eligible_for_issue": 317,
+        "native_A_winners_retained": 209
+      }
+    },
+    "first_missed_A_winner": {
+      "type_only": [
+        3,
+        575
+      ],
+      "no_decision_keys": [
+        3,
+        575
+      ],
+      "B": [
+        6,
+        297
+      ],
+      "same_type_replacement": [
+        6,
+        297
+      ],
+      "no_type_tag": [
+        16,
+        533
+      ],
+      "no_status": [
+        16,
+        533
+      ]
+    },
+    "A_state": "3347924d8839357889e7146b2417b7fba1caec8a6896dbc5aee046a219aa334a"
+  },
+  "sum-divisors": {
+    "first_independent_A_B_state_difference": 7,
+    "stages": {
+      "scheduled_rule_runs": 16321,
+      "accepted_without_parents": 2,
+      "root_scored": 127366,
+      "recursive_scored": 599656,
+      "postings_linked": 1261,
+      "postings_original": 1261,
+      "postings_flipped": 0,
+      "matched_rank_budget": 14872,
+      "routed_computations": 93,
+      "B_reverts_to_direct": 0
+    },
+    "readouts": {
+      "A": {
+        "complete_scored": 460193,
+        "eligible_for_issue": 376778,
+        "native_A_winners_retained": 1809,
+        "matched_budget_A_winners": 1223
+      },
+      "B": {
+        "complete_scored": 460193,
+        "eligible_for_issue": 14927,
+        "native_A_winners_retained": 1232,
+        "matched_budget_A_winners": 1221
+      },
+      "type_only": {
+        "complete_scored": 460193,
+        "eligible_for_issue": 0,
+        "native_A_winners_retained": 0
+      },
+      "no_type_tag": {
+        "complete_scored": 460193,
+        "eligible_for_issue": 64855,
+        "native_A_winners_retained": 1504
+      },
+      "same_type_replacement": {
+        "complete_scored": 460193,
+        "eligible_for_issue": 14412,
+        "native_A_winners_retained": 1223
+      },
+      "no_status": {
+        "complete_scored": 460193,
+        "eligible_for_issue": 106763,
+        "native_A_winners_retained": 1660
+      },
+      "no_decision_keys": {
+        "complete_scored": 460193,
+        "eligible_for_issue": 893,
+        "native_A_winners_retained": 537
+      }
+    },
+    "first_missed_A_winner": {
+      "type_only": [
+        3,
+        575
+      ],
+      "no_decision_keys": [
+        3,
+        575
+      ],
+      "B": [
+        6,
+        279
+      ],
+      "no_type_tag": [
+        6,
+        279
+      ],
+      "no_status": [
+        6,
+        279
+      ],
+      "same_type_replacement": [
+        6,
+        280
+      ]
+    },
+    "A_state": "29c0fac3a9e6bbd73bcb191e4ebe689acba61efeffea4e6b6f063f748e531a12"
+  }
+}

@@ -1,0 +1,194 @@
+{
+  "grammar-stride3-split-7300147": {
+    "initial-bypass": {
+      "derived": 256,
+      "paid": 984,
+      "visits": 4188,
+      "sha": "d0bb6af5b34e68195d9c51712e158df00da0b225314a4341c48a51a7de0318ae",
+      "changed": 0,
+      "proofs": 720,
+      "work": 256,
+      "wall": 0.05211708300339524
+    },
+    "no-compute": {
+      "derived": 256,
+      "paid": 1214,
+      "visits": 4726,
+      "sha": "d0bb6af5b34e68195d9c51712e158df00da0b225314a4341c48a51a7de0318ae",
+      "changed": 0,
+      "proofs": 1214,
+      "work": 256,
+      "wall": 0.04892800000379793
+    },
+    "swapped-result": {
+      "derived": 141,
+      "paid": 940,
+      "visits": 978,
+      "sha": "ecf336db8a37a360ebf7c169a42e083462d82ec9913532c04631de15a0ae205a",
+      "changed": 258,
+      "proofs": 158,
+      "work": 141,
+      "wall": 0.023721167002804577
+    }
+  },
+  "grammar-benefit-held-11901371": {
+    "initial-bypass": {
+      "derived": 147,
+      "paid": 466,
+      "visits": 2092,
+      "sha": "73c8a345c300261211dcae36d5d67c6da2e44954b0224be9e127610fc990bd98",
+      "changed": 0,
+      "proofs": 466,
+      "work": 147,
+      "wall": 0.03213391600002069
+    },
+    "no-compute": {
+      "derived": 147,
+      "paid": 466,
+      "visits": 2092,
+      "sha": "73c8a345c300261211dcae36d5d67c6da2e44954b0224be9e127610fc990bd98",
+      "changed": 0,
+      "proofs": 466,
+      "work": 147,
+      "wall": 0.03033591600251384
+    },
+    "swapped-result": {
+      "derived": 80,
+      "paid": 596,
+      "visits": 308,
+      "sha": "c39175457560de2ba706e85c57608f88a27cdb0baed86cdf9cbb7a1b57099c8a",
+      "changed": 132,
+      "proofs": 64,
+      "work": 80,
+      "wall": 0.01984566698956769
+    }
+  },
+  "grammar-benefit-held-deep-11901379": {
+    "initial-bypass": {
+      "derived": 83,
+      "paid": 204,
+      "visits": 830,
+      "sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+      "changed": 0,
+      "proofs": 204,
+      "work": 83,
+      "wall": 0.02351583399286028
+    },
+    "no-compute": {
+      "derived": 83,
+      "paid": 204,
+      "visits": 830,
+      "sha": "e8e2e32ad246a711ccfaa0e57ba45727abaa27e8a798cf3fadc61dc8a653bf2d",
+      "changed": 0,
+      "proofs": 204,
+      "work": 83,
+      "wall": 0.023282500013010576
+    },
+    "swapped-result": {
+      "derived": 44,
+      "paid": 336,
+      "visits": 146,
+      "sha": "ef9f25fd3cb21fac1c79036058407fa6b7e8b2aec45b870eb11fa87627183680",
+      "changed": 60,
+      "proofs": 32,
+      "work": 44,
+      "wall": 0.015460416005225852
+    }
+  },
+  "fact": {
+    "initial-bypass": {
+      "derived": 363,
+      "paid": 9954,
+      "visits": 33156,
+      "sha": "3347924d8839357889e7146b2417b7fba1caec8a6896dbc5aee046a219aa334a",
+      "changed": 0,
+      "proofs": 9947,
+      "work": 562,
+      "wall": 1.9565299579990096
+    },
+    "no-compute": {
+      "derived": 363,
+      "paid": 9947,
+      "visits": 33181,
+      "sha": "3347924d8839357889e7146b2417b7fba1caec8a6896dbc5aee046a219aa334a",
+      "changed": 0,
+      "proofs": 9947,
+      "work": 562,
+      "wall": 1.8837854169978527
+    },
+    "swapped-result": {
+      "derived": 363,
+      "paid": 10150,
+      "visits": 33057,
+      "sha": "3347924d8839357889e7146b2417b7fba1caec8a6896dbc5aee046a219aa334a",
+      "changed": 45,
+      "proofs": 9946,
+      "work": 562,
+      "wall": 1.896700333993067
+    }
+  },
+  "sum-divisors": {
+    "initial-bypass": {
+      "derived": 1404,
+      "paid": 376873,
+      "visits": 727022,
+      "sha": "29c0fac3a9e6bbd73bcb191e4ebe689acba61efeffea4e6b6f063f748e531a12",
+      "changed": 0,
+      "proofs": 376780,
+      "work": 2024,
+      "wall": 9.1960594580014
+    },
+    "no-compute": {
+      "derived": 1404,
+      "paid": 376781,
+      "visits": 727764,
+      "sha": "29c0fac3a9e6bbd73bcb191e4ebe689acba61efeffea4e6b6f063f748e531a12",
+      "changed": 0,
+      "proofs": 376781,
+      "work": 2024,
+      "wall": 9.292821625000215
+    },
+    "swapped-result": {
+      "derived": 1372,
+      "paid": 367900,
+      "visits": 920540,
+      "sha": "da6d6d4cb49d01ec8c2a0e40b35d48dec5cfcb35489acfce22752c000abca54e",
+      "changed": 102,
+      "proofs": 367515,
+      "work": 1988,
+      "wall": 9.152548250000109
+    }
+  },
+  "cyk801": {
+    "initial-bypass": {
+      "derived": 6567,
+      "paid": 50257,
+      "visits": 200389,
+      "sha": "2bad5f36b3dd70837b4677a4581a107bad02a9d423e60a866a4e3c7425242d94",
+      "changed": 0,
+      "proofs": 32563,
+      "work": 6567,
+      "wall": 3.1895561249984894
+    },
+    "no-compute": {
+      "derived": 6567,
+      "paid": 1072213,
+      "visits": 1240039,
+      "sha": "2bad5f36b3dd70837b4677a4581a107bad02a9d423e60a866a4e3c7425242d94",
+      "changed": 0,
+      "proofs": 1072213,
+      "work": 6567,
+      "wall": 4.565829625003971
+    },
+    "swapped-result": {
+      "derived": 2917,
+      "paid": 8650,
+      "visits": 10684,
+      "sha": "9065451ddee9e9d2fc066025d2c5ac4b4fc63efc905d606ec6604567e59ee604",
+      "changed": 1524,
+      "proofs": 7116,
+      "work": 2917,
+      "wall": 0.19733774999622256
+    }
+  }
+}

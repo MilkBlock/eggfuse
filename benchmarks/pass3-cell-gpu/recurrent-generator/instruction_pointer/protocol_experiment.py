@@ -37,18 +37,27 @@ def dump(path, data):
     path.write_text(json.dumps(data, indent=2) + "\n")
 
 
-def run(root, dest, cases):
+def run(
+    root,
+    dest,
+    cases,
+    *,
+    policy_factory=None,
+    orders=ORDERS,
+    series_prefix="protocol-ablation",
+    extra_weights=None,
+):
     torch.set_num_threads(1)
     for case in cases:
         dataset = folder(root, case)
-        work = root / "protocol-ablation" / case
+        work = root / series_prefix / case
         work.mkdir(exist_ok=True, parents=True)
         path = work / "align.json"
         ref, _ = snapshot(root, dataset, "reference", "-", None, path)
         target = Target(read(dataset / "program.json"), ref)
         seed = target.match(snapshot(root, dataset, "reference", "-", 0, path)[0])
         total = len(target.gold) - len(seed)
-        route = "chain" if "stride" in case else "learned"
+        route = "chain" if "stride" in case or "benefit-" in case else "learned"
         artifact = {
             "binary": binary(root),
             "program": dataset / "program.json",
@@ -57,7 +66,7 @@ def run(root, dest, cases):
             "route": root
             / ("txn-chain-study" if route == "chain" else "txn-study")
             / "model.pt",
-            "learner": dest / "model.pt",
+            **(extra_weights or {"learner": dest / "model.pt"}),
         }
         info = {
             "case": case,
@@ -65,21 +74,26 @@ def run(root, dest, cases):
             "mode": "exclusive",
             "reference": total,
             "sha256": {k: digest(v) for k, v in artifact.items()},
-            "arms": {a: [] for a in "ABCD"},
+            "arms": {a: [] for a in orders[0]},
             "controls": [],
             "cost_curve": {},
         }
-        traces = {a: [] for a in "ABCD"}
-        for repeat, order in enumerate(ORDERS):
+        traces = {a: [] for a in orders[0]}
+        for repeat, order in enumerate(orders):
             for arm in order:
-                net = ProtocolNet().eval()
-                net.load_state_dict(torch.load(dest / "model.pt", weights_only=True))
-                study = (
-                    ResponsePolicy(root, route)
-                    if arm == "A"
-                    else LearningPolicy(root, arm, net, route=route)
-                )
-                series = f"protocol-ablation/{case}/{arm}"
+                if policy_factory is None:
+                    net = ProtocolNet().eval()
+                    net.load_state_dict(
+                        torch.load(dest / "model.pt", weights_only=True)
+                    )
+                    study = (
+                        ResponsePolicy(root, route)
+                        if arm == "A"
+                        else LearningPolicy(root, arm, net, route=route)
+                    )
+                else:
+                    study = policy_factory(arm, route)
+                series = f"{series_prefix}/{case}/{arm}"
                 out = root / series / (case + "-stream-multi")
                 m = execute(root, case, study=study, series=series, seconds=240)
                 derived = len(target.match(read(out / "state.json")) - seed)

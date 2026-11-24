@@ -100,3 +100,5 @@ python -m unittest discover
 ~~~
 
 Each arm's JSON includes artifact digests, native verdicts and phase timings, candidate visits, complete tuple scores, index work, response encoding, named reads, cache hits, control decisions, synchronization counts and transaction size histograms.
+
+[计算时机的反事实训练、同快照退化诊断与独立执行](../computation-benefit/README.md)
