@@ -1,0 +1,74 @@
+{
+  "control": {
+    "work": {
+      "interface_reads": 529814,
+      "typed_products": 12527527511,
+      "traversed_positions": 500366386,
+      "visits": 18019020,
+      "root_scored": 1445,
+      "tuple_scored": 13825273,
+      "waves": 4214
+    },
+    "paid": 1072213,
+    "state_sha": "2bad5f36b3dd70837b4677a4581a107bad02a9d423e60a866a4e3c7425242d94",
+    "signed_ops": 6567,
+    "ept": 0.006124715891338755,
+    "eps": 159.169902418426,
+    "exact_endpoint": true,
+    "wall": 41.25780000000668,
+    "verdicts": {
+      "accepted": 4991,
+      "guard": 1067222
+    }
+  },
+  "p8": {
+    "work": {
+      "interface_reads": 529814,
+      "typed_products": 12527527511,
+      "traversed_positions": 40288809,
+      "visits": 1240039,
+      "root_scored": 1445,
+      "index_items": 496886,
+      "bucket_probes": 167579,
+      "bucket_items": 40287364,
+      "tuple_scored": 1072460,
+      "waves": 4214
+    },
+    "paid": 1072213,
+    "state_sha": "2bad5f36b3dd70837b4677a4581a107bad02a9d423e60a866a4e3c7425242d94",
+    "signed_ops": 6567,
+    "ept": 0.006124715891338755,
+    "eps": 568.5200833322795,
+    "exact_endpoint": true,
+    "wall": 11.551043125000433,
+    "verdicts": {
+      "accepted": 4991,
+      "guard": 1067222
+    }
+  },
+  "p8-delta": {
+    "work": {
+      "interface_reads": 529814,
+      "typed_products": 12527527511,
+      "traversed_positions": 1240039,
+      "visits": 1240039,
+      "root_scored": 1445,
+      "index_items": 504123,
+      "bucket_probes": 167579,
+      "bucket_items": 1238594,
+      "tuple_scored": 1072460,
+      "waves": 4214
+    },
+    "paid": 1072213,
+    "state_sha": "2bad5f36b3dd70837b4677a4581a107bad02a9d423e60a866a4e3c7425242d94",
+    "signed_ops": 6567,
+    "ept": 0.006124715891338755,
+    "eps": 637.2690995777007,
+    "exact_endpoint": true,
+    "wall": 10.304908874997636,
+    "verdicts": {
+      "accepted": 4991,
+      "guard": 1067222
+    }
+  }
+}

@@ -1,0 +1,106 @@
+[
+  {
+    "control": {
+      "paid": 1072213,
+      "signed_ops": 6567,
+      "wall": 40.833572959003504,
+      "eps": 160.82354602163278,
+      "native_verify_seconds": 0.65168555,
+      "verification_ipc": 3.7691738719295245
+    },
+    "p8": {
+      "paid": 1072213,
+      "signed_ops": 6567,
+      "wall": 12.426925292005762,
+      "eps": 528.4493022762879,
+      "native_verify_seconds": 0.633754538,
+      "verification_ipc": 3.646989175773342
+    },
+    "reference": {
+      "wall": 0.14613033299974632,
+      "engine": 0.10249725
+    },
+    "replay": {
+      "wall": 0.05963066600088496,
+      "engine": 0.012729542
+    }
+  },
+  {
+    "p8": {
+      "paid": 1072213,
+      "signed_ops": 6567,
+      "wall": 11.912125207993085,
+      "eps": 551.2870193467675,
+      "native_verify_seconds": 0.617303979,
+      "verification_ipc": 3.5750860941625433
+    },
+    "control": {
+      "paid": 1072213,
+      "signed_ops": 6567,
+      "wall": 40.96892954199575,
+      "eps": 160.29220371180088,
+      "native_verify_seconds": 0.655032147,
+      "verification_ipc": 3.8508904841000913
+    },
+    "replay": {
+      "wall": 0.058542500002658926,
+      "engine": 0.0135515
+    },
+    "reference": {
+      "wall": 0.1321959579945542,
+      "engine": 0.100484042
+    }
+  },
+  {
+    "control": {
+      "paid": 1072213,
+      "signed_ops": 6567,
+      "wall": 40.564782750007,
+      "eps": 161.88919438990135,
+      "native_verify_seconds": 0.640911094,
+      "verification_ipc": 3.714334825432161
+    },
+    "p8": {
+      "paid": 1072213,
+      "signed_ops": 6567,
+      "wall": 12.615171333003673,
+      "eps": 520.5636789743384,
+      "native_verify_seconds": 0.64176864,
+      "verification_ipc": 3.7195824648515554
+    },
+    "reference": {
+      "wall": 0.14431024999066722,
+      "engine": 0.100572917
+    },
+    "replay": {
+      "wall": 0.05487491699750535,
+      "engine": 0.012465083
+    }
+  },
+  {
+    "p8": {
+      "paid": 1072213,
+      "signed_ops": 6567,
+      "wall": 12.359874125002534,
+      "eps": 531.3160905672778,
+      "native_verify_seconds": 0.622584344,
+      "verification_ipc": 3.591980773227988
+    },
+    "control": {
+      "paid": 1072213,
+      "signed_ops": 6567,
+      "wall": 41.51820458400471,
+      "eps": 158.17157957090467,
+      "native_verify_seconds": 0.658426341,
+      "verification_ipc": 3.794148950910312
+    },
+    "replay": {
+      "wall": 0.04383883299306035,
+      "engine": 0.012898542
+    },
+    "reference": {
+      "wall": 0.14268150000134483,
+      "engine": 0.101728042
+    }
+  }
+]

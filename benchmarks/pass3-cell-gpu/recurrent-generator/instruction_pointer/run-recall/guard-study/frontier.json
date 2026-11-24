@@ -1,0 +1,49 @@
+{
+  "cyk801": [
+    "joint-recall",
+    "joint-balanced",
+    "s8",
+    "s4",
+    "s4-recall",
+    "p8-delta"
+  ],
+  "grammar-4691132": [
+    "s8",
+    "s4-recall",
+    "p4"
+  ],
+  "grammar-72102993": [
+    "joint-recall",
+    "s8",
+    "s4",
+    "s4-recall",
+    "p8"
+  ],
+  "grammar-layout-832749": [
+    "s8",
+    "s4",
+    "s4-recall",
+    "p8"
+  ],
+  "fact": [
+    "joint-recall",
+    "joint-balanced",
+    "s4",
+    "p8"
+  ],
+  "loopfact": [
+    "joint-recall",
+    "joint-balanced",
+    "s8",
+    "s4",
+    "p8"
+  ],
+  "sum-divisors": [
+    "s8",
+    "s4",
+    "p8-delta"
+  ],
+  "jacobi": [
+    "p8-delta"
+  ]
+}
