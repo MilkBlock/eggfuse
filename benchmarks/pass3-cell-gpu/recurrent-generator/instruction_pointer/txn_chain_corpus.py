@@ -14,6 +14,7 @@ def chain_sources(src):
         (CHAIN_TRAIN[0], 17118, 2, "(+ s (* p1 2))"),
         (CHAIN_TRAIN[1], 17119, 3, "(+ (* 3 p1) s)"),
         (CHAIN_VALID, 17122, 2, "(+ s (* p1 2))"),
+        ("grammar-stride2-25112473", 25112473, 2, "(+ s (* p1 2))"),
         (CHAIN_BLIND, 7300147, 3, "(+ s (+ (* p1 2) p1))"),
     ]
     sources = {}

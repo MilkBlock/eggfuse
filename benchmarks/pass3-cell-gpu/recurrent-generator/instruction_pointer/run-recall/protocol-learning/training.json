@@ -1,0 +1,51 @@
+{
+  "device": "mps",
+  "training_programs": [
+    "grammar-17118",
+    "grammar-17119",
+    "grammar-stride2-17118",
+    "grammar-stride3-17119",
+    "loopfact"
+  ],
+  "validation": "grammar-stride2-17122",
+  "proof_query_samples": {
+    "grammar-17118": [
+      202,
+      80
+    ],
+    "grammar-17119": [
+      216,
+      216
+    ],
+    "grammar-stride2-17118": [
+      374,
+      10
+    ],
+    "grammar-stride3-17119": [
+      382,
+      164
+    ],
+    "loopfact": [
+      23017,
+      29
+    ],
+    "grammar-stride2-17122": [
+      344,
+      2
+    ]
+  },
+  "instruction_examples": 206,
+  "ambiguous_operand_examples": 4,
+  "boundary_samples": 1303,
+  "boundary_positives": [
+    185.0,
+    233.0,
+    1160.0
+  ],
+  "validation_proofs": {
+    "positive": 76,
+    "hits": 76,
+    "issued": 342
+  },
+  "seed": 39113
+}
