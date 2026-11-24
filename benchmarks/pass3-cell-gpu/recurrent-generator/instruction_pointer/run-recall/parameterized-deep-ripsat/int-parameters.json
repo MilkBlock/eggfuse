@@ -1,0 +1,40 @@
+{
+  "format": "typed-int-parameters-v1",
+  "catalog_sha256": "d90f34674c13849d810918b1f47039effefe0d5c7293c5bd0483064740274d06",
+  "entries": 10000,
+  "concrete_layouts": 10000,
+  "structures": 10000,
+  "multiplicities": {
+    "1": 10000
+  },
+  "integer_layouts": 7031,
+  "cross_step_integer_sharing": 4070,
+  "used_rule_ids": 224,
+  "used_exact_rules": 224,
+  "used_rule_shapes": 224,
+  "donor_rules": 582,
+  "donor_rule_shapes": 582,
+  "target_linking": {
+    "fact": {
+      "concrete": 7955,
+      "structural": 9570,
+      "new_with_changed_values": 0,
+      "new_with_same_values": 1615,
+      "lost": 0
+    },
+    "loopfact": {
+      "concrete": 7997,
+      "structural": 9570,
+      "new_with_changed_values": 0,
+      "new_with_same_values": 1573,
+      "lost": 0
+    },
+    "sum-divisors": {
+      "concrete": 8008,
+      "structural": 9570,
+      "new_with_changed_values": 0,
+      "new_with_same_values": 1562,
+      "lost": 0
+    }
+  }
+}

@@ -7,10 +7,13 @@ from torch import nn
 
 from actor import InstructionActor, ints, row_features
 from catalog import Catalog, symbol
+from int_parameters import StructuralBake, integer_operand
 
 
 class SemanticCatalog(Catalog):
-    def __init__(self, program):
+    def __init__(self, program, *, integer_parameters=False):
+        self.int_bake = StructuralBake(program) if integer_parameters else None
+        self.parameter_nodes = {}
         self.factors=[]
         self.names=[]
         self.constants=[]
@@ -44,6 +47,20 @@ class SemanticCatalog(Catalog):
                                       ('sort',name) if sort['kind']=='eq' else None)
         return self.sorts[name]
 
+    def parameter_node(self, arg, role):
+        key = role, arg["sort"]["name"], arg["literal"]
+        if key not in self.parameter_nodes:
+            n = self.add([role, "sort/" + arg["sort"]["kind"]])
+            self.link(n, self.sort_node(arg["sort"]), -2)
+            self.parameter_nodes[key] = n
+        return self.parameter_nodes[key]
+
+    def argument_node(self, slots, arg, op, index):
+        if (self.int_bake is not None and index == 0 and integer_operand(arg)
+                and op.get("call", {}).get("table", "").startswith("RipenInput")):
+            return self.parameter_node(arg, "boundary")
+        return super().argument_node(slots, arg, op, index)
+
     def slot_node(self,label,sort):
         n=self.node(label)
         self.link(n,self.sort_node(sort),-2)
@@ -51,13 +68,19 @@ class SemanticCatalog(Catalog):
 
     def node(self,label):
         if isinstance(label,str):
+            if label == "rule":
+                self.parameter_nodes = {}
             return self.add([label])
         kind,*args=label
+        if kind == 'merge':
+            self.parameter_nodes = {}
         if kind=='input':
             name,=args
             return self.add([kind,'table/'+self.declarations[name]['kind']],('table',name))
         if kind=='literal':
             arg,=args
+            if self.int_bake is not None and integer_operand(arg):
+                return self.parameter_node(arg, 'IntParam')
             n=self.add([kind,'sort/'+arg['sort']['kind']],literal=arg['literal'])
             self.link(n,self.sort_node(arg['sort']),-2)
             return n

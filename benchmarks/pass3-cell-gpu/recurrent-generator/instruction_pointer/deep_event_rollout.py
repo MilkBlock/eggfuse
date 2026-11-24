@@ -14,14 +14,13 @@ from higher_replacement import Policy, send
 from protocol_experiment import dump
 from recursive_coverage import Target, snapshot
 from recursive_train import folder, read
-from ripsat_layout import signatures
+from int_parameters import link_layouts
 from ripsat_policy import CellScorer
-from ripsat_replay import unpack
 from transaction_native import execute
 
 
 class DeepTemplates:
-    def __init__(self, program, catalog_dir, full=False, size=None):
+    def __init__(self, program, catalog_dir, full=False, size=None, *, concrete_only=False):
         catalog = read(catalog_dir / "catalog.json")
         checkpoint = torch.load(catalog_dir / "event-gnn.pt", weights_only=True)
         width = checkpoint["codes"].shape[1]
@@ -29,14 +28,12 @@ class DeepTemplates:
         self.model.load_state_dict(checkpoint["model"])
         self.encoder = torch.nn.Linear(16, width)
         self.encoder.load_state_dict(checkpoint["encoder"])
-        target = {sig: i for i, sig in enumerate(signatures(program))}
         self.menu = defaultdict(list)
         self.cat = SimpleNamespace(units={})
-        for i, layout in enumerate(unpack(catalog["layouts"][:size])):
-            if (full or deployable(layout)) and all(
-                catalog["signatures"][r] in target for r, _, _ in layout
-            ):
-                unit = [(target[catalog["signatures"][r]], g, w) for r, g, w in layout]
+        if concrete_only:
+            catalog = {k: catalog[k] for k in ("signatures", "layouts")}
+        for i, unit in link_layouts(program, catalog, size):
+            if full or deployable(unit):
                 self.cat.units[i] = unit
                 self.menu[unit[0][0]].append(i)
         self.codes = checkpoint["codes"]
@@ -91,7 +88,7 @@ class DeepTemplates:
         self.count["higher_started"] += 1
 
 
-def run(root, out, case, deep, rep):
+def run(root, out, case, deep, rep, *, concrete_only=False):
     policy = EventGenerator(root, case, Path("run-recall/cell-events"), "B")
     d = folder(root, case)
     if deep:
@@ -99,10 +96,11 @@ def run(root, out, case, deep, rep):
             from deep_event_boundary import FullTemplates
 
             policy.higher = FullTemplates(
-                read(d / "program.json"), out, size=4096 if deep == 3 else None
+                read(d / "program.json"), out, size=4096 if deep == 3 else None,
+                concrete_only=concrete_only
             )
         else:
-            policy.higher = DeepTemplates(read(d / "program.json"), out)
+            policy.higher = DeepTemplates(read(d / "program.json"), out, concrete_only=concrete_only)
     series = f"deep-ripsat/{int(deep)}/{rep}"
     result = execute(root, case, study=policy, seconds=300, series=series)
     work = root / series / (case + "-stream-multi")
@@ -129,9 +127,11 @@ if __name__ == "__main__":
     p.add_argument(
         "--arms", nargs="+", type=int, choices=[0, 1, 2, 3], default=[0, 1, 3, 2]
     )
+    p.add_argument("--concrete-only", action="store_true", help="restrict linking to exact legacy rule signatures")
+    p.add_argument("--offset", type=int, default=0)
     a = p.parse_args()
     torch.set_num_threads(1)
     for i in range(a.reps):
         for case in a.cases:
             for arm in a.arms if i % 2 == 0 else reversed(a.arms):
-                run(a.root, a.out, case, arm, i)
+                run(a.root, a.out, case, arm, a.offset + i, concrete_only=a.concrete_only)

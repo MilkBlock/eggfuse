@@ -34,13 +34,23 @@ class GraphBank:
             return positions[k]
 
         for i, layout in enumerate(layouts):
+            bake = getattr(catalog, "int_bake", None)
+            structural_steps = bake.describe(layout)[0] if bake is not None else None
             for j, (rid, group, wires) in enumerate(layout):
                 template = 'generated', rid
                 root = catalog.roots[template]
-                key = root, group
+                # Encode local-to-layout parameter edges. Equal bindings across
+                # primitive steps share a coordinate, independently of their payload.
+                params, markers = structural_steps[j][3:] if structural_steps else ((), ())
+                key = root, group, tuple(params), tuple(markers)
                 if key not in step_keys:
                     step_keys[key] = len(step_vectors)
-                    step_vectors.append(nodes[root] + position(group))
+                    vec = nodes[root] + position(group)
+                    for namespace, refs in enumerate((params, markers)):
+                        for local, binding in enumerate(refs):
+                            role = position(2 * local + namespace + 1)
+                            vec = vec + role.roll(1) * position(binding + 1)
+                    step_vectors.append(vec)
                 step_ids[i, j] = step_keys[key]
                 inputs = catalog.inputs[template]
                 if len(wires) != len(inputs):

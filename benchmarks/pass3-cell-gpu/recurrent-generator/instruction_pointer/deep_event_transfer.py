@@ -9,6 +9,7 @@ from anchor_set_audit import load_actor
 from alternate_proofs import digest
 from deep_event_recognition import evaluate
 from deep_ripsat import depth
+from int_parameters import FORMAT
 from protocol_experiment import dump
 from recursive_train import read
 from ripsat_layout import signatures
@@ -37,7 +38,14 @@ def check(root, weights, out):
     assert set(layouts).isdisjoint(unpack(read(out / "catalog.json")["layouts"]))
     actor = load_actor(weights, True)
     donor = read(root / "sum/program.json")
-    cat = actor.catalog_type(donor)
+    trained = read(out / "catalog.json")
+    representation = trained.get("representation")
+    if representation not in (FORMAT, None):
+        raise ValueError("unknown training catalog representation")
+    cat = actor.catalog_type(donor, integer_parameters=representation == FORMAT)
+    if cat.int_bake:
+        seen = set(trained["structural_keys"])
+        layouts = [l for l in layouts if cat.int_bake.key(l) not in seen]
     checkpoint = torch.load(out / "event-gnn.pt", weights_only=True)
     net = CellScorer(actor.width).eval()
     net.load_state_dict(checkpoint["model"])
@@ -45,7 +53,10 @@ def check(root, weights, out):
     checkpoint["codes"] = bank.encode(net)
     held = out / "held"
     held.mkdir(exist_ok=True)
-    dump(held / "catalog.json", dict(layouts=layouts, signatures=signatures(donor)))
+    manifest = dict(layouts=layouts, signatures=signatures(donor))
+    if cat.int_bake:
+        manifest.update(cat.int_bake.manifest(layouts))
+    dump(held / "catalog.json", manifest)
     torch.save(checkpoint, held / "event-gnn.pt")
     dump(
         held / "result.json",

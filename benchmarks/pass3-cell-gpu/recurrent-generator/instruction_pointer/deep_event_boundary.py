@@ -11,8 +11,8 @@ from higher_replacement import send
 
 
 class FullTemplates(DeepTemplates):
-    def __init__(self, program, catalog_dir, size=None):
-        super().__init__(program, catalog_dir, full=True, size=size)
+    def __init__(self, program, catalog_dir, size=None, *, concrete_only=False):
+        super().__init__(program, catalog_dir, full=True, size=size, concrete_only=concrete_only)
 
     def start(self, rd, pub, txn, rules, stats):
         self.rules, self.count = rules, stats

@@ -1,0 +1,185 @@
+[
+  {
+    "case": "fact",
+    "arm": "old",
+    "facts": 768,
+    "reference": 1120,
+    "ccp": 301761,
+    "neural_proof_requests": 301599,
+    "visits": 8288022,
+    "scores": 617296,
+    "signed_ops": 1098,
+    "state": "77b7be9dc9717a43612fe512b82b1e9ba39723d8c8073214f229a45871fa1233",
+    "ept": 0.0036386411762951475,
+    "eps": [
+      78.8234883657645,
+      74.23725007890896
+    ],
+    "seconds": [
+      13.92985800000315,
+      14.79041854100069
+    ]
+  },
+  {
+    "case": "fact",
+    "arm": "parameterized",
+    "facts": 768,
+    "reference": 1120,
+    "ccp": 301737,
+    "neural_proof_requests": 301607,
+    "visits": 8287446,
+    "scores": 617296,
+    "signed_ops": 1098,
+    "state": "77b7be9dc9717a43612fe512b82b1e9ba39723d8c8073214f229a45871fa1233",
+    "ept": 0.003638930591873055,
+    "eps": [
+      80.45563117777262,
+      75.01521803594402
+    ],
+    "seconds": [
+      13.647273459006101,
+      14.637030042009428
+    ]
+  },
+  {
+    "case": "fact",
+    "arm": "structural-link",
+    "facts": 768,
+    "reference": 1120,
+    "ccp": 301740,
+    "neural_proof_requests": 301598,
+    "visits": 8287473,
+    "scores": 850482,
+    "signed_ops": 1098,
+    "state": "77b7be9dc9717a43612fe512b82b1e9ba39723d8c8073214f229a45871fa1233",
+    "ept": 0.0036388944124080332,
+    "eps": [
+      73.04704212834945
+    ],
+    "seconds": [
+      15.031409458999406
+    ]
+  },
+  {
+    "case": "loopfact",
+    "arm": "old",
+    "facts": 946,
+    "reference": 1112,
+    "ccp": 265927,
+    "neural_proof_requests": 265790,
+    "visits": 4013980,
+    "scores": 518821,
+    "signed_ops": 1132,
+    "state": "1f1618000fa6a1c448b6f5531836a5f627906e57ca25e42caef6ec511b29ca75",
+    "ept": 0.0042568073193019135,
+    "eps": [
+      111.80331433570167,
+      101.22189296322459
+    ],
+    "seconds": [
+      10.12492345800274,
+      11.183351415995276
+    ]
+  },
+  {
+    "case": "loopfact",
+    "arm": "parameterized",
+    "facts": 946,
+    "reference": 1112,
+    "ccp": 265910,
+    "neural_proof_requests": 265797,
+    "visits": 4013607,
+    "scores": 518821,
+    "signed_ops": 1132,
+    "state": "1f1618000fa6a1c448b6f5531836a5f627906e57ca25e42caef6ec511b29ca75",
+    "ept": 0.004257079462976195,
+    "eps": [
+      107.14916817012411,
+      102.11756297350547
+    ],
+    "seconds": [
+      10.564711040991824,
+      11.08526258400525
+    ]
+  },
+  {
+    "case": "loopfact",
+    "arm": "structural-link",
+    "facts": 946,
+    "reference": 1112,
+    "ccp": 265910,
+    "neural_proof_requests": 265790,
+    "visits": 4013613,
+    "scores": 760071,
+    "signed_ops": 1132,
+    "state": "1f1618000fa6a1c448b6f5531836a5f627906e57ca25e42caef6ec511b29ca75",
+    "ept": 0.004257079462976195,
+    "eps": [
+      102.78528019897588
+    ],
+    "seconds": [
+      11.01325012500456
+    ]
+  },
+  {
+    "case": "sum-divisors",
+    "arm": "old",
+    "facts": 3089,
+    "reference": 8018,
+    "ccp": 4951170,
+    "neural_proof_requests": 4950689,
+    "visits": 114747948,
+    "scores": 2163720,
+    "signed_ops": 4299,
+    "state": "5cc62e8ee584af14af963229e15c52fea0339478e4b2e490112578d362052aaf",
+    "ept": 0.0008682796187567787,
+    "eps": [
+      28.179979204878297,
+      27.828819877641518
+    ],
+    "seconds": [
+      152.55511612498958,
+      154.4801403330057
+    ]
+  },
+  {
+    "case": "sum-divisors",
+    "arm": "parameterized",
+    "facts": 3089,
+    "reference": 8018,
+    "ccp": 4951136,
+    "neural_proof_requests": 4950699,
+    "visits": 114745794,
+    "scores": 2163720,
+    "signed_ops": 4299,
+    "state": "5cc62e8ee584af14af963229e15c52fea0339478e4b2e490112578d362052aaf",
+    "ept": 0.0008682855813292141,
+    "eps": [
+      28.076063464608538,
+      27.523135026826385
+    ],
+    "seconds": [
+      153.11975645799248,
+      156.1958692499902
+    ]
+  },
+  {
+    "case": "sum-divisors",
+    "arm": "structural-link",
+    "facts": 3089,
+    "reference": 8018,
+    "ccp": 4951137,
+    "neural_proof_requests": 4950676,
+    "visits": 114745742,
+    "scores": 3138698,
+    "signed_ops": 4299,
+    "state": "5cc62e8ee584af14af963229e15c52fea0339478e4b2e490112578d362052aaf",
+    "ept": 0.0008682854059582678,
+    "eps": [
+      27.220743992512258
+    ],
+    "seconds": [
+      157.93102499999804
+    ]
+  }
+]

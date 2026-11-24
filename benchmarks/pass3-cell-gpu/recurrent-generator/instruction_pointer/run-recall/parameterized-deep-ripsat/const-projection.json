@@ -1,0 +1,39 @@
+{
+  "native_checks": [
+    "original-ripened",
+    "sentinel-reference",
+    "sentinel-single-update",
+    "better-reference",
+    "better-single-update",
+    "tie-reference",
+    "tie-single-update",
+    "tie-reference-no-new-Smaller",
+    "tie-direct-publishes-Smaller",
+    "swapped-costs-reverse-winner-preserve-boundary",
+    "between-runs-reference-observes-sentinel",
+    "between-runs-single-update-misses-sentinel"
+  ],
+  "observed_marker_rows": 3,
+  "observed_i64": [
+    "1",
+    "10000000000000000"
+  ],
+  "export_status": {
+    "unavailable": 51
+  },
+  "reference_parent_rows": 1,
+  "projected_row_columns": [
+    {
+      "slot": 0
+    },
+    {
+      "slot": 1
+    },
+    {
+      "slot": 2
+    },
+    {
+      "slot": 3
+    }
+  ]
+}

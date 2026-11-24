@@ -45,7 +45,7 @@ def measure(roots, ids):
     return dict(ready_distinct_steps=len(touched), root_boundary_steps=len(possible))
 
 
-def main(root, weights, out, size, examples=None):
+def main(root, weights, out, size, examples=None, *, integer_parameters=True, frozen=None):
     import numpy as np
     from event_addresses import Directory
     from recursive_agent import Reader
@@ -67,11 +67,19 @@ def main(root, weights, out, size, examples=None):
                     support[l] += 1
                     ready[l] += any(r and f for _, r, f, _ in occ)
     layouts = sorted(support, key=lambda l: (-ready[l], -support[l], l))[:size]
+    if frozen is not None:
+        from ripsat_replay import unpack
+        original = read(frozen)
+        if original["signatures"] != signatures(donor):
+            raise ValueError("frozen catalog has a different executable donor")
+        layouts = unpack(original["layouts"])
+        if any(l not in support for l in layouts):
+            raise ValueError("frozen layouts missing from the training tapes")
     if not 0 < size == len(layouts):
         raise ValueError("requested catalog exceeds distinct eligible training layouts")
     ids = {l: i for i, l in enumerate(layouts)}
     actor = load_actor(weights, True)
-    cat = actor.catalog_type(donor)
+    cat = actor.catalog_type(donor, integer_parameters=integer_parameters)
     with torch.no_grad():
         bank = GraphBank(layouts, cat, actor.template_graph(cat).detach())
     model = CellScorer(actor.width)
@@ -154,7 +162,10 @@ def main(root, weights, out, size, examples=None):
             ),
             out / "event-gnn.pt",
         )
-    dump(out / "catalog.json", dict(signatures=signatures(donor), layouts=layouts))
+    manifest = dict(signatures=signatures(donor), layouts=layouts)
+    if integer_parameters:
+        manifest.update(cat.int_bake.manifest(layouts))
+    dump(out / "catalog.json", manifest)
     report = dict(
         training=train,
         root_actor=digest(weights),
@@ -182,6 +193,9 @@ if __name__ == "__main__":
         p.add_argument(key, type=Path)
     p.add_argument("--size", type=int, default=10000)
     p.add_argument("--examples", type=int)
+    p.add_argument("--legacy-literals", action="store_true")
+    p.add_argument("--frozen", type=Path)
     a = p.parse_args()
     torch.set_num_threads(1)
-    main(a.root, a.weights, a.out, a.size, a.examples)
+    main(a.root, a.weights, a.out, a.size, a.examples,
+         integer_parameters=not a.legacy_literals, frozen=a.frozen)

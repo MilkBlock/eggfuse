@@ -141,12 +141,15 @@ class Catalog:
     def operand(self, slots, arg):
         return slots[arg['slot']] if 'slot' in arg else self.node(('literal', arg))
 
+    def argument_node(self, slots, arg, op, index):
+        return self.operand(slots, arg)
+
     def operation(self, root, slots, op, kind):
         n = self.node((kind, op.get('call'), op.get('kind')))
         self.link(root, n, 0)
         args = op.get('args', []) + [op[k] for k in ('arg', 'value') if k in op]
         for i, arg in enumerate(args):
-            self.link(self.operand(slots, arg), n, i + 2)
+            self.link(self.argument_node(slots, arg, op, i), n, i + 2)
         if 'dst' in op:
             self.link(n, slots[op['dst']], 1)
         return n

@@ -1,0 +1,14 @@
+{
+  "legacy": {
+    "layouts": 10000,
+    "changed": 6520,
+    "above_1e_minus_6": 6520,
+    "max_abs": 0.0690375566482544
+  },
+  "parameterized": {
+    "layouts": 10000,
+    "changed": 0,
+    "above_1e_minus_6": 0,
+    "max_abs": 0.0
+  }
+}

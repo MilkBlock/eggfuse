@@ -24,6 +24,6 @@ class Schemas:
 
 
 class TypedContentCatalog(SemanticCatalog):
-    def __init__(self,program):
-        super().__init__(program)
+    def __init__(self,program, **options):
+        super().__init__(program, **options)
         self.content_schema=Schemas(self,program)
