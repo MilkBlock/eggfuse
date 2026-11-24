@@ -32,6 +32,7 @@ pub mod extract;
 pub mod graph;
 pub mod known_results;
 pub mod merge_programs;
+pub mod receipt_contract;
 pub mod multistage;
 pub mod program;
 pub mod proof_audit;

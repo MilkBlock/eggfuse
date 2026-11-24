@@ -1,6 +1,6 @@
 //! A signed instruction DAG advances on the same sealed Run boundaries as its source rules.
 use super::{Address, PortObservation, Premise, Request};
-use crate::program::{Call, Op, Program, Result};
+use crate::program::{Call, Program, Result};
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -26,7 +26,7 @@ struct Plan {
 }
 
 impl Plan {
-    fn compile(program: &Program, steps: Layout) -> Result<Self> {
+    fn compile(program: &Program, steps: Layout, returns: &[crate::receipt_contract::Returns]) -> Result<Self> {
         if steps.len() < 2 {
             return Err("a composite layout requires at least two steps".into());
         }
@@ -66,10 +66,7 @@ impl Plan {
                     if owner >= i || steps[owner].1 >= *group {
                         return Err("layout reads an unsealed result".into());
                     }
-                    let producer = &program.rules[steps[owner].0];
-                    let output = program.templates[producer.template].ops.get(slot);
-                    if !matches!(output,Some(Op::Let(_,Call::Table(t),_) | Op::Set(t,_,_)) if *t==table)
-                    {
+                    if returns[steps[owner].0].tables.get(&slot) != Some(&table) {
                         return Err("invalid layout return type".into());
                     }
                     exports[owner].insert(slot);
@@ -109,6 +106,8 @@ struct Counts {
     accepted_steps: usize,
     rejected_groups: usize,
     missing_returns: usize,
+    absent_returns: usize,
+    retired_returns: usize,
     issued_layouts: BTreeMap<usize, usize>,
     completed_layouts: BTreeMap<usize, usize>,
     completed_sizes: BTreeMap<usize, usize>,
@@ -130,9 +129,11 @@ type Queue = BTreeMap<(usize, usize), Vec<Request>>;
 
 impl Receiver {
     pub fn new(program: &Program, layouts: Vec<Layout>) -> Result<Self> {
+        let returns = (0..program.rules.len())
+            .map(|rid| crate::receipt_contract::Returns::rule(program, rid)).collect::<Vec<_>>();
         let plans = layouts
             .into_iter()
-            .map(|layout| Plan::compile(program, layout))
+            .map(|layout| Plan::compile(program, layout, &returns))
             .collect::<Result<_>>()?;
         Ok(Self {
             plans,
@@ -296,6 +297,7 @@ impl Receiver {
     pub fn advance(
         &mut self,
         visible: &BTreeMap<Address, PortObservation>,
+        returned: impl Fn(&Address) -> bool,
         accepted: &[Request],
         run: usize,
         rules: &[(usize, u64)],
@@ -336,9 +338,20 @@ impl Receiver {
                 for (step, token) in inst.sent.drain(..) {
                     for &op in &plan.exports[step] {
                         let address = Address { token, op };
-                        let Some(row) = visible.get(&address) else {
-                            self.counts.missing_returns += 1;
-                            continue 'instance;
+                        use crate::receipt_contract::{port_state, PortState};
+                        let row = match port_state(true, visible.get(&address), || returned(&address)) {
+                            PortState::Available(row) => row,
+                            PortState::Absent => {
+                                self.counts.absent_returns += 1;
+                                self.counts.missing_returns += 1;
+                                continue 'instance;
+                            }
+                            PortState::Retired => {
+                                self.counts.retired_returns += 1;
+                                self.counts.missing_returns += 1;
+                                continue 'instance;
+                            }
+                            PortState::Pending => unreachable!("step already published"),
                         };
                         inst.returns.insert(
                             (step, op),
@@ -445,16 +458,16 @@ mod tests {
             if peer_ok {
                 accepted.push(peer);
             }
-            state.advance(&rows, &accepted, 2, &[], &mut queue).unwrap();
+            state.advance(&rows, |_| false, &accepted, 2, &[], &mut queue).unwrap();
             rows.get_mut(&Address { token: 8, op: 1 }).unwrap().version = 8;
-            state.advance(&rows, &[], 3, &[(2, 0)], &mut queue).unwrap();
+            state.advance(&rows, |_| false, &[], 3, &[(2, 0)], &mut queue).unwrap();
             if peer_ok {
                 let child = queue.remove(&(3, 2)).unwrap().pop().unwrap();
                 assert_eq!(
                     child.parents.iter().map(|p| p.version).collect::<Vec<_>>(),
                     [2, 1, 3]
                 );
-                state.advance(&rows, &[child], 4, &[], &mut queue).unwrap();
+                state.advance(&rows, |_| false, &[child], 4, &[], &mut queue).unwrap();
                 assert_eq!(state.counts.completed_sizes[&3], 1);
             } else {
                 assert!(queue.is_empty());
@@ -498,7 +511,7 @@ mod tests {
         };
         visible.insert(returned, row(5, 2));
         receiver
-            .advance(&visible, &[first], 2, &[(0, 0)], &mut queue)
+            .advance(&visible, |_| false, &[first], 2, &[(0, 0)], &mut queue)
             .unwrap();
         let owner = queue[&(2, 0)][0].clone();
         receiver.snapshot(2, &queue);
@@ -532,7 +545,7 @@ mod tests {
         visible.insert(actual, row(5, 3));
         receiver.completed_step(owner.token, "accepted");
         receiver
-            .advance(&visible, &[owner], 3, &[(0, 0)], &mut queue)
+            .advance(&visible, |_| false, &[owner], 3, &[(0, 0)], &mut queue)
             .unwrap();
         let next = &queue[&(3, 0)][0];
         assert_eq!(next.parents[0].address, actual);

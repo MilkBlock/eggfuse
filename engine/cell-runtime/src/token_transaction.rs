@@ -297,10 +297,7 @@ impl History {
                     if Some(r.epoch) != version.try_into().ok() || r.epoch >= g.epoch {
                         return Err("version");
                     }
-                    if !rule.query.iter().any(|q| {
-                        matches!(q.call,Call::Table(t) if t==r.table)
-                            && q.args.get(col as usize) == Some(arg)
-                    }) {
+                    if !crate::receipt_contract::accepts_field(rule, arg, r.table, col as usize) {
                         return Err("type");
                     }
                     inputs.push(r.values.get(col as usize).ok_or("type")?.clone());

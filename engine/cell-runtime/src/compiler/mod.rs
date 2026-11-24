@@ -161,7 +161,9 @@ pub fn compile(core: J, markers: &BTreeSet<String>) -> Result<J> {
         templates.push(json!({"rule":rid,"fact_operations":array(&r["effects"])?.iter().enumerate().filter_map(|(i,e)|matches!(e["kind"].as_str(),Some("construct"|"set")).then_some(i)).collect::<Vec<_>>(),"direct_entry":reads.len()==1,"entry_table":if reads.len()==1{reads[0]["table"].clone()}else{J::Null},"primitive_guards":r["interface"]["primitive_atoms"]}));
     }
     let mut j = json!({"schema":"eggfuse-cell-runtime/v1","initial":core["initial"],"requirements":recipe::requirements(&core),"source_core":core,"recipe":ir,"templates":templates,"contract":{"storage":"shared effect recipes plus instance slots and fact-position masks","native_runtime_dependency":false,"native_free_join":false,"completeness":"exact residual virtual-fact matching; no learned exclusion"}});
-    let p = Program::load(j, true)?;
+    let mut p = Program::load(j, true)?;
+    let merge_programs = crate::merge_programs::compile(&p)?;
+    p.merge_programs = crate::merge_programs::Programs::parse(&p, &merge_programs)?;
     let (known_results, known_json) = crate::known_results::Plans::derive(&p)?;
     let multi = multistage(&p, &known_results);
     let contexts = crate::local_context::derive(&p, &multi["stage_entries"]);
@@ -187,7 +189,8 @@ pub fn compile(core: J, markers: &BTreeSet<String>) -> Result<J> {
         ),
         ("known_results", known_json),
         ("entry_schedule", crate::entry_schedule::Plan::derive(&p)?.1),
-        ("merge_programs", crate::merge_programs::compile(&p)?),
+        ("merge_programs", merge_programs),
+        ("receipt_contract", crate::receipt_contract::describe(&p)),
         ("multi_stage", multi),
         ("local_contexts", json!(contexts)),
         (

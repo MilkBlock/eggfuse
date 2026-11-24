@@ -22,8 +22,79 @@ class ReadPlan:
         return (*self.prerequisites, (self.atom, self.operands))
 
 
+def receipt_plans(contract, order, depth, chains):
+    """Instantiate compiled operand options against the already-bound roles."""
+    preceding = {contract["inputs"][role]["atom"]: i for i,role in enumerate(order[:depth])}
+    target = contract["inputs"][order[depth]]["atom"]
+    result = []
+    by_pc = {p["atom"]: p for p in contract["computations"]}
+    for p in by_pc.values():
+        columns = [col for atom,col in p["target_fields"] if atom == target]
+        if not columns:
+            continue
+        steps, cache = [], {}
+        def bind(pc):
+            if pc in cache:
+                return cache[pc]
+            start = len(steps)
+            operands = []
+            for source in by_pc[pc]["operands"]:
+                if "literal_operand" in source:
+                    operands.append(None)
+                    continue
+                fields = [(preceding[a],col) for a,col in source["fields"] if a in preceding]
+                if fields:
+                    operands.append(min(fields))
+                    continue
+                local = None
+                if chains:
+                    for prior in reversed(source["local_results"]):
+                        local = bind(prior)
+                        if local is not None:
+                            break
+                if local is None:
+                    for orphan, _ in steps[start:]:
+                        del cache[orphan]
+                    del steps[start:]
+                    return None
+                operands.append(("local",local))
+            if not operands:
+                return None
+            cache[pc] = len(steps)
+            steps.append((pc,tuple(operands)))
+            return cache[pc]
+        if bind(p["atom"]) is not None:
+            result.append(ReadPlan(p["atom"],steps[-1][1],columns[0],tuple(steps[:-1])))
+    return result
+
+
+def request_frontier(rule_contract, states, *, chains=False):
+    """Inspect one chosen wiring at a scheduled boundary. States are supplied
+    by the caller's named receipts. 'unbound' denotes a free external role.
+    Operand positions in read plans index the returned bound_roles tuple.
+    """
+    if len(states) != len(rule_contract["inputs"]):
+        raise ValueError("one state per table role required")
+    allowed = {"available", "unbound", "pending", "absent", "retired"}
+    if any(state not in allowed for state in states):
+        raise ValueError("unknown input state")
+    roles = lambda state: tuple(i for i, value in enumerate(states) if value == state)
+    bound = roles("available")
+    blocked = roles("absent") + roles("retired")
+    unbound = roles("unbound")
+    reads = {} if blocked else {
+        i: receipt_plans(rule_contract, (*bound, i), len(bound), chains) for i in unbound
+    }
+    return dict(bound_roles=bound, address_roles=() if blocked else unbound,
+                await_roles=roles("pending"), failed_roles=blocked, computations=reads,
+                can_issue=len(bound) == len(states))
+
+
 def plans(rd, rule, depth, chains=False, *, order=None):
     order = rd.order(rule) if order is None else order
+    contract = getattr(rd.iface, "receipt_contract", None)
+    if contract is not None:
+        return receipt_plans(contract["rules"][rule], order, depth, chains)
     roles = rd.iface.roles[rule]
     sources = {}
     for i, role in enumerate(order[:depth]):

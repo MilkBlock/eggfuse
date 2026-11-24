@@ -509,6 +509,11 @@ impl Program {
         }
         p.merge_programs =
             crate::merge_programs::Programs::parse(&p, &p.artifact["merge_programs"])?;
+        if let Some(contract) = p.artifact.get("receipt_contract")
+            && *contract != crate::receipt_contract::describe(&p)
+        {
+            return Err("receipt contract differs from native Recipe semantics".into());
+        }
         p.known_results = crate::known_results::Plans::parse(&p, &p.artifact["known_results"])?;
         for rid in 0..p.rules.len() {
             p.rules[rid].completion = crate::cell::Definition::new(&p, rid)?

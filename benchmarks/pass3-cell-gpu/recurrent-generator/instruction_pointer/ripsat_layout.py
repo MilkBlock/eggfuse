@@ -24,7 +24,7 @@ def output_table(rule, pc):
     return effect.get('call',{}).get('table') if effect['op'] in ('let','set') else None
 
 
-def capture(folder, donor, limit, *, each_parent_first=False, grow_consumers=False):
+def capture(folder, donor, limit, *, each_parent_first=False, grow_consumers=False, receipt_contract=None):
     """Layout contains (rule, relative Run group, atom sources) in source order.
     A source is (previous step, result PC) or (-1, independent boundary slot).
     Exact obligations include every table atom, including external repair ports.
@@ -34,6 +34,16 @@ def capture(folder, donor, limit, *, each_parent_first=False, grow_consumers=Fal
     rules=target['recipe']['rules']
     donor_index={sig:i for i,sig in enumerate(signatures(donor))}
     mapped=[donor_index.get(sig) for sig in signatures(target)]
+    contract = receipt_contract if receipt_contract is not None else target.get("receipt_contract")
+    if contract is not None and (contract["schema"] != "eggfuse-recipe-receipts/v1" or
+                                 contract["recipe_sha256"] != target["recipe"]["sha256"]):
+        raise ValueError("receipt contract does not belong to target Recipe")
+    table_names = [t["name"] for t in target["recipe"]["tables"]] if contract is not None else []
+    def returned_table(rid, pc):
+        if contract is None:
+            return output_table(rules[rid], pc)  # historical artifacts
+        port = contract["rules"][rid]["outputs"].get(str(pc))
+        return table_names[port["table"]] if port is not None else None
     producer={p['token']:j for j,p in enumerate(refs)}
     atoms=[queries(r) for r in rules]
     timelines=defaultdict(list)
@@ -62,7 +72,7 @@ def capture(folder, donor, limit, *, each_parent_first=False, grow_consumers=Fal
                 pred=refs[parent]
                 if pred['run']>=req['run']:
                     raise ValueError('capture violates the sealed Run boundary')
-                if mapped[pred['rule']] is None or output_table(rules[pred['rule']],pc)!=atom['call']['table']:
+                if mapped[pred['rule']] is None or returned_table(pred['rule'],pc)!=atom['call']['table']:
                     parent=None
             edges.append(parent)
         return edges

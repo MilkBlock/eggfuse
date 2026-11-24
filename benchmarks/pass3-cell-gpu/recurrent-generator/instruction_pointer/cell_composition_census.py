@@ -18,8 +18,18 @@ from ripsat_replay import unpack
 def inventory(program):
     rules=program['recipe']['rules']
     tables=[t['name'] for t in program['recipe']['tables']]
-    merges={m['table']:m['operations'] for m in program['merge_programs']['programs']}
     exports={('initial',t):{0:t} for t in tables}
+    if "receipt_contract" in program:
+        contract = program["receipt_contract"]
+        if (contract["schema"] != "eggfuse-recipe-receipts/v1" or
+                contract["recipe_sha256"] != program["recipe"]["sha256"]):
+            raise ValueError("receipt contract does not belong to target Recipe")
+        for rid, rule in enumerate(contract["rules"]):
+            exports["generated",rid] = {int(pc):tables[o["table"]] for pc,o in rule["outputs"].items()}
+        for table,ports in contract["repair_outputs"].items():
+            exports["repair",tables[int(table)]] = {int(pc):tables[t] for pc,t in ports.items()}
+        return exports,tables
+    merges={m['table']:m['operations'] for m in program['merge_programs']['programs']}
     def merge_ports(t,base):
         return {base+i:op['call']['table'] for i,op in enumerate(merges[t]) if op['kind']=='construct'}
     for t in merges:

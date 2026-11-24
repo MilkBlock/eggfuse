@@ -16,6 +16,7 @@ from higher_cell import fingerprint
 
 class Interfaces:
     def __init__(self, program):
+        self.receipt_contract = program.get("receipt_contract")
         self.exports, self.tables = inventory(program)
         self.rules = program["recipe"]["rules"]
         self.roles = [

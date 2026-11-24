@@ -15,6 +15,11 @@ struct Tape {
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<_> = env::args().skip(1).collect();
+    if let [mode, path] = args.as_slice() && mode == "receipt-contract" {
+        let p = Program::parse(serde_json::from_slice(&fs::read(path)?)?)?;
+        println!("{}", eggfuse_cell_runtime::receipt_contract::describe(&p));
+        return Ok(());
+    }
     let [role, program, tape, audit, rest @ ..] = args.as_slice() else {
         return Err("expected reference|capture|replay|online PROGRAM TAPE audit|time".into());
     };

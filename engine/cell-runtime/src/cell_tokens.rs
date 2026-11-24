@@ -203,24 +203,8 @@ impl History {
     fn new(g: &Graph, teacher: bool) -> Result<Self> {
         // Preserve every original PC. Append the statically ordered merge-program
         // blocks; a Set that does not execute its merge contributes no result.
-        let merge_offsets = g
-            .program
-            .rules
-            .iter()
-            .map(|r| {
-                let ops = &g.program.templates[r.template].ops;
-                let mut next = ops.len();
-                let mut offsets = BTreeMap::new();
-                for (i, op) in ops.iter().enumerate() {
-                    if let crate::program::Op::Set(t, _, _) = op
-                        && let Some(m) = g.program.merge_programs.merges.get(t)
-                    {
-                        offsets.insert(i, next);
-                        next += m.operations.len();
-                    }
-                }
-                offsets
-            })
+        let merge_offsets = (0..g.program.rules.len())
+            .map(|rid| crate::receipt_contract::Returns::rule(&g.program, rid).merge_offsets)
             .collect();
         let mut history = Self {
             assist: None,
@@ -397,7 +381,7 @@ impl History {
         let mut preverified=Vec::new();
         if self.verified_layouts && !terminal {
             self.layouts.as_mut().ok_or("missing baked layouts")?.advance(
-                &visible,&self.memory.as_ref().unwrap().accepted,run,rules,&mut self.queue)?;
+                &visible,|a| self.returns.contains_key(a),&self.memory.as_ref().unwrap().accepted,run,rules,&mut self.queue)?;
             let tick=Instant::now();
             for &(rid,wm) in rules {
                 if check_dirty && !dirty[rid] {continue;}
@@ -443,7 +427,7 @@ impl History {
             frame["repair_events"]=serde_json::json!(repairs);
         }
         if let Some(layouts)=&mut self.layouts {
-            if !self.verified_layouts || terminal {layouts.advance(&visible,&memory.accepted,run,rules,&mut self.queue)?;}
+            if !self.verified_layouts || terminal {layouts.advance(&visible,|a| self.returns.contains_key(a),&memory.accepted,run,rules,&mut self.queue)?;}
             if self.verified_layouts {frame["verified_steps"]=serde_json::json!(preverified);}
             if let Some(feedback)=layouts.snapshot(run,&self.queue) {
                 frame["layout_feedback"]=feedback;
