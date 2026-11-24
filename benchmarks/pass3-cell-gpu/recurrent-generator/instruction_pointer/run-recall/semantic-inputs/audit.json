@@ -1,0 +1,16 @@
+{
+  "templates": 10000,
+  "changed": 102,
+  "totals": {
+    "steps": 63320,
+    "effect_instructions": 348352,
+    "parent_roles": 138091,
+    "external_before": 70343,
+    "external_after": 70228,
+    "internal_reads": 61916,
+    "eliminated": 115,
+    "proved_constructor_values": 172122,
+    "known_keys_without_receipt": 7737,
+    "publication_crossings": 38565
+  }
+}
