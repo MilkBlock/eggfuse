@@ -37,7 +37,7 @@ def grammar(seed):
     return "\n".join(init) + "\n(run 10000)\n"
 
 
-def main(root, out, extra_blind=()):
+def main(root, out, extra_blind=(), cases=None):
     tree = root / "model-tree"
     src = (tree / "egglog/tests/cykjson.egg").read_text().split("(input Prod")[0]
     # These seed groups are disjoint. No blind capture is used for fitting.
@@ -47,12 +47,17 @@ def main(root, out, extra_blind=()):
         "blind": [91627433, 72102993, *extra_blind],
     }
     out.mkdir(exist_ok=True, parents=True)
-    (out / "split.json").write_text(json.dumps(split, indent=2))
+    if cases is None or not (out / "split.json").exists():
+        (out / "split.json").write_text(json.dumps(split, indent=2))
     compiler = root / "unified-scale/build/release/eggfuse-cell-compiler"
     binary = root / "unified-scale/build/release/examples/cell_token_replay"
     sources = {
         f"grammar-{s}": src + grammar(s) for seeds in split.values() for s in seeds
     }
+    if cases and any(name.startswith("grammar-stride") for name in cases):
+        from txn_chain_corpus import chain_sources
+
+        sources.update(chain_sources(src))
     # Hold out a rule layout as well as its input. Materialize a redundant
     # four-column production certificate, preserving the reference parse.
     template_case = "grammar-layout-832749"
@@ -76,7 +81,10 @@ def main(root, out, extra_blind=()):
         .read_text()
         .replace('(check (P 801 1 "VAL"))', "")
     )
-    for name in [*sources, "jacobi"]:
+    names = [*sources, "jacobi"] if cases is None else cases
+    for name in names:
+        if name not in sources and name != "jacobi":
+            raise ValueError(f"unknown corpus case: {name}")
         d = out / name
         if (d / "capture.json").exists():
             continue
@@ -143,5 +151,6 @@ if __name__ == "__main__":
     p.add_argument("root", type=Path)
     p.add_argument("out", type=Path)
     p.add_argument("--extra-blind", type=int, nargs="*", default=[])
+    p.add_argument("--cases", nargs="+")
     a = p.parse_args()
-    main(a.root.resolve(), a.out.resolve(), a.extra_blind)
+    main(a.root.resolve(), a.out.resolve(), a.extra_blind, a.cases)

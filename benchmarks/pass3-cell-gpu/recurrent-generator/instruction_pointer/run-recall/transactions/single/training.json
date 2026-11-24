@@ -1,0 +1,21 @@
+{
+  "train": {
+    "grammar-17118": 46,
+    "grammar-17119": 82,
+    "grammar-17120": 34,
+    "grammar-17121": 30
+  },
+  "validation": "grammar-17122",
+  "validation_rows": 50,
+  "validation_selected": 44,
+  "validation_net_saved_visits": 16,
+  "validation_always": 4,
+  "validation_reject_unprofitable": 6,
+  "contrast_pairs": 402,
+  "steps": [
+    220,
+    280
+  ],
+  "device": "mps",
+  "seed": 12931
+}
