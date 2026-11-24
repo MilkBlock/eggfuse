@@ -66,10 +66,10 @@ class ProtocolNet(nn.Module):
         ).flatten()
 
 
-def decode(model, rd, rule, depth, capacity, stats, example=None):
+def decode(model, rd, rule, depth, capacity, stats, example=None, *, order=None):
     """A single-step action vocabulary plus STOP. No host enumeration of programs."""
     roles = rd.iface.roles[rule]
-    order = rd.order(rule)
+    order = rd.order(rule) if order is None else order
     target = roles[order[depth]][1]
     available = defaultdict(list)
     for j, role in enumerate(order[:depth]):

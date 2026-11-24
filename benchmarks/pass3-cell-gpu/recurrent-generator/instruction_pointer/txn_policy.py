@@ -22,8 +22,8 @@ class ReadPlan:
         return (*self.prerequisites, (self.atom, self.operands))
 
 
-def plans(rd, rule, depth, chains=False):
-    order = rd.order(rule)
+def plans(rd, rule, depth, chains=False, *, order=None):
+    order = rd.order(rule) if order is None else order
     roles = rd.iface.roles[rule]
     sources = {}
     for i, role in enumerate(order[:depth]):

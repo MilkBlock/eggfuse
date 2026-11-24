@@ -13,7 +13,7 @@ BLOCK = 2048
 class CellStream:
     """One generator frame is a resumable Cartesian cursor. Only the model scores evidence."""
 
-    def __init__(self, reader, model, rule, watermark, stats):
+    def __init__(self, reader, model, rule, watermark, stats, *, order=None, role_ports=None):
         self.rd, self.model, self.rule, self.wm, self.stats = (
             reader,
             model,
@@ -21,13 +21,13 @@ class CellStream:
             watermark,
             stats,
         )
-        self.order = reader.order(rule)
+        self.order = reader.order(rule) if order is None else order
         self.roles = []
         self.links = []
         self.semi = reader.iface.rules[rule]["metadata"]["seminaive"]
         for j, role in enumerate(self.order):
             tab = reader.tabs[reader.iface.roles[rule][role][0]]
-            self.roles.append(sorted(reader.live[tab]))
+            self.roles.append(sorted(reader.live[tab]) if role_ports is None else role_ports(tab))
             self.links.append(
                 [
                     (self.order.index(a), c, col)
