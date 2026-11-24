@@ -17,6 +17,7 @@ from train_ripsat import layout_id
 
 class Family:
     def __init__(self, rd, program, catalog):
+        self.structural_keys = catalog.get("structural_keys")
         self.units = dict(link_layouts(program, catalog))
         self.menu = defaultdict(list)
         self.codes = {}

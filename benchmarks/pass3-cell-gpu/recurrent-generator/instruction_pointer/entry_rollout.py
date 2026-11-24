@@ -19,18 +19,23 @@ from transaction_native import execute
 
 
 class Entries(FullTemplates):
-    def __init__(self, program, store, weights):
+    def __init__(self, program, store, weights, graph=None):
         self.program = program
         self.manifest = read(store / "catalog.json")
         self.model = BranchNet().eval()
         self.model.load_state_dict(torch.load(weights, weights_only=True))
         self.family = None
+        self.graph = graph
         self.expected = set()
         self.waiting = []
 
     def start(self, rd, pub, txn, rules, stats):
         if self.family is None:
             self.family = Family(rd, self.program, self.manifest)
+            if self.graph is not None:
+                from entry_wiring import use_wiring
+
+                use_wiring(self.family, self.graph)
             self.cat = SimpleNamespace(units=self.family.units)
         super().start(rd, pub, txn, rules, stats)
         self.covered_rules = {r: rows for r, rows in self.done.items() if rows}
@@ -135,12 +140,14 @@ def run(data, store, case, arm, rep):
     p = EventGenerator(data, case, Path("run-recall/cell-events"), "B")
     d = folder(data, case)
     if arm != "B":
-        weights = (
-            store / "entry.pt"
-            if arm == "trained"
-            else Path("run-recall/cell-events/template.pt")
-        )
-        p.higher = Entries(read(d / "program.json"), store, weights)
+        weights = {
+            "trained": store / "entry.pt",
+            "frozen": Path("run-recall/cell-events/template.pt"),
+            "wired": store / "wired.pt",
+            "rank": store / "rank.pt",
+        }[arm]
+        graph = torch.load(store / "graph.pt", weights_only=True) if arm == "wired" else None
+        p.higher = Entries(read(d / "program.json"), store, weights, graph)
     series = f"entry-first/{arm}/{rep}"
     result = execute(data, case, study=p, seconds=600, series=series)
     work = data / series / (case + "-stream-multi")
@@ -172,7 +179,7 @@ if __name__ == "__main__":
     p.add_argument("data", type=Path)
     p.add_argument("store", type=Path)
     p.add_argument("case")
-    p.add_argument("arms", nargs="+", choices=("B", "frozen", "trained"))
+    p.add_argument("arms", nargs="+", choices=("B", "frozen", "trained", "wired", "rank"))
     p.add_argument("--rep", type=int, default=0)
     a = p.parse_args()
     torch.set_num_threads(1)
