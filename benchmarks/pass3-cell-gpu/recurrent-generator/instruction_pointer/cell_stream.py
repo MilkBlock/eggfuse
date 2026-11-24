@@ -90,6 +90,15 @@ class CellStream:
         z = self.model.cell(self.model.encode(x), h)
         return self.model.score(z).flatten() + 2 * x[:, WIDTH], z
 
+    def children(self, paths, depth, block):
+        size = len(self.roles[depth])
+        for start in range(0, len(paths) * size, block):
+            ix = torch.arange(start, min(start + block, len(paths) * size))
+            yield ix // size, ix % size
+
+    def terminal(self, paths):
+        return paths
+
     def batches(self, mode, cutoff, deadline, block=BLOCK):
         if not self.roles:
             if self.wm == 0 or not self.semi:
@@ -103,14 +112,11 @@ class CellStream:
         self.stats["typed_products"] += prod(map(len, self.roles))
 
         def extend(p, h, ok, fresh, j):
-            size = len(self.roles[j])
             last = j + 1 == len(self.roles)
-            for lo in range(0, len(p) * size, block):
+            for parent, col in self.children(p, j, block):
                 if perf_counter() > deadline:
                     raise TimeoutError
-                ix = torch.arange(lo, min(lo + block, len(p) * size))
-                parent = ix // size
-                col = ix % size
+                self.stats["traversed_positions"] += len(col)
                 now = fresh[parent] | self.tables[j][0][col]
                 if self.semi and last:
                     parent, col, now = parent[now], col[now], now[now]
@@ -126,7 +132,7 @@ class CellStream:
                     self.stats["tuple_scored"] += len(s)
                     out = [
                         tuple(self.roles[n][idx] for n, idx in enumerate(row))
-                        for row in paths[keep].tolist()
+                        for row in self.terminal(paths[keep]).tolist()
                     ]
                     if out:
                         yield out

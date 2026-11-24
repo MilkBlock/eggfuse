@@ -60,7 +60,9 @@ def dynamic_wave(pol, frame):
 
 
 @torch.no_grad()
-def execute(root, case, arm, seconds, phase, limit=None, series="cell-stream"):
+def execute(
+    root, case, arm, seconds, phase, limit=None, series="cell-stream", study=None
+):
     d = folder(root, case)
     work = (
         root / series / (f"{case}-{arm}-{phase}" + (f"-first{limit}" if limit else ""))
@@ -109,6 +111,8 @@ def execute(root, case, arm, seconds, phase, limit=None, series="cell-stream"):
                     verdicts[v] += 1
                     if v == "accepted":
                         accepted.append(q)
+                if study is not None:
+                    study.verdicts(batch, reply, rd)
                 costs["waves"] += 1
             verify_ipc += perf_counter() - tick
 
@@ -134,7 +138,9 @@ def execute(root, case, arm, seconds, phase, limit=None, series="cell-stream"):
                 else:
                     rd.advance(f)
                     for r, wm in f["rules"]:
-                        st = CellStream(rd, pol.model, r, wm, costs)
+                        st = (study.stream if study is not None else CellStream)(
+                            rd, pol.model, r, wm, costs
+                        )
                         for block in st.batches(arm, 0.0, deadline):
                             for path in block:
                                 batch.append(
@@ -208,6 +214,8 @@ def execute(root, case, arm, seconds, phase, limit=None, series="cell-stream"):
         work=dict(costs),
         wall=wall,
         verification_ipc=verify_ipc,
+        guard_failures=end.get("guard_failures") if end else None,
+        native_verify_seconds=end.get("verify_seconds") if end else None,
         signed_ops=ops,
         ept=ops / max(1, paid),
         eps=ops / wall,
