@@ -78,11 +78,14 @@ class Target:
         }
 
 
-def snapshot(root, d, mode, tape, stop, output):
+def snapshot(root, d, mode, tape, stop, output, *, ept=False):
     cmd = [binary(root), mode, d / "program.json", tape, "time"]
     if stop is not None:
         cmd.append(str(stop))
-    report = json.loads(subprocess.check_output(cmd + ["--export", output]))
+    cmd.extend(["--export", output])
+    if ept:
+        cmd.append("--ept")
+    report = json.loads(subprocess.check_output(cmd))
     return read(output), report
 
 
