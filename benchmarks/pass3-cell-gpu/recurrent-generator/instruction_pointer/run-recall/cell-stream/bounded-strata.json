@@ -1,0 +1,44 @@
+[
+  {
+    "case": "fact",
+    "arm": "fixed",
+    "first": 4,
+    "high": 15,
+    "paid": 410
+  },
+  {
+    "case": "loopfact",
+    "arm": "fixed",
+    "first": 3,
+    "high": 26,
+    "paid": 375
+  },
+  {
+    "case": "sum-divisors",
+    "arm": "fixed",
+    "first": 4,
+    "high": 52,
+    "paid": 2036
+  },
+  {
+    "case": "fact",
+    "arm": "dynamic",
+    "first": 6,
+    "high": 18,
+    "paid": 333
+  },
+  {
+    "case": "loopfact",
+    "arm": "dynamic",
+    "first": 4,
+    "high": 16,
+    "paid": 421
+  },
+  {
+    "case": "sum-divisors",
+    "arm": "dynamic",
+    "first": 18,
+    "high": 56,
+    "paid": 1982
+  }
+]

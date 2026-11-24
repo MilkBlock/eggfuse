@@ -1,0 +1,2057 @@
+[
+  {
+    "case": "fact",
+    "first": [
+      6,
+      6,
+      6
+    ],
+    "high": [
+      84,
+      63,
+      63
+    ],
+    "runs": [
+      {
+        "run": 9,
+        "rule": 532,
+        "goals": 4,
+        "recognized": 4,
+        "observed": 4,
+        "issued": 11,
+        "finished": true
+      },
+      {
+        "run": 9,
+        "rule": 534,
+        "goals": 2,
+        "recognized": 2,
+        "observed": 2,
+        "issued": 8,
+        "finished": true
+      },
+      {
+        "run": 12,
+        "rule": 554,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 1,
+        "finished": true
+      },
+      {
+        "run": 17,
+        "rule": 531,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 17,
+        "rule": 533,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 1,
+        "finished": true
+      },
+      {
+        "run": 17,
+        "rule": 539,
+        "goals": 2,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 20,
+        "rule": 539,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 31,
+        "rule": 533,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 34,
+        "rule": 531,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 43,
+        "rule": 542,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 49,
+        "rule": 531,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 58,
+        "rule": 542,
+        "goals": 2,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 64,
+        "rule": 531,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 73,
+        "rule": 542,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 79,
+        "rule": 49,
+        "goals": 9,
+        "recognized": 9,
+        "observed": 9,
+        "issued": 213,
+        "finished": true
+      },
+      {
+        "run": 79,
+        "rule": 251,
+        "goals": 2,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 83,
+        "rule": 57,
+        "goals": 5,
+        "recognized": 5,
+        "observed": 5,
+        "issued": 16,
+        "finished": true
+      },
+      {
+        "run": 83,
+        "rule": 59,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 83,
+        "rule": 102,
+        "goals": 2,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 87,
+        "rule": 57,
+        "goals": 7,
+        "recognized": 7,
+        "observed": 7,
+        "issued": 13,
+        "finished": true
+      },
+      {
+        "run": 87,
+        "rule": 151,
+        "goals": 2,
+        "recognized": 2,
+        "observed": 2,
+        "issued": 4,
+        "finished": true
+      },
+      {
+        "run": 91,
+        "rule": 59,
+        "goals": 8,
+        "recognized": 4,
+        "observed": 4,
+        "issued": 6,
+        "finished": true
+      },
+      {
+        "run": 91,
+        "rule": 102,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 2,
+        "finished": true
+      },
+      {
+        "run": 98,
+        "rule": 57,
+        "goals": 6,
+        "recognized": 6,
+        "observed": 6,
+        "issued": 112,
+        "finished": true
+      },
+      {
+        "run": 157,
+        "rule": 533,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 5,
+        "finished": true
+      },
+      {
+        "run": 157,
+        "rule": 534,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 5,
+        "finished": true
+      },
+      {
+        "run": 169,
+        "rule": 59,
+        "goals": 4,
+        "recognized": 4,
+        "observed": 4,
+        "issued": 24,
+        "finished": true
+      },
+      {
+        "run": 349,
+        "rule": 405,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 26,
+        "finished": true
+      },
+      {
+        "run": 365,
+        "rule": 531,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 12,
+        "finished": true
+      },
+      {
+        "run": 365,
+        "rule": 532,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 3,
+        "finished": true
+      },
+      {
+        "run": 365,
+        "rule": 533,
+        "goals": 2,
+        "recognized": 2,
+        "observed": 2,
+        "issued": 7,
+        "finished": true
+      },
+      {
+        "run": 365,
+        "rule": 534,
+        "goals": 2,
+        "recognized": 2,
+        "observed": 2,
+        "issued": 2,
+        "finished": true
+      },
+      {
+        "run": 368,
+        "rule": 102,
+        "goals": 2,
+        "recognized": 2,
+        "observed": 2,
+        "issued": 4,
+        "finished": true
+      }
+    ],
+    "work": {
+      "interface_reads": 3359,
+      "typed_products": 160306391,
+      "visits": 24933,
+      "root_scored": 549,
+      "tuple_scored": 8412
+    }
+  },
+  {
+    "case": "loopfact",
+    "first": [
+      4,
+      4,
+      4
+    ],
+    "high": [
+      79,
+      60,
+      60
+    ],
+    "runs": [
+      {
+        "run": 10,
+        "rule": 532,
+        "goals": 2,
+        "recognized": 2,
+        "observed": 2,
+        "issued": 3,
+        "finished": true
+      },
+      {
+        "run": 10,
+        "rule": 534,
+        "goals": 2,
+        "recognized": 2,
+        "observed": 2,
+        "issued": 4,
+        "finished": true
+      },
+      {
+        "run": 13,
+        "rule": 554,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 1,
+        "finished": true
+      },
+      {
+        "run": 19,
+        "rule": 531,
+        "goals": 2,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 19,
+        "rule": 533,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 1,
+        "finished": true
+      },
+      {
+        "run": 19,
+        "rule": 539,
+        "goals": 2,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 19,
+        "rule": 554,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 22,
+        "rule": 533,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 22,
+        "rule": 539,
+        "goals": 2,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 32,
+        "rule": 554,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 1,
+        "finished": true
+      },
+      {
+        "run": 45,
+        "rule": 542,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 60,
+        "rule": 49,
+        "goals": 4,
+        "recognized": 4,
+        "observed": 4,
+        "issued": 66,
+        "finished": true
+      },
+      {
+        "run": 60,
+        "rule": 251,
+        "goals": 3,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 64,
+        "rule": 57,
+        "goals": 6,
+        "recognized": 6,
+        "observed": 6,
+        "issued": 16,
+        "finished": true
+      },
+      {
+        "run": 64,
+        "rule": 59,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 64,
+        "rule": 102,
+        "goals": 3,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 1,
+        "finished": true
+      },
+      {
+        "run": 68,
+        "rule": 57,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 5,
+        "finished": true
+      },
+      {
+        "run": 68,
+        "rule": 59,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 68,
+        "rule": 102,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 1,
+        "finished": true
+      },
+      {
+        "run": 68,
+        "rule": 104,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 71,
+        "rule": 57,
+        "goals": 4,
+        "recognized": 4,
+        "observed": 4,
+        "issued": 9,
+        "finished": true
+      },
+      {
+        "run": 71,
+        "rule": 59,
+        "goals": 4,
+        "recognized": 2,
+        "observed": 2,
+        "issued": 5,
+        "finished": true
+      },
+      {
+        "run": 75,
+        "rule": 57,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 9,
+        "finished": true
+      },
+      {
+        "run": 75,
+        "rule": 59,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 3,
+        "finished": true
+      },
+      {
+        "run": 75,
+        "rule": 249,
+        "goals": 4,
+        "recognized": 4,
+        "observed": 4,
+        "issued": 20,
+        "finished": true
+      },
+      {
+        "run": 75,
+        "rule": 264,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 5,
+        "finished": true
+      },
+      {
+        "run": 79,
+        "rule": 57,
+        "goals": 2,
+        "recognized": 2,
+        "observed": 2,
+        "issued": 15,
+        "finished": true
+      },
+      {
+        "run": 79,
+        "rule": 243,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 40,
+        "finished": true
+      },
+      {
+        "run": 83,
+        "rule": 57,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 11,
+        "finished": true
+      },
+      {
+        "run": 83,
+        "rule": 241,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 11,
+        "finished": true
+      },
+      {
+        "run": 86,
+        "rule": 158,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 2,
+        "finished": true
+      },
+      {
+        "run": 126,
+        "rule": 59,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 22,
+        "finished": true
+      },
+      {
+        "run": 129,
+        "rule": 59,
+        "goals": 2,
+        "recognized": 2,
+        "observed": 2,
+        "issued": 6,
+        "finished": true
+      },
+      {
+        "run": 153,
+        "rule": 429,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 2,
+        "finished": true
+      },
+      {
+        "run": 336,
+        "rule": 405,
+        "goals": 4,
+        "recognized": 4,
+        "observed": 4,
+        "issued": 48,
+        "finished": true
+      },
+      {
+        "run": 342,
+        "rule": 269,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 372,
+        "finished": true
+      },
+      {
+        "run": 343,
+        "rule": 268,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 3432,
+        "finished": true
+      },
+      {
+        "run": 352,
+        "rule": 531,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 4,
+        "finished": true
+      },
+      {
+        "run": 352,
+        "rule": 532,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 1,
+        "finished": true
+      },
+      {
+        "run": 355,
+        "rule": 102,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 4,
+        "finished": true
+      }
+    ],
+    "work": {
+      "interface_reads": 4004,
+      "typed_products": 16917514,
+      "visits": 67546,
+      "root_scored": 586,
+      "tuple_scored": 30513
+    }
+  },
+  {
+    "case": "sum-divisors",
+    "first": [
+      18,
+      18,
+      18
+    ],
+    "high": [
+      911,
+      763,
+      731
+    ],
+    "runs": [
+      {
+        "run": 14,
+        "rule": 532,
+        "goals": 14,
+        "recognized": 14,
+        "observed": 14,
+        "issued": 22,
+        "finished": true
+      },
+      {
+        "run": 14,
+        "rule": 534,
+        "goals": 4,
+        "recognized": 4,
+        "observed": 4,
+        "issued": 12,
+        "finished": true
+      },
+      {
+        "run": 17,
+        "rule": 554,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 26,
+        "rule": 531,
+        "goals": 8,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 26,
+        "rule": 533,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 1,
+        "finished": true
+      },
+      {
+        "run": 26,
+        "rule": 554,
+        "goals": 2,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 2,
+        "finished": true
+      },
+      {
+        "run": 31,
+        "rule": 531,
+        "goals": 2,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 31,
+        "rule": 533,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 31,
+        "rule": 554,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 36,
+        "rule": 531,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 36,
+        "rule": 533,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 36,
+        "rule": 554,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 41,
+        "rule": 554,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 46,
+        "rule": 531,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 46,
+        "rule": 554,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 51,
+        "rule": 531,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 51,
+        "rule": 554,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 56,
+        "rule": 531,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 56,
+        "rule": 542,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 56,
+        "rule": 554,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 1,
+        "finished": true
+      },
+      {
+        "run": 62,
+        "rule": 542,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 62,
+        "rule": 554,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 1,
+        "finished": true
+      },
+      {
+        "run": 71,
+        "rule": 533,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 74,
+        "rule": 542,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 94,
+        "rule": 542,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 119,
+        "rule": 251,
+        "goals": 22,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 123,
+        "rule": 57,
+        "goals": 25,
+        "recognized": 25,
+        "observed": 25,
+        "issued": 43,
+        "finished": true
+      },
+      {
+        "run": 123,
+        "rule": 59,
+        "goals": 3,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 123,
+        "rule": 102,
+        "goals": 9,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 127,
+        "rule": 57,
+        "goals": 18,
+        "recognized": 18,
+        "observed": 18,
+        "issued": 19,
+        "finished": true
+      },
+      {
+        "run": 127,
+        "rule": 59,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 131,
+        "rule": 57,
+        "goals": 18,
+        "recognized": 18,
+        "observed": 18,
+        "issued": 23,
+        "finished": true
+      },
+      {
+        "run": 131,
+        "rule": 59,
+        "goals": 16,
+        "recognized": 7,
+        "observed": 7,
+        "issued": 28,
+        "finished": true
+      },
+      {
+        "run": 135,
+        "rule": 57,
+        "goals": 18,
+        "recognized": 18,
+        "observed": 18,
+        "issued": 23,
+        "finished": true
+      },
+      {
+        "run": 135,
+        "rule": 59,
+        "goals": 16,
+        "recognized": 14,
+        "observed": 14,
+        "issued": 30,
+        "finished": true
+      },
+      {
+        "run": 139,
+        "rule": 57,
+        "goals": 28,
+        "recognized": 28,
+        "observed": 28,
+        "issued": 77,
+        "finished": true
+      },
+      {
+        "run": 139,
+        "rule": 59,
+        "goals": 16,
+        "recognized": 16,
+        "observed": 16,
+        "issued": 52,
+        "finished": true
+      },
+      {
+        "run": 139,
+        "rule": 249,
+        "goals": 5,
+        "recognized": 5,
+        "observed": 5,
+        "issued": 96,
+        "finished": true
+      },
+      {
+        "run": 143,
+        "rule": 57,
+        "goals": 27,
+        "recognized": 27,
+        "observed": 27,
+        "issued": 90,
+        "finished": true
+      },
+      {
+        "run": 143,
+        "rule": 59,
+        "goals": 13,
+        "recognized": 13,
+        "observed": 13,
+        "issued": 49,
+        "finished": true
+      },
+      {
+        "run": 143,
+        "rule": 249,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 16,
+        "finished": true
+      },
+      {
+        "run": 147,
+        "rule": 57,
+        "goals": 23,
+        "recognized": 23,
+        "observed": 23,
+        "issued": 88,
+        "finished": true
+      },
+      {
+        "run": 147,
+        "rule": 59,
+        "goals": 13,
+        "recognized": 13,
+        "observed": 13,
+        "issued": 51,
+        "finished": true
+      },
+      {
+        "run": 151,
+        "rule": 57,
+        "goals": 12,
+        "recognized": 12,
+        "observed": 12,
+        "issued": 96,
+        "finished": true
+      },
+      {
+        "run": 151,
+        "rule": 59,
+        "goals": 9,
+        "recognized": 9,
+        "observed": 9,
+        "issued": 35,
+        "finished": true
+      },
+      {
+        "run": 155,
+        "rule": 57,
+        "goals": 12,
+        "recognized": 12,
+        "observed": 12,
+        "issued": 98,
+        "finished": true
+      },
+      {
+        "run": 159,
+        "rule": 57,
+        "goals": 8,
+        "recognized": 8,
+        "observed": 8,
+        "issued": 102,
+        "finished": true
+      },
+      {
+        "run": 212,
+        "rule": 531,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 16,
+        "finished": true
+      },
+      {
+        "run": 212,
+        "rule": 532,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 13,
+        "finished": true
+      },
+      {
+        "run": 212,
+        "rule": 533,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 5,
+        "finished": true
+      },
+      {
+        "run": 212,
+        "rule": 534,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 5,
+        "finished": true
+      },
+      {
+        "run": 241,
+        "rule": 59,
+        "goals": 8,
+        "recognized": 8,
+        "observed": 8,
+        "issued": 144,
+        "finished": true
+      },
+      {
+        "run": 244,
+        "rule": 59,
+        "goals": 8,
+        "recognized": 8,
+        "observed": 8,
+        "issued": 32,
+        "finished": true
+      },
+      {
+        "run": 247,
+        "rule": 59,
+        "goals": 7,
+        "recognized": 7,
+        "observed": 7,
+        "issued": 29,
+        "finished": true
+      },
+      {
+        "run": 250,
+        "rule": 59,
+        "goals": 7,
+        "recognized": 7,
+        "observed": 7,
+        "issued": 29,
+        "finished": true
+      },
+      {
+        "run": 253,
+        "rule": 59,
+        "goals": 7,
+        "recognized": 7,
+        "observed": 7,
+        "issued": 29,
+        "finished": true
+      },
+      {
+        "run": 256,
+        "rule": 59,
+        "goals": 4,
+        "recognized": 4,
+        "observed": 4,
+        "issued": 15,
+        "finished": true
+      },
+      {
+        "run": 513,
+        "rule": 405,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 108,
+        "finished": true
+      },
+      {
+        "run": 513,
+        "rule": 406,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 156,
+        "finished": true
+      },
+      {
+        "run": 513,
+        "rule": 407,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 156,
+        "finished": true
+      },
+      {
+        "run": 517,
+        "rule": 406,
+        "goals": 2,
+        "recognized": 2,
+        "observed": 2,
+        "issued": 64,
+        "finished": true
+      },
+      {
+        "run": 517,
+        "rule": 407,
+        "goals": 2,
+        "recognized": 2,
+        "observed": 2,
+        "issued": 64,
+        "finished": true
+      },
+      {
+        "run": 533,
+        "rule": 463,
+        "goals": 13,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 536,
+        "rule": 466,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 540,
+        "rule": 531,
+        "goals": 8,
+        "recognized": 8,
+        "observed": 8,
+        "issued": 107,
+        "finished": true
+      },
+      {
+        "run": 540,
+        "rule": 532,
+        "goals": 8,
+        "recognized": 8,
+        "observed": 8,
+        "issued": 8,
+        "finished": true
+      },
+      {
+        "run": 540,
+        "rule": 533,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 35,
+        "finished": true
+      },
+      {
+        "run": 540,
+        "rule": 534,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 3,
+        "finished": true
+      },
+      {
+        "run": 546,
+        "rule": 57,
+        "goals": 20,
+        "recognized": 16,
+        "observed": 16,
+        "issued": 257,
+        "finished": true
+      },
+      {
+        "run": 546,
+        "rule": 59,
+        "goals": 23,
+        "recognized": 21,
+        "observed": 21,
+        "issued": 153,
+        "finished": true
+      },
+      {
+        "run": 546,
+        "rule": 249,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 16,
+        "finished": true
+      },
+      {
+        "run": 546,
+        "rule": 264,
+        "goals": 4,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 156,
+        "finished": true
+      },
+      {
+        "run": 549,
+        "rule": 136,
+        "goals": 4,
+        "recognized": 4,
+        "observed": 4,
+        "issued": 58,
+        "finished": true
+      },
+      {
+        "run": 549,
+        "rule": 243,
+        "goals": 5,
+        "recognized": 5,
+        "observed": 5,
+        "issued": 446,
+        "finished": true
+      },
+      {
+        "run": 552,
+        "rule": 136,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 42,
+        "finished": true
+      },
+      {
+        "run": 552,
+        "rule": 241,
+        "goals": 5,
+        "recognized": 4,
+        "observed": 4,
+        "issued": 383,
+        "finished": true
+      },
+      {
+        "run": 552,
+        "rule": 242,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 34,
+        "finished": true
+      },
+      {
+        "run": 555,
+        "rule": 242,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 18,
+        "finished": true
+      },
+      {
+        "run": 558,
+        "rule": 57,
+        "goals": 2,
+        "recognized": 2,
+        "observed": 2,
+        "issued": 4,
+        "finished": true
+      },
+      {
+        "run": 558,
+        "rule": 248,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 40,
+        "finished": true
+      },
+      {
+        "run": 561,
+        "rule": 57,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 16,
+        "finished": true
+      },
+      {
+        "run": 561,
+        "rule": 59,
+        "goals": 5,
+        "recognized": 4,
+        "observed": 4,
+        "issued": 12,
+        "finished": true
+      },
+      {
+        "run": 564,
+        "rule": 57,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 18,
+        "finished": true
+      },
+      {
+        "run": 564,
+        "rule": 59,
+        "goals": 5,
+        "recognized": 5,
+        "observed": 5,
+        "issued": 15,
+        "finished": true
+      },
+      {
+        "run": 568,
+        "rule": 57,
+        "goals": 4,
+        "recognized": 4,
+        "observed": 4,
+        "issued": 30,
+        "finished": true
+      },
+      {
+        "run": 568,
+        "rule": 59,
+        "goals": 5,
+        "recognized": 5,
+        "observed": 5,
+        "issued": 15,
+        "finished": true
+      },
+      {
+        "run": 572,
+        "rule": 57,
+        "goals": 4,
+        "recognized": 4,
+        "observed": 4,
+        "issued": 32,
+        "finished": true
+      },
+      {
+        "run": 572,
+        "rule": 59,
+        "goals": 5,
+        "recognized": 5,
+        "observed": 5,
+        "issued": 21,
+        "finished": true
+      },
+      {
+        "run": 576,
+        "rule": 57,
+        "goals": 2,
+        "recognized": 2,
+        "observed": 2,
+        "issued": 32,
+        "finished": true
+      },
+      {
+        "run": 576,
+        "rule": 59,
+        "goals": 5,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 3,
+        "finished": true
+      },
+      {
+        "run": 580,
+        "rule": 57,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 28,
+        "finished": true
+      },
+      {
+        "run": 584,
+        "rule": 57,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 26,
+        "finished": true
+      },
+      {
+        "run": 616,
+        "rule": 59,
+        "goals": 8,
+        "recognized": 8,
+        "observed": 8,
+        "issued": 289,
+        "finished": true
+      },
+      {
+        "run": 640,
+        "rule": 334,
+        "goals": 2,
+        "recognized": 2,
+        "observed": 2,
+        "issued": 80,
+        "finished": true
+      },
+      {
+        "run": 642,
+        "rule": 344,
+        "goals": 4,
+        "recognized": 4,
+        "observed": 4,
+        "issued": 44,
+        "finished": true
+      },
+      {
+        "run": 644,
+        "rule": 343,
+        "goals": 2,
+        "recognized": 2,
+        "observed": 2,
+        "issued": 29,
+        "finished": true
+      },
+      {
+        "run": 646,
+        "rule": 340,
+        "goals": 8,
+        "recognized": 6,
+        "observed": 6,
+        "issued": 210,
+        "finished": true
+      },
+      {
+        "run": 650,
+        "rule": 346,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 6,
+        "finished": true
+      },
+      {
+        "run": 654,
+        "rule": 338,
+        "goals": 2,
+        "recognized": 2,
+        "observed": 2,
+        "issued": 18,
+        "finished": true
+      },
+      {
+        "run": 668,
+        "rule": 339,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 6,
+        "finished": true
+      },
+      {
+        "run": 682,
+        "rule": 532,
+        "goals": 7,
+        "recognized": 7,
+        "observed": 7,
+        "issued": 7,
+        "finished": true
+      },
+      {
+        "run": 682,
+        "rule": 534,
+        "goals": 4,
+        "recognized": 4,
+        "observed": 4,
+        "issued": 4,
+        "finished": true
+      },
+      {
+        "run": 688,
+        "rule": 531,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 554,
+        "finished": true
+      },
+      {
+        "run": 691,
+        "rule": 531,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 245,
+        "finished": true
+      },
+      {
+        "run": 694,
+        "rule": 531,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 586,
+        "finished": true
+      },
+      {
+        "run": 694,
+        "rule": 533,
+        "goals": 2,
+        "recognized": 2,
+        "observed": 2,
+        "issued": 20,
+        "finished": true
+      },
+      {
+        "run": 697,
+        "rule": 533,
+        "goals": 2,
+        "recognized": 2,
+        "observed": 2,
+        "issued": 9,
+        "finished": true
+      },
+      {
+        "run": 934,
+        "rule": 251,
+        "goals": 6,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 937,
+        "rule": 57,
+        "goals": 38,
+        "recognized": 38,
+        "observed": 38,
+        "issued": 200,
+        "finished": true
+      },
+      {
+        "run": 937,
+        "rule": 59,
+        "goals": 14,
+        "recognized": 14,
+        "observed": 14,
+        "issued": 318,
+        "finished": true
+      },
+      {
+        "run": 940,
+        "rule": 57,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 3,
+        "finished": true
+      },
+      {
+        "run": 940,
+        "rule": 59,
+        "goals": 14,
+        "recognized": 14,
+        "observed": 14,
+        "issued": 44,
+        "finished": true
+      },
+      {
+        "run": 943,
+        "rule": 57,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 3,
+        "finished": true
+      },
+      {
+        "run": 943,
+        "rule": 59,
+        "goals": 19,
+        "recognized": 19,
+        "observed": 19,
+        "issued": 65,
+        "finished": true
+      },
+      {
+        "run": 947,
+        "rule": 57,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 3,
+        "finished": true
+      },
+      {
+        "run": 947,
+        "rule": 59,
+        "goals": 13,
+        "recognized": 13,
+        "observed": 13,
+        "issued": 58,
+        "finished": true
+      },
+      {
+        "run": 947,
+        "rule": 251,
+        "goals": 6,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 950,
+        "rule": 57,
+        "goals": 2,
+        "recognized": 2,
+        "observed": 2,
+        "issued": 18,
+        "finished": true
+      },
+      {
+        "run": 950,
+        "rule": 59,
+        "goals": 10,
+        "recognized": 10,
+        "observed": 10,
+        "issued": 119,
+        "finished": true
+      },
+      {
+        "run": 953,
+        "rule": 57,
+        "goals": 2,
+        "recognized": 2,
+        "observed": 2,
+        "issued": 21,
+        "finished": true
+      },
+      {
+        "run": 953,
+        "rule": 59,
+        "goals": 7,
+        "recognized": 7,
+        "observed": 7,
+        "issued": 89,
+        "finished": true
+      },
+      {
+        "run": 957,
+        "rule": 57,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 21,
+        "finished": true
+      },
+      {
+        "run": 957,
+        "rule": 59,
+        "goals": 2,
+        "recognized": 2,
+        "observed": 2,
+        "issued": 28,
+        "finished": true
+      },
+      {
+        "run": 961,
+        "rule": 57,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 18,
+        "finished": true
+      },
+      {
+        "run": 965,
+        "rule": 57,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 33,
+        "finished": true
+      },
+      {
+        "run": 1019,
+        "rule": 406,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 1019,
+        "rule": 407,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 1025,
+        "rule": 269,
+        "goals": 5,
+        "recognized": 5,
+        "observed": 0,
+        "issued": 54412,
+        "finished": false
+      },
+      {
+        "run": 1026,
+        "rule": 268,
+        "goals": 5,
+        "recognized": 5,
+        "observed": 3,
+        "issued": 930919,
+        "finished": false
+      },
+      {
+        "run": 1030,
+        "rule": 460,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 4072,
+        "finished": true
+      },
+      {
+        "run": 1030,
+        "rule": 463,
+        "goals": 20,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": true
+      },
+      {
+        "run": 1033,
+        "rule": 466,
+        "goals": 1,
+        "recognized": 0,
+        "observed": 0,
+        "issued": 0,
+        "finished": false
+      },
+      {
+        "run": 1042,
+        "rule": 57,
+        "goals": 9,
+        "recognized": 9,
+        "observed": 9,
+        "issued": 145,
+        "finished": true
+      },
+      {
+        "run": 1042,
+        "rule": 59,
+        "goals": 15,
+        "recognized": 13,
+        "observed": 13,
+        "issued": 110,
+        "finished": true
+      },
+      {
+        "run": 1045,
+        "rule": 136,
+        "goals": 2,
+        "recognized": 2,
+        "observed": 2,
+        "issued": 16,
+        "finished": true
+      },
+      {
+        "run": 1048,
+        "rule": 136,
+        "goals": 2,
+        "recognized": 2,
+        "observed": 2,
+        "issued": 16,
+        "finished": true
+      },
+      {
+        "run": 1116,
+        "rule": 460,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 0,
+        "issued": 20632,
+        "finished": false
+      },
+      {
+        "run": 1168,
+        "rule": 0,
+        "goals": 31,
+        "recognized": 22,
+        "observed": 0,
+        "issued": 21968,
+        "finished": false
+      },
+      {
+        "run": 1195,
+        "rule": 488,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 2520,
+        "finished": true
+      },
+      {
+        "run": 1196,
+        "rule": 488,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 2520,
+        "finished": true
+      },
+      {
+        "run": 1220,
+        "rule": 531,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 99,
+        "finished": true
+      },
+      {
+        "run": 1220,
+        "rule": 532,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 9,
+        "finished": true
+      },
+      {
+        "run": 1409,
+        "rule": 101,
+        "goals": 25,
+        "recognized": 25,
+        "observed": 25,
+        "issued": 6200,
+        "finished": true
+      },
+      {
+        "run": 1412,
+        "rule": 59,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 36,
+        "finished": true
+      },
+      {
+        "run": 1412,
+        "rule": 101,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 291,
+        "finished": true
+      },
+      {
+        "run": 1415,
+        "rule": 59,
+        "goals": 1,
+        "recognized": 1,
+        "observed": 1,
+        "issued": 4,
+        "finished": true
+      },
+      {
+        "run": 1481,
+        "rule": 531,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 36,
+        "finished": true
+      },
+      {
+        "run": 1481,
+        "rule": 532,
+        "goals": 3,
+        "recognized": 3,
+        "observed": 3,
+        "issued": 3,
+        "finished": true
+      }
+    ],
+    "work": {
+      "interface_reads": 198697,
+      "typed_products": 45370729691607689517065205150890636,
+      "visits": 33498772,
+      "root_scored": 38334,
+      "tuple_scored": 12942032
+    }
+  }
+]

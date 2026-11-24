@@ -1,0 +1,120 @@
+[
+  {
+    "case": "cyk801",
+    "arm": "stream",
+    "phase": "multi",
+    "runs": 43,
+    "last_run": 43,
+    "termination": "schedule_end",
+    "exact_endpoint": true,
+    "state_sha": "2bad5f36b3dd70837b4677a4581a107bad02a9d423e60a866a4e3c7425242d94",
+    "paid": 1072213,
+    "committed_tokens": 4991,
+    "verdicts": {
+      "accepted": 4991,
+      "guard": 1067222
+    },
+    "work": {
+      "interface_reads": 529814,
+      "typed_products": 12527527511,
+      "visits": 18019020,
+      "root_scored": 1445,
+      "tuple_scored": 13825273,
+      "waves": 4214
+    },
+    "wall": 39.7750016659993,
+    "verification_ipc": 3.750334539436153,
+    "signed_ops": 6567,
+    "ept": 0.006124715891338755,
+    "eps": 165.10370144405655,
+    "derived": [
+      6567,
+      6567
+    ],
+    "reference_runs": 43,
+    "reference_commits": 4991,
+    "visits": 18548834,
+    "duplicate_rate": 0.0,
+    "reject_rate": 0.9953451413105419
+  },
+  {
+    "case": "sum-divisors",
+    "arm": "stream",
+    "phase": "multi",
+    "runs": 547,
+    "last_run": 547,
+    "termination": "schedule_end",
+    "exact_endpoint": false,
+    "state_sha": "29c0fac3a9e6bbd73bcb191e4ebe689acba61efeffea4e6b6f063f748e531a12",
+    "paid": 413570,
+    "committed_tokens": 1811,
+    "verdicts": {
+      "accepted": 1811,
+      "duplicate": 330185,
+      "binding": 40438,
+      "guard": 41136
+    },
+    "work": {
+      "waves": 1698,
+      "interface_reads": 1836687,
+      "typed_products": 16619656263928312684087600,
+      "visits": 22410680,
+      "root_scored": 127366,
+      "tuple_scored": 16448072
+    },
+    "wall": 26.470150624998496,
+    "verification_ipc": 1.6162582421238767,
+    "signed_ops": 2024,
+    "ept": 0.004893971999903281,
+    "eps": 76.46348631233431,
+    "derived": [
+      1404,
+      8018
+    ],
+    "reference_runs": 1644,
+    "reference_commits": 17341,
+    "visits": 24247367,
+    "duplicate_rate": 0.7983775418913364,
+    "reject_rate": 0.19724351379452087
+  },
+  {
+    "case": "jacobi",
+    "arm": "stream",
+    "phase": "multi",
+    "runs": 394,
+    "last_run": 395,
+    "termination": "wall_budget",
+    "exact_endpoint": false,
+    "state_sha": "efeb14235a3f56e43bd5cc3969256710ea27cb837a091e03fac615a73a756bc4",
+    "paid": 2271681,
+    "committed_tokens": 4410,
+    "verdicts": {
+      "accepted": 4411,
+      "binding": 833292,
+      "duplicate": 1261471,
+      "guard": 172507
+    },
+    "work": {
+      "waves": 8985,
+      "interface_reads": 3689066,
+      "typed_products": 1543966522633858572435,
+      "visits": 288123805,
+      "root_scored": 522673,
+      "tuple_scored": 180952960
+    },
+    "wall": 240.00297208401025,
+    "verification_ipc": 9.420388368613203,
+    "signed_ops": 4852,
+    "ept": 0.0021358632660131416,
+    "eps": 20.216416312968047,
+    "derived": [
+      1879,
+      20275
+    ],
+    "reference_runs": 1990,
+    "reference_commits": 41319,
+    "visits": 291812871,
+    "duplicate_rate": 0.555302879233484,
+    "reject_rate": 0.4427553868698994
+  }
+]

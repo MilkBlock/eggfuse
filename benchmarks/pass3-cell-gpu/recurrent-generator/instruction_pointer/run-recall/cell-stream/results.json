@@ -1,0 +1,1327 @@
+[
+  {
+    "case": "fact",
+    "arm": "fixed",
+    "phase": "multi",
+    "runs": 385,
+    "last_run": 385,
+    "termination": "schedule_end",
+    "exact_endpoint": false,
+    "state_sha": "f4e8e5a7d2f5a34e8852f72ca2542ddc13d4b1fba1f8972b1ab04ab005bb333f",
+    "paid": 355,
+    "committed_tokens": 125,
+    "verdicts": {
+      "accepted": 125,
+      "binding": 134,
+      "duplicate": 66,
+      "guard": 30
+    },
+    "work": {
+      "visits": 107600,
+      "waves": 32
+    },
+    "wall": 1.1248809590033488,
+    "verification_ipc": 0.005280578858219087,
+    "signed_ops": 217,
+    "ept": 0.6112676056338028,
+    "eps": 192.90930143600553,
+    "derived": [
+      140,
+      1120
+    ],
+    "reference_runs": 634,
+    "reference_commits": 1668,
+    "visits": 107600,
+    "duplicate_rate": 0.18591549295774648,
+    "reject_rate": 0.4619718309859155
+  },
+  {
+    "case": "fact",
+    "arm": "dynamic",
+    "phase": "multi",
+    "runs": 367,
+    "last_run": 367,
+    "termination": "schedule_end",
+    "exact_endpoint": false,
+    "state_sha": "044c296652457799e9cdaddb38d3774802eb506a64c471777b2645b3c305385f",
+    "paid": 303,
+    "committed_tokens": 209,
+    "verdicts": {
+      "accepted": 209,
+      "binding": 6,
+      "duplicate": 52,
+      "guard": 36
+    },
+    "work": {
+      "visits": 53335,
+      "waves": 19
+    },
+    "wall": 0.946056332992157,
+    "verification_ipc": 0.005704622191842645,
+    "signed_ops": 272,
+    "ept": 0.8976897689768977,
+    "eps": 287.50930627960287,
+    "derived": [
+      138,
+      1120
+    ],
+    "reference_runs": 634,
+    "reference_commits": 1668,
+    "visits": 53335,
+    "duplicate_rate": 0.1716171617161716,
+    "reject_rate": 0.13861386138613863
+  },
+  {
+    "case": "fact",
+    "arm": "dense",
+    "phase": "multi",
+    "runs": 124,
+    "last_run": 125,
+    "termination": "wall_budget",
+    "exact_endpoint": false,
+    "state_sha": "2040b3348c2660979195dc7e58b73ee553a5b7b76e08286bcde4d8edccc22c49",
+    "paid": 4944,
+    "committed_tokens": 382,
+    "verdicts": {
+      "accepted": 383,
+      "binding": 366,
+      "duplicate": 3091,
+      "guard": 1104
+    },
+    "work": {
+      "waves": 55,
+      "interface_reads": 54659,
+      "typed_products": 36256808,
+      "visits": 30400774,
+      "root_scored": 7392,
+      "tuple_scored": 29820895
+    },
+    "wall": 20.002369249996264,
+    "verification_ipc": 0.021282494097249582,
+    "signed_ops": 450,
+    "ept": 0.09101941747572816,
+    "eps": 22.49733490946749,
+    "derived": [
+      282,
+      1120
+    ],
+    "reference_runs": 634,
+    "reference_commits": 1668,
+    "visits": 30455433,
+    "duplicate_rate": 0.6252022653721683,
+    "reject_rate": 0.2973300970873786
+  },
+  {
+    "case": "fact",
+    "arm": "stream",
+    "phase": "multi",
+    "runs": 464,
+    "last_run": 464,
+    "termination": "schedule_end",
+    "exact_endpoint": false,
+    "state_sha": "3347924d8839357889e7146b2417b7fba1caec8a6896dbc5aee046a219aa334a",
+    "paid": 10851,
+    "committed_tokens": 494,
+    "verdicts": {
+      "accepted": 494,
+      "binding": 917,
+      "duplicate": 7227,
+      "guard": 2213
+    },
+    "work": {
+      "waves": 101,
+      "interface_reads": 342613,
+      "typed_products": 1266848497603726341,
+      "visits": 306449,
+      "root_scored": 14488,
+      "tuple_scored": 196078
+    },
+    "wall": 2.167280124995159,
+    "verification_ipc": 0.04514922806993127,
+    "signed_ops": 562,
+    "ept": 0.051792461524283476,
+    "eps": 259.31119540961754,
+    "derived": [
+      363,
+      1120
+    ],
+    "reference_runs": 634,
+    "reference_commits": 1668,
+    "visits": 649062,
+    "duplicate_rate": 0.6660215648327343,
+    "reject_rate": 0.2884526771726108
+  },
+  {
+    "case": "loopfact",
+    "arm": "fixed",
+    "phase": "multi",
+    "runs": 383,
+    "last_run": 383,
+    "termination": "schedule_end",
+    "exact_endpoint": false,
+    "state_sha": "1754e7944502baa546dc72bdf988f7dab93e366855108d10166dce03f1a1b657",
+    "paid": 360,
+    "committed_tokens": 123,
+    "verdicts": {
+      "accepted": 123,
+      "binding": 130,
+      "duplicate": 63,
+      "guard": 44
+    },
+    "work": {
+      "visits": 96690,
+      "waves": 33
+    },
+    "wall": 1.1145422080007847,
+    "verification_ipc": 0.00522832504066173,
+    "signed_ops": 210,
+    "ept": 0.5833333333333334,
+    "eps": 188.4181671115789,
+    "derived": [
+      174,
+      1112
+    ],
+    "reference_runs": 618,
+    "reference_commits": 1419,
+    "visits": 96690,
+    "duplicate_rate": 0.175,
+    "reject_rate": 0.48333333333333334
+  },
+  {
+    "case": "loopfact",
+    "arm": "dynamic",
+    "phase": "multi",
+    "runs": 392,
+    "last_run": 392,
+    "termination": "schedule_end",
+    "exact_endpoint": false,
+    "state_sha": "7d61ffd41ae893df330470e3e3274ffc12b5e3f992582689112a94b6c174f6ed",
+    "paid": 1001,
+    "committed_tokens": 193,
+    "verdicts": {
+      "accepted": 193,
+      "binding": 13,
+      "duplicate": 585,
+      "guard": 210
+    },
+    "work": {
+      "visits": 402019,
+      "waves": 37
+    },
+    "wall": 1.3212276249978459,
+    "verification_ipc": 0.00996783294249326,
+    "signed_ops": 292,
+    "ept": 0.2917082917082917,
+    "eps": 221.00658090650813,
+    "derived": [
+      261,
+      1112
+    ],
+    "reference_runs": 618,
+    "reference_commits": 1419,
+    "visits": 402019,
+    "duplicate_rate": 0.5844155844155844,
+    "reject_rate": 0.22277722277722278
+  },
+  {
+    "case": "loopfact",
+    "arm": "dense",
+    "phase": "multi",
+    "runs": 132,
+    "last_run": 133,
+    "termination": "wall_budget",
+    "exact_endpoint": false,
+    "state_sha": "1eacb92997407f98a7ba3d685238c7d3693f3b4dbd7d74718e164b3668b2bd1d",
+    "paid": 5491,
+    "committed_tokens": 365,
+    "verdicts": {
+      "accepted": 366,
+      "binding": 473,
+      "duplicate": 3295,
+      "guard": 1357
+    },
+    "work": {
+      "waves": 59,
+      "interface_reads": 57360,
+      "typed_products": 47296239,
+      "visits": 32295925,
+      "root_scored": 7456,
+      "tuple_scored": 31623794
+    },
+    "wall": 20.00340391699865,
+    "verification_ipc": 0.021301418062648736,
+    "signed_ops": 408,
+    "ept": 0.07430340557275542,
+    "eps": 20.39652859548002,
+    "derived": [
+      353,
+      1112
+    ],
+    "reference_runs": 618,
+    "reference_commits": 1419,
+    "visits": 32353285,
+    "duplicate_rate": 0.6000728464760517,
+    "reject_rate": 0.33327262793662354
+  },
+  {
+    "case": "loopfact",
+    "arm": "stream",
+    "phase": "multi",
+    "runs": 483,
+    "last_run": 483,
+    "termination": "schedule_end",
+    "exact_endpoint": false,
+    "state_sha": "2b784f49ae3c7a88417b762d888c1dd8e1b9f4e1cc6814ad0af4f824679e4e6c",
+    "paid": 18075,
+    "committed_tokens": 465,
+    "verdicts": {
+      "accepted": 465,
+      "binding": 1466,
+      "duplicate": 12962,
+      "guard": 3182
+    },
+    "work": {
+      "waves": 134,
+      "interface_reads": 345475,
+      "typed_products": 697193576184961190,
+      "visits": 330143,
+      "root_scored": 14803,
+      "tuple_scored": 211018
+    },
+    "wall": 2.3149657499889145,
+    "verification_ipc": 0.0849711388873402,
+    "signed_ops": 524,
+    "ept": 0.028990318118948824,
+    "eps": 226.35324086436668,
+    "derived": [
+      449,
+      1112
+    ],
+    "reference_runs": 618,
+    "reference_commits": 1419,
+    "visits": 675618,
+    "duplicate_rate": 0.7171230982019364,
+    "reject_rate": 0.25715076071922544
+  },
+  {
+    "case": "sum-divisors",
+    "arm": "fixed",
+    "phase": "multi",
+    "runs": 432,
+    "last_run": 432,
+    "termination": "schedule_end",
+    "exact_endpoint": false,
+    "state_sha": "c24b8fcf436a8f156747589c34f8bc1cde082fb86e72282ff332d3d9c74c8e78",
+    "paid": 641,
+    "committed_tokens": 184,
+    "verdicts": {
+      "accepted": 184,
+      "duplicate": 151,
+      "binding": 244,
+      "guard": 62
+    },
+    "work": {
+      "visits": 227731,
+      "waves": 62
+    },
+    "wall": 1.7752570000011474,
+    "verification_ipc": 0.010310720070265234,
+    "signed_ops": 431,
+    "ept": 0.672386895475819,
+    "eps": 242.7817493465574,
+    "derived": [
+      286,
+      8018
+    ],
+    "reference_runs": 1644,
+    "reference_commits": 17341,
+    "visits": 227731,
+    "duplicate_rate": 0.23556942277691106,
+    "reject_rate": 0.47737909516380655
+  },
+  {
+    "case": "sum-divisors",
+    "arm": "dynamic",
+    "phase": "multi",
+    "runs": 303,
+    "last_run": 303,
+    "termination": "schedule_end",
+    "exact_endpoint": false,
+    "state_sha": "40f5a2172d74a57570a7166882fe5af53c3bdaef7fd696477580c4d18e310ca6",
+    "paid": 316,
+    "committed_tokens": 245,
+    "verdicts": {
+      "accepted": 245,
+      "binding": 12,
+      "duplicate": 58,
+      "guard": 1
+    },
+    "work": {
+      "visits": 209402,
+      "waves": 18
+    },
+    "wall": 1.2106669580098242,
+    "verification_ipc": 0.006627865004702471,
+    "signed_ops": 512,
+    "ept": 1.620253164556962,
+    "eps": 422.9073872154404,
+    "derived": [
+      340,
+      8018
+    ],
+    "reference_runs": 1644,
+    "reference_commits": 17341,
+    "visits": 209402,
+    "duplicate_rate": 0.18354430379746836,
+    "reject_rate": 0.04113924050632911
+  },
+  {
+    "case": "sum-divisors",
+    "arm": "dense",
+    "phase": "multi",
+    "runs": 33,
+    "last_run": 34,
+    "termination": "wall_budget",
+    "exact_endpoint": false,
+    "state_sha": "6c17f8877367b134c9c87a77d2cbe5c90910aad04ae149c2cc85663cc0954fce",
+    "paid": 1533,
+    "committed_tokens": 719,
+    "verdicts": {
+      "accepted": 794,
+      "duplicate": 537,
+      "binding": 103,
+      "guard": 99
+    },
+    "work": {
+      "waves": 21,
+      "interface_reads": 27731,
+      "typed_products": 132752062,
+      "visits": 30312440,
+      "root_scored": 9295,
+      "tuple_scored": 27958446
+    },
+    "wall": 20.002170874999138,
+    "verification_ipc": 0.006213910935912281,
+    "signed_ops": 884,
+    "ept": 0.5766470971950424,
+    "eps": 44.19520288694854,
+    "derived": [
+      623,
+      8018
+    ],
+    "reference_runs": 1644,
+    "reference_commits": 17341,
+    "visits": 30340171,
+    "duplicate_rate": 0.350293542074364,
+    "reject_rate": 0.13176777560339203
+  },
+  {
+    "case": "sum-divisors",
+    "arm": "stream",
+    "phase": "multi",
+    "runs": 291,
+    "last_run": 292,
+    "termination": "wall_budget",
+    "exact_endpoint": false,
+    "state_sha": "9e7ca302b5a270dee276412ffefb745a93e8b9fa922e3ff579b9fab5a999084e",
+    "paid": 398662,
+    "committed_tokens": 1744,
+    "verdicts": {
+      "accepted": 1745,
+      "duplicate": 322034,
+      "binding": 35446,
+      "guard": 39437
+    },
+    "work": {
+      "waves": 1631,
+      "interface_reads": 821894,
+      "typed_products": 27591005935219458,
+      "visits": 18298000,
+      "root_scored": 101487,
+      "tuple_scored": 14198710
+    },
+    "wall": 20.00200337500428,
+    "verification_ipc": 1.673263414952089,
+    "signed_ops": 1944,
+    "ept": 0.004876311261168609,
+    "eps": 97.1902645726648,
+    "derived": [
+      1398,
+      8018
+    ],
+    "reference_runs": 1644,
+    "reference_commits": 17341,
+    "visits": 19119894,
+    "duplicate_rate": 0.8077870476744711,
+    "reject_rate": 0.18783581078708278
+  },
+  {
+    "case": "jacobi",
+    "arm": "fixed",
+    "phase": "multi",
+    "runs": 448,
+    "last_run": 448,
+    "termination": "schedule_end",
+    "exact_endpoint": false,
+    "state_sha": "8a68d2d2134aa16fb348b58afb51229e68e754302f86b240a7d6e7dc0efffb81",
+    "paid": 445,
+    "committed_tokens": 196,
+    "verdicts": {
+      "accepted": 196,
+      "duplicate": 67,
+      "binding": 151,
+      "guard": 31
+    },
+    "work": {
+      "visits": 583459,
+      "waves": 38
+    },
+    "wall": 2.7787988749914803,
+    "verification_ipc": 0.0092370908241719,
+    "signed_ops": 813,
+    "ept": 1.8269662921348315,
+    "eps": 292.5724518304667,
+    "derived": [
+      270,
+      20275
+    ],
+    "reference_runs": 1990,
+    "reference_commits": 41319,
+    "visits": 583459,
+    "duplicate_rate": 0.15056179775280898,
+    "reject_rate": 0.40898876404494383
+  },
+  {
+    "case": "jacobi",
+    "arm": "dynamic",
+    "phase": "multi",
+    "runs": 438,
+    "last_run": 438,
+    "termination": "schedule_end",
+    "exact_endpoint": false,
+    "state_sha": "9ab32c5c42947b83b66eb9d2eb5707648e7c5e5400ea277efed6b66ca805c479",
+    "paid": 527,
+    "committed_tokens": 330,
+    "verdicts": {
+      "accepted": 330,
+      "guard": 33,
+      "duplicate": 164
+    },
+    "work": {
+      "visits": 983106,
+      "waves": 25
+    },
+    "wall": 2.4675646249961574,
+    "verification_ipc": 0.010538376096519642,
+    "signed_ops": 960,
+    "ept": 1.8216318785578747,
+    "eps": 389.04756141958995,
+    "derived": [
+      335,
+      20275
+    ],
+    "reference_runs": 1990,
+    "reference_commits": 41319,
+    "visits": 983106,
+    "duplicate_rate": 0.3111954459203036,
+    "reject_rate": 0.06261859582542695
+  },
+  {
+    "case": "jacobi",
+    "arm": "dense",
+    "phase": "multi",
+    "runs": 10,
+    "last_run": 11,
+    "termination": "wall_budget",
+    "exact_endpoint": false,
+    "state_sha": "8c4c4c799dd2f83f04dce51b07dce4b5dd9e08a9fcbeb70eb20770334eaabd0d",
+    "paid": 284,
+    "committed_tokens": 231,
+    "verdicts": {
+      "accepted": 231,
+      "binding": 32,
+      "duplicate": 21
+    },
+    "work": {
+      "waves": 6,
+      "interface_reads": 4933,
+      "typed_products": 21058114255,
+      "visits": 34397521,
+      "root_scored": 1295,
+      "tuple_scored": 32469829
+    },
+    "wall": 20.002223957999377,
+    "verification_ipc": 0.0016598730144323781,
+    "signed_ops": 839,
+    "ept": 2.954225352112676,
+    "eps": 41.94533576674925,
+    "derived": [
+      300,
+      20275
+    ],
+    "reference_runs": 1990,
+    "reference_commits": 41319,
+    "visits": 34402454,
+    "duplicate_rate": 0.07394366197183098,
+    "reject_rate": 0.11267605633802817
+  },
+  {
+    "case": "jacobi",
+    "arm": "stream",
+    "phase": "multi",
+    "runs": 141,
+    "last_run": 142,
+    "termination": "wall_budget",
+    "exact_endpoint": false,
+    "state_sha": "d0601801a5424cc48f664937edce676abd8257a0dab2e8c38aa2acf590e9864a",
+    "paid": 455857,
+    "committed_tokens": 3410,
+    "verdicts": {
+      "accepted": 3466,
+      "binding": 208223,
+      "duplicate": 196681,
+      "guard": 47487
+    },
+    "work": {
+      "waves": 1815,
+      "interface_reads": 673538,
+      "typed_products": 67506918927826854,
+      "visits": 21833772,
+      "root_scored": 114200,
+      "tuple_scored": 19344757
+    },
+    "wall": 20.00281045799784,
+    "verification_ipc": 1.5088022120471578,
+    "signed_ops": 3763,
+    "ept": 0.00825478165301838,
+    "eps": 188.12356433120218,
+    "derived": [
+      1469,
+      20275
+    ],
+    "reference_runs": 1990,
+    "reference_commits": 41319,
+    "visits": 22507310,
+    "duplicate_rate": 0.43145328469234867,
+    "reject_rate": 0.5609434537585252
+  },
+  {
+    "case": "cyk801",
+    "arm": "fixed",
+    "phase": "multi",
+    "runs": 2,
+    "last_run": 2,
+    "termination": "schedule_end",
+    "exact_endpoint": false,
+    "state_sha": "8392fe2b1e6bbe9e88c7b1f0dd9810f719f3014368d79b921a1f08c2a7f041b6",
+    "paid": 18,
+    "committed_tokens": 6,
+    "verdicts": {
+      "accepted": 6,
+      "guard": 8,
+      "binding": 4
+    },
+    "work": {
+      "visits": 2536,
+      "waves": 2
+    },
+    "wall": 0.03190516600443516,
+    "verification_ipc": 0.0002454579953337088,
+    "signed_ops": 15,
+    "ept": 0.8333333333333334,
+    "eps": 470.143298985338,
+    "derived": [
+      15,
+      6567
+    ],
+    "reference_runs": 43,
+    "reference_commits": 4991,
+    "visits": 2536,
+    "duplicate_rate": 0.0,
+    "reject_rate": 0.6666666666666666
+  },
+  {
+    "case": "cyk801",
+    "arm": "dynamic",
+    "phase": "multi",
+    "runs": 2,
+    "last_run": 2,
+    "termination": "schedule_end",
+    "exact_endpoint": false,
+    "state_sha": "6a1ab6e9692b2d096f40112e6913d947e225952ff29fc73688f00718384a228a",
+    "paid": 64,
+    "committed_tokens": 64,
+    "verdicts": {
+      "accepted": 64
+    },
+    "work": {
+      "visits": 3695,
+      "waves": 1
+    },
+    "wall": 0.03638150000188034,
+    "verification_ipc": 0.0003962920018238947,
+    "signed_ops": 129,
+    "ept": 2.015625,
+    "eps": 3545.758146127366,
+    "derived": [
+      129,
+      6567
+    ],
+    "reference_runs": 43,
+    "reference_commits": 4991,
+    "visits": 3695,
+    "duplicate_rate": 0.0,
+    "reject_rate": 0.0
+  },
+  {
+    "case": "cyk801",
+    "arm": "dense",
+    "phase": "multi",
+    "runs": 1,
+    "last_run": 2,
+    "termination": "wall_budget",
+    "exact_endpoint": false,
+    "state_sha": "8f4172e4765f2410452bb0f07652257a486411239bb0b927e6ce0c8f863c3acb",
+    "paid": 115109,
+    "committed_tokens": 1445,
+    "verdicts": {
+      "accepted": 1762,
+      "guard": 113347
+    },
+    "work": {
+      "interface_reads": 4543,
+      "typed_products": 35510042,
+      "visits": 31507795,
+      "root_scored": 34,
+      "tuple_scored": 31485233,
+      "waves": 450
+    },
+    "wall": 20.002011958000367,
+    "verification_ipc": 0.3854993028799072,
+    "signed_ops": 2901,
+    "ept": 0.025202199654240764,
+    "eps": 145.03540974235162,
+    "derived": [
+      2901,
+      6567
+    ],
+    "reference_runs": 43,
+    "reference_commits": 4991,
+    "visits": 31512338,
+    "duplicate_rate": 0.0,
+    "reject_rate": 0.9846927694619882
+  },
+  {
+    "case": "cyk801",
+    "arm": "stream",
+    "phase": "multi",
+    "runs": 14,
+    "last_run": 15,
+    "termination": "wall_budget",
+    "exact_endpoint": false,
+    "state_sha": "ec037f352a8d80f6a22fb44d1bc22dafdbb60651340a36ec95e230162d70468d",
+    "paid": 966263,
+    "committed_tokens": 4479,
+    "verdicts": {
+      "accepted": 4519,
+      "guard": 961744
+    },
+    "work": {
+      "interface_reads": 153754,
+      "typed_products": 3108227657,
+      "visits": 13160380,
+      "root_scored": 493,
+      "tuple_scored": 11964569,
+      "waves": 3782
+    },
+    "wall": 20.001067416000296,
+    "verification_ipc": 3.115197295221151,
+    "signed_ops": 6005,
+    "ept": 0.006214664123535725,
+    "eps": 300.2339762724947,
+    "derived": [
+      6005,
+      6567
+    ],
+    "reference_runs": 43,
+    "reference_commits": 4991,
+    "visits": 13314134,
+    "duplicate_rate": 0.0,
+    "reject_rate": 0.9953232194547447
+  },
+  {
+    "case": "grammar-17122",
+    "arm": "fixed",
+    "phase": "multi",
+    "runs": 3,
+    "last_run": 3,
+    "termination": "schedule_end",
+    "exact_endpoint": false,
+    "state_sha": "89e0ea3039c5274388fb464c4ebbf252215855e0077fe91c8ffd024716cc49f8",
+    "paid": 18,
+    "committed_tokens": 8,
+    "verdicts": {
+      "accepted": 8,
+      "guard": 6,
+      "binding": 4
+    },
+    "work": {
+      "visits": 368,
+      "waves": 2
+    },
+    "wall": 0.015239125001244247,
+    "verification_ipc": 0.000202499984879978,
+    "signed_ops": 18,
+    "ept": 1.0,
+    "eps": 1181.1701786375747,
+    "derived": [
+      18,
+      129
+    ],
+    "reference_runs": 6,
+    "reference_commits": 76,
+    "visits": 368,
+    "duplicate_rate": 0.0,
+    "reject_rate": 0.5555555555555556
+  },
+  {
+    "case": "grammar-17122",
+    "arm": "dynamic",
+    "phase": "multi",
+    "runs": 5,
+    "last_run": 5,
+    "termination": "schedule_end",
+    "exact_endpoint": false,
+    "state_sha": "0323b4ead198ff01857155e4c8ed805afd5e316410b4f4b23d86cdb5e1063ac6",
+    "paid": 101,
+    "committed_tokens": 35,
+    "verdicts": {
+      "accepted": 35,
+      "guard": 66
+    },
+    "work": {
+      "visits": 2980,
+      "waves": 4
+    },
+    "wall": 0.036920958998962305,
+    "verification_ipc": 0.0009203320078086108,
+    "signed_ops": 77,
+    "ept": 0.7623762376237624,
+    "eps": 2085.5362939560737,
+    "derived": [
+      77,
+      129
+    ],
+    "reference_runs": 6,
+    "reference_commits": 76,
+    "visits": 2980,
+    "duplicate_rate": 0.0,
+    "reject_rate": 0.6534653465346535
+  },
+  {
+    "case": "grammar-17122",
+    "arm": "dense",
+    "phase": "multi",
+    "runs": 6,
+    "last_run": 6,
+    "termination": "schedule_end",
+    "exact_endpoint": true,
+    "state_sha": "1ed4d431107ce8a5b5c439c587e1dd3436255e8cb6b35008290d29f7d8665335",
+    "paid": 348,
+    "committed_tokens": 76,
+    "verdicts": {
+      "accepted": 76,
+      "guard": 272
+    },
+    "work": {
+      "interface_reads": 1200,
+      "typed_products": 448732,
+      "visits": 124460,
+      "root_scored": 228,
+      "tuple_scored": 114508,
+      "waves": 6
+    },
+    "wall": 0.12299391599663068,
+    "verification_ipc": 0.0017746249941410497,
+    "signed_ops": 129,
+    "ept": 0.3706896551724138,
+    "eps": 1048.8323666638425,
+    "derived": [
+      129,
+      129
+    ],
+    "reference_runs": 6,
+    "reference_commits": 76,
+    "visits": 125660,
+    "duplicate_rate": 0.0,
+    "reject_rate": 0.7816091954022989
+  },
+  {
+    "case": "grammar-17122",
+    "arm": "stream",
+    "phase": "multi",
+    "runs": 6,
+    "last_run": 6,
+    "termination": "schedule_end",
+    "exact_endpoint": true,
+    "state_sha": "1ed4d431107ce8a5b5c439c587e1dd3436255e8cb6b35008290d29f7d8665335",
+    "paid": 348,
+    "committed_tokens": 76,
+    "verdicts": {
+      "accepted": 76,
+      "guard": 272
+    },
+    "work": {
+      "interface_reads": 1200,
+      "typed_products": 448732,
+      "visits": 15830,
+      "root_scored": 228,
+      "tuple_scored": 5878,
+      "waves": 6
+    },
+    "wall": 0.03987979199155234,
+    "verification_ipc": 0.0015570830291835591,
+    "signed_ops": 129,
+    "ept": 0.3706896551724138,
+    "eps": 3234.720984184818,
+    "derived": [
+      129,
+      129
+    ],
+    "reference_runs": 6,
+    "reference_commits": 76,
+    "visits": 17030,
+    "duplicate_rate": 0.0,
+    "reject_rate": 0.7816091954022989
+  },
+  {
+    "case": "grammar-91627433",
+    "arm": "fixed",
+    "phase": "multi",
+    "runs": 2,
+    "last_run": 2,
+    "termination": "schedule_end",
+    "exact_endpoint": false,
+    "state_sha": "ef38f8e06ecb67244a280006a35f69064374e523a03b3fcb11c5ce22b5c5f0f3",
+    "paid": 6,
+    "committed_tokens": 6,
+    "verdicts": {
+      "accepted": 6
+    },
+    "work": {
+      "visits": 246,
+      "waves": 1
+    },
+    "wall": 0.013200542001868598,
+    "verification_ipc": 8.816600893624127e-05,
+    "signed_ops": 15,
+    "ept": 2.5,
+    "eps": 1136.3169783389712,
+    "derived": [
+      15,
+      207
+    ],
+    "reference_runs": 8,
+    "reference_commits": 117,
+    "visits": 246,
+    "duplicate_rate": 0.0,
+    "reject_rate": 0.0
+  },
+  {
+    "case": "grammar-91627433",
+    "arm": "dynamic",
+    "phase": "multi",
+    "runs": 3,
+    "last_run": 3,
+    "termination": "schedule_end",
+    "exact_endpoint": false,
+    "state_sha": "4969767ff61318ee94e2c89f4d9249a6d4eb240ba2fc84916250f16469ff009a",
+    "paid": 113,
+    "committed_tokens": 52,
+    "verdicts": {
+      "accepted": 52,
+      "guard": 61
+    },
+    "work": {
+      "visits": 1363,
+      "waves": 2
+    },
+    "wall": 0.029312291997484863,
+    "verification_ipc": 0.0006649999995715916,
+    "signed_ops": 116,
+    "ept": 1.0265486725663717,
+    "eps": 3957.384158494101,
+    "derived": [
+      116,
+      207
+    ],
+    "reference_runs": 8,
+    "reference_commits": 117,
+    "visits": 1363,
+    "duplicate_rate": 0.0,
+    "reject_rate": 0.5398230088495575
+  },
+  {
+    "case": "grammar-91627433",
+    "arm": "dense",
+    "phase": "multi",
+    "runs": 8,
+    "last_run": 8,
+    "termination": "schedule_end",
+    "exact_endpoint": true,
+    "state_sha": "1af51eb06bd1aff43ab0dabab3476aebf7d4b99258c3c636ab02293dbd6840e7",
+    "paid": 789,
+    "committed_tokens": 117,
+    "verdicts": {
+      "accepted": 117,
+      "guard": 672
+    },
+    "work": {
+      "interface_reads": 2834,
+      "typed_products": 2999759,
+      "visits": 549484,
+      "root_scored": 531,
+      "tuple_scored": 509955,
+      "waves": 9
+    },
+    "wall": 0.5033229169930564,
+    "verification_ipc": 0.0035944160335930064,
+    "signed_ops": 207,
+    "ept": 0.2623574144486692,
+    "eps": 411.2667891950083,
+    "derived": [
+      207,
+      207
+    ],
+    "reference_runs": 8,
+    "reference_commits": 117,
+    "visits": 552318,
+    "duplicate_rate": 0.0,
+    "reject_rate": 0.8517110266159695
+  },
+  {
+    "case": "grammar-91627433",
+    "arm": "stream",
+    "phase": "multi",
+    "runs": 8,
+    "last_run": 8,
+    "termination": "schedule_end",
+    "exact_endpoint": true,
+    "state_sha": "1af51eb06bd1aff43ab0dabab3476aebf7d4b99258c3c636ab02293dbd6840e7",
+    "paid": 789,
+    "committed_tokens": 117,
+    "verdicts": {
+      "accepted": 117,
+      "guard": 672
+    },
+    "work": {
+      "interface_reads": 2834,
+      "typed_products": 2999759,
+      "visits": 58456,
+      "root_scored": 531,
+      "tuple_scored": 18927,
+      "waves": 9
+    },
+    "wall": 0.08265070800553076,
+    "verification_ipc": 0.0030607489752583206,
+    "signed_ops": 207,
+    "ept": 0.2623574144486692,
+    "eps": 2504.5157506230694,
+    "derived": [
+      207,
+      207
+    ],
+    "reference_runs": 8,
+    "reference_commits": 117,
+    "visits": 61290,
+    "duplicate_rate": 0.0,
+    "reject_rate": 0.8517110266159695
+  },
+  {
+    "case": "grammar-72102993",
+    "arm": "fixed",
+    "phase": "multi",
+    "runs": 2,
+    "last_run": 2,
+    "termination": "schedule_end",
+    "exact_endpoint": false,
+    "state_sha": "f13a0589c68ce23c3ce3d5646ca438074510b9685dbcc47beb1934f15668537b",
+    "paid": 14,
+    "committed_tokens": 6,
+    "verdicts": {
+      "accepted": 6,
+      "guard": 8
+    },
+    "work": {
+      "visits": 266,
+      "waves": 2
+    },
+    "wall": 0.01562408299650997,
+    "verification_ipc": 0.00023808403057046235,
+    "signed_ops": 14,
+    "ept": 1.0,
+    "eps": 896.052587734413,
+    "derived": [
+      14,
+      182
+    ],
+    "reference_runs": 8,
+    "reference_commits": 98,
+    "visits": 266,
+    "duplicate_rate": 0.0,
+    "reject_rate": 0.5714285714285714
+  },
+  {
+    "case": "grammar-72102993",
+    "arm": "dynamic",
+    "phase": "multi",
+    "runs": 3,
+    "last_run": 3,
+    "termination": "schedule_end",
+    "exact_endpoint": false,
+    "state_sha": "b5c4a875ac34ac2744b4c9d95acffe790dd6d243dd998731398fed540c77f2d8",
+    "paid": 110,
+    "committed_tokens": 49,
+    "verdicts": {
+      "accepted": 49,
+      "guard": 61
+    },
+    "work": {
+      "visits": 1142,
+      "waves": 2
+    },
+    "wall": 0.029009457997744903,
+    "verification_ipc": 0.0005832510069012642,
+    "signed_ops": 112,
+    "ept": 1.018181818181818,
+    "eps": 3860.8098092941445,
+    "derived": [
+      112,
+      182
+    ],
+    "reference_runs": 8,
+    "reference_commits": 98,
+    "visits": 1142,
+    "duplicate_rate": 0.0,
+    "reject_rate": 0.5545454545454546
+  },
+  {
+    "case": "grammar-72102993",
+    "arm": "dense",
+    "phase": "multi",
+    "runs": 8,
+    "last_run": 8,
+    "termination": "schedule_end",
+    "exact_endpoint": true,
+    "state_sha": "a21ac6083bc7733c4f4ab509ffc2a4c51a3c74002cd04a42b17da67b52f50f59",
+    "paid": 538,
+    "committed_tokens": 98,
+    "verdicts": {
+      "accepted": 98,
+      "guard": 440
+    },
+    "work": {
+      "interface_reads": 2596,
+      "typed_products": 2384116,
+      "visits": 451730,
+      "root_scored": 574,
+      "tuple_scored": 414916,
+      "waves": 8
+    },
+    "wall": 0.4236839590012096,
+    "verification_ipc": 0.0026559979596640915,
+    "signed_ops": 182,
+    "ept": 0.3382899628252788,
+    "eps": 429.5654724078907,
+    "derived": [
+      182,
+      182
+    ],
+    "reference_runs": 8,
+    "reference_commits": 98,
+    "visits": 454326,
+    "duplicate_rate": 0.0,
+    "reject_rate": 0.8178438661710037
+  },
+  {
+    "case": "grammar-72102993",
+    "arm": "stream",
+    "phase": "multi",
+    "runs": 8,
+    "last_run": 8,
+    "termination": "schedule_end",
+    "exact_endpoint": true,
+    "state_sha": "a21ac6083bc7733c4f4ab509ffc2a4c51a3c74002cd04a42b17da67b52f50f59",
+    "paid": 538,
+    "committed_tokens": 98,
+    "verdicts": {
+      "accepted": 98,
+      "guard": 440
+    },
+    "work": {
+      "interface_reads": 2596,
+      "typed_products": 2384116,
+      "visits": 50258,
+      "root_scored": 574,
+      "tuple_scored": 13444,
+      "waves": 8
+    },
+    "wall": 0.07259045900718775,
+    "verification_ipc": 0.0023913339828141034,
+    "signed_ops": 182,
+    "ept": 0.3382899628252788,
+    "eps": 2507.2165473148307,
+    "derived": [
+      182,
+      182
+    ],
+    "reference_runs": 8,
+    "reference_commits": 98,
+    "visits": 52854,
+    "duplicate_rate": 0.0,
+    "reject_rate": 0.8178438661710037
+  },
+  {
+    "case": "grammar-layout-832749",
+    "arm": "fixed",
+    "phase": "multi",
+    "runs": 2,
+    "last_run": 2,
+    "termination": "schedule_end",
+    "exact_endpoint": false,
+    "state_sha": "7e44558ff13e1bce32c1f4e990766913a9c9e0f3701235531f3c1e32f7ae4a68",
+    "paid": 6,
+    "committed_tokens": 6,
+    "verdicts": {
+      "accepted": 6
+    },
+    "work": {
+      "visits": 490,
+      "waves": 1
+    },
+    "wall": 0.018523749997257255,
+    "verification_ipc": 0.00012300099479034543,
+    "signed_ops": 15,
+    "ept": 2.5,
+    "eps": 809.7712397447059,
+    "derived": [
+      15,
+      151
+    ],
+    "reference_runs": 7,
+    "reference_commits": 85,
+    "visits": 490,
+    "duplicate_rate": 0.0,
+    "reject_rate": 0.0
+  },
+  {
+    "case": "grammar-layout-832749",
+    "arm": "dynamic",
+    "phase": "multi",
+    "runs": 5,
+    "last_run": 5,
+    "termination": "schedule_end",
+    "exact_endpoint": false,
+    "state_sha": "37722b8ec3a005031b4021866e71f290b2c3b735297b18159a5a7624b3e8e062",
+    "paid": 113,
+    "committed_tokens": 43,
+    "verdicts": {
+      "accepted": 43,
+      "guard": 70
+    },
+    "work": {
+      "visits": 6305,
+      "waves": 5
+    },
+    "wall": 0.06106491699756589,
+    "verification_ipc": 0.0009832100331550464,
+    "signed_ops": 95,
+    "ept": 0.8407079646017699,
+    "eps": 1555.721430093597,
+    "derived": [
+      95,
+      151
+    ],
+    "reference_runs": 7,
+    "reference_commits": 85,
+    "visits": 6305,
+    "duplicate_rate": 0.0,
+    "reject_rate": 0.6194690265486725
+  },
+  {
+    "case": "grammar-layout-832749",
+    "arm": "dense",
+    "phase": "multi",
+    "runs": 7,
+    "last_run": 7,
+    "termination": "schedule_end",
+    "exact_endpoint": true,
+    "state_sha": "adafa32b1faf682ae557432ae3fe314ee39bb21f828a44e9dfcac29f0201c429",
+    "paid": 611,
+    "committed_tokens": 85,
+    "verdicts": {
+      "accepted": 85,
+      "guard": 526
+    },
+    "work": {
+      "interface_reads": 2182,
+      "typed_products": 33856151,
+      "visits": 7548198,
+      "root_scored": 383,
+      "tuple_scored": 6919321,
+      "waves": 7
+    },
+    "wall": 6.56587550000404,
+    "verification_ipc": 0.0032750819955253974,
+    "signed_ops": 151,
+    "ept": 0.24713584288052373,
+    "eps": 22.9976946714733,
+    "derived": [
+      151,
+      151
+    ],
+    "reference_runs": 7,
+    "reference_commits": 85,
+    "visits": 7550380,
+    "duplicate_rate": 0.0,
+    "reject_rate": 0.8608837970540099
+  },
+  {
+    "case": "grammar-layout-832749",
+    "arm": "stream",
+    "phase": "multi",
+    "runs": 7,
+    "last_run": 7,
+    "termination": "schedule_end",
+    "exact_endpoint": true,
+    "state_sha": "adafa32b1faf682ae557432ae3fe314ee39bb21f828a44e9dfcac29f0201c429",
+    "paid": 611,
+    "committed_tokens": 85,
+    "verdicts": {
+      "accepted": 85,
+      "guard": 526
+    },
+    "work": {
+      "interface_reads": 2182,
+      "typed_products": 33856151,
+      "visits": 42138,
+      "root_scored": 383,
+      "tuple_scored": 10321,
+      "waves": 7
+    },
+    "wall": 0.07091466600832064,
+    "verification_ipc": 0.0028982090152567253,
+    "signed_ops": 151,
+    "ept": 0.24713584288052373,
+    "eps": 2129.319765565598,
+    "derived": [
+      151,
+      151
+    ],
+    "reference_runs": 7,
+    "reference_commits": 85,
+    "visits": 44320,
+    "duplicate_rate": 0.0,
+    "reject_rate": 0.8608837970540099
+  }
+]

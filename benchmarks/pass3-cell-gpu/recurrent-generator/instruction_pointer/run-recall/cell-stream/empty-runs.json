@@ -1,0 +1,807 @@
+[
+  {
+    "case": "fact",
+    "arm": "fixed",
+    "series": "cell-stream",
+    "observed_empty": 358,
+    "checks": [
+      {
+        "run": 13,
+        "teacher": 4,
+        "last_empty": false,
+        "next": [
+          0,
+          false
+        ]
+      },
+      {
+        "run": 385,
+        "teacher": 0,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "fact",
+    "arm": "dynamic",
+    "series": "cell-stream",
+    "observed_empty": 348,
+    "checks": [
+      {
+        "run": 12,
+        "teacher": 14,
+        "last_empty": false,
+        "next": [
+          6,
+          true
+        ]
+      },
+      {
+        "run": 367,
+        "teacher": 0,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "fact",
+    "arm": "dense",
+    "series": "cell-stream",
+    "observed_empty": 82,
+    "checks": [
+      {
+        "run": 19,
+        "teacher": 17,
+        "last_empty": false,
+        "next": [
+          0,
+          false
+        ]
+      },
+      {
+        "run": 124,
+        "teacher": 0,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "fact",
+    "arm": "stream",
+    "series": "cell-stream",
+    "observed_empty": 392,
+    "checks": [
+      {
+        "run": 19,
+        "teacher": 17,
+        "last_empty": false,
+        "next": [
+          0,
+          false
+        ]
+      },
+      {
+        "run": 464,
+        "teacher": 0,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "loopfact",
+    "arm": "fixed",
+    "series": "cell-stream",
+    "observed_empty": 355,
+    "checks": [
+      {
+        "run": 5,
+        "teacher": 1,
+        "last_empty": false,
+        "next": [
+          0,
+          false
+        ]
+      },
+      {
+        "run": 383,
+        "teacher": 0,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "loopfact",
+    "arm": "dynamic",
+    "series": "cell-stream",
+    "observed_empty": 357,
+    "checks": [
+      {
+        "run": 13,
+        "teacher": 18,
+        "last_empty": false,
+        "next": [
+          18,
+          true
+        ]
+      },
+      {
+        "run": 392,
+        "teacher": 0,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "loopfact",
+    "arm": "dense",
+    "series": "cell-stream",
+    "observed_empty": 85,
+    "checks": [
+      {
+        "run": 20,
+        "teacher": 13,
+        "last_empty": false,
+        "next": [
+          0,
+          false
+        ]
+      },
+      {
+        "run": 132,
+        "teacher": 0,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "loopfact",
+    "arm": "stream",
+    "series": "cell-stream",
+    "observed_empty": 403,
+    "checks": [
+      {
+        "run": 20,
+        "teacher": 13,
+        "last_empty": false,
+        "next": [
+          0,
+          false
+        ]
+      },
+      {
+        "run": 483,
+        "teacher": 0,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "sum-divisors",
+    "arm": "fixed",
+    "series": "cell-stream",
+    "observed_empty": 383,
+    "checks": [
+      {
+        "run": 5,
+        "teacher": 2,
+        "last_empty": false,
+        "next": [
+          1,
+          true
+        ]
+      },
+      {
+        "run": 432,
+        "teacher": 0,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "sum-divisors",
+    "arm": "dynamic",
+    "series": "cell-stream",
+    "observed_empty": 285,
+    "checks": [
+      {
+        "run": 5,
+        "teacher": 2,
+        "last_empty": false,
+        "next": [
+          1,
+          true
+        ]
+      },
+      {
+        "run": 303,
+        "teacher": 0,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "sum-divisors",
+    "arm": "dense",
+    "series": "cell-stream",
+    "observed_empty": 16,
+    "checks": [
+      {
+        "run": 5,
+        "teacher": 2,
+        "last_empty": false,
+        "next": [
+          1,
+          true
+        ]
+      },
+      {
+        "run": 33,
+        "teacher": 1,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "sum-divisors",
+    "arm": "stream",
+    "series": "cell-stream",
+    "observed_empty": 192,
+    "checks": [
+      {
+        "run": 5,
+        "teacher": 2,
+        "last_empty": false,
+        "next": [
+          1,
+          true
+        ]
+      },
+      {
+        "run": 291,
+        "teacher": 0,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "jacobi",
+    "arm": "fixed",
+    "series": "cell-stream",
+    "observed_empty": 416,
+    "checks": [
+      {
+        "run": 5,
+        "teacher": 6,
+        "last_empty": false,
+        "next": [
+          0,
+          false
+        ]
+      },
+      {
+        "run": 448,
+        "teacher": 0,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "jacobi",
+    "arm": "dynamic",
+    "series": "cell-stream",
+    "observed_empty": 414,
+    "checks": [
+      {
+        "run": 4,
+        "teacher": 5,
+        "last_empty": false,
+        "next": [
+          2,
+          true
+        ]
+      },
+      {
+        "run": 438,
+        "teacher": 0,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "jacobi",
+    "arm": "dense",
+    "series": "cell-stream",
+    "observed_empty": 4,
+    "checks": [
+      {
+        "run": 4,
+        "teacher": 5,
+        "last_empty": false,
+        "next": [
+          2,
+          true
+        ]
+      },
+      {
+        "run": 10,
+        "teacher": 0,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "jacobi",
+    "arm": "stream",
+    "series": "cell-stream",
+    "observed_empty": 89,
+    "checks": [
+      {
+        "run": 4,
+        "teacher": 5,
+        "last_empty": false,
+        "next": [
+          2,
+          true
+        ]
+      },
+      {
+        "run": 141,
+        "teacher": 0,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "cyk801",
+    "arm": "fixed",
+    "series": "cell-stream",
+    "observed_empty": 1,
+    "checks": [
+      {
+        "run": 2,
+        "teacher": 634,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "cyk801",
+    "arm": "dynamic",
+    "series": "cell-stream",
+    "observed_empty": 1,
+    "checks": [
+      {
+        "run": 2,
+        "teacher": 634,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "cyk801",
+    "arm": "dense",
+    "series": "cell-stream",
+    "observed_empty": 0,
+    "checks": []
+  },
+  {
+    "case": "cyk801",
+    "arm": "stream",
+    "series": "cell-stream",
+    "observed_empty": 0,
+    "checks": []
+  },
+  {
+    "case": "grammar-17122",
+    "arm": "fixed",
+    "series": "cell-stream",
+    "observed_empty": 1,
+    "checks": [
+      {
+        "run": 3,
+        "teacher": 4,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "grammar-17122",
+    "arm": "dynamic",
+    "series": "cell-stream",
+    "observed_empty": 1,
+    "checks": [
+      {
+        "run": 5,
+        "teacher": 2,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "grammar-17122",
+    "arm": "dense",
+    "series": "cell-stream",
+    "observed_empty": 1,
+    "checks": [
+      {
+        "run": 6,
+        "teacher": 0,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "grammar-17122",
+    "arm": "stream",
+    "series": "cell-stream",
+    "observed_empty": 1,
+    "checks": [
+      {
+        "run": 6,
+        "teacher": 0,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "grammar-91627433",
+    "arm": "fixed",
+    "series": "cell-stream",
+    "observed_empty": 1,
+    "checks": [
+      {
+        "run": 2,
+        "teacher": 50,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "grammar-91627433",
+    "arm": "dynamic",
+    "series": "cell-stream",
+    "observed_empty": 1,
+    "checks": [
+      {
+        "run": 3,
+        "teacher": 8,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "grammar-91627433",
+    "arm": "dense",
+    "series": "cell-stream",
+    "observed_empty": 1,
+    "checks": [
+      {
+        "run": 8,
+        "teacher": 0,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "grammar-91627433",
+    "arm": "stream",
+    "series": "cell-stream",
+    "observed_empty": 1,
+    "checks": [
+      {
+        "run": 8,
+        "teacher": 0,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "grammar-72102993",
+    "arm": "fixed",
+    "series": "cell-stream",
+    "observed_empty": 1,
+    "checks": [
+      {
+        "run": 2,
+        "teacher": 32,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "grammar-72102993",
+    "arm": "dynamic",
+    "series": "cell-stream",
+    "observed_empty": 1,
+    "checks": [
+      {
+        "run": 3,
+        "teacher": 6,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "grammar-72102993",
+    "arm": "dense",
+    "series": "cell-stream",
+    "observed_empty": 1,
+    "checks": [
+      {
+        "run": 8,
+        "teacher": 0,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "grammar-72102993",
+    "arm": "stream",
+    "series": "cell-stream",
+    "observed_empty": 1,
+    "checks": [
+      {
+        "run": 8,
+        "teacher": 0,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "grammar-layout-832749",
+    "arm": "fixed",
+    "series": "cell-stream",
+    "observed_empty": 1,
+    "checks": [
+      {
+        "run": 2,
+        "teacher": 36,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "grammar-layout-832749",
+    "arm": "dynamic",
+    "series": "cell-stream",
+    "observed_empty": 1,
+    "checks": [
+      {
+        "run": 5,
+        "teacher": 2,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "grammar-layout-832749",
+    "arm": "dense",
+    "series": "cell-stream",
+    "observed_empty": 1,
+    "checks": [
+      {
+        "run": 7,
+        "teacher": 0,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "grammar-layout-832749",
+    "arm": "stream",
+    "series": "cell-stream",
+    "observed_empty": 1,
+    "checks": [
+      {
+        "run": 7,
+        "teacher": 0,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "cyk801",
+    "arm": "stream",
+    "series": "cell-stream-long",
+    "observed_empty": 1,
+    "checks": [
+      {
+        "run": 43,
+        "teacher": 0,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "sum-divisors",
+    "arm": "stream",
+    "series": "cell-stream-long",
+    "observed_empty": 434,
+    "checks": [
+      {
+        "run": 5,
+        "teacher": 2,
+        "last_empty": false,
+        "next": [
+          1,
+          true
+        ]
+      },
+      {
+        "run": 547,
+        "teacher": 0,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "case": "jacobi",
+    "arm": "stream",
+    "series": "cell-stream-long",
+    "observed_empty": 245,
+    "checks": [
+      {
+        "run": 4,
+        "teacher": 5,
+        "last_empty": false,
+        "next": [
+          2,
+          true
+        ]
+      },
+      {
+        "run": 394,
+        "teacher": null,
+        "last_empty": true,
+        "next": [
+          0,
+          false
+        ]
+      }
+    ]
+  }
+]

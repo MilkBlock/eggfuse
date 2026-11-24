@@ -1,0 +1,55 @@
+{
+  "device": "mps",
+  "steps": 140,
+  "records": {
+    "fact": {
+      "runs": 48,
+      "teacher": 566,
+      "examples": 413,
+      "multiple": 392
+    },
+    "loopfact": {
+      "runs": 48,
+      "teacher": 425,
+      "examples": 431,
+      "multiple": 374
+    },
+    "sum-divisors": {
+      "runs": 48,
+      "teacher": 2404,
+      "examples": 785,
+      "multiple": 749
+    },
+    "jacobi": {
+      "runs": 48,
+      "teacher": 4670,
+      "examples": 886,
+      "multiple": 901
+    },
+    "grammar-17118": {
+      "runs": 5,
+      "teacher": 72,
+      "examples": 22,
+      "multiple": 33
+    },
+    "grammar-17119": {
+      "runs": 8,
+      "teacher": 136,
+      "examples": 32,
+      "multiple": 34
+    },
+    "grammar-17120": {
+      "runs": 7,
+      "teacher": 63,
+      "examples": 26,
+      "multiple": 24
+    },
+    "grammar-17121": {
+      "runs": 6,
+      "teacher": 47,
+      "examples": 20,
+      "multiple": 22
+    }
+  },
+  "examples": 2615
+}

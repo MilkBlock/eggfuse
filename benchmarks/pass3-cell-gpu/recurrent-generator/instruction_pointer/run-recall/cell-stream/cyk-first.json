@@ -1,0 +1,148 @@
+[
+  {
+    "arm": "fixed",
+    "phase": "dagger",
+    "paid": 6,
+    "committed_tokens": 6,
+    "verdicts": {
+      "accepted": 6
+    },
+    "work": {
+      "visits": 563,
+      "waves": 1
+    },
+    "wall": 0.03366958300466649,
+    "ept": 2.3333333333333335,
+    "eps": 415.8055654582846
+  },
+  {
+    "arm": "dynamic",
+    "phase": "dagger",
+    "paid": 64,
+    "committed_tokens": 64,
+    "verdicts": {
+      "accepted": 64
+    },
+    "work": {
+      "visits": 225,
+      "waves": 1
+    },
+    "wall": 0.027710916998330504,
+    "ept": 2.03125,
+    "eps": 4691.291883550158
+  },
+  {
+    "arm": "dense",
+    "phase": "dagger",
+    "paid": 2220,
+    "committed_tokens": 1445,
+    "verdicts": {
+      "accepted": 1445,
+      "binding": 775
+    },
+    "work": {
+      "interface_reads": 818,
+      "typed_products": 13617,
+      "visits": 13634,
+      "root_scored": 17,
+      "tuple_scored": 13617,
+      "waves": 9
+    },
+    "wall": 0.06973429200297687,
+    "ept": 1.3067567567567568,
+    "eps": 41600.76651923504
+  },
+  {
+    "arm": "stream",
+    "phase": "dagger",
+    "paid": 2220,
+    "committed_tokens": 1445,
+    "verdicts": {
+      "accepted": 1445,
+      "binding": 775
+    },
+    "work": {
+      "interface_reads": 818,
+      "typed_products": 13617,
+      "visits": 13634,
+      "root_scored": 17,
+      "tuple_scored": 13617,
+      "waves": 9
+    },
+    "wall": 0.08744445801130496,
+    "ept": 1.3067567567567568,
+    "eps": 33175.344281108744
+  },
+  {
+    "arm": "fixed",
+    "phase": "multi",
+    "paid": 6,
+    "committed_tokens": 6,
+    "verdicts": {
+      "accepted": 6
+    },
+    "work": {
+      "visits": 1539,
+      "waves": 1
+    },
+    "wall": 0.030792375007877126,
+    "ept": 2.5,
+    "eps": 487.1335840825135
+  },
+  {
+    "arm": "dynamic",
+    "phase": "multi",
+    "paid": 64,
+    "committed_tokens": 64,
+    "verdicts": {
+      "accepted": 64
+    },
+    "work": {
+      "visits": 609,
+      "waves": 1
+    },
+    "wall": 0.027766166007495485,
+    "ept": 2.015625,
+    "eps": 4645.942114052636
+  },
+  {
+    "arm": "dense",
+    "phase": "multi",
+    "paid": 1445,
+    "committed_tokens": 1445,
+    "verdicts": {
+      "accepted": 1445
+    },
+    "work": {
+      "interface_reads": 818,
+      "typed_products": 13617,
+      "visits": 13634,
+      "root_scored": 17,
+      "tuple_scored": 13617,
+      "waves": 6
+    },
+    "wall": 0.0670029169996269,
+    "ept": 2.0076124567474047,
+    "eps": 43296.62244430573
+  },
+  {
+    "arm": "stream",
+    "phase": "multi",
+    "paid": 1445,
+    "committed_tokens": 1445,
+    "verdicts": {
+      "accepted": 1445
+    },
+    "work": {
+      "interface_reads": 818,
+      "typed_products": 13617,
+      "visits": 13634,
+      "root_scored": 17,
+      "tuple_scored": 13617,
+      "waves": 6
+    },
+    "wall": 0.06767441699048504,
+    "ept": 2.0076124567474047,
+    "eps": 42867.0113317397
+  }
+]

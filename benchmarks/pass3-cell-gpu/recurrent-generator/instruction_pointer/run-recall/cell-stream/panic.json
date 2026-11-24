@@ -1,0 +1,109 @@
+{
+  "mismatch": [
+    [
+      [
+        {
+          "eq": "Cell(554050781279)",
+          "sort": "Expr"
+        },
+        {
+          "eq": "Cell(4)",
+          "sort": "Type"
+        },
+        {
+          "sort": "String",
+          "value": "Mul"
+        },
+        {
+          "eq": "Cell(1425929142283)",
+          "sort": "___ExpectTypeSort"
+        }
+      ],
+      [
+        {
+          "eq": "Cell(554050781279)",
+          "sort": "Expr"
+        },
+        {
+          "eq": "Cell(755914244105)",
+          "sort": "Type"
+        },
+        {
+          "eq": "Cell(755914244106)",
+          "sort": "___HasTypeSort"
+        }
+      ]
+    ]
+  ],
+  "exact_continuation": {
+    "prefix_sha": "4d5f10cb28817f8c79cb942730605cffc9ec7664c1808d02801d9407e5afabac",
+    "result": {
+      "source_error": "source panic (Run 177, rule 351, op 0, (rule ((ExpectType e expected msg)\n       (HasType e actual)\n       (!= expected actual))\n      ((panic 'type mismatch- check RUST_LOG=info for expressions that mismatched'))\n        :ruleset error-checking ))"
+    },
+    "run": 177
+  },
+  "isolated": [
+    {
+      "token": 723,
+      "parents": [
+        {
+          "address": {
+            "token": 709,
+            "op": 2
+          },
+          "version": 166
+        },
+        {
+          "address": {
+            "token": 113,
+            "op": 3
+          },
+          "version": 12
+        }
+      ],
+      "source_asserted": true
+    },
+    {
+      "token": 724,
+      "parents": [
+        {
+          "address": {
+            "token": 713,
+            "op": 2
+          },
+          "version": 166
+        },
+        {
+          "address": {
+            "token": 105,
+            "op": 3
+          },
+          "version": 13
+        }
+      ],
+      "source_asserted": false
+    },
+    {
+      "token": 725,
+      "parents": [
+        {
+          "address": {
+            "token": 713,
+            "op": 1
+          },
+          "version": 166
+        },
+        {
+          "address": {
+            "token": 80,
+            "op": 1
+          },
+          "version": 9
+        }
+      ],
+      "source_asserted": false
+    }
+  ],
+  "error": "Error: \"source panic (Run 177, rule 351, op 0, (rule ((ExpectType e expected msg)\\n       (HasType e actual)\\n       (!= expected actual))\\n      ((panic 'type mismatch- check RUST_LOG=info for expressions that mismatched'))\\n        :ruleset error-checking ))\"\n",
+  "completed_runs": 176
+}
