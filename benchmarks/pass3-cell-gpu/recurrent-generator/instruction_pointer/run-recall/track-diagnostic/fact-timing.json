@@ -1,0 +1,281 @@
+{
+  "mode": "shadow, paired audited CPU observations",
+  "rounds": [
+    {
+      "order": "ABCD",
+      "native": {
+        "reference": 0.14616591698722914,
+        "replay": 0.14585208300559316
+      },
+      "arms": {
+        "A": {
+          "generation_wall": 0.46688999999605585,
+          "audited_replay_wall": 0.1612466249935096,
+          "generation_plus_replay": 0.6281366249895655,
+          "phases": {
+            "store": 0.0022619950177613646,
+            "index": 0.0037928072415525094,
+            "prepare": 0.3418766869872343,
+            "retrieval": 0.013132383886841126,
+            "rank": 0.00037626890116371214
+          },
+          "teacher_and_probe_verify_seconds": 0.001478776,
+          "reference_repair_seconds": 0.00028192400000000235,
+          "prior_union_index_seconds": 0.0012951240059919655
+        },
+        "B": {
+          "generation_wall": 0.45753300000797026,
+          "audited_replay_wall": 0.15832779099582694,
+          "generation_plus_replay": 0.6158607910037972,
+          "phases": {
+            "store": 0.00241778812778648,
+            "index": 0.0040028488874668255,
+            "prepare": 0.3513717526511755,
+            "retrieval": 0.011923309721169062,
+            "rank": 0.0006830269267084077
+          },
+          "teacher_and_probe_verify_seconds": 0.001533474,
+          "reference_repair_seconds": 0.0002799830000000021,
+          "prior_union_index_seconds": 0.0013130849547451362
+        },
+        "C": {
+          "generation_wall": 0.8258345829963218,
+          "audited_replay_wall": 0.15685091700288467,
+          "generation_plus_replay": 0.9826854999992065,
+          "phases": {
+            "store": 0.002495628170436248,
+            "index": 0.004290517637855373,
+            "prepare": 0.7071128134703031,
+            "retrieval": 0.013335874551557936,
+            "rank": 0.0052567371021723375
+          },
+          "teacher_and_probe_verify_seconds": 0.001560804,
+          "reference_repair_seconds": 0.0002803750000000021,
+          "prior_union_index_seconds": 0.0013624589773826301
+        },
+        "D": {
+          "generation_wall": 1.0868333340040408,
+          "audited_replay_wall": 0.15413925000757445,
+          "generation_plus_replay": 1.2409725840116153,
+          "phases": {
+            "store": 0.0026082043477799743,
+            "index": 0.11966317794576753,
+            "prepare": 0.6863691574690165,
+            "retrieval": 0.11859853693749756,
+            "rank": 0.016896251079742797
+          },
+          "teacher_and_probe_verify_seconds": 0.001393696,
+          "reference_repair_seconds": 0.0002717230000000023,
+          "prior_union_index_seconds": 0.024871415022062138
+        }
+      }
+    },
+    {
+      "order": "BCDA",
+      "native": {
+        "replay": 0.15146816699416377,
+        "reference": 0.14803920900158118
+      },
+      "arms": {
+        "B": {
+          "generation_wall": 0.4181628759979503,
+          "audited_replay_wall": 0.16700799998943694,
+          "generation_plus_replay": 0.5851708759873873,
+          "phases": {
+            "store": 0.0022195150959305465,
+            "index": 0.003964430914493278,
+            "prepare": 0.3160948778677266,
+            "retrieval": 0.01110761747986544,
+            "rank": 0.0005931017803959548
+          },
+          "teacher_and_probe_verify_seconds": 0.001531207,
+          "reference_repair_seconds": 0.00028813500000000224,
+          "prior_union_index_seconds": 0.0014002499810885638
+        },
+        "C": {
+          "generation_wall": 0.8291839999874355,
+          "audited_replay_wall": 0.15972554200561717,
+          "generation_plus_replay": 0.9889095419930527,
+          "phases": {
+            "store": 0.0023104802530724555,
+            "index": 0.00410320570517797,
+            "prepare": 0.6861242095765192,
+            "retrieval": 0.012447133893147111,
+            "rank": 0.004590199969243258
+          },
+          "teacher_and_probe_verify_seconds": 0.001473806,
+          "reference_repair_seconds": 0.00028420700000000203,
+          "prior_union_index_seconds": 0.0014004150143591687
+        },
+        "D": {
+          "generation_wall": 1.0323577079980168,
+          "audited_replay_wall": 0.17264737500227056,
+          "generation_plus_replay": 1.2050050830002874,
+          "phases": {
+            "store": 0.002526479118387215,
+            "index": 0.08661428204504773,
+            "prepare": 0.6747923082875786,
+            "retrieval": 0.12930910698196385,
+            "rank": 0.016566991136642173
+          },
+          "teacher_and_probe_verify_seconds": 0.001516292,
+          "reference_repair_seconds": 0.00031012300000000205,
+          "prior_union_index_seconds": 0.02534162600932177
+        },
+        "A": {
+          "generation_wall": 0.50480474899814,
+          "audited_replay_wall": 0.1610902079992229,
+          "generation_plus_replay": 0.6658949569973629,
+          "phases": {
+            "store": 0.0023530448379460722,
+            "index": 0.0039896001981105655,
+            "prepare": 0.3347389266709797,
+            "retrieval": 0.012068770985933952,
+            "rank": 0.0003936980647267774
+          },
+          "teacher_and_probe_verify_seconds": 0.001517083,
+          "reference_repair_seconds": 0.00028514300000000224,
+          "prior_union_index_seconds": 0.0014183320017764345
+        }
+      }
+    },
+    {
+      "order": "CDAB",
+      "native": {
+        "reference": 0.14800050000485498,
+        "replay": 0.15087229100754485
+      },
+      "arms": {
+        "C": {
+          "generation_wall": 0.7925522090081358,
+          "audited_replay_wall": 0.16713129200797994,
+          "generation_plus_replay": 0.9596835010161158,
+          "phases": {
+            "store": 0.0023454769689124078,
+            "index": 0.004178514136583544,
+            "prepare": 0.6731337139208335,
+            "retrieval": 0.012699807586614043,
+            "rank": 0.004764569210237823
+          },
+          "teacher_and_probe_verify_seconds": 0.001495857,
+          "reference_repair_seconds": 0.0002889100000000021,
+          "prior_union_index_seconds": 0.001430957971024327
+        },
+        "D": {
+          "generation_wall": 1.1386250409996137,
+          "audited_replay_wall": 0.1996694160043262,
+          "generation_plus_replay": 1.33829445700394,
+          "phases": {
+            "store": 0.002602431195555255,
+            "index": 0.09297557096579112,
+            "prepare": 0.6937735073588556,
+            "retrieval": 0.11624987328832503,
+            "rank": 0.01678551730583422
+          },
+          "teacher_and_probe_verify_seconds": 0.001427102,
+          "reference_repair_seconds": 0.0002788000000000022,
+          "prior_union_index_seconds": 0.025518628041027114
+        },
+        "A": {
+          "generation_wall": 0.44259004198829643,
+          "audited_replay_wall": 0.16167549999954645,
+          "generation_plus_replay": 0.6042655419878429,
+          "phases": {
+            "store": 0.002428231033263728,
+            "index": 0.004148567968513817,
+            "prepare": 0.32290242580347694,
+            "retrieval": 0.011835607816465199,
+            "rank": 0.0003694760816870257
+          },
+          "teacher_and_probe_verify_seconds": 0.0015895,
+          "reference_repair_seconds": 0.00029398000000000184,
+          "prior_union_index_seconds": 0.001369373028865084
+        },
+        "B": {
+          "generation_wall": 0.43523183300567325,
+          "audited_replay_wall": 0.16185608399973717,
+          "generation_plus_replay": 0.5970879170054104,
+          "phases": {
+            "store": 0.0023409068380715325,
+            "index": 0.0040328569448320195,
+            "prepare": 0.3284211910649901,
+            "retrieval": 0.012315705840592273,
+            "rank": 0.0007080231007421389
+          },
+          "teacher_and_probe_verify_seconds": 0.001547035,
+          "reference_repair_seconds": 0.0003011770000000021,
+          "prior_union_index_seconds": 0.001394585007801652
+        }
+      }
+    },
+    {
+      "order": "DABC",
+      "native": {
+        "replay": 0.15230158298800234,
+        "reference": 0.15253125000162981
+      },
+      "arms": {
+        "D": {
+          "generation_wall": 1.1311310840101214,
+          "audited_replay_wall": 0.15576770799816586,
+          "generation_plus_replay": 1.2868987920082873,
+          "phases": {
+            "store": 0.00275583281472791,
+            "index": 0.1582435260352213,
+            "prepare": 0.6969416310021188,
+            "retrieval": 0.11348255985649303,
+            "rank": 0.017136240290710703
+          },
+          "teacher_and_probe_verify_seconds": 0.001463805,
+          "reference_repair_seconds": 0.00030570800000000235,
+          "prior_union_index_seconds": 0.09454425002331845
+        },
+        "A": {
+          "generation_wall": 0.4429155410034582,
+          "audited_replay_wall": 0.15345154200622346,
+          "generation_plus_replay": 0.5963670830096817,
+          "phases": {
+            "store": 0.002321602965821512,
+            "index": 0.003862598241539672,
+            "prepare": 0.32258037479186896,
+            "retrieval": 0.011783804307924584,
+            "rank": 0.0003781005507335067
+          },
+          "teacher_and_probe_verify_seconds": 0.001479664,
+          "reference_repair_seconds": 0.0002823350000000021,
+          "prior_union_index_seconds": 0.0014169140195008367
+        },
+        "B": {
+          "generation_wall": 0.4303608749905834,
+          "audited_replay_wall": 0.1536758329893928,
+          "generation_plus_replay": 0.5840367079799762,
+          "phases": {
+            "store": 0.0023312649864237756,
+            "index": 0.004044479937874712,
+            "prepare": 0.32590353312843945,
+            "retrieval": 0.011934039095649496,
+            "rank": 0.0007276610849658027
+          },
+          "teacher_and_probe_verify_seconds": 0.001496208,
+          "reference_repair_seconds": 0.0002858450000000024,
+          "prior_union_index_seconds": 0.001448088005417958
+        },
+        "C": {
+          "generation_wall": 0.918369666003855,
+          "audited_replay_wall": 0.1529490410030121,
+          "generation_plus_replay": 1.071318707006867,
+          "phases": {
+            "store": 0.0024038799747359008,
+            "index": 0.004123481136048213,
+            "prepare": 0.7378755259560421,
+            "retrieval": 0.018979750951984897,
+            "rank": 0.004726402068627067
+          },
+          "teacher_and_probe_verify_seconds": 0.001479443,
+          "reference_repair_seconds": 0.00028845000000000205,
+          "prior_union_index_seconds": 0.0014507100131595507
+        }
+      }
+    }
+  ]
+}

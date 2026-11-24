@@ -1,0 +1,579 @@
+{
+  "track": "Neural Compilation",
+  "mode": "offline heuristic controls",
+  "depth": 10,
+  "training_layouts": 8276,
+  "greedy_positive": 185,
+  "cases": {
+    "fact": {
+      "frozen": {
+        "targets": 84,
+        "became_low": 2,
+        "external_parents_saved": 3,
+        "after": {
+          "3": 58,
+          "4": 22,
+          "5": 2,
+          "1": 1,
+          "2": 1
+        },
+        "unit_boundary": {
+          "3": 39,
+          "4": 33,
+          "5": 8,
+          "8": 1,
+          "6": 1,
+          "2": 1,
+          "1": 1
+        },
+        "unit_low": 2,
+        "all_low": 1353,
+        "instances": 331,
+        "used_layouts": 111,
+        "catalog_size": 4096
+      },
+      "frequency_64": {
+        "targets": 84,
+        "became_low": 0,
+        "external_parents_saved": 0,
+        "after": {
+          "3": 60,
+          "4": 22,
+          "5": 2
+        },
+        "unit_boundary": {
+          "3": 54,
+          "4": 28,
+          "5": 2
+        },
+        "unit_low": 0,
+        "all_low": 1351,
+        "instances": 225,
+        "used_layouts": 27,
+        "catalog_size": 64
+      },
+      "chain_frequency_64": {
+        "targets": 84,
+        "became_low": 0,
+        "external_parents_saved": 0,
+        "after": {
+          "3": 60,
+          "4": 22,
+          "5": 2
+        },
+        "unit_boundary": {
+          "3": 54,
+          "4": 28,
+          "5": 2
+        },
+        "unit_low": 0,
+        "all_low": 1351,
+        "instances": 243,
+        "used_layouts": 27,
+        "catalog_size": 64
+      },
+      "greedy_64": {
+        "targets": 84,
+        "became_low": 6,
+        "external_parents_saved": 9,
+        "after": {
+          "3": 54,
+          "4": 22,
+          "5": 2,
+          "1": 3,
+          "2": 3
+        },
+        "unit_boundary": {
+          "3": 53,
+          "4": 23,
+          "5": 2,
+          "2": 3,
+          "1": 3
+        },
+        "unit_low": 6,
+        "all_low": 1364,
+        "instances": 22,
+        "used_layouts": 8,
+        "catalog_size": 64
+      },
+      "frequency_4096": {
+        "targets": 84,
+        "became_low": 3,
+        "external_parents_saved": 4,
+        "after": {
+          "3": 57,
+          "4": 22,
+          "5": 2,
+          "2": 2,
+          "1": 1
+        },
+        "unit_boundary": {
+          "3": 27,
+          "5": 9,
+          "4": 34,
+          "6": 6,
+          "7": 1,
+          "2": 6,
+          "1": 1
+        },
+        "unit_low": 7,
+        "all_low": 1360,
+        "instances": 373,
+        "used_layouts": 140,
+        "catalog_size": 4096
+      },
+      "chain_frequency_4096": {
+        "targets": 84,
+        "became_low": 1,
+        "external_parents_saved": 1,
+        "after": {
+          "3": 59,
+          "4": 22,
+          "5": 2,
+          "2": 1
+        },
+        "unit_boundary": {
+          "3": 38,
+          "4": 30,
+          "5": 7,
+          "6": 1,
+          "7": 1,
+          "2": 7
+        },
+        "unit_low": 7,
+        "all_low": 1357,
+        "instances": 401,
+        "used_layouts": 98,
+        "catalog_size": 1784
+      },
+      "greedy_4096": {
+        "targets": 84,
+        "became_low": 3,
+        "external_parents_saved": 4,
+        "after": {
+          "3": 57,
+          "4": 22,
+          "5": 2,
+          "2": 2,
+          "1": 1
+        },
+        "unit_boundary": {
+          "3": 27,
+          "5": 9,
+          "4": 34,
+          "6": 6,
+          "7": 1,
+          "2": 6,
+          "1": 1
+        },
+        "unit_low": 7,
+        "all_low": 1360,
+        "instances": 373,
+        "used_layouts": 140,
+        "catalog_size": 4096
+      }
+    },
+    "loopfact": {
+      "frozen": {
+        "targets": 79,
+        "became_low": 5,
+        "external_parents_saved": 7,
+        "after": {
+          "3": 46,
+          "4": 17,
+          "5": 8,
+          "1": 1,
+          "2": 4,
+          "6": 3
+        },
+        "unit_boundary": {
+          "3": 27,
+          "5": 16,
+          "4": 24,
+          "2": 4,
+          "8": 1,
+          "6": 6,
+          "1": 1
+        },
+        "unit_low": 5,
+        "all_low": 1132,
+        "instances": 301,
+        "used_layouts": 124,
+        "catalog_size": 4096
+      },
+      "frequency_64": {
+        "targets": 79,
+        "became_low": 0,
+        "external_parents_saved": 0,
+        "after": {
+          "3": 50,
+          "4": 18,
+          "5": 8,
+          "6": 3
+        },
+        "unit_boundary": {
+          "3": 39,
+          "5": 13,
+          "4": 24,
+          "6": 3
+        },
+        "unit_low": 0,
+        "all_low": 1127,
+        "instances": 215,
+        "used_layouts": 30,
+        "catalog_size": 64
+      },
+      "chain_frequency_64": {
+        "targets": 79,
+        "became_low": 0,
+        "external_parents_saved": 0,
+        "after": {
+          "3": 50,
+          "4": 18,
+          "5": 8,
+          "6": 3
+        },
+        "unit_boundary": {
+          "3": 39,
+          "5": 13,
+          "4": 24,
+          "6": 3
+        },
+        "unit_low": 0,
+        "all_low": 1127,
+        "instances": 221,
+        "used_layouts": 30,
+        "catalog_size": 64
+      },
+      "greedy_64": {
+        "targets": 79,
+        "became_low": 5,
+        "external_parents_saved": 7,
+        "after": {
+          "3": 45,
+          "4": 18,
+          "5": 9,
+          "1": 1,
+          "2": 4,
+          "6": 2
+        },
+        "unit_boundary": {
+          "3": 42,
+          "5": 8,
+          "4": 20,
+          "2": 3,
+          "1": 2,
+          "6": 4
+        },
+        "unit_low": 5,
+        "all_low": 1144,
+        "instances": 25,
+        "used_layouts": 11,
+        "catalog_size": 64
+      },
+      "frequency_4096": {
+        "targets": 79,
+        "became_low": 0,
+        "external_parents_saved": 0,
+        "after": {
+          "3": 50,
+          "4": 18,
+          "5": 8,
+          "6": 3
+        },
+        "unit_boundary": {
+          "3": 22,
+          "5": 18,
+          "4": 24,
+          "6": 9,
+          "7": 1,
+          "2": 2,
+          "12": 3
+        },
+        "unit_low": 2,
+        "all_low": 1130,
+        "instances": 338,
+        "used_layouts": 153,
+        "catalog_size": 4096
+      },
+      "chain_frequency_4096": {
+        "targets": 79,
+        "became_low": 0,
+        "external_parents_saved": 1,
+        "after": {
+          "3": 51,
+          "4": 17,
+          "5": 8,
+          "6": 3
+        },
+        "unit_boundary": {
+          "3": 31,
+          "5": 11,
+          "4": 28,
+          "6": 4,
+          "7": 1,
+          "2": 2,
+          "9": 2
+        },
+        "unit_low": 2,
+        "all_low": 1127,
+        "instances": 357,
+        "used_layouts": 118,
+        "catalog_size": 1784
+      },
+      "greedy_4096": {
+        "targets": 79,
+        "became_low": 0,
+        "external_parents_saved": 0,
+        "after": {
+          "3": 50,
+          "4": 18,
+          "5": 8,
+          "6": 3
+        },
+        "unit_boundary": {
+          "3": 22,
+          "5": 18,
+          "4": 24,
+          "6": 9,
+          "7": 1,
+          "2": 2,
+          "12": 3
+        },
+        "unit_low": 2,
+        "all_low": 1130,
+        "instances": 338,
+        "used_layouts": 153,
+        "catalog_size": 4096
+      }
+    },
+    "sum-divisors": {
+      "frozen": {
+        "targets": 911,
+        "became_low": 48,
+        "external_parents_saved": 56,
+        "after": {
+          "3": 628,
+          "4": 136,
+          "5": 22,
+          "1": 5,
+          "2": 43,
+          "6": 44,
+          "7": 3,
+          "8": 27,
+          "12": 2,
+          "11": 1
+        },
+        "unit_boundary": {
+          "4": 170,
+          "5": 193,
+          "3": 405,
+          "2": 37,
+          "6": 61,
+          "7": 9,
+          "8": 28,
+          "1": 5,
+          "12": 2,
+          "11": 1
+        },
+        "unit_low": 42,
+        "all_low": 13819,
+        "instances": 3108,
+        "used_layouts": 324,
+        "catalog_size": 4096
+      },
+      "frequency_64": {
+        "targets": 911,
+        "became_low": 0,
+        "external_parents_saved": 0,
+        "after": {
+          "3": 675,
+          "4": 137,
+          "5": 22,
+          "6": 44,
+          "7": 2,
+          "8": 28,
+          "12": 3
+        },
+        "unit_boundary": {
+          "4": 163,
+          "5": 168,
+          "3": 503,
+          "6": 44,
+          "7": 2,
+          "8": 28,
+          "12": 3
+        },
+        "unit_low": 0,
+        "all_low": 13753,
+        "instances": 1929,
+        "used_layouts": 36,
+        "catalog_size": 64
+      },
+      "chain_frequency_64": {
+        "targets": 911,
+        "became_low": 1,
+        "external_parents_saved": 1,
+        "after": {
+          "3": 674,
+          "4": 137,
+          "5": 22,
+          "6": 44,
+          "7": 2,
+          "2": 1,
+          "8": 28,
+          "12": 3
+        },
+        "unit_boundary": {
+          "4": 163,
+          "5": 172,
+          "3": 498,
+          "6": 44,
+          "7": 2,
+          "8": 28,
+          "12": 3,
+          "2": 1
+        },
+        "unit_low": 1,
+        "all_low": 13759,
+        "instances": 2210,
+        "used_layouts": 39,
+        "catalog_size": 64
+      },
+      "greedy_64": {
+        "targets": 911,
+        "became_low": 72,
+        "external_parents_saved": 84,
+        "after": {
+          "3": 609,
+          "4": 131,
+          "5": 23,
+          "2": 67,
+          "1": 5,
+          "6": 43,
+          "7": 2,
+          "8": 28,
+          "12": 3
+        },
+        "unit_boundary": {
+          "4": 131,
+          "3": 600,
+          "2": 67,
+          "5": 21,
+          "6": 46,
+          "7": 3,
+          "8": 31,
+          "9": 4,
+          "12": 3,
+          "1": 5
+        },
+        "unit_low": 72,
+        "all_low": 13938,
+        "instances": 206,
+        "used_layouts": 23,
+        "catalog_size": 64
+      },
+      "frequency_4096": {
+        "targets": 911,
+        "became_low": 48,
+        "external_parents_saved": 58,
+        "after": {
+          "3": 630,
+          "4": 134,
+          "5": 23,
+          "1": 4,
+          "2": 44,
+          "6": 43,
+          "7": 3,
+          "8": 27,
+          "12": 2,
+          "11": 1
+        },
+        "unit_boundary": {
+          "4": 192,
+          "5": 174,
+          "6": 130,
+          "7": 9,
+          "3": 325,
+          "2": 36,
+          "8": 33,
+          "12": 2,
+          "11": 1,
+          "1": 7,
+          "10": 2
+        },
+        "unit_low": 43,
+        "all_low": 13826,
+        "instances": 3267,
+        "used_layouts": 485,
+        "catalog_size": 4096
+      },
+      "chain_frequency_4096": {
+        "targets": 911,
+        "became_low": 1,
+        "external_parents_saved": 9,
+        "after": {
+          "3": 675,
+          "4": 143,
+          "5": 15,
+          "6": 44,
+          "7": 2,
+          "2": 1,
+          "8": 28,
+          "12": 3
+        },
+        "unit_boundary": {
+          "4": 210,
+          "5": 158,
+          "3": 427,
+          "7": 5,
+          "6": 62,
+          "8": 29,
+          "9": 2,
+          "12": 3,
+          "2": 15
+        },
+        "unit_low": 15,
+        "all_low": 13764,
+        "instances": 3570,
+        "used_layouts": 296,
+        "catalog_size": 1784
+      },
+      "greedy_4096": {
+        "targets": 911,
+        "became_low": 49,
+        "external_parents_saved": 60,
+        "after": {
+          "3": 629,
+          "4": 134,
+          "5": 23,
+          "1": 5,
+          "2": 44,
+          "6": 43,
+          "7": 3,
+          "8": 27,
+          "12": 2,
+          "11": 1
+        },
+        "unit_boundary": {
+          "4": 193,
+          "5": 177,
+          "6": 128,
+          "7": 9,
+          "3": 322,
+          "2": 36,
+          "8": 33,
+          "1": 8,
+          "12": 2,
+          "11": 1,
+          "10": 2
+        },
+        "unit_low": 44,
+        "all_low": 13830,
+        "instances": 3278,
+        "used_layouts": 486,
+        "catalog_size": 4096
+      }
+    }
+  }
+}
