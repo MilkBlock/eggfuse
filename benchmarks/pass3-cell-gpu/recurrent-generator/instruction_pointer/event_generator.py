@@ -69,19 +69,28 @@ class EventGenerator:
         if audit is not None and audit.run != frame["run"]:
             audit = None
         scored = {}
+        higher = getattr(self, "higher", None)
+        if higher is not None:
+            higher.start(rd, pub, txn, rules, stats)
+            higher.parent_model = model
 
         def emit(r, order, paths):
             refs = np.empty((len(paths), len(order), 3), np.int64)
             for k, j in enumerate(order):
                 refs[:, j] = mem.bank(mem.roles[r][j]).rows[paths[:, k]]
+            roots = paths[:, 0] if order else np.zeros(len(paths), dtype=np.int64)
             if order and rd.iface.rules[r]["metadata"]["seminaive"]:
                 legal = (refs[:, :, 2] >= rules[r]).any(1)
                 stats["old_only_paths"] += int((~legal).sum())
                 refs = refs[legal]
+                roots = roots[legal]
             stats["named_parent_reads"] += len(paths) * len(order)
             if len(refs):
                 # Formation is the issue boundary: no subsequent tuple classifier.
-                send(txn, r, refs)
+                if higher is None:
+                    send(txn, r, refs)
+                else:
+                    higher.issue(r, roots, refs, txn)
                 stats["generated_proofs"] += len(refs)
 
         def decode(r, order, depth, paths, h, legacy):
@@ -141,6 +150,8 @@ class EventGenerator:
             if perf_counter() >= deadline:
                 raise TimeoutError
             order = mem.order(r, j)
+            if higher is not None:
+                higher.choose(r, j, ix, mem, woke)
             paths = ix[:, None] if order else np.empty((len(ix), 0), np.int64)
             stats["woken_templates" if woke else "generated_templates"] += len(ix)
             if not woke and len(order) > 1:
