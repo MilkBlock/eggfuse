@@ -1,6 +1,6 @@
 # RipSat Cell 浏览器
 
-用 Python 3.9+ 生成单文件 HTML，打开后即可断网使用。无需启动服务，可同时加载多个目录。
+用 Python 3.8+ 生成单文件 HTML，打开后即可断网使用。无需启动服务，可同时加载多个目录。
 
 ```sh
 python3 -m pip install .
