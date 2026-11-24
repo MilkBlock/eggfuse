@@ -1,0 +1,65 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RipSat · Cell 浏览器</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f6f2;color:#172b29;font:14px/1.5 "Inter",-apple-system,sans-serif}header{background:#163a34;color:#fff;padding:15px 24px;display:flex;gap:16px;align-items:center}header strong{font-size:22px;letter-spacing:-.6px}header select{margin-left:auto;max-width:50vw}main{display:grid;grid-template-columns:286px minmax(0,1fr);min-height:90vh}aside{padding:16px;border-right:1px solid #cbd7cf;background:white}input,select,button{font:inherit;padding:6px 8px;background:white;color:inherit;border:1px solid #b8c9bf;border-radius:5px}header select{color:#173932}button{cursor:pointer}button:hover,button[aria-current=true]{background:#dcf0dc;color:#124731}label{display:block;margin:9px 0;color:#455c55}label input,label select{display:block;width:100%}.pair{display:grid;grid-template-columns:1fr 1fr;gap:7px}.list{display:grid;gap:3px;margin:8px 0}.list button{text-align:left;display:flex;justify-content:space-between}.list small{color:#476257}.nav{display:flex;align-items:center;justify-content:space-between}article{min-width:0;padding:20px 3vw}h1{margin:0;font-size:30px}h2{font-size:16px;margin:16px 0 8px}#stats{display:flex;flex-wrap:wrap;gap:18px;color:#466255;margin:6px 0 12px}.graph{overflow:auto;border:1px solid #c5d4cc;border-radius:8px;background:#fff}svg{display:block}svg text{pointer-events:none;font:12px "Inter",sans-serif}g[role=button]{cursor:pointer}g[role=button]:focus rect{stroke:#263fca;stroke-width:3}button:focus-visible{outline:2px solid #315db4}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#eaf0ea;padding:12px;border-radius:6px}table{border-collapse:collapse;width:100%;background:white}td,th{text-align:left;border-bottom:1px solid #d9e1d9;padding:6px 10px}#count,#legend{color:#476257}details{margin:12px 0}summary{cursor:pointer}#evidence{margin:8px 0;color:#4c5d54}@media(max-width:750px){main{display:block}aside{border-bottom:1px solid #cbd7cf}.list{max-height:125px;overflow:auto}article{padding:14px}header{padding:12px}}
+</style>
+<header><strong>RipSat</strong><span>Cell 浏览器</span><select aria-label="Bake 目录" id="catalog"></select></header>
+<main><aside><label>搜索 ID、规则或表名<input id="search" type="search" placeholder="#42 或规则名称"></label>
+<div class="pair"><label>最小依赖深度<input type="number" min="1" id="depth" value="1"></label><label>最多外部输入<input type="number" min="0" id="bounds" placeholder="不限"></label></div>
+<label>Teacher 回放证据<select id="proof"></select></label><label>排序<select id="sort"><option value="id">原始编号</option><option value="depth">依赖最深</option><option value="external">外部输入最少</option></select></label><button id="sample">随机抽看匹配项</button><div id="count"></div><div class="list" id="list"></div><div class="nav"><button id="prev">上一页</button><span id="page"></span><button id="next">下一页</button></div></aside>
+<article><h1 id="title"></h1><div id="stats"></div><div id="evidence"></div><p id="legend">左侧为独立输入，箭头沿实际指令输出连到消费步骤。点击步骤查看每个具名端口。</p>
+<div class="graph" id="graph"></div><section id="inspector"></section><details><summary>原始 Bake 布局</summary><pre id="raw"></pre></details></article></main>
+<script type="application/json" id="data">/*CATALOGS*/</script>
+<script>
+"use strict";
+const cats=JSON.parse(document.querySelector('#data').textContent), el=id=>document.getElementById(id);
+const put=(parent,tag,txt)=>{const n=document.createElement(tag);n.textContent=txt;parent.append(n);return n};
+const option=(s,v,name)=>s.add(new Option(name,v));
+let cat,items,filtered,id,pg=0,replays,searchable,step=0;
+cats.forEach((c,i)=>option(el('catalog'),i,c.name));
+function load(index,initial){
+ el('catalog').value=index;cat=cats[index];replays=Object.fromEntries(Object.entries(cat.replay).map(([k,v])=>[k,new Set(v)]));
+ searchable=Object.fromEntries(Object.entries(cat.rules).map(([i,r])=>[i,[r.name,r.group,...r.atoms,...r.effects].join(' ').toLowerCase()]));
+ el('proof').replaceChildren(); option(el('proof'),'','全部');for(const k of Object.keys(replays))option(el('proof'),k,k);
+ items=cat.layouts.map((steps,id)=>{const levels=[],inputs=new Set(),rules=new Set();for(const [rid,g,w] of steps){let d=1;rules.add(rid);for(const [owner,pc] of w){if(owner<0)inputs.add(pc);else d=Math.max(d,levels[owner]+1)}levels.push(d)}return {id,levels,inputs:[...inputs].sort((a,b)=>a-b),rules:[...rules],d:Math.max(...levels)}});
+ filter(initial);
+}
+function filter(initial){
+ const q=el('search').value.trim().toLowerCase(),match=new Set(Object.keys(searchable).filter(r=>searchable[r].includes(q)).map(Number));
+ filtered=items.filter(x=>x.d>=Number(el('depth').value)&&(!el('bounds').value||x.inputs.length<=Number(el('bounds').value))&&(!el('proof').value||replays[el('proof').value].has(x.id))&&(!q||'#'+x.id===q||String(x.id)===q||x.rules.some(r=>match.has(r)||'r'+r===q)));
+ if(el("sort").value==="depth")filtered.sort((a,b)=>b.d-a.d||a.id-b.id);
+ if(el("sort").value==="external")filtered.sort((a,b)=>a.inputs.length-b.inputs.length||b.d-a.d||a.id-b.id);
+ el("sample").disabled=!filtered.length;
+ const pos=filtered.findIndex(x=>x.id===initial);pg=pos>=0?Math.floor(pos/16):0;select(pos>=0?initial:filtered[0]?.id);
+}
+function select(i){id=i;step=0;list();view();if(i!==undefined)history.replaceState(null,'','#'+el('catalog').value+'/'+i)}
+function list(){el('list').replaceChildren();el('count').textContent=filtered.length.toLocaleString()+' / '+items.length.toLocaleString()+' 个模板';
+ for(const x of filtered.slice(pg*16,pg*16+16)){const b=put(el('list'),'button','#'+x.id);put(b,'small','深 '+x.d+' · 输入 '+x.inputs.length);b.setAttribute('aria-current',x.id===id);b.onclick=()=>select(x.id)}
+ const pages=Math.ceil(filtered.length/16);el('page').textContent=(pages?pg+1:0)+' / '+pages;el('prev').disabled=pg===0;el('next').disabled=pg+1>=pages}
+function svg(tag,attrs,p){const n=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [k,v] of Object.entries(attrs))n.setAttribute(k,v);p.append(n);return n}
+function view(){for(const k of ['stats','graph','inspector','evidence','raw'])el(k).replaceChildren();
+ if(id===undefined){el('title').textContent='没有匹配的模板';return}
+ const x=items[id],l=cat.layouts[id];el('title').textContent='Cell #'+id;
+ [l.length+' 个规则步骤','依赖深度 '+x.d,x.inputs.length+' 个独立输入',new Set(l.map(s=>s[1])).size+' 个 Run 组'].forEach(t=>put(el('stats'),'b',t));
+ const verified=Object.keys(replays).filter(k=>replays[k].has(id));el('evidence').textContent=verified.length?'原生 teacher 回放通过 · '+verified.join(' / '):'此目录载入的回放中没有该模板的完成记录';
+ const cols=new Map(),pos=new Map();
+ function place(key,d){const i=cols.get(d)||0;cols.set(d,i+1);pos.set(key,[16+d*182,22+i*70])}
+ x.inputs.forEach(s=>place('b'+s,0));x.levels.forEach((d,i)=>place(i,d));
+ const root=svg('svg',{width:182*(x.d+1),height:Math.max(110,70*Math.max(...cols.values())+22),'aria-label':'模板依赖图'},el('graph'));
+ const marker=svg('marker',{id:'arrow',viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:6,markerHeight:6,orient:'auto'},svg('defs',{},root));svg('path',{d:'M0 0L10 5L0 10Z',fill:'#687f73'},marker);
+ l.forEach((s,i)=>s[2].forEach(([p,pc],j)=>{const [a,b]=pos.get(p<0?'b'+pc:p),[c,d]=pos.get(i);const y=d+7+(j+1)*32/(s[2].length+1);
+ const path=svg('path',{d:'M'+(a+139)+' '+(b+23)+' C'+(a+164)+' '+(b+23)+' '+(c-24)+' '+y+' '+c+' '+y,fill:'none',stroke:i===step?'#187758':'#c0cdc4','stroke-width':i===step?2:1,'marker-end':'url(#arrow)'},root);
+ svg('title',{},path).textContent=(p<0?'外部输入 '+pc:'步骤 '+p+' · op '+pc)+' → 步骤 '+i+' · atom '+j}));
+ for(const [key,[a,b]] of pos){const isStep=typeof key==='number',node=svg('g',isStep?{role:'button',tabindex:0,'aria-label':'步骤 '+key}:{},root);
+ svg('rect',{x:a,y:b,width:139,height:46,rx:6,fill:key===step?'#1a5346':isStep?'#e4f0e8':'#faf0d7',stroke:'#8ca499'},node);
+ const label=(dy,t)=>svg('text',{x:a+8,y:b+dy,fill:key===step?'#fff':'#1b382d'},node).textContent=t;
+ if(isStep){const [r,g]=l[key];label(18,'步骤 '+key+' · R'+r);label(36,'Run 组 '+g);node.onclick=()=>{step=key;view()};node.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();node.onclick()}}}else label(28,'外部输入 '+key.slice(1))}
+ const [r,g,w]=l[step],rule=cat.rules[r],panel=el('inspector');put(panel,'h2','步骤 '+step+' · R'+r+(rule?' · '+rule.group:''));if(rule)put(panel,'pre',rule.name);
+ const table=put(panel,'table',''),head=put(table,'tr','');['消费端口','输入表','实际引用'].forEach(t=>put(head,'th',t));
+ w.forEach(([p,pc],j)=>{const tr=put(table,'tr','');put(tr,'td','atom '+j);put(tr,'td',rule?.atoms[j]??'—');put(tr,'td',p<0?'外部输入 '+pc:'步骤 '+p+' · op '+pc+' '+(cat.rules[l[p][0]]?.effects[pc]??''))});
+ if(!w.length)put(panel,'p','该步骤不需要表输入。');el('raw').textContent=JSON.stringify(l,null,2)}
+el('catalog').onchange=()=>load(Number(el('catalog').value));for(const k of ['depth','bounds','search','proof','sort'])el(k).oninput=()=>filter(id);
+el('sample').onclick=()=>{const n=Math.floor(Math.random()*filtered.length);pg=Math.floor(n/16);select(filtered[n].id)};
+el('prev').onclick=()=>{pg--;select(filtered[pg*16].id)};el('next').onclick=()=>{pg++;select(filtered[pg*16].id)};
+const saved=location.hash.slice(1).split('/').map(Number);load(cats[saved[0]]?saved[0]:0,saved[1]);
+</script></html>
