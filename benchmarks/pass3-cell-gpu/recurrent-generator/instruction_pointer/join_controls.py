@@ -268,7 +268,9 @@ class Generator:
         return elapsed, self.index.writes - writes, self.index.removes - removes
 
     @torch.no_grad()
-    def issue(self, frame, bootstrap=False, rank_all=False, remaining=None, live=False):
+    def issue(
+        self, frame, bootstrap=False, rank_all=False, remaining=None, live=False, frontier=None
+    ):
         result = {}
         prepared = 0
         for rid, wm in frame["rules"]:
@@ -298,6 +300,10 @@ class Generator:
                     if sides is None:
                         return
                     a, b, _ = sides
+                    if frontier is not None:
+                        frontier.update(a.owners.tolist())
+                        if b is not None:
+                            frontier.update(b.owners.tolist())
                     for src, dst in [(a, b), (b, a)] if b else [(a, None)]:
                         fresh = np.flatnonzero(
                             src.first < len(self.store.iface.roles[rid])
