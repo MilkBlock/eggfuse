@@ -1,0 +1,802 @@
+{
+  "fact": {
+    "run": 9,
+    "ruleset": "type-analysis",
+    "before_sha": "a2e6d160ff9be3612001465ffbc6965ddf20ecca1b8b2256c3c8ca3ab14a761d",
+    "reference_sha": "fcee1582f9f79d64bbdb110fea46f68ccf8972e73cabc98cf8a0ca60c5516c2b",
+    "arm_sha": "1b8f2da49759e6394e5459a72b0c43fb97fffabd574c91db9f3701e0caee5f97",
+    "all_A_requests": 23,
+    "teacher": 21,
+    "hit": 15,
+    "missing": [
+      {
+        "token": 21,
+        "rule": 532,
+        "parents": [
+          [
+            1,
+            64,
+            1
+          ],
+          [
+            -213,
+            0,
+            0
+          ],
+          [
+            -163,
+            0,
+            0
+          ]
+        ],
+        "owners": 3,
+        "in_A": false,
+        "proofs": 1,
+        "minimum_owners": 3,
+        "alternative_proofs": 0
+      },
+      {
+        "token": 22,
+        "rule": 532,
+        "parents": [
+          [
+            1,
+            88,
+            1
+          ],
+          [
+            -217,
+            0,
+            0
+          ],
+          [
+            -167,
+            0,
+            0
+          ]
+        ],
+        "owners": 3,
+        "in_A": false,
+        "proofs": 1,
+        "minimum_owners": 3,
+        "alternative_proofs": 0
+      },
+      {
+        "token": 23,
+        "rule": 532,
+        "parents": [
+          [
+            1,
+            102,
+            1
+          ],
+          [
+            -217,
+            0,
+            0
+          ],
+          [
+            -167,
+            0,
+            0
+          ]
+        ],
+        "owners": 3,
+        "in_A": false,
+        "proofs": 1,
+        "minimum_owners": 3,
+        "alternative_proofs": 0
+      },
+      {
+        "token": 24,
+        "rule": 532,
+        "parents": [
+          [
+            1,
+            128,
+            1
+          ],
+          [
+            -217,
+            0,
+            0
+          ],
+          [
+            -167,
+            0,
+            0
+          ]
+        ],
+        "owners": 3,
+        "in_A": false,
+        "proofs": 1,
+        "minimum_owners": 3,
+        "alternative_proofs": 0
+      },
+      {
+        "token": 25,
+        "rule": 534,
+        "parents": [
+          [
+            1,
+            28,
+            1
+          ],
+          [
+            -243,
+            0,
+            0
+          ],
+          [
+            -177,
+            0,
+            0
+          ]
+        ],
+        "owners": 3,
+        "in_A": false,
+        "proofs": 1,
+        "minimum_owners": 3,
+        "alternative_proofs": 0
+      },
+      {
+        "token": 26,
+        "rule": 534,
+        "parents": [
+          [
+            1,
+            74,
+            1
+          ],
+          [
+            -243,
+            0,
+            0
+          ],
+          [
+            -177,
+            0,
+            0
+          ]
+        ],
+        "owners": 3,
+        "in_A": false,
+        "proofs": 1,
+        "minimum_owners": 3,
+        "alternative_proofs": 0
+      }
+    ],
+    "typed_proofs_checked": 4200,
+    "omission_fork_equal": {
+      "schedule": true,
+      "writes": true,
+      "rhs": true,
+      "events": true,
+      "state_sha": true
+    },
+    "recorded_descendants": {
+      "direct": 0,
+      "transitive": 0
+    }
+  },
+  "loopfact": {
+    "run": 10,
+    "ruleset": "type-analysis",
+    "before_sha": "8c12daf36f5177e83697ceb4a1f74a2eb9ec16b5e8e6865072f502a996b38c03",
+    "reference_sha": "5d8010043fa8021184df42023234549c058739165b6ba68561e6a1d4503d683f",
+    "arm_sha": "ffe0c61444e7e5ffe133c27475a8aee14b1f63e1e7a6c46af9a316a66481754b",
+    "all_A_requests": 19,
+    "teacher": 16,
+    "hit": 12,
+    "missing": [
+      {
+        "token": 26,
+        "rule": 532,
+        "parents": [
+          [
+            1,
+            64,
+            1
+          ],
+          [
+            -213,
+            0,
+            0
+          ],
+          [
+            -163,
+            0,
+            0
+          ]
+        ],
+        "owners": 3,
+        "in_A": false,
+        "proofs": 1,
+        "minimum_owners": 3,
+        "alternative_proofs": 0
+      },
+      {
+        "token": 27,
+        "rule": 532,
+        "parents": [
+          [
+            1,
+            78,
+            1
+          ],
+          [
+            -217,
+            0,
+            0
+          ],
+          [
+            -167,
+            0,
+            0
+          ]
+        ],
+        "owners": 3,
+        "in_A": false,
+        "proofs": 1,
+        "minimum_owners": 3,
+        "alternative_proofs": 0
+      },
+      {
+        "token": 28,
+        "rule": 534,
+        "parents": [
+          [
+            1,
+            28,
+            1
+          ],
+          [
+            -235,
+            0,
+            0
+          ],
+          [
+            -169,
+            0,
+            0
+          ]
+        ],
+        "owners": 3,
+        "in_A": false,
+        "proofs": 1,
+        "minimum_owners": 3,
+        "alternative_proofs": 0
+      },
+      {
+        "token": 29,
+        "rule": 534,
+        "parents": [
+          [
+            1,
+            66,
+            1
+          ],
+          [
+            -235,
+            0,
+            0
+          ],
+          [
+            -169,
+            0,
+            0
+          ]
+        ],
+        "owners": 3,
+        "in_A": false,
+        "proofs": 1,
+        "minimum_owners": 3,
+        "alternative_proofs": 0
+      }
+    ],
+    "typed_proofs_checked": 3000,
+    "omission_fork_equal": {
+      "schedule": true,
+      "writes": true,
+      "rhs": true,
+      "events": true,
+      "state_sha": true
+    },
+    "recorded_descendants": {
+      "direct": 0,
+      "transitive": 0
+    }
+  },
+  "sum-divisors": {
+    "run": 14,
+    "ruleset": "type-analysis",
+    "before_sha": "df00ed3500cc0ab6fcf50e6076ea7e221944c2121170e5c3cb9e18043c2cd6cd",
+    "reference_sha": "47407cb0943100ee838bd34759fad2d1cc42b6f78181132c0ee5c703e6a604eb",
+    "arm_sha": "aaf59b80adfe61ee693f4b16e3ecda2a80c6cba0133f55bbffb91a648defdf38",
+    "all_A_requests": 32,
+    "teacher": 39,
+    "hit": 21,
+    "missing": [
+      {
+        "token": 75,
+        "rule": 532,
+        "parents": [
+          [
+            1,
+            310,
+            1
+          ],
+          [
+            -211,
+            0,
+            0
+          ],
+          [
+            -161,
+            0,
+            0
+          ]
+        ],
+        "owners": 3,
+        "in_A": false,
+        "proofs": 1,
+        "minimum_owners": 3,
+        "alternative_proofs": 0
+      },
+      {
+        "token": 76,
+        "rule": 532,
+        "parents": [
+          [
+            1,
+            314,
+            1
+          ],
+          [
+            -211,
+            0,
+            0
+          ],
+          [
+            -161,
+            0,
+            0
+          ]
+        ],
+        "owners": 3,
+        "in_A": false,
+        "proofs": 1,
+        "minimum_owners": 3,
+        "alternative_proofs": 0
+      },
+      {
+        "token": 77,
+        "rule": 532,
+        "parents": [
+          [
+            1,
+            150,
+            1
+          ],
+          [
+            -211,
+            0,
+            0
+          ],
+          [
+            -161,
+            0,
+            0
+          ]
+        ],
+        "owners": 3,
+        "in_A": false,
+        "proofs": 1,
+        "minimum_owners": 3,
+        "alternative_proofs": 0
+      },
+      {
+        "token": 78,
+        "rule": 532,
+        "parents": [
+          [
+            1,
+            254,
+            1
+          ],
+          [
+            -211,
+            0,
+            0
+          ],
+          [
+            -161,
+            0,
+            0
+          ]
+        ],
+        "owners": 3,
+        "in_A": false,
+        "proofs": 1,
+        "minimum_owners": 3,
+        "alternative_proofs": 0
+      },
+      {
+        "token": 79,
+        "rule": 532,
+        "parents": [
+          [
+            1,
+            262,
+            1
+          ],
+          [
+            -211,
+            0,
+            0
+          ],
+          [
+            -161,
+            0,
+            0
+          ]
+        ],
+        "owners": 3,
+        "in_A": false,
+        "proofs": 1,
+        "minimum_owners": 3,
+        "alternative_proofs": 0
+      },
+      {
+        "token": 80,
+        "rule": 532,
+        "parents": [
+          [
+            1,
+            214,
+            1
+          ],
+          [
+            -213,
+            0,
+            0
+          ],
+          [
+            -163,
+            0,
+            0
+          ]
+        ],
+        "owners": 3,
+        "in_A": false,
+        "proofs": 1,
+        "minimum_owners": 3,
+        "alternative_proofs": 0
+      },
+      {
+        "token": 81,
+        "rule": 532,
+        "parents": [
+          [
+            1,
+            386,
+            1
+          ],
+          [
+            -213,
+            0,
+            0
+          ],
+          [
+            -163,
+            0,
+            0
+          ]
+        ],
+        "owners": 3,
+        "in_A": false,
+        "proofs": 1,
+        "minimum_owners": 3,
+        "alternative_proofs": 0
+      },
+      {
+        "token": 82,
+        "rule": 532,
+        "parents": [
+          [
+            1,
+            210,
+            1
+          ],
+          [
+            -215,
+            0,
+            0
+          ],
+          [
+            -165,
+            0,
+            0
+          ]
+        ],
+        "owners": 3,
+        "in_A": false,
+        "proofs": 1,
+        "minimum_owners": 3,
+        "alternative_proofs": 0
+      },
+      {
+        "token": 83,
+        "rule": 532,
+        "parents": [
+          [
+            1,
+            248,
+            1
+          ],
+          [
+            -215,
+            0,
+            0
+          ],
+          [
+            -165,
+            0,
+            0
+          ]
+        ],
+        "owners": 3,
+        "in_A": false,
+        "proofs": 1,
+        "minimum_owners": 3,
+        "alternative_proofs": 0
+      },
+      {
+        "token": 84,
+        "rule": 532,
+        "parents": [
+          [
+            1,
+            382,
+            1
+          ],
+          [
+            -215,
+            0,
+            0
+          ],
+          [
+            -165,
+            0,
+            0
+          ]
+        ],
+        "owners": 3,
+        "in_A": false,
+        "proofs": 1,
+        "minimum_owners": 3,
+        "alternative_proofs": 0
+      },
+      {
+        "token": 85,
+        "rule": 532,
+        "parents": [
+          [
+            1,
+            98,
+            1
+          ],
+          [
+            -217,
+            0,
+            0
+          ],
+          [
+            -167,
+            0,
+            0
+          ]
+        ],
+        "owners": 3,
+        "in_A": false,
+        "proofs": 1,
+        "minimum_owners": 3,
+        "alternative_proofs": 0
+      },
+      {
+        "token": 86,
+        "rule": 532,
+        "parents": [
+          [
+            1,
+            152,
+            1
+          ],
+          [
+            -217,
+            0,
+            0
+          ],
+          [
+            -167,
+            0,
+            0
+          ]
+        ],
+        "owners": 3,
+        "in_A": false,
+        "proofs": 1,
+        "minimum_owners": 3,
+        "alternative_proofs": 0
+      },
+      {
+        "token": 87,
+        "rule": 532,
+        "parents": [
+          [
+            1,
+            212,
+            1
+          ],
+          [
+            -217,
+            0,
+            0
+          ],
+          [
+            -167,
+            0,
+            0
+          ]
+        ],
+        "owners": 3,
+        "in_A": false,
+        "proofs": 1,
+        "minimum_owners": 3,
+        "alternative_proofs": 0
+      },
+      {
+        "token": 88,
+        "rule": 532,
+        "parents": [
+          [
+            1,
+            384,
+            1
+          ],
+          [
+            -217,
+            0,
+            0
+          ],
+          [
+            -167,
+            0,
+            0
+          ]
+        ],
+        "owners": 3,
+        "in_A": false,
+        "proofs": 1,
+        "minimum_owners": 3,
+        "alternative_proofs": 0
+      },
+      {
+        "token": 89,
+        "rule": 534,
+        "parents": [
+          [
+            1,
+            32,
+            1
+          ],
+          [
+            -235,
+            0,
+            0
+          ],
+          [
+            -169,
+            0,
+            0
+          ]
+        ],
+        "owners": 3,
+        "in_A": false,
+        "proofs": 1,
+        "minimum_owners": 3,
+        "alternative_proofs": 0
+      },
+      {
+        "token": 90,
+        "rule": 534,
+        "parents": [
+          [
+            1,
+            156,
+            1
+          ],
+          [
+            -237,
+            0,
+            0
+          ],
+          [
+            -171,
+            0,
+            0
+          ]
+        ],
+        "owners": 3,
+        "in_A": false,
+        "proofs": 1,
+        "minimum_owners": 3,
+        "alternative_proofs": 0
+      },
+      {
+        "token": 91,
+        "rule": 534,
+        "parents": [
+          [
+            1,
+            232,
+            1
+          ],
+          [
+            -243,
+            0,
+            0
+          ],
+          [
+            -177,
+            0,
+            0
+          ]
+        ],
+        "owners": 3,
+        "in_A": false,
+        "proofs": 1,
+        "minimum_owners": 3,
+        "alternative_proofs": 0
+      },
+      {
+        "token": 92,
+        "rule": 534,
+        "parents": [
+          [
+            1,
+            250,
+            1
+          ],
+          [
+            -243,
+            0,
+            0
+          ],
+          [
+            -177,
+            0,
+            0
+          ]
+        ],
+        "owners": 3,
+        "in_A": false,
+        "proofs": 1,
+        "minimum_owners": 3,
+        "alternative_proofs": 0
+      }
+    ],
+    "typed_proofs_checked": 11400,
+    "omission_fork_equal": {
+      "schedule": true,
+      "writes": true,
+      "rhs": true,
+      "events": true,
+      "state_sha": true
+    },
+    "recorded_descendants": {
+      "direct": 0,
+      "transitive": 0
+    }
+  }
+}
