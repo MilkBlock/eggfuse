@@ -1,0 +1,490 @@
+{
+  "device": "mps",
+  "seed": 37409,
+  "programs": {
+    "loopfact": {
+      "probes": 2855,
+      "unique_alternatives": 381,
+      "labels": [
+        1729.0,
+        1000.0,
+        1119.0,
+        44.0,
+        116.0
+      ],
+      "forks": {
+        "571": {
+          "delete": 0,
+          "substitute": 0
+        },
+        "1324": {
+          "delete": 2,
+          "substitute": 0
+        },
+        "185": {
+          "delete": 4,
+          "substitute": 0
+        },
+        "426": {
+          "delete": 0,
+          "substitute": 0
+        },
+        "1013": {
+          "delete": 132,
+          "substitute": 0
+        },
+        "857": {
+          "delete": 0,
+          "substitute": 0
+        },
+        "155": {
+          "delete": 1,
+          "substitute": 0
+        },
+        "162": {
+          "delete": 562,
+          "substitute": 0
+        },
+        "734": {
+          "delete": 547,
+          "substitute": 0
+        },
+        "1313": {
+          "delete": 0,
+          "substitute": 0
+        },
+        "485": {
+          "delete": 0,
+          "substitute": 0
+        },
+        "677": {
+          "delete": 0,
+          "substitute": 0
+        },
+        "272": {
+          "delete": 580,
+          "substitute": 0
+        },
+        "1274": {
+          "delete": 139
+        },
+        "666": {
+          "delete": 496
+        },
+        "110": {
+          "delete": 987,
+          "substitute": 0
+        },
+        "898": {
+          "delete": 1,
+          "substitute": 0
+        },
+        "1094": {
+          "delete": 163,
+          "substitute": 0
+        },
+        "1033": {
+          "delete": 377,
+          "substitute": 0
+        },
+        "332": {
+          "delete": 12
+        },
+        "560": {
+          "delete": 1
+        },
+        "43": {
+          "delete": 1
+        },
+        "731": {
+          "delete": 1,
+          "substitute": 0
+        },
+        "1250": {
+          "delete": 63,
+          "substitute": 0
+        },
+        "868": {
+          "delete": 0,
+          "substitute": 0
+        },
+        "1055": {
+          "delete": 0,
+          "substitute": 0
+        },
+        "77": {
+          "delete": 0
+        },
+        "177": {
+          "delete": 0
+        },
+        "681": {
+          "delete": 0,
+          "substitute": 0
+        },
+        "1357": {
+          "delete": 0,
+          "substitute": 0
+        },
+        "787": {
+          "delete": 0,
+          "substitute": 0
+        },
+        "376": {
+          "delete": 0
+        },
+        "464": {
+          "delete": 0
+        },
+        "1002": {
+          "delete": 0,
+          "substitute": 0
+        },
+        "322": {
+          "delete": 0,
+          "substitute": 0
+        }
+      }
+    },
+    "grammar-17118": {
+      "probes": 341,
+      "unique_alternatives": 0,
+      "labels": [
+        84.0,
+        84.0,
+        46.0,
+        9.625,
+        27.0
+      ],
+      "forks": {
+        "11": {
+          "delete": 7
+        },
+        "8": {
+          "delete": 11
+        },
+        "53": {
+          "delete": 5
+        },
+        "61": {
+          "delete": 3
+        },
+        "39": {
+          "delete": 4
+        },
+        "14": {
+          "delete": 4
+        },
+        "37": {
+          "delete": 3
+        },
+        "20": {
+          "delete": 4
+        },
+        "66": {
+          "delete": 5
+        },
+        "42": {
+          "delete": 4
+        },
+        "7": {
+          "delete": 5
+        },
+        "17": {
+          "delete": 4
+        },
+        "47": {
+          "delete": 1
+        },
+        "33": {
+          "delete": 1
+        },
+        "32": {
+          "delete": 1
+        },
+        "30": {
+          "delete": 1
+        },
+        "29": {
+          "delete": 1
+        },
+        "38": {
+          "delete": 1
+        },
+        "9": {
+          "delete": 2
+        },
+        "51": {
+          "delete": 1
+        },
+        "56": {
+          "delete": 1
+        },
+        "35": {
+          "delete": 1
+        },
+        "40": {
+          "delete": 1
+        },
+        "48": {
+          "delete": 2
+        }
+      }
+    },
+    "grammar-17119": {
+      "probes": 633,
+      "unique_alternatives": 0,
+      "labels": [
+        166.0,
+        166.0,
+        88.0,
+        14.625,
+        31.0
+      ],
+      "forks": {
+        "17": {
+          "delete": 16
+        },
+        "126": {
+          "delete": 5
+        },
+        "35": {
+          "delete": 4
+        },
+        "43": {
+          "delete": 22
+        },
+        "40": {
+          "delete": 23
+        },
+        "27": {
+          "delete": 4
+        },
+        "113": {
+          "delete": 9
+        },
+        "37": {
+          "delete": 4
+        },
+        "125": {
+          "delete": 3
+        },
+        "134": {
+          "delete": 4
+        },
+        "78": {
+          "delete": 7
+        },
+        "119": {
+          "delete": 4
+        },
+        "65": {
+          "delete": 1
+        },
+        "118": {
+          "delete": 1
+        },
+        "2": {
+          "delete": 2
+        },
+        "97": {
+          "delete": 1
+        },
+        "57": {
+          "delete": 1
+        },
+        "103": {
+          "delete": 1
+        },
+        "91": {
+          "delete": 1
+        },
+        "58": {
+          "delete": 1
+        },
+        "98": {
+          "delete": 1
+        },
+        "20": {
+          "delete": 2
+        },
+        "61": {
+          "delete": 1
+        },
+        "99": {
+          "delete": 1
+        }
+      }
+    },
+    "grammar-stride2-17118": {
+      "probes": 336,
+      "unique_alternatives": 0,
+      "labels": [
+        81.0,
+        81.0,
+        44.0,
+        11.375,
+        27.0
+      ],
+      "forks": {
+        "61": {
+          "delete": 3
+        },
+        "17": {
+          "delete": 4
+        },
+        "37": {
+          "delete": 3
+        },
+        "12": {
+          "delete": 13
+        },
+        "19": {
+          "delete": 16
+        },
+        "41": {
+          "delete": 2
+        },
+        "58": {
+          "delete": 6
+        },
+        "13": {
+          "delete": 4
+        },
+        "23": {
+          "delete": 12
+        },
+        "1": {
+          "delete": 16
+        },
+        "6": {
+          "delete": 10
+        },
+        "42": {
+          "delete": 4
+        },
+        "44": {
+          "delete": 1
+        },
+        "56": {
+          "delete": 1
+        },
+        "48": {
+          "delete": 2
+        },
+        "54": {
+          "delete": 1
+        },
+        "49": {
+          "delete": 1
+        },
+        "50": {
+          "delete": 1
+        },
+        "9": {
+          "delete": 2
+        },
+        "24": {
+          "delete": 2
+        },
+        "18": {
+          "delete": 2
+        },
+        "65": {
+          "delete": 1
+        },
+        "35": {
+          "delete": 1
+        },
+        "72": {
+          "delete": 2
+        }
+      }
+    },
+    "grammar-benefit-fork-17120": {
+      "probes": 283,
+      "unique_alternatives": 0,
+      "labels": [
+        77.0,
+        77.0,
+        40.0,
+        15.375,
+        30.0
+      ],
+      "forks": {
+        "45": {
+          "delete": 6
+        },
+        "29": {
+          "delete": 11
+        },
+        "14": {
+          "delete": 7
+        },
+        "57": {
+          "delete": 8
+        },
+        "42": {
+          "delete": 8
+        },
+        "49": {
+          "delete": 3
+        },
+        "34": {
+          "delete": 4
+        },
+        "53": {
+          "delete": 10
+        },
+        "6": {
+          "delete": 5
+        },
+        "7": {
+          "delete": 5
+        },
+        "13": {
+          "delete": 28
+        },
+        "43": {
+          "delete": 15
+        },
+        "47": {
+          "delete": 1
+        },
+        "46": {
+          "delete": 1
+        },
+        "63": {
+          "delete": 2
+        },
+        "19": {
+          "delete": 2
+        },
+        "28": {
+          "delete": 2
+        },
+        "9": {
+          "delete": 2
+        },
+        "33": {
+          "delete": 1
+        },
+        "52": {
+          "delete": 2
+        },
+        "16": {
+          "delete": 2
+        },
+        "39": {
+          "delete": 2
+        },
+        "22": {
+          "delete": 2
+        },
+        "2": {
+          "delete": 2
+        }
+      }
+    }
+  }
+}
