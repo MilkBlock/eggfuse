@@ -1,0 +1,18 @@
+{
+  "steps": 900,
+  "seed": 9417,
+  "examples": [
+    [
+      613,
+      532
+    ],
+    [
+      6745,
+      937
+    ]
+  ],
+  "seen_signatures": 2629,
+  "known_producers": 178,
+  "training_dictionary_sha256": "3509cb2703d6585ac6892bed2ba9fb51cea91c90cff0934d47a12c383ca3578c",
+  "weights_sha256": "034e1872eb10546a1521e9244ee9bfc9f163696aaf5053c1da4f6888f4da17b2"
+}

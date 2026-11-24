@@ -1,0 +1,976 @@
+{
+  "mode": "native shadow",
+  "runs": [
+    1,
+    14,
+    15,
+    17,
+    19,
+    32,
+    35,
+    37,
+    51,
+    54,
+    62,
+    75,
+    98,
+    111,
+    112,
+    147,
+    157,
+    184,
+    206,
+    216,
+    220,
+    226,
+    229,
+    230,
+    243,
+    247,
+    257,
+    266,
+    280,
+    308,
+    314,
+    338,
+    339,
+    349,
+    388,
+    409,
+    444,
+    482,
+    520,
+    586
+  ],
+  "reference_runs": 618,
+  "sample_teacher": 268,
+  "prefix_weights": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+  "weights": "034e1872eb10546a1521e9244ee9bfc9f163696aaf5053c1da4f6888f4da17b2",
+  "receiver": "9baee8273937950f151f9f640ff325254ad4a4556fd994db7a6a26665472499d",
+  "domains": {
+    "events": 1739,
+    "candidates": 89962,
+    "over_budget_layouts": 9,
+    "canonical_at_layout_cap": 4
+  },
+  "work": {
+    "canonical_scored": 185,
+    "exact_ranked": 89962,
+    "lsh_reranked": 4882,
+    "binary_exact_top8": 8451,
+    "binary_retrieved_exact_top8": 354
+  },
+  "required": {
+    "new_producer": 48,
+    "seen": 116,
+    "new_combination": 11,
+    "new_consumer": 11,
+    "new_pair_for_schema": 3
+  },
+  "fire": {
+    "all": {
+      "events": 1739,
+      "actual": 481,
+      "fire": 744,
+      "tp": 469
+    },
+    "new_producer": {
+      "events": 1314,
+      "actual": 263,
+      "fire": 311,
+      "tp": 254
+    },
+    "seen": {
+      "events": 729,
+      "actual": 219,
+      "fire": 294,
+      "tp": 219
+    },
+    "new_pair_for_schema": {
+      "events": 190,
+      "actual": 5,
+      "fire": 14,
+      "tp": 5
+    },
+    "new_combination": {
+      "events": 369,
+      "actual": 25,
+      "fire": 43,
+      "tp": 25
+    },
+    "new_consumer": {
+      "events": 286,
+      "actual": 60,
+      "fire": 219,
+      "tp": 57
+    },
+    "new_mapping": {
+      "events": 190,
+      "actual": 3,
+      "fire": 4,
+      "tp": 3
+    }
+  },
+  "counts": {
+    "full": {
+      "paid": 89962,
+      "binding": 86892,
+      "accepted": 2323,
+      "guard": 747
+    },
+    "k8": {
+      "paid": 8819,
+      "binding": 7895,
+      "accepted": 829,
+      "guard": 95
+    },
+    "exact_emit": {
+      "paid": 3690,
+      "accepted": 2311,
+      "binding": 635,
+      "guard": 744
+    },
+    "k8_emit": {
+      "paid": 1514,
+      "accepted": 817,
+      "binding": 605,
+      "guard": 92
+    },
+    "lsh8": {
+      "paid": 1731,
+      "binding": 1402,
+      "accepted": 311,
+      "guard": 18
+    },
+    "lsh8_emit": {
+      "paid": 367,
+      "accepted": 299,
+      "binding": 53,
+      "guard": 15
+    }
+  },
+  "unique_all": {
+    "full": 236,
+    "k8": 229,
+    "exact_emit": 233,
+    "k8_emit": 226,
+    "lsh8": 76,
+    "lsh8_emit": 73
+  },
+  "per_run_all": [
+    [
+      1,
+      1,
+      0
+    ],
+    [
+      14,
+      5,
+      5
+    ],
+    [
+      15,
+      5,
+      5
+    ],
+    [
+      17,
+      3,
+      3
+    ],
+    [
+      19,
+      21,
+      15
+    ],
+    [
+      32,
+      3,
+      1
+    ],
+    [
+      35,
+      2,
+      1
+    ],
+    [
+      37,
+      1,
+      1
+    ],
+    [
+      51,
+      1,
+      1
+    ],
+    [
+      54,
+      1,
+      1
+    ],
+    [
+      62,
+      4,
+      4
+    ],
+    [
+      75,
+      90,
+      79
+    ],
+    [
+      98,
+      6,
+      4
+    ],
+    [
+      111,
+      5,
+      5
+    ],
+    [
+      112,
+      2,
+      2
+    ],
+    [
+      147,
+      6,
+      6
+    ],
+    [
+      157,
+      6,
+      4
+    ],
+    [
+      184,
+      6,
+      6
+    ],
+    [
+      206,
+      6,
+      6
+    ],
+    [
+      216,
+      9,
+      6
+    ],
+    [
+      220,
+      1,
+      1
+    ],
+    [
+      226,
+      8,
+      8
+    ],
+    [
+      229,
+      6,
+      6
+    ],
+    [
+      230,
+      6,
+      6
+    ],
+    [
+      243,
+      4,
+      4
+    ],
+    [
+      247,
+      5,
+      5
+    ],
+    [
+      257,
+      12,
+      9
+    ],
+    [
+      266,
+      3,
+      3
+    ],
+    [
+      280,
+      1,
+      1
+    ],
+    [
+      308,
+      1,
+      1
+    ],
+    [
+      314,
+      8,
+      4
+    ],
+    [
+      338,
+      0,
+      0
+    ],
+    [
+      339,
+      30,
+      30
+    ],
+    [
+      349,
+      0,
+      0
+    ],
+    [
+      388,
+      0,
+      0
+    ],
+    [
+      409,
+      0,
+      0
+    ],
+    [
+      444,
+      0,
+      0
+    ],
+    [
+      482,
+      0,
+      0
+    ],
+    [
+      520,
+      0,
+      0
+    ],
+    [
+      586,
+      0,
+      0
+    ]
+  ],
+  "precision_by_signature": {
+    "full/new_producer": {
+      "paid": 31443,
+      "valid": 333
+    },
+    "k8/new_producer": {
+      "paid": 3081,
+      "valid": 296
+    },
+    "exact_emit/new_producer": {
+      "paid": 389,
+      "valid": 324
+    },
+    "k8_emit/new_producer": {
+      "paid": 341,
+      "valid": 287
+    },
+    "lsh8/new_producer": {
+      "paid": 791,
+      "valid": 197
+    },
+    "full/seen": {
+      "paid": 20827,
+      "valid": 1641
+    },
+    "k8/seen": {
+      "paid": 2653,
+      "valid": 348
+    },
+    "lsh8_emit/new_producer": {
+      "paid": 207,
+      "valid": 188
+    },
+    "lsh8/seen": {
+      "paid": 524,
+      "valid": 85
+    },
+    "exact_emit/seen": {
+      "paid": 2259,
+      "valid": 1641
+    },
+    "k8_emit/seen": {
+      "paid": 456,
+      "valid": 348
+    },
+    "lsh8_emit/seen": {
+      "paid": 118,
+      "valid": 85
+    },
+    "full/new_pair_for_schema": {
+      "paid": 4570,
+      "valid": 9
+    },
+    "k8/new_pair_for_schema": {
+      "paid": 386,
+      "valid": 9
+    },
+    "full/new_combination": {
+      "paid": 6059,
+      "valid": 200
+    },
+    "k8/new_combination": {
+      "paid": 625,
+      "valid": 44
+    },
+    "exact_emit/new_pair_for_schema": {
+      "paid": 41,
+      "valid": 9
+    },
+    "k8_emit/new_pair_for_schema": {
+      "paid": 33,
+      "valid": 9
+    },
+    "exact_emit/new_combination": {
+      "paid": 359,
+      "valid": 200
+    },
+    "k8_emit/new_combination": {
+      "paid": 71,
+      "valid": 44
+    },
+    "lsh8/new_combination": {
+      "paid": 95,
+      "valid": 7
+    },
+    "lsh8/new_pair_for_schema": {
+      "paid": 80,
+      "valid": 1
+    },
+    "lsh8_emit/new_combination": {
+      "paid": 14,
+      "valid": 7
+    },
+    "full/new_consumer": {
+      "paid": 24949,
+      "valid": 135
+    },
+    "k8/new_consumer": {
+      "paid": 1731,
+      "valid": 128
+    },
+    "lsh8/new_consumer": {
+      "paid": 218,
+      "valid": 21
+    },
+    "exact_emit/new_consumer": {
+      "paid": 636,
+      "valid": 132
+    },
+    "k8_emit/new_consumer": {
+      "paid": 608,
+      "valid": 125
+    },
+    "lsh8_emit/new_pair_for_schema": {
+      "paid": 4,
+      "valid": 1
+    },
+    "full/new_mapping": {
+      "paid": 2114,
+      "valid": 5
+    },
+    "k8/new_mapping": {
+      "paid": 343,
+      "valid": 4
+    },
+    "lsh8/new_mapping": {
+      "paid": 23
+    },
+    "exact_emit/new_mapping": {
+      "paid": 6,
+      "valid": 5
+    },
+    "k8_emit/new_mapping": {
+      "paid": 5,
+      "valid": 4
+    },
+    "lsh8_emit/new_consumer": {
+      "paid": 24,
+      "valid": 18
+    }
+  },
+  "binary_required": {
+    "new_producer": 34,
+    "seen": 86,
+    "new_combination": 11,
+    "new_consumer": 2,
+    "new_pair_for_schema": 3
+  },
+  "binary_hits": {
+    "full": {
+      "seen": 86,
+      "new_producer": 34,
+      "new_pair_for_schema": 3,
+      "new_combination": 11,
+      "new_consumer": 2
+    },
+    "k8": {
+      "seen": 79,
+      "new_producer": 34,
+      "new_pair_for_schema": 3,
+      "new_combination": 11,
+      "new_consumer": 2
+    },
+    "exact_emit": {
+      "seen": 86,
+      "new_producer": 34,
+      "new_pair_for_schema": 3,
+      "new_combination": 11,
+      "new_consumer": 2
+    },
+    "k8_emit": {
+      "seen": 79,
+      "new_producer": 34,
+      "new_pair_for_schema": 3,
+      "new_combination": 11,
+      "new_consumer": 2
+    },
+    "lsh8": {
+      "seen": 17,
+      "new_producer": 5
+    },
+    "lsh8_emit": {
+      "seen": 17,
+      "new_producer": 5
+    }
+  },
+  "hits": {
+    "full": {
+      "seen": 116,
+      "new_producer": 44,
+      "new_pair_for_schema": 3,
+      "new_combination": 11,
+      "new_consumer": 11
+    },
+    "k8": {
+      "seen": 109,
+      "new_producer": 44,
+      "new_pair_for_schema": 3,
+      "new_combination": 11,
+      "new_consumer": 11
+    },
+    "exact_emit": {
+      "seen": 116,
+      "new_producer": 44,
+      "new_pair_for_schema": 3,
+      "new_combination": 11,
+      "new_consumer": 8
+    },
+    "k8_emit": {
+      "seen": 109,
+      "new_producer": 44,
+      "new_pair_for_schema": 3,
+      "new_combination": 11,
+      "new_consumer": 8
+    },
+    "lsh8": {
+      "seen": 47,
+      "new_producer": 15,
+      "new_consumer": 9
+    },
+    "lsh8_emit": {
+      "seen": 47,
+      "new_producer": 15,
+      "new_consumer": 6
+    }
+  },
+  "binary_rank": {
+    "all": {
+      "2": 128,
+      "1": 169,
+      "3": 91,
+      "12": 7,
+      "10": 9,
+      "11": 14,
+      "9": 28,
+      "7": 24,
+      "4": 53,
+      "6": 38,
+      "5": 61,
+      "8": 22,
+      "13": 5,
+      "17": 4,
+      "15": 3,
+      "16": 5,
+      "14": 23,
+      "23": 1,
+      "20": 21,
+      "19": 1,
+      "22": 2,
+      "26": 3,
+      "18": 2,
+      "60": 20,
+      "40": 19,
+      "21": 127,
+      "42": 168,
+      "63": 126,
+      "93": 186,
+      "31": 186,
+      "62": 186,
+      "126": 42,
+      "84": 41,
+      "43": 1,
+      "88": 88,
+      "132": 88,
+      "44": 88
+    },
+    "new_producer": {
+      "2": 21,
+      "1": 74,
+      "3": 10,
+      "12": 1,
+      "10": 2,
+      "11": 11,
+      "7": 2,
+      "9": 11,
+      "8": 6,
+      "6": 13,
+      "4": 12,
+      "13": 2,
+      "5": 7,
+      "17": 2,
+      "15": 2,
+      "16": 2,
+      "14": 1,
+      "23": 1,
+      "20": 1,
+      "19": 1
+    },
+    "seen": {
+      "2": 70,
+      "1": 66,
+      "9": 11,
+      "4": 24,
+      "6": 21,
+      "3": 41,
+      "5": 34,
+      "7": 13,
+      "8": 9,
+      "12": 5,
+      "11": 1,
+      "14": 22,
+      "60": 20,
+      "20": 20,
+      "40": 19,
+      "21": 127,
+      "42": 168,
+      "63": 126,
+      "93": 186,
+      "31": 186,
+      "62": 186,
+      "126": 42,
+      "84": 41,
+      "43": 1,
+      "88": 44,
+      "132": 44,
+      "44": 44
+    },
+    "new_combination": {
+      "1": 13,
+      "2": 13,
+      "3": 4,
+      "7": 5,
+      "15": 1,
+      "5": 5,
+      "9": 2,
+      "11": 2,
+      "17": 2,
+      "12": 1,
+      "10": 3,
+      "4": 4,
+      "22": 2,
+      "13": 3,
+      "16": 3,
+      "26": 3,
+      "18": 2,
+      "88": 44,
+      "132": 44,
+      "44": 44
+    },
+    "new_consumer": {
+      "2": 24,
+      "1": 15,
+      "5": 12,
+      "6": 4,
+      "3": 29,
+      "9": 4,
+      "10": 3,
+      "8": 7,
+      "7": 4,
+      "4": 12
+    },
+    "new_mapping": {
+      "4": 1,
+      "10": 1,
+      "3": 3
+    },
+    "new_pair_for_schema": {
+      "1": 1,
+      "3": 4,
+      "5": 3
+    }
+  },
+  "matched": {
+    "exact_emit": {
+      "paid_per_arm": 502,
+      "prefix": {
+        "seen": 92,
+        "new_producer": 38,
+        "new_pair_for_schema": 3,
+        "new_combination": 11,
+        "new_consumer": 9
+      },
+      "relation": {
+        "seen": 89,
+        "new_producer": 40,
+        "new_pair_for_schema": 3,
+        "new_combination": 11,
+        "new_consumer": 8
+      }
+    },
+    "k8_emit": {
+      "paid_per_arm": 475,
+      "prefix": {
+        "seen": 92,
+        "new_producer": 38,
+        "new_pair_for_schema": 3,
+        "new_combination": 11,
+        "new_consumer": 9
+      },
+      "relation": {
+        "seen": 89,
+        "new_producer": 40,
+        "new_pair_for_schema": 3,
+        "new_combination": 11,
+        "new_consumer": 8
+      }
+    },
+    "lsh8_emit": {
+      "paid_per_arm": 225,
+      "prefix": {
+        "seen": 44,
+        "new_pair_for_schema": 1,
+        "new_producer": 12,
+        "new_consumer": 7
+      },
+      "relation": {
+        "seen": 33,
+        "new_producer": 15,
+        "new_consumer": 6
+      }
+    }
+  },
+  "per_run": [
+    [
+      1,
+      0,
+      0
+    ],
+    [
+      14,
+      5,
+      5
+    ],
+    [
+      15,
+      5,
+      5
+    ],
+    [
+      17,
+      3,
+      3
+    ],
+    [
+      19,
+      15,
+      15
+    ],
+    [
+      32,
+      1,
+      1
+    ],
+    [
+      35,
+      1,
+      1
+    ],
+    [
+      37,
+      1,
+      1
+    ],
+    [
+      51,
+      1,
+      1
+    ],
+    [
+      54,
+      1,
+      1
+    ],
+    [
+      62,
+      4,
+      4
+    ],
+    [
+      75,
+      78,
+      78
+    ],
+    [
+      98,
+      4,
+      4
+    ],
+    [
+      111,
+      5,
+      5
+    ],
+    [
+      112,
+      2,
+      2
+    ],
+    [
+      147,
+      6,
+      6
+    ],
+    [
+      157,
+      4,
+      4
+    ],
+    [
+      184,
+      6,
+      6
+    ],
+    [
+      206,
+      1,
+      1
+    ],
+    [
+      216,
+      0,
+      0
+    ],
+    [
+      220,
+      1,
+      1
+    ],
+    [
+      226,
+      1,
+      1
+    ],
+    [
+      229,
+      6,
+      6
+    ],
+    [
+      230,
+      6,
+      6
+    ],
+    [
+      243,
+      4,
+      4
+    ],
+    [
+      247,
+      5,
+      5
+    ],
+    [
+      257,
+      12,
+      9
+    ],
+    [
+      266,
+      1,
+      1
+    ],
+    [
+      280,
+      1,
+      1
+    ],
+    [
+      308,
+      1,
+      1
+    ],
+    [
+      314,
+      8,
+      4
+    ],
+    [
+      338,
+      0,
+      0
+    ],
+    [
+      339,
+      0,
+      0
+    ],
+    [
+      349,
+      0,
+      0
+    ],
+    [
+      388,
+      0,
+      0
+    ],
+    [
+      409,
+      0,
+      0
+    ],
+    [
+      444,
+      0,
+      0
+    ],
+    [
+      482,
+      0,
+      0
+    ],
+    [
+      520,
+      0,
+      0
+    ],
+    [
+      586,
+      0,
+      0
+    ]
+  ]
+}
