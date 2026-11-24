@@ -1,7 +1,7 @@
 """Direct B template refinement from the event, before its first parent search."""
 
 import argparse
-from collections import Counter, defaultdict
+from collections import defaultdict
 from pathlib import Path
 from types import SimpleNamespace
 

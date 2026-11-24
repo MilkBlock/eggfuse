@@ -45,7 +45,7 @@ def measure(roots, ids):
     return dict(ready_distinct_steps=len(touched), root_boundary_steps=len(possible))
 
 
-def main(root, weights, out):
+def main(root, weights, out, size, examples=None):
     import numpy as np
     from event_addresses import Directory
     from recursive_agent import Reader
@@ -66,8 +66,9 @@ def main(root, weights, out):
                 if depth(l) >= 3 and int(layout_id(l)[:8], 16) % 8:
                     support[l] += 1
                     ready[l] += any(r and f for _, r, f, _ in occ)
-    layouts = sorted(support, key=lambda l: (-ready[l], -support[l], l))[:10000]
-    assert len(layouts) == 10000
+    layouts = sorted(support, key=lambda l: (-ready[l], -support[l], l))[:size]
+    if not 0 < size == len(layouts):
+        raise ValueError("requested catalog exceeds distinct eligible training layouts")
     ids = {l: i for i, l in enumerate(layouts)}
     actor = load_actor(weights, True)
     cat = actor.catalog_type(donor)
@@ -125,7 +126,14 @@ def main(root, weights, out):
     dev = "mps" if torch.backends.mps.is_available() else "cpu"
     model.to(dev)
     encoder.to(dev)
-    for batch in torch.randperm(len(x)).split(256):
+    # Match example and optimizer budgets across different catalog sizes.
+    examples = len(x) if examples is None else examples
+    if examples < len(x):
+        raise ValueError("training budget would omit catalog examples")
+    order = torch.cat(
+        [torch.randperm(len(x)) for _ in range((examples + len(x) - 1) // len(x))]
+    )[:examples]
+    for batch in order.split(256):
         unique, inverse = torch.unique(indices[batch], return_inverse=True)
         codes = model.encode(bank.batch(unique, dev))
         loss = F.binary_cross_entropy_with_logits(
@@ -155,6 +163,8 @@ def main(root, weights, out):
         observed_gradient_layouts=len(set(indices[y[:, 0].bool()].tolist())),
         ready_gradient_layouts=len(set(indices[y[:, 1].bool()].tolist())),
         pairs=len(x),
+        examples=examples,
+        updates=(examples + 255) // 256,
         device=dev,
         deployable=sum(map(deployable, layouts)),
         programs={},
@@ -170,6 +180,8 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser()
     for key in ("root", "weights", "out"):
         p.add_argument(key, type=Path)
+    p.add_argument("--size", type=int, default=10000)
+    p.add_argument("--examples", type=int)
     a = p.parse_args()
     torch.set_num_threads(1)
-    main(a.root, a.weights, a.out)
+    main(a.root, a.weights, a.out, a.size, a.examples)

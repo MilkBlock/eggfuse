@@ -45,6 +45,7 @@ def evaluate(root, out, name, size):
         runs[q["run"]].append((j, q))
     counts = Counter()
     union = set()
+    first_in_menu = set()
     # Deduplicate repeated requests for the same event and menu within one snapshot.
     for frame in map(
         json.loads, (root / name / "memory.jsonl").read_text().splitlines()
@@ -79,6 +80,12 @@ def evaluate(root, out, name, size):
                 if uid is None:
                     continue
                 counts["selected_event_root_pairs"] += 1
+                # Identical admitted event/root pairs, fixed training order for the choice.
+                for _, ready, first, tokens in roots.get(j, {}).get(
+                    layouts[menu[0]], ()
+                ):
+                    if ready and first:
+                        first_in_menu.update(tokens)
                 for _, ready, first, tokens in roots.get(j, {}).get(layouts[uid], ()):
                     if ready and first:
                         union.update(tokens)
@@ -87,6 +94,7 @@ def evaluate(root, out, name, size):
         compatible_templates=sum(map(len, menus.values())),
         commits=len(refs),
         selected_ready_distinct_steps=len(union),
+        first_in_menu_distinct_steps=len(first_in_menu),
         **measure(roots, set(layouts)),
         **counts,
     )
