@@ -1,0 +1,465 @@
+{
+  "first_publications": 16060,
+  "reference_ops": 11905,
+  "bounded_local": {
+    "native_witness": null,
+    "entry_binding_histogram": {
+      "1": 493,
+      "2": 164
+    },
+    "direct_branch_histogram": {
+      "3": 238,
+      "32": 1,
+      "2": 231,
+      "1": 180,
+      "7": 1,
+      "4": 6
+    },
+    "teacher_fresh_path_costs": {},
+    "opportunities": 2223,
+    "events": 1626,
+    "selected": 657,
+    "steps": 2640,
+    "effective_ops": 2503,
+    "independent_bindings": 821,
+    "extra_direct_branches": 762,
+    "later_run_steps": 1938,
+    "EAR": 3.048721071863581,
+    "packed_EAR_histogram": [
+      [
+        0.5,
+        82
+      ],
+      [
+        1.0,
+        111
+      ],
+      [
+        1.5,
+        31
+      ],
+      [
+        2.0,
+        81
+      ],
+      [
+        2.5,
+        9
+      ],
+      [
+        3.0,
+        141
+      ],
+      [
+        4.0,
+        124
+      ],
+      [
+        5.0,
+        15
+      ],
+      [
+        6.0,
+        12
+      ],
+      [
+        7.0,
+        4
+      ],
+      [
+        8.0,
+        4
+      ],
+      [
+        10.0,
+        14
+      ],
+      [
+        11.0,
+        4
+      ],
+      [
+        12.0,
+        2
+      ],
+      [
+        16.0,
+        1
+      ],
+      [
+        19.0,
+        2
+      ],
+      [
+        20.0,
+        1
+      ],
+      [
+        25.0,
+        1
+      ],
+      [
+        27.0,
+        4
+      ],
+      [
+        29.0,
+        5
+      ],
+      [
+        30.0,
+        8
+      ],
+      [
+        32.0,
+        1
+      ]
+    ],
+    "max_individual_EAR": 32.0
+  },
+  "exact_donor_shape": {
+    "native_witness": {
+      "status": "pass",
+      "entry": 132,
+      "first_run": 135,
+      "last_run": 155,
+      "evidence": 1733,
+      "bindings": 1,
+      "teacher_effective_ops": 25,
+      "direct_branches": 3,
+      "tokens": [
+        2111,
+        2129,
+        2430,
+        2512,
+        2532,
+        2560,
+        2858,
+        2903,
+        2984,
+        3004,
+        3031,
+        3053,
+        3329,
+        3370,
+        3392,
+        3439,
+        3481,
+        3502,
+        3544,
+        3793,
+        3816,
+        3831,
+        3852,
+        3899,
+        3946,
+        3987,
+        4266,
+        4294,
+        4399,
+        4428,
+        4647,
+        4666
+      ],
+      "native": {
+        "checks": {
+          "state_sha": true,
+          "schedule": true,
+          "writes": true,
+          "rhs": true,
+          "resumes": true,
+          "events": true
+        },
+        "accepted": 17341,
+        "graph": {
+          "absent_returns": 0,
+          "accepted_steps": 31,
+          "attached_roots": 0,
+          "boundary_reads": 3,
+          "completed_layouts": {
+            "0": 1
+          },
+          "completed_sizes": {
+            "32": 1
+          },
+          "invalid_boundary": 0,
+          "issued_layouts": {
+            "0": 1
+          },
+          "issued_steps": 31,
+          "missing_returns": 0,
+          "rejected_groups": 0,
+          "retired_returns": 0,
+          "signed_layouts": 1
+        },
+        "external_requests": 17310,
+        "native_batches": 1644
+      }
+    },
+    "entry_binding_histogram": {
+      "1": 378,
+      "2": 17
+    },
+    "direct_branch_histogram": {
+      "3": 140,
+      "1": 154,
+      "2": 101
+    },
+    "teacher_fresh_path_costs": {
+      "removed_terminal_visits": 1013,
+      "suppressed_b_proposals": 1962,
+      "unary_event_skips": 949
+    },
+    "opportunities": 660,
+    "events": 660,
+    "selected": 395,
+    "steps": 1701,
+    "effective_ops": 1719,
+    "independent_bindings": 412,
+    "extra_direct_branches": 381,
+    "later_run_steps": 1328,
+    "EAR": 4.172330097087379,
+    "packed_EAR_histogram": [
+      [
+        1.0,
+        2
+      ],
+      [
+        1.5,
+        5
+      ],
+      [
+        2.0,
+        80
+      ],
+      [
+        2.5,
+        7
+      ],
+      [
+        3.0,
+        113
+      ],
+      [
+        4.0,
+        154
+      ],
+      [
+        6.0,
+        1
+      ],
+      [
+        8.0,
+        2
+      ],
+      [
+        10.0,
+        13
+      ],
+      [
+        19.0,
+        1
+      ],
+      [
+        21.0,
+        12
+      ],
+      [
+        23.0,
+        2
+      ],
+      [
+        25.0,
+        3
+      ]
+    ],
+    "max_individual_EAR": 25.0
+  },
+  "opportunity_histogram": [
+    [
+      1,
+      0,
+      271
+    ],
+    [
+      1,
+      1,
+      139
+    ],
+    [
+      1,
+      2,
+      159
+    ],
+    [
+      1,
+      3,
+      203
+    ],
+    [
+      1,
+      4,
+      192
+    ],
+    [
+      1,
+      5,
+      26
+    ],
+    [
+      1,
+      6,
+      17
+    ],
+    [
+      1,
+      7,
+      11
+    ],
+    [
+      1,
+      8,
+      8
+    ],
+    [
+      1,
+      9,
+      15
+    ],
+    [
+      1,
+      10,
+      18
+    ],
+    [
+      1,
+      11,
+      7
+    ],
+    [
+      1,
+      12,
+      2
+    ],
+    [
+      1,
+      13,
+      3
+    ],
+    [
+      1,
+      15,
+      15
+    ],
+    [
+      1,
+      16,
+      3
+    ],
+    [
+      1,
+      17,
+      1
+    ],
+    [
+      1,
+      18,
+      3
+    ],
+    [
+      1,
+      19,
+      3
+    ],
+    [
+      1,
+      20,
+      2
+    ],
+    [
+      1,
+      21,
+      12
+    ],
+    [
+      1,
+      23,
+      3
+    ],
+    [
+      1,
+      25,
+      7
+    ],
+    [
+      1,
+      26,
+      2
+    ],
+    [
+      1,
+      27,
+      15
+    ],
+    [
+      1,
+      28,
+      9
+    ],
+    [
+      1,
+      29,
+      6
+    ],
+    [
+      1,
+      30,
+      8
+    ],
+    [
+      1,
+      32,
+      1
+    ],
+    [
+      2,
+      0,
+      729
+    ],
+    [
+      2,
+      1,
+      172
+    ],
+    [
+      2,
+      2,
+      78
+    ],
+    [
+      2,
+      3,
+      40
+    ],
+    [
+      2,
+      4,
+      24
+    ],
+    [
+      2,
+      5,
+      10
+    ],
+    [
+      2,
+      7,
+      8
+    ],
+    [
+      2,
+      8,
+      1
+    ]
+  ]
+}

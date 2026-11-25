@@ -1,0 +1,637 @@
+{
+  "sum-train-0--1": {
+    "runs": 320,
+    "state_sha": "25bdbd8ddfbc9cf87d1b8cff3f385fa9622273fe2a46ab8071015bbce0bc9a45",
+    "exact_endpoint": false,
+    "facts": 1241,
+    "reference": 1681,
+    "coverage": 0.7382510410469958,
+    "effective_operations": 1678,
+    "CCP_requests": 359216,
+    "requests_and_decisions": 381881,
+    "ept": 0.004671284129882856,
+    "ept_including_decisions": 0.004394038980729599,
+    "visits": 2474833,
+    "terminal_scores": 2182548,
+    "parent_scores": 2471178,
+    "interface_reads": 861659,
+    "synchronizations": 4401,
+    "verdicts": {
+      "accepted": 1808,
+      "duplicate": 318959,
+      "untriggered_rule": 83,
+      "binding": 1191,
+      "guard": 37128,
+      "watermark": 47
+    },
+    "open_actions": {
+      "EvidenceActivate": 198,
+      "Defer": 1119,
+      "Primitive": 270,
+      "Extend": 935,
+      "WiredExtend": 136,
+      "EvidencePass": 52,
+      "Compose": 197,
+      "Activate": 12,
+      "WiredCompose": 18,
+      "EvidenceBind": 1
+    },
+    "activated": 198,
+    "region_counts": {
+      "operations": 141,
+      "bindings": 199,
+      "additional_attempts": 1,
+      "issued": 246,
+      "horizontal": 162,
+      "vertical": 43,
+      "later": 154
+    },
+    "ear": 0.7085427135678392,
+    "additional_binding_strata": {
+      "0": {
+        "activations": 197,
+        "operations": 140
+      },
+      "1": {
+        "activations": 1,
+        "operations": 1
+      }
+    },
+    "extra_direct_branches": 64,
+    "productive_activations": 62,
+    "skip_and_overhead": {
+      "template_branch_scores": 98650,
+      "evidence_option_scores": 933,
+      "evidence_reply_accepted": 205,
+      "evidence_certificate_position_checks": 87,
+      "evidence_certified_leaf_scores_skipped": 87,
+      "evidence_binary_root_scores_skipped": 76,
+      "receipt_position_probes": 978,
+      "receipt_prefix_checks": 6833,
+      "struct_skip_evidence": 201,
+      "boundary_scores": 735,
+      "structure_scores": 498,
+      "evidence_done_or_old": 231,
+      "evidence_blocked_descendants": 308,
+      "open_partner_scores": 2920,
+      "evidence_reply_guard": 5,
+      "evidence_unavailable": 3,
+      "evidence_reply_duplicate": 36
+    }
+  },
+  "sum-train-0-1": {
+    "runs": 320,
+    "state_sha": "038f2e72858eb4cee3031584451bd86a301e3076aaa91fbdf721990ec03c3536",
+    "exact_endpoint": false,
+    "facts": 1241,
+    "reference": 1681,
+    "coverage": 0.7382510410469958,
+    "effective_operations": 1668,
+    "CCP_requests": 360413,
+    "requests_and_decisions": 383640,
+    "ept": 0.004628023961399838,
+    "ept_including_decisions": 0.004347826086956522,
+    "visits": 2292653,
+    "terminal_scores": 2012802,
+    "parent_scores": 2288376,
+    "interface_reads": 863751,
+    "synchronizations": 4308,
+    "verdicts": {
+      "accepted": 1800,
+      "duplicate": 319868,
+      "untriggered_rule": 80,
+      "binding": 1205,
+      "guard": 37409,
+      "watermark": 51
+    },
+    "open_actions": {
+      "EvidenceActivate": 197,
+      "Defer": 1230,
+      "Primitive": 285,
+      "Extend": 1026,
+      "WiredExtend": 158,
+      "EvidencePass": 51,
+      "Activate": 18,
+      "Compose": 241,
+      "WiredCompose": 65
+    },
+    "activated": 197,
+    "region_counts": {
+      "operations": 173,
+      "bindings": 197,
+      "additional_attempts": 0,
+      "issued": 266,
+      "horizontal": 162,
+      "vertical": 64,
+      "later": 174
+    },
+    "ear": 0.8781725888324873,
+    "additional_binding_strata": {
+      "0": {
+        "activations": 197,
+        "operations": 173
+      },
+      "1": {
+        "activations": 0,
+        "operations": 0
+      }
+    },
+    "extra_direct_branches": 66,
+    "productive_activations": 58,
+    "skip_and_overhead": {
+      "template_branch_scores": 98507,
+      "evidence_option_scores": 927,
+      "evidence_reply_accepted": 226,
+      "evidence_certificate_position_checks": 91,
+      "evidence_certified_leaf_scores_skipped": 91,
+      "evidence_binary_root_scores_skipped": 80,
+      "receipt_position_probes": 1028,
+      "receipt_prefix_checks": 11389,
+      "struct_skip_evidence": 231,
+      "boundary_scores": 355,
+      "structure_scores": 679,
+      "evidence_done_or_old": 233,
+      "evidence_blocked_descendants": 334,
+      "open_partner_scores": 3922,
+      "evidence_reply_guard": 5,
+      "evidence_reply_duplicate": 35
+    }
+  },
+  "sum-train-1--1": {
+    "runs": 320,
+    "state_sha": "25bdbd8ddfbc9cf87d1b8cff3f385fa9622273fe2a46ab8071015bbce0bc9a45",
+    "exact_endpoint": false,
+    "facts": 1241,
+    "reference": 1681,
+    "coverage": 0.7382510410469958,
+    "effective_operations": 1678,
+    "CCP_requests": 359191,
+    "requests_and_decisions": 382013,
+    "ept": 0.004671609255243033,
+    "ept_including_decisions": 0.004392520673380225,
+    "visits": 2476356,
+    "terminal_scores": 2182526,
+    "parent_scores": 2471156,
+    "interface_reads": 868430,
+    "synchronizations": 4404,
+    "verdicts": {
+      "accepted": 1808,
+      "duplicate": 318955,
+      "untriggered_rule": 79,
+      "binding": 1173,
+      "guard": 37130,
+      "watermark": 46
+    },
+    "open_actions": {
+      "EvidenceActivate": 197,
+      "Defer": 1255,
+      "Primitive": 294,
+      "Extend": 922,
+      "Activate": 17,
+      "WiredExtend": 131,
+      "EvidencePass": 53,
+      "Compose": 206,
+      "WiredCompose": 24,
+      "EvidenceBind": 5
+    },
+    "activated": 197,
+    "region_counts": {
+      "operations": 189,
+      "bindings": 202,
+      "additional_attempts": 5,
+      "issued": 283,
+      "horizontal": 173,
+      "vertical": 62,
+      "later": 180
+    },
+    "ear": 0.9356435643564357,
+    "additional_binding_strata": {
+      "0": {
+        "activations": 192,
+        "operations": 185
+      },
+      "1": {
+        "activations": 5,
+        "operations": 4
+      }
+    },
+    "extra_direct_branches": 71,
+    "productive_activations": 63,
+    "skip_and_overhead": {
+      "template_branch_scores": 98650,
+      "evidence_option_scores": 933,
+      "evidence_reply_accepted": 235,
+      "evidence_certificate_position_checks": 93,
+      "evidence_certified_leaf_scores_skipped": 93,
+      "evidence_binary_root_scores_skipped": 82,
+      "receipt_position_probes": 1062,
+      "receipt_prefix_checks": 14198,
+      "struct_skip_evidence": 242,
+      "boundary_scores": 826,
+      "structure_scores": 567,
+      "evidence_done_or_old": 234,
+      "evidence_blocked_descendants": 358,
+      "open_partner_scores": 4374,
+      "evidence_reply_guard": 5,
+      "evidence_unavailable": 2,
+      "evidence_reply_duplicate": 43
+    }
+  },
+  "sum-train-1-1": {
+    "runs": 320,
+    "state_sha": "25bdbd8ddfbc9cf87d1b8cff3f385fa9622273fe2a46ab8071015bbce0bc9a45",
+    "exact_endpoint": false,
+    "facts": 1241,
+    "reference": 1681,
+    "coverage": 0.7382510410469958,
+    "effective_operations": 1678,
+    "CCP_requests": 359235,
+    "requests_and_decisions": 381776,
+    "ept": 0.0046710370648739685,
+    "ept_including_decisions": 0.0043952474749591386,
+    "visits": 2475392,
+    "terminal_scores": 2182536,
+    "parent_scores": 2471166,
+    "interface_reads": 869389,
+    "synchronizations": 4430,
+    "verdicts": {
+      "accepted": 1808,
+      "duplicate": 318955,
+      "untriggered_rule": 79,
+      "binding": 1217,
+      "guard": 37129,
+      "watermark": 47
+    },
+    "open_actions": {
+      "EvidenceActivate": 203,
+      "Defer": 976,
+      "Primitive": 280,
+      "Extend": 924,
+      "WiredExtend": 153,
+      "EvidencePass": 47,
+      "Compose": 180,
+      "Activate": 15,
+      "WiredCompose": 45
+    },
+    "activated": 203,
+    "region_counts": {
+      "operations": 183,
+      "bindings": 203,
+      "additional_attempts": 0,
+      "issued": 273,
+      "horizontal": 169,
+      "vertical": 60,
+      "later": 179
+    },
+    "ear": 0.9014778325123153,
+    "additional_binding_strata": {
+      "0": {
+        "activations": 203,
+        "operations": 183
+      },
+      "1": {
+        "activations": 0,
+        "operations": 0
+      }
+    },
+    "extra_direct_branches": 68,
+    "productive_activations": 65,
+    "skip_and_overhead": {
+      "template_branch_scores": 98650,
+      "evidence_option_scores": 933,
+      "evidence_reply_accepted": 229,
+      "evidence_certificate_position_checks": 89,
+      "evidence_certified_leaf_scores_skipped": 89,
+      "evidence_binary_root_scores_skipped": 78,
+      "receipt_position_probes": 1032,
+      "receipt_prefix_checks": 9840,
+      "struct_skip_evidence": 235,
+      "boundary_scores": 716,
+      "structure_scores": 610,
+      "evidence_done_or_old": 247,
+      "evidence_blocked_descendants": 364,
+      "open_partner_scores": 3510,
+      "evidence_reply_guard": 4,
+      "evidence_reply_duplicate": 40
+    }
+  },
+  "sum-train-2--1": {
+    "runs": 320,
+    "state_sha": "25bdbd8ddfbc9cf87d1b8cff3f385fa9622273fe2a46ab8071015bbce0bc9a45",
+    "exact_endpoint": false,
+    "facts": 1241,
+    "reference": 1681,
+    "coverage": 0.7382510410469958,
+    "effective_operations": 1678,
+    "CCP_requests": 359176,
+    "requests_and_decisions": 382290,
+    "ept": 0.004671804352183888,
+    "ept_including_decisions": 0.004389337937168118,
+    "visits": 2474535,
+    "terminal_scores": 2182542,
+    "parent_scores": 2471172,
+    "interface_reads": 863556,
+    "synchronizations": 4366,
+    "verdicts": {
+      "accepted": 1808,
+      "duplicate": 318948,
+      "untriggered_rule": 78,
+      "binding": 1166,
+      "guard": 37129,
+      "watermark": 47
+    },
+    "open_actions": {
+      "EvidenceActivate": 190,
+      "Defer": 1324,
+      "Primitive": 311,
+      "Extend": 1058,
+      "Activate": 19,
+      "WiredExtend": 158,
+      "EvidencePass": 60,
+      "Compose": 223,
+      "WiredCompose": 48
+    },
+    "activated": 190,
+    "region_counts": {
+      "operations": 155,
+      "bindings": 190,
+      "additional_attempts": 0,
+      "issued": 246,
+      "horizontal": 159,
+      "vertical": 50,
+      "later": 156
+    },
+    "ear": 0.8157894736842105,
+    "additional_binding_strata": {
+      "0": {
+        "activations": 190,
+        "operations": 155
+      },
+      "1": {
+        "activations": 0,
+        "operations": 0
+      }
+    },
+    "extra_direct_branches": 65,
+    "productive_activations": 61,
+    "skip_and_overhead": {
+      "template_branch_scores": 98650,
+      "evidence_option_scores": 933,
+      "evidence_reply_accepted": 209,
+      "evidence_certificate_position_checks": 91,
+      "evidence_certified_leaf_scores_skipped": 91,
+      "evidence_binary_root_scores_skipped": 80,
+      "receipt_position_probes": 987,
+      "receipt_prefix_checks": 6065,
+      "struct_skip_evidence": 209,
+      "boundary_scores": 1277,
+      "structure_scores": 697,
+      "evidence_done_or_old": 222,
+      "evidence_blocked_descendants": 286,
+      "open_partner_scores": 2086,
+      "evidence_reply_guard": 5,
+      "evidence_unavailable": 2,
+      "evidence_reply_duplicate": 32
+    }
+  },
+  "sum-train-2-1": {
+    "runs": 320,
+    "state_sha": "25bdbd8ddfbc9cf87d1b8cff3f385fa9622273fe2a46ab8071015bbce0bc9a45",
+    "exact_endpoint": false,
+    "facts": 1241,
+    "reference": 1681,
+    "coverage": 0.7382510410469958,
+    "effective_operations": 1678,
+    "CCP_requests": 359210,
+    "requests_and_decisions": 381883,
+    "ept": 0.004671362155841987,
+    "ept_including_decisions": 0.004394015968241582,
+    "visits": 2475612,
+    "terminal_scores": 2182542,
+    "parent_scores": 2471172,
+    "interface_reads": 869556,
+    "synchronizations": 4395,
+    "verdicts": {
+      "accepted": 1808,
+      "duplicate": 318962,
+      "untriggered_rule": 80,
+      "binding": 1184,
+      "guard": 37130,
+      "watermark": 46
+    },
+    "open_actions": {
+      "EvidenceActivate": 195,
+      "Defer": 1109,
+      "Primitive": 339,
+      "Extend": 863,
+      "WiredExtend": 137,
+      "EvidencePass": 55,
+      "Activate": 18,
+      "Compose": 188,
+      "WiredCompose": 45,
+      "EvidenceBind": 1
+    },
+    "activated": 195,
+    "region_counts": {
+      "operations": 156,
+      "bindings": 196,
+      "additional_attempts": 1,
+      "issued": 258,
+      "horizontal": 163,
+      "vertical": 50,
+      "later": 162
+    },
+    "ear": 0.7959183673469388,
+    "additional_binding_strata": {
+      "0": {
+        "activations": 194,
+        "operations": 156
+      },
+      "1": {
+        "activations": 1,
+        "operations": 0
+      }
+    },
+    "extra_direct_branches": 66,
+    "productive_activations": 59,
+    "skip_and_overhead": {
+      "template_branch_scores": 98650,
+      "evidence_option_scores": 933,
+      "evidence_reply_accepted": 213,
+      "evidence_certificate_position_checks": 83,
+      "evidence_certified_leaf_scores_skipped": 83,
+      "evidence_binary_root_scores_skipped": 72,
+      "receipt_position_probes": 999,
+      "receipt_prefix_checks": 6498,
+      "struct_skip_evidence": 221,
+      "boundary_scores": 759,
+      "structure_scores": 642,
+      "evidence_done_or_old": 233,
+      "evidence_blocked_descendants": 351,
+      "open_partner_scores": 3681,
+      "evidence_reply_guard": 5,
+      "evidence_reply_duplicate": 40,
+      "evidence_unavailable": 1
+    }
+  },
+  "sum-train-3--1": {
+    "runs": 320,
+    "state_sha": "25bdbd8ddfbc9cf87d1b8cff3f385fa9622273fe2a46ab8071015bbce0bc9a45",
+    "exact_endpoint": false,
+    "facts": 1241,
+    "reference": 1681,
+    "coverage": 0.7382510410469958,
+    "effective_operations": 1678,
+    "CCP_requests": 359232,
+    "requests_and_decisions": 382128,
+    "ept": 0.004671076073401033,
+    "ept_including_decisions": 0.004391198760624712,
+    "visits": 2475247,
+    "terminal_scores": 2182546,
+    "parent_scores": 2471176,
+    "interface_reads": 863763,
+    "synchronizations": 4423,
+    "verdicts": {
+      "accepted": 1808,
+      "duplicate": 318961,
+      "untriggered_rule": 80,
+      "binding": 1208,
+      "guard": 37129,
+      "watermark": 46
+    },
+    "open_actions": {
+      "EvidenceActivate": 193,
+      "Defer": 1139,
+      "Extend": 1033,
+      "Primitive": 297,
+      "WiredExtend": 174,
+      "EvidencePass": 57,
+      "Compose": 211,
+      "WiredCompose": 48,
+      "Activate": 15,
+      "EvidenceBind": 1
+    },
+    "activated": 193,
+    "region_counts": {
+      "operations": 136,
+      "bindings": 194,
+      "additional_attempts": 1,
+      "issued": 238,
+      "horizontal": 159,
+      "vertical": 39,
+      "later": 144
+    },
+    "ear": 0.7010309278350515,
+    "additional_binding_strata": {
+      "0": {
+        "activations": 192,
+        "operations": 135
+      },
+      "1": {
+        "activations": 1,
+        "operations": 1
+      }
+    },
+    "extra_direct_branches": 66,
+    "productive_activations": 54,
+    "skip_and_overhead": {
+      "template_branch_scores": 98650,
+      "evidence_option_scores": 933,
+      "evidence_reply_accepted": 198,
+      "evidence_certificate_position_checks": 89,
+      "evidence_certified_leaf_scores_skipped": 89,
+      "evidence_binary_root_scores_skipped": 78,
+      "receipt_position_probes": 979,
+      "receipt_prefix_checks": 6617,
+      "struct_skip_evidence": 200,
+      "boundary_scores": 508,
+      "structure_scores": 684,
+      "evidence_done_or_old": 233,
+      "evidence_blocked_descendants": 366,
+      "open_partner_scores": 3563,
+      "evidence_reply_guard": 4,
+      "evidence_unavailable": 3,
+      "evidence_reply_duplicate": 36
+    }
+  },
+  "sum-train-3-1": {
+    "runs": 320,
+    "state_sha": "25bdbd8ddfbc9cf87d1b8cff3f385fa9622273fe2a46ab8071015bbce0bc9a45",
+    "exact_endpoint": false,
+    "facts": 1241,
+    "reference": 1681,
+    "coverage": 0.7382510410469958,
+    "effective_operations": 1678,
+    "CCP_requests": 359155,
+    "requests_and_decisions": 381972,
+    "ept": 0.004672077515278919,
+    "ept_including_decisions": 0.004392992156493146,
+    "visits": 2474804,
+    "terminal_scores": 2182536,
+    "parent_scores": 2471166,
+    "interface_reads": 872398,
+    "synchronizations": 4348,
+    "verdicts": {
+      "accepted": 1808,
+      "duplicate": 318952,
+      "untriggered_rule": 81,
+      "binding": 1142,
+      "guard": 37127,
+      "watermark": 45
+    },
+    "open_actions": {
+      "EvidenceActivate": 196,
+      "Defer": 1272,
+      "Extend": 856,
+      "Primitive": 322,
+      "WiredExtend": 147,
+      "EvidencePass": 54,
+      "Activate": 18,
+      "Compose": 185,
+      "WiredCompose": 45,
+      "EvidenceBind": 1
+    },
+    "activated": 196,
+    "region_counts": {
+      "operations": 156,
+      "bindings": 197,
+      "additional_attempts": 1,
+      "issued": 263,
+      "horizontal": 163,
+      "vertical": 56,
+      "later": 168
+    },
+    "ear": 0.7918781725888325,
+    "additional_binding_strata": {
+      "0": {
+        "activations": 195,
+        "operations": 156
+      },
+      "1": {
+        "activations": 1,
+        "operations": 0
+      }
+    },
+    "extra_direct_branches": 68,
+    "productive_activations": 56,
+    "skip_and_overhead": {
+      "template_branch_scores": 98650,
+      "evidence_option_scores": 933,
+      "evidence_reply_accepted": 219,
+      "evidence_certificate_position_checks": 85,
+      "evidence_certified_leaf_scores_skipped": 85,
+      "evidence_binary_root_scores_skipped": 74,
+      "receipt_position_probes": 1018,
+      "receipt_prefix_checks": 6627,
+      "struct_skip_evidence": 229,
+      "boundary_scores": 117,
+      "structure_scores": 709,
+      "evidence_done_or_old": 237,
+      "evidence_blocked_descendants": 377,
+      "open_partner_scores": 3521,
+      "evidence_reply_guard": 5,
+      "evidence_reply_duplicate": 39,
+      "evidence_unavailable": 1
+    }
+  }
+}
