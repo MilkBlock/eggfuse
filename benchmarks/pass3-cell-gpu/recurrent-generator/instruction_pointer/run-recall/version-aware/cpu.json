@@ -1,0 +1,13 @@
+{
+  "backend": "standalone-cell-cpu",
+  "program_sha256": "c7512386e84a516f01e4cbce3d79e8299c862eee9951508b7bc0659f4bed4edc",
+  "inference_ms": [
+    22.852,
+    23.321542,
+    23.628583000000003,
+    23.376292,
+    21.226292
+  ],
+  "median_ms": 23.321542,
+  "final_state_sha256": "95fa82263dfc6fc8b26e2faf23be62fdb1be6e4ca33f940224e59779dc63ed52"
+}

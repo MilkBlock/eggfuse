@@ -1,0 +1,1 @@
+{"branches": 18049, "counts": {"dot": {"higher": 28, "primitive": 412, "rules": 156}, "sum": {"higher": 34, "primitive": 488, "rules": 197}}, "last_batch_losses": [0.728856086730957, 0.7012042999267578, 0.6717814207077026, 0.6539586782455444], "seed": 851, "sha256": "f2cf242e755f633ba57326cedbeb4005824fd188f98642fcd6a6df44150732ba", "wall": 2.7476030830002856}
