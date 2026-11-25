@@ -256,6 +256,9 @@ def run(a):
                     536,
                     a.pages,
                 )
+                if a.fresh_requests:
+                    pol.fresh_requests = True
+                    m.forced_owned = None
                 setup = perf_counter() - tick
                 res = execute(a.data, case, study=pol, seconds=a.seconds, series=tmp)
                 graph = read(Path(tmp) / (case + "-stream-multi") / "state.json")
@@ -265,6 +268,7 @@ def run(a):
                 res.update(
                     arm=arm,
                     primitive_only=a.primitive_only,
+                    fresh_requests=a.fresh_requests,
                     steps=steps,
                     case=case,
                     block=block,
@@ -319,7 +323,7 @@ def run(a):
                     res["held_signature"] = signature
                 save(
                     a.out
-                    / f"{case}-{spec}{'prim' if a.primitive_only else ''}-p{a.pages}-b{block}.json",
+                    / f"{case}-{spec}{'prim' if a.primitive_only else ''}{'fresh' if a.fresh_requests else ''}-p{a.pages}-b{block}.json",
                     res,
                 )
                 print(
@@ -350,6 +354,7 @@ def arguments():
     p.add_argument("--rollout", type=Path)
     p.add_argument("--macro", action="store_true")
     p.add_argument("--primitive-only", action="store_true")
+    p.add_argument("--fresh-requests", action="store_true")
     p.add_argument("--case")
     p.add_argument("--arms", default="C1,D1,D2,D4,D8,E4")
     p.add_argument("--blocks", type=int, default=2)

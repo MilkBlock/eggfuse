@@ -185,6 +185,18 @@ class ResponsePolicy(Ownership):
         super().resume_programs(frame, pub, txn, stats)
         self.m.refresh()
 
+    def send(self, items, txn, stats):
+        if not getattr(self, "fresh_requests", False):
+            return super().send(items, txn, stats)
+        # Keep internal verified continuation sharing, but charge every external
+        # neural request to CCP and condition on its real reply.
+        owned = self.owned
+        self.owned = {}
+        try:
+            return super().send(items, txn, stats)
+        finally:
+            self.owned = owned
+
     def issue(self, items, txn, stats):
         replies = super().issue(items, txn, stats)
         if replies and self.draft:

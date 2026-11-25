@@ -15,22 +15,27 @@ def facts(row):
 def summarize(out):
     paths = sorted((*out.glob("high-*-b*.json"), *out.glob("*-p*-b*.json")))
     groups = defaultdict(list)
-    with (out / "runs.jsonl").open("w") as raw:
-        for p in paths:
-            row = json.loads(p.read_text())
-            assert row["termination"] == "schedule_end", (p, row["termination"])
-            raw.write(json.dumps(dict(row, file=p.name), separators=(",", ":")) + "\n")
-            groups[
-                row["case"],
-                row["arm"],
-                row.get("steps", 0),
-                row.get("pages", 0),
-                row.get("primitive_only", False),
-            ].append(row)
+    archive = out / "runs.jsonl"
+    if paths:
+        evidence = [dict(json.loads(p.read_text()), file=p.name) for p in paths]
+    else:
+        evidence = [json.loads(line) for line in archive.read_text().splitlines()]
+    if not evidence:
+        raise ValueError("no completed native measurements")
+    for row in evidence:
+        assert row["termination"] == "schedule_end", (row["file"], row["termination"])
+        groups[
+            row["case"],
+            row["arm"],
+            row.get("steps", 0),
+            row.get("pages", 0),
+            row.get("primitive_only", False),
+            row.get("fresh_requests", False),
+        ].append(row)
     rows = []
-    for (case, arm, steps, pages, bare), pair in sorted(groups.items()):
+    for (case, arm, steps, pages, bare, fresh), pair in sorted(groups.items()):
         assert sorted(r["block"] for r in pair) == [0, 1]
-        ref = groups.get((case, "A", 0, 0, False))
+        ref = groups.get((case, "A", 0, 0, False, False))
         a = pair[0]
         assert all(
             r["state_sha"] == a["state_sha"]
@@ -48,6 +53,10 @@ def summarize(out):
             steps=steps,
             pages=pages,
             primitive_only=bare,
+            fresh_requests=fresh,
+            policy_tokens=w.get("final_tokens", 0),
+            primitive_receipt_reuses=w.get("neural_primitive_receipt_reuses", 0),
+            lowered_suffix=w.get("lowered_suffix", 0),
             covered=covered,
             reference=a["reference"],
             coverage=covered / a["reference"],
@@ -88,11 +97,17 @@ def summarize(out):
             completed_higher=w.get("higher_completed", 0),
         )
         rows.append(row)
+    if paths:
+        temp = archive.with_suffix(".tmp")
+        temp.write_text(
+            "".join(json.dumps(row, separators=(",", ":")) + "\n" for row in evidence)
+        )
+        temp.replace(archive)
     with (out / "frontier.csv").open("w", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=list(rows[0]))
+        writer = csv.DictWriter(f, fieldnames=list(rows[0]), lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
-    print(len(paths), "native executions;", len(rows), "paired configurations")
+    print(len(evidence), "native executions;", len(rows), "paired configurations")
 
 
 if __name__ == "__main__":
