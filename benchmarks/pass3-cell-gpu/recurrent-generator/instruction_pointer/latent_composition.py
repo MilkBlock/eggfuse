@@ -31,8 +31,8 @@ SHAPES = {
 }
 
 
-def fixture(root, compiler, name, family, value, scenario):
-    deps = SHAPES[family]
+def fixture(root, compiler, name, family, value, scenario, *, dependencies=None):
+    deps = SHAPES[family] if dependencies is None else dependencies
     symbols = ["Port" + str(i) for i in range(len(deps))] + ["Evidence"]
     script = [f"(relation {t} (i64))" for t in symbols]
     for i, src in enumerate(deps):

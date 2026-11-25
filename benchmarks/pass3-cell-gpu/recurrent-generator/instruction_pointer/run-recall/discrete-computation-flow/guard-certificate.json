@@ -1,0 +1,29 @@
+{
+  "False": {
+    "terminal": "88a8fe36c5b7db17a71f0a8ca6b6fb4077856abc6d2ee97135281cc08d2d7908",
+    "effective": 1,
+    "paid": 1,
+    "verdicts": {
+      "accepted": 1
+    },
+    "work": {
+      "instantiated": 0,
+      "higher_completed": 0,
+      "suffix_rejected": 0
+    }
+  },
+  "True": {
+    "terminal": "88a8fe36c5b7db17a71f0a8ca6b6fb4077856abc6d2ee97135281cc08d2d7908",
+    "effective": 1,
+    "paid": 2,
+    "verdicts": {
+      "accepted": 1,
+      "binding": 1
+    },
+    "work": {
+      "instantiated": 1,
+      "higher_completed": 0,
+      "suffix_rejected": 1
+    }
+  }
+}

@@ -1,0 +1,2082 @@
+{
+  "milestone-fact-editor1-b0": [
+    {
+      "run": 1,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 2,
+      "wall": 0.6143862080061808,
+      "effective": 72
+    },
+    {
+      "run": 2,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 2,
+      "wall": 0.6161514580016956,
+      "effective": 72
+    },
+    {
+      "run": 3,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 2,
+      "wall": 0.6169285409851,
+      "effective": 72
+    },
+    {
+      "run": 4,
+      "covered": 32,
+      "coverage_sha": "e5d08c05af59b819b1b1d3f7c7c8047cb6665e4eb1ee1a712781b4ab84e297bb",
+      "paid": 3,
+      "wall": 0.6185805829882156,
+      "effective": 73
+    },
+    {
+      "run": 5,
+      "covered": 32,
+      "coverage_sha": "e5d08c05af59b819b1b1d3f7c7c8047cb6665e4eb1ee1a712781b4ab84e297bb",
+      "paid": 3,
+      "wall": 0.6195438329887111,
+      "effective": 73
+    },
+    {
+      "run": 6,
+      "covered": 32,
+      "coverage_sha": "e5d08c05af59b819b1b1d3f7c7c8047cb6665e4eb1ee1a712781b4ab84e297bb",
+      "paid": 4,
+      "wall": 0.6205245410092175,
+      "effective": 73
+    },
+    {
+      "run": 7,
+      "covered": 32,
+      "coverage_sha": "e5d08c05af59b819b1b1d3f7c7c8047cb6665e4eb1ee1a712781b4ab84e297bb",
+      "paid": 8,
+      "wall": 0.6221782499924302,
+      "effective": 73
+    },
+    {
+      "run": 8,
+      "covered": 32,
+      "coverage_sha": "e5d08c05af59b819b1b1d3f7c7c8047cb6665e4eb1ee1a712781b4ab84e297bb",
+      "paid": 8,
+      "wall": 0.6230950409953948,
+      "effective": 73
+    },
+    {
+      "run": 10,
+      "covered": 32,
+      "coverage_sha": "e5d08c05af59b819b1b1d3f7c7c8047cb6665e4eb1ee1a712781b4ab84e297bb",
+      "paid": 8,
+      "wall": 0.6249366659903899,
+      "effective": 73
+    },
+    {
+      "run": 12,
+      "covered": 32,
+      "coverage_sha": "e5d08c05af59b819b1b1d3f7c7c8047cb6665e4eb1ee1a712781b4ab84e297bb",
+      "paid": 10,
+      "wall": 0.626893790991744,
+      "effective": 73
+    },
+    {
+      "run": 16,
+      "covered": 32,
+      "coverage_sha": "e5d08c05af59b819b1b1d3f7c7c8047cb6665e4eb1ee1a712781b4ab84e297bb",
+      "paid": 14,
+      "wall": 0.6310914999921806,
+      "effective": 73
+    },
+    {
+      "run": 24,
+      "covered": 34,
+      "coverage_sha": "9d6de771da11edc5e1bef455aca269f1850e47d5fb018b79482455b8b1fa8878",
+      "paid": 22,
+      "wall": 0.6399528330075555,
+      "effective": 75
+    },
+    {
+      "run": 32,
+      "covered": 34,
+      "coverage_sha": "9d6de771da11edc5e1bef455aca269f1850e47d5fb018b79482455b8b1fa8878",
+      "paid": 26,
+      "wall": 0.6455822910065763,
+      "effective": 75
+    },
+    {
+      "run": 64,
+      "covered": 44,
+      "coverage_sha": "2289bfa695b4137003747b99bb5f6d9ef0f4c3f79b80b713261967416a215e0b",
+      "paid": 59,
+      "wall": 0.6769245830073487,
+      "effective": 86
+    },
+    {
+      "run": 128,
+      "covered": 44,
+      "coverage_sha": "2289bfa695b4137003747b99bb5f6d9ef0f4c3f79b80b713261967416a215e0b",
+      "paid": 117,
+      "wall": 0.7407400000083726,
+      "effective": 86
+    },
+    {
+      "run": 293,
+      "covered": 44,
+      "coverage_sha": "2289bfa695b4137003747b99bb5f6d9ef0f4c3f79b80b713261967416a215e0b",
+      "paid": 250,
+      "wall": 0.9168980829999782,
+      "effective": 86
+    }
+  ],
+  "milestone-fact-editor1-b1": [
+    {
+      "run": 1,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 2,
+      "wall": 0.582185458013555,
+      "effective": 72
+    },
+    {
+      "run": 2,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 2,
+      "wall": 0.5844665830081794,
+      "effective": 72
+    },
+    {
+      "run": 3,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 2,
+      "wall": 0.5855034989945125,
+      "effective": 72
+    },
+    {
+      "run": 4,
+      "covered": 32,
+      "coverage_sha": "e5d08c05af59b819b1b1d3f7c7c8047cb6665e4eb1ee1a712781b4ab84e297bb",
+      "paid": 3,
+      "wall": 0.5873550830001477,
+      "effective": 73
+    },
+    {
+      "run": 5,
+      "covered": 32,
+      "coverage_sha": "e5d08c05af59b819b1b1d3f7c7c8047cb6665e4eb1ee1a712781b4ab84e297bb",
+      "paid": 3,
+      "wall": 0.5883612490142696,
+      "effective": 73
+    },
+    {
+      "run": 6,
+      "covered": 32,
+      "coverage_sha": "e5d08c05af59b819b1b1d3f7c7c8047cb6665e4eb1ee1a712781b4ab84e297bb",
+      "paid": 4,
+      "wall": 0.590532249014359,
+      "effective": 73
+    },
+    {
+      "run": 7,
+      "covered": 32,
+      "coverage_sha": "e5d08c05af59b819b1b1d3f7c7c8047cb6665e4eb1ee1a712781b4ab84e297bb",
+      "paid": 8,
+      "wall": 0.5933369990088977,
+      "effective": 73
+    },
+    {
+      "run": 8,
+      "covered": 32,
+      "coverage_sha": "e5d08c05af59b819b1b1d3f7c7c8047cb6665e4eb1ee1a712781b4ab84e297bb",
+      "paid": 8,
+      "wall": 0.59467574901646,
+      "effective": 73
+    },
+    {
+      "run": 10,
+      "covered": 32,
+      "coverage_sha": "e5d08c05af59b819b1b1d3f7c7c8047cb6665e4eb1ee1a712781b4ab84e297bb",
+      "paid": 8,
+      "wall": 0.5968917080026586,
+      "effective": 73
+    },
+    {
+      "run": 12,
+      "covered": 32,
+      "coverage_sha": "e5d08c05af59b819b1b1d3f7c7c8047cb6665e4eb1ee1a712781b4ab84e297bb",
+      "paid": 10,
+      "wall": 0.5992207910167053,
+      "effective": 73
+    },
+    {
+      "run": 16,
+      "covered": 32,
+      "coverage_sha": "e5d08c05af59b819b1b1d3f7c7c8047cb6665e4eb1ee1a712781b4ab84e297bb",
+      "paid": 14,
+      "wall": 0.6049705409968738,
+      "effective": 73
+    },
+    {
+      "run": 24,
+      "covered": 34,
+      "coverage_sha": "9d6de771da11edc5e1bef455aca269f1850e47d5fb018b79482455b8b1fa8878",
+      "paid": 22,
+      "wall": 0.6174842909967992,
+      "effective": 75
+    },
+    {
+      "run": 32,
+      "covered": 34,
+      "coverage_sha": "9d6de771da11edc5e1bef455aca269f1850e47d5fb018b79482455b8b1fa8878",
+      "paid": 26,
+      "wall": 0.6245221240096726,
+      "effective": 75
+    },
+    {
+      "run": 64,
+      "covered": 44,
+      "coverage_sha": "2289bfa695b4137003747b99bb5f6d9ef0f4c3f79b80b713261967416a215e0b",
+      "paid": 59,
+      "wall": 0.6614344989939127,
+      "effective": 86
+    },
+    {
+      "run": 128,
+      "covered": 44,
+      "coverage_sha": "2289bfa695b4137003747b99bb5f6d9ef0f4c3f79b80b713261967416a215e0b",
+      "paid": 117,
+      "wall": 0.7452646660094615,
+      "effective": 86
+    },
+    {
+      "run": 293,
+      "covered": 44,
+      "coverage_sha": "2289bfa695b4137003747b99bb5f6d9ef0f4c3f79b80b713261967416a215e0b",
+      "paid": 250,
+      "wall": 0.9449612080061343,
+      "effective": 86
+    }
+  ],
+  "milestone-fact-empty4-b0": [
+    {
+      "run": 1,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 3,
+      "wall": 0.6130009159969632,
+      "effective": 72
+    },
+    {
+      "run": 2,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 3,
+      "wall": 0.6141529160086066,
+      "effective": 72
+    },
+    {
+      "run": 3,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 4,
+      "wall": 0.6154326660034712,
+      "effective": 72
+    },
+    {
+      "run": 4,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 5,
+      "wall": 0.6166797910118476,
+      "effective": 72
+    },
+    {
+      "run": 5,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 5,
+      "wall": 0.617760332999751,
+      "effective": 72
+    },
+    {
+      "run": 6,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 6,
+      "wall": 0.6187834989978,
+      "effective": 72
+    },
+    {
+      "run": 7,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 6,
+      "wall": 0.6196143330016639,
+      "effective": 72
+    },
+    {
+      "run": 8,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 7,
+      "wall": 0.6205159990058746,
+      "effective": 72
+    },
+    {
+      "run": 10,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 7,
+      "wall": 0.6223750409844797,
+      "effective": 72
+    },
+    {
+      "run": 12,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 8,
+      "wall": 0.6244237489881925,
+      "effective": 72
+    },
+    {
+      "run": 16,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 8,
+      "wall": 0.6268934579857159,
+      "effective": 72
+    },
+    {
+      "run": 24,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 11,
+      "wall": 0.6332043329894077,
+      "effective": 72
+    },
+    {
+      "run": 32,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 16,
+      "wall": 0.6395868329855148,
+      "effective": 72
+    },
+    {
+      "run": 64,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 37,
+      "wall": 0.6694555830035824,
+      "effective": 72
+    },
+    {
+      "run": 128,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 71,
+      "wall": 0.7215563330100849,
+      "effective": 72
+    },
+    {
+      "run": 208,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 119,
+      "wall": 0.8122149159898981,
+      "effective": 72
+    }
+  ],
+  "milestone-fact-empty4-b1": [
+    {
+      "run": 1,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 3,
+      "wall": 0.5872305410157423,
+      "effective": 72
+    },
+    {
+      "run": 2,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 3,
+      "wall": 0.5884309990215115,
+      "effective": 72
+    },
+    {
+      "run": 3,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 4,
+      "wall": 0.5896885410184041,
+      "effective": 72
+    },
+    {
+      "run": 4,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 5,
+      "wall": 0.5909087909967639,
+      "effective": 72
+    },
+    {
+      "run": 5,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 5,
+      "wall": 0.5919986240041908,
+      "effective": 72
+    },
+    {
+      "run": 6,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 6,
+      "wall": 0.5930394990136847,
+      "effective": 72
+    },
+    {
+      "run": 7,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 6,
+      "wall": 0.5938611240126193,
+      "effective": 72
+    },
+    {
+      "run": 8,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 7,
+      "wall": 0.5947692080226261,
+      "effective": 72
+    },
+    {
+      "run": 10,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 7,
+      "wall": 0.5966636660159566,
+      "effective": 72
+    },
+    {
+      "run": 12,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 8,
+      "wall": 0.5987983329978306,
+      "effective": 72
+    },
+    {
+      "run": 16,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 8,
+      "wall": 0.601476873998763,
+      "effective": 72
+    },
+    {
+      "run": 24,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 11,
+      "wall": 0.6083681239979342,
+      "effective": 72
+    },
+    {
+      "run": 32,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 16,
+      "wall": 0.615063874021871,
+      "effective": 72
+    },
+    {
+      "run": 64,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 37,
+      "wall": 0.6450547490094323,
+      "effective": 72
+    },
+    {
+      "run": 128,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 71,
+      "wall": 0.6993483330006711,
+      "effective": 72
+    },
+    {
+      "run": 208,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 119,
+      "wall": 0.7916319990181364,
+      "effective": 72
+    }
+  ],
+  "milestone-fact-flow4-b0": [
+    {
+      "run": 1,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 3,
+      "wall": 0.596980790985981,
+      "effective": 72
+    },
+    {
+      "run": 2,
+      "covered": 32,
+      "coverage_sha": "0a098f6f7b053af2d66a42d31e85fd326a518840a6c837ae03cded4ab1481299",
+      "paid": 5,
+      "wall": 0.6002719159878325,
+      "effective": 73
+    },
+    {
+      "run": 3,
+      "covered": 32,
+      "coverage_sha": "0a098f6f7b053af2d66a42d31e85fd326a518840a6c837ae03cded4ab1481299",
+      "paid": 6,
+      "wall": 0.6018629579921253,
+      "effective": 73
+    },
+    {
+      "run": 4,
+      "covered": 32,
+      "coverage_sha": "0a098f6f7b053af2d66a42d31e85fd326a518840a6c837ae03cded4ab1481299",
+      "paid": 8,
+      "wall": 0.6040731239772867,
+      "effective": 73
+    },
+    {
+      "run": 5,
+      "covered": 34,
+      "coverage_sha": "882b2507663b7fa1e6e044bc14f9cba2fb01ebb12aeb3b14e93702d206b81ef4",
+      "paid": 10,
+      "wall": 0.6066237079794519,
+      "effective": 76
+    },
+    {
+      "run": 6,
+      "covered": 34,
+      "coverage_sha": "882b2507663b7fa1e6e044bc14f9cba2fb01ebb12aeb3b14e93702d206b81ef4",
+      "paid": 12,
+      "wall": 0.6087948739877902,
+      "effective": 76
+    },
+    {
+      "run": 7,
+      "covered": 34,
+      "coverage_sha": "882b2507663b7fa1e6e044bc14f9cba2fb01ebb12aeb3b14e93702d206b81ef4",
+      "paid": 13,
+      "wall": 0.6107306240010075,
+      "effective": 76
+    },
+    {
+      "run": 8,
+      "covered": 34,
+      "coverage_sha": "882b2507663b7fa1e6e044bc14f9cba2fb01ebb12aeb3b14e93702d206b81ef4",
+      "paid": 15,
+      "wall": 0.6133874989754986,
+      "effective": 76
+    },
+    {
+      "run": 10,
+      "covered": 34,
+      "coverage_sha": "882b2507663b7fa1e6e044bc14f9cba2fb01ebb12aeb3b14e93702d206b81ef4",
+      "paid": 19,
+      "wall": 0.6167119989986531,
+      "effective": 76
+    },
+    {
+      "run": 12,
+      "covered": 35,
+      "coverage_sha": "59e674de581c7587a83c2c8394c566d2383cbc005d5073e428d40051f0bb268c",
+      "paid": 22,
+      "wall": 0.6207541239855345,
+      "effective": 77
+    },
+    {
+      "run": 16,
+      "covered": 35,
+      "coverage_sha": "59e674de581c7587a83c2c8394c566d2383cbc005d5073e428d40051f0bb268c",
+      "paid": 27,
+      "wall": 0.6291446659888607,
+      "effective": 77
+    },
+    {
+      "run": 24,
+      "covered": 35,
+      "coverage_sha": "59e674de581c7587a83c2c8394c566d2383cbc005d5073e428d40051f0bb268c",
+      "paid": 38,
+      "wall": 0.6436753329762723,
+      "effective": 77
+    },
+    {
+      "run": 32,
+      "covered": 36,
+      "coverage_sha": "a7deb2a1c347af206394cff618c2127e4ca7a97635bb522d659be172120a2f48",
+      "paid": 45,
+      "wall": 0.6540212079999037,
+      "effective": 78
+    },
+    {
+      "run": 64,
+      "covered": 46,
+      "coverage_sha": "8eadaa7da6ec4a357ec0b4f6f406ffe556ec0db06050000a3f5de130decad444",
+      "paid": 87,
+      "wall": 0.7037153739947826,
+      "effective": 89
+    },
+    {
+      "run": 128,
+      "covered": 50,
+      "coverage_sha": "deeb03f1680f6c126385b751d848e12cd7131f619806444b0b1a18020527c616",
+      "paid": 181,
+      "wall": 0.812640873977216,
+      "effective": 93
+    },
+    {
+      "run": 299,
+      "covered": 50,
+      "coverage_sha": "deeb03f1680f6c126385b751d848e12cd7131f619806444b0b1a18020527c616",
+      "paid": 439,
+      "wall": 1.1284854989789892,
+      "effective": 93
+    }
+  ],
+  "milestone-fact-flow4-b1": [
+    {
+      "run": 1,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 3,
+      "wall": 0.6080068740120623,
+      "effective": 72
+    },
+    {
+      "run": 2,
+      "covered": 32,
+      "coverage_sha": "0a098f6f7b053af2d66a42d31e85fd326a518840a6c837ae03cded4ab1481299",
+      "paid": 5,
+      "wall": 0.6112318740051705,
+      "effective": 73
+    },
+    {
+      "run": 3,
+      "covered": 32,
+      "coverage_sha": "0a098f6f7b053af2d66a42d31e85fd326a518840a6c837ae03cded4ab1481299",
+      "paid": 6,
+      "wall": 0.6127663739898708,
+      "effective": 73
+    },
+    {
+      "run": 4,
+      "covered": 32,
+      "coverage_sha": "0a098f6f7b053af2d66a42d31e85fd326a518840a6c837ae03cded4ab1481299",
+      "paid": 8,
+      "wall": 0.614531083003385,
+      "effective": 73
+    },
+    {
+      "run": 5,
+      "covered": 34,
+      "coverage_sha": "882b2507663b7fa1e6e044bc14f9cba2fb01ebb12aeb3b14e93702d206b81ef4",
+      "paid": 10,
+      "wall": 0.61692945798859,
+      "effective": 76
+    },
+    {
+      "run": 6,
+      "covered": 34,
+      "coverage_sha": "882b2507663b7fa1e6e044bc14f9cba2fb01ebb12aeb3b14e93702d206b81ef4",
+      "paid": 12,
+      "wall": 0.6186373739910778,
+      "effective": 76
+    },
+    {
+      "run": 7,
+      "covered": 34,
+      "coverage_sha": "882b2507663b7fa1e6e044bc14f9cba2fb01ebb12aeb3b14e93702d206b81ef4",
+      "paid": 13,
+      "wall": 0.6202548329893034,
+      "effective": 76
+    },
+    {
+      "run": 8,
+      "covered": 34,
+      "coverage_sha": "882b2507663b7fa1e6e044bc14f9cba2fb01ebb12aeb3b14e93702d206b81ef4",
+      "paid": 15,
+      "wall": 0.6228222080098931,
+      "effective": 76
+    },
+    {
+      "run": 10,
+      "covered": 34,
+      "coverage_sha": "882b2507663b7fa1e6e044bc14f9cba2fb01ebb12aeb3b14e93702d206b81ef4",
+      "paid": 19,
+      "wall": 0.6257008330139797,
+      "effective": 76
+    },
+    {
+      "run": 12,
+      "covered": 35,
+      "coverage_sha": "59e674de581c7587a83c2c8394c566d2383cbc005d5073e428d40051f0bb268c",
+      "paid": 22,
+      "wall": 0.6289924579905346,
+      "effective": 77
+    },
+    {
+      "run": 16,
+      "covered": 35,
+      "coverage_sha": "59e674de581c7587a83c2c8394c566d2383cbc005d5073e428d40051f0bb268c",
+      "paid": 27,
+      "wall": 0.6375768329889979,
+      "effective": 77
+    },
+    {
+      "run": 24,
+      "covered": 35,
+      "coverage_sha": "59e674de581c7587a83c2c8394c566d2383cbc005d5073e428d40051f0bb268c",
+      "paid": 38,
+      "wall": 0.6540080830163788,
+      "effective": 77
+    },
+    {
+      "run": 32,
+      "covered": 36,
+      "coverage_sha": "a7deb2a1c347af206394cff618c2127e4ca7a97635bb522d659be172120a2f48",
+      "paid": 45,
+      "wall": 0.6657587490044534,
+      "effective": 78
+    },
+    {
+      "run": 64,
+      "covered": 46,
+      "coverage_sha": "8eadaa7da6ec4a357ec0b4f6f406ffe556ec0db06050000a3f5de130decad444",
+      "paid": 87,
+      "wall": 0.7176359989971388,
+      "effective": 89
+    },
+    {
+      "run": 128,
+      "covered": 50,
+      "coverage_sha": "deeb03f1680f6c126385b751d848e12cd7131f619806444b0b1a18020527c616",
+      "paid": 181,
+      "wall": 0.8276757080166135,
+      "effective": 93
+    },
+    {
+      "run": 299,
+      "covered": 50,
+      "coverage_sha": "deeb03f1680f6c126385b751d848e12cd7131f619806444b0b1a18020527c616",
+      "paid": 439,
+      "wall": 1.1545608330052346,
+      "effective": 93
+    }
+  ],
+  "milestone-fact-supervised-empty1-b0": [
+    {
+      "run": 1,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 2,
+      "wall": 0.5807114579947665,
+      "effective": 72
+    },
+    {
+      "run": 2,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 2,
+      "wall": 0.5820899159880355,
+      "effective": 72
+    },
+    {
+      "run": 3,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 3,
+      "wall": 0.5828693750081584,
+      "effective": 72
+    },
+    {
+      "run": 4,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 3,
+      "wall": 0.5835611659858841,
+      "effective": 72
+    },
+    {
+      "run": 5,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 3,
+      "wall": 0.5840259160031565,
+      "effective": 72
+    },
+    {
+      "run": 6,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 3,
+      "wall": 0.5845020409906283,
+      "effective": 72
+    },
+    {
+      "run": 7,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 3,
+      "wall": 0.5850492499885149,
+      "effective": 72
+    },
+    {
+      "run": 8,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 3,
+      "wall": 0.5854662909987383,
+      "effective": 72
+    },
+    {
+      "run": 10,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 3,
+      "wall": 0.586234707996482,
+      "effective": 72
+    },
+    {
+      "run": 12,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 3,
+      "wall": 0.5871463750081602,
+      "effective": 72
+    },
+    {
+      "run": 16,
+      "covered": 32,
+      "coverage_sha": "1d22bb3d10729373f4f0512a0d970af704604d5a0b5dca225bb35a0488aa197e",
+      "paid": 6,
+      "wall": 0.590297582995845,
+      "effective": 73
+    },
+    {
+      "run": 24,
+      "covered": 32,
+      "coverage_sha": "1d22bb3d10729373f4f0512a0d970af704604d5a0b5dca225bb35a0488aa197e",
+      "paid": 7,
+      "wall": 0.5934356660000049,
+      "effective": 73
+    },
+    {
+      "run": 32,
+      "covered": 32,
+      "coverage_sha": "1d22bb3d10729373f4f0512a0d970af704604d5a0b5dca225bb35a0488aa197e",
+      "paid": 10,
+      "wall": 0.5973339159972966,
+      "effective": 73
+    },
+    {
+      "run": 64,
+      "covered": 40,
+      "coverage_sha": "2bba450e1e2f9b4351b065a0128d3fbc9945d615973eb4de66fcbf058086e4dd",
+      "paid": 38,
+      "wall": 0.6190576250082813,
+      "effective": 82
+    },
+    {
+      "run": 128,
+      "covered": 40,
+      "coverage_sha": "2bba450e1e2f9b4351b065a0128d3fbc9945d615973eb4de66fcbf058086e4dd",
+      "paid": 63,
+      "wall": 0.6511593750037719,
+      "effective": 82
+    },
+    {
+      "run": 282,
+      "covered": 40,
+      "coverage_sha": "2bba450e1e2f9b4351b065a0128d3fbc9945d615973eb4de66fcbf058086e4dd",
+      "paid": 126,
+      "wall": 0.7533413330093026,
+      "effective": 82
+    }
+  ],
+  "milestone-fact-supervised-empty1-b1": [
+    {
+      "run": 1,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 2,
+      "wall": 0.602943583013257,
+      "effective": 72
+    },
+    {
+      "run": 2,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 2,
+      "wall": 0.6045244580018334,
+      "effective": 72
+    },
+    {
+      "run": 3,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 3,
+      "wall": 0.6052179580146912,
+      "effective": 72
+    },
+    {
+      "run": 4,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 3,
+      "wall": 0.6059456240036525,
+      "effective": 72
+    },
+    {
+      "run": 5,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 3,
+      "wall": 0.6064697910042014,
+      "effective": 72
+    },
+    {
+      "run": 6,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 3,
+      "wall": 0.6069862910080701,
+      "effective": 72
+    },
+    {
+      "run": 7,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 3,
+      "wall": 0.6075854579976294,
+      "effective": 72
+    },
+    {
+      "run": 8,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 3,
+      "wall": 0.6080234580149408,
+      "effective": 72
+    },
+    {
+      "run": 10,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 3,
+      "wall": 0.6088363330054563,
+      "effective": 72
+    },
+    {
+      "run": 12,
+      "covered": 31,
+      "coverage_sha": "8f3e08ee1f2c0a4394deba44ce326108fe3919095e57f4b660c1c454e985e544",
+      "paid": 3,
+      "wall": 0.6098364159988705,
+      "effective": 72
+    },
+    {
+      "run": 16,
+      "covered": 32,
+      "coverage_sha": "1d22bb3d10729373f4f0512a0d970af704604d5a0b5dca225bb35a0488aa197e",
+      "paid": 6,
+      "wall": 0.612461707991315,
+      "effective": 73
+    },
+    {
+      "run": 24,
+      "covered": 32,
+      "coverage_sha": "1d22bb3d10729373f4f0512a0d970af704604d5a0b5dca225bb35a0488aa197e",
+      "paid": 7,
+      "wall": 0.6154282909992617,
+      "effective": 73
+    },
+    {
+      "run": 32,
+      "covered": 32,
+      "coverage_sha": "1d22bb3d10729373f4f0512a0d970af704604d5a0b5dca225bb35a0488aa197e",
+      "paid": 10,
+      "wall": 0.6192299989925232,
+      "effective": 73
+    },
+    {
+      "run": 64,
+      "covered": 40,
+      "coverage_sha": "2bba450e1e2f9b4351b065a0128d3fbc9945d615973eb4de66fcbf058086e4dd",
+      "paid": 38,
+      "wall": 0.6397181659995113,
+      "effective": 82
+    },
+    {
+      "run": 128,
+      "covered": 40,
+      "coverage_sha": "2bba450e1e2f9b4351b065a0128d3fbc9945d615973eb4de66fcbf058086e4dd",
+      "paid": 63,
+      "wall": 0.6686652910138946,
+      "effective": 82
+    },
+    {
+      "run": 282,
+      "covered": 40,
+      "coverage_sha": "2bba450e1e2f9b4351b065a0128d3fbc9945d615973eb4de66fcbf058086e4dd",
+      "paid": 126,
+      "wall": 0.7620694159995764,
+      "effective": 82
+    }
+  ],
+  "milestone-sum-divisors-editor1-b0": [
+    {
+      "run": 1,
+      "covered": 100,
+      "coverage_sha": "8d3c760230fe18b6a25c008c0f9daecb63aebc8518b061688de3eef8cbd06da3",
+      "paid": 2,
+      "wall": 0.6377198330010287,
+      "effective": 199
+    },
+    {
+      "run": 2,
+      "covered": 100,
+      "coverage_sha": "8d3c760230fe18b6a25c008c0f9daecb63aebc8518b061688de3eef8cbd06da3",
+      "paid": 2,
+      "wall": 0.6402192910027225,
+      "effective": 199
+    },
+    {
+      "run": 3,
+      "covered": 100,
+      "coverage_sha": "8d3c760230fe18b6a25c008c0f9daecb63aebc8518b061688de3eef8cbd06da3",
+      "paid": 3,
+      "wall": 0.6414577490068041,
+      "effective": 199
+    },
+    {
+      "run": 4,
+      "covered": 106,
+      "coverage_sha": "61497d60b25f906de86ac00c22edb9937733da111ceb3801c05b62747cbb4174",
+      "paid": 5,
+      "wall": 0.6435375830042176,
+      "effective": 205
+    },
+    {
+      "run": 5,
+      "covered": 106,
+      "coverage_sha": "61497d60b25f906de86ac00c22edb9937733da111ceb3801c05b62747cbb4174",
+      "paid": 6,
+      "wall": 0.6447592490003444,
+      "effective": 205
+    },
+    {
+      "run": 6,
+      "covered": 106,
+      "coverage_sha": "61497d60b25f906de86ac00c22edb9937733da111ceb3801c05b62747cbb4174",
+      "paid": 8,
+      "wall": 0.6463217489945237,
+      "effective": 205
+    },
+    {
+      "run": 7,
+      "covered": 106,
+      "coverage_sha": "61497d60b25f906de86ac00c22edb9937733da111ceb3801c05b62747cbb4174",
+      "paid": 11,
+      "wall": 0.6478399579937104,
+      "effective": 205
+    },
+    {
+      "run": 8,
+      "covered": 106,
+      "coverage_sha": "61497d60b25f906de86ac00c22edb9937733da111ceb3801c05b62747cbb4174",
+      "paid": 12,
+      "wall": 0.6489230410079472,
+      "effective": 205
+    },
+    {
+      "run": 10,
+      "covered": 107,
+      "coverage_sha": "810824754e5155953888b3ca7661af02695b01172e4b5b649144032e962d33c1",
+      "paid": 16,
+      "wall": 0.6519732910091989,
+      "effective": 206
+    },
+    {
+      "run": 12,
+      "covered": 107,
+      "coverage_sha": "810824754e5155953888b3ca7661af02695b01172e4b5b649144032e962d33c1",
+      "paid": 18,
+      "wall": 0.6545353739929851,
+      "effective": 206
+    },
+    {
+      "run": 16,
+      "covered": 107,
+      "coverage_sha": "810824754e5155953888b3ca7661af02695b01172e4b5b649144032e962d33c1",
+      "paid": 23,
+      "wall": 0.6590872909873724,
+      "effective": 206
+    },
+    {
+      "run": 24,
+      "covered": 107,
+      "coverage_sha": "810824754e5155953888b3ca7661af02695b01172e4b5b649144032e962d33c1",
+      "paid": 34,
+      "wall": 0.6690027079894207,
+      "effective": 206
+    },
+    {
+      "run": 32,
+      "covered": 107,
+      "coverage_sha": "810824754e5155953888b3ca7661af02695b01172e4b5b649144032e962d33c1",
+      "paid": 39,
+      "wall": 0.6757802079955582,
+      "effective": 206
+    },
+    {
+      "run": 64,
+      "covered": 121,
+      "coverage_sha": "56dc8b457f9dd2c18bb78be3a5c785e918ec535c597be07fb17f7f251f40a80d",
+      "paid": 87,
+      "wall": 0.7139071240089834,
+      "effective": 222
+    },
+    {
+      "run": 128,
+      "covered": 121,
+      "coverage_sha": "56dc8b457f9dd2c18bb78be3a5c785e918ec535c597be07fb17f7f251f40a80d",
+      "paid": 159,
+      "wall": 0.7943901660037227,
+      "effective": 223
+    },
+    {
+      "run": 285,
+      "covered": 121,
+      "coverage_sha": "56dc8b457f9dd2c18bb78be3a5c785e918ec535c597be07fb17f7f251f40a80d",
+      "paid": 343,
+      "wall": 1.0135935409925878,
+      "effective": 223
+    }
+  ],
+  "milestone-sum-divisors-editor1-b1": [
+    {
+      "run": 1,
+      "covered": 100,
+      "coverage_sha": "8d3c760230fe18b6a25c008c0f9daecb63aebc8518b061688de3eef8cbd06da3",
+      "paid": 2,
+      "wall": 0.6274394170031883,
+      "effective": 199
+    },
+    {
+      "run": 2,
+      "covered": 100,
+      "coverage_sha": "8d3c760230fe18b6a25c008c0f9daecb63aebc8518b061688de3eef8cbd06da3",
+      "paid": 2,
+      "wall": 0.6299934170092456,
+      "effective": 199
+    },
+    {
+      "run": 3,
+      "covered": 100,
+      "coverage_sha": "8d3c760230fe18b6a25c008c0f9daecb63aebc8518b061688de3eef8cbd06da3",
+      "paid": 3,
+      "wall": 0.6312132499879226,
+      "effective": 199
+    },
+    {
+      "run": 4,
+      "covered": 106,
+      "coverage_sha": "61497d60b25f906de86ac00c22edb9937733da111ceb3801c05b62747cbb4174",
+      "paid": 5,
+      "wall": 0.633020209003007,
+      "effective": 205
+    },
+    {
+      "run": 5,
+      "covered": 106,
+      "coverage_sha": "61497d60b25f906de86ac00c22edb9937733da111ceb3801c05b62747cbb4174",
+      "paid": 6,
+      "wall": 0.6341620000021067,
+      "effective": 205
+    },
+    {
+      "run": 6,
+      "covered": 106,
+      "coverage_sha": "61497d60b25f906de86ac00c22edb9937733da111ceb3801c05b62747cbb4174",
+      "paid": 8,
+      "wall": 0.6357014999957755,
+      "effective": 205
+    },
+    {
+      "run": 7,
+      "covered": 106,
+      "coverage_sha": "61497d60b25f906de86ac00c22edb9937733da111ceb3801c05b62747cbb4174",
+      "paid": 11,
+      "wall": 0.6373986669932492,
+      "effective": 205
+    },
+    {
+      "run": 8,
+      "covered": 106,
+      "coverage_sha": "61497d60b25f906de86ac00c22edb9937733da111ceb3801c05b62747cbb4174",
+      "paid": 12,
+      "wall": 0.6385488339874428,
+      "effective": 205
+    },
+    {
+      "run": 10,
+      "covered": 107,
+      "coverage_sha": "810824754e5155953888b3ca7661af02695b01172e4b5b649144032e962d33c1",
+      "paid": 16,
+      "wall": 0.6417206669866573,
+      "effective": 206
+    },
+    {
+      "run": 12,
+      "covered": 107,
+      "coverage_sha": "810824754e5155953888b3ca7661af02695b01172e4b5b649144032e962d33c1",
+      "paid": 18,
+      "wall": 0.6447126250131987,
+      "effective": 206
+    },
+    {
+      "run": 16,
+      "covered": 107,
+      "coverage_sha": "810824754e5155953888b3ca7661af02695b01172e4b5b649144032e962d33c1",
+      "paid": 23,
+      "wall": 0.6497369999997318,
+      "effective": 206
+    },
+    {
+      "run": 24,
+      "covered": 107,
+      "coverage_sha": "810824754e5155953888b3ca7661af02695b01172e4b5b649144032e962d33c1",
+      "paid": 34,
+      "wall": 0.6601587919867598,
+      "effective": 206
+    },
+    {
+      "run": 32,
+      "covered": 107,
+      "coverage_sha": "810824754e5155953888b3ca7661af02695b01172e4b5b649144032e962d33c1",
+      "paid": 39,
+      "wall": 0.6675486669992097,
+      "effective": 206
+    },
+    {
+      "run": 64,
+      "covered": 121,
+      "coverage_sha": "56dc8b457f9dd2c18bb78be3a5c785e918ec535c597be07fb17f7f251f40a80d",
+      "paid": 87,
+      "wall": 0.7101201250043232,
+      "effective": 222
+    },
+    {
+      "run": 128,
+      "covered": 121,
+      "coverage_sha": "56dc8b457f9dd2c18bb78be3a5c785e918ec535c597be07fb17f7f251f40a80d",
+      "paid": 159,
+      "wall": 0.7850360840093344,
+      "effective": 223
+    },
+    {
+      "run": 285,
+      "covered": 121,
+      "coverage_sha": "56dc8b457f9dd2c18bb78be3a5c785e918ec535c597be07fb17f7f251f40a80d",
+      "paid": 343,
+      "wall": 0.9916274170100223,
+      "effective": 223
+    }
+  ],
+  "milestone-sum-divisors-empty4-b0": [
+    {
+      "run": 1,
+      "covered": 100,
+      "coverage_sha": "8d3c760230fe18b6a25c008c0f9daecb63aebc8518b061688de3eef8cbd06da3",
+      "paid": 3,
+      "wall": 0.601429624017328,
+      "effective": 199
+    },
+    {
+      "run": 2,
+      "covered": 100,
+      "coverage_sha": "8d3c760230fe18b6a25c008c0f9daecb63aebc8518b061688de3eef8cbd06da3",
+      "paid": 3,
+      "wall": 0.6036669989989605,
+      "effective": 199
+    },
+    {
+      "run": 3,
+      "covered": 100,
+      "coverage_sha": "8d3c760230fe18b6a25c008c0f9daecb63aebc8518b061688de3eef8cbd06da3",
+      "paid": 4,
+      "wall": 0.605569124018075,
+      "effective": 199
+    },
+    {
+      "run": 4,
+      "covered": 104,
+      "coverage_sha": "002c393fc8f0fedcf842af370158c5bd58eab4221fde8b299b8b67aa0699e69a",
+      "paid": 6,
+      "wall": 0.6075368740130216,
+      "effective": 203
+    },
+    {
+      "run": 5,
+      "covered": 104,
+      "coverage_sha": "002c393fc8f0fedcf842af370158c5bd58eab4221fde8b299b8b67aa0699e69a",
+      "paid": 8,
+      "wall": 0.6095528739970177,
+      "effective": 203
+    },
+    {
+      "run": 6,
+      "covered": 104,
+      "coverage_sha": "002c393fc8f0fedcf842af370158c5bd58eab4221fde8b299b8b67aa0699e69a",
+      "paid": 9,
+      "wall": 0.611054666020209,
+      "effective": 203
+    },
+    {
+      "run": 7,
+      "covered": 104,
+      "coverage_sha": "002c393fc8f0fedcf842af370158c5bd58eab4221fde8b299b8b67aa0699e69a",
+      "paid": 10,
+      "wall": 0.6120846660051029,
+      "effective": 203
+    },
+    {
+      "run": 8,
+      "covered": 104,
+      "coverage_sha": "002c393fc8f0fedcf842af370158c5bd58eab4221fde8b299b8b67aa0699e69a",
+      "paid": 12,
+      "wall": 0.6136177080043126,
+      "effective": 203
+    },
+    {
+      "run": 10,
+      "covered": 104,
+      "coverage_sha": "002c393fc8f0fedcf842af370158c5bd58eab4221fde8b299b8b67aa0699e69a",
+      "paid": 12,
+      "wall": 0.6156696240068413,
+      "effective": 203
+    },
+    {
+      "run": 12,
+      "covered": 104,
+      "coverage_sha": "002c393fc8f0fedcf842af370158c5bd58eab4221fde8b299b8b67aa0699e69a",
+      "paid": 15,
+      "wall": 0.6188421240076423,
+      "effective": 203
+    },
+    {
+      "run": 16,
+      "covered": 104,
+      "coverage_sha": "002c393fc8f0fedcf842af370158c5bd58eab4221fde8b299b8b67aa0699e69a",
+      "paid": 17,
+      "wall": 0.6225880410056561,
+      "effective": 203
+    },
+    {
+      "run": 24,
+      "covered": 105,
+      "coverage_sha": "acf91280a102b70c541169b1e921495359ea61055976588ae2ab3de635213a0c",
+      "paid": 32,
+      "wall": 0.6351851660001557,
+      "effective": 204
+    },
+    {
+      "run": 32,
+      "covered": 105,
+      "coverage_sha": "acf91280a102b70c541169b1e921495359ea61055976588ae2ab3de635213a0c",
+      "paid": 34,
+      "wall": 0.6414473740151152,
+      "effective": 204
+    },
+    {
+      "run": 64,
+      "covered": 113,
+      "coverage_sha": "a80ac11e68bdcfb38d67256be575e02505cfe9d41d4a4be5ce6755b10bfb51a2",
+      "paid": 71,
+      "wall": 0.681320958014112,
+      "effective": 213
+    },
+    {
+      "run": 128,
+      "covered": 113,
+      "coverage_sha": "a80ac11e68bdcfb38d67256be575e02505cfe9d41d4a4be5ce6755b10bfb51a2",
+      "paid": 135,
+      "wall": 0.7527426239976194,
+      "effective": 214
+    },
+    {
+      "run": 293,
+      "covered": 113,
+      "coverage_sha": "a80ac11e68bdcfb38d67256be575e02505cfe9d41d4a4be5ce6755b10bfb51a2",
+      "paid": 291,
+      "wall": 0.9644924990134314,
+      "effective": 214
+    }
+  ],
+  "milestone-sum-divisors-empty4-b1": [
+    {
+      "run": 1,
+      "covered": 100,
+      "coverage_sha": "8d3c760230fe18b6a25c008c0f9daecb63aebc8518b061688de3eef8cbd06da3",
+      "paid": 3,
+      "wall": 0.6161963749909773,
+      "effective": 199
+    },
+    {
+      "run": 2,
+      "covered": 100,
+      "coverage_sha": "8d3c760230fe18b6a25c008c0f9daecb63aebc8518b061688de3eef8cbd06da3",
+      "paid": 3,
+      "wall": 0.6186077089805622,
+      "effective": 199
+    },
+    {
+      "run": 3,
+      "covered": 100,
+      "coverage_sha": "8d3c760230fe18b6a25c008c0f9daecb63aebc8518b061688de3eef8cbd06da3",
+      "paid": 4,
+      "wall": 0.6201633339805994,
+      "effective": 199
+    },
+    {
+      "run": 4,
+      "covered": 104,
+      "coverage_sha": "002c393fc8f0fedcf842af370158c5bd58eab4221fde8b299b8b67aa0699e69a",
+      "paid": 6,
+      "wall": 0.622289083985379,
+      "effective": 203
+    },
+    {
+      "run": 5,
+      "covered": 104,
+      "coverage_sha": "002c393fc8f0fedcf842af370158c5bd58eab4221fde8b299b8b67aa0699e69a",
+      "paid": 8,
+      "wall": 0.6241503339842893,
+      "effective": 203
+    },
+    {
+      "run": 6,
+      "covered": 104,
+      "coverage_sha": "002c393fc8f0fedcf842af370158c5bd58eab4221fde8b299b8b67aa0699e69a",
+      "paid": 9,
+      "wall": 0.6256478749855887,
+      "effective": 203
+    },
+    {
+      "run": 7,
+      "covered": 104,
+      "coverage_sha": "002c393fc8f0fedcf842af370158c5bd58eab4221fde8b299b8b67aa0699e69a",
+      "paid": 10,
+      "wall": 0.6266874999855645,
+      "effective": 203
+    },
+    {
+      "run": 8,
+      "covered": 104,
+      "coverage_sha": "002c393fc8f0fedcf842af370158c5bd58eab4221fde8b299b8b67aa0699e69a",
+      "paid": 12,
+      "wall": 0.6280628749809694,
+      "effective": 203
+    },
+    {
+      "run": 10,
+      "covered": 104,
+      "coverage_sha": "002c393fc8f0fedcf842af370158c5bd58eab4221fde8b299b8b67aa0699e69a",
+      "paid": 12,
+      "wall": 0.6300669169868343,
+      "effective": 203
+    },
+    {
+      "run": 12,
+      "covered": 104,
+      "coverage_sha": "002c393fc8f0fedcf842af370158c5bd58eab4221fde8b299b8b67aa0699e69a",
+      "paid": 15,
+      "wall": 0.6332837089721579,
+      "effective": 203
+    },
+    {
+      "run": 16,
+      "covered": 104,
+      "coverage_sha": "002c393fc8f0fedcf842af370158c5bd58eab4221fde8b299b8b67aa0699e69a",
+      "paid": 17,
+      "wall": 0.6368395419849548,
+      "effective": 203
+    },
+    {
+      "run": 24,
+      "covered": 105,
+      "coverage_sha": "acf91280a102b70c541169b1e921495359ea61055976588ae2ab3de635213a0c",
+      "paid": 32,
+      "wall": 0.6484592499909922,
+      "effective": 204
+    },
+    {
+      "run": 32,
+      "covered": 105,
+      "coverage_sha": "acf91280a102b70c541169b1e921495359ea61055976588ae2ab3de635213a0c",
+      "paid": 34,
+      "wall": 0.6540973339870106,
+      "effective": 204
+    },
+    {
+      "run": 64,
+      "covered": 113,
+      "coverage_sha": "a80ac11e68bdcfb38d67256be575e02505cfe9d41d4a4be5ce6755b10bfb51a2",
+      "paid": 71,
+      "wall": 0.6904004999960307,
+      "effective": 213
+    },
+    {
+      "run": 128,
+      "covered": 113,
+      "coverage_sha": "a80ac11e68bdcfb38d67256be575e02505cfe9d41d4a4be5ce6755b10bfb51a2",
+      "paid": 135,
+      "wall": 0.7638998339825775,
+      "effective": 214
+    },
+    {
+      "run": 293,
+      "covered": 113,
+      "coverage_sha": "a80ac11e68bdcfb38d67256be575e02505cfe9d41d4a4be5ce6755b10bfb51a2",
+      "paid": 291,
+      "wall": 0.9597220839932561,
+      "effective": 214
+    }
+  ],
+  "milestone-sum-divisors-flow4-b0": [
+    {
+      "run": 1,
+      "covered": 100,
+      "coverage_sha": "8d3c760230fe18b6a25c008c0f9daecb63aebc8518b061688de3eef8cbd06da3",
+      "paid": 2,
+      "wall": 0.6029804999998305,
+      "effective": 199
+    },
+    {
+      "run": 2,
+      "covered": 101,
+      "coverage_sha": "e09d83549f7236cd106b99f4e212e1cbd41be33566719ce6338af764ad2aaa56",
+      "paid": 3,
+      "wall": 0.6066404579905793,
+      "effective": 200
+    },
+    {
+      "run": 3,
+      "covered": 101,
+      "coverage_sha": "e09d83549f7236cd106b99f4e212e1cbd41be33566719ce6338af764ad2aaa56",
+      "paid": 5,
+      "wall": 0.6089521670073736,
+      "effective": 200
+    },
+    {
+      "run": 4,
+      "covered": 101,
+      "coverage_sha": "e09d83549f7236cd106b99f4e212e1cbd41be33566719ce6338af764ad2aaa56",
+      "paid": 8,
+      "wall": 0.6120480830140878,
+      "effective": 200
+    },
+    {
+      "run": 5,
+      "covered": 104,
+      "coverage_sha": "1aab9482ece5b15dbdff2a8196399abdfce6e6ee7953ca28a7faa129a0c3b5e6",
+      "paid": 9,
+      "wall": 0.614230957988184,
+      "effective": 203
+    },
+    {
+      "run": 6,
+      "covered": 104,
+      "coverage_sha": "1aab9482ece5b15dbdff2a8196399abdfce6e6ee7953ca28a7faa129a0c3b5e6",
+      "paid": 11,
+      "wall": 0.6161069580120966,
+      "effective": 203
+    },
+    {
+      "run": 7,
+      "covered": 104,
+      "coverage_sha": "1aab9482ece5b15dbdff2a8196399abdfce6e6ee7953ca28a7faa129a0c3b5e6",
+      "paid": 15,
+      "wall": 0.6190864169911947,
+      "effective": 203
+    },
+    {
+      "run": 8,
+      "covered": 104,
+      "coverage_sha": "1aab9482ece5b15dbdff2a8196399abdfce6e6ee7953ca28a7faa129a0c3b5e6",
+      "paid": 17,
+      "wall": 0.6212695419962984,
+      "effective": 203
+    },
+    {
+      "run": 10,
+      "covered": 104,
+      "coverage_sha": "1aab9482ece5b15dbdff2a8196399abdfce6e6ee7953ca28a7faa129a0c3b5e6",
+      "paid": 19,
+      "wall": 0.6253580420161597,
+      "effective": 203
+    },
+    {
+      "run": 12,
+      "covered": 104,
+      "coverage_sha": "1aab9482ece5b15dbdff2a8196399abdfce6e6ee7953ca28a7faa129a0c3b5e6",
+      "paid": 20,
+      "wall": 0.6286859580141027,
+      "effective": 203
+    },
+    {
+      "run": 16,
+      "covered": 104,
+      "coverage_sha": "1aab9482ece5b15dbdff2a8196399abdfce6e6ee7953ca28a7faa129a0c3b5e6",
+      "paid": 29,
+      "wall": 0.6398750419903081,
+      "effective": 203
+    },
+    {
+      "run": 24,
+      "covered": 104,
+      "coverage_sha": "1aab9482ece5b15dbdff2a8196399abdfce6e6ee7953ca28a7faa129a0c3b5e6",
+      "paid": 43,
+      "wall": 0.6560781250009313,
+      "effective": 203
+    },
+    {
+      "run": 32,
+      "covered": 106,
+      "coverage_sha": "0d665160b78c82213b5e764ebfb9f808493532d43cccadf764becc14c47b560e",
+      "paid": 50,
+      "wall": 0.6684688329987694,
+      "effective": 205
+    },
+    {
+      "run": 64,
+      "covered": 114,
+      "coverage_sha": "29c87dea63dfcb376d322d5a3f8296b3db963c33bf2c17e51a1635bc15792961",
+      "paid": 102,
+      "wall": 0.7258424999890849,
+      "effective": 214
+    },
+    {
+      "run": 128,
+      "covered": 114,
+      "coverage_sha": "29c87dea63dfcb376d322d5a3f8296b3db963c33bf2c17e51a1635bc15792961",
+      "paid": 201,
+      "wall": 0.8394809580058791,
+      "effective": 215
+    },
+    {
+      "run": 294,
+      "covered": 114,
+      "coverage_sha": "29c87dea63dfcb376d322d5a3f8296b3db963c33bf2c17e51a1635bc15792961",
+      "paid": 451,
+      "wall": 1.1707707500027027,
+      "effective": 215
+    }
+  ],
+  "milestone-sum-divisors-flow4-b1": [
+    {
+      "run": 1,
+      "covered": 100,
+      "coverage_sha": "8d3c760230fe18b6a25c008c0f9daecb63aebc8518b061688de3eef8cbd06da3",
+      "paid": 2,
+      "wall": 0.6045278340170626,
+      "effective": 199
+    },
+    {
+      "run": 2,
+      "covered": 101,
+      "coverage_sha": "e09d83549f7236cd106b99f4e212e1cbd41be33566719ce6338af764ad2aaa56",
+      "paid": 3,
+      "wall": 0.6074324170185719,
+      "effective": 200
+    },
+    {
+      "run": 3,
+      "covered": 101,
+      "coverage_sha": "e09d83549f7236cd106b99f4e212e1cbd41be33566719ce6338af764ad2aaa56",
+      "paid": 5,
+      "wall": 0.6092649170022923,
+      "effective": 200
+    },
+    {
+      "run": 4,
+      "covered": 101,
+      "coverage_sha": "e09d83549f7236cd106b99f4e212e1cbd41be33566719ce6338af764ad2aaa56",
+      "paid": 8,
+      "wall": 0.6122160009981599,
+      "effective": 200
+    },
+    {
+      "run": 5,
+      "covered": 104,
+      "coverage_sha": "1aab9482ece5b15dbdff2a8196399abdfce6e6ee7953ca28a7faa129a0c3b5e6",
+      "paid": 9,
+      "wall": 0.6141552510089241,
+      "effective": 203
+    },
+    {
+      "run": 6,
+      "covered": 104,
+      "coverage_sha": "1aab9482ece5b15dbdff2a8196399abdfce6e6ee7953ca28a7faa129a0c3b5e6",
+      "paid": 11,
+      "wall": 0.6158312920015305,
+      "effective": 203
+    },
+    {
+      "run": 7,
+      "covered": 104,
+      "coverage_sha": "1aab9482ece5b15dbdff2a8196399abdfce6e6ee7953ca28a7faa129a0c3b5e6",
+      "paid": 15,
+      "wall": 0.6183902920165565,
+      "effective": 203
+    },
+    {
+      "run": 8,
+      "covered": 104,
+      "coverage_sha": "1aab9482ece5b15dbdff2a8196399abdfce6e6ee7953ca28a7faa129a0c3b5e6",
+      "paid": 17,
+      "wall": 0.6201146260136738,
+      "effective": 203
+    },
+    {
+      "run": 10,
+      "covered": 104,
+      "coverage_sha": "1aab9482ece5b15dbdff2a8196399abdfce6e6ee7953ca28a7faa129a0c3b5e6",
+      "paid": 19,
+      "wall": 0.6229959170159418,
+      "effective": 203
+    },
+    {
+      "run": 12,
+      "covered": 104,
+      "coverage_sha": "1aab9482ece5b15dbdff2a8196399abdfce6e6ee7953ca28a7faa129a0c3b5e6",
+      "paid": 20,
+      "wall": 0.6254022089997306,
+      "effective": 203
+    },
+    {
+      "run": 16,
+      "covered": 104,
+      "coverage_sha": "1aab9482ece5b15dbdff2a8196399abdfce6e6ee7953ca28a7faa129a0c3b5e6",
+      "paid": 29,
+      "wall": 0.6333551669958979,
+      "effective": 203
+    },
+    {
+      "run": 24,
+      "covered": 104,
+      "coverage_sha": "1aab9482ece5b15dbdff2a8196399abdfce6e6ee7953ca28a7faa129a0c3b5e6",
+      "paid": 43,
+      "wall": 0.6455730420129839,
+      "effective": 203
+    },
+    {
+      "run": 32,
+      "covered": 106,
+      "coverage_sha": "0d665160b78c82213b5e764ebfb9f808493532d43cccadf764becc14c47b560e",
+      "paid": 50,
+      "wall": 0.6558031260210555,
+      "effective": 205
+    },
+    {
+      "run": 64,
+      "covered": 114,
+      "coverage_sha": "29c87dea63dfcb376d322d5a3f8296b3db963c33bf2c17e51a1635bc15792961",
+      "paid": 102,
+      "wall": 0.7094412920123432,
+      "effective": 214
+    },
+    {
+      "run": 128,
+      "covered": 114,
+      "coverage_sha": "29c87dea63dfcb376d322d5a3f8296b3db963c33bf2c17e51a1635bc15792961",
+      "paid": 201,
+      "wall": 0.8186284170078579,
+      "effective": 215
+    },
+    {
+      "run": 294,
+      "covered": 114,
+      "coverage_sha": "29c87dea63dfcb376d322d5a3f8296b3db963c33bf2c17e51a1635bc15792961",
+      "paid": 451,
+      "wall": 1.1681807510030922,
+      "effective": 215
+    }
+  ],
+  "milestone-sum-divisors-supervised-empty1-b0": [
+    {
+      "run": 1,
+      "covered": 100,
+      "coverage_sha": "8d3c760230fe18b6a25c008c0f9daecb63aebc8518b061688de3eef8cbd06da3",
+      "paid": 2,
+      "wall": 0.6162892080028541,
+      "effective": 199
+    },
+    {
+      "run": 2,
+      "covered": 100,
+      "coverage_sha": "8d3c760230fe18b6a25c008c0f9daecb63aebc8518b061688de3eef8cbd06da3",
+      "paid": 2,
+      "wall": 0.6187197910039686,
+      "effective": 199
+    },
+    {
+      "run": 3,
+      "covered": 101,
+      "coverage_sha": "a758904a7284f90c90c6c3badde889d9b4e0f44ae81da6dc08b09ff3c72dbf3f",
+      "paid": 3,
+      "wall": 0.6196927909913938,
+      "effective": 200
+    },
+    {
+      "run": 4,
+      "covered": 101,
+      "coverage_sha": "a758904a7284f90c90c6c3badde889d9b4e0f44ae81da6dc08b09ff3c72dbf3f",
+      "paid": 4,
+      "wall": 0.6206201659806538,
+      "effective": 200
+    },
+    {
+      "run": 5,
+      "covered": 101,
+      "coverage_sha": "a758904a7284f90c90c6c3badde889d9b4e0f44ae81da6dc08b09ff3c72dbf3f",
+      "paid": 4,
+      "wall": 0.621203749004053,
+      "effective": 200
+    },
+    {
+      "run": 6,
+      "covered": 101,
+      "coverage_sha": "a758904a7284f90c90c6c3badde889d9b4e0f44ae81da6dc08b09ff3c72dbf3f",
+      "paid": 4,
+      "wall": 0.6218086660082918,
+      "effective": 200
+    },
+    {
+      "run": 7,
+      "covered": 101,
+      "coverage_sha": "a758904a7284f90c90c6c3badde889d9b4e0f44ae81da6dc08b09ff3c72dbf3f",
+      "paid": 4,
+      "wall": 0.6223917489987798,
+      "effective": 200
+    },
+    {
+      "run": 8,
+      "covered": 101,
+      "coverage_sha": "a758904a7284f90c90c6c3badde889d9b4e0f44ae81da6dc08b09ff3c72dbf3f",
+      "paid": 5,
+      "wall": 0.6233301659813151,
+      "effective": 200
+    },
+    {
+      "run": 10,
+      "covered": 101,
+      "coverage_sha": "a758904a7284f90c90c6c3badde889d9b4e0f44ae81da6dc08b09ff3c72dbf3f",
+      "paid": 6,
+      "wall": 0.6243387080030516,
+      "effective": 200
+    },
+    {
+      "run": 12,
+      "covered": 101,
+      "coverage_sha": "a758904a7284f90c90c6c3badde889d9b4e0f44ae81da6dc08b09ff3c72dbf3f",
+      "paid": 7,
+      "wall": 0.6256594989972655,
+      "effective": 200
+    },
+    {
+      "run": 16,
+      "covered": 101,
+      "coverage_sha": "a758904a7284f90c90c6c3badde889d9b4e0f44ae81da6dc08b09ff3c72dbf3f",
+      "paid": 10,
+      "wall": 0.6281380410073325,
+      "effective": 200
+    },
+    {
+      "run": 24,
+      "covered": 101,
+      "coverage_sha": "a758904a7284f90c90c6c3badde889d9b4e0f44ae81da6dc08b09ff3c72dbf3f",
+      "paid": 13,
+      "wall": 0.6331777489976957,
+      "effective": 200
+    },
+    {
+      "run": 32,
+      "covered": 101,
+      "coverage_sha": "a758904a7284f90c90c6c3badde889d9b4e0f44ae81da6dc08b09ff3c72dbf3f",
+      "paid": 14,
+      "wall": 0.6364823739859276,
+      "effective": 200
+    },
+    {
+      "run": 64,
+      "covered": 109,
+      "coverage_sha": "152f85717ef065dd6a91ef6d4f5c521ffc7b24d5398f4beeb50c31613991d0d8",
+      "paid": 35,
+      "wall": 0.657155833003344,
+      "effective": 209
+    },
+    {
+      "run": 128,
+      "covered": 109,
+      "coverage_sha": "152f85717ef065dd6a91ef6d4f5c521ffc7b24d5398f4beeb50c31613991d0d8",
+      "paid": 60,
+      "wall": 0.6942691239819396,
+      "effective": 209
+    },
+    {
+      "run": 281,
+      "covered": 109,
+      "coverage_sha": "152f85717ef065dd6a91ef6d4f5c521ffc7b24d5398f4beeb50c31613991d0d8",
+      "paid": 127,
+      "wall": 0.8032749579870142,
+      "effective": 209
+    }
+  ],
+  "milestone-sum-divisors-supervised-empty1-b1": [
+    {
+      "run": 1,
+      "covered": 100,
+      "coverage_sha": "8d3c760230fe18b6a25c008c0f9daecb63aebc8518b061688de3eef8cbd06da3",
+      "paid": 2,
+      "wall": 0.6584612920123618,
+      "effective": 199
+    },
+    {
+      "run": 2,
+      "covered": 100,
+      "coverage_sha": "8d3c760230fe18b6a25c008c0f9daecb63aebc8518b061688de3eef8cbd06da3",
+      "paid": 2,
+      "wall": 0.6605965420021676,
+      "effective": 199
+    },
+    {
+      "run": 3,
+      "covered": 101,
+      "coverage_sha": "a758904a7284f90c90c6c3badde889d9b4e0f44ae81da6dc08b09ff3c72dbf3f",
+      "paid": 3,
+      "wall": 0.6614050829957705,
+      "effective": 200
+    },
+    {
+      "run": 4,
+      "covered": 101,
+      "coverage_sha": "a758904a7284f90c90c6c3badde889d9b4e0f44ae81da6dc08b09ff3c72dbf3f",
+      "paid": 4,
+      "wall": 0.6621968749968801,
+      "effective": 200
+    },
+    {
+      "run": 5,
+      "covered": 101,
+      "coverage_sha": "a758904a7284f90c90c6c3badde889d9b4e0f44ae81da6dc08b09ff3c72dbf3f",
+      "paid": 4,
+      "wall": 0.6626758330094162,
+      "effective": 200
+    },
+    {
+      "run": 6,
+      "covered": 101,
+      "coverage_sha": "a758904a7284f90c90c6c3badde889d9b4e0f44ae81da6dc08b09ff3c72dbf3f",
+      "paid": 4,
+      "wall": 0.663172458007466,
+      "effective": 200
+    },
+    {
+      "run": 7,
+      "covered": 101,
+      "coverage_sha": "a758904a7284f90c90c6c3badde889d9b4e0f44ae81da6dc08b09ff3c72dbf3f",
+      "paid": 4,
+      "wall": 0.6636030000227038,
+      "effective": 200
+    },
+    {
+      "run": 8,
+      "covered": 101,
+      "coverage_sha": "a758904a7284f90c90c6c3badde889d9b4e0f44ae81da6dc08b09ff3c72dbf3f",
+      "paid": 5,
+      "wall": 0.6643091670121066,
+      "effective": 200
+    },
+    {
+      "run": 10,
+      "covered": 101,
+      "coverage_sha": "a758904a7284f90c90c6c3badde889d9b4e0f44ae81da6dc08b09ff3c72dbf3f",
+      "paid": 6,
+      "wall": 0.6651760000095237,
+      "effective": 200
+    },
+    {
+      "run": 12,
+      "covered": 101,
+      "coverage_sha": "a758904a7284f90c90c6c3badde889d9b4e0f44ae81da6dc08b09ff3c72dbf3f",
+      "paid": 7,
+      "wall": 0.6663265830138698,
+      "effective": 200
+    },
+    {
+      "run": 16,
+      "covered": 101,
+      "coverage_sha": "a758904a7284f90c90c6c3badde889d9b4e0f44ae81da6dc08b09ff3c72dbf3f",
+      "paid": 10,
+      "wall": 0.668514207995031,
+      "effective": 200
+    },
+    {
+      "run": 24,
+      "covered": 101,
+      "coverage_sha": "a758904a7284f90c90c6c3badde889d9b4e0f44ae81da6dc08b09ff3c72dbf3f",
+      "paid": 13,
+      "wall": 0.673416042001918,
+      "effective": 200
+    },
+    {
+      "run": 32,
+      "covered": 101,
+      "coverage_sha": "a758904a7284f90c90c6c3badde889d9b4e0f44ae81da6dc08b09ff3c72dbf3f",
+      "paid": 14,
+      "wall": 0.6772443329973612,
+      "effective": 200
+    },
+    {
+      "run": 64,
+      "covered": 109,
+      "coverage_sha": "152f85717ef065dd6a91ef6d4f5c521ffc7b24d5398f4beeb50c31613991d0d8",
+      "paid": 35,
+      "wall": 0.6960343329992611,
+      "effective": 209
+    },
+    {
+      "run": 128,
+      "covered": 109,
+      "coverage_sha": "152f85717ef065dd6a91ef6d4f5c521ffc7b24d5398f4beeb50c31613991d0d8",
+      "paid": 60,
+      "wall": 0.727323333005188,
+      "effective": 209
+    },
+    {
+      "run": 281,
+      "covered": 109,
+      "coverage_sha": "152f85717ef065dd6a91ef6d4f5c521ffc7b24d5398f4beeb50c31613991d0d8",
+      "paid": 127,
+      "wall": 0.8220555000007153,
+      "effective": 209
+    }
+  ]
+}

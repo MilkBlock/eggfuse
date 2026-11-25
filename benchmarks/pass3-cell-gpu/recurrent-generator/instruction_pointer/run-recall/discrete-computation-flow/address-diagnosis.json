@@ -1,0 +1,46 @@
+{
+  "fact": {
+    "draws": 96,
+    "addressable_output": 52,
+    "template_hit": 18,
+    "all_parents_and_template_hit": 2,
+    "forced_template_all_parents_hit": 5,
+    "editor_blank": 5,
+    "mask_blank": 4,
+    "flow_blank": 4,
+    "contexts": 12
+  },
+  "loopfact": {
+    "draws": 88,
+    "addressable_output": 57,
+    "template_hit": 24,
+    "all_parents_and_template_hit": 0,
+    "forced_template_all_parents_hit": 0,
+    "editor_blank": 4,
+    "mask_blank": 10,
+    "flow_blank": 0,
+    "contexts": 11
+  },
+  "sum-divisors": {
+    "draws": 96,
+    "addressable_output": 55,
+    "template_hit": 17,
+    "all_parents_and_template_hit": 1,
+    "forced_template_all_parents_hit": 4,
+    "editor_blank": 2,
+    "mask_blank": 8,
+    "flow_blank": 3,
+    "contexts": 12
+  },
+  "grammar-benefit-left-17119": {
+    "draws": 32,
+    "addressable_output": 27,
+    "template_hit": 20,
+    "all_parents_and_template_hit": 0,
+    "forced_template_all_parents_hit": 0,
+    "editor_blank": 1,
+    "mask_blank": 1,
+    "flow_blank": 2,
+    "contexts": 4
+  }
+}

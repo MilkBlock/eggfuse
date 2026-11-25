@@ -1,0 +1,34 @@
+{
+  "checks": {
+    "state_sha": true,
+    "schedule": true,
+    "writes": true,
+    "rhs": true,
+    "resumes": true,
+    "events": true
+  },
+  "accepted": 3,
+  "graph": {
+    "absent_returns": 0,
+    "accepted_steps": 1,
+    "attached_roots": 0,
+    "boundary_reads": 1,
+    "completed_layouts": {
+      "0": 1
+    },
+    "completed_sizes": {
+      "2": 1
+    },
+    "invalid_boundary": 0,
+    "issued_layouts": {
+      "0": 1
+    },
+    "issued_steps": 1,
+    "missing_returns": 0,
+    "rejected_groups": 0,
+    "retired_returns": 0,
+    "signed_layouts": 1
+  },
+  "external_requests": 2,
+  "native_batches": 6
+}

@@ -1,0 +1,275 @@
+{
+  "frozen_sha": {
+    "marks.pt": "83a04fa8ff3769096e192531724989ccb4265f99d5db0d81318be068e519e8e7",
+    "editor.pt": "c0b9ef778cd768f2e5da33c973715e5eb73f0fe71cf7f4d6c9b8ea5b48119cc7",
+    "mask.pt": "15a7a95f748ce5c5eb4bbe6bb60a38ca6f5c1d0022b2b6fd6d05326089402796",
+    "flow.pt": "89d7e85cc78aa6958291e1ac6ebb3a11c64a87466bb01fdf8eb1d5ee7109343e"
+  },
+  "cases": {
+    "edit-held-chain3-fresh": {
+      "signature": "877320d396c92086535422f3a13ec7cda973e5a28614b77758a46493424f7c0a",
+      "certificate": {
+        "checks": {
+          "state_sha": true,
+          "schedule": true,
+          "writes": true,
+          "rhs": true,
+          "resumes": true,
+          "events": true
+        },
+        "accepted": 3,
+        "graph": {
+          "absent_returns": 0,
+          "accepted_steps": 2,
+          "attached_roots": 0,
+          "boundary_reads": 1,
+          "completed_layouts": {
+            "0": 1
+          },
+          "completed_sizes": {
+            "3": 1
+          },
+          "invalid_boundary": 0,
+          "issued_layouts": {
+            "0": 1
+          },
+          "issued_steps": 2,
+          "missing_returns": 0,
+          "rejected_groups": 0,
+          "retired_returns": 0,
+          "signed_layouts": 1
+        },
+        "external_requests": 1,
+        "native_batches": 4
+      }
+    },
+    "edit-held-chain5-fresh": {
+      "signature": "e34f11a82747c2057b2f2225d87c08c2e20ac422918ea35277f250b2c03ee71c",
+      "certificate": {
+        "checks": {
+          "state_sha": true,
+          "schedule": true,
+          "writes": true,
+          "rhs": true,
+          "resumes": true,
+          "events": true
+        },
+        "accepted": 5,
+        "graph": {
+          "absent_returns": 0,
+          "accepted_steps": 4,
+          "attached_roots": 0,
+          "boundary_reads": 1,
+          "completed_layouts": {
+            "0": 1
+          },
+          "completed_sizes": {
+            "5": 1
+          },
+          "invalid_boundary": 0,
+          "issued_layouts": {
+            "0": 1
+          },
+          "issued_steps": 4,
+          "missing_returns": 0,
+          "rejected_groups": 0,
+          "retired_returns": 0,
+          "signed_layouts": 1
+        },
+        "external_requests": 1,
+        "native_batches": 6
+      }
+    },
+    "edit-held-diamond-fresh": {
+      "signature": "b6893aa19e574b53bd4bfae6ba127b760c13092399b0a0cdad4ab74a10e345a0",
+      "certificate": {
+        "checks": {
+          "state_sha": true,
+          "schedule": true,
+          "writes": true,
+          "rhs": true,
+          "resumes": true,
+          "events": true
+        },
+        "accepted": 4,
+        "graph": {
+          "absent_returns": 0,
+          "accepted_steps": 3,
+          "attached_roots": 0,
+          "boundary_reads": 1,
+          "completed_layouts": {
+            "0": 1
+          },
+          "completed_sizes": {
+            "4": 1
+          },
+          "invalid_boundary": 0,
+          "issued_layouts": {
+            "0": 1
+          },
+          "issued_steps": 3,
+          "missing_returns": 0,
+          "rejected_groups": 0,
+          "retired_returns": 0,
+          "signed_layouts": 1
+        },
+        "external_requests": 1,
+        "native_batches": 5
+      }
+    },
+    "edit-held-shared-fresh": {
+      "signature": "3c59b62ce76c58b9189d4ba04e808c9834138ea622a6bb384a26c639b486b023",
+      "certificate": {
+        "checks": {
+          "state_sha": true,
+          "schedule": true,
+          "writes": true,
+          "rhs": true,
+          "resumes": true,
+          "events": true
+        },
+        "accepted": 4,
+        "graph": {
+          "absent_returns": 0,
+          "accepted_steps": 3,
+          "attached_roots": 0,
+          "boundary_reads": 1,
+          "completed_layouts": {
+            "0": 1
+          },
+          "completed_sizes": {
+            "4": 1
+          },
+          "invalid_boundary": 0,
+          "issued_layouts": {
+            "0": 1
+          },
+          "issued_steps": 3,
+          "missing_returns": 0,
+          "rejected_groups": 0,
+          "retired_returns": 0,
+          "signed_layouts": 1
+        },
+        "external_requests": 1,
+        "native_batches": 5
+      }
+    },
+    "edit-held-chain3-guard_true": {
+      "signature": "708ced962fce20105f97f8cbd2330d8e23fbbe221ed7daf6d36ab5cb3aea1320",
+      "certificate": {
+        "checks": {
+          "state_sha": true,
+          "schedule": true,
+          "writes": true,
+          "rhs": true,
+          "resumes": true,
+          "events": true
+        },
+        "accepted": 3,
+        "graph": {
+          "absent_returns": 0,
+          "accepted_steps": 2,
+          "attached_roots": 0,
+          "boundary_reads": 1,
+          "completed_layouts": {
+            "0": 1
+          },
+          "completed_sizes": {
+            "3": 1
+          },
+          "invalid_boundary": 0,
+          "issued_layouts": {
+            "0": 1
+          },
+          "issued_steps": 2,
+          "missing_returns": 0,
+          "rejected_groups": 0,
+          "retired_returns": 0,
+          "signed_layouts": 1
+        },
+        "external_requests": 1,
+        "native_batches": 4
+      }
+    },
+    "edit-held-chain3-guard_false": {
+      "signature": "708ced962fce20105f97f8cbd2330d8e23fbbe221ed7daf6d36ab5cb3aea1320",
+      "certificate": {
+        "complete_teacher_instance": false
+      }
+    },
+    "edit-held-chain3-partial": {
+      "signature": "877320d396c92086535422f3a13ec7cda973e5a28614b77758a46493424f7c0a",
+      "certificate": {
+        "checks": {
+          "state_sha": true,
+          "schedule": true,
+          "writes": true,
+          "rhs": true,
+          "resumes": true,
+          "events": true
+        },
+        "accepted": 3,
+        "graph": {
+          "absent_returns": 0,
+          "accepted_steps": 2,
+          "attached_roots": 0,
+          "boundary_reads": 1,
+          "completed_layouts": {
+            "0": 1
+          },
+          "completed_sizes": {
+            "3": 1
+          },
+          "invalid_boundary": 0,
+          "issued_layouts": {
+            "0": 1
+          },
+          "issued_steps": 2,
+          "missing_returns": 0,
+          "rejected_groups": 0,
+          "retired_returns": 0,
+          "signed_layouts": 1
+        },
+        "external_requests": 1,
+        "native_batches": 4
+      }
+    },
+    "edit-held-chain3-duplicate": {
+      "signature": "877320d396c92086535422f3a13ec7cda973e5a28614b77758a46493424f7c0a",
+      "certificate": {
+        "checks": {
+          "state_sha": true,
+          "schedule": true,
+          "writes": true,
+          "rhs": true,
+          "resumes": true,
+          "events": true
+        },
+        "accepted": 3,
+        "graph": {
+          "absent_returns": 0,
+          "accepted_steps": 2,
+          "attached_roots": 0,
+          "boundary_reads": 1,
+          "completed_layouts": {
+            "0": 1
+          },
+          "completed_sizes": {
+            "3": 1
+          },
+          "invalid_boundary": 0,
+          "issued_layouts": {
+            "0": 1
+          },
+          "issued_steps": 2,
+          "missing_returns": 0,
+          "rejected_groups": 0,
+          "retired_returns": 0,
+          "signed_layouts": 1
+        },
+        "external_requests": 1,
+        "native_batches": 4
+      }
+    }
+  }
+}

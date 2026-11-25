@@ -1,0 +1,25 @@
+{
+  "counts": {
+    "duplicate": 47,
+    "keep": 47,
+    "repair": 46,
+    "empty": 46,
+    "partial": 44,
+    "empty_multi": 44,
+    "keep_multi": 44,
+    "fold": 5,
+    "activate": 5,
+    "failed_macro": 1
+  },
+  "branch_labels": 3826,
+  "training": [
+    "sum",
+    "sum-roll",
+    "grammar-benefit-fork-17118"
+  ],
+  "signatures": [
+    "5676c9ee8da1846ef3e1d3c21d70bc35adc2c2451c5d6e4d490007606e2173bb",
+    "bea44bf6c0058709928d7402a740155ee0149106892b8151522f9fefae7afed6"
+  ],
+  "seed": 243
+}

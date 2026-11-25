@@ -1,0 +1,122 @@
+{
+  "sum": {
+    "runs": 1428,
+    "verified_repeats": 32,
+    "publication_sha": "cd32d3d5023b61da594cdf60ea03bab1fa1e91eeb9b464107d4878b27a96b3ab",
+    "terminal": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "checks": {
+      "schedule": true,
+      "state_sha": true,
+      "rhs": true,
+      "writes": true,
+      "resumes": true,
+      "events": true,
+      "ept": true
+    }
+  },
+  "sum-roll": {
+    "runs": 870,
+    "verified_repeats": 12,
+    "publication_sha": "019d1903675d530fda6d7fcd070df297a953a26699ad2c6265e33be9debfc07b",
+    "terminal": "08988fa7a01f263536482a283c6428ccb550636c1aefa6637d82ba7302b4796d",
+    "checks": {
+      "schedule": true,
+      "state_sha": true,
+      "rhs": true,
+      "writes": true,
+      "resumes": true,
+      "events": true,
+      "ept": true
+    }
+  },
+  "grammar-benefit-fork-17118": {
+    "runs": 6,
+    "verified_repeats": 3,
+    "publication_sha": "6b465ddbaf879c9b9a28c9194cd28775cd0d2a9b1721d4d2fc4b2c840f22b6fb",
+    "terminal": "12000b574e7ad820aa2b9e7f26525ca388220d36867ef4b3b9cdac55af7dce2b",
+    "checks": {
+      "schedule": true,
+      "state_sha": true,
+      "rhs": true,
+      "writes": true,
+      "resumes": true,
+      "events": true,
+      "ept": true
+    }
+  },
+  "dot": {
+    "runs": 1535,
+    "verified_repeats": 12,
+    "publication_sha": "63a79722165cd29dbf26603904a60ab4044c37eec6ed1abea7cc89f8be722fb3",
+    "terminal": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+    "checks": {
+      "schedule": true,
+      "state_sha": true,
+      "rhs": true,
+      "writes": true,
+      "resumes": true,
+      "events": true,
+      "ept": true
+    }
+  },
+  "fact": {
+    "runs": 634,
+    "verified_repeats": 12,
+    "publication_sha": "b1ddd80da1b0d1c67bc5df872b8d5124def308f600c7e461937d02a43e503566",
+    "terminal": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d",
+    "checks": {
+      "schedule": true,
+      "state_sha": true,
+      "rhs": true,
+      "writes": true,
+      "resumes": true,
+      "events": true,
+      "ept": true
+    }
+  },
+  "loopfact": {
+    "runs": 618,
+    "verified_repeats": 12,
+    "publication_sha": "8b6258a7ee275320d5b7d665d783eb320e8a912afa21fa756a6a50293867efc0",
+    "terminal": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724",
+    "checks": {
+      "schedule": true,
+      "state_sha": true,
+      "rhs": true,
+      "writes": true,
+      "resumes": true,
+      "events": true,
+      "ept": true
+    }
+  },
+  "sum-divisors": {
+    "runs": 1644,
+    "verified_repeats": 12,
+    "publication_sha": "d54ce3b06d97dbdf984e7bb03a43c3298061d3c312a9dba13cb8d0855e305bb2",
+    "terminal": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e",
+    "checks": {
+      "schedule": true,
+      "state_sha": true,
+      "rhs": true,
+      "writes": true,
+      "resumes": true,
+      "events": true,
+      "ept": true
+    }
+  },
+  "grammar-benefit-left-17119": {
+    "runs": 9,
+    "verified_repeats": 4,
+    "publication_sha": "e54a65dc9e93dffd9432ded5bf48fa61c2c2b42872b9d49a4c76af453d52b01d",
+    "terminal": "b22a87ff503ef956505d0f443029100fe79bef8366a75916012c0f4d017f86a0",
+    "checks": {
+      "schedule": true,
+      "state_sha": true,
+      "rhs": true,
+      "writes": true,
+      "resumes": true,
+      "events": true,
+      "ept": true
+    }
+  }
+}
