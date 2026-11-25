@@ -3,6 +3,7 @@ import argparse
 from collections import Counter
 import numpy as np
 import json
+import hashlib
 from pathlib import Path
 import subprocess
 from tempfile import TemporaryDirectory
@@ -35,7 +36,7 @@ def setup_policy(data, store, case, state, opened, exploration_seed=None, policy
     return d, program, p, policy
 
 
-def episode(data, store, case, label, state, opened, limit=None, exploration_seed=None, policy_cls=None):
+def episode(data, store, case, label, state, opened, limit=None, exploration_seed=None, policy_cls=None, boundary_audit=False):
     start = perf_counter()
     d, program, p, policy = setup_policy(data, store, case, state, opened, exploration_seed, policy_cls)
     setup_seconds = perf_counter() - start
@@ -53,6 +54,12 @@ def episode(data, store, case, label, state, opened, limit=None, exploration_see
                 work / "issued.json", "audit", str(result["runs"]), "--ept-origins"]))
             if report["state_sha"] != result["state_sha"]:
                 raise ValueError("origin attribution changed the independent endpoint")
+            if boundary_audit:
+                # Per-Run checks cover transient publications and repairs as well as the endpoint.
+                checks = {k: hashlib.sha256(json.dumps(report[k], separators=(",", ":")).encode()).hexdigest()
+                          for k in ("schedule", "rhs", "resumes", "writes", "events")}
+                checks["effective_ledger"] = report["ept"]["ledger_sha256"]
+                result["boundary_hashes"] = checks
             credit = Counter()
             for tok, n in report["ept"]["origins"]:
                 if tok in policy.suffix_tokens:

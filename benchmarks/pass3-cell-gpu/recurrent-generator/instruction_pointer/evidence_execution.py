@@ -115,23 +115,11 @@ class EvidenceEntries(StructureEntries):
             self.advance_region(region, mem)
         for token, outputs in self.births.items():
             pids = self.by_source[mem.rd.store.types[token]]
-            pc = min(outputs)
-            table = mem.rd.store.visible[token, pc]["table"]
-            bank = mem.bank(table)
-            pos = bank.positions[token, pc]
-            codes = [self.code(mem, self.regions[pids[0]][0][0], 0), *(self.descriptor(mem, i) for i in pids)]
-            logits = scores(
-                self.model, torch.from_numpy(bank.vec[pos : pos + 1]), torch.from_numpy(np.stack(codes))
-            )
-            k = int(logits.argmax())
-            if self.exploration is not None and self.exploration.random() < 0.20:
-                k = int(self.exploration.integers(len(codes)))
-            self.count["evidence_option_scores"] += len(codes)
-            self.action_counts["EvidenceActivate" if k else "EvidencePass"] += 1
+            pid = self.select_region(mem, token, outputs, pids)
+            self.action_counts["EvidenceActivate" if pid is not None else "EvidencePass"] += 1
             self.action_runs.add(self.txn.run)
-            if not k:
+            if pid is None:
                 continue
-            pid = pids[k - 1]
             boundary = {}
             inputs = self.owners.get(token, ())
             for owner, op in self.interface[pid]:
@@ -144,6 +132,21 @@ class EvidenceEntries(StructureEntries):
             if (PARTNER, 0) in self.interface[pid]:
                 self.bind_partner(region, mem)
             self.advance_region(region, mem)
+
+    def select_region(self, mem, token, outputs, pids):
+        pc = min(outputs)
+        table = mem.rd.store.visible[token, pc]["table"]
+        bank = mem.bank(table)
+        pos = bank.positions[token, pc]
+        codes = [self.code(mem, self.regions[pids[0]][0][0], 0), *(self.descriptor(mem, i) for i in pids)]
+        logits = scores(
+            self.model, torch.from_numpy(bank.vec[pos : pos + 1]), torch.from_numpy(np.stack(codes))
+        )
+        k = int(logits.argmax())
+        if self.exploration is not None and self.exploration.random() < 0.20:
+            k = int(self.exploration.integers(len(codes)))
+        self.count["evidence_option_scores"] += len(codes)
+        return pids[k - 1] if k else None
 
     def bind_partner(self, region, mem):
         r, wires = next((r, w) for r, w in self.regions[region.pid] if (PARTNER, 0) in w)

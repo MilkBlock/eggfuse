@@ -76,6 +76,9 @@ class EventGenerator:
             if hasattr(higher, "resume_programs"):
                 higher.resume_programs(mem)
 
+        profile = getattr(higher, "cost_profile", None)
+        bake = getattr(higher, "cost_bake", None)
+
         def emit(r, order, paths):
             refs = np.empty((len(paths), len(order), 3), np.int64)
             for k, j in enumerate(order):
@@ -87,6 +90,8 @@ class EventGenerator:
                 refs = refs[legal]
                 roots = roots[legal]
             stats["named_parent_reads"] += len(paths) * len(order)
+            if profile is not None:
+                profile.formed(paths, roots)
             if len(refs):
                 # Formation is the issue boundary: no subsequent tuple classifier.
                 if higher is None:
@@ -98,13 +103,18 @@ class EventGenerator:
         def decode(r, order, depth, paths, h, legacy):
             if perf_counter() >= deadline:
                 raise TimeoutError
+            stats["expanded_prefixes" if depth < len(order) else "formed_paths"] += len(paths)
             if audit is not None:
                 audit.prefix(mem, r, order, depth, paths)
+            if profile is not None:
+                profile.prefix(paths, depth)
             if depth == len(order):
                 emit(r, order, paths)
                 return
             dst = order[depth]
             win = mem.window(r, order[:depth], dst, paths)
+            if bake is not None:
+                win = bake.window(mem, r, order, depth, paths, win, rules[r])
             if self.compute:
                 win = self.compute.address(mem, r, order, depth, paths, txn, stats, win)
             groups = win if isinstance(win, list) else [(np.arange(len(paths)), *win)]
@@ -140,6 +150,8 @@ class EventGenerator:
                     child = np.column_stack((parents[owner], addr))
                     z = None
                     if legacy is not None:
+                        if profile is not None:
+                            tick = perf_counter()
                         logits, z = legacy.logits(
                             h[ix[owner]], depth, torch.from_numpy(child)
                         )
@@ -147,12 +159,14 @@ class EventGenerator:
                         if depth + 1 == len(order):
                             stats["complete_candidate_scores"] += len(child)
                         keep = logits >= 0
+                        if profile is not None:
+                            profile.scored(mem, r, order, depth, child, keep.numpy(), rules[r], perf_counter() - tick)
                         child = child[keep.numpy()]
                         z = z[keep]
                     if len(child):
                         decode(r, order, depth + 1, child, z, legacy)
 
-        def dispatch(r, j, ix, woke):
+        def expand(r, j, ix, woke):
             if perf_counter() >= deadline:
                 raise TimeoutError
             order = mem.order(r, j)
@@ -173,6 +187,8 @@ class EventGenerator:
                 self.generation[r, j] = tuple(
                     rd.versions[mem.roles[r][a]] for a in order[1:]
                 )
+            if bake is not None:
+                bake.choose(mem, r, j, ix, woke, rules[r])
             project = getattr(higher, "project_entries", None)
             if project is not None:
                 project(r, j, mem, txn)
@@ -183,6 +199,12 @@ class EventGenerator:
                 if not len(ix):
                     return
                 paths = ix[:, None]
+            if bake is not None:
+                ix = bake.roots(ix)
+                if not len(ix):
+                    return
+                if order:
+                    paths = ix[:, None]
             if any(not len(mem.bank(mem.roles[r][a]).ports) for a in order):
                 return
             h = legacy = None
@@ -200,12 +222,20 @@ class EventGenerator:
                     ptr.prepare()
                     scored[r, j] = ptr
                 legacy = scored[r, j]
+                stats["root_state_updates"] += len(ix)
                 _, h = legacy.logits(
                     model.start(rd.meta(r)).expand(len(ix), -1),
                     0,
                     torch.from_numpy(paths),
                 )
             decode(r, order, min(1, len(order)), paths, h, legacy)
+
+        def dispatch(r, j, ix, woke):
+            if profile is not None:
+                profile.start(mem, txn.run, r, j, ix, woke, stats)
+            expand(r, j, ix, woke)
+            if profile is not None:
+                profile.end(stats)
 
         for r, j, ix, woke in self.wake(rules, stats):
             dispatch(r, j, ix, woke)

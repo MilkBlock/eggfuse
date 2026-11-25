@@ -29,6 +29,7 @@ def execute(
     capacity=256,
     protocol="ccp-v0.1",
 ):
+    init = perf_counter()
     root = Path(root).resolve()
     d = folder(root, case)
     work = (
@@ -237,6 +238,7 @@ def execute(
         "txn_stats": end.get("txn_stats") if end else None,
         "trace": trace,
         "wall": wall,
+        "runtime_setup_seconds": start - init,
         "signed_ops": ops,
         "ept": ops / max(1, txn.paid),
         "eps": ops / wall,

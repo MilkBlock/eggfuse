@@ -76,6 +76,9 @@ class DeepTemplates:
             if not len(batch):
                 continue
             responses = send(txn, r, batch)
+            profile = getattr(self, "cost_profile", None)
+            if profile is not None:
+                profile.replies(sources, responses, batch)
             for idx in np.flatnonzero(responses[:, 1] == 0):
                 uid = self.choice.get(int(sources[idx]))
                 if uid is not None:
