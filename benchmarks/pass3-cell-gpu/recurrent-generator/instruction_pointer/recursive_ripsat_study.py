@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import subprocess
 from tempfile import TemporaryDirectory
+from time import perf_counter
 import torch
 
 from event_generator import EventGenerator
@@ -35,10 +36,13 @@ def setup_policy(data, store, case, state, opened, exploration_seed=None, policy
 
 
 def episode(data, store, case, label, state, opened, limit=None, exploration_seed=None, policy_cls=None):
+    start = perf_counter()
     d, program, p, policy = setup_policy(data, store, case, state, opened, exploration_seed, policy_cls)
+    setup_seconds = perf_counter() - start
     # Keep bounded disk usage: native scratch is private to each invocation.
     with TemporaryDirectory(dir=store) as tmp:
         result = execute(data, case, study=p, seconds=900, series=tmp, limit=limit)
+        result["setup_seconds"] = setup_seconds
         suffix = f"-first{limit}" if limit else ""
         work = Path(tmp) / (case + "-stream-multi" + suffix)
         align = work / "align.json"

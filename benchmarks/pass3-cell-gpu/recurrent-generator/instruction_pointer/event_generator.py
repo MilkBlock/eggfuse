@@ -178,6 +178,11 @@ class EventGenerator:
                 project(r, j, mem, txn)
             if audit is not None:
                 audit.prefix(mem, r, order, min(1, len(order)), paths)
+            if self.mode == "B" and len(order) == 2 and hasattr(higher, "remaining_binary_roots"):
+                ix = higher.remaining_binary_roots(mem, r, order, ix)
+                if not len(ix):
+                    return
+                paths = ix[:, None]
             if any(not len(mem.bank(mem.roles[r][a]).ports) for a in order):
                 return
             h = legacy = None
