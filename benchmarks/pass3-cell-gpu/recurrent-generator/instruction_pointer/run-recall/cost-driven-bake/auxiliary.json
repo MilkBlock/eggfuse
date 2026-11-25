@@ -1,0 +1,26 @@
+{
+  "fact": {
+    "calls": 654,
+    "visits": {
+      "partner": 240,
+      "boundary": 47
+    },
+    "state_sha": "0fb621363b5ce5c45fde0cf66da65d967a4382d07bdfec0716f9219e6a1f3751"
+  },
+  "loopfact": {
+    "calls": 782,
+    "visits": {
+      "partner": 619,
+      "boundary": 31
+    },
+    "state_sha": "0e1e9961fc23ce1d14272e69b7a01001893deabf6a32fcd861d903f7fd379cb5"
+  },
+  "sum-divisors": {
+    "calls": 1627,
+    "visits": {
+      "partner": 3157,
+      "boundary": 53
+    },
+    "state_sha": "e2c26acf0b06fb922c75e656e39534a7b1cd8cea1866e23bc7dac0ce4dfed67c"
+  }
+}

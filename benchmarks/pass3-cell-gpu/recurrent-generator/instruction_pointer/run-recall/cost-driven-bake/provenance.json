@@ -1,0 +1,52 @@
+{
+  "first_parent": "b33af382",
+  "runtime": "cell_token_replay",
+  "runtime_sha256": "38efa8d45746cd561e3378c210667b8198f882828dfb22ab03e4c122a3581375",
+  "python": "3.14.3",
+  "numpy": "2.5.5",
+  "pytorch": "2.15.0",
+  "torch_threads": 1,
+  "machine": "arm64",
+  "model": "Apple M3 Max",
+  "training_cases": [
+    "sum"
+  ],
+  "evaluation_cases": [
+    "fact",
+    "loopfact",
+    "sum-divisors"
+  ],
+  "frozen_inputs": {
+    "wired.pt": "4f50d1a755a9a2e7f937b875cf8e748d52f63846bdde26af0cf14ea4f02f6761",
+    "graph.pt": "26913155521aa1d49a71e390fb9aee1a92be1d339b4e7fc899dbf22cab1e1d06",
+    "catalog.json": "794a7af3dd79a0c92b9a859f9a39fc6b27c8cf56a8309cd3ac57cea5e59585c5",
+    "entry-contracts.json": "d825e35bc2479ccaeed05a59128357e328b1bddc4dd12a878e2d5b4746443f8d",
+    "structure-book.json": "5cfef1c66ddb266417b4478368f976fc032ba8776fa52496b9071e3e43a68c6a",
+    "structure-rl.pt": "dc9d4abb7f1c02ebdb2cfda0aa2632781fc42f7cfe1adb5a99e98cc0cd2c5b59",
+    "evidence-book.json": "dd7b58da604ef27dab7396931adf37bb3ab509713740516ff12d92cbcf33298a",
+    "cost-book.json": "2c19dd64c6bc1d45797cc3b2919a4cd4214142e56ac0d199bc1d6b1c375e4c16",
+    "cost-rl.pt": "d9750613e5699b0ee1ba0761d198dced2372a502dd4ad623d4b75cb19877a93c"
+  },
+  "native_programs": {
+    "sum": {
+      "program.json": "63cc00f1d584b62192eb7674591f4025916452ff4fbfbd88ccb3bd686958af04",
+      "capture.json": "cea14132e6909044cd4f324ebec11e04af0ec87267255fe68db46da26e10acd6",
+      "tape.json": "69de4af6520027f42a46ef04633a3e6f1c5875a2036ec761c5588d1c1d6fe9c4"
+    },
+    "fact": {
+      "program.json": "f4da1650af5393f3f07d5d20d092e26270ae58090266dd197113dd295ffaf900",
+      "capture.json": "e302e78eb5769e131438c7a5fa08d44bdf6ce01e82f7068df53677497f46a35c",
+      "tape.json": "e34de3bf62e6a0c89bd95ec97838c12f306bffcc6930ed45b1f4da9f2a0c7c42"
+    },
+    "loopfact": {
+      "program.json": "8f6d2b1a5f5a593b73119d0bfded0aefee97315191cc5f3efcd6e35320beacba",
+      "capture.json": "836fa727a48ce86dea9c2c9209f4974529e0ab275181cfab194de79e87323728",
+      "tape.json": "d877d81138ba44674aace8d33c447075e5fd5c8c1e76eaac7b8bb64f00675a20"
+    },
+    "sum-divisors": {
+      "program.json": "3b904063c8c7e580ec2030b452d831ee53478a28c3dfaecf17eeb7e853a0aaf8",
+      "capture.json": "e12959b45517706eace1e7d144ff2b99aa0da7682552cad756aa2fc96d47fddc",
+      "tape.json": "30da140008a764b2a6931777ee359bc657ce201a9667f1cf3d71ceb6cb6b484f"
+    }
+  }
+}

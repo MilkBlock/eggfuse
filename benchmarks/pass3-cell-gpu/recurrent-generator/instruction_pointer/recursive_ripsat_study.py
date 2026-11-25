@@ -6,6 +6,7 @@ import json
 import hashlib
 from pathlib import Path
 import subprocess
+import shutil
 from tempfile import TemporaryDirectory
 from time import perf_counter
 import torch
@@ -36,7 +37,7 @@ def setup_policy(data, store, case, state, opened, exploration_seed=None, policy
     return d, program, p, policy
 
 
-def episode(data, store, case, label, state, opened, limit=None, exploration_seed=None, policy_cls=None, boundary_audit=False):
+def episode(data, store, case, label, state, opened, limit=None, exploration_seed=None, policy_cls=None, boundary_audit=False, keep_tape=None):
     start = perf_counter()
     d, program, p, policy = setup_policy(data, store, case, state, opened, exploration_seed, policy_cls)
     setup_seconds = perf_counter() - start
@@ -46,6 +47,8 @@ def episode(data, store, case, label, state, opened, limit=None, exploration_see
         result["setup_seconds"] = setup_seconds
         suffix = f"-first{limit}" if limit else ""
         work = Path(tmp) / (case + "-stream-multi" + suffix)
+        if keep_tape is not None:
+            shutil.copyfile(work / "issued.json", keep_tape)
         align = work / "align.json"
         target = Target(program, snapshot(data, d, "reference", "-", limit, align)[0])
         initial = target.match(snapshot(data, d, "reference", "-", 0, align)[0])

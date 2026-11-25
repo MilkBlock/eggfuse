@@ -5,6 +5,7 @@ import csv
 import gzip
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 from statistics import median
 
@@ -12,11 +13,11 @@ import numpy as np
 
 from cell_transaction import STATUS
 from cost_profile import META
-from recursive_train import read
+from recursive_train import folder, read
 
 CASES = ("fact", "loopfact", "sum-divisors")
 ARMS = ("base", "frozen", "rl", "oracle")
-DIAGNOSTICS = ("single", "receipt-single", "receipt", "combined", "wide")
+DIAGNOSTICS = ("single", "receipt-single", "receipt", "combined", "receipt-with-b", "wide")
 
 
 def write(path, obj):
@@ -45,6 +46,7 @@ def frozen_search(store, output, case):
         z[k] for k in ("meta", "depth", "verdict", "ops", "prune", "batch")
     )
     scores = depth[:, :, 1].sum(axis=1)
+    score_ns = depth[:, :, 4].sum(axis=1)
     order = np.argsort(-scores, kind="stable")
     accumulated = scores[order].cumsum()
     total = int(scores.sum())
@@ -167,7 +169,33 @@ def frozen_search(store, output, case):
             ids = [e for e, ls in loss.items() if (stage, why) in ls]
             loss_stats[f"{stage}_{why}"] = {"events": len(ids), "parent_scores": int(scores[ids].sum())}
     dep = read(store / f"{case}-dependencies.json")
-    dep.pop("examples")
+    examples = {row[0]: row[1] for row in dep.pop("examples")}
+    by_time = {}
+    for event in order[: counts["95"]]:
+        if event in examples:
+            n = examples[event]
+            group = "named_wiring" if not n else "one_external" if n == 1 else "multiple_external"
+        elif probe[event] == 1:
+            group = "valid_pruned_witness"
+        else:
+            fork = exact["runs"][str(meta[event, 0])]
+            group = (
+                "fork_failed"
+                if "error" in fork
+                else "exact_fork_emitted_no_rule_binding"
+                if not fork["rules"].get(str(meta[event, 1]), 0)
+                else "unresolved_no_named_witness"
+            )
+        by_time[group] = by_time.get(group, 0.0) + score_ns[event] / 1e9
+
+    def time_tiers(metric):
+        rank = np.argsort(-metric, kind="stable")
+        return {
+            str(p): int(np.searchsorted(metric[rank].cumsum(), metric.sum() * p / 100) + 1)
+            for p in (50, 80, 95)
+        }
+
+    dep["apportioned_pointer_seconds_high95_by_witness"] = by_time
     return {
         "total": stats(np.arange(len(meta))),
         "classes": evidence(np.arange(len(meta))),
@@ -176,6 +204,8 @@ def frozen_search(store, output, case):
         "batches": len(batch),
         "batch_seconds": float(sum(batch[:, 0])),
         "tiers": tiers,
+        "apportioned_pointer_time_event_counts": time_tiers(score_ns),
+        "exact_dispatch_wall_batch_counts": time_tiers(batch[:, 0]),
         "threshold_probed": int((probe >= 0).sum()),
         "native_fork_runs": len(exact["runs"]),
         "fork_errors": fork_errors,
@@ -190,7 +220,12 @@ def compact(row, arm):
     w = row["work"]
     oracle = arm in ("oracle", "wide", "single", "combined", "receipt", "receipt-single")
     actions = row["open_actions"]
-    oracular = sum(n for k, n in actions.items() if oracle and k.startswith(("Cost", "Evidence")))
+    oracular = sum(
+        n
+        for k, n in actions.items()
+        if (oracle and k.startswith(("Cost", "Evidence")))
+        or (arm == "receipt-with-b" and k.startswith("Evidence"))
+    )
     proofs = w["generated_proofs"]
     neural_controls = (
         row["terminal_decisions"] + sum(actions.values()) - oracular + w.get("open_contract_choices", 0)
@@ -253,11 +288,11 @@ def compact(row, arm):
         else None,
         "controls": actions,
         "verdicts": row["verdicts"],
-        "additional_suffix_ops": row["new_suffix_operations"],
+        "additional_suffix_ops": row.get("new_suffix_operations", {}),
         "counters": counters,
         "cost_seconds": {k: v for k, v in w.items() if k.endswith("_seconds")},
         "boundaries": row.get("boundary_hashes"),
-        "region_receipts": [x for x in row["structures"] if x.get("mode") == "Evidence"],
+        "region_receipts": [x for x in row.get("structures", []) if x.get("mode") == "Evidence"],
     }
 
 
@@ -282,9 +317,10 @@ def rollouts(store, cases):
             }
             if arm != "base" and "base" in groups:
                 base = groups["base"]["rows"]
-                groups[arm]["paired_online_seconds_saved"] = distribution(
-                    [b["wall"] - r["wall"] for b, r in zip(base, rows)]
-                )
+                if arm in ARMS:
+                    groups[arm]["paired_online_seconds_saved"] = distribution(
+                        [b["wall"] - r["wall"] for b, r in zip(base, rows)]
+                    )
                 reference = next((b["boundaries"] for b in base if b["boundaries"]), None)
                 checks = [(reference, r["boundaries"]) for r in rows if reference and r["boundaries"]]
                 groups[arm]["per_run_compared"] = [{k: a[k] == b[k] for k in a} for a, b in checks]
@@ -292,14 +328,63 @@ def rollouts(store, cases):
     return out
 
 
+def native_work(data, store, executable):
+    result = {}
+    for case in CASES:
+        episodes = {}
+        for arm, suffix in (("base", ""), ("aux", "-aux"), ("receipt-with-b", "-receipt-with-b")):
+            tape = store / f"{case}{suffix}-issued.json"
+            if not tape.is_file():
+                continue
+            measured = read(store / f"{case}-{arm}-0.json")
+            report = json.loads(
+                subprocess.check_output(
+                    [
+                        executable,
+                        "replay",
+                        folder(data, case) / "program.json",
+                        tape,
+                        "audit",
+                        "--ept-origins",
+                    ]
+                )
+            )
+            work = report["primitive_work"]
+            if (
+                report["state_sha"] != measured["state_sha"]
+                or work["committed_rhs"] != measured["committed_tokens"]
+            ):
+                raise ValueError(f"Native operation audit diverged on {case}/{arm}")
+            ept = report["ept"]
+            effective = sum(ept["signed_external"]) + sum(ept["signed_internal"])
+            if effective != measured["signed_ops"]:
+                raise ValueError(f"Native effective ledger diverged on {case}/{arm}")
+            episodes[arm] = {
+                "work": work,
+                "ept_ledger": ept["ledger_sha256"],
+                "effective_ops": effective,
+                "state_sha": report["state_sha"],
+                "signed_by_kind": dict(zip(ept["kinds"], ept["signed_external"])),
+                "uncredited_by_kind": dict(zip(ept["kinds"], ept["uncredited"])),
+            }
+        result[case] = episodes
+    return result
+
+
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("store", type=Path)
     p.add_argument("dest", type=Path)
-    p.add_argument("task", choices=["profile", "rollouts"])
+    p.add_argument("task", choices=["profile", "rollouts", "primitive"])
+    p.add_argument("--data", type=Path)
+    p.add_argument("--replay", type=Path)
     a = p.parse_args()
     a.dest.mkdir(parents=True, exist_ok=True)
     if a.task == "profile":
         write(a.dest / "search-audit.json", {c: frozen_search(a.store, a.dest, c) for c in CASES})
+    elif a.task == "primitive":
+        if a.data is None or a.replay is None:
+            p.error("primitive requires --data and --replay")
+        write(a.dest / "primitive-work.json", native_work(a.data, a.store, a.replay))
     else:
         write(a.dest / "native-rollouts.json", rollouts(a.store, CASES))

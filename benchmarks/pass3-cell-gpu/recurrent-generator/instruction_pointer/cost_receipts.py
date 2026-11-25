@@ -14,6 +14,7 @@ from ripsat_layout import signatures
 class ReceiptOracle(EvidenceEntries):
     combined = False
     single = False
+    learned_cost = False
 
     def __init__(self, program, store, *args):
         super().__init__(program, store, *args)
@@ -27,10 +28,12 @@ class ReceiptOracle(EvidenceEntries):
         if self.combined:
             sig = signatures(program)
             menu = set(map(tuple, read(store / "cost-book.json")["entries"]))
-            choices = np.load(store / (sha + "-oracle.npz"))["events"]
-            events = defaultdict(set)
-            for run, r, j, t, pc, v in choices:
-                events[run, r, j].add((t, pc, v))
+            events = None
+            if not self.learned_cost:
+                choices = np.load(store / (sha + "-oracle.npz"))["events"]
+                events = defaultdict(set)
+                for run, r, j, t, pc, v in choices:
+                    events[run, r, j].add((t, pc, v))
             entries = {
                 (r, j)
                 for r, s in enumerate(sig)
@@ -74,3 +77,9 @@ class SingleReceiptOracle(ReceiptOracle):
 
 class CombinedOracle(ReceiptOracle):
     combined = True
+
+
+class ReceiptWithFrozenB(CombinedOracle):
+    """Re-evaluate the eight-entry choice on live IDs after early receipt publication."""
+
+    learned_cost = True

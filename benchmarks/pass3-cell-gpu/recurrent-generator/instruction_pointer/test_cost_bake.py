@@ -37,6 +37,30 @@ class CostBakeTests(TestCase):
         obj.cut = 0
         self.assertEqual(obj.roots(np.array([0, 1])).tolist(), [1])
 
+    def test_new_publication_reopens_a_previously_empty_residual(self):
+        owner = NS(count=Counter(), action_counts=Counter(), txn=NS(run=5))
+        bank = NS(rows=np.array([[3, 0, 1]]), versions=np.array([1]))
+        other = NS(rows=np.array([[7, 0, 1]]), versions=np.array([1]))
+        mem = NS(
+            bank=lambda role: (bank, other)[role],
+            order=lambda rule, role: (0, 1),
+            roles={7: (0, 1)},
+            rd=NS(iface=NS(rules={7: {"metadata": {"seminaive": True}}})),
+        )
+        bake = CostBake(owner, {(7, 0)}, {(5, 7, 0): {(3, 0, 1)}, (6, 7, 0): {(3, 0, 1)}})
+        roots = np.array([0])
+        bake.choose(mem, 7, 0, roots, True, 5)
+        self.assertEqual(bake.roots(roots).tolist(), [])
+        owner.txn.run = 6
+        other.rows = np.array([[7, 0, 1], [8, 0, 6]])
+        other.versions = np.array([1, 6])
+        bake.choose(mem, 7, 0, roots, True, 6)
+        self.assertEqual(bake.roots(roots).tolist(), [0])
+        listing, lo, n = bake.window(mem, 7, (0, 1), 1, roots[:, None], (None, roots, np.array([2])), 6)
+        self.assertEqual(listing[lo[0] : lo[0] + n[0]].tolist(), [1])
+        bake.choose(mem, 7, 0, roots, False, 6)
+        self.assertFalse(bake.active)
+
     def test_function_dependency_supplies_uniqueness_only_with_all_rule_inputs(self):
         row = lambda cols, keys: {"columns": [{"slot": n} for n in cols], "key_columns": keys}
         rule = {

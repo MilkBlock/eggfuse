@@ -1,0 +1,251 @@
+{
+  "fact": {
+    "base": {
+      "work": {
+        "committed_rhs": 1262,
+        "constructor_requests": 1405,
+        "constructor_reused": 731,
+        "function_updates": 319,
+        "merge_calls": 483,
+        "merge_program_operations": 72,
+        "repaired_dependencies": 231,
+        "unions": 115
+      },
+      "ept_ledger": "775bfa094b34515f0b0a803b2e5413102f0e6041e521c7b516a36d90c4a6f729",
+      "effective_ops": 1094,
+      "state_sha": "0fb621363b5ce5c45fde0cf66da65d967a4382d07bdfec0716f9219e6a1f3751",
+      "signed_by_kind": {
+        "visible_birth": 699,
+        "function_write": 318,
+        "effective_union": 77,
+        "visibility_change": 0
+      },
+      "uncredited_by_kind": {
+        "visible_birth": 0,
+        "function_write": 0,
+        "effective_union": 38,
+        "visibility_change": 0
+      }
+    },
+    "aux": {
+      "work": {
+        "committed_rhs": 1262,
+        "constructor_requests": 1405,
+        "constructor_reused": 731,
+        "function_updates": 319,
+        "merge_calls": 483,
+        "merge_program_operations": 72,
+        "repaired_dependencies": 231,
+        "unions": 115
+      },
+      "ept_ledger": "775bfa094b34515f0b0a803b2e5413102f0e6041e521c7b516a36d90c4a6f729",
+      "effective_ops": 1094,
+      "state_sha": "0fb621363b5ce5c45fde0cf66da65d967a4382d07bdfec0716f9219e6a1f3751",
+      "signed_by_kind": {
+        "visible_birth": 699,
+        "function_write": 318,
+        "effective_union": 77,
+        "visibility_change": 0
+      },
+      "uncredited_by_kind": {
+        "visible_birth": 0,
+        "function_write": 0,
+        "effective_union": 38,
+        "visibility_change": 0
+      }
+    },
+    "receipt-with-b": {
+      "work": {
+        "committed_rhs": 1262,
+        "constructor_requests": 1405,
+        "constructor_reused": 731,
+        "function_updates": 319,
+        "merge_calls": 483,
+        "merge_program_operations": 72,
+        "repaired_dependencies": 231,
+        "unions": 115
+      },
+      "ept_ledger": "775bfa094b34515f0b0a803b2e5413102f0e6041e521c7b516a36d90c4a6f729",
+      "effective_ops": 1094,
+      "state_sha": "0fb621363b5ce5c45fde0cf66da65d967a4382d07bdfec0716f9219e6a1f3751",
+      "signed_by_kind": {
+        "visible_birth": 699,
+        "function_write": 318,
+        "effective_union": 77,
+        "visibility_change": 0
+      },
+      "uncredited_by_kind": {
+        "visible_birth": 0,
+        "function_write": 0,
+        "effective_union": 38,
+        "visibility_change": 0
+      }
+    }
+  },
+  "loopfact": {
+    "base": {
+      "work": {
+        "committed_rhs": 1160,
+        "constructor_requests": 1212,
+        "constructor_reused": 576,
+        "function_updates": 398,
+        "merge_calls": 608,
+        "merge_program_operations": 76,
+        "repaired_dependencies": 251,
+        "unions": 115
+      },
+      "ept_ledger": "52a6ec40d4879080db630459a64c3cf315873d1da33f0cb9eba2d9dbd2b9093c",
+      "effective_ops": 1136,
+      "state_sha": "0e1e9961fc23ce1d14272e69b7a01001893deabf6a32fcd861d903f7fd379cb5",
+      "signed_by_kind": {
+        "visible_birth": 661,
+        "function_write": 397,
+        "effective_union": 78,
+        "visibility_change": 0
+      },
+      "uncredited_by_kind": {
+        "visible_birth": 0,
+        "function_write": 0,
+        "effective_union": 37,
+        "visibility_change": 0
+      }
+    },
+    "aux": {
+      "work": {
+        "committed_rhs": 1160,
+        "constructor_requests": 1212,
+        "constructor_reused": 576,
+        "function_updates": 398,
+        "merge_calls": 608,
+        "merge_program_operations": 76,
+        "repaired_dependencies": 251,
+        "unions": 115
+      },
+      "ept_ledger": "52a6ec40d4879080db630459a64c3cf315873d1da33f0cb9eba2d9dbd2b9093c",
+      "effective_ops": 1136,
+      "state_sha": "0e1e9961fc23ce1d14272e69b7a01001893deabf6a32fcd861d903f7fd379cb5",
+      "signed_by_kind": {
+        "visible_birth": 661,
+        "function_write": 397,
+        "effective_union": 78,
+        "visibility_change": 0
+      },
+      "uncredited_by_kind": {
+        "visible_birth": 0,
+        "function_write": 0,
+        "effective_union": 37,
+        "visibility_change": 0
+      }
+    },
+    "receipt-with-b": {
+      "work": {
+        "committed_rhs": 1160,
+        "constructor_requests": 1212,
+        "constructor_reused": 576,
+        "function_updates": 398,
+        "merge_calls": 608,
+        "merge_program_operations": 76,
+        "repaired_dependencies": 251,
+        "unions": 115
+      },
+      "ept_ledger": "52a6ec40d4879080db630459a64c3cf315873d1da33f0cb9eba2d9dbd2b9093c",
+      "effective_ops": 1136,
+      "state_sha": "0e1e9961fc23ce1d14272e69b7a01001893deabf6a32fcd861d903f7fd379cb5",
+      "signed_by_kind": {
+        "visible_birth": 661,
+        "function_write": 397,
+        "effective_union": 78,
+        "visibility_change": 0
+      },
+      "uncredited_by_kind": {
+        "visible_birth": 0,
+        "function_write": 0,
+        "effective_union": 37,
+        "visibility_change": 0
+      }
+    }
+  },
+  "sum-divisors": {
+    "base": {
+      "work": {
+        "committed_rhs": 4623,
+        "constructor_requests": 4974,
+        "constructor_reused": 2576,
+        "function_updates": 1538,
+        "merge_calls": 2433,
+        "merge_program_operations": 304,
+        "repaired_dependencies": 1005,
+        "unions": 409
+      },
+      "ept_ledger": "7c78dad020cd1187b0753d1f1eb5ae23e4cbd575f6f04b741a35924d120426cc",
+      "effective_ops": 4321,
+      "state_sha": "e2c26acf0b06fb922c75e656e39534a7b1cd8cea1866e23bc7dac0ce4dfed67c",
+      "signed_by_kind": {
+        "visible_birth": 2515,
+        "function_write": 1537,
+        "effective_union": 269,
+        "visibility_change": 0
+      },
+      "uncredited_by_kind": {
+        "visible_birth": 0,
+        "function_write": 0,
+        "effective_union": 140,
+        "visibility_change": 0
+      }
+    },
+    "aux": {
+      "work": {
+        "committed_rhs": 4623,
+        "constructor_requests": 4974,
+        "constructor_reused": 2576,
+        "function_updates": 1538,
+        "merge_calls": 2433,
+        "merge_program_operations": 304,
+        "repaired_dependencies": 1005,
+        "unions": 409
+      },
+      "ept_ledger": "7c78dad020cd1187b0753d1f1eb5ae23e4cbd575f6f04b741a35924d120426cc",
+      "effective_ops": 4321,
+      "state_sha": "e2c26acf0b06fb922c75e656e39534a7b1cd8cea1866e23bc7dac0ce4dfed67c",
+      "signed_by_kind": {
+        "visible_birth": 2515,
+        "function_write": 1537,
+        "effective_union": 269,
+        "visibility_change": 0
+      },
+      "uncredited_by_kind": {
+        "visible_birth": 0,
+        "function_write": 0,
+        "effective_union": 140,
+        "visibility_change": 0
+      }
+    },
+    "receipt-with-b": {
+      "work": {
+        "committed_rhs": 4623,
+        "constructor_requests": 4974,
+        "constructor_reused": 2576,
+        "function_updates": 1538,
+        "merge_calls": 2433,
+        "merge_program_operations": 304,
+        "repaired_dependencies": 1005,
+        "unions": 409
+      },
+      "ept_ledger": "7c78dad020cd1187b0753d1f1eb5ae23e4cbd575f6f04b741a35924d120426cc",
+      "effective_ops": 4321,
+      "state_sha": "e2c26acf0b06fb922c75e656e39534a7b1cd8cea1866e23bc7dac0ce4dfed67c",
+      "signed_by_kind": {
+        "visible_birth": 2515,
+        "function_write": 1537,
+        "effective_union": 269,
+        "visibility_change": 0
+      },
+      "uncredited_by_kind": {
+        "visible_birth": 0,
+        "function_write": 0,
+        "effective_union": 140,
+        "visibility_change": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,1254 @@
+{
+  "fact": {
+    "total": {
+      "events": 120742,
+      "scores": 6959256,
+      "prefixes": 499173,
+      "score_depth": [
+        0,
+        615214,
+        421098,
+        148745,
+        1434053,
+        275890,
+        4064256,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "expanded_by_depth": [
+        75,
+        81021,
+        460194,
+        353329,
+        95527,
+        1396365,
+        40946,
+        98784,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "verified_old_score_depth": [
+        0,
+        527959,
+        262748,
+        25429,
+        1157213,
+        15832,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "threshold_failures": [
+        0,
+        155020,
+        67769,
+        53218,
+        37688,
+        234944,
+        3965472,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "score_seconds_apportioned": [
+        0.0,
+        0.716178612,
+        0.443540154,
+        0.164653062,
+        1.267962018,
+        0.260176429,
+        3.775519182,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "formed": 2027068,
+      "watermark_legal": 297580,
+      "native_verdicts": {
+        "accepted": 1157,
+        "duplicate": 277730,
+        "untriggered_rule": 73,
+        "arity": 0,
+        "unknown_output": 0,
+        "retired": 0,
+        "hidden": 0,
+        "type": 0,
+        "version": 0,
+        "binding": 1077,
+        "watermark": 0,
+        "unbound_primitive": 0,
+        "guard": 17543,
+        "unbound_input": 0,
+        "computed": 0,
+        "bad_dependency": 0,
+        "invalid_computation": 0,
+        "pending_port": 0
+      },
+      "effective_operations": 979
+    },
+    "classes": {
+      "accepted": {
+        "events": 1005,
+        "parent_scores": 20344
+      },
+      "duplicate_only": {
+        "events": 3629,
+        "parent_scores": 347377
+      },
+      "no_accepted_or_duplicate": {
+        "events": 116108,
+        "parent_scores": 6591535
+      },
+      "sampled_legal_rejected_terminal": {
+        "events": 190,
+        "parent_scores": 6726
+      }
+    },
+    "all_visits": 6959543,
+    "aux_visits": 287,
+    "batches": 6354,
+    "batch_seconds": 11.302080906112678,
+    "tiers": {
+      "50": {
+        "events": 12,
+        "cutoff": 292792,
+        "cost": 3513504,
+        "classes": {
+          "accepted": {
+            "events": 0,
+            "parent_scores": 0
+          },
+          "duplicate_only": {
+            "events": 0,
+            "parent_scores": 0
+          },
+          "no_accepted_or_duplicate": {
+            "events": 12,
+            "parent_scores": 3513504
+          },
+          "sampled_legal_rejected_terminal": {
+            "events": 0,
+            "parent_scores": 0
+          }
+        }
+      },
+      "80": {
+        "events": 489,
+        "cutoff": 975,
+        "cost": 5567583,
+        "classes": {
+          "accepted": {
+            "events": 5,
+            "parent_scores": 8427
+          },
+          "duplicate_only": {
+            "events": 97,
+            "parent_scores": 172573
+          },
+          "no_accepted_or_duplicate": {
+            "events": 387,
+            "parent_scores": 5386583
+          },
+          "sampled_legal_rejected_terminal": {
+            "events": 0,
+            "parent_scores": 0
+          }
+        }
+      },
+      "95": {
+        "events": 8831,
+        "cutoff": 32,
+        "cost": 6611296,
+        "classes": {
+          "accepted": {
+            "events": 43,
+            "parent_scores": 17225
+          },
+          "duplicate_only": {
+            "events": 917,
+            "parent_scores": 326128
+          },
+          "no_accepted_or_duplicate": {
+            "events": 7871,
+            "parent_scores": 6267943
+          },
+          "sampled_legal_rejected_terminal": {
+            "events": 87,
+            "parent_scores": 6069
+          }
+        }
+      }
+    },
+    "apportioned_pointer_time_event_counts": {
+      "50": 13,
+      "80": 756,
+      "95": 13143
+    },
+    "exact_dispatch_wall_batch_counts": {
+      "50": 17,
+      "80": 445,
+      "95": 2076
+    },
+    "threshold_probed": 12026,
+    "native_fork_runs": 123,
+    "fork_errors": {},
+    "ledger_sha256": "3f13ff0b8288428008be8302aba27ead26f2498fa83fdd320cea3f022d5cceec",
+    "witnessed_path_losses": {
+      "bucket_match": {
+        "events": 0,
+        "parent_scores": 0
+      },
+      "bucket_off_reference": {
+        "events": 0,
+        "parent_scores": 0
+      },
+      "prefix_match": {
+        "events": 30,
+        "parent_scores": 22394
+      },
+      "prefix_off_reference": {
+        "events": 0,
+        "parent_scores": 0
+      },
+      "terminal_match": {
+        "events": 9,
+        "parent_scores": 497
+      },
+      "terminal_off_reference": {
+        "events": 3,
+        "parent_scores": 240
+      }
+    },
+    "dependency_audit": {
+      "high95_events": 8831,
+      "high95_cost": 6611296,
+      "certified_old_cost": 1715772,
+      "events": {
+        "exact_fork_emitted_no_rule_binding": 5935,
+        "unresolved_no_named_witness": 1925,
+        "multiple_external": 607,
+        "named_wiring": 114,
+        "one_external": 243,
+        "valid_pruned_witness": 7
+      },
+      "cost": {
+        "exact_fork_emitted_no_rule_binding": 5846821,
+        "unresolved_no_named_witness": 420504,
+        "multiple_external": 312016,
+        "named_wiring": 13389,
+        "one_external": 18230,
+        "valid_pruned_witness": 336
+      },
+      "parent_roles": {
+        "independent_in_tested_interfaces": 2078,
+        "signed_ancestor": 607,
+        "source_named_port": 977
+      },
+      "conditional_ceilings": {
+        "one_witness_does_not_certify_all_residual_scores": 13389,
+        "event_cost_with_scalar_fd": 48,
+        "actual_compiled_computation_request_available_events": 18,
+        "actual_compiled_computation_request_available_cost": 739
+      },
+      "examined_witnesses": 1119,
+      "apportioned_pointer_seconds_high95_by_witness": {
+        "exact_fork_emitted_no_rule_binding": 5.393090691999984,
+        "unresolved_no_named_witness": 0.37621665799999954,
+        "multiple_external": 0.29660675399999975,
+        "named_wiring": 0.013221228999999992,
+        "one_external": 0.01797900200000001,
+        "valid_pruned_witness": 0.00040319499999999996
+      }
+    },
+    "single_regions": [
+      {
+        "event": 82628,
+        "key": [
+          252,
+          498,
+          0,
+          1,
+          64,
+          1
+        ],
+        "before": 6225,
+        "after": 513,
+        "before_prefixes": 514,
+        "after_prefixes": 514
+      },
+      {
+        "event": 82762,
+        "key": [
+          252,
+          501,
+          0,
+          1,
+          36,
+          1
+        ],
+        "before": 3310,
+        "after": 174,
+        "before_prefixes": 171,
+        "after_prefixes": 171
+      },
+      {
+        "event": 89306,
+        "key": [
+          257,
+          501,
+          2,
+          40076,
+          2,
+          205
+        ],
+        "before": 7903,
+        "after": 679,
+        "before_prefixes": 511,
+        "after_prefixes": 511
+      },
+      {
+        "event": 89358,
+        "key": [
+          257,
+          501,
+          4,
+          40076,
+          2,
+          205
+        ],
+        "before": 5240,
+        "after": 200,
+        "before_prefixes": 199,
+        "after_prefixes": 199
+      },
+      {
+        "event": 104794,
+        "key": [
+          313,
+          498,
+          3,
+          8975,
+          2,
+          160
+        ],
+        "before": 1764,
+        "after": 10,
+        "before_prefixes": 93,
+        "after_prefixes": 5
+      },
+      {
+        "event": 105059,
+        "key": [
+          313,
+          498,
+          4,
+          9618,
+          2,
+          169
+        ],
+        "before": 8180,
+        "after": 0,
+        "before_prefixes": 565,
+        "after_prefixes": 1
+      },
+      {
+        "event": 110584,
+        "key": [
+          326,
+          498,
+          1,
+          8975,
+          2,
+          160
+        ],
+        "before": 1358,
+        "after": 122,
+        "before_prefixes": 71,
+        "after_prefixes": 71
+      },
+      {
+        "event": 112502,
+        "key": [
+          326,
+          498,
+          2,
+          9618,
+          2,
+          169
+        ],
+        "before": 5925,
+        "after": 213,
+        "before_prefixes": 214,
+        "after_prefixes": 214
+      }
+    ]
+  },
+  "loopfact": {
+    "total": {
+      "events": 134377,
+      "scores": 4950282,
+      "prefixes": 654413,
+      "score_depth": [
+        0,
+        1199244,
+        582356,
+        211752,
+        2539843,
+        84032,
+        290623,
+        42432,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "expanded_by_depth": [
+        83,
+        102667,
+        846751,
+        466700,
+        152711,
+        1538707,
+        71772,
+        24459,
+        11424,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "verified_old_score_depth": [
+        0,
+        1079600,
+        434989,
+        70348,
+        2195062,
+        5813,
+        941,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "threshold_failures": [
+        0,
+        352493,
+        115656,
+        59041,
+        1001136,
+        12260,
+        266164,
+        31008,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "score_seconds_apportioned": [
+        0.0,
+        1.261274858,
+        0.616666878,
+        0.241991506,
+        2.246780384,
+        0.090148114,
+        0.279431318,
+        0.039531295,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "formed": 2560861,
+      "watermark_legal": 263374,
+      "native_verdicts": {
+        "accepted": 1039,
+        "duplicate": 241068,
+        "untriggered_rule": 81,
+        "arity": 0,
+        "unknown_output": 0,
+        "retired": 0,
+        "hidden": 0,
+        "type": 0,
+        "version": 0,
+        "binding": 1078,
+        "watermark": 0,
+        "unbound_primitive": 0,
+        "guard": 20108,
+        "unbound_input": 0,
+        "computed": 0,
+        "bad_dependency": 0,
+        "invalid_computation": 0,
+        "pending_port": 0
+      },
+      "effective_operations": 995
+    },
+    "classes": {
+      "accepted": {
+        "events": 910,
+        "parent_scores": 23696
+      },
+      "duplicate_only": {
+        "events": 4174,
+        "parent_scores": 372882
+      },
+      "no_accepted_or_duplicate": {
+        "events": 129293,
+        "parent_scores": 4553704
+      },
+      "sampled_legal_rejected_terminal": {
+        "events": 171,
+        "parent_scores": 6074
+      }
+    },
+    "all_visits": 4950932,
+    "aux_visits": 650,
+    "batches": 6741,
+    "batch_seconds": 10.16919441241771,
+    "tiers": {
+      "50": {
+        "events": 526,
+        "cutoff": 1178,
+        "cost": 2475629,
+        "classes": {
+          "accepted": {
+            "events": 4,
+            "parent_scores": 9813
+          },
+          "duplicate_only": {
+            "events": 62,
+            "parent_scores": 143393
+          },
+          "no_accepted_or_duplicate": {
+            "events": 460,
+            "parent_scores": 2322423
+          },
+          "sampled_legal_rejected_terminal": {
+            "events": 0,
+            "parent_scores": 0
+          }
+        }
+      },
+      "80": {
+        "events": 7112,
+        "cutoff": 106,
+        "cost": 3960250,
+        "classes": {
+          "accepted": {
+            "events": 23,
+            "parent_scores": 19200
+          },
+          "duplicate_only": {
+            "events": 610,
+            "parent_scores": 314443
+          },
+          "no_accepted_or_duplicate": {
+            "events": 6479,
+            "parent_scores": 3626607
+          },
+          "sampled_legal_rejected_terminal": {
+            "events": 15,
+            "parent_scores": 1620
+          }
+        }
+      },
+      "95": {
+        "events": 25899,
+        "cutoff": 18,
+        "cost": 4702775,
+        "classes": {
+          "accepted": {
+            "events": 92,
+            "parent_scores": 21710
+          },
+          "duplicate_only": {
+            "events": 1634,
+            "parent_scores": 359283
+          },
+          "no_accepted_or_duplicate": {
+            "events": 24173,
+            "parent_scores": 4321782
+          },
+          "sampled_legal_rejected_terminal": {
+            "events": 92,
+            "parent_scores": 5517
+          }
+        }
+      }
+    },
+    "apportioned_pointer_time_event_counts": {
+      "50": 707,
+      "80": 9013,
+      "95": 30903
+    },
+    "exact_dispatch_wall_batch_counts": {
+      "50": 160,
+      "80": 904,
+      "95": 2778
+    },
+    "threshold_probed": 17648,
+    "native_fork_runs": 177,
+    "fork_errors": {},
+    "ledger_sha256": "35bddd27aa1ecd6ef7efc1d71ebcb4846390fa790ff1471749d8160ef3a663c9",
+    "witnessed_path_losses": {
+      "bucket_match": {
+        "events": 0,
+        "parent_scores": 0
+      },
+      "bucket_off_reference": {
+        "events": 0,
+        "parent_scores": 0
+      },
+      "prefix_match": {
+        "events": 53,
+        "parent_scores": 23792
+      },
+      "prefix_off_reference": {
+        "events": 0,
+        "parent_scores": 0
+      },
+      "terminal_match": {
+        "events": 23,
+        "parent_scores": 1048
+      },
+      "terminal_off_reference": {
+        "events": 4,
+        "parent_scores": 89
+      }
+    },
+    "dependency_audit": {
+      "high95_events": 25899,
+      "high95_cost": 4702775,
+      "certified_old_cost": 3598933,
+      "events": {
+        "exact_fork_emitted_no_rule_binding": 19087,
+        "unresolved_no_named_witness": 5072,
+        "multiple_external": 973,
+        "one_external": 553,
+        "named_wiring": 212,
+        "valid_pruned_witness": 2
+      },
+      "cost": {
+        "exact_fork_emitted_no_rule_binding": 3196864,
+        "unresolved_no_named_witness": 1124452,
+        "multiple_external": 330602,
+        "one_external": 32905,
+        "named_wiring": 17910,
+        "valid_pruned_witness": 42
+      },
+      "parent_roles": {
+        "independent_in_tested_interfaces": 3287,
+        "source_named_port": 1815,
+        "signed_ancestor": 910
+      },
+      "conditional_ceilings": {
+        "one_witness_does_not_certify_all_residual_scores": 17688,
+        "actual_compiled_computation_request_available_events": 93,
+        "actual_compiled_computation_request_available_cost": 4866,
+        "event_cost_with_scalar_fd": 178,
+        "potential_cross_run_event_cost": 1155,
+        "potential_shared_binding_event_cost": 810
+      },
+      "examined_witnesses": 2056,
+      "apportioned_pointer_seconds_high95_by_witness": {
+        "exact_fork_emitted_no_rule_binding": 2.9825584059999772,
+        "unresolved_no_named_witness": 0.992477741999998,
+        "multiple_external": 0.3206282309999995,
+        "one_external": 0.03409570900000008,
+        "named_wiring": 0.01863648799999998,
+        "valid_pruned_witness": 0.000103584
+      }
+    },
+    "single_regions": [
+      {
+        "event": 77666,
+        "key": [
+          253,
+          498,
+          0,
+          1,
+          78,
+          1
+        ],
+        "before": 4005,
+        "after": 351,
+        "before_prefixes": 352,
+        "after_prefixes": 352
+      },
+      {
+        "event": 121377,
+        "key": [
+          351,
+          498,
+          3,
+          10968,
+          3,
+          177
+        ],
+        "before": 825,
+        "after": 3,
+        "before_prefixes": 40,
+        "after_prefixes": 4
+      },
+      {
+        "event": 121589,
+        "key": [
+          351,
+          498,
+          2,
+          7263,
+          2,
+          170
+        ],
+        "before": 5085,
+        "after": 0,
+        "before_prefixes": 214,
+        "after_prefixes": 1
+      },
+      {
+        "event": 121687,
+        "key": [
+          351,
+          498,
+          4,
+          14453,
+          2,
+          219
+        ],
+        "before": 3928,
+        "after": 0,
+        "before_prefixes": 274,
+        "after_prefixes": 1
+      },
+      {
+        "event": 124297,
+        "key": [
+          361,
+          501,
+          0,
+          1294,
+          6,
+          62
+        ],
+        "before": 18314,
+        "after": 170,
+        "before_prefixes": 171,
+        "after_prefixes": 171
+      },
+      {
+        "event": 124947,
+        "key": [
+          361,
+          498,
+          1,
+          10968,
+          3,
+          177
+        ],
+        "before": 1083,
+        "after": 60,
+        "before_prefixes": 58,
+        "after_prefixes": 58
+      },
+      {
+        "event": 127248,
+        "key": [
+          361,
+          501,
+          2,
+          44488,
+          2,
+          206
+        ],
+        "before": 27471,
+        "after": 255,
+        "before_prefixes": 256,
+        "after_prefixes": 256
+      },
+      {
+        "event": 127317,
+        "key": [
+          361,
+          501,
+          4,
+          44486,
+          2,
+          206
+        ],
+        "before": 27393,
+        "after": 177,
+        "before_prefixes": 178,
+        "after_prefixes": 178
+      }
+    ]
+  },
+  "sum-divisors": {
+    "total": {
+      "events": 750774,
+      "scores": 89399216,
+      "prefixes": 4178778,
+      "score_depth": [
+        0,
+        17190973,
+        7233241,
+        2797800,
+        62055268,
+        121934,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "expanded_by_depth": [
+        113,
+        599107,
+        11907927,
+        4928157,
+        1663949,
+        38526721,
+        21150,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "verified_old_score_depth": [
+        0,
+        15942959,
+        5395258,
+        632361,
+        54307389,
+        89794,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "threshold_failures": [
+        0,
+        5283046,
+        2305084,
+        1133851,
+        23528547,
+        100784,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "score_seconds_apportioned": [
+        0.0,
+        15.558586328,
+        6.639342607,
+        2.662903085,
+        53.529776656,
+        0.126278052,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "formed": 53468346,
+      "watermark_legal": 4930065,
+      "native_verdicts": {
+        "accepted": 4122,
+        "duplicate": 4647827,
+        "untriggered_rule": 111,
+        "arity": 0,
+        "unknown_output": 0,
+        "retired": 0,
+        "hidden": 0,
+        "type": 0,
+        "version": 0,
+        "binding": 77167,
+        "watermark": 0,
+        "unbound_primitive": 0,
+        "guard": 200838,
+        "unbound_input": 0,
+        "computed": 0,
+        "bad_dependency": 0,
+        "invalid_computation": 0,
+        "pending_port": 0
+      },
+      "effective_operations": 3723
+    },
+    "classes": {
+      "accepted": {
+        "events": 3434,
+        "parent_scores": 391842
+      },
+      "duplicate_only": {
+        "events": 16183,
+        "parent_scores": 11151070
+      },
+      "no_accepted_or_duplicate": {
+        "events": 731157,
+        "parent_scores": 77856304
+      },
+      "sampled_legal_rejected_terminal": {
+        "events": 1021,
+        "parent_scores": 69216
+      }
+    },
+    "all_visits": 89402426,
+    "aux_visits": 3210,
+    "batches": 11362,
+    "batch_seconds": 130.3029395014164,
+    "tiers": {
+      "50": {
+        "events": 1839,
+        "cutoff": 7647,
+        "cost": 44705918,
+        "classes": {
+          "accepted": {
+            "events": 9,
+            "parent_scores": 166561
+          },
+          "duplicate_only": {
+            "events": 209,
+            "parent_scores": 6542037
+          },
+          "no_accepted_or_duplicate": {
+            "events": 1621,
+            "parent_scores": 37997320
+          },
+          "sampled_legal_rejected_terminal": {
+            "events": 0,
+            "parent_scores": 0
+          }
+        }
+      },
+      "80": {
+        "events": 20751,
+        "cutoff": 567,
+        "cost": 71519761,
+        "classes": {
+          "accepted": {
+            "events": 94,
+            "parent_scores": 357956
+          },
+          "duplicate_only": {
+            "events": 2038,
+            "parent_scores": 10250025
+          },
+          "no_accepted_or_duplicate": {
+            "events": 18619,
+            "parent_scores": 60911780
+          },
+          "sampled_legal_rejected_terminal": {
+            "events": 6,
+            "parent_scores": 6177
+          }
+        }
+      },
+      "95": {
+        "events": 92909,
+        "cutoff": 67,
+        "cost": 84929281,
+        "classes": {
+          "accepted": {
+            "events": 199,
+            "parent_scores": 375211
+          },
+          "duplicate_only": {
+            "events": 5436,
+            "parent_scores": 10996563
+          },
+          "no_accepted_or_duplicate": {
+            "events": 87274,
+            "parent_scores": 73557507
+          },
+          "sampled_legal_rejected_terminal": {
+            "events": 346,
+            "parent_scores": 57779
+          }
+        }
+      }
+    },
+    "apportioned_pointer_time_event_counts": {
+      "50": 1977,
+      "80": 22289,
+      "95": 99970
+    },
+    "exact_dispatch_wall_batch_counts": {
+      "50": 67,
+      "80": 504,
+      "95": 2435
+    },
+    "threshold_probed": 158944,
+    "native_fork_runs": 225,
+    "fork_errors": {},
+    "ledger_sha256": "096b5247d419ecf0d17d3bfb70fdae48e71eead352febd25489bf57f07513195",
+    "witnessed_path_losses": {
+      "bucket_match": {
+        "events": 0,
+        "parent_scores": 0
+      },
+      "bucket_off_reference": {
+        "events": 0,
+        "parent_scores": 0
+      },
+      "prefix_match": {
+        "events": 264,
+        "parent_scores": 1030926
+      },
+      "prefix_off_reference": {
+        "events": 1,
+        "parent_scores": 113
+      },
+      "terminal_match": {
+        "events": 31,
+        "parent_scores": 5088
+      },
+      "terminal_off_reference": {
+        "events": 10,
+        "parent_scores": 1581
+      }
+    },
+    "dependency_audit": {
+      "high95_events": 92909,
+      "high95_cost": 84929281,
+      "certified_old_cost": 72672052,
+      "events": {
+        "unresolved_no_named_witness": 21806,
+        "exact_fork_emitted_no_rule_binding": 65442,
+        "multiple_external": 3857,
+        "one_external": 1307,
+        "named_wiring": 495,
+        "valid_pruned_witness": 2
+      },
+      "cost": {
+        "unresolved_no_named_witness": 27198707,
+        "exact_fork_emitted_no_rule_binding": 46354408,
+        "multiple_external": 10715211,
+        "one_external": 453466,
+        "named_wiring": 206833,
+        "valid_pruned_witness": 656
+      },
+      "parent_roles": {
+        "independent_in_tested_interfaces": 13181,
+        "signed_ancestor": 2557,
+        "source_named_port": 5702
+      },
+      "conditional_ceilings": {
+        "one_witness_does_not_certify_all_residual_scores": 204033,
+        "actual_compiled_computation_request_available_events": 661,
+        "actual_compiled_computation_request_available_cost": 103111,
+        "event_cost_with_scalar_fd": 1893,
+        "potential_cross_run_event_cost": 35124,
+        "potential_shared_binding_event_cost": 690
+      },
+      "examined_witnesses": 6782,
+      "apportioned_pointer_seconds_high95_by_witness": {
+        "unresolved_no_named_witness": 23.457152982999897,
+        "exact_fork_emitted_no_rule_binding": 40.33100078699866,
+        "multiple_external": 9.666751814999975,
+        "one_external": 0.42833277600000025,
+        "named_wiring": 0.196353451,
+        "valid_pruned_witness": 0.000636011
+      }
+    },
+    "single_regions": [
+      {
+        "event": 726578,
+        "key": [
+          541,
+          498,
+          0,
+          3138471,
+          2,
+          422
+        ],
+        "before": 269928,
+        "after": 0,
+        "before_prefixes": 619,
+        "after_prefixes": 0
+      },
+      {
+        "event": 726964,
+        "key": [
+          541,
+          501,
+          0,
+          1,
+          202,
+          1
+        ],
+        "before": 108926,
+        "after": 0,
+        "before_prefixes": 249,
+        "after_prefixes": 0
+      },
+      {
+        "event": 728416,
+        "key": [
+          541,
+          498,
+          1,
+          44479,
+          3,
+          254
+        ],
+        "before": 27342,
+        "after": 0,
+        "before_prefixes": 223,
+        "after_prefixes": 0
+      },
+      {
+        "event": 730634,
+        "key": [
+          541,
+          498,
+          3,
+          44479,
+          3,
+          254
+        ],
+        "before": 15894,
+        "after": 0,
+        "before_prefixes": 49,
+        "after_prefixes": 0
+      },
+      {
+        "event": 735292,
+        "key": [
+          541,
+          501,
+          2,
+          455855,
+          2,
+          283
+        ],
+        "before": 166541,
+        "after": 0,
+        "before_prefixes": 993,
+        "after_prefixes": 0
+      },
+      {
+        "event": 735757,
+        "key": [
+          541,
+          501,
+          4,
+          883913,
+          2,
+          303
+        ],
+        "before": 162700,
+        "after": 0,
+        "before_prefixes": 256,
+        "after_prefixes": 0
+      },
+      {
+        "event": 736012,
+        "key": [
+          541,
+          498,
+          2,
+          77695,
+          2,
+          296
+        ],
+        "before": 154852,
+        "after": 0,
+        "before_prefixes": 1199,
+        "after_prefixes": 0
+      },
+      {
+        "event": 736410,
+        "key": [
+          541,
+          498,
+          4,
+          883892,
+          2,
+          303
+        ],
+        "before": 404643,
+        "after": 0,
+        "before_prefixes": 634,
+        "after_prefixes": 0
+      }
+    ]
+  }
+}

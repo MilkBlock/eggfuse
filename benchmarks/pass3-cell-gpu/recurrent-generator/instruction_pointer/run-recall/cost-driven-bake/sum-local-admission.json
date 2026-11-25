@@ -1,0 +1,210 @@
+[
+  {
+    "entry": [
+      "59d79a3adc91eaa9f2cd44e0b3b287c4b077ee8ab99aa3d9d9e50a97cabc81c2",
+      1
+    ],
+    "rule": 507,
+    "run": 374,
+    "event": 234942,
+    "before": 546,
+    "after": 0,
+    "index_and_choice_bound": 998,
+    "admit": false
+  },
+  {
+    "entry": [
+      "2ba173c0eab014efd02066be4d161155462410e92c02c5b2587da546c3363e49",
+      0
+    ],
+    "rule": 498,
+    "run": 522,
+    "event": 315615,
+    "before": 14160,
+    "after": 0,
+    "index_and_choice_bound": 1040,
+    "admit": true
+  },
+  {
+    "entry": [
+      "ad05bb2078bb9b21b9d5ab9af43edf7d35708876f0897e35c8902b1a45e817cd",
+      0
+    ],
+    "rule": 501,
+    "run": 522,
+    "event": 315841,
+    "before": 7244,
+    "after": 0,
+    "index_and_choice_bound": 1040,
+    "admit": true
+  },
+  {
+    "entry": [
+      "ad05bb2078bb9b21b9d5ab9af43edf7d35708876f0897e35c8902b1a45e817cd",
+      1
+    ],
+    "rule": 501,
+    "run": 522,
+    "event": 316030,
+    "before": 907,
+    "after": 0,
+    "index_and_choice_bound": 1040,
+    "admit": false
+  },
+  {
+    "entry": [
+      "ad05bb2078bb9b21b9d5ab9af43edf7d35708876f0897e35c8902b1a45e817cd",
+      2
+    ],
+    "rule": 501,
+    "run": 522,
+    "event": 319545,
+    "before": 12250,
+    "after": 0,
+    "index_and_choice_bound": 1040,
+    "admit": true
+  },
+  {
+    "entry": [
+      "ad05bb2078bb9b21b9d5ab9af43edf7d35708876f0897e35c8902b1a45e817cd",
+      3
+    ],
+    "rule": 501,
+    "run": 522,
+    "event": 317081,
+    "before": 890,
+    "after": 0,
+    "index_and_choice_bound": 1040,
+    "admit": false
+  },
+  {
+    "entry": [
+      "ad05bb2078bb9b21b9d5ab9af43edf7d35708876f0897e35c8902b1a45e817cd",
+      4
+    ],
+    "rule": 501,
+    "run": 522,
+    "event": 319681,
+    "before": 10419,
+    "after": 0,
+    "index_and_choice_bound": 1040,
+    "admit": true
+  },
+  {
+    "entry": [
+      "2ba173c0eab014efd02066be4d161155462410e92c02c5b2587da546c3363e49",
+      1
+    ],
+    "rule": 498,
+    "run": 732,
+    "event": 395321,
+    "before": 2381,
+    "after": 9,
+    "index_and_choice_bound": 1051,
+    "admit": true
+  },
+  {
+    "entry": [
+      "2ba173c0eab014efd02066be4d161155462410e92c02c5b2587da546c3363e49",
+      2
+    ],
+    "rule": 498,
+    "run": 732,
+    "event": 396297,
+    "before": 14401,
+    "after": 0,
+    "index_and_choice_bound": 1051,
+    "admit": true
+  },
+  {
+    "entry": [
+      "2ba173c0eab014efd02066be4d161155462410e92c02c5b2587da546c3363e49",
+      3
+    ],
+    "rule": 498,
+    "run": 732,
+    "event": 396079,
+    "before": 2912,
+    "after": 4,
+    "index_and_choice_bound": 1051,
+    "admit": true
+  },
+  {
+    "entry": [
+      "2ba173c0eab014efd02066be4d161155462410e92c02c5b2587da546c3363e49",
+      4
+    ],
+    "rule": 498,
+    "run": 732,
+    "event": 396497,
+    "before": 8449,
+    "after": 0,
+    "index_and_choice_bound": 1051,
+    "admit": true
+  },
+  {
+    "entry": [
+      "09c5985da8197520deab0ae0eb0a74dc1db99ba15e1e6e346be63ead0ba5aea9",
+      0
+    ],
+    "rule": 306,
+    "run": 736,
+    "event": 398538,
+    "before": 285,
+    "after": 0,
+    "index_and_choice_bound": 1055,
+    "admit": false
+  },
+  {
+    "entry": [
+      "09c5985da8197520deab0ae0eb0a74dc1db99ba15e1e6e346be63ead0ba5aea9",
+      1
+    ],
+    "rule": 306,
+    "run": 736,
+    "event": 399258,
+    "before": 285,
+    "after": 0,
+    "index_and_choice_bound": 1055,
+    "admit": false
+  },
+  {
+    "entry": [
+      "4d2b407340470ebd40ac96a132b3d5b6422541e2b7456a620b7e586ccb58e1f9",
+      1
+    ],
+    "rule": 509,
+    "run": 737,
+    "event": 399941,
+    "before": 290,
+    "after": 0,
+    "index_and_choice_bound": 1055,
+    "admit": false
+  },
+  {
+    "entry": [
+      "54226c7e99c63bc65cc54d0a8bab73a3f44dd53cc57fceb3eb5244135e25e7f5",
+      1
+    ],
+    "rule": 510,
+    "run": 737,
+    "event": 400063,
+    "before": 290,
+    "after": 0,
+    "index_and_choice_bound": 1055,
+    "admit": false
+  },
+  {
+    "entry": [
+      "612dab914c974530c0e46cb80204e80db76036482140c3425024944c4338b74c",
+      1
+    ],
+    "rule": 511,
+    "run": 737,
+    "event": 399819,
+    "before": 290,
+    "after": 0,
+    "index_and_choice_bound": 1055,
+    "admit": false
+  }
+]

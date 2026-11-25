@@ -29,13 +29,19 @@ if __name__ == "__main__":
             from cost_aux import AuxiliaryProfile
 
             cls = AuxiliaryProfile
-        elif arm in ("receipt", "receipt-single", "combined"):
-            from cost_receipts import CombinedOracle, ReceiptOracle, SingleReceiptOracle
+        elif arm in ("receipt", "receipt-single", "combined", "receipt-with-b"):
+            from cost_receipts import (
+                CombinedOracle,
+                ReceiptOracle,
+                ReceiptWithFrozenB,
+                SingleReceiptOracle,
+            )
 
             cls = {
                 "receipt": ReceiptOracle,
                 "receipt-single": SingleReceiptOracle,
                 "combined": CombinedOracle,
+                "receipt-with-b": ReceiptWithFrozenB,
             }[arm]
         else:
             from cost_bake import (
@@ -71,4 +77,7 @@ if __name__ == "__main__":
                 a.limit,
                 policy_cls=cls,
                 boundary_audit=True,
+                keep_tape=a.store / f"{a.case}-{arm}-issued.json"
+                if arm in ("receipt-with-b", "aux")
+                else None,
             )

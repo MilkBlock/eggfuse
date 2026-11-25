@@ -205,6 +205,20 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     report["residual_candidates"] = json!(engine.graph.stats.residual_candidates);
     #[cfg(feature = "cell-token-ept")]
     if let Some(e)=&engine.graph.token_ept {report["ept"]=e.report();}
+    #[cfg(feature = "cell-token-ept")]
+    if role == "replay" && origins {
+        let work = &engine.graph.stats;
+        report["primitive_work"] = json!({
+            "committed_rhs": report["matches"],
+            "constructor_requests": work.constructor_requests,
+            "constructor_reused": work.constructor_reused,
+            "function_updates": work.function_updates,
+            "merge_calls": work.merge_calls,
+            "merge_program_operations": work.merge_program_operations,
+            "unions": work.unions,
+            "repaired_dependencies": work.repaired_dependencies
+        });
+    }
     if let Some(h) = engine.tokens() {
         if let Some(counts)=h.layout_report() {report["layouts"]=counts;}
         if let Some(counts) = h.higher_report() { report["higher"] = counts; }
