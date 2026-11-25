@@ -134,6 +134,7 @@ class Policy:
                 updates=updates,
                 retired=[dict(token=int(t), op=int(o)) for t, o in retired],
                 rules=frame["rules"],
+                accepted=pub[3],
             )
         )
         self.events.extend((a["token"], a["op"]) for a, _ in updates)
@@ -168,7 +169,7 @@ class Policy:
                     if c is not None:
                         src.append(c)
             stats["draft_tokens"] += len(src)
-            before = plan(src)
+            before = self.draft if hasattr(self, "draft") else plan(src)
             method = {"raw": None, "supervised-empty": "editor", "empty": "flow", "mask-empty": "mask"}.get(
                 self.arm, self.arm
             )
@@ -179,6 +180,8 @@ class Policy:
                 else before
             )
             stats["sampling_seconds"] += perf_counter() - tick
+            if hasattr(self, "dispatch_prefix"):
+                after = self.dispatch_prefix(after, stats)
             cells = [v.cell for v in after]
             stats["final_tokens"] += len(cells)
             stats["prefinal_duplicate_excess"] += len(src) - len(set(src))
@@ -203,7 +206,10 @@ class Policy:
                 item = next(v for v in reversed(after) if v.uid in resp)
                 c = item.cell
                 m.receipt = m.graph((c.rule, c.higher)) * (1 if resp[item.uid][1] == 0 else -1)
-                m.state = (m.pub.total.float() / 16).asinh().tanh() + 0.1 * m.receipt
+                if hasattr(m, "observe_reply"):
+                    m.observe_reply(after, resp)
+                else:
+                    m.state = (m.pub.total.float() / 16).asinh().tanh() + 0.1 * m.receipt
         stats["unresolved_local_requests"] = sum(len(p[0]) for p in self.partial)
         stats["never_serviced_events"] = len(self.events)
         stats["open_instances"] = len(self.waiting)

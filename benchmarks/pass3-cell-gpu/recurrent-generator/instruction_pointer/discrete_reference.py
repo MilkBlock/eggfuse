@@ -82,6 +82,7 @@ if __name__ == "__main__":
         row.pop("trace", None)
         row.update(
             covered=len(covered),
+            facts=sorted(covered),
             reference=len(target.gold) - len(initial),
             cold_wall=row["wall"] + row["runtime_setup_seconds"] + setup,
         )

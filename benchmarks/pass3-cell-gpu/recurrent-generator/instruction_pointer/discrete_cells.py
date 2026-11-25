@@ -185,13 +185,43 @@ class Marks(nn.Module):
             covered = m.forced_owned(r, m.roles[r][0], hint, rng, stats)
             if covered is not None:
                 return covered
+        only_group = getattr(m, "only_group", False)
+        if only_group and (high or len(m.roles[r]) < 2):
+            return None
         q = (ctx + m.graph(k)).tanh()
         refs = []
+        projection_plan = {}
         for i, tab in enumerate(m.roles[r]):
             tick = perf_counter()
             slot = m.enc.nodes[m.enc.cat.inputs["generated", r][i]]
             key = (q + slot).tanh()
             wanted = target.refs[i] if train else None
+            if i == 1 and hasattr(m, "owner_contract"):
+                contract = m.owner_contract(r, refs[0])
+                if contract:
+                    owner = refs[0][0]
+                    correct = train and all(
+                        not isinstance(target.refs[j], Local)
+                        and target.refs[j][:2] == (owner, pc)
+                        for j, pc in contract.items()
+                    )
+                    if choose(self.branch(key, m.key(refs[0][:2]), slot, 2), int(correct)):
+                        projection_plan = contract
+                        stats["owner_contracts_selected"] += 1
+                if only_group and len(projection_plan) != len(m.roles[r]) - 1:
+                    return None
+            if i in projection_plan:
+                projected = refs[0][0], projection_plan[i]
+                stats["owner_projection_reads"] += 1
+                entry = m.pub.live.get(projected)
+                if entry is None or entry[0]["table"] != tab:
+                    stats["unpublished_projections"] += 1
+                    return None
+                row, vec = entry
+                refs.append((*projected, row["version"]))
+                q = m.enc.actor.next_read((vec + slot)[None], q[None])[0]
+                stats["port_address_seconds"] += perf_counter() - tick
+                continue
             locals_ = [
                 (Local(v.uid, pc), m.local_code(v.cell, pc))
                 for v in prefix

@@ -96,6 +96,7 @@ def replay(
     precedes=None,
     groups=None,
     observed=(),
+    observer=None,
 ):
     """Schedule-gated event modes never read the teacher Run or absolute version for dispatch."""
     full = mode in ("full_order", "full_groups")
@@ -174,6 +175,8 @@ def replay(
                     if live.get(addr) != v:
                         advanced_by[addr] = confirmed
                     record_publication(live, history, addr, v)
+                if observer is not None:
+                    observer(f, rows, hashes, retired, published, reverse)
                 if f["final_publication"]:
                     continue
                 if full:

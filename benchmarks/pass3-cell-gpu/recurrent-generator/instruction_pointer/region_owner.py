@@ -143,6 +143,12 @@ class Ownership(Measured):
                     # Once pinned, an exact version can never be reacquired after
                     # retirement/version advance. Unpublished conditionals may wake later.
                     stale = ver is not None and current is not None
+                    notify = getattr(self, "record_boundary", None)
+                    if notify is not None:
+                        # A pinned reference that has disappeared cannot be reused on trust.
+                        stale = ver is not None
+                        reason = "invalidated" if stale else "await_publication"
+                        notify(inst, rid, len(refs), src, pc, reason, stats)
                     break
                 refs.append((*addr, ver))
             if stale:
@@ -158,6 +164,9 @@ class Ownership(Measured):
             if row is None:
                 row = send(txn, rid, np.asarray(refs, np.int64).reshape(1, len(refs), 3))[0]
                 stats["lowered_suffix"] += 1
+                observe = getattr(self,"record_suffix_response",None)
+                if observe is not None:
+                    observe(rid, refs, row[1] == 0)
                 if row[1] != 0:
                     stats["suffix_rejected"] += 1
                     self.close(inst)
