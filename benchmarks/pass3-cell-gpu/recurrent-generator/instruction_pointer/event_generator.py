@@ -171,6 +171,9 @@ class EventGenerator:
                 self.generation[r, j] = tuple(
                     rd.versions[mem.roles[r][a]] for a in order[1:]
                 )
+            project = getattr(higher, "project_entries", None)
+            if project is not None:
+                project(r, j, mem, txn)
             if audit is not None:
                 audit.prefix(mem, r, order, min(1, len(order)), paths)
             if any(not len(mem.bank(mem.roles[r][a]).ports) for a in order):

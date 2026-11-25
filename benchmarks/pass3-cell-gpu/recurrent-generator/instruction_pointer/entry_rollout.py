@@ -136,7 +136,7 @@ class Entries(FullTemplates):
                 yield owners[i], pos
 
 
-def run(data, store, case, arm, rep):
+def run(data, store, case, arm, rep, preferred_entries=()):
     p = EventGenerator(data, case, Path("run-recall/cell-events"), "B")
     d = folder(data, case)
     if arm != "B":
@@ -144,10 +144,26 @@ def run(data, store, case, arm, rep):
             "trained": store / "entry.pt",
             "frozen": Path("run-recall/cell-events/template.pt"),
             "wired": store / "wired.pt",
+            "projected": store / "wired.pt",
             "rank": store / "rank.pt",
         }[arm]
-        graph = torch.load(store / "graph.pt", weights_only=True) if arm == "wired" else None
-        p.higher = Entries(read(d / "program.json"), store, weights, graph)
+        graph = torch.load(store / "graph.pt", weights_only=True) if arm in ("wired", "projected") else None
+        program = read(d / "program.json")
+        if arm == "projected":
+            import json
+            import subprocess
+            from projected_entries import ProjectedEntries
+            from recursive_train import binary
+
+            native = json.loads(subprocess.check_output(
+                [binary(data), "receipt-contract", d / "program.json"]
+            ))
+            if native["recipe_sha256"] != program["recipe"]["sha256"]:
+                raise ValueError("native contract has different Recipe")
+            p.higher = ProjectedEntries(program, store, weights, graph,
+                                        read(store / "entry-contracts.json"), native["rules"], preferred_entries)
+        else:
+            p.higher = Entries(program, store, weights, graph)
     series = f"entry-first/{arm}/{rep}"
     result = execute(data, case, study=p, seconds=600, series=series)
     work = data / series / (case + "-stream-multi")
@@ -161,6 +177,9 @@ def run(data, store, case, arm, rep):
         reference=len(target.gold) - len(initial),
     )
     result.pop("trace")
+    if arm == "projected":
+        result["entry_events"] = p.higher.events
+        result["published_bodies"] = p.higher.completions
     dump(store / f"{case}-{arm}-{rep}.json", result)
     print(
         case,
@@ -179,9 +198,11 @@ if __name__ == "__main__":
     p.add_argument("data", type=Path)
     p.add_argument("store", type=Path)
     p.add_argument("case")
-    p.add_argument("arms", nargs="+", choices=("B", "frozen", "trained", "wired", "rank"))
+    p.add_argument("arms", nargs="+", choices=("B", "frozen", "trained", "wired", "rank", "projected"))
     p.add_argument("--rep", type=int, default=0)
+    p.add_argument("--entry-id", type=int, action="append", default=[],
+                   help="prefer this compiled contract when applicable (repeatable)")
     a = p.parse_args()
     torch.set_num_threads(1)
     for arm in a.arms:
-        run(a.data, a.store, a.case, arm, a.rep)
+        run(a.data, a.store, a.case, arm, a.rep, a.entry_id)
