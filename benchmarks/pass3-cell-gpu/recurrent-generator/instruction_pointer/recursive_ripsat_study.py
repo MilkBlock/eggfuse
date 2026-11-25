@@ -17,7 +17,7 @@ from recursive_train import binary, folder, read
 from transaction_native import execute
 
 
-def episode(data, store, case, label, state, opened, limit=None, exploration_seed=None):
+def setup_policy(data, store, case, state, opened, exploration_seed=None, policy_cls=None):
     d = folder(data, case)
     p = EventGenerator(data, case, Path("run-recall/cell-events"), "B")
     program = read(d / "program.json")
@@ -25,12 +25,17 @@ def episode(data, store, case, label, state, opened, limit=None, exploration_see
     contract = json.loads(subprocess.check_output([binary(data), "receipt-contract", d / "program.json"]))
     if contract["recipe_sha256"] != program["recipe"]["sha256"]:
         raise ValueError("native contract belongs to another Recipe")
-    cls = OpenEntries if opened else ProjectedEntries
+    cls = policy_cls or (OpenEntries if opened else ProjectedEntries)
     policy = cls(program, store, store / "wired.pt", graph, read(store / "entry-contracts.json"), contract["rules"])
     if opened and exploration_seed is not None:
         policy.exploration = np.random.default_rng(exploration_seed)
     p.higher = policy
     policy.model.load_state_dict(state)
+    return d, program, p, policy
+
+
+def episode(data, store, case, label, state, opened, limit=None, exploration_seed=None, policy_cls=None):
+    d, program, p, policy = setup_policy(data, store, case, state, opened, exploration_seed, policy_cls)
     # Keep bounded disk usage: native scratch is private to each invocation.
     with TemporaryDirectory(dir=store) as tmp:
         result = execute(data, case, study=p, seconds=900, series=tmp, limit=limit)
@@ -49,6 +54,10 @@ def episode(data, store, case, label, state, opened, limit=None, exploration_see
                 if tok in policy.suffix_tokens:
                     credit[policy.suffix_tokens[tok][0]] += n
             result["new_suffix_operations"] = dict(credit)
+            if hasattr(policy, "structure_report"):
+                result["structures"] = policy.structure_report(report["ept"]["origins"])
+        if hasattr(policy, "audit_partners"):
+            result["partner_audit"] = policy.audit_partners(data, case, work, result)
         result["reference"] = len(target.gold) - len(initial)
         result["facts"] = len(target.match(read(work / "state.json")) - initial)
     if result["termination"] != "schedule_end":
@@ -81,8 +90,8 @@ def reward(x, base):
     return max(-1., min(1., value))
 
 
-def train(a):
-    state = torch.load(a.store / "wired.pt", weights_only=True)
+def train(a, policy_cls=None, initial="wired.pt", checkpoint="recursive-rl.pt"):
+    state = torch.load(a.store / initial, weights_only=True)
     base = episode(a.data, a.store, a.case, "train-origin", state, False, a.limit)
     gen = torch.Generator().manual_seed(a.seed)
     log = []
@@ -94,13 +103,13 @@ def train(a):
         ret = {}
         for sign in ((1, -1) if i % 2 == 0 else (-1, 1)):
             draw = {k: v + sign * a.sigma * noise[k] for k, v in state.items()}
-            x = episode(a.data, a.store, a.case, f"train-{i}-{sign}", draw, True, a.limit, a.seed + i)
+            x = episode(a.data, a.store, a.case, f"train-{i}-{sign}", draw, True, a.limit, a.seed + i, policy_cls)
             ret[sign] = reward(x, base)
         advantage = ret[1] - ret[-1]
         for k in state:
             state[k] = state[k] + .02 * max(-1., min(1., advantage / (2*a.sigma))) * noise[k]
         log.append(dict(step=i, positive=ret[1], negative=ret[-1], advantage=advantage))
-    torch.save(state, a.store / "recursive-rl.pt")
+    torch.save(state, a.store / checkpoint)
     dump(a.store / "training.json", dict(seed=a.seed, sigma=a.sigma, limit=a.limit, episodes=log))
 
 

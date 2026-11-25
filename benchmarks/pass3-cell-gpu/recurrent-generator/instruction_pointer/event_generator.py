@@ -73,6 +73,8 @@ class EventGenerator:
         if higher is not None:
             higher.start(rd, pub, txn, rules, stats)
             higher.parent_model = model
+            if hasattr(higher, "resume_programs"):
+                higher.resume_programs(mem)
 
         def emit(r, order, paths):
             refs = np.empty((len(paths), len(order), 3), np.int64)

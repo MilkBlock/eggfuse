@@ -158,6 +158,7 @@ class OpenEntries(ProjectedEntries):
             option("Extend", base)
         if depth and target and recent:
             option("Compose", base)
+        self.structure_options(r, j, base, depth, target, recent, option)
         if not retry:
             option("Defer", base)
         x = torch.from_numpy(srcbank.vec[pos:pos + 1])
@@ -185,18 +186,13 @@ class OpenEntries(ProjectedEntries):
             self.choice.pop(pos, None)
         if action == "Primitive":
             return
+        mode = action.removeprefix("Wired")
         refs = [src]
         if target:
-            if action == "Compose" or not depth:
-                # This address instruction reads the most recently published open
-                # port of the requested type. It has no access to field equality.
-                other = next(reversed(recent))
-                if action == "Compose" and src[0] == other[0] and len(recent) > 1:
-                    # A second explicit address in publication order, never a value lookup.
-                    it = reversed(recent)
-                    next(it)
-                    other = next(it)
-                    self.count["open_operand_reads"] += 1
+            if mode == "Compose" or not depth:
+                other = self.open_partner(r, j, pos, src, target, recent, mem, mode)
+                if other is None:
+                    return
             else:
                 # The existing B pointer supplies the independent operand.
                 # Its posting visits and neural scores are charged by bind().
@@ -206,14 +202,28 @@ class OpenEntries(ProjectedEntries):
                     return
                 other = tuple(map(int, other))
             self.count["open_operand_reads"] += 1
-            if action == "Compose" and src[0] == other[0]:
+            if mode == "Compose" and src[0] == other[0]:
                 self.count["open_same_parent_Compose"] += 1
                 return
-            if action == "Extend" and depth and other in self.open_ports:
+            if mode == "Extend" and depth and other in self.open_ports:
                 self.count["open_partner_already_composite"] += 1
                 return
             refs.insert(target[0], other)
-        self.issue_suffix(r, tuple(refs), action, mem)
+        if uid is None:
+            self.issue_suffix(r, tuple(refs), mode, mem)
+        else:
+            self.issue_structure(r, tuple(refs), mode, mem, uid)
+
+    def structure_options(self, r, j, base, depth, target, recent, option):
+        pass
+
+    def open_partner(self, r, j, pos, src, target, recent, mem, mode):
+        it = reversed(recent)
+        other = next(it)
+        if mode == "Compose" and src[0] == other[0] and len(recent) > 1:
+            other = next(it)
+            self.count["open_operand_reads"] += 1
+        return other
 
     def retry_activation(self, r, j, src, uid, mem):
         kind, owner_rule = mem.rd.store.types[src[0]]
@@ -266,6 +276,7 @@ class OpenEntries(ProjectedEntries):
         for key in tuple(self.covered_indices):
             if key[0] == r:
                 del self.covered_indices[key]
+        return token
 
     def choose(self, r, j, ix, mem, woke):
         super().choose(r, j, ix, mem, woke)

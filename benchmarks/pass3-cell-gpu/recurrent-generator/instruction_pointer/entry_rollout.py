@@ -103,6 +103,12 @@ class Entries(FullTemplates):
         if getattr(self, "suffix_positions", None):
             suffixes = self.suffix_positions.get(r, ())
             self.count["open_unary_events_skipped"] += sum((int(i),) in suffixes for i in ix if i in seen)
+        structural = getattr(self, "struct_positions", {}).get(r, {})
+        if structural:
+            for i in ix:
+                label = structural.get((int(i),))
+                if label and i in seen:
+                    self.count["struct_skip_" + label] += 1
         self.count["proven_event_branches_skipped"] += len(ix) - len(left)
         return left
 
@@ -132,6 +138,9 @@ class Entries(FullTemplates):
                             ordered[role] = int(position)
                         if tuple(ordered) in self.suffix_positions.get(r, ()):
                             self.count["open_terminal_candidates_skipped"] += 1
+                            label = getattr(self, "struct_positions", {}).get(r, {}).get(tuple(ordered))
+                            if label:
+                                self.count["struct_skip_" + label] += 1
             self.count["proven_candidate_positions_skipped"] += len(excluded)
             for pos in [*sorted(excluded), end]:
                 if pos > lo:
