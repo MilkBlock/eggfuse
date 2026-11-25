@@ -170,6 +170,19 @@ class Marks(nn.Module):
             return None
         stats["template_probe"] += 1
         r, high = k
+        route_audit = high and getattr(m, "audit_routes", False)
+        if route_audit:
+            stats[f"routed_root/{r}"] += 1
+        if (
+            not train
+            and not high
+            and not prefix
+            and len(m.roles[r]) == 1
+            and getattr(m, "forced_owned", None)
+        ):
+            covered = m.forced_owned(r, m.roles[r][0], hint, rng, stats)
+            if covered is not None:
+                return covered
         q = (ctx + m.graph(k)).tanh()
         refs = []
         for i, tab in enumerate(m.roles[r]):
@@ -222,6 +235,8 @@ class Marks(nn.Module):
             refs.append((*picked, row["version"]))
             q = m.enc.actor.next_read((vec + slot)[None], q[None])[0]
             stats["port_address_seconds"] += perf_counter() - tick
+        if route_audit:
+            stats[f"addressed_root/{r}"] += 1
         return Cell(r, tuple(refs), high)
 
 

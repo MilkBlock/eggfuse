@@ -97,6 +97,12 @@ class Measured(Policy):
     one_job = False
 
     def run_snapshot(self, frame, pub, rd, model, txn, stats, deadline):
+        if hasattr(self, "schedule_log"):
+            self.schedule_log.append((frame["run"], [r for r, _ in frame["rules"]]))
+        if getattr(self.m, "audit_routes", False):
+            for rid, _ in frame["rules"]:
+                if rid in self.m.menu:
+                    stats[f"scheduled_root/{rid}"] += 1
         if self.first_run is None:
             self.first_run = frame["run"]
         if self.one_job and frame["run"] != self.first_run:
@@ -118,6 +124,8 @@ class Measured(Policy):
         if len(items) <= txn.capacity:
             for item, row in zip(items, rows, strict=True):
                 if item.cell.higher:
+                    if getattr(self.m, "audit_routes", False):
+                        stats[f"issued_root/{item.cell.rule}"] += 1
                     n = len(self.m.menu[item.cell.rule])
                     stats[f"selected/{n}"] += 1
                     if row[1] == 0:
@@ -155,13 +163,28 @@ def run(a, case):
     analyses = {}
     for mode in modes:
         begin = perf_counter()
-        menu = menus(contract, enc, d, mode, excluded, a.cap)
+        base = {"A": "prim", "B": "wide", "C": "wide", "old-scale": "flat", "owned-scale": "flat"}.get(
+            mode, mode
+        )
+        if mode in ("common-topo", "common-trace"):
+            from region_bake import linked
+
+            trace = linked(prog, read(a.trace_menu))
+            topo = menus(contract, enc, d, "wide", excluded, a.cap)
+            use = trace if mode == "common-trace" else topo
+            menu = {r: use[r] for r in sorted(trace.keys() & topo.keys())}
+        elif mode in ("D", "E"):
+            from region_bake import linked
+
+            menu = linked(prog, read(a.trace_menu))
+        else:
+            menu = menus(contract, enc, d, base, excluded, a.cap)
         bake_seconds = perf_counter() - begin
         t = perf_counter()
         m = Memory(enc, contract, menu, scorer)
         encode = perf_counter() - t
         sigs = [enc.cat.int_bake.key(u) for u in menu.values()]
-        if held.intersection(sigs):
+        if mode not in ("D", "E", "common-trace") and held.intersection(sigs):
             raise ValueError("training overlap")
         analyses[mode] = dict(
             bake_seconds=bake_seconds,
@@ -171,6 +194,7 @@ def run(a, case):
             external_arities=dict(Counter(len(u[0][2]) for u in menu.values())),
             past_catalog_overlap=len(excluded.intersection(sigs)),
             signatures=sigs,
+            editor_training_overlap=len(held.intersection(sigs)),
         )
         if case.startswith("scale-") and len(menu) == 1:
             code = next(iter(m.codes.values()))
@@ -192,6 +216,7 @@ def run(a, case):
             for mode, method in pairs if b % 2 == 0 else reversed(pairs):
                 outfile = dest / f"{prefix}.{b}.{mode}.{method}.json"
                 m = layouts[mode]
+                m.audit_routes = a.profile
                 m.pub = Published(enc)
                 m.rows.clear()
                 m.index.clear()
@@ -199,7 +224,14 @@ def run(a, case):
                 m.last = None
                 m.receipt = ZERO
                 seed = a.seed if not a.vary else a.seed + b
-                pol = Measured(m, marks, nets, method, 4 if method == "empty" else 1, seed, a.pages)
+                cls = Measured
+                if mode in ("C", "E", "owned-scale"):
+                    from region_owner import Ownership
+
+                    cls = Ownership
+                pol = cls(m, marks, nets, method, 4 if method == "empty" else 1, seed, a.pages)
+                if getattr(a, "save_issued", False):
+                    pol.schedule_log = []
                 pol.one_job = a.one_job
                 pol.count_suffix_scan = a.profile
                 forward_counts = Counter()
@@ -222,12 +254,23 @@ def run(a, case):
                     if a.profile
                     else []
                 )
-                result = execute(a.root, case, study=pol, series=temp, seconds=a.seconds)
-                for h in handles:
-                    h.remove()
+                try:
+                    result = execute(a.root, case, study=pol, series=temp, seconds=a.seconds)
+                finally:
+                    if hasattr(m, "forced_owned"):
+                        del m.forced_owned
+                    for h in handles:
+                        h.remove()
                 if a.profile:
                     result["forward_counts"] = forward_counts
                 run_dir = work / (case + "-stream-multi")
+                if getattr(a, "save_issued", False):
+                    audit_dir = a.out / "signed"
+                    audit_dir.mkdir(exist_ok=True)
+                    save(
+                        audit_dir / outfile.name,
+                        dict(schedule=pol.schedule_log, tape=read(run_dir / "issued.json")),
+                    )
                 state = read(run_dir / "state.json")
                 gold = sorted(target.match(state) - initial)
                 paid = result["paid"]
@@ -274,7 +317,11 @@ def run(a, case):
                     if not actual <= truth:
                         raise ValueError("controlled semantic mismatch")
                     result["all_expected_values"] = actual == truth
-                result.pop("trace")
+                trace = result.pop("trace")
+                if getattr(a, "save_trace", False):
+                    with outfile.with_suffix(".jsonl").open("w") as log:
+                        for frame in trace:
+                            log.write(json.dumps(frame, separators=(",", ":")) + "\n")
                 save(outfile, result)
     print(case, a.label, flush=True)
 
@@ -291,9 +338,12 @@ if __name__ == "__main__":
     p.add_argument("--pages", type=int, default=2)
     p.add_argument("--cap", type=int, default=256)
     p.add_argument("--seconds", type=int, default=300)
+    p.add_argument("--trace-menu", type=Path)
     p.add_argument("--vary", action="store_true")
     p.add_argument("--label", default="pair")
     p.add_argument("--profile", action="store_true")
+    p.add_argument("--save-trace", action="store_true")
+    p.add_argument("--save-issued", action="store_true")
     p.add_argument("--one-job", action="store_true")
     a = p.parse_args()
     torch.set_num_threads(1)
