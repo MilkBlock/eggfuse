@@ -1,0 +1,29 @@
+{
+  "counts": {
+    "body_pair_occurrences": 57,
+    "distinct_root_proofs": 57,
+    "positive_roots": 0,
+    "best_gross_extra_ops": 0,
+    "distinct_extra_ops": 0
+  },
+  "first_consumption": {
+    "no_recorded_consumer": 7,
+    "outside_pair_and_matched_inputs": 47,
+    "could_read_still_visible_matched_input": 3
+  },
+  "explicit_third_operand": {
+    "roots_with_one_live_external_ref_at_entry": 47,
+    "roots_with_witnessed_suffix": 47,
+    "roots_with_positive_suffix": 22,
+    "roots_with_multiple_suffix_steps": 0,
+    "roots_with_fanout": 0,
+    "gross_extra_ops": 66,
+    "union_extra_ops": 66
+  },
+  "higher_arity_root": {
+    "wider_root_proofs": 15,
+    "root_effective_operations": 0,
+    "largest_arity": 3
+  },
+  "witness": null
+}

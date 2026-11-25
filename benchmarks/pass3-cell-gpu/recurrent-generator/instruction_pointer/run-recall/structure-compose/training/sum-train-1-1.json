@@ -1,0 +1,934 @@
+{
+  "case": "sum",
+  "arm": "stream",
+  "phase": "multi",
+  "runs": 320,
+  "last_run": 320,
+  "termination": "schedule_end",
+  "exact_endpoint": false,
+  "state_sha": "708103481241f148213a283074272d916bee295d18f2ba87cfa7521917206e4b",
+  "paid": 359815,
+  "proof_paid": 359815,
+  "compute_paid": 0,
+  "committed_tokens": 1807,
+  "verdicts": {
+    "accepted": 1807,
+    "duplicate": 319678,
+    "untriggered_rule": 82,
+    "binding": 1082,
+    "guard": 37119,
+    "watermark": 47
+  },
+  "work": {
+    "boundary_wait_seconds": 0.1751010887674056,
+    "header_decode_seconds": 0.007443327805958688,
+    "boundary_decode_seconds": 0.010887043754337355,
+    "memory_update_seconds": 0.08599305097595789,
+    "receipt_index_records": 176,
+    "schedule_metadata_nodes": 1068160,
+    "source_port_reads": 8561,
+    "template_branch_scores": 98404,
+    "generated_templates": 32603,
+    "named_parent_reads": 4656053,
+    "generated_proofs": 359419,
+    "live_pending": 29490,
+    "peak_pending": 29490,
+    "entry_provenance_slices": 29,
+    "index_port_reads": 37717,
+    "old_port_wakes": 144354,
+    "woken_templates": 144354,
+    "interface_reads": 850369,
+    "query_field_reads": 335148,
+    "posting_index_reads": 68045,
+    "addressable_positions": 2208181,
+    "visits": 2208821,
+    "parent_candidate_scores": 2207960,
+    "complete_candidate_scores": 1937780,
+    "old_only_paths": 1149918,
+    "joint_terminal_scores": 62552,
+    "primitive_terminal_choices": 3200,
+    "entry_terminal_choices": 16577,
+    "held_entry_choices": 5734,
+    "entry_dispatch_lookups": 227,
+    "entry_projected_operands": 206,
+    "entry_probes": 22,
+    "entry_accepted": 7,
+    "root_other_bindings_replaced": 7,
+    "higher_started": 214,
+    "held_entry_starts": 93,
+    "entry_dispatch_seconds": 0.002432668930850923,
+    "receipt_position_probes": 564,
+    "receipt_prefix_checks": 4837,
+    "proven_candidate_positions_skipped": 221,
+    "receipt_posting_probe_bound": 1057,
+    "replaced_requests": 0,
+    "open_contract_choices": 21,
+    "lowered_steps": 249,
+    "completed_deep": 139,
+    "completed_size_2": 102,
+    "max_abstraction_depth": 2,
+    "entry_old_only": 64,
+    "retired_opportunities": 1994,
+    "rejected_step": 73,
+    "receipt_event_checks": 131,
+    "proven_event_branches_skipped": 54,
+    "open_action_scores": 5660,
+    "open_page_position_checks": 88123,
+    "structure_scores": 384,
+    "open_operand_reads": 768,
+    "structure_unavailable_entry": 58,
+    "open_issued_Extend": 104,
+    "open_independent_bindings": 250,
+    "open_new_bindings": 125,
+    "open_reply_Extend_binding": 98,
+    "completed_size_3": 37,
+    "open_resumes": 667,
+    "open_old_only_Extend": 593,
+    "missing_return": 2,
+    "boundary_scores": 310,
+    "open_interface_probes": 2609,
+    "open_partner_scores": 551,
+    "open_issued_Compose": 21,
+    "open_reply_Compose_binding": 13,
+    "no_watermark_partner": 86,
+    "open_reply_Extend_accepted": 2,
+    "open_accepted_Extend": 2,
+    "open_terminal_candidates_skipped": 4,
+    "open_unary_events_skipped": 0,
+    "open_reply_Compose_duplicate": 5,
+    "open_old_only_Activate": 1,
+    "open_reply_Extend_duplicate": 3,
+    "open_reply_Compose_guard": 3,
+    "open_reply_Extend_guard": 1,
+    "pack_seconds": 0.046054704318521544,
+    "request_write_seconds": 0.049633052316494286,
+    "request_bytes": 62166815,
+    "max_outstanding": 1,
+    "collection_barriers": 3500,
+    "receipt_wait_seconds": 0.3327483612811193,
+    "receipt_read_seconds": 0.29256239807000384,
+    "response_bytes": 11654080,
+    "receipt_decode_audit_seconds": 0.06708575921948068,
+    "seals": 320,
+    "index_update_seconds": 0.0756460351694841,
+    "index_writes": 16645,
+    "index_removes": 1130
+  },
+  "transaction_sizes": {
+    "1": 665,
+    "6": 74,
+    "5": 95,
+    "3": 123,
+    "4": 118,
+    "2": 162,
+    "8": 55,
+    "9": 43,
+    "11": 13,
+    "7": 45,
+    "12": 32,
+    "13": 14,
+    "17": 12,
+    "18": 16,
+    "24": 47,
+    "10": 42,
+    "27": 7,
+    "26": 3,
+    "16": 30,
+    "84": 6,
+    "60": 8,
+    "34": 10,
+    "36": 13,
+    "15": 16,
+    "106": 3,
+    "19": 9,
+    "14": 31,
+    "21": 19,
+    "40": 15,
+    "77": 1,
+    "32": 34,
+    "29": 5,
+    "22": 6,
+    "41": 2,
+    "20": 13,
+    "69": 1,
+    "73": 5,
+    "115": 5,
+    "31": 4,
+    "37": 2,
+    "46": 5,
+    "57": 1,
+    "23": 7,
+    "193": 2,
+    "99": 5,
+    "70": 5,
+    "65": 2,
+    "82": 5,
+    "119": 2,
+    "243": 2,
+    "188": 4,
+    "96": 18,
+    "143": 3,
+    "72": 5,
+    "79": 1,
+    "221": 1,
+    "56": 13,
+    "154": 3,
+    "187": 1,
+    "33": 3,
+    "110": 1,
+    "30": 18,
+    "25": 3,
+    "54": 12,
+    "105": 3,
+    "140": 4,
+    "47": 2,
+    "120": 6,
+    "51": 9,
+    "194": 1,
+    "100": 5,
+    "53": 15,
+    "85": 7,
+    "87": 1,
+    "28": 12,
+    "55": 10,
+    "35": 3,
+    "58": 2,
+    "76": 3,
+    "78": 2,
+    "49": 2,
+    "256": 1025,
+    "219": 3,
+    "190": 3,
+    "185": 2,
+    "38": 5,
+    "95": 2,
+    "111": 2,
+    "63": 3,
+    "121": 1,
+    "126": 7,
+    "232": 11,
+    "227": 5,
+    "229": 2,
+    "231": 1,
+    "230": 3,
+    "152": 6,
+    "156": 2,
+    "124": 5,
+    "112": 11,
+    "98": 3,
+    "168": 6,
+    "138": 2,
+    "123": 1,
+    "226": 2,
+    "146": 1,
+    "240": 5,
+    "104": 5,
+    "103": 3,
+    "238": 1,
+    "130": 4,
+    "149": 1,
+    "136": 6,
+    "81": 1,
+    "117": 1,
+    "224": 9,
+    "215": 1,
+    "237": 2,
+    "83": 1,
+    "192": 17,
+    "184": 2,
+    "212": 3,
+    "68": 13,
+    "44": 3,
+    "128": 33,
+    "64": 22,
+    "144": 8,
+    "254": 1,
+    "247": 5,
+    "242": 1,
+    "253": 2,
+    "249": 1,
+    "235": 1,
+    "195": 3,
+    "244": 4,
+    "246": 5,
+    "239": 2,
+    "196": 4,
+    "206": 4,
+    "218": 3,
+    "177": 4,
+    "251": 1,
+    "48": 15,
+    "42": 13,
+    "210": 3,
+    "113": 2,
+    "205": 3,
+    "203": 4,
+    "92": 2,
+    "228": 2,
+    "204": 3,
+    "171": 2,
+    "191": 1,
+    "132": 2,
+    "217": 1,
+    "39": 2,
+    "93": 1,
+    "45": 2,
+    "61": 1,
+    "166": 1,
+    "90": 3,
+    "102": 4,
+    "216": 6,
+    "202": 1,
+    "148": 4,
+    "74": 1,
+    "80": 12,
+    "200": 4,
+    "164": 5,
+    "208": 7,
+    "176": 4,
+    "141": 1,
+    "248": 4,
+    "234": 1,
+    "160": 9,
+    "236": 3,
+    "62": 2,
+    "86": 3,
+    "135": 2,
+    "116": 1,
+    "134": 2,
+    "125": 2,
+    "207": 1,
+    "75": 2,
+    "108": 1,
+    "250": 3,
+    "223": 3,
+    "233": 1,
+    "172": 4,
+    "211": 1,
+    "94": 1,
+    "88": 2,
+    "182": 1,
+    "214": 1,
+    "52": 13,
+    "66": 1,
+    "255": 2,
+    "241": 1,
+    "245": 1,
+    "252": 1,
+    "209": 1,
+    "220": 1,
+    "222": 1,
+    "189": 2,
+    "114": 1,
+    "131": 1,
+    "139": 1,
+    "151": 1,
+    "43": 1
+  },
+  "synchronizations": 3820,
+  "protocol": "ccp-v0.1",
+  "txn_stats": {
+    "batches": 3500,
+    "cache_hits": 0,
+    "ccp": true,
+    "compute_ops": 0,
+    "computed": 0,
+    "decode_ns": 12125714,
+    "encode_ns": 4309096,
+    "execute_ns": 252093793,
+    "local_reads": 0,
+    "port_bytes": 427560,
+    "proof_ops": 359815,
+    "publication_encode_ns": 351123,
+    "publication_write_ns": 131622,
+    "request_bytes": 62166815,
+    "response_bytes": 11654080,
+    "response_write_ns": 5615446,
+    "sequence": 3820
+  },
+  "wall": 8.67289354201057,
+  "signed_ops": 1677,
+  "ept": 0.0046607284298875815,
+  "eps": 193.36107285034586,
+  "native_verify_seconds": 0.220189614,
+  "guard_failures": [
+    [
+      16,
+      577,
+      2,
+      "undefined",
+      14
+    ],
+    [
+      16,
+      578,
+      2,
+      "undefined",
+      18
+    ],
+    [
+      17,
+      577,
+      2,
+      "undefined",
+      26
+    ],
+    [
+      17,
+      578,
+      2,
+      "undefined",
+      18
+    ],
+    [
+      18,
+      577,
+      2,
+      "undefined",
+      14
+    ],
+    [
+      18,
+      578,
+      2,
+      "undefined",
+      20
+    ],
+    [
+      19,
+      577,
+      2,
+      "undefined",
+      4
+    ],
+    [
+      19,
+      578,
+      2,
+      "undefined",
+      10
+    ],
+    [
+      20,
+      577,
+      2,
+      "undefined",
+      7
+    ],
+    [
+      20,
+      578,
+      2,
+      "undefined",
+      10
+    ],
+    [
+      21,
+      577,
+      2,
+      "undefined",
+      5
+    ],
+    [
+      21,
+      578,
+      2,
+      "undefined",
+      10
+    ],
+    [
+      53,
+      57,
+      4,
+      "undefined",
+      17
+    ],
+    [
+      53,
+      138,
+      1,
+      "undefined",
+      15
+    ],
+    [
+      53,
+      144,
+      1,
+      "result_mismatch",
+      1
+    ],
+    [
+      57,
+      138,
+      1,
+      "undefined",
+      17
+    ],
+    [
+      61,
+      138,
+      1,
+      "undefined",
+      6
+    ],
+    [
+      65,
+      62,
+      2,
+      "undefined",
+      2
+    ],
+    [
+      65,
+      138,
+      1,
+      "undefined",
+      2
+    ],
+    [
+      69,
+      62,
+      2,
+      "undefined",
+      3
+    ],
+    [
+      69,
+      138,
+      1,
+      "undefined",
+      1
+    ],
+    [
+      73,
+      57,
+      4,
+      "undefined",
+      4
+    ],
+    [
+      73,
+      138,
+      1,
+      "undefined",
+      3
+    ],
+    [
+      77,
+      62,
+      2,
+      "undefined",
+      3
+    ],
+    [
+      77,
+      138,
+      1,
+      "undefined",
+      4
+    ],
+    [
+      81,
+      138,
+      1,
+      "undefined",
+      2
+    ],
+    [
+      81,
+      144,
+      1,
+      "result_mismatch",
+      7
+    ],
+    [
+      85,
+      57,
+      4,
+      "undefined",
+      13
+    ],
+    [
+      85,
+      138,
+      1,
+      "undefined",
+      2
+    ],
+    [
+      85,
+      144,
+      1,
+      "result_mismatch",
+      14
+    ],
+    [
+      91,
+      144,
+      1,
+      "result_mismatch",
+      15
+    ],
+    [
+      114,
+      351,
+      2,
+      "undefined",
+      28
+    ],
+    [
+      114,
+      352,
+      3,
+      "undefined",
+      210
+    ],
+    [
+      114,
+      353,
+      2,
+      "undefined",
+      24
+    ],
+    [
+      114,
+      354,
+      3,
+      "undefined",
+      39
+    ],
+    [
+      114,
+      355,
+      3,
+      "undefined",
+      9
+    ],
+    [
+      114,
+      356,
+      3,
+      "undefined",
+      18
+    ],
+    [
+      114,
+      371,
+      2,
+      "undefined",
+      584
+    ],
+    [
+      118,
+      577,
+      2,
+      "undefined",
+      3
+    ],
+    [
+      118,
+      578,
+      2,
+      "undefined",
+      4
+    ],
+    [
+      119,
+      577,
+      2,
+      "undefined",
+      3
+    ],
+    [
+      119,
+      578,
+      2,
+      "undefined",
+      4
+    ],
+    [
+      152,
+      138,
+      1,
+      "undefined",
+      2
+    ],
+    [
+      181,
+      351,
+      2,
+      "undefined",
+      7
+    ],
+    [
+      234,
+      508,
+      0,
+      "undefined",
+      14
+    ],
+    [
+      241,
+      509,
+      1,
+      "undefined",
+      126
+    ],
+    [
+      243,
+      509,
+      1,
+      "undefined",
+      252
+    ],
+    [
+      245,
+      507,
+      2,
+      "undefined",
+      1850
+    ],
+    [
+      250,
+      508,
+      0,
+      "undefined",
+      24
+    ],
+    [
+      257,
+      509,
+      1,
+      "undefined",
+      546
+    ],
+    [
+      259,
+      509,
+      1,
+      "undefined",
+      1093
+    ],
+    [
+      261,
+      507,
+      2,
+      "undefined",
+      2580
+    ],
+    [
+      267,
+      507,
+      2,
+      "undefined",
+      336
+    ],
+    [
+      267,
+      508,
+      0,
+      "undefined",
+      28
+    ],
+    [
+      270,
+      510,
+      1,
+      "undefined",
+      52
+    ],
+    [
+      272,
+      510,
+      1,
+      "undefined",
+      108
+    ],
+    [
+      274,
+      507,
+      2,
+      "undefined",
+      1272
+    ],
+    [
+      277,
+      509,
+      1,
+      "undefined",
+      1134
+    ],
+    [
+      279,
+      509,
+      1,
+      "undefined",
+      2269
+    ],
+    [
+      281,
+      507,
+      2,
+      "undefined",
+      2472
+    ],
+    [
+      287,
+      507,
+      2,
+      "undefined",
+      2366
+    ],
+    [
+      287,
+      508,
+      0,
+      "undefined",
+      30
+    ],
+    [
+      290,
+      510,
+      1,
+      "undefined",
+      195
+    ],
+    [
+      292,
+      510,
+      1,
+      "undefined",
+      402
+    ],
+    [
+      294,
+      507,
+      2,
+      "undefined",
+      9126
+    ],
+    [
+      297,
+      509,
+      1,
+      "undefined",
+      1464
+    ],
+    [
+      299,
+      509,
+      1,
+      "undefined",
+      2929
+    ],
+    [
+      301,
+      507,
+      2,
+      "undefined",
+      306
+    ],
+    [
+      307,
+      507,
+      2,
+      "undefined",
+      274
+    ],
+    [
+      307,
+      508,
+      0,
+      "undefined",
+      11
+    ],
+    [
+      310,
+      510,
+      1,
+      "undefined",
+      8
+    ],
+    [
+      312,
+      510,
+      1,
+      "undefined",
+      18
+    ],
+    [
+      314,
+      507,
+      2,
+      "undefined",
+      201
+    ],
+    [
+      317,
+      509,
+      1,
+      "undefined",
+      1470
+    ],
+    [
+      319,
+      509,
+      1,
+      "undefined",
+      2941
+    ]
+  ],
+  "new_suffix_operations": {
+    "Extend": 2
+  },
+  "structures": [],
+  "reference": 1681,
+  "facts": 1240,
+  "open_actions": {
+    "Primitive": 214,
+    "Defer": 722,
+    "WiredExtend": 144,
+    "Extend": 652,
+    "Activate": 9,
+    "Compose": 102,
+    "WiredCompose": 5
+  },
+  "open_decision_runs": 127,
+  "published_recursive": [
+    [
+      3653,
+      2,
+      [
+        2768
+      ],
+      [
+        [
+          3653,
+          0,
+          69
+        ],
+        [
+          3653,
+          1,
+          53
+        ]
+      ]
+    ],
+    [
+      12941,
+      2,
+      [
+        5356
+      ],
+      [
+        [
+          12941,
+          1,
+          195
+        ]
+      ]
+    ]
+  ],
+  "terminal_decisions": 19777,
+  "charged_with_decisions": 381461
+}

@@ -1,0 +1,126 @@
+{
+  "full_options": 16,
+  "optimistic_union": {
+    "removed_terminal_visits": 12,
+    "suppressed_b_proposals": 12
+  },
+  "packed_roots": 8,
+  "packed_suffixes": 12,
+  "packed_extra_ops": 5,
+  "packed_marginal": {
+    "removed_terminal_visits": 12,
+    "suppressed_b_proposals": 12
+  },
+  "packed_net_ccp_saving": 0,
+  "native": {
+    "checks": {
+      "state_sha": true,
+      "schedule": true,
+      "writes": true,
+      "rhs": true,
+      "resumes": true,
+      "events": true
+    },
+    "accepted": 1419,
+    "graph": {
+      "absent_returns": 0,
+      "accepted_steps": 12,
+      "attached_roots": 0,
+      "boundary_reads": 28,
+      "completed_layouts": {
+        "0": 1,
+        "1": 1,
+        "2": 1,
+        "3": 1,
+        "4": 1,
+        "5": 1,
+        "6": 1,
+        "7": 1
+      },
+      "completed_sizes": {
+        "2": 4,
+        "3": 4
+      },
+      "invalid_boundary": 0,
+      "issued_layouts": {
+        "0": 1,
+        "1": 1,
+        "2": 1,
+        "3": 1,
+        "4": 1,
+        "5": 1,
+        "6": 1,
+        "7": 1
+      },
+      "issued_steps": 12,
+      "missing_returns": 0,
+      "rejected_groups": 0,
+      "retired_returns": 0,
+      "signed_layouts": 8
+    },
+    "external_requests": 1407,
+    "native_batches": 618
+  },
+  "witnesses": [
+    [
+      4,
+      [
+        744,
+        762,
+        774
+      ]
+    ],
+    [
+      4,
+      [
+        743,
+        761,
+        773
+      ]
+    ],
+    [
+      4,
+      [
+        521,
+        620,
+        672
+      ]
+    ],
+    [
+      4,
+      [
+        520,
+        619,
+        670
+      ]
+    ],
+    [
+      13,
+      [
+        552,
+        631
+      ]
+    ],
+    [
+      8,
+      [
+        690,
+        716
+      ]
+    ],
+    [
+      8,
+      [
+        618,
+        681
+      ]
+    ],
+    [
+      8,
+      [
+        617,
+        680
+      ]
+    ]
+  ]
+}

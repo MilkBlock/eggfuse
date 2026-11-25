@@ -1,0 +1,1013 @@
+{
+  "case": "sum",
+  "arm": "stream",
+  "phase": "multi",
+  "runs": 320,
+  "last_run": 320,
+  "termination": "schedule_end",
+  "exact_endpoint": false,
+  "state_sha": "708103481241f148213a283074272d916bee295d18f2ba87cfa7521917206e4b",
+  "paid": 359751,
+  "proof_paid": 359751,
+  "compute_paid": 0,
+  "committed_tokens": 1807,
+  "verdicts": {
+    "accepted": 1807,
+    "duplicate": 319660,
+    "untriggered_rule": 81,
+    "binding": 1043,
+    "guard": 37115,
+    "watermark": 45
+  },
+  "work": {
+    "boundary_wait_seconds": 0.1770676579035353,
+    "header_decode_seconds": 0.007605786842759699,
+    "boundary_decode_seconds": 0.011557776917470619,
+    "memory_update_seconds": 0.10868122693500482,
+    "receipt_index_records": 176,
+    "schedule_metadata_nodes": 1068160,
+    "source_port_reads": 8561,
+    "template_branch_scores": 98404,
+    "generated_templates": 32612,
+    "named_parent_reads": 4656018,
+    "generated_proofs": 359406,
+    "live_pending": 29490,
+    "peak_pending": 29490,
+    "entry_provenance_slices": 29,
+    "index_port_reads": 37717,
+    "old_port_wakes": 144354,
+    "woken_templates": 144354,
+    "interface_reads": 853546,
+    "query_field_reads": 335150,
+    "posting_index_reads": 68045,
+    "addressable_positions": 2208181,
+    "visits": 2209010,
+    "parent_candidate_scores": 2207938,
+    "complete_candidate_scores": 1937758,
+    "old_only_paths": 1149918,
+    "joint_terminal_scores": 62546,
+    "primitive_terminal_choices": 3017,
+    "entry_terminal_choices": 16758,
+    "held_entry_choices": 5629,
+    "entry_dispatch_lookups": 213,
+    "entry_projected_operands": 202,
+    "entry_probes": 21,
+    "entry_accepted": 6,
+    "root_other_bindings_replaced": 6,
+    "higher_started": 209,
+    "held_entry_starts": 96,
+    "entry_dispatch_seconds": 0.002461416821461171,
+    "receipt_position_probes": 599,
+    "receipt_prefix_checks": 4541,
+    "proven_candidate_positions_skipped": 243,
+    "receipt_posting_probe_bound": 1145,
+    "replaced_requests": 1,
+    "open_contract_choices": 19,
+    "lowered_steps": 245,
+    "completed_deep": 137,
+    "completed_size_2": 98,
+    "max_abstraction_depth": 2,
+    "entry_old_only": 63,
+    "retired_opportunities": 1994,
+    "rejected_step": 69,
+    "receipt_event_checks": 102,
+    "proven_event_branches_skipped": 45,
+    "open_action_scores": 6142,
+    "open_page_position_checks": 87985,
+    "structure_scores": 468,
+    "completed_size_3": 39,
+    "open_resumes": 846,
+    "open_operand_reads": 738,
+    "open_old_only_Extend": 618,
+    "missing_return": 3,
+    "structure_unavailable_entry": 49,
+    "open_issued_Extend": 57,
+    "open_independent_bindings": 155,
+    "open_new_bindings": 77,
+    "open_reply_Extend_binding": 51,
+    "boundary_scores": 825,
+    "open_reply_Extend_accepted": 5,
+    "open_accepted_Extend": 5,
+    "open_unary_events_skipped": 0,
+    "open_interface_probes": 1182,
+    "open_partner_scores": 247,
+    "open_issued_Compose": 21,
+    "open_reply_Compose_binding": 21,
+    "structure_root_accepted": 2,
+    "open_terminal_candidates_skipped": 9,
+    "structure_reply_guard": 1,
+    "no_watermark_partner": 82,
+    "structure_reply_accepted": 1,
+    "structure_wired_reads": 2,
+    "open_old_only_Activate": 1,
+    "struct_skip_continuation": 2,
+    "structure_old": 1,
+    "open_partner_already_composite": 1,
+    "open_reply_Extend_duplicate": 1,
+    "pack_seconds": 0.04755527089582756,
+    "request_write_seconds": 0.05317982495762408,
+    "request_bytes": 62157871,
+    "max_outstanding": 1,
+    "collection_barriers": 3451,
+    "receipt_wait_seconds": 0.3347954270429909,
+    "receipt_read_seconds": 0.29538881094777025,
+    "response_bytes": 11650072,
+    "receipt_decode_audit_seconds": 0.06991013424703851,
+    "seals": 320,
+    "index_update_seconds": 0.09761241835076362,
+    "index_writes": 16645,
+    "index_removes": 1130
+  },
+  "transaction_sizes": {
+    "1": 612,
+    "6": 74,
+    "5": 94,
+    "3": 121,
+    "4": 119,
+    "2": 163,
+    "8": 54,
+    "9": 42,
+    "11": 13,
+    "7": 45,
+    "12": 34,
+    "13": 14,
+    "17": 13,
+    "18": 17,
+    "24": 46,
+    "10": 42,
+    "27": 6,
+    "26": 3,
+    "16": 35,
+    "84": 9,
+    "60": 7,
+    "34": 11,
+    "36": 15,
+    "15": 16,
+    "106": 3,
+    "19": 7,
+    "14": 31,
+    "21": 19,
+    "40": 16,
+    "77": 1,
+    "32": 32,
+    "29": 4,
+    "22": 5,
+    "41": 2,
+    "20": 14,
+    "69": 1,
+    "73": 5,
+    "115": 5,
+    "30": 19,
+    "37": 2,
+    "46": 4,
+    "57": 1,
+    "23": 7,
+    "193": 2,
+    "99": 5,
+    "70": 5,
+    "65": 2,
+    "82": 2,
+    "119": 2,
+    "243": 4,
+    "188": 3,
+    "31": 3,
+    "96": 16,
+    "143": 3,
+    "72": 5,
+    "79": 3,
+    "221": 1,
+    "56": 14,
+    "154": 3,
+    "187": 1,
+    "33": 3,
+    "110": 1,
+    "25": 3,
+    "54": 12,
+    "105": 3,
+    "140": 5,
+    "47": 3,
+    "120": 10,
+    "51": 9,
+    "194": 1,
+    "100": 4,
+    "53": 16,
+    "85": 7,
+    "87": 1,
+    "28": 13,
+    "55": 10,
+    "35": 3,
+    "58": 2,
+    "76": 3,
+    "78": 2,
+    "49": 2,
+    "256": 1026,
+    "219": 3,
+    "190": 2,
+    "185": 2,
+    "38": 4,
+    "95": 4,
+    "111": 2,
+    "63": 3,
+    "121": 1,
+    "126": 7,
+    "232": 10,
+    "227": 4,
+    "229": 2,
+    "231": 1,
+    "230": 4,
+    "152": 6,
+    "156": 2,
+    "124": 4,
+    "112": 11,
+    "98": 3,
+    "168": 5,
+    "138": 2,
+    "248": 5,
+    "228": 3,
+    "144": 11,
+    "240": 8,
+    "104": 4,
+    "102": 5,
+    "239": 1,
+    "171": 4,
+    "88": 3,
+    "130": 4,
+    "149": 1,
+    "136": 5,
+    "81": 2,
+    "117": 1,
+    "253": 2,
+    "224": 9,
+    "196": 6,
+    "192": 18,
+    "128": 35,
+    "212": 4,
+    "68": 12,
+    "44": 1,
+    "64": 20,
+    "208": 6,
+    "254": 1,
+    "247": 4,
+    "242": 1,
+    "249": 2,
+    "235": 1,
+    "201": 4,
+    "244": 4,
+    "206": 5,
+    "218": 3,
+    "177": 4,
+    "251": 1,
+    "246": 4,
+    "48": 15,
+    "42": 13,
+    "210": 3,
+    "113": 2,
+    "205": 4,
+    "203": 4,
+    "92": 3,
+    "204": 2,
+    "191": 1,
+    "132": 1,
+    "103": 2,
+    "217": 1,
+    "39": 2,
+    "93": 1,
+    "45": 4,
+    "61": 1,
+    "166": 1,
+    "90": 2,
+    "216": 7,
+    "202": 1,
+    "148": 4,
+    "74": 1,
+    "80": 12,
+    "176": 4,
+    "141": 1,
+    "234": 1,
+    "160": 10,
+    "237": 3,
+    "195": 2,
+    "62": 2,
+    "43": 2,
+    "135": 2,
+    "116": 1,
+    "137": 1,
+    "125": 2,
+    "75": 2,
+    "108": 1,
+    "162": 1,
+    "233": 1,
+    "200": 2,
+    "223": 2,
+    "222": 2,
+    "161": 1,
+    "94": 1,
+    "172": 2,
+    "164": 3,
+    "52": 13,
+    "184": 1,
+    "66": 1,
+    "250": 2,
+    "255": 1,
+    "245": 2,
+    "252": 1,
+    "209": 1,
+    "220": 1,
+    "236": 1,
+    "189": 2,
+    "114": 1,
+    "131": 1,
+    "134": 1,
+    "139": 1,
+    "151": 1,
+    "86": 2
+  },
+  "synchronizations": 3771,
+  "protocol": "ccp-v0.1",
+  "txn_stats": {
+    "batches": 3451,
+    "cache_hits": 0,
+    "ccp": true,
+    "compute_ops": 0,
+    "computed": 0,
+    "decode_ns": 12309038,
+    "encode_ns": 4379341,
+    "execute_ns": 252668179,
+    "local_reads": 0,
+    "port_bytes": 427560,
+    "proof_ops": 359751,
+    "publication_encode_ns": 348082,
+    "publication_write_ns": 131712,
+    "request_bytes": 62157871,
+    "response_bytes": 11650072,
+    "response_write_ns": 5881882,
+    "sequence": 3771
+  },
+  "wall": 8.914355291024549,
+  "signed_ops": 1677,
+  "ept": 0.004661557577324316,
+  "eps": 188.12353168024316,
+  "native_verify_seconds": 0.221200602,
+  "guard_failures": [
+    [
+      16,
+      577,
+      2,
+      "undefined",
+      14
+    ],
+    [
+      16,
+      578,
+      2,
+      "undefined",
+      18
+    ],
+    [
+      17,
+      577,
+      2,
+      "undefined",
+      26
+    ],
+    [
+      17,
+      578,
+      2,
+      "undefined",
+      18
+    ],
+    [
+      18,
+      577,
+      2,
+      "undefined",
+      14
+    ],
+    [
+      18,
+      578,
+      2,
+      "undefined",
+      20
+    ],
+    [
+      19,
+      577,
+      2,
+      "undefined",
+      4
+    ],
+    [
+      19,
+      578,
+      2,
+      "undefined",
+      10
+    ],
+    [
+      20,
+      577,
+      2,
+      "undefined",
+      7
+    ],
+    [
+      20,
+      578,
+      2,
+      "undefined",
+      10
+    ],
+    [
+      21,
+      577,
+      2,
+      "undefined",
+      5
+    ],
+    [
+      21,
+      578,
+      2,
+      "undefined",
+      10
+    ],
+    [
+      53,
+      57,
+      4,
+      "undefined",
+      17
+    ],
+    [
+      53,
+      138,
+      1,
+      "undefined",
+      15
+    ],
+    [
+      53,
+      144,
+      1,
+      "result_mismatch",
+      1
+    ],
+    [
+      57,
+      138,
+      1,
+      "undefined",
+      17
+    ],
+    [
+      61,
+      138,
+      1,
+      "undefined",
+      6
+    ],
+    [
+      65,
+      62,
+      2,
+      "undefined",
+      2
+    ],
+    [
+      65,
+      138,
+      1,
+      "undefined",
+      2
+    ],
+    [
+      69,
+      62,
+      2,
+      "undefined",
+      3
+    ],
+    [
+      69,
+      138,
+      1,
+      "undefined",
+      1
+    ],
+    [
+      73,
+      57,
+      4,
+      "undefined",
+      4
+    ],
+    [
+      73,
+      138,
+      1,
+      "undefined",
+      3
+    ],
+    [
+      77,
+      62,
+      2,
+      "undefined",
+      3
+    ],
+    [
+      77,
+      138,
+      1,
+      "undefined",
+      4
+    ],
+    [
+      81,
+      138,
+      1,
+      "undefined",
+      2
+    ],
+    [
+      81,
+      144,
+      1,
+      "result_mismatch",
+      7
+    ],
+    [
+      85,
+      57,
+      4,
+      "undefined",
+      13
+    ],
+    [
+      85,
+      138,
+      1,
+      "undefined",
+      2
+    ],
+    [
+      85,
+      144,
+      1,
+      "result_mismatch",
+      14
+    ],
+    [
+      91,
+      144,
+      1,
+      "result_mismatch",
+      15
+    ],
+    [
+      114,
+      351,
+      2,
+      "undefined",
+      28
+    ],
+    [
+      114,
+      352,
+      3,
+      "undefined",
+      210
+    ],
+    [
+      114,
+      353,
+      2,
+      "undefined",
+      24
+    ],
+    [
+      114,
+      354,
+      3,
+      "undefined",
+      39
+    ],
+    [
+      114,
+      355,
+      3,
+      "undefined",
+      9
+    ],
+    [
+      114,
+      356,
+      3,
+      "undefined",
+      18
+    ],
+    [
+      114,
+      371,
+      2,
+      "undefined",
+      584
+    ],
+    [
+      118,
+      577,
+      2,
+      "undefined",
+      3
+    ],
+    [
+      118,
+      578,
+      2,
+      "undefined",
+      4
+    ],
+    [
+      119,
+      577,
+      2,
+      "undefined",
+      3
+    ],
+    [
+      119,
+      578,
+      2,
+      "undefined",
+      4
+    ],
+    [
+      152,
+      138,
+      1,
+      "undefined",
+      2
+    ],
+    [
+      181,
+      351,
+      2,
+      "undefined",
+      7
+    ],
+    [
+      234,
+      508,
+      0,
+      "undefined",
+      14
+    ],
+    [
+      241,
+      509,
+      1,
+      "undefined",
+      126
+    ],
+    [
+      243,
+      509,
+      1,
+      "undefined",
+      252
+    ],
+    [
+      245,
+      507,
+      2,
+      "undefined",
+      1850
+    ],
+    [
+      250,
+      508,
+      0,
+      "undefined",
+      24
+    ],
+    [
+      257,
+      509,
+      1,
+      "undefined",
+      546
+    ],
+    [
+      259,
+      509,
+      1,
+      "undefined",
+      1092
+    ],
+    [
+      261,
+      507,
+      2,
+      "undefined",
+      2580
+    ],
+    [
+      267,
+      507,
+      2,
+      "undefined",
+      336
+    ],
+    [
+      267,
+      508,
+      0,
+      "undefined",
+      28
+    ],
+    [
+      270,
+      510,
+      1,
+      "undefined",
+      52
+    ],
+    [
+      272,
+      510,
+      1,
+      "undefined",
+      108
+    ],
+    [
+      274,
+      507,
+      2,
+      "undefined",
+      1272
+    ],
+    [
+      277,
+      509,
+      1,
+      "undefined",
+      1134
+    ],
+    [
+      279,
+      509,
+      1,
+      "undefined",
+      2268
+    ],
+    [
+      281,
+      507,
+      2,
+      "undefined",
+      2472
+    ],
+    [
+      287,
+      507,
+      2,
+      "undefined",
+      2366
+    ],
+    [
+      287,
+      508,
+      0,
+      "undefined",
+      30
+    ],
+    [
+      290,
+      510,
+      1,
+      "undefined",
+      195
+    ],
+    [
+      292,
+      510,
+      1,
+      "undefined",
+      402
+    ],
+    [
+      294,
+      507,
+      2,
+      "undefined",
+      9126
+    ],
+    [
+      297,
+      509,
+      1,
+      "undefined",
+      1464
+    ],
+    [
+      299,
+      509,
+      1,
+      "undefined",
+      2928
+    ],
+    [
+      301,
+      507,
+      2,
+      "undefined",
+      306
+    ],
+    [
+      307,
+      507,
+      2,
+      "undefined",
+      274
+    ],
+    [
+      307,
+      508,
+      0,
+      "undefined",
+      11
+    ],
+    [
+      310,
+      510,
+      1,
+      "undefined",
+      8
+    ],
+    [
+      312,
+      510,
+      1,
+      "undefined",
+      18
+    ],
+    [
+      314,
+      507,
+      2,
+      "undefined",
+      201
+    ],
+    [
+      317,
+      509,
+      1,
+      "undefined",
+      1470
+    ],
+    [
+      319,
+      509,
+      1,
+      "undefined",
+      2940
+    ]
+  ],
+  "new_suffix_operations": {
+    "Extend": 1,
+    "WiredExtend": 2,
+    "continuation": 0
+  },
+  "structures": [
+    {
+      "pid": 1,
+      "mode": "Extend",
+      "tokens": [
+        3538
+      ],
+      "root_ops": 1,
+      "extra_ops": 0,
+      "boundary_refs": 2
+    },
+    {
+      "pid": 4,
+      "mode": "Extend",
+      "tokens": [
+        3646,
+        4032
+      ],
+      "root_ops": 1,
+      "extra_ops": 0,
+      "boundary_refs": 4
+    }
+  ],
+  "reference": 1681,
+  "facts": 1240,
+  "open_actions": {
+    "Primitive": 233,
+    "Defer": 922,
+    "Activate": 12,
+    "Extend": 626,
+    "WiredExtend": 134,
+    "Compose": 94,
+    "WiredCompose": 9
+  },
+  "open_decision_runs": 129,
+  "published_recursive": [
+    [
+      3128,
+      2,
+      [
+        2377
+      ],
+      [
+        [
+          3128,
+          1,
+          53
+        ],
+        [
+          3128,
+          2,
+          49
+        ]
+      ]
+    ],
+    [
+      3538,
+      2,
+      [
+        2759
+      ],
+      [
+        [
+          3538,
+          1,
+          1
+        ],
+        [
+          3538,
+          2,
+          1
+        ],
+        [
+          3538,
+          5,
+          65
+        ]
+      ]
+    ],
+    [
+      3646,
+      2,
+      [
+        2762
+      ],
+      [
+        [
+          3646,
+          0,
+          69
+        ],
+        [
+          3646,
+          1,
+          53
+        ]
+      ]
+    ],
+    [
+      4032,
+      2,
+      [
+        2762,
+        3646
+      ],
+      [
+        [
+          4032,
+          0,
+          69
+        ]
+      ]
+    ],
+    [
+      12886,
+      2,
+      [
+        5343
+      ],
+      [
+        [
+          12886,
+          1,
+          195
+        ]
+      ]
+    ]
+  ],
+  "terminal_decisions": 19775,
+  "charged_with_decisions": 381575
+}

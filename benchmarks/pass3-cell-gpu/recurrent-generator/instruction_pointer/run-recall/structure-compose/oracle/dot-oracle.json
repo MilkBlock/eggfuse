@@ -1,0 +1,70 @@
+{
+  "totals": {
+    "correct_pairs_Extend": 888,
+    "root_ops_Extend": 477,
+    "best_extra_ops_sum_Extend": 26,
+    "multi_effect_pairs_Extend": 16,
+    "correct_pairs_Compose": 52,
+    "root_ops_Compose": 26,
+    "best_extra_ops_sum_Compose": 0,
+    "multi_effect_pairs_Compose": 0
+  },
+  "distinct_root_ops": 503,
+  "local_discovery": {
+    "roots_with_any_extra_Extend": 117,
+    "roots_with_positive_extra_Extend": 34,
+    "roots_with_fanout_Extend": 19,
+    "gross_extra_ops_Extend": 66,
+    "roots_with_any_extra_Compose": 0,
+    "roots_with_positive_extra_Compose": 0,
+    "roots_with_fanout_Compose": 0,
+    "gross_extra_ops_Compose": 0
+  },
+  "union_extra_ops": 0,
+  "distinct_suffix_ops": 16,
+  "best_extra_ops_histogram": [
+    [
+      "Compose",
+      0,
+      52
+    ],
+    [
+      "Extend",
+      0,
+      872
+    ],
+    [
+      "Extend",
+      1,
+      6
+    ],
+    [
+      "Extend",
+      2,
+      10
+    ]
+  ],
+  "native_witnesses": [
+    {
+      "kind": [
+        "Extend",
+        "chain"
+      ],
+      "pid": 2,
+      "tokens": [
+        1588,
+        1748,
+        1956
+      ],
+      "extra_ops": 2,
+      "checks": {
+        "state_sha": true,
+        "schedule": true,
+        "writes": true,
+        "rhs": true,
+        "resumes": true,
+        "events": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "totals": {
+    "correct_pairs_Extend": 304,
+    "root_ops_Extend": 147,
+    "best_extra_ops_sum_Extend": 0,
+    "multi_effect_pairs_Extend": 0,
+    "correct_pairs_Compose": 12,
+    "root_ops_Compose": 6,
+    "best_extra_ops_sum_Compose": 0,
+    "multi_effect_pairs_Compose": 0
+  },
+  "distinct_root_ops": 153,
+  "local_discovery": {
+    "roots_with_any_extra_Extend": 35,
+    "roots_with_positive_extra_Extend": 0,
+    "roots_with_fanout_Extend": 5,
+    "gross_extra_ops_Extend": 0,
+    "roots_with_any_extra_Compose": 0,
+    "roots_with_positive_extra_Compose": 0,
+    "roots_with_fanout_Compose": 0,
+    "gross_extra_ops_Compose": 0
+  },
+  "union_extra_ops": 0,
+  "distinct_suffix_ops": 0,
+  "best_extra_ops_histogram": [
+    [
+      "Compose",
+      0,
+      12
+    ],
+    [
+      "Extend",
+      0,
+      304
+    ]
+  ],
+  "native_witnesses": [
+    {
+      "kind": [
+        "Extend",
+        "chain"
+      ],
+      "pid": 8,
+      "tokens": [
+        826,
+        925
+      ],
+      "extra_ops": 0,
+      "checks": {
+        "state_sha": true,
+        "schedule": true,
+        "writes": true,
+        "rhs": true,
+        "resumes": true,
+        "events": true
+      }
+    }
+  ]
+}

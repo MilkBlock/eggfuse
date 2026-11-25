@@ -1,0 +1,1224 @@
+{
+  "cases": {
+    "dot": {
+      "recent": {
+        "runs": 192,
+        "state": "95ec8b3a336f9f0f7e819aad9e21bc619538eee2390131916ed24703de7e4c4b",
+        "facts": 1220,
+        "reference": 1942,
+        "operations": 1742,
+        "paid": 25574,
+        "paid_plus_decisions": 32212,
+        "ept": 0.06811605536873387,
+        "ept_including_decisions": 0.05407922513349062,
+        "visits": 13785092,
+        "interface_reads": 782950,
+        "terminal_decisions": 5561,
+        "open_actions": {
+          "Defer": 500,
+          "Primitive": 16,
+          "Extend": 487,
+          "Compose": 69,
+          "Activate": 5
+        },
+        "reported_suffix_operations": {
+          "Extend": 1
+        },
+        "structural_instances": [],
+        "structural_effective_operations_after_root": 0,
+        "decisions": {
+          "structure_scores": 0,
+          "structure_root_accepted": 0,
+          "structure_completed": 0,
+          "structure_unavailable_entry": 0,
+          "structure_unavailable_return": 0,
+          "structure_old": 0,
+          "structure_wired_reads": 0,
+          "struct_skip_fanout": 0,
+          "struct_skip_continuation": 0,
+          "open_interface_probes": 0,
+          "open_partner_scores": 0,
+          "no_watermark_partner": 0,
+          "open_contract_choices": 0,
+          "open_new_bindings": 20,
+          "open_issued_Compose": 2,
+          "open_accepted_Compose": 0,
+          "open_accepted_Extend": 3,
+          "open_reply_Compose_duplicate": 0
+        },
+        "wall": [
+          20.653681583004072,
+          20.74486595898634
+        ],
+        "eps": [
+          84.34331637190984,
+          83.9725840332747
+        ],
+        "setup_seconds": [
+          0.2360822499904316,
+          0.2246971660060808
+        ],
+        "eps_with_separately_measured_setup": [
+          83.39012417405046,
+          83.07278456954643
+        ],
+        "same_graph": true,
+        "paired_wall_delta_seconds": [
+          0.0,
+          0.0
+        ]
+      },
+      "pointer": {
+        "runs": 192,
+        "state": "95ec8b3a336f9f0f7e819aad9e21bc619538eee2390131916ed24703de7e4c4b",
+        "facts": 1220,
+        "reference": 1942,
+        "operations": 1742,
+        "paid": 25574,
+        "paid_plus_decisions": 32212,
+        "ept": 0.06811605536873387,
+        "ept_including_decisions": 0.05407922513349062,
+        "visits": 13785094,
+        "interface_reads": 783670,
+        "terminal_decisions": 5561,
+        "open_actions": {
+          "Defer": 500,
+          "Primitive": 16,
+          "Extend": 487,
+          "Compose": 69,
+          "Activate": 5
+        },
+        "reported_suffix_operations": {
+          "Extend": 1
+        },
+        "structural_instances": [],
+        "structural_effective_operations_after_root": 0,
+        "decisions": {
+          "structure_scores": 0,
+          "structure_root_accepted": 0,
+          "structure_completed": 0,
+          "structure_unavailable_entry": 0,
+          "structure_unavailable_return": 0,
+          "structure_old": 0,
+          "structure_wired_reads": 0,
+          "struct_skip_fanout": 0,
+          "struct_skip_continuation": 0,
+          "open_interface_probes": 591,
+          "open_partner_scores": 2,
+          "no_watermark_partner": 67,
+          "open_contract_choices": 0,
+          "open_new_bindings": 20,
+          "open_issued_Compose": 2,
+          "open_accepted_Compose": 0,
+          "open_accepted_Extend": 3,
+          "open_reply_Compose_duplicate": 0
+        },
+        "wall": [
+          20.896377957978984,
+          20.300813333014958
+        ],
+        "eps": [
+          83.3637295182461,
+          85.8093698722409
+        ],
+        "setup_seconds": [
+          0.22611295801470987,
+          0.22715900000184774
+        ],
+        "eps_with_separately_measured_setup": [
+          82.47133384637787,
+          84.85981819052824
+        ],
+        "same_graph": true,
+        "paired_wall_delta_seconds": [
+          0.24269637497491203,
+          -0.4440526259713806
+        ]
+      },
+      "structure": {
+        "runs": 192,
+        "state": "95ec8b3a336f9f0f7e819aad9e21bc619538eee2390131916ed24703de7e4c4b",
+        "facts": 1220,
+        "reference": 1942,
+        "operations": 1742,
+        "paid": 25577,
+        "paid_plus_decisions": 32205,
+        "ept": 0.06810806584040349,
+        "ept_including_decisions": 0.05409097966154324,
+        "visits": 13785094,
+        "interface_reads": 783670,
+        "terminal_decisions": 5561,
+        "open_actions": {
+          "Defer": 488,
+          "Primitive": 14,
+          "Extend": 387,
+          "WiredExtend": 104,
+          "Compose": 69,
+          "Activate": 5
+        },
+        "reported_suffix_operations": {
+          "Extend": 1
+        },
+        "structural_instances": [],
+        "structural_effective_operations_after_root": 0,
+        "decisions": {
+          "structure_scores": 289,
+          "structure_root_accepted": 0,
+          "structure_completed": 0,
+          "structure_unavailable_entry": 49,
+          "structure_unavailable_return": 0,
+          "structure_old": 0,
+          "structure_wired_reads": 0,
+          "struct_skip_fanout": 0,
+          "struct_skip_continuation": 0,
+          "open_interface_probes": 591,
+          "open_partner_scores": 2,
+          "no_watermark_partner": 67,
+          "open_contract_choices": 0,
+          "open_new_bindings": 23,
+          "open_issued_Compose": 2,
+          "open_accepted_Compose": 0,
+          "open_accepted_Extend": 3,
+          "open_reply_Compose_duplicate": 0
+        },
+        "wall": [
+          21.056575042020995,
+          20.19601979100844
+        ],
+        "eps": [
+          82.72950356473567,
+          86.25461937681224
+        ],
+        "setup_seconds": [
+          0.2350951250118669,
+          0.24675737498910166
+        ],
+        "eps_with_separately_measured_setup": [
+          81.81603351611375,
+          85.21347103941766
+        ],
+        "same_graph": true,
+        "paired_wall_delta_seconds": [
+          0.40289345901692286,
+          -0.5488461679778993
+        ]
+      },
+      "rl": {
+        "runs": 192,
+        "state": "95ec8b3a336f9f0f7e819aad9e21bc619538eee2390131916ed24703de7e4c4b",
+        "facts": 1220,
+        "reference": 1942,
+        "operations": 1742,
+        "paid": 25577,
+        "paid_plus_decisions": 32205,
+        "ept": 0.06810806584040349,
+        "ept_including_decisions": 0.05409097966154324,
+        "visits": 13785094,
+        "interface_reads": 783670,
+        "terminal_decisions": 5561,
+        "open_actions": {
+          "Defer": 488,
+          "Primitive": 14,
+          "Extend": 387,
+          "WiredExtend": 104,
+          "Compose": 69,
+          "Activate": 5
+        },
+        "reported_suffix_operations": {
+          "Extend": 1
+        },
+        "structural_instances": [],
+        "structural_effective_operations_after_root": 0,
+        "decisions": {
+          "structure_scores": 289,
+          "structure_root_accepted": 0,
+          "structure_completed": 0,
+          "structure_unavailable_entry": 49,
+          "structure_unavailable_return": 0,
+          "structure_old": 0,
+          "structure_wired_reads": 0,
+          "struct_skip_fanout": 0,
+          "struct_skip_continuation": 0,
+          "open_interface_probes": 591,
+          "open_partner_scores": 2,
+          "no_watermark_partner": 67,
+          "open_contract_choices": 0,
+          "open_new_bindings": 23,
+          "open_issued_Compose": 2,
+          "open_accepted_Compose": 0,
+          "open_accepted_Extend": 3,
+          "open_reply_Compose_duplicate": 0
+        },
+        "wall": [
+          20.73801283398643,
+          20.722919791995082
+        ],
+        "eps": [
+          84.00033378054084,
+          84.06151341052362
+        ],
+        "setup_seconds": [
+          0.24177808398962952,
+          0.2542383750260342
+        ],
+        "eps_with_separately_measured_setup": [
+          83.03228601327035,
+          83.04270703067186
+        ],
+        "same_graph": true,
+        "paired_wall_delta_seconds": [
+          0.08433125098235905,
+          -0.021946166991256177
+        ]
+      }
+    },
+    "fact": {
+      "recent": {
+        "runs": 560,
+        "state": "0fb621363b5ce5c45fde0cf66da65d967a4382d07bdfec0716f9219e6a1f3751",
+        "facts": 764,
+        "reference": 1120,
+        "operations": 1094,
+        "paid": 297798,
+        "paid_plus_decisions": 321116,
+        "ept": 0.003673631119080719,
+        "ept_including_decisions": 0.003406868545946013,
+        "visits": 6959269,
+        "interface_reads": 480335,
+        "terminal_decisions": 21895,
+        "open_actions": {
+          "Defer": 669,
+          "Primitive": 131,
+          "Extend": 531,
+          "Compose": 88,
+          "Activate": 4
+        },
+        "reported_suffix_operations": {
+          "Extend": 0
+        },
+        "structural_instances": [],
+        "structural_effective_operations_after_root": 0,
+        "decisions": {
+          "structure_scores": 0,
+          "structure_root_accepted": 0,
+          "structure_completed": 0,
+          "structure_unavailable_entry": 0,
+          "structure_unavailable_return": 0,
+          "structure_old": 0,
+          "structure_wired_reads": 0,
+          "struct_skip_fanout": 0,
+          "struct_skip_continuation": 0,
+          "open_interface_probes": 0,
+          "open_partner_scores": 0,
+          "no_watermark_partner": 0,
+          "open_contract_choices": 0,
+          "open_new_bindings": 55,
+          "open_issued_Compose": 15,
+          "open_accepted_Compose": 0,
+          "open_accepted_Extend": 2,
+          "open_reply_Compose_duplicate": 0
+        },
+        "wall": [
+          12.0809698329831,
+          11.761239166982705
+        ],
+        "eps": [
+          90.55564372101932,
+          93.01740951507756
+        ],
+        "setup_seconds": [
+          0.2155884160019923,
+          0.206153417006135
+        ],
+        "eps_with_separately_measured_setup": [
+          88.96798419917981,
+          91.41506742777548
+        ],
+        "same_graph": true,
+        "paired_wall_delta_seconds": [
+          0.0,
+          0.0
+        ]
+      },
+      "pointer": {
+        "runs": 560,
+        "state": "0fb621363b5ce5c45fde0cf66da65d967a4382d07bdfec0716f9219e6a1f3751",
+        "facts": 764,
+        "reference": 1120,
+        "operations": 1094,
+        "paid": 297798,
+        "paid_plus_decisions": 321116,
+        "ept": 0.003673631119080719,
+        "ept_including_decisions": 0.003406868545946013,
+        "visits": 6959509,
+        "interface_reads": 483881,
+        "terminal_decisions": 21895,
+        "open_actions": {
+          "Defer": 669,
+          "Primitive": 131,
+          "Extend": 531,
+          "Compose": 88,
+          "Activate": 4
+        },
+        "reported_suffix_operations": {
+          "Extend": 0
+        },
+        "structural_instances": [],
+        "structural_effective_operations_after_root": 0,
+        "decisions": {
+          "structure_scores": 0,
+          "structure_root_accepted": 0,
+          "structure_completed": 0,
+          "structure_unavailable_entry": 0,
+          "structure_unavailable_return": 0,
+          "structure_old": 0,
+          "structure_wired_reads": 0,
+          "struct_skip_fanout": 0,
+          "struct_skip_continuation": 0,
+          "open_interface_probes": 1507,
+          "open_partner_scores": 240,
+          "no_watermark_partner": 73,
+          "open_contract_choices": 0,
+          "open_new_bindings": 55,
+          "open_issued_Compose": 15,
+          "open_accepted_Compose": 0,
+          "open_accepted_Extend": 2,
+          "open_reply_Compose_duplicate": 4
+        },
+        "wall": [
+          12.414833916001953,
+          11.661367374996189
+        ],
+        "eps": [
+          88.12038947938737,
+          93.81404125434797
+        ],
+        "setup_seconds": [
+          0.20985879198997281,
+          0.21076783302123658
+        ],
+        "eps_with_separately_measured_setup": [
+          86.65557453984246,
+          92.14854622454148
+        ],
+        "same_graph": true,
+        "paired_wall_delta_seconds": [
+          0.3338640830188524,
+          -0.09987179198651575
+        ]
+      },
+      "structure": {
+        "runs": 560,
+        "state": "0fb621363b5ce5c45fde0cf66da65d967a4382d07bdfec0716f9219e6a1f3751",
+        "facts": 764,
+        "reference": 1120,
+        "operations": 1094,
+        "paid": 297797,
+        "paid_plus_decisions": 321197,
+        "ept": 0.0036736434551053235,
+        "ept_including_decisions": 0.0034060093961027034,
+        "visits": 6959543,
+        "interface_reads": 488048,
+        "terminal_decisions": 21895,
+        "open_actions": {
+          "Defer": 708,
+          "Primitive": 131,
+          "Extend": 486,
+          "WiredExtend": 66,
+          "Compose": 110,
+          "Activate": 4
+        },
+        "reported_suffix_operations": {
+          "Extend": 0
+        },
+        "structural_instances": [],
+        "structural_effective_operations_after_root": 0,
+        "decisions": {
+          "structure_scores": 182,
+          "structure_root_accepted": 0,
+          "structure_completed": 0,
+          "structure_unavailable_entry": 62,
+          "structure_unavailable_return": 0,
+          "structure_old": 0,
+          "structure_wired_reads": 0,
+          "struct_skip_fanout": 0,
+          "struct_skip_continuation": 0,
+          "open_interface_probes": 1529,
+          "open_partner_scores": 240,
+          "no_watermark_partner": 95,
+          "open_contract_choices": 0,
+          "open_new_bindings": 54,
+          "open_issued_Compose": 15,
+          "open_accepted_Compose": 0,
+          "open_accepted_Extend": 2,
+          "open_reply_Compose_duplicate": 4
+        },
+        "wall": [
+          12.07091050001327,
+          12.25054816599004
+        ],
+        "eps": [
+          90.6311085645774,
+          89.30212633563303
+        ],
+        "setup_seconds": [
+          0.22748379199765623,
+          0.2373938749951776
+        ],
+        "eps_with_separately_measured_setup": [
+          88.95470205493946,
+          87.60450652393406
+        ],
+        "same_graph": true,
+        "paired_wall_delta_seconds": [
+          -0.010059332969831303,
+          0.48930899900733493
+        ]
+      },
+      "rl": {
+        "runs": 560,
+        "state": "0fb621363b5ce5c45fde0cf66da65d967a4382d07bdfec0716f9219e6a1f3751",
+        "facts": 764,
+        "reference": 1120,
+        "operations": 1094,
+        "paid": 297797,
+        "paid_plus_decisions": 321197,
+        "ept": 0.0036736434551053235,
+        "ept_including_decisions": 0.0034060093961027034,
+        "visits": 6959543,
+        "interface_reads": 488048,
+        "terminal_decisions": 21895,
+        "open_actions": {
+          "Defer": 710,
+          "Primitive": 129,
+          "Extend": 486,
+          "WiredExtend": 66,
+          "Compose": 110,
+          "Activate": 4
+        },
+        "reported_suffix_operations": {
+          "Extend": 0
+        },
+        "structural_instances": [],
+        "structural_effective_operations_after_root": 0,
+        "decisions": {
+          "structure_scores": 182,
+          "structure_root_accepted": 0,
+          "structure_completed": 0,
+          "structure_unavailable_entry": 62,
+          "structure_unavailable_return": 0,
+          "structure_old": 0,
+          "structure_wired_reads": 0,
+          "struct_skip_fanout": 0,
+          "struct_skip_continuation": 0,
+          "open_interface_probes": 1529,
+          "open_partner_scores": 240,
+          "no_watermark_partner": 95,
+          "open_contract_choices": 0,
+          "open_new_bindings": 54,
+          "open_issued_Compose": 15,
+          "open_accepted_Compose": 0,
+          "open_accepted_Extend": 2,
+          "open_reply_Compose_duplicate": 4
+        },
+        "wall": [
+          12.544730500027072,
+          12.290043667017017
+        ],
+        "eps": [
+          87.20793164888151,
+          89.01514344786138
+        ],
+        "setup_seconds": [
+          0.2286258749954868,
+          0.2309399170044344
+        ],
+        "eps_with_separately_measured_setup": [
+          85.6470271305703,
+          87.37332755520093
+        ],
+        "same_graph": true,
+        "paired_wall_delta_seconds": [
+          0.4637606670439709,
+          0.5288045000343118
+        ]
+      }
+    },
+    "loopfact": {
+      "recent": {
+        "runs": 595,
+        "state": "0e1e9961fc23ce1d14272e69b7a01001893deabf6a32fcd861d903f7fd379cb5",
+        "facts": 944,
+        "reference": 1112,
+        "operations": 1136,
+        "paid": 263617,
+        "paid_plus_decisions": 298453,
+        "ept": 0.004309282026576435,
+        "ept_including_decisions": 0.0038062944584239394,
+        "visits": 4950314,
+        "interface_reads": 642377,
+        "terminal_decisions": 33079,
+        "open_actions": {
+          "Defer": 812,
+          "Extend": 644,
+          "Activate": 6,
+          "Compose": 144,
+          "Primitive": 151
+        },
+        "reported_suffix_operations": {
+          "Extend": 1
+        },
+        "structural_instances": [],
+        "structural_effective_operations_after_root": 0,
+        "decisions": {
+          "structure_scores": 0,
+          "structure_root_accepted": 0,
+          "structure_completed": 0,
+          "structure_unavailable_entry": 0,
+          "structure_unavailable_return": 0,
+          "structure_old": 0,
+          "structure_wired_reads": 0,
+          "struct_skip_fanout": 0,
+          "struct_skip_continuation": 0,
+          "open_interface_probes": 0,
+          "open_partner_scores": 0,
+          "no_watermark_partner": 0,
+          "open_contract_choices": 0,
+          "open_new_bindings": 67,
+          "open_issued_Compose": 24,
+          "open_accepted_Compose": 0,
+          "open_accepted_Extend": 2,
+          "open_reply_Compose_duplicate": 0
+        },
+        "wall": [
+          10.724145374988439,
+          11.150275416992372
+        ],
+        "eps": [
+          105.9291869214543,
+          101.88089150415082
+        ],
+        "setup_seconds": [
+          0.2287927919824142,
+          0.21179416598170064
+        ],
+        "eps_with_separately_measured_setup": [
+          103.71646243979231,
+          99.98178515842595
+        ],
+        "same_graph": true,
+        "paired_wall_delta_seconds": [
+          0.0,
+          0.0
+        ]
+      },
+      "pointer": {
+        "runs": 595,
+        "state": "0e1e9961fc23ce1d14272e69b7a01001893deabf6a32fcd861d903f7fd379cb5",
+        "facts": 944,
+        "reference": 1112,
+        "operations": 1136,
+        "paid": 263618,
+        "paid_plus_decisions": 298454,
+        "ept": 0.004309265679885288,
+        "ept_including_decisions": 0.003806281705053375,
+        "visits": 4950933,
+        "interface_reads": 650671,
+        "terminal_decisions": 33079,
+        "open_actions": {
+          "Defer": 812,
+          "Extend": 644,
+          "Activate": 6,
+          "Compose": 144,
+          "Primitive": 151
+        },
+        "reported_suffix_operations": {
+          "Extend": 1
+        },
+        "structural_instances": [],
+        "structural_effective_operations_after_root": 0,
+        "decisions": {
+          "structure_scores": 0,
+          "structure_root_accepted": 0,
+          "structure_completed": 0,
+          "structure_unavailable_entry": 0,
+          "structure_unavailable_return": 0,
+          "structure_old": 0,
+          "structure_wired_reads": 0,
+          "struct_skip_fanout": 0,
+          "struct_skip_continuation": 0,
+          "open_interface_probes": 3220,
+          "open_partner_scores": 619,
+          "no_watermark_partner": 119,
+          "open_contract_choices": 0,
+          "open_new_bindings": 68,
+          "open_issued_Compose": 25,
+          "open_accepted_Compose": 0,
+          "open_accepted_Extend": 2,
+          "open_reply_Compose_duplicate": 6
+        },
+        "wall": [
+          10.86961754199001,
+          11.453183125006035
+        ],
+        "eps": [
+          104.51149689596356,
+          99.18639976337595
+        ],
+        "setup_seconds": [
+          0.22311837499728426,
+          0.21772116699139588
+        ],
+        "eps_with_separately_measured_setup": [
+          102.40936127040959,
+          97.33607367330899
+        ],
+        "same_graph": true,
+        "paired_wall_delta_seconds": [
+          0.1454721670015715,
+          0.30290770801366307
+        ]
+      },
+      "structure": {
+        "runs": 595,
+        "state": "0e1e9961fc23ce1d14272e69b7a01001893deabf6a32fcd861d903f7fd379cb5",
+        "facts": 944,
+        "reference": 1112,
+        "operations": 1136,
+        "paid": 263616,
+        "paid_plus_decisions": 298448,
+        "ept": 0.0043092983733916,
+        "ept_including_decisions": 0.0038063582265587307,
+        "visits": 4950932,
+        "interface_reads": 650671,
+        "terminal_decisions": 33079,
+        "open_actions": {
+          "Defer": 808,
+          "WiredExtend": 73,
+          "Extend": 574,
+          "Activate": 5,
+          "Compose": 138,
+          "Primitive": 149,
+          "WiredCompose": 6
+        },
+        "reported_suffix_operations": {
+          "WiredExtend": 0,
+          "continuation": 0,
+          "Extend": 1
+        },
+        "structural_instances": [
+          {
+            "pid": 4,
+            "mode": "Extend",
+            "tokens": [
+              2364,
+              2618
+            ],
+            "root_ops": 0,
+            "extra_ops": 0,
+            "boundary_refs": 4
+          }
+        ],
+        "structural_effective_operations_after_root": 0,
+        "decisions": {
+          "structure_scores": 260,
+          "structure_root_accepted": 1,
+          "structure_completed": 0,
+          "structure_unavailable_entry": 21,
+          "structure_unavailable_return": 0,
+          "structure_old": 1,
+          "structure_wired_reads": 2,
+          "struct_skip_fanout": 0,
+          "struct_skip_continuation": 1,
+          "open_interface_probes": 3225,
+          "open_partner_scores": 619,
+          "no_watermark_partner": 119,
+          "open_contract_choices": 0,
+          "open_new_bindings": 66,
+          "open_issued_Compose": 25,
+          "open_accepted_Compose": 0,
+          "open_accepted_Extend": 2,
+          "open_reply_Compose_duplicate": 6
+        },
+        "wall": [
+          10.75833166699158,
+          11.175964959023986
+        ],
+        "eps": [
+          105.59258025902326,
+          101.64670381171351
+        ],
+        "setup_seconds": [
+          0.23806537501513958,
+          0.24287112499587238
+        ],
+        "eps_with_separately_measured_setup": [
+          103.30656447383903,
+          99.48474534893975
+        ],
+        "same_graph": true,
+        "paired_wall_delta_seconds": [
+          0.034186292003141716,
+          0.02568954203161411
+        ]
+      },
+      "rl": {
+        "runs": 595,
+        "state": "0e1e9961fc23ce1d14272e69b7a01001893deabf6a32fcd861d903f7fd379cb5",
+        "facts": 944,
+        "reference": 1112,
+        "operations": 1136,
+        "paid": 263616,
+        "paid_plus_decisions": 298448,
+        "ept": 0.0043092983733916,
+        "ept_including_decisions": 0.0038063582265587307,
+        "visits": 4950932,
+        "interface_reads": 650671,
+        "terminal_decisions": 33079,
+        "open_actions": {
+          "Defer": 811,
+          "WiredExtend": 73,
+          "Extend": 574,
+          "Activate": 5,
+          "Compose": 138,
+          "Primitive": 146,
+          "WiredCompose": 6
+        },
+        "reported_suffix_operations": {
+          "WiredExtend": 0,
+          "continuation": 0,
+          "Extend": 1
+        },
+        "structural_instances": [
+          {
+            "pid": 4,
+            "mode": "Extend",
+            "tokens": [
+              2364,
+              2618
+            ],
+            "root_ops": 0,
+            "extra_ops": 0,
+            "boundary_refs": 4
+          }
+        ],
+        "structural_effective_operations_after_root": 0,
+        "decisions": {
+          "structure_scores": 260,
+          "structure_root_accepted": 1,
+          "structure_completed": 0,
+          "structure_unavailable_entry": 21,
+          "structure_unavailable_return": 0,
+          "structure_old": 1,
+          "structure_wired_reads": 2,
+          "struct_skip_fanout": 0,
+          "struct_skip_continuation": 1,
+          "open_interface_probes": 3225,
+          "open_partner_scores": 619,
+          "no_watermark_partner": 119,
+          "open_contract_choices": 0,
+          "open_new_bindings": 66,
+          "open_issued_Compose": 25,
+          "open_accepted_Compose": 0,
+          "open_accepted_Extend": 2,
+          "open_reply_Compose_duplicate": 6
+        },
+        "wall": [
+          10.561276458000066,
+          10.533973749988945
+        ],
+        "eps": [
+          107.5627557443107,
+          107.84154460240535
+        ],
+        "setup_seconds": [
+          0.23936070798663422,
+          0.2540839169814717
+        ],
+        "eps_with_separately_measured_setup": [
+          105.17897995661629,
+          105.30162472880255
+        ],
+        "same_graph": true,
+        "paired_wall_delta_seconds": [
+          -0.1628689169883728,
+          -0.6163016670034267
+        ]
+      }
+    },
+    "sum-divisors": {
+      "recent": {
+        "runs": 723,
+        "state": "e2c26acf0b06fb922c75e656e39534a7b1cd8cea1866e23bc7dac0ce4dfed67c",
+        "facts": 3085,
+        "reference": 8018,
+        "operations": 4321,
+        "paid": 4930891,
+        "paid_plus_decisions": 5110872,
+        "ept": 0.0008763122121336691,
+        "ept_including_decisions": 0.0008454525959562282,
+        "visits": 89399270,
+        "interface_reads": 3923728,
+        "terminal_decisions": 176216,
+        "open_actions": {
+          "Defer": 1731,
+          "Primitive": 396,
+          "Extend": 1437,
+          "Compose": 195,
+          "Activate": 6
+        },
+        "reported_suffix_operations": {
+          "Extend": 1
+        },
+        "structural_instances": [],
+        "structural_effective_operations_after_root": 0,
+        "decisions": {
+          "structure_scores": 0,
+          "structure_root_accepted": 0,
+          "structure_completed": 0,
+          "structure_unavailable_entry": 0,
+          "structure_unavailable_return": 0,
+          "structure_old": 0,
+          "structure_wired_reads": 0,
+          "struct_skip_fanout": 0,
+          "struct_skip_continuation": 0,
+          "open_interface_probes": 0,
+          "open_partner_scores": 0,
+          "no_watermark_partner": 0,
+          "open_contract_choices": 0,
+          "open_new_bindings": 90,
+          "open_issued_Compose": 30,
+          "open_accepted_Compose": 0,
+          "open_accepted_Extend": 2,
+          "open_reply_Compose_duplicate": 0
+        },
+        "wall": [
+          122.90170358301839,
+          125.35190758400131
+        ],
+        "eps": [
+          35.1581782353507,
+          34.470955275286855
+        ],
+        "setup_seconds": [
+          0.23645437500090338,
+          0.21980900000198744
+        ],
+        "eps_with_separately_measured_setup": [
+          35.09066622121415,
+          34.41061504570096
+        ],
+        "same_graph": true,
+        "paired_wall_delta_seconds": [
+          0.0,
+          0.0
+        ]
+      },
+      "pointer": {
+        "runs": 723,
+        "state": "e2c26acf0b06fb922c75e656e39534a7b1cd8cea1866e23bc7dac0ce4dfed67c",
+        "facts": 3085,
+        "reference": 8018,
+        "operations": 4321,
+        "paid": 4930892,
+        "paid_plus_decisions": 5110873,
+        "ept": 0.0008763120344148686,
+        "ept_including_decisions": 0.0008454524305338834,
+        "visits": 89402427,
+        "interface_reads": 3968445,
+        "terminal_decisions": 176216,
+        "open_actions": {
+          "Defer": 1731,
+          "Primitive": 396,
+          "Extend": 1437,
+          "Compose": 195,
+          "Activate": 6
+        },
+        "reported_suffix_operations": {
+          "Extend": 1
+        },
+        "structural_instances": [],
+        "structural_effective_operations_after_root": 0,
+        "decisions": {
+          "structure_scores": 0,
+          "structure_root_accepted": 0,
+          "structure_completed": 0,
+          "structure_unavailable_entry": 0,
+          "structure_unavailable_return": 0,
+          "structure_old": 0,
+          "structure_wired_reads": 0,
+          "struct_skip_fanout": 0,
+          "struct_skip_continuation": 0,
+          "open_interface_probes": 17473,
+          "open_partner_scores": 3157,
+          "no_watermark_partner": 164,
+          "open_contract_choices": 0,
+          "open_new_bindings": 91,
+          "open_issued_Compose": 31,
+          "open_accepted_Compose": 0,
+          "open_accepted_Extend": 2,
+          "open_reply_Compose_duplicate": 8
+        },
+        "wall": [
+          123.22236008400796,
+          124.86620625000796
+        ],
+        "eps": [
+          35.06668754805637,
+          34.605039504030934
+        ],
+        "setup_seconds": [
+          0.2334287090052385,
+          0.22067237499868497
+        ],
+        "eps_with_separately_measured_setup": [
+          35.00038388029432,
+          34.54399092452988
+        ],
+        "same_graph": true,
+        "paired_wall_delta_seconds": [
+          0.3206565009895712,
+          -0.48570133399334736
+        ]
+      },
+      "structure": {
+        "runs": 723,
+        "state": "e2c26acf0b06fb922c75e656e39534a7b1cd8cea1866e23bc7dac0ce4dfed67c",
+        "facts": 3085,
+        "reference": 8018,
+        "operations": 4321,
+        "paid": 4930894,
+        "paid_plus_decisions": 5110861,
+        "ept": 0.0008763116789774836,
+        "ept_including_decisions": 0.0008454544156062941,
+        "visits": 89402426,
+        "interface_reads": 3968445,
+        "terminal_decisions": 176216,
+        "open_actions": {
+          "Defer": 1714,
+          "Primitive": 394,
+          "Extend": 1251,
+          "WiredExtend": 192,
+          "Compose": 194,
+          "Activate": 5,
+          "WiredCompose": 1
+        },
+        "reported_suffix_operations": {
+          "WiredExtend": 0,
+          "continuation": 0,
+          "Extend": 1
+        },
+        "structural_instances": [
+          {
+            "pid": 4,
+            "mode": "Extend",
+            "tokens": [
+              12320,
+              13375
+            ],
+            "root_ops": 0,
+            "extra_ops": 0,
+            "boundary_refs": 4
+          }
+        ],
+        "structural_effective_operations_after_root": 0,
+        "decisions": {
+          "structure_scores": 582,
+          "structure_root_accepted": 1,
+          "structure_completed": 0,
+          "structure_unavailable_entry": 72,
+          "structure_unavailable_return": 0,
+          "structure_old": 1,
+          "structure_wired_reads": 2,
+          "struct_skip_fanout": 0,
+          "struct_skip_continuation": 1,
+          "open_interface_probes": 17473,
+          "open_partner_scores": 3157,
+          "no_watermark_partner": 164,
+          "open_contract_choices": 0,
+          "open_new_bindings": 93,
+          "open_issued_Compose": 31,
+          "open_accepted_Compose": 0,
+          "open_accepted_Extend": 2,
+          "open_reply_Compose_duplicate": 8
+        },
+        "wall": [
+          123.3787166250113,
+          125.94954379202682
+        ],
+        "eps": [
+          35.0222479062815,
+          34.30738905362783
+        ],
+        "setup_seconds": [
+          0.24563508300343528,
+          0.24497737499768846
+        ],
+        "eps_with_separately_measured_setup": [
+          34.95266054220177,
+          34.2407892200086
+        ],
+        "same_graph": true,
+        "paired_wall_delta_seconds": [
+          0.4770130419929046,
+          0.5976362080255058
+        ]
+      },
+      "rl": {
+        "runs": 723,
+        "state": "e2c26acf0b06fb922c75e656e39534a7b1cd8cea1866e23bc7dac0ce4dfed67c",
+        "facts": 3085,
+        "reference": 8018,
+        "operations": 4321,
+        "paid": 4930893,
+        "paid_plus_decisions": 5110860,
+        "ept": 0.00087631185669614,
+        "ept_including_decisions": 0.0008454545810294158,
+        "visits": 89402426,
+        "interface_reads": 3968457,
+        "terminal_decisions": 176215,
+        "open_actions": {
+          "Defer": 1716,
+          "Primitive": 392,
+          "Extend": 1252,
+          "WiredExtend": 192,
+          "Compose": 194,
+          "Activate": 5,
+          "WiredCompose": 1
+        },
+        "reported_suffix_operations": {
+          "WiredExtend": 0,
+          "continuation": 0,
+          "Extend": 1
+        },
+        "structural_instances": [
+          {
+            "pid": 4,
+            "mode": "Extend",
+            "tokens": [
+              12319,
+              13374
+            ],
+            "root_ops": 0,
+            "extra_ops": 0,
+            "boundary_refs": 4
+          }
+        ],
+        "structural_effective_operations_after_root": 0,
+        "decisions": {
+          "structure_scores": 582,
+          "structure_root_accepted": 1,
+          "structure_completed": 0,
+          "structure_unavailable_entry": 72,
+          "structure_unavailable_return": 0,
+          "structure_old": 1,
+          "structure_wired_reads": 2,
+          "struct_skip_fanout": 0,
+          "struct_skip_continuation": 1,
+          "open_interface_probes": 17494,
+          "open_partner_scores": 3157,
+          "no_watermark_partner": 164,
+          "open_contract_choices": 0,
+          "open_new_bindings": 93,
+          "open_issued_Compose": 31,
+          "open_accepted_Compose": 0,
+          "open_accepted_Extend": 2,
+          "open_reply_Compose_duplicate": 8
+        },
+        "wall": [
+          122.9115823339962,
+          125.01876158299274
+        ],
+        "eps": [
+          35.15535247327828,
+          34.56281237541725
+        ],
+        "setup_seconds": [
+          0.24113020801451057,
+          0.24334587500197813
+        ],
+        "eps_with_separately_measured_setup": [
+          35.08651909332481,
+          34.495667426392295
+        ],
+        "same_graph": true,
+        "paired_wall_delta_seconds": [
+          0.009878750977804884,
+          -0.33314600100857206
+        ]
+      }
+    }
+  },
+  "own_state_partner_audit": {
+    "fact": {
+      "counts": {
+        "events": 88,
+        "eligible_events": 15
+      },
+      "reasons": {
+        "binding": 168,
+        "guard": 36,
+        "match": 36
+      },
+      "fully_checked": 240,
+      "events_with_valid_partner": 4,
+      "events_with_still_unsigned_partner": 0,
+      "pointer_picked_still_unsigned": 0
+    },
+    "loopfact": {
+      "counts": {
+        "events": 144,
+        "eligible_events": 25
+      },
+      "reasons": {
+        "binding": 409,
+        "guard": 105,
+        "match": 105
+      },
+      "fully_checked": 619,
+      "events_with_valid_partner": 6,
+      "events_with_still_unsigned_partner": 0,
+      "pointer_picked_still_unsigned": 0
+    },
+    "sum-divisors": {
+      "counts": {
+        "events": 195,
+        "eligible_events": 31
+      },
+      "reasons": {
+        "binding": 2005,
+        "guard": 576,
+        "match": 576
+      },
+      "fully_checked": 3157,
+      "events_with_valid_partner": 8,
+      "events_with_still_unsigned_partner": 0,
+      "pointer_picked_still_unsigned": 0
+    }
+  },
+  "training_actions": {
+    "Extend": 5084,
+    "Defer": 6738,
+    "WiredExtend": 1083,
+    "Compose": 769,
+    "Primitive": 1796,
+    "Activate": 98,
+    "WiredCompose": 51
+  },
+  "training_native_credit": {
+    "Extend": 8,
+    "WiredExtend": 9,
+    "continuation": 0
+  },
+  "structure_activations": 9,
+  "training_completed": 1,
+  "input_checksums": {
+    "catalog.json": "794a7af3dd79a0c92b9a859f9a39fc6b27c8cf56a8309cd3ac57cea5e59585c5",
+    "entry-contracts.json": "d825e35bc2479ccaeed05a59128357e328b1bddc4dd12a878e2d5b4746443f8d",
+    "wired.pt": "4f50d1a755a9a2e7f937b875cf8e748d52f63846bdde26af0cf14ea4f02f6761",
+    "graph.pt": "26913155521aa1d49a71e390fb9aee1a92be1d339b4e7fc899dbf22cab1e1d06",
+    "recursive-rl.pt": "a8e1f4b724c2f5ee722667e0891a41404e836458e9a1c30abe2ed6fa965b82d7",
+    "structure-book.json": "5cfef1c66ddb266417b4478368f976fc032ba8776fa52496b9071e3e43a68c6a",
+    "structure-rl.pt": "dc9d4abb7f1c02ebdb2cfda0aa2632781fc42f7cfe1adb5a99e98cc0cd2c5b59"
+  }
+}
