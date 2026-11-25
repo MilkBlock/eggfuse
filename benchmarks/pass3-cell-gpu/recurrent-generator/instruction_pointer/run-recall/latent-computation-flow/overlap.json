@@ -1,0 +1,130 @@
+{
+  "empty": {
+    "outcome": [],
+    "state_sha": "4962090741ad7223f0878686aaaa4ec88190154cac7b81c6ab3a0518237bf0d5",
+    "visible_sha": "e722fe6ec899bb4955f8dcdb0fd6022cbe53c6d10676f2e008d7ef8dfdda77a0",
+    "counts": {
+      "accepted": 0,
+      "calls": 2,
+      "duplicates": 0,
+      "reads": 0,
+      "reads_by_kind": {},
+      "rejected": {}
+    },
+    "signed": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "predicted_norm": null
+  },
+  "0": {
+    "outcome": [
+      {
+        "sort": "i64",
+        "value": 42
+      }
+    ],
+    "state_sha": "e1e97a3b3126245743c3ecd945cd379ef6504f059aa437f78e79fcfa7b2cf35e",
+    "visible_sha": "def11ab86a259b649a4f48fe95609fa5604b64302a083b61cc42c23a53f828d2",
+    "counts": {
+      "accepted": 1,
+      "calls": 2,
+      "duplicates": 0,
+      "reads": 1,
+      "reads_by_kind": {
+        "initial": 1
+      },
+      "rejected": {}
+    },
+    "signed": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "predicted_norm": 5.101579666137695
+  },
+  "1": {
+    "outcome": [
+      {
+        "sort": "i64",
+        "value": 42
+      }
+    ],
+    "state_sha": "9bdd58a82fb6611039823363cda2e368234d708382ff6c199823507893bb933d",
+    "visible_sha": "22f802a6ab8e165f3044bfbdbce7a4be11f1d88de02babc887c6fff992c5c7d9",
+    "counts": {
+      "accepted": 1,
+      "calls": 2,
+      "duplicates": 0,
+      "reads": 2,
+      "reads_by_kind": {
+        "initial": 2
+      },
+      "rejected": {}
+    },
+    "signed": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "predicted_norm": 6.425925254821777
+  },
+  "01": {
+    "outcome": [
+      {
+        "sort": "i64",
+        "value": 42
+      }
+    ],
+    "state_sha": "e1e97a3b3126245743c3ecd945cd379ef6504f059aa437f78e79fcfa7b2cf35e",
+    "visible_sha": "def11ab86a259b649a4f48fe95609fa5604b64302a083b61cc42c23a53f828d2",
+    "counts": {
+      "accepted": 2,
+      "calls": 2,
+      "duplicates": 0,
+      "reads": 3,
+      "reads_by_kind": {
+        "initial": 3
+      },
+      "rejected": {}
+    },
+    "signed": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "predicted_norm": 5.840930461883545
+  },
+  "10": {
+    "outcome": [
+      {
+        "sort": "i64",
+        "value": 42
+      }
+    ],
+    "state_sha": "e1e97a3b3126245743c3ecd945cd379ef6504f059aa437f78e79fcfa7b2cf35e",
+    "visible_sha": "def11ab86a259b649a4f48fe95609fa5604b64302a083b61cc42c23a53f828d2",
+    "counts": {
+      "accepted": 2,
+      "calls": 2,
+      "duplicates": 0,
+      "reads": 3,
+      "reads_by_kind": {
+        "initial": 3
+      },
+      "rejected": {}
+    },
+    "signed": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "predicted_norm": 5.605119705200195
+  }
+}

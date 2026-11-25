@@ -1,0 +1,3651 @@
+{
+  "donor_signatures": [
+    "bea44bf6c0058709928d7402a740155ee0149106892b8151522f9fefae7afed6"
+  ],
+  "donor": "chain2",
+  "donors": 8,
+  "weight_sha_before_eval_bake": "61e1aadefc59ff8d5e28e7c40c39685ecf91b7a557436423f824db3446b0b112",
+  "tests": {
+    "chain3": {
+      "layout": [
+        [
+          0,
+          0,
+          [
+            [
+              -1,
+              0
+            ]
+          ]
+        ],
+        [
+          1,
+          1,
+          [
+            [
+              0,
+              0
+            ]
+          ]
+        ],
+        [
+          2,
+          2,
+          [
+            [
+              1,
+              0
+            ]
+          ]
+        ]
+      ],
+      "static_signature": "877320d396c92086535422f3a13ec7cda973e5a28614b77758a46493424f7c0a",
+      "oracle": {
+        "checks": {
+          "state_sha": true,
+          "schedule": true,
+          "writes": true,
+          "rhs": true,
+          "resumes": true,
+          "events": true
+        },
+        "accepted": 3,
+        "graph": {
+          "absent_returns": 0,
+          "accepted_steps": 2,
+          "attached_roots": 0,
+          "boundary_reads": 1,
+          "completed_layouts": {
+            "0": 1
+          },
+          "completed_sizes": {
+            "3": 1
+          },
+          "invalid_boundary": 0,
+          "issued_layouts": {
+            "0": 1
+          },
+          "issued_steps": 2,
+          "missing_returns": 0,
+          "rejected_groups": 0,
+          "retired_returns": 0,
+          "signed_layouts": 1
+        },
+        "external_requests": 1,
+        "native_batches": 4
+      },
+      "zero_mse": 3.3381636142730713,
+      "primitive_fit_mse": 2.64302921295166,
+      "composed_mse": 1.5957772731781006,
+      "runs": [
+        {
+          "arm": "primitive",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 4,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 108.31221116595998,
+          "wall": 0.012228708015754819,
+          "total_harness": 0.04106629197485745
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 220.15856993472454,
+          "wall": 0.01093016698723659,
+          "total_harness": 0.026361625001300126
+        },
+        {
+          "arm": "composed",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 242.6178470713036,
+          "wall": 0.010143833991605788,
+          "total_harness": 0.02423599999747239
+        },
+        {
+          "arm": "desired",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 230.22538527488663,
+          "wall": 0.010522208991460502,
+          "total_harness": 0.024175583996111527
+        },
+        {
+          "arm": "forced",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 210.94635817146295,
+          "wall": 0.01193687500199303,
+          "total_harness": 0.02706212500925176
+        },
+        {
+          "arm": "forced",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 204.00068477305405,
+          "wall": 0.012243375007528812,
+          "total_harness": 0.026928917010081932
+        },
+        {
+          "arm": "desired",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 226.496291431174,
+          "wall": 0.011027250002371147,
+          "total_harness": 0.025924541987478733
+        },
+        {
+          "arm": "composed",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 215.4462927418691,
+          "wall": 0.011353375011822209,
+          "total_harness": 0.026792582997586578
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 220.25218846242944,
+          "wall": 0.011302917002467439,
+          "total_harness": 0.025213042012182996
+        },
+        {
+          "arm": "primitive",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 4,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 216.55177413881333,
+          "wall": 0.011497166997287422,
+          "total_harness": 0.025450959015870467
+        },
+        {
+          "arm": "primitive",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 4,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 236.16855236899963,
+          "wall": 0.01044716700562276,
+          "total_harness": 0.02437083297991194
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 234.7218932533355,
+          "wall": 0.010528500017244369,
+          "total_harness": 0.025799541996093467
+        },
+        {
+          "arm": "composed",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 259.7393154034416,
+          "wall": 0.009251499985111877,
+          "total_harness": 0.025407458015251905
+        },
+        {
+          "arm": "desired",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 209.4301803183202,
+          "wall": 0.011640832992270589,
+          "total_harness": 0.02569341700291261
+        },
+        {
+          "arm": "forced",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 234.16918732663981,
+          "wall": 0.010634292004397139,
+          "total_harness": 0.02437133400235325
+        },
+        {
+          "arm": "forced",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 221.5241421977477,
+          "wall": 0.011156291991937906,
+          "total_harness": 0.027050000004237518
+        },
+        {
+          "arm": "desired",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 248.42920259214952,
+          "wall": 0.009908500011079013,
+          "total_harness": 0.024634291999973357
+        },
+        {
+          "arm": "composed",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 237.59395241616576,
+          "wall": 0.0103288340033032,
+          "total_harness": 0.02326520800124854
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 241.47945756703922,
+          "wall": 0.01015962500241585,
+          "total_harness": 0.02309695800067857
+        },
+        {
+          "arm": "primitive",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 4,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 235.64683009633362,
+          "wall": 0.010558790992945433,
+          "total_harness": 0.026587790984194726
+        }
+      ]
+    },
+    "chain5": {
+      "layout": [
+        [
+          0,
+          0,
+          [
+            [
+              -1,
+              0
+            ]
+          ]
+        ],
+        [
+          1,
+          1,
+          [
+            [
+              0,
+              0
+            ]
+          ]
+        ],
+        [
+          2,
+          2,
+          [
+            [
+              1,
+              0
+            ]
+          ]
+        ],
+        [
+          3,
+          3,
+          [
+            [
+              2,
+              0
+            ]
+          ]
+        ],
+        [
+          4,
+          4,
+          [
+            [
+              3,
+              0
+            ]
+          ]
+        ]
+      ],
+      "static_signature": "e34f11a82747c2057b2f2225d87c08c2e20ac422918ea35277f250b2c03ee71c",
+      "oracle": {
+        "checks": {
+          "state_sha": true,
+          "schedule": true,
+          "writes": true,
+          "rhs": true,
+          "resumes": true,
+          "events": true
+        },
+        "accepted": 5,
+        "graph": {
+          "absent_returns": 0,
+          "accepted_steps": 4,
+          "attached_roots": 0,
+          "boundary_reads": 1,
+          "completed_layouts": {
+            "0": 1
+          },
+          "completed_sizes": {
+            "5": 1
+          },
+          "invalid_boundary": 0,
+          "issued_layouts": {
+            "0": 1
+          },
+          "issued_steps": 4,
+          "missing_returns": 0,
+          "rejected_groups": 0,
+          "retired_returns": 0,
+          "signed_layouts": 1
+        },
+        "external_requests": 1,
+        "native_batches": 6
+      },
+      "zero_mse": 8.546893119812012,
+      "primitive_fit_mse": 7.625338554382324,
+      "composed_mse": 4.742247581481934,
+      "runs": [
+        {
+          "arm": "primitive",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 6,
+            "network_actions": 6
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.8333333333333334,
+          "effective": 5,
+          "eps": 194.3162496703583,
+          "wall": 0.01234379198285751,
+          "total_harness": 0.039435916987713426
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 6,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 4,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.8333333333333334,
+          "effective": 5,
+          "eps": 391.630849397201,
+          "wall": 0.010434916999656707,
+          "total_harness": 0.025359040999319404
+        },
+        {
+          "arm": "composed",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 6,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 4,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.8333333333333334,
+          "effective": 5,
+          "eps": 355.76110636234756,
+          "wall": 0.011517000006278977,
+          "total_harness": 0.026079542003571987
+        },
+        {
+          "arm": "desired",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 6,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 6
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.8333333333333334,
+          "effective": 5,
+          "eps": 361.7519646287101,
+          "wall": 0.011427707999246195,
+          "total_harness": 0.027066832990385592
+        },
+        {
+          "arm": "forced",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 6,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 4,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.8333333333333334,
+          "effective": 5,
+          "eps": 380.52836384667995,
+          "wall": 0.010837624984560534,
+          "total_harness": 0.024962666997453198
+        },
+        {
+          "arm": "forced",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 6,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 4,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.8333333333333334,
+          "effective": 5,
+          "eps": 388.99405143638677,
+          "wall": 0.010460958001203835,
+          "total_harness": 0.024726000003283843
+        },
+        {
+          "arm": "desired",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 6,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 6
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.8333333333333334,
+          "effective": 5,
+          "eps": 375.9587043814679,
+          "wall": 0.01113254198571667,
+          "total_harness": 0.02539824999985285
+        },
+        {
+          "arm": "composed",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 6,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 4,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.8333333333333334,
+          "effective": 5,
+          "eps": 297.54820256967076,
+          "wall": 0.014092917001107708,
+          "total_harness": 0.029463916987879202
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 6,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 4,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.8333333333333334,
+          "effective": 5,
+          "eps": 349.67377537154437,
+          "wall": 0.012013667001156136,
+          "total_harness": 0.026158417022088543
+        },
+        {
+          "arm": "primitive",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 6,
+            "network_actions": 6
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.8333333333333334,
+          "effective": 5,
+          "eps": 383.4331133135119,
+          "wall": 0.010870333993807435,
+          "total_harness": 0.025795207999181002
+        },
+        {
+          "arm": "primitive",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 6,
+            "network_actions": 6
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.8333333333333334,
+          "effective": 5,
+          "eps": 367.295967407199,
+          "wall": 0.011372874985681847,
+          "total_harness": 0.024286959000164643
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 6,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 4,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.8333333333333334,
+          "effective": 5,
+          "eps": 369.714250478952,
+          "wall": 0.011121292016468942,
+          "total_harness": 0.026100457995198667
+        },
+        {
+          "arm": "composed",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 6,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 4,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.8333333333333334,
+          "effective": 5,
+          "eps": 387.7559695333707,
+          "wall": 0.010770749999210238,
+          "total_harness": 0.026657541980966926
+        },
+        {
+          "arm": "desired",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 6,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 6
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.8333333333333334,
+          "effective": 5,
+          "eps": 351.81125761428876,
+          "wall": 0.011708166013704613,
+          "total_harness": 0.028346208011498675
+        },
+        {
+          "arm": "forced",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 6,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 4,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.8333333333333334,
+          "effective": 5,
+          "eps": 377.34305456393344,
+          "wall": 0.01083220899454318,
+          "total_harness": 0.025424416991882026
+        },
+        {
+          "arm": "forced",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 6,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 4,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.8333333333333334,
+          "effective": 5,
+          "eps": 360.1494618230729,
+          "wall": 0.011574292002478614,
+          "total_harness": 0.024505000008502975
+        },
+        {
+          "arm": "desired",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 6,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 6
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.8333333333333334,
+          "effective": 5,
+          "eps": 400.00799984837766,
+          "wall": 0.010347083007218316,
+          "total_harness": 0.02518558400333859
+        },
+        {
+          "arm": "composed",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 6,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 4,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.8333333333333334,
+          "effective": 5,
+          "eps": 372.3377753951061,
+          "wall": 0.011199917003978044,
+          "total_harness": 0.02526216598926112
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 6,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 4,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.8333333333333334,
+          "effective": 5,
+          "eps": 355.86451536519195,
+          "wall": 0.011663750017760321,
+          "total_harness": 0.026836167002329603
+        },
+        {
+          "arm": "primitive",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 6,
+            "network_actions": 6
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.8333333333333334,
+          "effective": 5,
+          "eps": 328.87795801007786,
+          "wall": 0.012528082996141165,
+          "total_harness": 0.027916417020605877
+        }
+      ]
+    },
+    "diamond": {
+      "layout": [
+        [
+          0,
+          0,
+          [
+            [
+              -1,
+              0
+            ]
+          ]
+        ],
+        [
+          1,
+          1,
+          [
+            [
+              0,
+              0
+            ]
+          ]
+        ],
+        [
+          2,
+          2,
+          [
+            [
+              0,
+              0
+            ]
+          ]
+        ],
+        [
+          3,
+          3,
+          [
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ]
+        ]
+      ],
+      "static_signature": "b6893aa19e574b53bd4bfae6ba127b760c13092399b0a0cdad4ab74a10e345a0",
+      "oracle": {
+        "checks": {
+          "state_sha": true,
+          "schedule": true,
+          "writes": true,
+          "rhs": true,
+          "resumes": true,
+          "events": true
+        },
+        "accepted": 4,
+        "graph": {
+          "absent_returns": 0,
+          "accepted_steps": 3,
+          "attached_roots": 0,
+          "boundary_reads": 1,
+          "completed_layouts": {
+            "0": 1
+          },
+          "completed_sizes": {
+            "4": 1
+          },
+          "invalid_boundary": 0,
+          "issued_layouts": {
+            "0": 1
+          },
+          "issued_steps": 3,
+          "missing_returns": 0,
+          "rejected_groups": 0,
+          "retired_returns": 0,
+          "signed_layouts": 1
+        },
+        "external_requests": 1,
+        "native_batches": 5
+      },
+      "zero_mse": 4.098165035247803,
+      "primitive_fit_mse": 2.720093250274658,
+      "composed_mse": 2.435222625732422,
+      "runs": [
+        {
+          "arm": "primitive",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 7,
+            "network_actions": 5
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 153.3514479087235,
+          "wall": 0.012499459000537172,
+          "total_harness": 0.03832829199382104
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 3,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 320.0885497619902,
+          "wall": 0.010122916981345043,
+          "total_harness": 0.025784124998608604
+        },
+        {
+          "arm": "composed",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 3,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 317.25259275236056,
+          "wall": 0.010311666992492974,
+          "total_harness": 0.02424483301001601
+        },
+        {
+          "arm": "desired",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 5
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 293.39313875238645,
+          "wall": 0.011244124994846061,
+          "total_harness": 0.024837458011461422
+        },
+        {
+          "arm": "forced",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 3,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 308.59632867669586,
+          "wall": 0.010621709021506831,
+          "total_harness": 0.02520704100606963
+        },
+        {
+          "arm": "forced",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 3,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 292.9481805146025,
+          "wall": 0.01130212499992922,
+          "total_harness": 0.026699500012909994
+        },
+        {
+          "arm": "desired",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 5
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 315.89129065473895,
+          "wall": 0.010499750002054498,
+          "total_harness": 0.024924084020312876
+        },
+        {
+          "arm": "composed",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 3,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 285.8393402797758,
+          "wall": 0.011547208996489644,
+          "total_harness": 0.026411458005895838
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 3,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 318.93371486363424,
+          "wall": 0.010342000023229048,
+          "total_harness": 0.02502020899555646
+        },
+        {
+          "arm": "primitive",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 7,
+            "network_actions": 5
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 309.85132763343375,
+          "wall": 0.010627292009303346,
+          "total_harness": 0.023760042007779703
+        },
+        {
+          "arm": "primitive",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 7,
+            "network_actions": 5
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 354.68724981861493,
+          "wall": 0.00901249999878928,
+          "total_harness": 0.02397866701357998
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 3,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 314.9130953233778,
+          "wall": 0.010565959004452452,
+          "total_harness": 0.022811542003182694
+        },
+        {
+          "arm": "composed",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 3,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 326.45066531622484,
+          "wall": 0.01015179097885266,
+          "total_harness": 0.02451962500344962
+        },
+        {
+          "arm": "desired",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 5
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 333.3541676552987,
+          "wall": 0.00987704101135023,
+          "total_harness": 0.02265575001365505
+        },
+        {
+          "arm": "forced",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 3,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 305.7597648903075,
+          "wall": 0.010859750007512048,
+          "total_harness": 0.025781125004868954
+        },
+        {
+          "arm": "forced",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 3,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 302.75220697003357,
+          "wall": 0.010777666990179569,
+          "total_harness": 0.024675041990121827
+        },
+        {
+          "arm": "desired",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 5
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 287.25398762108136,
+          "wall": 0.011674874986056238,
+          "total_harness": 0.02865670798928477
+        },
+        {
+          "arm": "composed",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 3,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 237.56261725184635,
+          "wall": 0.014233708003303036,
+          "total_harness": 0.031355207989690825
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 3,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 269.834979363455,
+          "wall": 0.012524041987489909,
+          "total_harness": 0.028351290995487943
+        },
+        {
+          "arm": "primitive",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 7,
+            "network_actions": 5
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 260.4526992929957,
+          "wall": 0.012782499979948625,
+          "total_harness": 0.0315403749991674
+        }
+      ]
+    },
+    "shared": {
+      "layout": [
+        [
+          0,
+          0,
+          [
+            [
+              -1,
+              0
+            ]
+          ]
+        ],
+        [
+          1,
+          1,
+          [
+            [
+              0,
+              0
+            ]
+          ]
+        ],
+        [
+          2,
+          2,
+          [
+            [
+              0,
+              0
+            ],
+            [
+              -1,
+              0
+            ]
+          ]
+        ],
+        [
+          3,
+          3,
+          [
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ]
+        ]
+      ],
+      "static_signature": "3c59b62ce76c58b9189d4ba04e808c9834138ea622a6bb384a26c639b486b023",
+      "oracle": {
+        "checks": {
+          "state_sha": true,
+          "schedule": true,
+          "writes": true,
+          "rhs": true,
+          "resumes": true,
+          "events": true
+        },
+        "accepted": 4,
+        "graph": {
+          "absent_returns": 0,
+          "accepted_steps": 3,
+          "attached_roots": 0,
+          "boundary_reads": 1,
+          "completed_layouts": {
+            "0": 1
+          },
+          "completed_sizes": {
+            "4": 1
+          },
+          "invalid_boundary": 0,
+          "issued_layouts": {
+            "0": 1
+          },
+          "issued_steps": 3,
+          "missing_returns": 0,
+          "rejected_groups": 0,
+          "retired_returns": 0,
+          "signed_layouts": 1
+        },
+        "external_requests": 1,
+        "native_batches": 5
+      },
+      "zero_mse": 5.743194580078125,
+      "primitive_fit_mse": 4.771681785583496,
+      "composed_mse": 2.8488292694091797,
+      "runs": [
+        {
+          "arm": "primitive",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 8,
+            "network_actions": 5
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 141.03812875088508,
+          "wall": 0.014426000008825213,
+          "total_harness": 0.04460329201538116
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 8,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 3,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 238.16139904681725,
+          "wall": 0.013823040993884206,
+          "total_harness": 0.0332477499905508
+        },
+        {
+          "arm": "composed",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 8,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 3,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 257.366438636905,
+          "wall": 0.012715083983493969,
+          "total_harness": 0.03036324999993667
+        },
+        {
+          "arm": "desired",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 8,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 5
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 255.67818092965007,
+          "wall": 0.012825957994209602,
+          "total_harness": 0.028745541989337653
+        },
+        {
+          "arm": "forced",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 8,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 3,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 239.1766440599801,
+          "wall": 0.013918749988079071,
+          "total_harness": 0.031458749988814816
+        },
+        {
+          "arm": "forced",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 8,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 3,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 252.8418315955387,
+          "wall": 0.01326362500549294,
+          "total_harness": 0.02860175000387244
+        },
+        {
+          "arm": "desired",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 8,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 5
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 295.7121662679962,
+          "wall": 0.011233041994273663,
+          "total_harness": 0.025877000007312745
+        },
+        {
+          "arm": "composed",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 8,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 3,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 299.2677366847162,
+          "wall": 0.01093816600041464,
+          "total_harness": 0.024073542008409277
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 8,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 3,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 293.93573092500844,
+          "wall": 0.011237667000386864,
+          "total_harness": 0.026532040996244177
+        },
+        {
+          "arm": "primitive",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 8,
+            "network_actions": 5
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 269.1850543590688,
+          "wall": 0.01219858299009502,
+          "total_harness": 0.029426541994325817
+        },
+        {
+          "arm": "primitive",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 8,
+            "network_actions": 5
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 245.57453191889735,
+          "wall": 0.013857834012014791,
+          "total_harness": 0.029636999999638647
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 8,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 3,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 284.6612224020096,
+          "wall": 0.011378041002899408,
+          "total_harness": 0.027609457989456132
+        },
+        {
+          "arm": "composed",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 8,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 3,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 297.71779951910236,
+          "wall": 0.011152667022543028,
+          "total_harness": 0.028702667012112215
+        },
+        {
+          "arm": "desired",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 8,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 5
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 279.7610305419625,
+          "wall": 0.011783541995100677,
+          "total_harness": 0.025834040978224948
+        },
+        {
+          "arm": "forced",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 8,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 3,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 269.1737327813159,
+          "wall": 0.012381540989736095,
+          "total_harness": 0.028058666997822
+        },
+        {
+          "arm": "forced",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 8,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 3,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 283.88591826966285,
+          "wall": 0.011648000014247373,
+          "total_harness": 0.026817333011422306
+        },
+        {
+          "arm": "desired",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 8,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 5
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 340.3917537003006,
+          "wall": 0.00947641598759219,
+          "total_harness": 0.02312370901927352
+        },
+        {
+          "arm": "composed",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 8,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 3,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 328.32298735066814,
+          "wall": 0.009898292017169297,
+          "total_harness": 0.02315162497689016
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 8,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 3,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 325.5947864088452,
+          "wall": 0.010157750017242506,
+          "total_harness": 0.02334912499645725
+        },
+        {
+          "arm": "primitive",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 8,
+            "network_actions": 5
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.8,
+          "effective": 4,
+          "eps": 272.632780900673,
+          "wall": 0.012301999988267198,
+          "total_harness": 0.02833691699197516
+        }
+      ]
+    },
+    "chain3-guard_true": {
+      "layout": [
+        [
+          0,
+          0,
+          [
+            [
+              -1,
+              0
+            ]
+          ]
+        ],
+        [
+          1,
+          1,
+          [
+            [
+              0,
+              0
+            ]
+          ]
+        ],
+        [
+          2,
+          2,
+          [
+            [
+              1,
+              1
+            ]
+          ]
+        ]
+      ],
+      "static_signature": "708ced962fce20105f97f8cbd2330d8e23fbbe221ed7daf6d36ab5cb3aea1320",
+      "oracle": {
+        "checks": {
+          "state_sha": true,
+          "schedule": true,
+          "writes": true,
+          "rhs": true,
+          "resumes": true,
+          "events": true
+        },
+        "accepted": 3,
+        "graph": {
+          "absent_returns": 0,
+          "accepted_steps": 2,
+          "attached_roots": 0,
+          "boundary_reads": 1,
+          "completed_layouts": {
+            "0": 1
+          },
+          "completed_sizes": {
+            "3": 1
+          },
+          "invalid_boundary": 0,
+          "issued_layouts": {
+            "0": 1
+          },
+          "issued_steps": 2,
+          "missing_returns": 0,
+          "rejected_groups": 0,
+          "retired_returns": 0,
+          "signed_layouts": 1
+        },
+        "external_requests": 1,
+        "native_batches": 4
+      },
+      "zero_mse": 2.9197394847869873,
+      "primitive_fit_mse": 2.418921709060669,
+      "composed_mse": 1.7055002450942993,
+      "runs": [
+        {
+          "arm": "primitive",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 4,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 127.25029956143594,
+          "wall": 0.010626167000737041,
+          "total_harness": 0.03651304100640118
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 244.1356580476547,
+          "wall": 0.009973333013476804,
+          "total_harness": 0.023893750010756776
+        },
+        {
+          "arm": "composed",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 203.6308468455848,
+          "wall": 0.012273707980057225,
+          "total_harness": 0.028111624997109175
+        },
+        {
+          "arm": "desired",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 217.02894473996744,
+          "wall": 0.011269707989413291,
+          "total_harness": 0.0269497919944115
+        },
+        {
+          "arm": "forced",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 237.0378234394001,
+          "wall": 0.010107583017088473,
+          "total_harness": 0.02640800000517629
+        },
+        {
+          "arm": "forced",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 206.76523447988987,
+          "wall": 0.012069666991010308,
+          "total_harness": 0.027330042008543387
+        },
+        {
+          "arm": "desired",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 238.38298158632853,
+          "wall": 0.010292040999047458,
+          "total_harness": 0.022791958996094763
+        },
+        {
+          "arm": "composed",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 228.34670053152885,
+          "wall": 0.01066920900484547,
+          "total_harness": 0.025296209001680836
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 232.50482566560467,
+          "wall": 0.010738207987742499,
+          "total_harness": 0.026713083003414795
+        },
+        {
+          "arm": "primitive",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 4,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 226.44430117459342,
+          "wall": 0.010909875010838732,
+          "total_harness": 0.02522629202576354
+        },
+        {
+          "arm": "primitive",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 4,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 221.90649029544593,
+          "wall": 0.011406792007619515,
+          "total_harness": 0.027994290983770043
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 200.1072707847378,
+          "wall": 0.012495667004259303,
+          "total_harness": 0.029706459026783705
+        },
+        {
+          "arm": "composed",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 168.88127264011146,
+          "wall": 0.015358167001977563,
+          "total_harness": 0.03251991601428017
+        },
+        {
+          "arm": "desired",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 217.7878197798914,
+          "wall": 0.011589459027163684,
+          "total_harness": 0.028392292006174102
+        },
+        {
+          "arm": "forced",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 183.74237658117485,
+          "wall": 0.013764874980552122,
+          "total_harness": 0.03210004200809635
+        },
+        {
+          "arm": "forced",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 176.96504961040404,
+          "wall": 0.014391915989108384,
+          "total_harness": 0.03178966700215824
+        },
+        {
+          "arm": "desired",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 194.12397087711483,
+          "wall": 0.012620833003893495,
+          "total_harness": 0.029218833020422608
+        },
+        {
+          "arm": "composed",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 187.16757853723882,
+          "wall": 0.01335937500698492,
+          "total_harness": 0.03460291598457843
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 4,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 2,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 190.55534047072902,
+          "wall": 0.012881457980256528,
+          "total_harness": 0.031135124998399988
+        },
+        {
+          "arm": "primitive",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 4,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.75,
+          "effective": 3,
+          "eps": 200.1924112779242,
+          "wall": 0.012393125012749806,
+          "total_harness": 0.029383040993707255
+        }
+      ]
+    },
+    "chain3-guard_false": {
+      "layout": [
+        [
+          0,
+          0,
+          [
+            [
+              -1,
+              0
+            ]
+          ]
+        ],
+        [
+          1,
+          1,
+          [
+            [
+              0,
+              0
+            ]
+          ]
+        ],
+        [
+          2,
+          2,
+          [
+            [
+              1,
+              1
+            ]
+          ]
+        ]
+      ],
+      "static_signature": "708ced962fce20105f97f8cbd2330d8e23fbbe221ed7daf6d36ab5cb3aea1320",
+      "oracle": {
+        "complete_teacher_instance": false
+      },
+      "zero_mse": 0.3259683847427368,
+      "primitive_fit_mse": 0.5584032535552979,
+      "composed_mse": 0.8688576221466064,
+      "runs": [
+        {
+          "arm": "primitive",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 2,
+            "network_actions": 2
+          },
+          "same_end": true,
+          "paid": 2,
+          "ept": 0.5,
+          "effective": 1,
+          "eps": 36.89690940263666,
+          "wall": 0.012416791025316343,
+          "total_harness": 0.046170499990694225
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 2,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 1,
+            "instantiated": 1,
+            "lowered_suffix": 1,
+            "suffix_rejected": 1
+          },
+          "same_end": true,
+          "paid": 2,
+          "ept": 0.5,
+          "effective": 1,
+          "eps": 66.11333775340407,
+          "wall": 0.012263290991540998,
+          "total_harness": 0.03078079200349748
+        },
+        {
+          "arm": "composed",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 2,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 1,
+            "instantiated": 1,
+            "lowered_suffix": 1,
+            "suffix_rejected": 1
+          },
+          "same_end": true,
+          "paid": 2,
+          "ept": 0.5,
+          "effective": 1,
+          "eps": 66.07529284644703,
+          "wall": 0.012480749981477857,
+          "total_harness": 0.03134108302765526
+        },
+        {
+          "arm": "desired",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 2,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 2
+          },
+          "same_end": true,
+          "paid": 2,
+          "ept": 0.5,
+          "effective": 1,
+          "eps": 63.412546187330015,
+          "wall": 0.01295583401224576,
+          "total_harness": 0.03105224997852929
+        },
+        {
+          "arm": "forced",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 2,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 1,
+            "instantiated": 1,
+            "lowered_suffix": 1,
+            "suffix_rejected": 1
+          },
+          "same_end": true,
+          "paid": 2,
+          "ept": 0.5,
+          "effective": 1,
+          "eps": 72.15723062673806,
+          "wall": 0.010993832984240726,
+          "total_harness": 0.03016629201010801
+        },
+        {
+          "arm": "forced",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 2,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 1,
+            "instantiated": 1,
+            "lowered_suffix": 1,
+            "suffix_rejected": 1
+          },
+          "same_end": true,
+          "paid": 2,
+          "ept": 0.5,
+          "effective": 1,
+          "eps": 69.77534927839058,
+          "wall": 0.011307834007311612,
+          "total_harness": 0.02736562499194406
+        },
+        {
+          "arm": "desired",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 2,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 2
+          },
+          "same_end": true,
+          "paid": 2,
+          "ept": 0.5,
+          "effective": 1,
+          "eps": 79.17969827401416,
+          "wall": 0.010267750010825694,
+          "total_harness": 0.024979499983601272
+        },
+        {
+          "arm": "composed",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 2,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 1,
+            "instantiated": 1,
+            "lowered_suffix": 1,
+            "suffix_rejected": 1
+          },
+          "same_end": true,
+          "paid": 2,
+          "ept": 0.5,
+          "effective": 1,
+          "eps": 75.41810282452055,
+          "wall": 0.010817500005941838,
+          "total_harness": 0.028970624989597127
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 2,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 1,
+            "instantiated": 1,
+            "lowered_suffix": 1,
+            "suffix_rejected": 1
+          },
+          "same_end": true,
+          "paid": 2,
+          "ept": 0.5,
+          "effective": 1,
+          "eps": 75.45650996564636,
+          "wall": 0.010609166987705976,
+          "total_harness": 0.026432999991811812
+        },
+        {
+          "arm": "primitive",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 2,
+            "network_actions": 2
+          },
+          "same_end": true,
+          "paid": 2,
+          "ept": 0.5,
+          "effective": 1,
+          "eps": 79.6413463450792,
+          "wall": 0.010325708019081503,
+          "total_harness": 0.025738249998539686
+        },
+        {
+          "arm": "primitive",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 2,
+            "network_actions": 2
+          },
+          "same_end": true,
+          "paid": 2,
+          "ept": 0.5,
+          "effective": 1,
+          "eps": 81.9560146543622,
+          "wall": 0.009715584019431844,
+          "total_harness": 0.02627758399466984
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 2,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 1,
+            "instantiated": 1,
+            "lowered_suffix": 1,
+            "suffix_rejected": 1
+          },
+          "same_end": true,
+          "paid": 2,
+          "ept": 0.5,
+          "effective": 1,
+          "eps": 74.87996007673485,
+          "wall": 0.011032999987946823,
+          "total_harness": 0.03004995800438337
+        },
+        {
+          "arm": "composed",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 2,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 1,
+            "instantiated": 1,
+            "lowered_suffix": 1,
+            "suffix_rejected": 1
+          },
+          "same_end": true,
+          "paid": 2,
+          "ept": 0.5,
+          "effective": 1,
+          "eps": 75.04033239573626,
+          "wall": 0.010932791978120804,
+          "total_harness": 0.02691737498389557
+        },
+        {
+          "arm": "desired",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 2,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 2
+          },
+          "same_end": true,
+          "paid": 2,
+          "ept": 0.5,
+          "effective": 1,
+          "eps": 65.47895270137954,
+          "wall": 0.01280695799505338,
+          "total_harness": 0.02798900002380833
+        },
+        {
+          "arm": "forced",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 2,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 1,
+            "instantiated": 1,
+            "lowered_suffix": 1,
+            "suffix_rejected": 1
+          },
+          "same_end": true,
+          "paid": 2,
+          "ept": 0.5,
+          "effective": 1,
+          "eps": 64.71950689854827,
+          "wall": 0.013073624984826893,
+          "total_harness": 0.0295744999893941
+        },
+        {
+          "arm": "forced",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 2,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 1,
+            "instantiated": 1,
+            "lowered_suffix": 1,
+            "suffix_rejected": 1
+          },
+          "same_end": true,
+          "paid": 2,
+          "ept": 0.5,
+          "effective": 1,
+          "eps": 74.14318091168842,
+          "wall": 0.011054167000111192,
+          "total_harness": 0.026431666017742828
+        },
+        {
+          "arm": "desired",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 2,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 2
+          },
+          "same_end": true,
+          "paid": 2,
+          "ept": 0.5,
+          "effective": 1,
+          "eps": 69.19297603380525,
+          "wall": 0.011906125000678003,
+          "total_harness": 0.027825540979392827
+        },
+        {
+          "arm": "composed",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 2,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 1,
+            "instantiated": 1,
+            "lowered_suffix": 1,
+            "suffix_rejected": 1
+          },
+          "same_end": true,
+          "paid": 2,
+          "ept": 0.5,
+          "effective": 1,
+          "eps": 68.52267645717188,
+          "wall": 0.011799583997344598,
+          "total_harness": 0.028057125018676743
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 2,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 1,
+            "instantiated": 1,
+            "lowered_suffix": 1,
+            "suffix_rejected": 1
+          },
+          "same_end": true,
+          "paid": 2,
+          "ept": 0.5,
+          "effective": 1,
+          "eps": 67.55425288363502,
+          "wall": 0.012346667004749179,
+          "total_harness": 0.04051462499774061
+        },
+        {
+          "arm": "primitive",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 2,
+            "network_actions": 2
+          },
+          "same_end": true,
+          "paid": 2,
+          "ept": 0.5,
+          "effective": 1,
+          "eps": 60.25699369985536,
+          "wall": 0.012885584001196548,
+          "total_harness": 0.030413250002311543
+        }
+      ]
+    },
+    "chain3-partial": {
+      "layout": [
+        [
+          0,
+          0,
+          [
+            [
+              -1,
+              0
+            ]
+          ]
+        ],
+        [
+          1,
+          1,
+          [
+            [
+              0,
+              0
+            ]
+          ]
+        ],
+        [
+          2,
+          2,
+          [
+            [
+              1,
+              0
+            ]
+          ]
+        ]
+      ],
+      "static_signature": "877320d396c92086535422f3a13ec7cda973e5a28614b77758a46493424f7c0a",
+      "oracle": {
+        "checks": {
+          "state_sha": true,
+          "schedule": true,
+          "writes": true,
+          "rhs": true,
+          "resumes": true,
+          "events": true
+        },
+        "accepted": 3,
+        "graph": {
+          "absent_returns": 0,
+          "accepted_steps": 2,
+          "attached_roots": 0,
+          "boundary_reads": 1,
+          "completed_layouts": {
+            "0": 1
+          },
+          "completed_sizes": {
+            "3": 1
+          },
+          "invalid_boundary": 0,
+          "issued_layouts": {
+            "0": 1
+          },
+          "issued_steps": 2,
+          "missing_returns": 0,
+          "rejected_groups": 0,
+          "retired_returns": 0,
+          "signed_layouts": 1
+        },
+        "external_requests": 1,
+        "native_batches": 4
+      },
+      "zero_mse": 2.512620449066162,
+      "primitive_fit_mse": 1.5434091091156006,
+      "composed_mse": 1.6257516145706177,
+      "runs": [
+        {
+          "arm": "primitive",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 5,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.5,
+          "effective": 2,
+          "eps": 68.15432329892691,
+          "wall": 0.014417083002626896,
+          "total_harness": 0.04403274998185225
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 5,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 3,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.4,
+          "effective": 2,
+          "eps": 139.48905989446834,
+          "wall": 0.011696250003296882,
+          "total_harness": 0.028341917000943795
+        },
+        {
+          "arm": "composed",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 5,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 3,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.4,
+          "effective": 2,
+          "eps": 127.74689373217883,
+          "wall": 0.013005540997255594,
+          "total_harness": 0.030433875013841316
+        },
+        {
+          "arm": "desired",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 5,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.5,
+          "effective": 2,
+          "eps": 145.28900039702552,
+          "wall": 0.01137908300734125,
+          "total_harness": 0.02696191699942574
+        },
+        {
+          "arm": "forced",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 5,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 3,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.4,
+          "effective": 2,
+          "eps": 135.93729388019528,
+          "wall": 0.012341624998953193,
+          "total_harness": 0.02841075000469573
+        },
+        {
+          "arm": "forced",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 5,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 3,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.4,
+          "effective": 2,
+          "eps": 135.0446552193401,
+          "wall": 0.012427290988853201,
+          "total_harness": 0.029663207998964936
+        },
+        {
+          "arm": "desired",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 5,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.5,
+          "effective": 2,
+          "eps": 148.321640629067,
+          "wall": 0.011272999981883913,
+          "total_harness": 0.027764458005549386
+        },
+        {
+          "arm": "composed",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 5,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 3,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.4,
+          "effective": 2,
+          "eps": 146.10893307591374,
+          "wall": 0.011164291994646192,
+          "total_harness": 0.026087333011673763
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 5,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 3,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.4,
+          "effective": 2,
+          "eps": 128.56672211585317,
+          "wall": 0.013164124975446612,
+          "total_harness": 0.03097987500950694
+        },
+        {
+          "arm": "primitive",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 5,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.5,
+          "effective": 2,
+          "eps": 149.12389346250131,
+          "wall": 0.010935250000329688,
+          "total_harness": 0.024975292006274685
+        },
+        {
+          "arm": "primitive",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 5,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.5,
+          "effective": 2,
+          "eps": 158.51995658153308,
+          "wall": 0.010451749985804781,
+          "total_harness": 0.025410083995666355
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 5,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 3,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.4,
+          "effective": 2,
+          "eps": 175.51107937448887,
+          "wall": 0.009180416993331164,
+          "total_harness": 0.023284625000087544
+        },
+        {
+          "arm": "composed",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 5,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 3,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.4,
+          "effective": 2,
+          "eps": 147.44505371889898,
+          "wall": 0.011278582998784259,
+          "total_harness": 0.027100291976239532
+        },
+        {
+          "arm": "desired",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 5,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.5,
+          "effective": 2,
+          "eps": 152.40029697615083,
+          "wall": 0.010614333994453773,
+          "total_harness": 0.02455245901364833
+        },
+        {
+          "arm": "forced",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 5,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 3,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.4,
+          "effective": 2,
+          "eps": 145.0251864597132,
+          "wall": 0.011573541996767744,
+          "total_harness": 0.02715254097711295
+        },
+        {
+          "arm": "forced",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 5,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 3,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.4,
+          "effective": 2,
+          "eps": 150.96522640672566,
+          "wall": 0.010804417019244283,
+          "total_harness": 0.023813707986846566
+        },
+        {
+          "arm": "desired",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 5,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.5,
+          "effective": 2,
+          "eps": 157.27443403041133,
+          "wall": 0.010419500002171844,
+          "total_harness": 0.025040167005499825
+        },
+        {
+          "arm": "composed",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 5,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 3,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.4,
+          "effective": 2,
+          "eps": 157.3785890423874,
+          "wall": 0.010394791985163465,
+          "total_harness": 0.023661082988837734
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 5,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 3,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 5,
+          "ept": 0.4,
+          "effective": 2,
+          "eps": 176.57834766298177,
+          "wall": 0.0093061669904273,
+          "total_harness": 0.024529792019166052
+        },
+        {
+          "arm": "primitive",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 5,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.5,
+          "effective": 2,
+          "eps": 179.1405837003043,
+          "wall": 0.008983208012068644,
+          "total_harness": 0.022923040989553556
+        }
+      ]
+    },
+    "chain3-duplicate": {
+      "layout": [
+        [
+          0,
+          0,
+          [
+            [
+              -1,
+              0
+            ]
+          ]
+        ],
+        [
+          1,
+          1,
+          [
+            [
+              0,
+              0
+            ]
+          ]
+        ],
+        [
+          2,
+          2,
+          [
+            [
+              1,
+              0
+            ]
+          ]
+        ]
+      ],
+      "static_signature": "877320d396c92086535422f3a13ec7cda973e5a28614b77758a46493424f7c0a",
+      "oracle": {
+        "checks": {
+          "state_sha": true,
+          "schedule": true,
+          "writes": true,
+          "rhs": true,
+          "resumes": true,
+          "events": true
+        },
+        "accepted": 3,
+        "graph": {
+          "absent_returns": 0,
+          "accepted_steps": 2,
+          "attached_roots": 0,
+          "boundary_reads": 1,
+          "completed_layouts": {
+            "0": 1
+          },
+          "completed_sizes": {
+            "3": 1
+          },
+          "invalid_boundary": 0,
+          "issued_layouts": {
+            "0": 1
+          },
+          "issued_steps": 2,
+          "missing_returns": 0,
+          "rejected_groups": 0,
+          "retired_returns": 0,
+          "signed_layouts": 1
+        },
+        "external_requests": 1,
+        "native_batches": 4
+      },
+      "zero_mse": 2.987699270248413,
+      "primitive_fit_mse": 1.9888103008270264,
+      "composed_mse": 3.0685975551605225,
+      "runs": [
+        {
+          "arm": "primitive",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 7,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.0,
+          "effective": 0,
+          "eps": 0.0,
+          "wall": 0.01507395799853839,
+          "total_harness": 0.044756957999197766
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 4,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.0,
+          "effective": 0,
+          "eps": 0.0,
+          "wall": 0.014562750002369285,
+          "total_harness": 0.03202891699038446
+        },
+        {
+          "arm": "composed",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 4,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.0,
+          "effective": 0,
+          "eps": 0.0,
+          "wall": 0.011437374982051551,
+          "total_harness": 0.025447666994296014
+        },
+        {
+          "arm": "desired",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.0,
+          "effective": 0,
+          "eps": 0.0,
+          "wall": 0.01060262499959208,
+          "total_harness": 0.025893958983942866
+        },
+        {
+          "arm": "forced",
+          "block": 0,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 4,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.0,
+          "effective": 0,
+          "eps": 0.0,
+          "wall": 0.010468207998201251,
+          "total_harness": 0.022942541021620855
+        },
+        {
+          "arm": "forced",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 4,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.0,
+          "effective": 0,
+          "eps": 0.0,
+          "wall": 0.011523708002641797,
+          "total_harness": 0.02595058298902586
+        },
+        {
+          "arm": "desired",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.0,
+          "effective": 0,
+          "eps": 0.0,
+          "wall": 0.011283667001407593,
+          "total_harness": 0.024342874996364117
+        },
+        {
+          "arm": "composed",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 4,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.0,
+          "effective": 0,
+          "eps": 0.0,
+          "wall": 0.011434457992436364,
+          "total_harness": 0.025237458001356572
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 4,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.0,
+          "effective": 0,
+          "eps": 0.0,
+          "wall": 0.009275165997678414,
+          "total_harness": 0.025391625007614493
+        },
+        {
+          "arm": "primitive",
+          "block": 1,
+          "counts": {
+            "pointer_reads": 7,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.0,
+          "effective": 0,
+          "eps": 0.0,
+          "wall": 0.01262366701848805,
+          "total_harness": 0.029179375007515773
+        },
+        {
+          "arm": "primitive",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 7,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.0,
+          "effective": 0,
+          "eps": 0.0,
+          "wall": 0.012162749975686893,
+          "total_harness": 0.028158500004792586
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 4,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.0,
+          "effective": 0,
+          "eps": 0.0,
+          "wall": 0.012295082997297868,
+          "total_harness": 0.02886529199895449
+        },
+        {
+          "arm": "composed",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 4,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.0,
+          "effective": 0,
+          "eps": 0.0,
+          "wall": 0.011254250013735145,
+          "total_harness": 0.026515500008827075
+        },
+        {
+          "arm": "desired",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.0,
+          "effective": 0,
+          "eps": 0.0,
+          "wall": 0.011104125005658716,
+          "total_harness": 0.025564707990270108
+        },
+        {
+          "arm": "forced",
+          "block": 2,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 4,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.0,
+          "effective": 0,
+          "eps": 0.0,
+          "wall": 0.013744208990829065,
+          "total_harness": 0.03189379198011011
+        },
+        {
+          "arm": "forced",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 4,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.0,
+          "effective": 0,
+          "eps": 0.0,
+          "wall": 0.012387583003146574,
+          "total_harness": 0.029651541000930592
+        },
+        {
+          "arm": "desired",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 0,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.0,
+          "effective": 0,
+          "eps": 0.0,
+          "wall": 0.012236583017511293,
+          "total_harness": 0.028700541995931417
+        },
+        {
+          "arm": "composed",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 4,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.0,
+          "effective": 0,
+          "eps": 0.0,
+          "wall": 0.010577458015177399,
+          "total_harness": 0.02678633399773389
+        },
+        {
+          "arm": "primitive_fit",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 7,
+            "menus": 1,
+            "high_chosen": 1,
+            "network_actions": 4,
+            "instantiated": 1,
+            "lowered_suffix": 2,
+            "suffix_rejected": 0,
+            "completed": 1
+          },
+          "same_end": true,
+          "paid": 6,
+          "ept": 0.0,
+          "effective": 0,
+          "eps": 0.0,
+          "wall": 0.01139145897468552,
+          "total_harness": 0.02727816699189134
+        },
+        {
+          "arm": "primitive",
+          "block": 3,
+          "counts": {
+            "pointer_reads": 7,
+            "network_actions": 4
+          },
+          "same_end": true,
+          "paid": 4,
+          "ept": 0.0,
+          "effective": 0,
+          "eps": 0.0,
+          "wall": 0.010864959011087194,
+          "total_harness": 0.02628470800118521
+        }
+      ]
+    }
+  }
+}
