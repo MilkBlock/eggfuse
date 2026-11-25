@@ -170,6 +170,8 @@ class Marks(nn.Module):
             return None
         stats["template_probe"] += 1
         r, high = k
+        if (audit := getattr(m, "on_template_draw", None)) is not None:
+            audit(k)
         route_audit = high and getattr(m, "audit_routes", False)
         if route_audit:
             stats[f"routed_root/{r}"] += 1

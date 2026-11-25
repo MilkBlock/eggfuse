@@ -1,0 +1,9 @@
+boundary,witnesses,steps,external_slots,external_owners,late_external,version_obligations,teacher_enter,teacher_complete,teacher_verified_replacements,teacher_effective,scheduled_model,model_enter,proven_no,unknown,tested_model_instances,model_complete,model_effective_per_test
+original,10,8..8,2..2,2..2,0..0,0..0,10,10,10,8..8,120,0,120,0,0,0,
+left_parent,10,9..9,2..2,2..2,1..1,0..0,0,0,0,0..0,120,0,120,0,0,0,
+right_parent,10,9..9,4..4,4..4,1..1,0..0,0,0,0,0..0,120,0,120,0,0,0,
+both_parents,10,10..10,4..4,4..4,0..0,0..0,10,10,10,12..13,120,0,120,0,0,0,
+left_ancestry,10,10..10,1..1,1..1,1..1,0..0,0,0,0,0..0,10,0,10,0,0,0,
+right_ancestry,10,58..190,6..10,6..10,1..1,13..59,0,0,0,0..0,10,0,10,0,0,0,
+both_ancestries,10,59..191,5..9,5..9,0..0,13..59,10,0,0,248..327,10,10,0,0,10,0,248..327
+after_init,10,58..190,47..172,6..10,0..0,13..59,10,0,0,49..128,390,10,380,0,10,0,49..128
