@@ -65,6 +65,9 @@ class ProjectedEntries(Entries):
             return alternatives[0] if alternatives else None
         return next((pair for pair in alternatives if pair[0] == contract_id), None)
 
+    def event_route(self, key, pos):
+        return self.route(key)
+
     def project_entries(self, r, j, mem, txn):
         if not self.choice or j < 0 or r not in self.root_rules:
             return
@@ -78,7 +81,7 @@ class ProjectedEntries(Entries):
             if kind != "generated":
                 continue
             self.count["entry_dispatch_lookups"] += 1
-            route = self.route((uid, j, source, pc))
+            route = self.event_route((uid, j, source, pc), pos)
             if route is None:
                 continue
             cid, contract = route

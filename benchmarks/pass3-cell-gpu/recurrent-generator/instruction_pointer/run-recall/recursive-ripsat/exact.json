@@ -1,0 +1,26 @@
+{
+  "fact": {
+    "runs": 634,
+    "seconds": 0.007311916,
+    "source_search_phase_seconds": 0.002507800000000017,
+    "rhs_phase_seconds": 0.0013682440000000098,
+    "repair_phase_seconds": 0.0002590900000000023,
+    "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d"
+  },
+  "loopfact": {
+    "runs": 618,
+    "seconds": 0.007233917,
+    "source_search_phase_seconds": 0.0025695810000000143,
+    "rhs_phase_seconds": 0.0013362070000000077,
+    "repair_phase_seconds": 0.0002448250000000019,
+    "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724"
+  },
+  "sum-divisors": {
+    "runs": 1644,
+    "seconds": 0.054408875,
+    "source_search_phase_seconds": 0.021229711000000186,
+    "rhs_phase_seconds": 0.013530121999999997,
+    "repair_phase_seconds": 0.006495237999999955,
+    "state_sha": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e"
+  }
+}

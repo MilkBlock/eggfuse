@@ -1,0 +1,91 @@
+{
+  "Extend": {
+    "layouts": [
+      13
+    ],
+    "existing_steps": [
+      [
+        339,
+        552
+      ]
+    ],
+    "suffix": {
+      "token": 605,
+      "run": 106,
+      "rule": 60,
+      "parents": [
+        {
+          "address": {
+            "token": 552,
+            "op": 1
+          },
+          "version": 1
+        },
+        {
+          "address": {
+            "token": 487,
+            "op": 1
+          },
+          "version": 102
+        }
+      ]
+    },
+    "suffix_effective_ops": 1,
+    "checks": {
+      "state_sha": true,
+      "schedule": true,
+      "writes": true,
+      "rhs": true,
+      "resumes": true,
+      "events": true
+    },
+    "native_accepted": 7265
+  },
+  "Compose": {
+    "layouts": [
+      5,
+      20
+    ],
+    "existing_steps": [
+      [
+        2211,
+        2251
+      ],
+      [
+        2221,
+        2265
+      ]
+    ],
+    "suffix": {
+      "token": 2266,
+      "run": 291,
+      "rule": 287,
+      "parents": [
+        {
+          "address": {
+            "token": 2251,
+            "op": 9
+          },
+          "version": 290
+        },
+        {
+          "address": {
+            "token": 2265,
+            "op": 7
+          },
+          "version": 257
+        }
+      ]
+    },
+    "suffix_effective_ops": 1,
+    "checks": {
+      "state_sha": true,
+      "schedule": true,
+      "writes": true,
+      "rhs": true,
+      "resumes": true,
+      "events": true
+    },
+    "native_accepted": 7265
+  }
+}

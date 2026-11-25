@@ -1,0 +1,550 @@
+{
+  "case": "sum",
+  "arm": "stream",
+  "phase": "multi",
+  "runs": 192,
+  "last_run": 192,
+  "termination": "schedule_end",
+  "exact_endpoint": false,
+  "state_sha": "fcc3dc8cc8d9c64aaa7cf8d1530935798489cf0186d41606a569dec6cffb8bfd",
+  "paid": 12668,
+  "proof_paid": 12668,
+  "compute_paid": 0,
+  "committed_tokens": 1240,
+  "verdicts": {
+    "accepted": 1240,
+    "duplicate": 9549,
+    "untriggered_rule": 78,
+    "binding": 550,
+    "guard": 1221,
+    "watermark": 30
+  },
+  "work": {
+    "boundary_wait_seconds": 0.07624071495956741,
+    "header_decode_seconds": 0.0046863804454915226,
+    "boundary_decode_seconds": 0.006828755227616057,
+    "memory_update_seconds": 0.03897724283160642,
+    "receipt_index_records": 52,
+    "schedule_metadata_nodes": 640896,
+    "source_port_reads": 2833,
+    "template_branch_scores": 47380,
+    "generated_templates": 17028,
+    "named_parent_reads": 721113,
+    "generated_proofs": 12534,
+    "live_pending": 14691,
+    "peak_pending": 14806,
+    "entry_provenance_slices": 29,
+    "index_port_reads": 20625,
+    "old_port_wakes": 88131,
+    "woken_templates": 88131,
+    "interface_reads": 562703,
+    "query_field_reads": 165495,
+    "posting_index_reads": 36641,
+    "addressable_positions": 434957,
+    "visits": 435017,
+    "parent_candidate_scores": 434933,
+    "complete_candidate_scores": 293538,
+    "old_only_paths": 198271,
+    "joint_terminal_scores": 12546,
+    "primitive_terminal_choices": 2542,
+    "entry_terminal_choices": 1848,
+    "held_entry_choices": 97,
+    "entry_dispatch_lookups": 172,
+    "entry_projected_operands": 204,
+    "entry_probes": 21,
+    "entry_accepted": 6,
+    "root_other_bindings_replaced": 6,
+    "higher_started": 90,
+    "held_entry_starts": 29,
+    "entry_dispatch_seconds": 0.0023507470614276826,
+    "receipt_position_probes": 92,
+    "receipt_prefix_checks": 128,
+    "proven_candidate_positions_skipped": 24,
+    "receipt_posting_probe_bound": 55,
+    "replaced_requests": 0,
+    "open_contract_choices": 20,
+    "lowered_steps": 91,
+    "completed_deep": 49,
+    "completed_size_2": 46,
+    "max_abstraction_depth": 2,
+    "entry_old_only": 64,
+    "retired_opportunities": 1480,
+    "rejected_step": 39,
+    "receipt_event_checks": 107,
+    "proven_event_branches_skipped": 44,
+    "open_action_scores": 3389,
+    "open_page_position_checks": 26044,
+    "open_operand_reads": 481,
+    "completed_size_3": 3,
+    "open_resumes": 533,
+    "missing_return": 2,
+    "open_issued_Extend": 22,
+    "open_independent_bindings": 44,
+    "boundary_scores": 84,
+    "open_accepted_Extend": 1,
+    "pack_seconds": 0.01787443208741024,
+    "request_write_seconds": 0.018718446226557717,
+    "request_bytes": 1737996,
+    "max_outstanding": 1,
+    "collection_barriers": 1291,
+    "receipt_wait_seconds": 0.041199077502824366,
+    "receipt_read_seconds": 0.022960223985137418,
+    "response_bytes": 457016,
+    "receipt_decode_audit_seconds": 0.028944596328074113,
+    "seals": 192,
+    "index_update_seconds": 0.03370762197300792,
+    "index_writes": 6355,
+    "index_removes": 596
+  },
+  "transaction_sizes": {
+    "1": 390,
+    "6": 69,
+    "5": 83,
+    "3": 113,
+    "4": 108,
+    "2": 152,
+    "8": 42,
+    "9": 40,
+    "11": 6,
+    "7": 31,
+    "12": 22,
+    "13": 11,
+    "17": 10,
+    "18": 13,
+    "24": 11,
+    "10": 31,
+    "27": 2,
+    "26": 3,
+    "16": 8,
+    "84": 1,
+    "60": 4,
+    "34": 5,
+    "36": 7,
+    "15": 13,
+    "106": 3,
+    "19": 4,
+    "14": 17,
+    "21": 6,
+    "40": 3,
+    "77": 1,
+    "32": 2,
+    "29": 3,
+    "22": 5,
+    "41": 2,
+    "20": 5,
+    "69": 1,
+    "73": 2,
+    "115": 3,
+    "31": 3,
+    "37": 1,
+    "46": 2,
+    "57": 1,
+    "23": 4,
+    "193": 2,
+    "99": 5,
+    "70": 4,
+    "65": 1,
+    "82": 1,
+    "119": 2,
+    "243": 1,
+    "188": 1,
+    "96": 1,
+    "143": 1,
+    "72": 1,
+    "79": 1,
+    "221": 1,
+    "56": 1,
+    "154": 1,
+    "187": 1,
+    "33": 1,
+    "110": 1,
+    "30": 4,
+    "25": 2,
+    "54": 1,
+    "105": 1,
+    "140": 1,
+    "47": 1,
+    "120": 1,
+    "51": 1,
+    "194": 1,
+    "100": 1,
+    "53": 1,
+    "85": 1,
+    "87": 1,
+    "28": 2,
+    "55": 1,
+    "35": 1
+  },
+  "synchronizations": 1483,
+  "protocol": "ccp-v0.1",
+  "txn_stats": {
+    "batches": 1291,
+    "cache_hits": 0,
+    "ccp": true,
+    "compute_ops": 0,
+    "computed": 0,
+    "decode_ns": 1608102,
+    "encode_ns": 742079,
+    "execute_ns": 12363821,
+    "local_reads": 0,
+    "port_bytes": 185848,
+    "proof_ops": 12668,
+    "publication_encode_ns": 180792,
+    "publication_write_ns": 62754,
+    "request_bytes": 1737996,
+    "response_bytes": 457016,
+    "response_write_ns": 1731502,
+    "sequence": 1483
+  },
+  "wall": 4.493273959000362,
+  "signed_ops": 979,
+  "ept": 0.07728133880644143,
+  "eps": 217.88121733351917,
+  "native_verify_seconds": 0.010462223,
+  "guard_failures": [
+    [
+      16,
+      577,
+      2,
+      "undefined",
+      14
+    ],
+    [
+      16,
+      578,
+      2,
+      "undefined",
+      18
+    ],
+    [
+      17,
+      577,
+      2,
+      "undefined",
+      26
+    ],
+    [
+      17,
+      578,
+      2,
+      "undefined",
+      18
+    ],
+    [
+      18,
+      577,
+      2,
+      "undefined",
+      14
+    ],
+    [
+      18,
+      578,
+      2,
+      "undefined",
+      20
+    ],
+    [
+      19,
+      577,
+      2,
+      "undefined",
+      4
+    ],
+    [
+      19,
+      578,
+      2,
+      "undefined",
+      10
+    ],
+    [
+      20,
+      577,
+      2,
+      "undefined",
+      7
+    ],
+    [
+      20,
+      578,
+      2,
+      "undefined",
+      10
+    ],
+    [
+      21,
+      577,
+      2,
+      "undefined",
+      5
+    ],
+    [
+      21,
+      578,
+      2,
+      "undefined",
+      10
+    ],
+    [
+      53,
+      57,
+      4,
+      "undefined",
+      17
+    ],
+    [
+      53,
+      138,
+      1,
+      "undefined",
+      15
+    ],
+    [
+      53,
+      144,
+      1,
+      "result_mismatch",
+      1
+    ],
+    [
+      57,
+      138,
+      1,
+      "undefined",
+      17
+    ],
+    [
+      61,
+      138,
+      1,
+      "undefined",
+      6
+    ],
+    [
+      65,
+      62,
+      2,
+      "undefined",
+      2
+    ],
+    [
+      65,
+      138,
+      1,
+      "undefined",
+      2
+    ],
+    [
+      69,
+      62,
+      2,
+      "undefined",
+      3
+    ],
+    [
+      69,
+      138,
+      1,
+      "undefined",
+      1
+    ],
+    [
+      73,
+      57,
+      4,
+      "undefined",
+      4
+    ],
+    [
+      73,
+      138,
+      1,
+      "undefined",
+      3
+    ],
+    [
+      77,
+      62,
+      2,
+      "undefined",
+      2
+    ],
+    [
+      77,
+      138,
+      1,
+      "undefined",
+      4
+    ],
+    [
+      81,
+      138,
+      1,
+      "undefined",
+      2
+    ],
+    [
+      81,
+      144,
+      1,
+      "result_mismatch",
+      7
+    ],
+    [
+      85,
+      57,
+      4,
+      "undefined",
+      13
+    ],
+    [
+      85,
+      138,
+      1,
+      "undefined",
+      2
+    ],
+    [
+      85,
+      144,
+      1,
+      "result_mismatch",
+      14
+    ],
+    [
+      91,
+      144,
+      1,
+      "result_mismatch",
+      15
+    ],
+    [
+      114,
+      351,
+      2,
+      "undefined",
+      28
+    ],
+    [
+      114,
+      352,
+      3,
+      "undefined",
+      210
+    ],
+    [
+      114,
+      353,
+      2,
+      "undefined",
+      24
+    ],
+    [
+      114,
+      354,
+      3,
+      "undefined",
+      39
+    ],
+    [
+      114,
+      355,
+      3,
+      "undefined",
+      9
+    ],
+    [
+      114,
+      356,
+      3,
+      "undefined",
+      18
+    ],
+    [
+      114,
+      371,
+      2,
+      "undefined",
+      584
+    ],
+    [
+      118,
+      577,
+      2,
+      "undefined",
+      3
+    ],
+    [
+      118,
+      578,
+      2,
+      "undefined",
+      4
+    ],
+    [
+      119,
+      577,
+      2,
+      "undefined",
+      3
+    ],
+    [
+      119,
+      578,
+      2,
+      "undefined",
+      4
+    ],
+    [
+      152,
+      138,
+      1,
+      "undefined",
+      2
+    ],
+    [
+      181,
+      351,
+      2,
+      "undefined",
+      7
+    ]
+  ],
+  "new_suffix_operations": {
+    "Extend": 1
+  },
+  "reference": 1173,
+  "facts": 776,
+  "open_actions": {
+    "Primitive": 114,
+    "Defer": 569,
+    "Activate": 11,
+    "Extend": 489,
+    "Compose": 15
+  },
+  "open_decision_runs": 53,
+  "published_recursive": [
+    [
+      3644,
+      2,
+      [
+        2764
+      ],
+      [
+        [
+          3644,
+          0,
+          69
+        ],
+        [
+          3644,
+          1,
+          53
+        ]
+      ]
+    ]
+  ],
+  "terminal_decisions": 4390,
+  "charged_with_decisions": 18276
+}

@@ -100,6 +100,9 @@ class Entries(FullTemplates):
         seen = self.proven(mem, r, (j,))[()]
         self.count["receipt_event_checks"] += len(ix)
         left = ix[[int(i) not in seen for i in ix]]
+        if getattr(self, "suffix_positions", None):
+            suffixes = self.suffix_positions.get(r, ())
+            self.count["open_unary_events_skipped"] += sum((int(i),) in suffixes for i in ix if i in seen)
         self.count["proven_event_branches_skipped"] += len(ix) - len(left)
         return left
 
@@ -123,6 +126,12 @@ class Entries(FullTemplates):
                         continue
                 if lo <= pos < end:
                     excluded.append(pos)
+                    if getattr(self, "suffix_positions", None):
+                        ordered = [0] * len(order)
+                        for role, position in zip(order, (*p, k), strict=True):
+                            ordered[role] = int(position)
+                        if tuple(ordered) in self.suffix_positions.get(r, ()):
+                            self.count["open_terminal_candidates_skipped"] += 1
             self.count["proven_candidate_positions_skipped"] += len(excluded)
             for pos in [*sorted(excluded), end]:
                 if pos > lo:

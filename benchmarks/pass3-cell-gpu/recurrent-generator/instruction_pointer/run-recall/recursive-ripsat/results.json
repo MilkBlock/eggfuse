@@ -1,0 +1,611 @@
+{
+  "cases": {
+    "dot": {
+      "original": {
+        "metrics": {
+          "runs": 192,
+          "facts": 1220,
+          "reference": 1942,
+          "coverage": 0.6282183316168898,
+          "same_graph": true,
+          "signed_ops": 1742,
+          "ept": 0.06815336463223787,
+          "paid": 25560,
+          "visits": 13785082,
+          "template_emissions": 40828,
+          "terminal_choices": 5561,
+          "open_choices": 0,
+          "contract_choices": 0,
+          "operand_reads": 0,
+          "boundary_scores": 0,
+          "complete_candidate_scores": 8489290,
+          "charged_with_decisions": 31121,
+          "depth": 1,
+          "direct_suffix_ops": {},
+          "skipped_leaf_positions": 0,
+          "skipped_unary_events": 0,
+          "open_actions": {},
+          "open_issued": {},
+          "open_accepted": {},
+          "named_operands_issued": 0,
+          "extra_bindings_at_issue": 0
+        },
+        "wall": [
+          19.879090041999007
+        ],
+        "eps": [
+          87.62976556369718
+        ]
+      },
+      "open": {
+        "metrics": {
+          "runs": 192,
+          "facts": 1220,
+          "reference": 1942,
+          "coverage": 0.6282183316168898,
+          "same_graph": true,
+          "signed_ops": 1742,
+          "ept": 0.06810806584040349,
+          "paid": 25577,
+          "visits": 13785092,
+          "template_emissions": 40828,
+          "terminal_choices": 5561,
+          "open_choices": 1051,
+          "contract_choices": 0,
+          "operand_reads": 536,
+          "boundary_scores": 16,
+          "complete_candidate_scores": 8489284,
+          "charged_with_decisions": 32189,
+          "depth": 3,
+          "direct_suffix_ops": {
+            "Extend": 1
+          },
+          "skipped_leaf_positions": 6,
+          "skipped_unary_events": 0,
+          "open_actions": {
+            "Defer": 473,
+            "Primitive": 16,
+            "Extend": 488,
+            "Compose": 69,
+            "Activate": 5
+          },
+          "open_issued": {
+            "Extend": 21,
+            "Compose": 2
+          },
+          "open_accepted": {
+            "Extend": 3
+          },
+          "named_operands_issued": 46,
+          "extra_bindings_at_issue": 23
+        },
+        "wall": [
+          20.71320095800911
+        ],
+        "eps": [
+          84.10095588467827
+        ]
+      },
+      "rl": {
+        "metrics": {
+          "runs": 192,
+          "facts": 1220,
+          "reference": 1942,
+          "coverage": 0.6282183316168898,
+          "same_graph": true,
+          "signed_ops": 1742,
+          "ept": 0.06811605536873387,
+          "paid": 25574,
+          "visits": 13785092,
+          "template_emissions": 40829,
+          "terminal_choices": 5561,
+          "open_choices": 1077,
+          "contract_choices": 0,
+          "operand_reads": 535,
+          "boundary_scores": 16,
+          "complete_candidate_scores": 8489284,
+          "charged_with_decisions": 32212,
+          "depth": 3,
+          "direct_suffix_ops": {
+            "Extend": 1
+          },
+          "skipped_leaf_positions": 6,
+          "skipped_unary_events": 0,
+          "open_actions": {
+            "Defer": 500,
+            "Primitive": 16,
+            "Extend": 487,
+            "Compose": 69,
+            "Activate": 5
+          },
+          "open_issued": {
+            "Extend": 18,
+            "Compose": 2
+          },
+          "open_accepted": {
+            "Extend": 3
+          },
+          "named_operands_issued": 40,
+          "extra_bindings_at_issue": 20
+        },
+        "wall": [
+          20.835340915975394
+        ],
+        "eps": [
+          83.607943206935
+        ]
+      }
+    },
+    "fact": {
+      "original": {
+        "metrics": {
+          "runs": 560,
+          "facts": 764,
+          "reference": 1120,
+          "coverage": 0.6821428571428572,
+          "same_graph": true,
+          "signed_ops": 1094,
+          "ept": 0.0036742603619851753,
+          "paid": 297747,
+          "visits": 6959260,
+          "template_emissions": 29516,
+          "terminal_choices": 21895,
+          "open_choices": 0,
+          "contract_choices": 0,
+          "operand_reads": 0,
+          "boundary_scores": 0,
+          "complete_candidate_scores": 2247646,
+          "charged_with_decisions": 319642,
+          "depth": 1,
+          "direct_suffix_ops": {},
+          "skipped_leaf_positions": 0,
+          "skipped_unary_events": 0,
+          "open_actions": {},
+          "open_issued": {},
+          "open_accepted": {},
+          "named_operands_issued": 0,
+          "extra_bindings_at_issue": 0
+        },
+        "wall": [
+          12.585327249980764,
+          12.841984416008927
+        ],
+        "eps": [
+          86.92662322321989,
+          85.18932624121629
+        ]
+      },
+      "open": {
+        "metrics": {
+          "runs": 560,
+          "facts": 764,
+          "reference": 1120,
+          "coverage": 0.6821428571428572,
+          "same_graph": true,
+          "signed_ops": 1094,
+          "ept": 0.003673631119080719,
+          "paid": 297798,
+          "visits": 6959269,
+          "template_emissions": 29516,
+          "terminal_choices": 21895,
+          "open_choices": 1423,
+          "contract_choices": 0,
+          "operand_reads": 653,
+          "boundary_scores": 13,
+          "complete_candidate_scores": 2247642,
+          "charged_with_decisions": 321116,
+          "depth": 2,
+          "direct_suffix_ops": {
+            "Extend": 0
+          },
+          "skipped_leaf_positions": 4,
+          "skipped_unary_events": 0,
+          "open_actions": {
+            "Defer": 668,
+            "Primitive": 126,
+            "Extend": 537,
+            "Compose": 88,
+            "Activate": 4
+          },
+          "open_issued": {
+            "Extend": 40,
+            "Compose": 15
+          },
+          "open_accepted": {
+            "Extend": 2
+          },
+          "named_operands_issued": 110,
+          "extra_bindings_at_issue": 55
+        },
+        "wall": [
+          12.677616000000853,
+          12.640812583005754
+        ],
+        "eps": [
+          86.29382685198277,
+          86.54506922053162
+        ]
+      },
+      "rl": {
+        "metrics": {
+          "runs": 560,
+          "facts": 764,
+          "reference": 1120,
+          "coverage": 0.6821428571428572,
+          "same_graph": true,
+          "signed_ops": 1094,
+          "ept": 0.003673631119080719,
+          "paid": 297798,
+          "visits": 6959269,
+          "template_emissions": 29516,
+          "terminal_choices": 21895,
+          "open_choices": 1423,
+          "contract_choices": 0,
+          "operand_reads": 647,
+          "boundary_scores": 13,
+          "complete_candidate_scores": 2247642,
+          "charged_with_decisions": 321116,
+          "depth": 2,
+          "direct_suffix_ops": {
+            "Extend": 0
+          },
+          "skipped_leaf_positions": 4,
+          "skipped_unary_events": 0,
+          "open_actions": {
+            "Defer": 669,
+            "Primitive": 131,
+            "Extend": 531,
+            "Compose": 88,
+            "Activate": 4
+          },
+          "open_issued": {
+            "Extend": 40,
+            "Compose": 15
+          },
+          "open_accepted": {
+            "Extend": 2
+          },
+          "named_operands_issued": 110,
+          "extra_bindings_at_issue": 55
+        },
+        "wall": [
+          12.779905750008766,
+          12.413232165999943
+        ],
+        "eps": [
+          85.60313521868106,
+          88.1317601548197
+        ]
+      }
+    },
+    "loopfact": {
+      "original": {
+        "metrics": {
+          "runs": 595,
+          "facts": 944,
+          "reference": 1112,
+          "coverage": 0.8489208633093526,
+          "same_graph": true,
+          "signed_ops": 1136,
+          "ept": 0.0043103121181996855,
+          "paid": 263554,
+          "visits": 4950287,
+          "template_emissions": 26513,
+          "terminal_choices": 33079,
+          "open_choices": 0,
+          "contract_choices": 0,
+          "operand_reads": 0,
+          "boundary_scores": 0,
+          "complete_candidate_scores": 3950413,
+          "charged_with_decisions": 296633,
+          "depth": 1,
+          "direct_suffix_ops": {},
+          "skipped_leaf_positions": 0,
+          "skipped_unary_events": 0,
+          "open_actions": {},
+          "open_issued": {},
+          "open_accepted": {},
+          "named_operands_issued": 0,
+          "extra_bindings_at_issue": 0
+        },
+        "wall": [
+          11.18533591600135,
+          11.400330541975563
+        ],
+        "eps": [
+          101.56154527061437,
+          99.64623357342958
+        ]
+      },
+      "open": {
+        "metrics": {
+          "runs": 595,
+          "facts": 944,
+          "reference": 1112,
+          "coverage": 0.8489208633093526,
+          "same_graph": true,
+          "signed_ops": 1136,
+          "ept": 0.004309282026576435,
+          "paid": 263617,
+          "visits": 4950314,
+          "template_emissions": 26513,
+          "terminal_choices": 33079,
+          "open_choices": 1752,
+          "contract_choices": 0,
+          "operand_reads": 835,
+          "boundary_scores": 31,
+          "complete_candidate_scores": 3950409,
+          "charged_with_decisions": 298448,
+          "depth": 2,
+          "direct_suffix_ops": {
+            "Extend": 1
+          },
+          "skipped_leaf_positions": 4,
+          "skipped_unary_events": 0,
+          "open_actions": {
+            "Defer": 806,
+            "Extend": 644,
+            "Activate": 6,
+            "Compose": 144,
+            "Primitive": 152
+          },
+          "open_issued": {
+            "Extend": 43,
+            "Compose": 24
+          },
+          "open_accepted": {
+            "Extend": 2
+          },
+          "named_operands_issued": 134,
+          "extra_bindings_at_issue": 67
+        },
+        "wall": [
+          10.85468854100327,
+          11.405007666995516
+        ],
+        "eps": [
+          104.65523683234144,
+          99.60536925261557
+        ]
+      },
+      "rl": {
+        "metrics": {
+          "runs": 595,
+          "facts": 944,
+          "reference": 1112,
+          "coverage": 0.8489208633093526,
+          "same_graph": true,
+          "signed_ops": 1136,
+          "ept": 0.004309282026576435,
+          "paid": 263617,
+          "visits": 4950314,
+          "template_emissions": 26513,
+          "terminal_choices": 33079,
+          "open_choices": 1757,
+          "contract_choices": 0,
+          "operand_reads": 835,
+          "boundary_scores": 31,
+          "complete_candidate_scores": 3950409,
+          "charged_with_decisions": 298453,
+          "depth": 2,
+          "direct_suffix_ops": {
+            "Extend": 1
+          },
+          "skipped_leaf_positions": 4,
+          "skipped_unary_events": 0,
+          "open_actions": {
+            "Defer": 812,
+            "Extend": 644,
+            "Activate": 6,
+            "Compose": 144,
+            "Primitive": 151
+          },
+          "open_issued": {
+            "Extend": 43,
+            "Compose": 24
+          },
+          "open_accepted": {
+            "Extend": 2
+          },
+          "named_operands_issued": 134,
+          "extra_bindings_at_issue": 67
+        },
+        "wall": [
+          10.748837708000792,
+          11.50669716700213
+        ],
+        "eps": [
+          105.68584537790812,
+          98.72511490592787
+        ]
+      }
+    },
+    "sum-divisors": {
+      "original": {
+        "metrics": {
+          "runs": 723,
+          "facts": 3085,
+          "reference": 8018,
+          "coverage": 0.3847592915939137,
+          "same_graph": true,
+          "signed_ops": 4321,
+          "ept": 0.0008763273184951913,
+          "paid": 4930806,
+          "visits": 89399221,
+          "template_emissions": 106211,
+          "terminal_choices": 176217,
+          "open_choices": 0,
+          "contract_choices": 0,
+          "operand_reads": 0,
+          "boundary_scores": 0,
+          "complete_candidate_scores": 83661500,
+          "charged_with_decisions": 5107023,
+          "depth": 1,
+          "direct_suffix_ops": {},
+          "skipped_leaf_positions": 0,
+          "skipped_unary_events": 0,
+          "open_actions": {},
+          "open_issued": {},
+          "open_accepted": {},
+          "named_operands_issued": 0,
+          "extra_bindings_at_issue": 0
+        },
+        "wall": [
+          120.37074362498242,
+          123.70970012500766
+        ],
+        "eps": [
+          35.89742714776413,
+          34.9285463923497
+        ]
+      },
+      "open": {
+        "metrics": {
+          "runs": 723,
+          "facts": 3085,
+          "reference": 8018,
+          "coverage": 0.3847592915939137,
+          "same_graph": true,
+          "signed_ops": 4321,
+          "ept": 0.000876311323540387,
+          "paid": 4930896,
+          "visits": 89399270,
+          "template_emissions": 106211,
+          "terminal_choices": 176217,
+          "open_choices": 3753,
+          "contract_choices": 0,
+          "operand_reads": 1727,
+          "boundary_scores": 53,
+          "complete_candidate_scores": 83661496,
+          "charged_with_decisions": 5110866,
+          "depth": 2,
+          "direct_suffix_ops": {
+            "Extend": 1
+          },
+          "skipped_leaf_positions": 4,
+          "skipped_unary_events": 0,
+          "open_actions": {
+            "Defer": 1718,
+            "Primitive": 396,
+            "Extend": 1438,
+            "Compose": 195,
+            "Activate": 6
+          },
+          "open_issued": {
+            "Extend": 64,
+            "Compose": 30
+          },
+          "open_accepted": {
+            "Extend": 2
+          },
+          "named_operands_issued": 188,
+          "extra_bindings_at_issue": 94
+        },
+        "wall": [
+          121.02322133400594,
+          127.45425987499766
+        ],
+        "eps": [
+          35.70389180167902,
+          33.90235841656351
+        ]
+      },
+      "rl": {
+        "metrics": {
+          "runs": 723,
+          "facts": 3085,
+          "reference": 8018,
+          "coverage": 0.3847592915939137,
+          "same_graph": true,
+          "signed_ops": 4321,
+          "ept": 0.0008763122121336691,
+          "paid": 4930891,
+          "visits": 89399270,
+          "template_emissions": 106211,
+          "terminal_choices": 176216,
+          "open_choices": 3765,
+          "contract_choices": 0,
+          "operand_reads": 1726,
+          "boundary_scores": 53,
+          "complete_candidate_scores": 83661496,
+          "charged_with_decisions": 5110872,
+          "depth": 2,
+          "direct_suffix_ops": {
+            "Extend": 1
+          },
+          "skipped_leaf_positions": 4,
+          "skipped_unary_events": 0,
+          "open_actions": {
+            "Defer": 1731,
+            "Primitive": 396,
+            "Extend": 1437,
+            "Compose": 195,
+            "Activate": 6
+          },
+          "open_issued": {
+            "Extend": 60,
+            "Compose": 30
+          },
+          "open_accepted": {
+            "Extend": 2
+          },
+          "named_operands_issued": 180,
+          "extra_bindings_at_issue": 90
+        },
+        "wall": [
+          127.44913691599504,
+          125.46517879099702
+        ],
+        "eps": [
+          33.90372115935222,
+          34.439834555195816
+        ]
+      }
+    }
+  },
+  "training_decisions": {
+    "Extend": 3899,
+    "Defer": 4063,
+    "Primitive": 838,
+    "Compose": 228,
+    "Activate": 106
+  },
+  "reward_fit": {
+    "seed": 431,
+    "sigma": 0.06,
+    "limit": 192,
+    "episodes": [
+      {
+        "step": 0,
+        "positive": -0.03971358475265781,
+        "negative": -0.05496999322121657,
+        "advantage": 0.01525640846855876
+      },
+      {
+        "step": 1,
+        "positive": -0.07312801795453591,
+        "negative": -0.058768898615165155,
+        "advantage": -0.014359119339370757
+      },
+      {
+        "step": 2,
+        "positive": -0.043189057293007246,
+        "negative": -0.044424590504878715,
+        "advantage": 0.0012355332118714688
+      },
+      {
+        "step": 3,
+        "positive": -0.0433030331351747,
+        "negative": -0.05969377801513595,
+        "advantage": 0.01639074487996125
+      }
+    ]
+  },
+  "checkpoints": {
+    "wired.pt": "4f50d1a755a9a2e7f937b875cf8e748d52f63846bdde26af0cf14ea4f02f6761",
+    "graph.pt": "26913155521aa1d49a71e390fb9aee1a92be1d339b4e7fc899dbf22cab1e1d06",
+    "recursive-rl.pt": "a8e1f4b724c2f5ee722667e0891a41404e836458e9a1c30abe2ed6fa965b82d7",
+    "entry-contracts.json": "d825e35bc2479ccaeed05a59128357e328b1bddc4dd12a878e2d5b4746443f8d",
+    "catalog.json": "794a7af3dd79a0c92b9a859f9a39fc6b27c8cf56a8309cd3ac57cea5e59585c5"
+  }
+}
