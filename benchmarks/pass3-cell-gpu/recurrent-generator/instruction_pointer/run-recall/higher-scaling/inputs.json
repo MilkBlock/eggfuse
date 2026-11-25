@@ -1,0 +1,32 @@
+{
+  "base": "0d3c4451",
+  "compiler": "53dc38f197d2f917e86b2cd2403cb989194de2dac1fa8ff349146b642f6d1665",
+  "fact": {
+    "capture.json": "e302e78eb5769e131438c7a5fa08d44bdf6ce01e82f7068df53677497f46a35c",
+    "memory.jsonl": "b1ddd80da1b0d1c67bc5df872b8d5124def308f600c7e461937d02a43e503566",
+    "program.json": "f4da1650af5393f3f07d5d20d092e26270ae58090266dd197113dd295ffaf900",
+    "tape.json": "e34de3bf62e6a0c89bd95ec97838c12f306bffcc6930ed45b1f4da9f2a0c7c42"
+  },
+  "grammar-benefit-left-17119": {
+    "capture.json": "7b98417f1cbabc727e8ac5b2f6067bb2fe3fb49cb91d73652ba2e61b6ae8a4bf",
+    "memory.jsonl": "e54a65dc9e93dffd9432ded5bf48fa61c2c2b42872b9d49a4c76af453d52b01d",
+    "program.json": "057d4eaf8d7bc18ea7cd2d92893966719955efdd6d8ba083bc0105bcc0dce554",
+    "tape.json": "7d0bfacee2a1612e2f3f6c6943e2a248225cb1b049c1238874b04030827ca885"
+  },
+  "loopfact": {
+    "capture.json": "836fa727a48ce86dea9c2c9209f4974529e0ab275181cfab194de79e87323728",
+    "memory.jsonl": "8b6258a7ee275320d5b7d665d783eb320e8a912afa21fa756a6a50293867efc0",
+    "program.json": "8f6d2b1a5f5a593b73119d0bfded0aefee97315191cc5f3efcd6e35320beacba",
+    "tape.json": "d877d81138ba44674aace8d33c447075e5fd5c8c1e76eaac7b8bb64f00675a20"
+  },
+  "machine": "arm64",
+  "python": "3.14.3",
+  "runtime": "38efa8d45746cd561e3378c210667b8198f882828dfb22ab03e4c122a3581375",
+  "sum-divisors": {
+    "capture.json": "e12959b45517706eace1e7d144ff2b99aa0da7682552cad756aa2fc96d47fddc",
+    "memory.jsonl": "d54ce3b06d97dbdf984e7bb03a43c3298061d3c312a9dba13cb8d0855e305bb2",
+    "program.json": "3b904063c8c7e580ec2030b452d831ee53478a28c3dfaecf17eeb7e853a0aaf8",
+    "tape.json": "30da140008a764b2a6931777ee359bc657ce201a9667f1cf3d71ceb6cb6b484f"
+  },
+  "torch": "2.15.0"
+}

@@ -1,0 +1,14 @@
+{
+  "run-recall/cell-stream/multi.pt": "193103af9bb00441686225df42bea2266882dc0df36930c4bffe551382399184",
+  "run-recall/discrete-computation-flow/editor.pt": "c0b9ef778cd768f2e5da33c973715e5eb73f0fe71cf7f4d6c9b8ea5b48119cc7",
+  "run-recall/discrete-computation-flow/flow.pt": "89d7e85cc78aa6958291e1ac6ebb3a11c64a87466bb01fdf8eb1d5ee7109343e",
+  "run-recall/discrete-computation-flow/marks.pt": "83a04fa8ff3769096e192531724989ccb4265f99d5db0d81318be068e519e8e7",
+  "run-recall/discrete-computation-flow/mask.pt": "15a7a95f748ce5c5eb4bbe6bb60a38ca6f5c1d0022b2b6fd6d05326089402796",
+  "run-recall/discrete-computation-flow/primitive-fit/editor.pt": "7dce2941caec520e6c8175c43659ae918c97c335be39ea5fdd1191208c942ae2",
+  "run-recall/discrete-computation-flow/primitive-fit/flow.pt": "8ec9a1354445cac695812f604f8183c5df16dae58ffcd15adb67806ddcab820e",
+  "run-recall/discrete-computation-flow/primitive-fit/marks.pt": "ec580581131334ad7dcb89932a592fea0fee5c633d6485e145728ade1789c98a",
+  "run-recall/discrete-computation-flow/primitive-fit/mask.pt": "c553bcf0517dce54bea04bc7420f0bc18415e32211240dec80cbd402bdcb7b01",
+  "run-recall/higher-scaling/weights/actor.pt": "13e209c652ddfe40aa61de7070dfca949c6c18c75770fd0b5ad30c28c4c890cd",
+  "run-recall/higher-scaling/weights/field.pt": "2ba121556a2e659559d133efa9cd078eed38b065ac4182e4bc6f1cd7e4522a3d",
+  "run-recall/parameterized-deep-ripsat/event-gnn.pt": "e758737a22b40533ca315bfe7a872a0c361e35fbe61e3affcd90e8afdd3af2e7"
+}
