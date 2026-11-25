@@ -1,0 +1,101 @@
+{
+  "meta": {
+    "run": 541,
+    "rule": 498,
+    "entry_role": 4,
+    "token": 883892,
+    "op": 2,
+    "version": 303,
+    "wake": 1,
+    "batch": 11150
+  },
+  "depth": [
+    {
+      "prefixes": 1,
+      "scores": 3,
+      "old_certificate": 3,
+      "negative": 0,
+      "score_ns": 3333
+    },
+    {
+      "prefixes": 3,
+      "scores": 18,
+      "old_certificate": 18,
+      "negative": 0,
+      "score_ns": 15609
+    },
+    {
+      "prefixes": 18,
+      "scores": 702,
+      "old_certificate": 702,
+      "negative": 90,
+      "score_ns": 616884
+    },
+    {
+      "prefixes": 612,
+      "scores": 403920,
+      "old_certificate": 403920,
+      "negative": 400860,
+      "score_ns": 347414725
+    },
+    {
+      "prefixes": 3060,
+      "scores": 0,
+      "old_certificate": 0,
+      "negative": 0,
+      "score_ns": 0
+    }
+  ],
+  "formed": 3060,
+  "signed": 0,
+  "effective_ops": 0,
+  "native_exact_next": {
+    "prefix_sha": "e2c26acf0b06fb922c75e656e39534a7b1cd8cea1866e23bc7dac0ce4dfed67c",
+    "result": {
+      "next": [
+        0,
+        false
+      ]
+    },
+    "run": 541
+  },
+  "native_next_proofs": 0,
+  "hardware": {
+    "base": {
+      "begin_unix_ns": 1795592410601008000,
+      "end_unix_ns": 1795592412788438000,
+      "rounds": 5,
+      "scores_per_root": 404643,
+      "generated_proofs": 0,
+      "samples": 2389,
+      "counts": {
+        "INST_LDST": 5941932930,
+        "LD_UNIT_UOP": 5161535912,
+        "ST_UNIT_UOP": 2473727623
+      },
+      "sampled_per_root": {
+        "INST_LDST": 1188386586.0,
+        "LD_UNIT_UOP": 1032307182.4,
+        "ST_UNIT_UOP": 494745524.6
+      }
+    },
+    "frozen": {
+      "begin_unix_ns": 1795592442685486000,
+      "end_unix_ns": 1795592443830961000,
+      "rounds": 30000,
+      "scores_per_root": 0,
+      "generated_proofs": 0,
+      "samples": 1197,
+      "counts": {
+        "INST_LDST": 7488993410,
+        "LD_UNIT_UOP": 6039230641,
+        "ST_UNIT_UOP": 2625724825
+      },
+      "sampled_per_root": {
+        "INST_LDST": 249633.11366666667,
+        "LD_UNIT_UOP": 201307.68803333334,
+        "ST_UNIT_UOP": 87524.16083333333
+      }
+    }
+  }
+}

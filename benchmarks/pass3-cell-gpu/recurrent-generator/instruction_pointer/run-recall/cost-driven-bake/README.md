@@ -2,6 +2,8 @@
 
 The baseline is the recursive B policy at `b33af382` with the existing GNN and `structure-rl.pt`. Every evaluation starts from the program's initial state, drives the native Rust Cell runtime through CCP v0.1, and runs to schedule end. Exact matching, witness probes, dependency tracing and oracle event lists run exclusively in the diagnostic arms or after an execution. The independent trajectories can diverge from the exact reference.
 
+**Boundary audit correction.** The 49,577,598 fewer visits are a measured host-side Symbolic Execution optimization selected by a neural action. The host computes cross-role freshness feasibility before the pointer model. B2 excludes this gain from Neural Execution. The four timing arms below are historical system measurements. [Call chain, event replay and memory-growth measurements](../cost-boundary-audit/README.md)
+
 ## Independent execution
 
 The eight donor contracts preserve the baseline final graph and all audited Run boundaries on each evaluation program. On sum-divisors they eliminate 49,577,598 candidate visits with frozen weights. The baseline gate already selected the new contract on every eligible old-source event in all three programs. Continued RL reproduces essentially the same search savings. It changes some existing open actions, including saving four paid requests on loopfact. The reduction in searches happens before signing, so EPT changes little. Extra chooser tokens are visible in the neural column.
