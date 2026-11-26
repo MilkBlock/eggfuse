@@ -3,12 +3,14 @@
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f5f6f2;color:#172b29;font:14px/1.5 "Inter",-apple-system,sans-serif}header{background:#163a34;color:#fff;padding:15px 24px;display:flex;gap:16px;align-items:center}header strong{font-size:22px;letter-spacing:-.6px}header select{margin-left:auto;max-width:50vw}main{display:grid;grid-template-columns:286px minmax(0,1fr);min-height:90vh}aside{padding:16px;border-right:1px solid #cbd7cf;background:white}input,select,button{font:inherit;padding:6px 8px;background:white;color:inherit;border:1px solid #b8c9bf;border-radius:5px}header select{color:#173932}button{cursor:pointer}button:hover,button[aria-current=true]{background:#dcf0dc;color:#124731}label{display:block;margin:9px 0;color:#455c55}label input,label select{display:block;width:100%}.pair{display:grid;grid-template-columns:1fr 1fr;gap:7px}.list{display:grid;gap:3px;margin:8px 0}.list button{text-align:left;display:flex;justify-content:space-between}.list small{color:#476257}.nav{display:flex;align-items:center;justify-content:space-between}article{min-width:0;padding:20px 3vw}h1{margin:0;font-size:30px}h2{font-size:16px;margin:16px 0 8px}#stats{display:flex;flex-wrap:wrap;gap:18px;color:#466255;margin:6px 0 12px}.graph{overflow:auto;border:1px solid #c5d4cc;border-radius:8px;background:#fff}svg{display:block}svg text{pointer-events:none;font:12px "Inter",sans-serif}g[role=button]{cursor:pointer}g[role=button]:focus rect{stroke:#263fca;stroke-width:3}button:focus-visible{outline:2px solid #315db4}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#eaf0ea;padding:12px;border-radius:6px}table{border-collapse:collapse;width:100%;background:white}td,th{text-align:left;border-bottom:1px solid #d9e1d9;padding:6px 10px}#count,#legend{color:#476257}details{margin:12px 0}summary{cursor:pointer}#evidence{margin:8px 0;color:#4c5d54}@media(max-width:750px){main{display:block}aside{border-bottom:1px solid #cbd7cf}.list{max-height:125px;overflow:auto}article{padding:14px}header{padding:12px}}
 </style>
-<header><strong>RipSat</strong><span>Cell 浏览器</span><select aria-label="Bake 目录" id="catalog"></select></header>
-<main><aside><label>搜索 ID、规则或表名<input id="search" type="search" placeholder="#42 或规则名称"></label>
+<header><strong>RipSat</strong><span>Cell 浏览器</span><!--EGRAPH_LINK--><nav class="suite-nav" aria-label="浏览模式"><button id="cell-tab">Cell 结构</button><button id="stream-tab">Token 执行流</button></nav><select aria-label="Bake 目录" id="catalog"></select></header>
+<main id="cell-pane"><aside><label>搜索 ID、规则或表名<input id="search" type="search" placeholder="#42 或规则名称"></label>
 <div class="pair"><label>最小依赖深度<input type="number" min="1" id="depth" value="1"></label><label>最多外部输入<input type="number" min="0" id="bounds" placeholder="不限"></label></div>
 <label>Teacher 回放证据<select id="proof"></select></label><label>排序<select id="sort"><option value="id">原始编号</option><option value="depth">依赖最深</option><option value="external">外部输入最少</option></select></label><button id="sample">随机抽看匹配项</button><div id="count"></div><div class="list" id="list"></div><div class="nav"><button id="prev">上一页</button><span id="page"></span><button id="next">下一页</button></div></aside>
 <article><h1 id="title"></h1><div id="stats"></div><div id="evidence"></div><p id="legend">左侧为独立输入，箭头沿实际指令输出连到消费步骤。点击步骤查看每个具名端口。</p>
 <div class="graph" id="graph"></div><section id="inspector"></section><details><summary>原始 Bake 布局</summary><pre id="raw"></pre></details></article></main>
+<!--STREAM-->
+<script type="application/json" id="ts-data">/*STREAM_DATA*/</script>
 <script type="application/json" id="data">/*CATALOGS*/</script>
 <script>
 "use strict";
@@ -39,9 +41,9 @@ function list(){el('list').replaceChildren();el('count').textContent=filtered.le
 function svg(tag,attrs,p){const n=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [k,v] of Object.entries(attrs))n.setAttribute(k,v);p.append(n);return n}
 function view(){for(const k of ['stats','graph','inspector','evidence','raw'])el(k).replaceChildren();
  if(id===undefined){el('title').textContent='没有匹配的模板';return}
- const x=items[id],l=cat.layouts[id];el('title').textContent='Cell #'+id;
+ const x=items[id],l=cat.layouts[id];el('title').textContent=cat.program_sha?'Primitive · R'+id:'Cell #'+id;
  [l.length+' 个规则步骤','依赖深度 '+x.d,x.inputs.length+' 个独立输入',new Set(l.map(s=>s[1])).size+' 个 Run 组'].forEach(t=>put(el('stats'),'b',t));
- const verified=Object.keys(replays).filter(k=>replays[k].has(id));el('evidence').textContent=verified.length?'原生 teacher 回放通过 · '+verified.join(' / '):'此目录载入的回放中没有该模板的完成记录';
+ const verified=Object.keys(replays).filter(k=>replays[k].has(id));el('evidence').textContent=cat.program_sha?'输入来自本程序的 Recipe 与回执契约。':verified.length?'原生 teacher 回放通过 · '+verified.join(' / '):'此目录载入的回放中没有该模板的完成记录';
  const cols=new Map(),pos=new Map();
  function place(key,d){const i=cols.get(d)||0;cols.set(d,i+1);pos.set(key,[16+d*182,22+i*70])}
  x.inputs.forEach(s=>place('b'+s,0));x.levels.forEach((d,i)=>place(i,d));
@@ -57,9 +59,27 @@ function view(){for(const k of ['stats','graph','inspector','evidence','raw'])el
  const [r,g,w]=l[step],rule=cat.rules[r],panel=el('inspector');put(panel,'h2','步骤 '+step+' · R'+r+(rule?' · '+rule.group:''));if(rule)put(panel,'pre',rule.name);
  const table=put(panel,'table',''),head=put(table,'tr','');['消费端口','输入表','实际引用'].forEach(t=>put(head,'th',t));
  w.forEach(([p,pc],j)=>{const tr=put(table,'tr','');put(tr,'td','atom '+j);put(tr,'td',rule?.atoms[j]??'—');put(tr,'td',p<0?'外部输入 '+pc:'步骤 '+p+' · op '+pc+' '+(cat.rules[l[p][0]]?.effects[pc]??''))});
+ if(cat.program_sha && window.tsHasRule?.(cat.program_sha,r)){const b=put(panel,'button','查看此规则的实际签发 →');b.onclick=()=>{showStream(true);window.tsGoRule(r)}}
  if(!w.length)put(panel,'p','该步骤不需要表输入。');el('raw').textContent=JSON.stringify(l,null,2)}
 el('catalog').onchange=()=>load(Number(el('catalog').value));for(const k of ['depth','bounds','search','proof','sort'])el(k).oninput=()=>filter(id);
 el('sample').onclick=()=>{const n=Math.floor(Math.random()*filtered.length);pg=Math.floor(n/16);select(filtered[n].id)};
 el('prev').onclick=()=>{pg--;select(filtered[pg*16].id)};el('next').onclick=()=>{pg++;select(filtered[pg*16].id)};
-const saved=location.hash.slice(1).split('/').map(Number);load(cats[saved[0]]?saved[0]:0,saved[1]);
-</script></html>
+function showStream(on){
+ el('cell-pane').hidden=on;el('ts-pane').hidden=!on;el('catalog').hidden=on;
+ el('cell-tab').setAttribute('aria-pressed',String(!on));el('stream-tab').setAttribute('aria-pressed',String(on));
+}
+el('cell-tab').disabled=!cats.length;
+el('cell-tab').onclick=()=>{showStream(false);if(cat)view()};el('stream-tab').onclick=()=>showStream(true);
+let linkedCatalog=-1;
+window.tsStructureAvailable=(sha,r,higher)=>{
+ linkedCatalog=cats.findIndex(c=>typeof sha==='string' && c.program_sha===sha && c.rules[r] && !higher);
+ return linkedCatalog>=0;
+};
+window.tsOpenStructure=r=>{
+ if(linkedCatalog<0)return;
+ el('search').value='';el('depth').value=1;el('bounds').value='';
+ load(linkedCatalog,r);showStream(false);el('title').scrollIntoView({block:'nearest'});
+};
+const saved=location.hash.slice(1).split('/').map(Number);if(cats.length)load(cats[saved[0]]?saved[0]:0,saved[1]);
+showStream(/*START_STREAM*/ || !cats.length);
+</script><script>/*STREAM_SCRIPT*/</script></html>

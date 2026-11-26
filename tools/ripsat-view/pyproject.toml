@@ -4,12 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ripsat-view"
-version = "0.2.2"
-description = "Offline RipSat Bake catalog viewer"
+version = "0.3.0"
+description = "Offline RipSat Cell structure and token stream viewer"
 requires-python = ">=3.8"
 
 [project.scripts]
 ripsat-view = "ripsat_view.__main__:main"
+ts_viz = "ripsat_view.__main__:ts_viz"
 
 [tool.setuptools.package-data]
-ripsat_view = ["viewer.html", "egraph.html"]
+ripsat_view = ["viewer.html", "egraph.html", "stream.html", "stream.js"]

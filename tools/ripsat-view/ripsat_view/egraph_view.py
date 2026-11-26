@@ -7,7 +7,7 @@ import json
 import webbrowser
 from urllib.parse import urlsplit
 
-from . import _load
+from . import _load, suite_html
 from .egraph import layout_graph, snapshot_graph, svg
 
 
@@ -43,10 +43,11 @@ def library(path, program):
             lambda i,phase: snapshot_graph(folders[i]/("trigger-state.json" if phase=="before" else "observed-saturated-state.json")))
 
 
-def serve(paths,program,port,launch):
+def serve(paths,program,port,launch,stream=None):
     libs=[library(p,program) for p in paths]
     page=Path(__file__).with_name("egraph.html").read_text(encoding="utf-8")
     page=page.replace("/*LIBRARIES*/",json.dumps([x[0] for x in libs],ensure_ascii=False).replace("<","\\u003c"))
+    stream_page=suite_html([],program,stream=stream,start_stream=True,egraph_link=True)
     @lru_cache(maxsize=24)
     def draw(k,i,phase):
         g=libs[k][1](i,phase)
@@ -56,6 +57,8 @@ def serve(paths,program,port,launch):
             path=urlsplit(self.path).path
             if path=="/":
                 body,mime=page,"text/html"
+            elif path=="/stream":
+                body,mime=stream_page,"text/html"
             else:
                 try:
                     prefix,cat,cell,phase=path.strip("/").split("/")

@@ -1,0 +1,27 @@
+<section id="ts-pane" hidden aria-label="Token 执行流">
+<style>
+[hidden]{display:none!important}.suite-nav{display:flex;gap:4px}.suite-nav button{border-color:#678277;color:white;background:transparent}.suite-nav button[aria-pressed=true]{background:#edf4eb;color:#193f35}.ts{max-width:1460px;margin:auto;padding:22px clamp(12px,3vw,48px);color:#1d3932}.ts h1,.ts h2,.ts h3{margin:0}.ts h1{font-size:28px;letter-spacing:-1px}.ts .head,.ts .toolbar,.ts .pager{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.ts .head{justify-content:space-between}.ts .dim,.ts small{color:#51695f}.ts .metrics,.ts .layout{display:grid;gap:12px}.ts .metrics{grid-template-columns:repeat(4,1fr);margin:16px 0}.ts .card,.ts .box,.ts details.faq{border:1px solid #cad8cc;background:white;border-radius:8px}.ts .card{padding:10px 14px}.ts .card b{display:block;font-size:23px;font-variant-numeric:tabular-nums}.ts .layout{grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);align-items:start}.ts .box{padding:16px;min-width:0}.ts button,.ts select,.ts input{font:inherit}.ts .tabs{display:flex;gap:7px;overflow:auto;padding:6px 0 12px}.ts .tabs button{white-space:nowrap}.ts [aria-pressed=true]{background:#235344;color:white}.ts .toolbar{margin:12px 0}.ts .toolbar input{min-width:100px;width:134px}.ts .ledger{display:grid}.ts .ledger button{display:grid;grid-template-columns:minmax(72px,1fr) minmax(64px,1fr) minmax(84px,1fr);border:0;border-bottom:1px solid #e2eae3;border-radius:0;background:white;text-align:left;padding:8px;align-items:center}.ts .ledger button[aria-pressed=true]{background:#e5f1e8;color:#173c30;box-shadow:inset 3px 0 #37765e}.ts .tag{font-size:12px;font-weight:650}.ts .good{color:#176443}.ts .bad{color:#95432d}.ts .wait{color:#81601a}.ts .pager{justify-content:space-between;margin-top:12px}.ts .life{padding-left:22px}.ts .life li{padding-left:4px;margin:10px 0}.ts .life b{display:block}.ts .box ul{padding-left:20px}.ts pre{font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere;background:#f4f6f2;padding:8px}.ts #ts-frame pre{max-height:240px;overflow:auto}.ts .faq{padding:12px 16px;margin-top:16px}.ts summary{cursor:pointer;font-weight:650}.ts .faq dt{font-weight:650;margin-top:10px}.ts .faq dd{margin:3px 0 0}.ts .file{display:inline-block;cursor:pointer;padding:6px 12px;border:1px solid #abc2b2;background:white;border-radius:5px}.ts .file:focus-within{outline:2px solid #315db4}.ts .file input{position:absolute;opacity:0;width:1px;height:1px}.ts .empty{padding:20px 0;color:#566c63}.ts #ts-error{color:#913d26}.ts .link{padding:0;border:0;background:none;color:#126144;text-decoration:underline}.ts .runline{margin:8px 0;color:#465d54}@media(max-width:800px){.ts .layout{grid-template-columns:1fr}.ts .metrics{grid-template-columns:1fr 1fr}header{flex-wrap:wrap}}
+</style>
+<div class="ts">
+<div class="head"><div><h1>Token 执行流</h1><span id="ts-source" class="dim"></span></div><div class="toolbar"><label class="file">打开轨迹<input id="ts-file" type="file" accept=".json,.gz,.gzip,application/json,application/gzip"></label><button id="ts-help">常见问题</button></div></div>
+<p id="ts-error" role="alert"></p>
+<div id="ts-empty" class="empty">选择经验缓冲区中的 .json.gz 或 .json 文件，查看每轮发出的请求和收到的回执。</div>
+<div id="ts-content" hidden>
+<div class="metrics" id="ts-metrics"></div>
+<nav class="tabs" id="ts-runs" aria-label="执行轮次"></nav>
+<p id="ts-runline" class="runline"></p>
+<details><summary>查看本轮发布与退役的原始记录</summary><div id="ts-frame"></div></details>
+<div class="layout"><section class="box"><h2>本轮记录</h2>
+<div class="toolbar"><select aria-label="记录来源" id="ts-origin"><option value="network">网络请求</option><option value="teacher">Teacher 辅助</option><option value="random">随机辅助</option><option value="audit">离线遗漏</option></select><select aria-label="原生回执状态" id="ts-status"></select><input aria-label="查找请求编号或规则" id="ts-find" placeholder="#请求号 或 R规则号" type="search"></div>
+<div class="ledger" id="ts-list"></div><div class="pager"><button id="ts-prev">上一页</button><span id="ts-count"></span><button id="ts-next">下一页</button></div></section>
+<section class="box" id="ts-detail" aria-label="所选记录"></section></div></div>
+<details class="faq" id="ts-faq"><summary>常见问题 · FAQ</summary><dl>
+<dt>第一次看，从哪里开始？</dt><dd>选一轮 Run，再点一枚网络请求。按“生成 → 回执 → 发布”阅读右侧记录。带下划线的父请求和消费者可以跳转。</dd>
+<dt>Cell 结构和 Token 执行流分别回答什么？</dt><dd>结构视图解释规则需要哪些输入以及计算如何接线；执行流显示某次运行实际选择的引用和 CPU 回执。规则编号只在对应程序内有意义。</dd>
+<dt>一页有 160 枚 Token，代表 160 次根据回执重新决策吗？</dt><dd>这套采集器在每个 Run 开头从同一上下文生成一页，然后分批签发。每条请求有独立回执；页内较早的回执没有参与后半页的生成。</dd>
+<dt>为什么“已接受”之后还要看发布？</dt><dd>已接受表示 CPU 准许执行。后继读取具名端口，还需要实际发布及适用的版本。工具只展示分片中直接记录到的端口；末轮的最终发布可能不在文件内。</dd>
+<dt>重复、未触发、绑定错误有何区别？</dt><dd>重复是原生执行器对该次请求的判定；未触发表示规则当时没有被触发；绑定错误表示给定父引用没有形成要求的绑定。两个请求看起来相同，仍各自计一次签发。</dd>
+<dt>有效操作为零是否说明请求无用？</dt><dd>“当轮贡献”来自原生分叉的 signed_gain，只统计当时已归属的新增操作。如有终图账本，详情还会显示最终归属。训练数据应保留决策时可见的状态，把随后发布的端口及最终贡献留作监督。</dd>
+<dt>Teacher 和遗漏为什么分开？</dt><dd>Teacher 与随机辅助都实际签发并获得 CPU 回执。遗漏来自同一状态的离线分叉，未计入网络请求数。原有贡献归属发生变化时，遗漏结论保留未知。</dd>
+<dt>如何打开自己的数据？</dt><dd>在“打开轨迹”里选择 credit-scaling 的 buffer 分片。解压和查询均在本机进行。结构跳转需要同一 program.json；仅凭不同文件里相同的规则号无法对齐。</dd>
+</dl></details></div></section>
