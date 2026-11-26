@@ -1,0 +1,437 @@
+case,run,n,semantic,higher_entry_only,responses
+fact,7,4,0,0,{}
+fact,7,16,0,0,{'untriggered_rule': 3}
+fact,7,64,0,0,"{'untriggered_rule': 11, 'binding': 4}"
+fact,7,256,0,0,"{'untriggered_rule': 44, 'binding': 17}"
+fact,9,4,1,0,{'match': 1}
+fact,9,16,1,0,{'match': 2}
+fact,9,64,6,0,"{'match': 7, 'binding': 1}"
+fact,9,256,10,0,"{'binding': 11, 'match': 29}"
+fact,17,4,0,0,{'binding': 3}
+fact,17,16,0,0,"{'binding': 7, 'untriggered_rule': 1}"
+fact,17,64,0,0,"{'binding': 31, 'untriggered_rule': 4}"
+fact,17,256,2,0,"{'binding': 117, 'untriggered_rule': 30, 'match': 2, 'watermark': 1}"
+fact,20,4,0,0,"{'binding': 2, 'untriggered_rule': 1}"
+fact,20,16,0,0,"{'binding': 6, 'untriggered_rule': 2}"
+fact,20,64,0,0,"{'binding': 22, 'untriggered_rule': 11}"
+fact,20,256,2,0,"{'binding': 99, 'match': 2, 'untriggered_rule': 36}"
+fact,31,4,0,0,"{'binding': 2, 'untriggered_rule': 1}"
+fact,31,16,0,0,"{'watermark': 1, 'binding': 7, 'untriggered_rule': 4}"
+fact,31,64,0,0,"{'binding': 24, 'watermark': 1, 'untriggered_rule': 8}"
+fact,31,256,0,0,"{'binding': 93, 'watermark': 2, 'untriggered_rule': 45}"
+fact,34,4,0,0,{'binding': 1}
+fact,34,16,0,0,"{'binding': 4, 'untriggered_rule': 2}"
+fact,34,64,0,0,"{'binding': 23, 'untriggered_rule': 12}"
+fact,34,256,0,0,"{'binding': 99, 'watermark': 2, 'untriggered_rule': 43}"
+fact,49,4,0,0,{'binding': 1}
+fact,49,16,0,0,"{'binding': 5, 'untriggered_rule': 2}"
+fact,49,64,0,0,"{'binding': 14, 'untriggered_rule': 13}"
+fact,49,256,0,0,"{'untriggered_rule': 70, 'binding': 51}"
+fact,79,4,0,0,{}
+fact,79,16,1,0,{'match': 1}
+fact,79,64,2,1,{'match': 3}
+fact,79,256,4,3,"{'binding': 2, 'match': 9}"
+fact,81,4,0,0,{}
+fact,81,16,0,0,{'untriggered_rule': 2}
+fact,81,64,0,0,"{'untriggered_rule': 11, 'watermark': 2, 'binding': 9}"
+fact,81,256,0,0,"{'untriggered_rule': 23, 'watermark': 4, 'binding': 32}"
+fact,83,4,0,0,{'binding': 1}
+fact,83,16,0,0,{'binding': 6}
+fact,83,64,0,0,"{'binding': 20, 'untriggered_rule': 3}"
+fact,83,256,0,0,"{'untriggered_rule': 9, 'binding': 73, 'guard': 4}"
+fact,87,4,0,0,{}
+fact,87,16,0,0,{'binding': 1}
+fact,87,64,0,0,"{'binding': 16, 'guard': 1}"
+fact,87,256,1,1,"{'binding': 48, 'untriggered_rule': 11, 'match': 2, 'watermark': 1, 'guard': 2}"
+fact,91,4,0,0,{}
+fact,91,16,0,0,"{'untriggered_rule': 2, 'binding': 1}"
+fact,91,64,0,0,"{'untriggered_rule': 3, 'binding': 2, 'guard': 1, 'watermark': 2}"
+fact,91,256,0,3,"{'binding': 44, 'match': 3, 'untriggered_rule': 9, 'watermark': 4, 'guard': 2}"
+fact,94,4,0,0,{'binding': 2}
+fact,94,16,0,0,"{'binding': 5, 'untriggered_rule': 2}"
+fact,94,64,0,0,"{'untriggered_rule': 4, 'binding': 15, 'watermark': 2}"
+fact,94,256,0,0,"{'untriggered_rule': 20, 'binding': 78, 'watermark': 8}"
+fact,98,4,0,0,{'binding': 1}
+fact,98,16,0,0,"{'untriggered_rule': 2, 'binding': 2}"
+fact,98,64,0,0,"{'binding': 14, 'untriggered_rule': 10, 'watermark': 3}"
+fact,98,256,0,0,"{'untriggered_rule': 62, 'binding': 43, 'watermark': 5}"
+fact,101,4,0,0,"{'untriggered_rule': 1, 'binding': 1}"
+fact,101,16,0,0,"{'untriggered_rule': 4, 'binding': 1}"
+fact,101,64,0,0,"{'untriggered_rule': 19, 'binding': 4}"
+fact,101,256,0,0,"{'untriggered_rule': 63, 'binding': 39, 'watermark': 2}"
+fact,113,4,0,0,{'untriggered_rule': 4}
+fact,113,16,0,0,{'untriggered_rule': 6}
+fact,113,64,0,0,"{'untriggered_rule': 25, 'binding': 1}"
+fact,113,256,0,0,"{'untriggered_rule': 95, 'binding': 8}"
+fact,128,4,0,0,{'untriggered_rule': 3}
+fact,128,16,0,0,{'untriggered_rule': 10}
+fact,128,64,0,0,"{'untriggered_rule': 33, 'binding': 1}"
+fact,128,256,1,0,"{'untriggered_rule': 137, 'binding': 5, 'match': 1}"
+fact,157,4,0,0,"{'binding': 1, 'untriggered_rule': 1}"
+fact,157,16,0,0,"{'binding': 1, 'untriggered_rule': 2}"
+fact,157,64,0,0,"{'binding': 6, 'untriggered_rule': 6}"
+fact,157,256,0,0,"{'binding': 39, 'untriggered_rule': 37}"
+fact,160,4,0,0,"{'binding': 2, 'untriggered_rule': 1}"
+fact,160,16,0,0,"{'untriggered_rule': 4, 'binding': 4}"
+fact,160,64,0,0,"{'binding': 18, 'untriggered_rule': 14}"
+fact,160,256,0,0,"{'binding': 83, 'untriggered_rule': 50}"
+fact,198,4,0,0,{'binding': 2}
+fact,198,16,0,0,{'binding': 13}
+fact,198,64,0,0,"{'binding': 41, 'untriggered_rule': 5}"
+fact,198,256,0,0,"{'binding': 160, 'untriggered_rule': 11, 'watermark': 1}"
+fact,202,4,0,0,{'binding': 4}
+fact,202,16,0,0,{'binding': 12}
+fact,202,64,0,0,{'binding': 38}
+fact,202,256,1,0,"{'binding': 152, 'untriggered_rule': 3, 'watermark': 1, 'match': 1}"
+fact,260,4,0,0,{'untriggered_rule': 2}
+fact,260,16,0,0,{'untriggered_rule': 7}
+fact,260,64,0,0,{'untriggered_rule': 20}
+fact,260,256,1,0,"{'untriggered_rule': 68, 'match': 1}"
+fact,267,4,0,0,"{'untriggered_rule': 1, 'binding': 1}"
+fact,267,16,0,0,"{'untriggered_rule': 3, 'binding': 2}"
+fact,267,64,0,0,"{'untriggered_rule': 9, 'binding': 7, 'watermark': 1}"
+fact,267,256,0,0,"{'untriggered_rule': 41, 'binding': 14, 'watermark': 3}"
+fact,279,4,0,0,"{'watermark': 1, 'binding': 2, 'guard': 1}"
+fact,279,16,1,0,"{'watermark': 1, 'binding': 9, 'guard': 5, 'match': 1}"
+fact,279,64,1,0,"{'watermark': 5, 'binding': 42, 'guard': 10, 'match': 5}"
+fact,279,256,2,0,"{'watermark': 13, 'binding': 190, 'guard': 30, 'match': 16}"
+fact,313,4,0,0,{'untriggered_rule': 2}
+fact,313,16,0,0,{'untriggered_rule': 5}
+fact,313,64,0,0,"{'untriggered_rule': 15, 'watermark': 1}"
+fact,313,256,0,0,"{'untriggered_rule': 65, 'watermark': 4, 'binding': 4}"
+fact,352,4,0,0,{'binding': 2}
+fact,352,16,0,0,{'binding': 10}
+fact,352,64,0,0,{'binding': 36}
+fact,352,256,0,0,{'binding': 170}
+fact,365,4,0,0,{'untriggered_rule': 1}
+fact,365,16,0,0,"{'binding': 3, 'untriggered_rule': 5}"
+fact,365,64,0,0,"{'binding': 14, 'untriggered_rule': 17}"
+fact,365,256,0,0,"{'binding': 40, 'untriggered_rule': 72}"
+fact,368,4,0,0,{'untriggered_rule': 2}
+fact,368,16,0,0,{'untriggered_rule': 7}
+fact,368,64,0,0,"{'untriggered_rule': 17, 'binding': 3}"
+fact,368,256,0,0,"{'untriggered_rule': 63, 'binding': 13}"
+fact,390,4,0,0,{'watermark': 4}
+fact,390,16,0,0,"{'watermark': 13, 'binding': 3}"
+fact,390,64,2,0,"{'watermark': 46, 'match': 2, 'binding': 16}"
+fact,390,256,2,0,"{'watermark': 187, 'match': 11, 'binding': 58}"
+fact,393,4,0,0,{'binding': 3}
+fact,393,16,0,0,"{'binding': 12, 'watermark': 1}"
+fact,393,64,0,0,"{'binding': 53, 'watermark': 6}"
+fact,393,256,0,0,"{'binding': 212, 'watermark': 19, 'guard': 1}"
+fact,418,4,0,0,{'binding': 1}
+fact,418,16,0,0,{'binding': 6}
+fact,418,64,0,0,{'binding': 33}
+fact,418,256,0,0,{'binding': 157}
+loopfact,8,4,0,0,{'binding': 1}
+loopfact,8,16,0,0,"{'untriggered_rule': 3, 'binding': 1}"
+loopfact,8,64,0,0,"{'untriggered_rule': 7, 'binding': 3}"
+loopfact,8,256,1,0,"{'untriggered_rule': 37, 'binding': 13, 'match': 1}"
+loopfact,10,4,0,0,{}
+loopfact,10,16,0,0,{}
+loopfact,10,64,2,0,"{'binding': 4, 'match': 2}"
+loopfact,10,256,5,0,"{'binding': 15, 'match': 12}"
+loopfact,13,4,1,0,"{'match': 1, 'untriggered_rule': 1}"
+loopfact,13,16,1,0,"{'match': 1, 'binding': 4, 'untriggered_rule': 1}"
+loopfact,13,64,1,0,"{'match': 1, 'binding': 9, 'untriggered_rule': 6}"
+loopfact,13,256,1,0,"{'match': 2, 'binding': 62, 'untriggered_rule': 15}"
+loopfact,29,4,0,0,"{'binding': 1, 'watermark': 1, 'untriggered_rule': 1}"
+loopfact,29,16,1,0,"{'binding': 8, 'match': 1, 'watermark': 2, 'untriggered_rule': 3}"
+loopfact,29,64,1,0,"{'binding': 40, 'match': 3, 'watermark': 8, 'untriggered_rule': 10}"
+loopfact,29,256,1,0,"{'binding': 147, 'match': 21, 'watermark': 21, 'untriggered_rule': 45}"
+loopfact,48,4,0,0,{'untriggered_rule': 3}
+loopfact,48,16,0,0,"{'untriggered_rule': 7, 'binding': 2}"
+loopfact,48,64,0,0,"{'untriggered_rule': 27, 'binding': 15}"
+loopfact,48,256,0,0,"{'untriggered_rule': 104, 'binding': 35}"
+loopfact,51,4,0,0,{'untriggered_rule': 3}
+loopfact,51,16,0,0,"{'untriggered_rule': 8, 'binding': 1}"
+loopfact,51,64,0,0,"{'untriggered_rule': 22, 'binding': 10}"
+loopfact,51,256,0,0,"{'untriggered_rule': 103, 'binding': 25}"
+loopfact,60,4,0,0,{'binding': 1}
+loopfact,60,16,1,0,"{'match': 1, 'binding': 1}"
+loopfact,60,64,2,0,"{'match': 2, 'binding': 1}"
+loopfact,60,256,9,1,"{'binding': 2, 'match': 19}"
+loopfact,64,4,0,0,{'binding': 2}
+loopfact,64,16,0,0,"{'binding': 7, 'untriggered_rule': 2}"
+loopfact,64,64,0,0,"{'untriggered_rule': 8, 'binding': 19}"
+loopfact,64,256,0,0,"{'untriggered_rule': 41, 'watermark': 1, 'binding': 62, 'guard': 1}"
+loopfact,68,4,0,0,{'binding': 1}
+loopfact,68,16,0,0,"{'binding': 4, 'untriggered_rule': 1, 'watermark': 1}"
+loopfact,68,64,1,0,"{'untriggered_rule': 11, 'binding': 14, 'watermark': 1, 'match': 1}"
+loopfact,68,256,1,2,"{'untriggered_rule': 45, 'binding': 52, 'match': 3, 'watermark': 1, 'guard': 2}"
+loopfact,71,4,0,0,{'binding': 1}
+loopfact,71,16,0,0,"{'untriggered_rule': 2, 'binding': 4}"
+loopfact,71,64,0,0,"{'untriggered_rule': 9, 'binding': 19}"
+loopfact,71,256,0,1,"{'untriggered_rule': 32, 'binding': 99, 'watermark': 1, 'match': 1}"
+loopfact,75,4,0,0,{}
+loopfact,75,16,0,0,"{'untriggered_rule': 2, 'binding': 2}"
+loopfact,75,64,0,0,"{'untriggered_rule': 11, 'binding': 14}"
+loopfact,75,256,0,0,"{'untriggered_rule': 40, 'watermark': 3, 'binding': 67}"
+loopfact,79,4,0,0,"{'untriggered_rule': 2, 'binding': 1}"
+loopfact,79,16,0,0,"{'untriggered_rule': 3, 'binding': 5}"
+loopfact,79,64,0,0,"{'untriggered_rule': 14, 'binding': 17}"
+loopfact,79,256,1,0,"{'untriggered_rule': 48, 'binding': 62, 'match': 1}"
+loopfact,83,4,0,0,{}
+loopfact,83,16,0,0,"{'untriggered_rule': 3, 'binding': 2}"
+loopfact,83,64,0,0,"{'untriggered_rule': 15, 'binding': 12}"
+loopfact,83,256,0,0,"{'untriggered_rule': 62, 'binding': 47, 'watermark': 1}"
+loopfact,86,4,0,0,{'untriggered_rule': 1}
+loopfact,86,16,0,0,"{'binding': 2, 'untriggered_rule': 5}"
+loopfact,86,64,1,0,"{'binding': 7, 'untriggered_rule': 19, 'match': 1}"
+loopfact,86,256,1,0,"{'binding': 31, 'untriggered_rule': 77, 'match': 1, 'watermark': 1}"
+loopfact,98,4,1,0,"{'untriggered_rule': 1, 'match': 1}"
+loopfact,98,16,1,0,"{'untriggered_rule': 7, 'match': 1, 'binding': 1}"
+loopfact,98,64,1,0,"{'untriggered_rule': 28, 'match': 1, 'binding': 2}"
+loopfact,98,256,1,0,"{'untriggered_rule': 80, 'binding': 6, 'match': 1}"
+loopfact,109,4,0,0,{'untriggered_rule': 2}
+loopfact,109,16,0,0,{'untriggered_rule': 8}
+loopfact,109,64,0,0,"{'untriggered_rule': 20, 'binding': 1}"
+loopfact,109,256,0,0,"{'untriggered_rule': 72, 'binding': 14}"
+loopfact,110,4,0,0,"{'binding': 1, 'untriggered_rule': 3}"
+loopfact,110,16,0,0,"{'binding': 7, 'untriggered_rule': 7}"
+loopfact,110,64,0,0,"{'binding': 30, 'watermark': 4, 'untriggered_rule': 21}"
+loopfact,110,256,1,0,"{'binding': 117, 'watermark': 20, 'match': 3, 'untriggered_rule': 66, 'guard': 1}"
+loopfact,117,4,0,0,{'untriggered_rule': 1}
+loopfact,117,16,0,0,"{'binding': 2, 'untriggered_rule': 4}"
+loopfact,117,64,1,0,"{'binding': 21, 'match': 1, 'untriggered_rule': 8}"
+loopfact,117,256,1,0,"{'binding': 85, 'match': 1, 'watermark': 1, 'untriggered_rule': 45}"
+loopfact,123,4,0,0,{'untriggered_rule': 2}
+loopfact,123,16,0,0,{'untriggered_rule': 6}
+loopfact,123,64,0,0,"{'binding': 1, 'untriggered_rule': 33}"
+loopfact,123,256,0,0,"{'binding': 1, 'untriggered_rule': 118}"
+loopfact,146,4,0,0,{}
+loopfact,146,16,0,0,{}
+loopfact,146,64,3,0,{'match': 4}
+loopfact,146,256,5,0,{'match': 10}
+loopfact,194,4,0,0,{'untriggered_rule': 3}
+loopfact,194,16,0,0,{'untriggered_rule': 5}
+loopfact,194,64,0,0,{'untriggered_rule': 14}
+loopfact,194,256,2,0,"{'untriggered_rule': 60, 'match': 2}"
+loopfact,202,4,2,1,"{'watermark': 1, 'match': 3}"
+loopfact,202,16,5,0,"{'watermark': 5, 'match': 9, 'binding': 2}"
+loopfact,202,64,6,0,"{'watermark': 15, 'match': 38, 'binding': 11}"
+loopfact,202,256,6,0,"{'watermark': 67, 'match': 148, 'binding': 41}"
+loopfact,236,4,0,0,{'binding': 4}
+loopfact,236,16,0,0,"{'binding': 14, 'untriggered_rule': 1}"
+loopfact,236,64,0,0,"{'binding': 52, 'untriggered_rule': 3}"
+loopfact,236,256,0,0,"{'binding': 208, 'untriggered_rule': 12}"
+loopfact,237,4,0,0,{'untriggered_rule': 1}
+loopfact,237,16,0,0,"{'untriggered_rule': 4, 'binding': 1}"
+loopfact,237,64,1,0,"{'untriggered_rule': 17, 'binding': 3, 'match': 1, 'watermark': 1}"
+loopfact,237,256,1,0,"{'untriggered_rule': 46, 'binding': 17, 'match': 1, 'watermark': 2}"
+loopfact,243,4,0,0,{}
+loopfact,243,16,0,0,{'untriggered_rule': 6}
+loopfact,243,64,0,0,{'untriggered_rule': 12}
+loopfact,243,256,0,0,{'untriggered_rule': 42}
+loopfact,269,4,0,0,{'binding': 4}
+loopfact,269,16,1,0,"{'binding': 8, 'watermark': 3, 'guard': 2, 'match': 1}"
+loopfact,269,64,1,0,"{'binding': 36, 'watermark': 11, 'guard': 8, 'match': 2}"
+loopfact,269,256,1,0,"{'binding': 159, 'watermark': 41, 'guard': 23, 'match': 6}"
+loopfact,296,4,0,0,{'binding': 4}
+loopfact,296,16,0,0,"{'binding': 15, 'untriggered_rule': 1}"
+loopfact,296,64,0,0,"{'binding': 51, 'untriggered_rule': 7}"
+loopfact,296,256,0,0,"{'binding': 189, 'untriggered_rule': 25}"
+loopfact,339,4,0,0,{'binding': 4}
+loopfact,339,16,0,0,{'binding': 16}
+loopfact,339,64,0,0,{'binding': 55}
+loopfact,339,256,0,0,{'binding': 219}
+loopfact,343,4,0,0,{'binding': 2}
+loopfact,343,16,0,0,{'binding': 11}
+loopfact,343,64,0,0,{'binding': 47}
+loopfact,343,256,0,0,{'binding': 183}
+loopfact,377,4,1,0,"{'watermark': 3, 'match': 1}"
+loopfact,377,16,1,0,"{'watermark': 15, 'match': 1}"
+loopfact,377,64,1,0,"{'watermark': 59, 'match': 4, 'binding': 1}"
+loopfact,377,256,1,0,"{'watermark': 228, 'match': 20, 'binding': 8}"
+sum-divisors,17,4,0,0,{'binding': 2}
+sum-divisors,17,16,0,0,{'binding': 10}
+sum-divisors,17,64,0,0,"{'binding': 31, 'untriggered_rule': 3}"
+sum-divisors,17,256,0,0,"{'binding': 130, 'untriggered_rule': 22}"
+sum-divisors,23,4,0,0,"{'untriggered_rule': 1, 'binding': 1}"
+sum-divisors,23,16,0,0,"{'untriggered_rule': 10, 'binding': 3}"
+sum-divisors,23,64,0,0,"{'untriggered_rule': 31, 'binding': 19}"
+sum-divisors,23,256,1,0,"{'untriggered_rule': 115, 'binding': 73, 'match': 1}"
+sum-divisors,79,4,0,0,"{'untriggered_rule': 1, 'binding': 2}"
+sum-divisors,79,16,0,0,"{'untriggered_rule': 1, 'binding': 8}"
+sum-divisors,79,64,0,0,"{'untriggered_rule': 14, 'binding': 25, 'watermark': 1}"
+sum-divisors,79,256,0,0,"{'untriggered_rule': 64, 'binding': 106, 'watermark': 6, 'guard': 1}"
+sum-divisors,119,4,0,0,{}
+sum-divisors,119,16,2,0,"{'match': 2, 'binding': 1}"
+sum-divisors,119,64,2,0,"{'match': 3, 'binding': 1}"
+sum-divisors,119,256,5,3,"{'binding': 5, 'match': 10}"
+sum-divisors,127,4,0,0,{'binding': 1}
+sum-divisors,127,16,0,0,"{'binding': 4, 'untriggered_rule': 2}"
+sum-divisors,127,64,0,0,"{'untriggered_rule': 9, 'binding': 13, 'watermark': 1}"
+sum-divisors,127,256,0,0,"{'untriggered_rule': 22, 'binding': 70, 'watermark': 1, 'guard': 1}"
+sum-divisors,135,4,0,0,{'binding': 3}
+sum-divisors,135,16,0,0,"{'binding': 6, 'untriggered_rule': 3}"
+sum-divisors,135,64,0,0,"{'binding': 22, 'untriggered_rule': 7}"
+sum-divisors,135,256,0,0,"{'binding': 94, 'untriggered_rule': 17, 'watermark': 1}"
+sum-divisors,141,4,0,0,"{'untriggered_rule': 1, 'binding': 2}"
+sum-divisors,141,16,0,0,"{'untriggered_rule': 2, 'binding': 6}"
+sum-divisors,141,64,0,0,"{'binding': 20, 'untriggered_rule': 7, 'watermark': 2}"
+sum-divisors,141,256,1,0,"{'binding': 86, 'watermark': 7, 'untriggered_rule': 32, 'match': 1}"
+sum-divisors,147,4,0,0,"{'binding': 1, 'untriggered_rule': 1}"
+sum-divisors,147,16,0,0,"{'binding': 4, 'untriggered_rule': 2}"
+sum-divisors,147,64,0,0,"{'untriggered_rule': 11, 'binding': 16, 'watermark': 1}"
+sum-divisors,147,256,0,0,"{'untriggered_rule': 32, 'binding': 70, 'watermark': 3}"
+sum-divisors,151,4,0,0,{'binding': 3}
+sum-divisors,151,16,0,0,{'binding': 8}
+sum-divisors,151,64,0,0,"{'untriggered_rule': 3, 'binding': 25, 'watermark': 1}"
+sum-divisors,151,256,0,0,"{'untriggered_rule': 17, 'binding': 78, 'watermark': 6}"
+sum-divisors,220,4,0,0,{'binding': 1}
+sum-divisors,220,16,0,0,"{'binding': 7, 'untriggered_rule': 2}"
+sum-divisors,220,64,0,0,"{'binding': 18, 'untriggered_rule': 16}"
+sum-divisors,220,256,0,0,"{'binding': 71, 'untriggered_rule': 45, 'watermark': 1}"
+sum-divisors,238,4,0,0,{}
+sum-divisors,238,16,0,0,{'untriggered_rule': 5}
+sum-divisors,238,64,0,0,{'untriggered_rule': 26}
+sum-divisors,238,256,0,0,"{'untriggered_rule': 95, 'binding': 3}"
+sum-divisors,247,4,0,0,"{'binding': 1, 'untriggered_rule': 1}"
+sum-divisors,247,16,0,0,"{'binding': 1, 'untriggered_rule': 10}"
+sum-divisors,247,64,0,0,"{'untriggered_rule': 29, 'binding': 1}"
+sum-divisors,247,256,0,0,"{'untriggered_rule': 111, 'binding': 4}"
+sum-divisors,259,4,0,0,{'untriggered_rule': 2}
+sum-divisors,259,16,0,0,"{'binding': 1, 'untriggered_rule': 6}"
+sum-divisors,259,64,0,0,"{'untriggered_rule': 31, 'binding': 1}"
+sum-divisors,259,256,0,0,"{'untriggered_rule': 99, 'binding': 6}"
+sum-divisors,275,4,0,0,{'binding': 4}
+sum-divisors,275,16,0,0,{'binding': 14}
+sum-divisors,275,64,0,0,"{'binding': 41, 'untriggered_rule': 3}"
+sum-divisors,275,256,0,0,"{'binding': 172, 'untriggered_rule': 8}"
+sum-divisors,290,4,0,0,{'binding': 2}
+sum-divisors,290,16,0,0,{'binding': 7}
+sum-divisors,290,64,0,0,"{'binding': 36, 'untriggered_rule': 1}"
+sum-divisors,290,256,0,0,"{'binding': 167, 'untriggered_rule': 3, 'watermark': 1}"
+sum-divisors,325,4,0,0,{'untriggered_rule': 2}
+sum-divisors,325,16,0,0,{'untriggered_rule': 5}
+sum-divisors,325,64,1,0,"{'untriggered_rule': 11, 'match': 1, 'binding': 1}"
+sum-divisors,325,256,6,0,"{'untriggered_rule': 66, 'match': 10, 'binding': 7}"
+sum-divisors,459,4,0,0,{'binding': 3}
+sum-divisors,459,16,0,0,{'binding': 14}
+sum-divisors,459,64,1,0,"{'binding': 55, 'match': 1, 'watermark': 3}"
+sum-divisors,459,256,1,0,"{'binding': 220, 'match': 1, 'watermark': 13}"
+sum-divisors,461,4,0,0,"{'binding': 2, 'watermark': 1}"
+sum-divisors,461,16,0,0,"{'binding': 8, 'watermark': 1}"
+sum-divisors,461,64,0,0,"{'binding': 38, 'watermark': 3}"
+sum-divisors,461,256,1,0,"{'binding': 156, 'watermark': 18, 'match': 1, 'guard': 1}"
+sum-divisors,476,4,2,0,"{'watermark': 2, 'match': 2}"
+sum-divisors,476,16,5,0,"{'watermark': 10, 'match': 5, 'binding': 1}"
+sum-divisors,476,64,11,0,"{'watermark': 34, 'match': 17, 'binding': 13}"
+sum-divisors,476,256,22,0,"{'watermark': 140, 'match': 79, 'binding': 37}"
+sum-divisors,491,4,0,0,{'untriggered_rule': 3}
+sum-divisors,491,16,0,0,{'untriggered_rule': 7}
+sum-divisors,491,64,0,0,"{'untriggered_rule': 24, 'binding': 1, 'watermark': 1}"
+sum-divisors,491,256,0,0,"{'untriggered_rule': 98, 'binding': 7, 'watermark': 5}"
+sum-divisors,616,4,0,0,{'untriggered_rule': 1}
+sum-divisors,616,16,0,0,{'untriggered_rule': 8}
+sum-divisors,616,64,0,0,"{'untriggered_rule': 36, 'binding': 4}"
+sum-divisors,616,256,0,0,"{'untriggered_rule': 119, 'binding': 20}"
+sum-divisors,676,4,4,0,{'match': 4}
+sum-divisors,676,16,9,0,{'match': 16}
+sum-divisors,676,64,31,0,{'match': 64}
+sum-divisors,676,256,63,0,{'match': 256}
+sum-divisors,706,4,0,0,"{'binding': 1, 'untriggered_rule': 1}"
+sum-divisors,706,16,0,0,"{'untriggered_rule': 4, 'binding': 3}"
+sum-divisors,706,64,0,0,"{'untriggered_rule': 15, 'binding': 10}"
+sum-divisors,706,256,0,0,"{'untriggered_rule': 61, 'binding': 39}"
+sum-divisors,712,4,0,0,{'binding': 1}
+sum-divisors,712,16,0,0,"{'untriggered_rule': 2, 'binding': 4}"
+sum-divisors,712,64,0,0,"{'untriggered_rule': 12, 'binding': 12}"
+sum-divisors,712,256,0,0,"{'untriggered_rule': 80, 'binding': 41}"
+sum-divisors,803,4,1,0,"{'match': 1, 'watermark': 1, 'binding': 2}"
+sum-divisors,803,16,2,0,"{'match': 3, 'watermark': 8, 'binding': 5}"
+sum-divisors,803,64,5,0,"{'match': 12, 'watermark': 30, 'binding': 22}"
+sum-divisors,803,256,6,1,"{'match': 34, 'watermark': 124, 'binding': 97, 'guard': 1}"
+sum-divisors,810,4,0,0,{'binding': 4}
+sum-divisors,810,16,0,0,"{'binding': 15, 'watermark': 1}"
+sum-divisors,810,64,0,0,"{'binding': 59, 'watermark': 3}"
+sum-divisors,810,256,0,0,"{'binding': 238, 'watermark': 13, 'guard': 1}"
+sum-divisors,943,4,0,0,{'binding': 2}
+sum-divisors,943,16,0,0,"{'untriggered_rule': 2, 'binding': 4}"
+sum-divisors,943,64,0,0,"{'untriggered_rule': 7, 'binding': 16, 'watermark': 1}"
+sum-divisors,943,256,0,0,"{'untriggered_rule': 33, 'binding': 89, 'watermark': 1}"
+sum-divisors,953,4,0,0,{'binding': 3}
+sum-divisors,953,16,0,0,"{'binding': 7, 'untriggered_rule': 2}"
+sum-divisors,953,64,0,0,"{'untriggered_rule': 12, 'binding': 19, 'watermark': 1}"
+sum-divisors,953,256,0,0,"{'untriggered_rule': 35, 'binding': 83, 'watermark': 1}"
+sum-divisors,957,4,0,0,{'binding': 2}
+sum-divisors,957,16,0,0,"{'binding': 6, 'untriggered_rule': 3}"
+sum-divisors,957,64,0,0,"{'untriggered_rule': 8, 'binding': 27}"
+sum-divisors,957,256,0,0,"{'untriggered_rule': 30, 'binding': 95}"
+sum-divisors,965,4,0,0,{'untriggered_rule': 1}
+sum-divisors,965,16,0,0,"{'binding': 4, 'untriggered_rule': 2}"
+sum-divisors,965,64,0,0,"{'untriggered_rule': 12, 'binding': 22}"
+sum-divisors,965,256,0,0,"{'untriggered_rule': 41, 'binding': 73}"
+sum-divisors,1017,4,0,0,"{'untriggered_rule': 2, 'watermark': 1}"
+sum-divisors,1017,16,0,0,"{'untriggered_rule': 9, 'binding': 1, 'watermark': 1}"
+sum-divisors,1017,64,0,0,"{'untriggered_rule': 31, 'binding': 9, 'watermark': 1}"
+sum-divisors,1017,256,0,0,"{'untriggered_rule': 141, 'binding': 42, 'watermark': 1}"
+sum-divisors,1024,4,0,0,{'binding': 4}
+sum-divisors,1024,16,0,0,{'binding': 16}
+sum-divisors,1024,64,1,0,"{'binding': 63, 'match': 1}"
+sum-divisors,1024,256,1,0,"{'binding': 247, 'match': 9}"
+sum-divisors,1177,4,0,0,{'untriggered_rule': 4}
+sum-divisors,1177,16,0,0,"{'untriggered_rule': 10, 'binding': 2}"
+sum-divisors,1177,64,0,0,"{'untriggered_rule': 33, 'binding': 5}"
+sum-divisors,1177,256,0,0,"{'untriggered_rule': 125, 'binding': 11}"
+sum-divisors,1195,4,0,0,{'binding': 3}
+sum-divisors,1195,16,0,0,{'binding': 7}
+sum-divisors,1195,64,2,0,"{'binding': 34, 'match': 2}"
+sum-divisors,1195,256,4,0,"{'binding': 128, 'match': 4}"
+sum-divisors,1205,4,0,0,{'binding': 3}
+sum-divisors,1205,16,1,0,"{'binding': 8, 'match': 3}"
+sum-divisors,1205,64,2,0,"{'binding': 48, 'match': 6}"
+sum-divisors,1205,256,2,0,"{'binding': 190, 'match': 12}"
+sum-divisors,1206,4,0,0,{'binding': 4}
+sum-divisors,1206,16,0,0,{'binding': 13}
+sum-divisors,1206,64,0,0,{'binding': 55}
+sum-divisors,1206,256,0,0,"{'binding': 208, 'watermark': 4}"
+sum-divisors,1208,4,0,0,{'binding': 2}
+sum-divisors,1208,16,0,0,"{'binding': 10, 'watermark': 1}"
+sum-divisors,1208,64,0,0,"{'binding': 38, 'watermark': 1}"
+sum-divisors,1208,256,1,0,"{'binding': 146, 'match': 1, 'watermark': 6}"
+sum-divisors,1301,4,0,0,{'binding': 3}
+sum-divisors,1301,16,0,0,"{'binding': 13, 'guard': 1, 'watermark': 1}"
+sum-divisors,1301,64,0,0,"{'binding': 55, 'guard': 1, 'watermark': 4}"
+sum-divisors,1301,256,1,0,"{'binding': 212, 'guard': 5, 'watermark': 16, 'match': 4}"
+sum-divisors,1363,4,0,0,"{'watermark': 2, 'binding': 2}"
+sum-divisors,1363,16,1,0,"{'watermark': 10, 'match': 1, 'binding': 5}"
+sum-divisors,1363,64,1,0,"{'watermark': 45, 'match': 2, 'binding': 17}"
+sum-divisors,1363,256,4,0,"{'watermark': 188, 'match': 6, 'binding': 62}"
+sum-divisors,1511,4,0,0,{'binding': 4}
+sum-divisors,1511,16,1,0,"{'binding': 13, 'watermark': 1, 'match': 1}"
+sum-divisors,1511,64,1,0,"{'binding': 55, 'watermark': 3, 'match': 2}"
+sum-divisors,1511,256,1,0,"{'binding': 211, 'watermark': 19, 'match': 6, 'guard': 1}"
+grammar-benefit-left-17119,1,4,0,0,{}
+grammar-benefit-left-17119,1,16,1,0,"{'binding': 2, 'match': 1}"
+grammar-benefit-left-17119,1,64,4,0,"{'binding': 20, 'match': 4}"
+grammar-benefit-left-17119,1,256,13,0,"{'binding': 70, 'match': 27}"
+grammar-benefit-left-17119,2,4,0,0,{'binding': 4}
+grammar-benefit-left-17119,2,16,0,0,"{'untriggered_rule': 2, 'binding': 14}"
+grammar-benefit-left-17119,2,64,0,0,"{'untriggered_rule': 10, 'binding': 53, 'guard': 1}"
+grammar-benefit-left-17119,2,256,0,0,"{'untriggered_rule': 43, 'binding': 212, 'guard': 1}"
+grammar-benefit-left-17119,3,4,0,0,"{'untriggered_rule': 1, 'binding': 3}"
+grammar-benefit-left-17119,3,16,0,0,"{'untriggered_rule': 4, 'binding': 12}"
+grammar-benefit-left-17119,3,64,0,0,"{'untriggered_rule': 27, 'binding': 37}"
+grammar-benefit-left-17119,3,256,0,0,"{'untriggered_rule': 103, 'binding': 153}"
+grammar-benefit-left-17119,4,4,0,0,{'binding': 4}
+grammar-benefit-left-17119,4,16,0,0,"{'untriggered_rule': 3, 'binding': 13}"
+grammar-benefit-left-17119,4,64,0,0,"{'untriggered_rule': 13, 'binding': 51}"
+grammar-benefit-left-17119,4,256,0,0,"{'untriggered_rule': 59, 'binding': 196, 'watermark': 1}"
+grammar-benefit-left-17119,5,4,0,0,{'binding': 4}
+grammar-benefit-left-17119,5,16,0,0,"{'untriggered_rule': 3, 'binding': 13}"
+grammar-benefit-left-17119,5,64,0,0,"{'untriggered_rule': 27, 'binding': 37}"
+grammar-benefit-left-17119,5,256,0,0,"{'untriggered_rule': 116, 'binding': 140}"
+grammar-benefit-left-17119,6,4,0,0,"{'untriggered_rule': 1, 'binding': 3}"
+grammar-benefit-left-17119,6,16,0,0,"{'untriggered_rule': 3, 'binding': 13}"
+grammar-benefit-left-17119,6,64,0,0,"{'untriggered_rule': 15, 'binding': 49}"
+grammar-benefit-left-17119,6,256,0,0,"{'untriggered_rule': 82, 'binding': 174}"
+grammar-benefit-left-17119,7,4,0,0,"{'untriggered_rule': 3, 'binding': 1}"
+grammar-benefit-left-17119,7,16,0,0,"{'untriggered_rule': 12, 'binding': 4}"
+grammar-benefit-left-17119,7,64,0,0,"{'untriggered_rule': 48, 'binding': 16}"
+grammar-benefit-left-17119,7,256,0,0,"{'untriggered_rule': 195, 'binding': 60, 'watermark': 1}"
+grammar-benefit-left-17119,8,4,0,0,{'binding': 4}
+grammar-benefit-left-17119,8,16,0,0,"{'untriggered_rule': 10, 'binding': 6}"
+grammar-benefit-left-17119,8,64,0,0,"{'untriggered_rule': 33, 'binding': 31}"
+grammar-benefit-left-17119,8,256,0,0,"{'untriggered_rule': 124, 'binding': 131, 'watermark': 1}"

@@ -1,0 +1,7 @@
+{
+  "tree-fit.pt": "79e27114d128eb175121dda2bdeaf00b09d91d5d5342ef227770306db35ffbf0",
+  "tree-bilinear.pt": "03449ff8dea1e307744d64698147b72d44b291ce24c85d3f4e8c3cf2ca32d7f6",
+  "direct-fit.pt": "8a9e7525afe5dbfad21137dfe344420cd0ac9c49ad002afc52efc2cf38ddff57",
+  "direct-mlp.pt": "499d6a449b5b8c946cd1c59603688adeb7bd5a7b749a461c80d537284c0b420f",
+  "semantic-mlp.pt": "89288e1e531b9d2ca1549d4604761a09f76dfbe6901eaa7ca39546fe97a0c1e3"
+}

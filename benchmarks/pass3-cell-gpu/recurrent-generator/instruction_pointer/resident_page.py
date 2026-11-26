@@ -253,6 +253,7 @@ class Page:
             perjob,
             self.member.data,
             self.order,
+            *getattr(self, "address_index", ()),
             threads=2 * cap * 32,
             group_size=32,
         )

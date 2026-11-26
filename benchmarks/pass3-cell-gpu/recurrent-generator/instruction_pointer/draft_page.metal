@@ -77,8 +77,8 @@ kernel void jobs(device const float *logits, device int *control, device int2 *j
     control[Overflow] = 1;
 }
 // FP32 matvec with one SIMD group; each lane owns a row and all weights are resident.
-inline bool choose(device const float *w, int h, threadgroup float *x, threadgroup float *a,
-                   threadgroup float *b, int lane, thread uint &s) {
+inline float branch_score(device const float *w, int h, threadgroup float *x, threadgroup float *a,
+                   threadgroup float *b, int lane) {
   for (int i = lane; i < h; i += 32) {
     float u = w[99 * h + i];
     for (int j = 0; j < 99; j++)
@@ -99,8 +99,54 @@ inline bool choose(device const float *w, int h, threadgroup float *x, threadgro
   for (int j = lane; j < h; j += 32)
     u = fma(w[off + j], b[j], u);
   float score = simd_sum(u) + w[off + h];
-  return rand_unit(s) < 1.f / (1.f + exp(-score));
+  return score;
 }
+inline bool choose(device const float *w, int h, threadgroup float *x, threadgroup float *a,
+                   threadgroup float *b, int lane, thread uint &s) {
+#ifdef REFIT_ADDRESS_TREE
+  if (x[98] != 0.f) w += 100*h + h*h + 2*h + 1;
+#endif
+  return rand_unit(s) < 1.f / (1.f + exp(-branch_score(w,h,x,a,b,lane)));
+}
+#ifdef DENSE_ADDRESS
+// Gumbel-max samples a categorical over exactly one typed domain. Every key is read.
+inline int sample_domain(threadgroup const float *q, device const float *w, int mode,
+                         device const float *keys, device const int *rows, int n, int lane,
+                         thread uint &seed, threadgroup float *x, threadgroup float *a, threadgroup float *b) {
+  if (n == 1) return 0;
+  uint salt=mix32(++seed);
+  float best=-INFINITY; int index=0;
+#ifdef DENSE_MLP
+  for (int j=0;j<n;j++) {
+    float k=keys[32*rows[j]+lane];
+    x[lane]=q[lane]; x[32+lane]=0; x[64+lane]=k;
+    if (lane<3) x[96+lane]=float(lane==mode);
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+    float s=branch_score(w,MARK_H,x,a,b,lane);
+    x[32+lane]=k; x[64+lane]=0;
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+    s=(s-branch_score(w,MARK_H,x,a,b,lane))*.5f;
+    uint random=mix32(salt^uint(j)); s-=log(-log(rand_unit(random)));
+    if (s>best) {best=s; index=j;}
+  }
+  return index;
+#else
+  device const float *matrix=w+100*MARK_H+MARK_H*MARK_H+2*MARK_H+1+1024*mode;
+  float projected=0;
+  for (int j=0;j<32;j++) projected=fma(q[j],matrix[32*j+lane],projected);
+  x[lane]=projected;
+  threadgroup_barrier(mem_flags::mem_threadgroup);
+  for (int j=lane;j<n;j+=32) {
+    float s=0;
+    for (int i=0;i<32;i++) s=fma(x[i],keys[32*rows[j]+i],s);
+    uint random=mix32(salt^uint(j)); s-=log(-log(rand_unit(random)));
+    if (s>best) {best=s; index=j;}
+  }
+  float peak=simd_max(best);
+  return simd_min(best==peak?index:n);
+#endif
+}
+#endif
 inline float rot(device const float *v, int k, int j) {
   float phi = float(k) * exp(float(j / 2) * (-log(10000.f) / 16.f));
   return j % 2 ? v[j - 1] * sin(phi) + v[j] * cos(phi) : v[j] * cos(phi) - v[j + 1] * sin(phi);
@@ -115,6 +161,9 @@ kernel void draw(device const int2 *job, device int *control, constant int *c, d
                  device const int *ownerpc, device const int *projection, device const float *weights,
                  device const float *gru, device const float *ctx, device int *perjob,
                  device const int *membership, device const int *order,
+#ifdef SEMANTIC_ADDRESS
+                 device const int *offsets, device const int *permutation, device const float *centroids,
+#endif
                  uint g [[threadgroup_position_in_grid]], uint l [[thread_index_in_threadgroup]]) {
   if (control[Overflow] || int(g) >= control[Jobs])
     return;
@@ -130,11 +179,21 @@ kernel void draw(device const int2 *job, device int *control, constant int *c, d
   q[lane] = op == 2 ? tanh(ctx[lane] + embeds[pos * 32 + lane]) : ctx[lane];
   threadgroup_barrier(mem_flags::mem_threadgroup);
   int lo = 0, hi = c[Vocab];
+#ifdef DENSE_ADDRESS
+  lo = sample_domain(q, weights, 0, graphs, vocab, hi, lane, random, x, a, b);
+  visits += hi;
+  pivots += hi;
+#else
   while (hi - lo > 1) {
     int mid = (lo + hi) / 2;
     x[lane] = q[lane];
+#ifdef SEMANTIC_ADDRESS
+    int node=64*(offsets[c[Tables]]+mid);
+    x[32+lane]=centroids[node+lane]; x[64+lane]=centroids[node+32+lane];
+#else
     x[32 + lane] = graphs[32 * vocab[(lo + mid - 1) / 2] + lane];
     x[64 + lane] = graphs[32 * vocab[(mid + hi - 1) / 2] + lane];
+#endif
     if (lane < 3)
       x[96 + lane] = float(lane == 0);
     threadgroup_barrier(mem_flags::mem_threadgroup);
@@ -146,11 +205,15 @@ kernel void draw(device const int2 *job, device int *control, constant int *c, d
     visits++;
     pivots += 2;
   }
+#endif
 #ifdef SET_PAGE
   if (lane == 0) {
     atomic_fetch_add_explicit((device atomic_int *)(control+14), visits, memory_order_relaxed);
     atomic_fetch_add_explicit((device atomic_int *)(control+15), pivots+1, memory_order_relaxed);
   }
+#endif
+#ifdef SEMANTIC_ADDRESS
+  lo=permutation[offsets[c[Tables]]+lo];
 #endif
   tid = vocab[lo];
   rid = tid / 2;
@@ -244,6 +307,13 @@ kernel void draw(device const int2 *job, device int *control, constant int *c, d
           success = false;
           break;
         }
+#ifdef DENSE_ADDRESS
+        if (!local) {
+          lo = sample_domain(tmp, weights, 1, keys, tabrows + tab*c[RowStride], hi, lane, random, x, a, b);
+          visits += hi;
+          pivots += hi;
+        } else
+#endif
         while (hi - lo > 1) {
           int mid = (lo + hi) / 2, li = (lo + mid - 1) / 2, ri = (mid + hi - 1) / 2;
           int aa = 0, bb = 0;
@@ -266,8 +336,18 @@ kernel void draw(device const int2 *job, device int *control, constant int *c, d
             bb = tabrows[tab * c[RowStride] + ri];
           }
           x[lane] = tmp[lane];
+#ifdef SEMANTIC_ADDRESS
+          if (local) {
+#endif
           x[32 + lane] = local ? localcodes[32 * aa + lane] : keys[32 * aa + lane];
           x[64 + lane] = local ? localcodes[32 * bb + lane] : keys[32 * bb + lane];
+
+#ifdef SEMANTIC_ADDRESS
+          } else {
+            int node=64*(offsets[tab]+mid);
+            x[32+lane]=centroids[node+lane]; x[64+lane]=centroids[node+32+lane];
+          }
+#endif
           if (lane < 3)
             x[96 + lane] = float(lane == 1);
           threadgroup_barrier(mem_flags::mem_threadgroup);
@@ -294,6 +374,9 @@ kernel void draw(device const int2 *job, device int *control, constant int *c, d
               }
           }
         } else
+#ifdef SEMANTIC_ADDRESS
+          lo=permutation[offsets[tab]+lo];
+#endif
           picked = tabrows[tab * c[RowStride] + lo];
       }
     }
