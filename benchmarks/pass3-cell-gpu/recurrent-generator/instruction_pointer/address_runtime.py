@@ -48,9 +48,7 @@ class AddressPage(Page):
         if hasattr(self, "centroids"):
             self.centroids.update(frame, previous != self.last_rules)
 
-    def sample(self, m, source, steps, rng, stats):
-        if source or steps != 1:
-            raise ValueError("address-only trial requires an empty independent page")
+    def device_sample(self, m, rng):
         cap = self.cap
         buffers = self.scratch(cap)
         draft, vec, jobs, _generated, *_ = buffers
@@ -75,13 +73,21 @@ class AddressPage(Page):
             ]
         )
         self.apply_marks(cfg, ctl, self.upload(m.context()), buffers, cap)
-        reply = torch.cat((ctl, draft.flatten())).cpu()
+        return torch.cat((ctl, draft.flatten()))
+
+    def sample(self, m, source, steps, rng, stats):
+        if source or steps != 1:
+            raise ValueError("address-only trial requires an empty independent page")
+        reply = self.device_sample(m, rng).cpu()
         self.count["boundary_readbacks"] += 1
         self.count["download_bytes"] += reply.numel() * 4
+        return self.decode_sample(reply, stats)
+
+    def decode_sample(self, reply, stats):
         stats["template_reads"] += int(reply[15])
         stats["template_scores"] += int(reply[14])
         stats["edit_forward_calls"] -= 1
-        return self.unpack(reply, 1, cap, stats, 16)
+        return self.unpack(reply, 1, self.cap, stats, 16)
 
 
 def setup(a, m, arm, cap):

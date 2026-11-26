@@ -1,0 +1,9 @@
+{
+  "batch_generation_and_memory_seconds": 0.49199004092952237,
+  "shared_readbacks": 6,
+  "program_pages": 28,
+  "episodes": 6,
+  "wall": 1.8311714580049738,
+  "command_buffer_waits": 48,
+  "includes_setup_and_final_barrier": true
+}

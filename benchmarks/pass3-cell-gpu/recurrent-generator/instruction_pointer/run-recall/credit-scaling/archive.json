@@ -1,0 +1,11 @@
+{
+  "decision_states": 119,
+  "verified_equivalent_alternatives": 3462,
+  "direct_omissions": 122,
+  "accepted": 71,
+  "duplicate": 154,
+  "untriggered_rule": 5506,
+  "binding": 510,
+  "watermark": 3,
+  "guard": 8
+}

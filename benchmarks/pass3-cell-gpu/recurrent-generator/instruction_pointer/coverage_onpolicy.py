@@ -91,8 +91,8 @@ def coefficients(first, second, credit):
     return coeff
 
 
-def coverage_gradient(net, m, credit, gate, budget, rng):
-    if not credit:
+def coverage_gradient(net, m, credit, gate, budget, rng, marginal=None):
+    if not credit and marginal is None:
         return next(net.parameters()).sum() * 0, 0, 0, 0
     with torch.no_grad():
         page = m.page
@@ -115,7 +115,12 @@ def coverage_gradient(net, m, credit, gate, budget, rng):
         for start in range(0, goal, 2 * budget):
             x = draws[start : start + budget]
             y = draws[start + budget : start + 2 * budget]
-            coeff.update(coefficients(x, y, credit))
+            if marginal is None:
+                coeff.update(coefficients(x, y, credit))
+            else:
+                for c, d, h, k in zip(x, y, marginal(x), marginal(y), strict=True):
+                    coeff[c] += h - k
+                    coeff[d] += k - h
             discovery += sum(
                 len({credit[c] for c in draws if c in credit}) for draws in (x, y)
             )
