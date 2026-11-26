@@ -128,7 +128,7 @@ def native(a, configure=setup, native_memory=None):
             m = native_memory(a, d, dest, arm) if native_memory else memory(a, d)
             marks, rates, page = configure(a, m, arm, a.cap)
             pol = Dispatch(
-                m, marks, {"flow": rates}, "empty", 1, 536, a.pages, mode="page"
+                m, marks, {"flow": rates}, "empty", 1, getattr(a, "generation_seed", 536), a.pages, mode="page"
             )
             setup_time = perf_counter() - start
             try:

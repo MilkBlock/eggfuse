@@ -425,6 +425,10 @@ impl History {
                         graph: None,
                         step: 0,
                     };
+                    if let Some(writer) = self.memory.as_mut().and_then(|m| m.admission_observer.as_mut()) {
+                        writeln!(writer, "{run},{id},{rid},{},{},{}", g.epoch, u8::from(check_dirty), u8::from(dirty[rid]))
+                            .map_err(|e| e.to_string())?;
+                    }
                     let v = if check_dirty && !dirty[rid] {
                         *self.counts.rejected.entry("untriggered_rule").or_default() += 1;
                         "untriggered_rule"

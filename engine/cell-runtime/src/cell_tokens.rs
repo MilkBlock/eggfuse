@@ -103,6 +103,7 @@ pub(crate) fn value_hash(value: &Value) -> u64 {
 /// not scan token memory. Each record describes the snapshot before any RHS.
 struct MemoryExport {
     query_observer: Option<BufWriter<std::fs::File>>,
+    admission_observer: Option<BufWriter<std::fs::File>>,
     writer: Box<dyn Write>,
     previous: BTreeMap<Address, PortObservation>,
     accepted: Vec<Request>,
@@ -340,8 +341,12 @@ impl History {
         let query_observer = std::env::var_os("EGGFUSE_QUERY_OBSERVER")
             .map(std::fs::File::create).transpose().map_err(|e| e.to_string())?
             .map(BufWriter::new);
+        let admission_observer = std::env::var_os("EGGFUSE_ADMISSION_OBSERVER")
+            .map(std::fs::File::create).transpose().map_err(|e| e.to_string())?
+            .map(BufWriter::new);
         self.memory = Some(MemoryExport {
             query_observer,
+            admission_observer,
             writer,
             previous: BTreeMap::new(),
             accepted: Vec::new(),

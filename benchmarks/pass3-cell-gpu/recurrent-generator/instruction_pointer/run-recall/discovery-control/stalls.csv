@@ -1,0 +1,8 @@
+case,run,available,productive,original_effective,stall,stream_paid,stream_accepted,stream_effective,stream_productive
+fact,3,2,2,0,['first_gap'],6,2,2,2
+fact,80,0,0,0,['terminal_tail'],0,0,0,0
+loopfact,3,2,2,0,['first_gap'],4,2,2,2
+loopfact,96,0,0,0,['terminal_tail'],0,0,0,0
+sum-divisors,3,2,2,0,['first_gap'],6,2,2,2
+sum-divisors,100,0,0,0,['terminal_tail'],0,0,0,0
+grammar-benefit-left-17119,2,0,0,0,"['first_gap', 'terminal_tail']",0,0,0,0
