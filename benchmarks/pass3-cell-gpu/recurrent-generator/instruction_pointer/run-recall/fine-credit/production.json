@@ -1,0 +1,16 @@
+{
+  "collection": {
+    "batch_generation_and_memory_seconds": 13.94167716812808,
+    "shared_readbacks": 687,
+    "program_pages": 3612,
+    "episodes": 160,
+    "wall": 116.7264526670333
+  },
+  "new_cohort_logical_bytes": {
+    "buffer": 5551763,
+    "credit": 660296,
+    "weights": 37807566
+  },
+  "audit_worker_seconds": 376.38781484682113,
+  "credit_verification_seconds": 34.48340604105033
+}

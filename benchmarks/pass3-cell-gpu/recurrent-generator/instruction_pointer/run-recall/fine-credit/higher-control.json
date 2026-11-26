@@ -1,0 +1,350 @@
+[
+  {
+    "mode": "empty",
+    "template": [
+      [
+        3,
+        0,
+        [
+          [
+            -1,
+            0
+          ]
+        ]
+      ],
+      [
+        2,
+        1,
+        [
+          [
+            0,
+            0
+          ]
+        ]
+      ]
+    ],
+    "entry": [
+      -1,
+      0,
+      0
+    ],
+    "steps": [
+      {
+        "run": 3,
+        "request": 1,
+        "status": "accepted",
+        "credit": {
+          "cost": [
+            "signed_request",
+            1,
+            "paid_ccp"
+          ],
+          "binding": [
+            "table_atom_tuple",
+            1,
+            "check_passed_all_named_atoms"
+          ],
+          "condition": [
+            "required_query_checks",
+            1,
+            "check_returned_instance"
+          ],
+          "structure": [
+            "this_instantiation",
+            1,
+            "check_returned_instance"
+          ],
+          "timing": [
+            "this_admission",
+            1,
+            "receipt"
+          ],
+          "contribution": [
+            "immediate_signed_ops",
+            1,
+            "replay_origin"
+          ],
+          "novelty": [
+            "some_new_operation",
+            1,
+            "replay_origin"
+          ]
+        }
+      },
+      {
+        "run": 4,
+        "request": 2,
+        "status": "accepted",
+        "credit": {
+          "cost": [
+            "signed_request",
+            1,
+            "paid_ccp"
+          ],
+          "binding": [
+            "table_atom_tuple",
+            1,
+            "check_passed_all_named_atoms"
+          ],
+          "condition": [
+            "required_query_checks",
+            1,
+            "check_returned_instance"
+          ],
+          "structure": [
+            "this_instantiation",
+            1,
+            "check_returned_instance"
+          ],
+          "timing": [
+            "this_admission",
+            1,
+            "receipt"
+          ],
+          "contribution": [
+            "immediate_signed_ops",
+            1,
+            "replay_origin"
+          ],
+          "novelty": [
+            "some_new_operation",
+            1,
+            "replay_origin"
+          ]
+        }
+      }
+    ],
+    "gain": 2,
+    "completed": 1,
+    "pending": 0,
+    "reference": true,
+    "graph": "8d148bbeeaee6c93a3852e26c0e1186c28b84fff4594128389cd23583ed23471"
+  },
+  {
+    "mode": "partial",
+    "template": [
+      [
+        3,
+        0,
+        [
+          [
+            -1,
+            0
+          ]
+        ]
+      ],
+      [
+        2,
+        1,
+        [
+          [
+            0,
+            0
+          ]
+        ]
+      ]
+    ],
+    "entry": [
+      -1,
+      0,
+      0
+    ],
+    "steps": [
+      {
+        "run": 3,
+        "request": 2,
+        "status": "accepted",
+        "credit": {
+          "cost": [
+            "signed_request",
+            1,
+            "paid_ccp"
+          ],
+          "binding": [
+            "table_atom_tuple",
+            1,
+            "check_passed_all_named_atoms"
+          ],
+          "condition": [
+            "required_query_checks",
+            1,
+            "check_returned_instance"
+          ],
+          "structure": [
+            "this_instantiation",
+            1,
+            "check_returned_instance"
+          ],
+          "timing": [
+            "this_admission",
+            1,
+            "receipt"
+          ],
+          "contribution": [
+            "immediate_signed_ops",
+            1,
+            "replay_origin"
+          ],
+          "novelty": [
+            "some_new_operation",
+            1,
+            "replay_origin"
+          ]
+        }
+      },
+      {
+        "run": 4,
+        "request": 3,
+        "status": "accepted",
+        "credit": {
+          "cost": [
+            "signed_request",
+            1,
+            "paid_ccp"
+          ],
+          "binding": [
+            "table_atom_tuple",
+            1,
+            "check_passed_all_named_atoms"
+          ],
+          "condition": [
+            "required_query_checks",
+            1,
+            "check_returned_instance"
+          ],
+          "structure": [
+            "this_instantiation",
+            1,
+            "check_returned_instance"
+          ],
+          "timing": [
+            "this_admission",
+            1,
+            "receipt"
+          ],
+          "contribution": [
+            "immediate_signed_ops",
+            0,
+            "replay_origin"
+          ]
+        }
+      }
+    ],
+    "gain": 1,
+    "completed": 1,
+    "pending": 0,
+    "reference": false,
+    "graph": "3e63c30b339a2e4c8b46527994a8a34c9fc454605c7bddc935546aec31b9e2cd"
+  },
+  {
+    "mode": "present",
+    "template": [
+      [
+        3,
+        0,
+        [
+          [
+            -1,
+            0
+          ]
+        ]
+      ],
+      [
+        2,
+        1,
+        [
+          [
+            0,
+            0
+          ]
+        ]
+      ]
+    ],
+    "entry": [
+      -1,
+      0,
+      0
+    ],
+    "steps": [
+      {
+        "run": 3,
+        "request": 3,
+        "status": "accepted",
+        "credit": {
+          "cost": [
+            "signed_request",
+            1,
+            "paid_ccp"
+          ],
+          "binding": [
+            "table_atom_tuple",
+            1,
+            "check_passed_all_named_atoms"
+          ],
+          "condition": [
+            "required_query_checks",
+            1,
+            "check_returned_instance"
+          ],
+          "structure": [
+            "this_instantiation",
+            1,
+            "check_returned_instance"
+          ],
+          "timing": [
+            "this_admission",
+            1,
+            "receipt"
+          ],
+          "contribution": [
+            "immediate_signed_ops",
+            0,
+            "replay_origin"
+          ]
+        }
+      },
+      {
+        "run": 4,
+        "request": 4,
+        "status": "accepted",
+        "credit": {
+          "cost": [
+            "signed_request",
+            1,
+            "paid_ccp"
+          ],
+          "binding": [
+            "table_atom_tuple",
+            1,
+            "check_passed_all_named_atoms"
+          ],
+          "condition": [
+            "required_query_checks",
+            1,
+            "check_returned_instance"
+          ],
+          "structure": [
+            "this_instantiation",
+            1,
+            "check_returned_instance"
+          ],
+          "timing": [
+            "this_admission",
+            1,
+            "receipt"
+          ],
+          "contribution": [
+            "immediate_signed_ops",
+            0,
+            "replay_origin"
+          ]
+        }
+      }
+    ],
+    "gain": 0,
+    "completed": 1,
+    "pending": 0,
+    "reference": true,
+    "graph": "8d148bbeeaee6c93a3852e26c0e1186c28b84fff4594128389cd23583ed23471"
+  }
+]

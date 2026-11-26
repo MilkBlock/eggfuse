@@ -1,0 +1,316 @@
+[
+  {
+    "run": 1,
+    "epoch": 1,
+    "uid": 1,
+    "rule": 0,
+    "refs": [
+      [
+        -3,
+        0,
+        0
+      ]
+    ],
+    "status": "accepted",
+    "gain": 1,
+    "credit": {
+      "cost": [
+        "signed_request",
+        1,
+        "paid_ccp"
+      ],
+      "binding": [
+        "table_atom_tuple",
+        1,
+        "check_passed_all_named_atoms"
+      ],
+      "condition": [
+        "required_query_checks",
+        1,
+        "check_returned_instance"
+      ],
+      "structure": [
+        "this_instantiation",
+        1,
+        "check_returned_instance"
+      ],
+      "timing": [
+        "this_admission",
+        1,
+        "receipt"
+      ],
+      "contribution": [
+        "immediate_signed_ops",
+        1,
+        "replay_origin"
+      ],
+      "novelty": [
+        "some_new_operation",
+        1,
+        "replay_origin"
+      ]
+    }
+  },
+  {
+    "run": 2,
+    "epoch": 2,
+    "uid": 2,
+    "rule": 3,
+    "refs": [
+      [
+        -1,
+        0,
+        0
+      ]
+    ],
+    "status": "accepted",
+    "gain": 1,
+    "credit": {
+      "cost": [
+        "signed_request",
+        1,
+        "paid_ccp"
+      ],
+      "binding": [
+        "table_atom_tuple",
+        1,
+        "check_passed_all_named_atoms"
+      ],
+      "condition": [
+        "required_query_checks",
+        1,
+        "check_returned_instance"
+      ],
+      "structure": [
+        "this_instantiation",
+        1,
+        "check_returned_instance"
+      ],
+      "timing": [
+        "this_admission",
+        1,
+        "receipt"
+      ],
+      "contribution": [
+        "immediate_signed_ops",
+        1,
+        "replay_origin"
+      ],
+      "novelty": [
+        "some_new_operation",
+        1,
+        "replay_origin"
+      ]
+    }
+  },
+  {
+    "run": 3,
+    "epoch": 3,
+    "uid": 3,
+    "rule": 0,
+    "refs": [
+      [
+        -3,
+        0,
+        0
+      ]
+    ],
+    "status": "version",
+    "gain": 0,
+    "credit": {
+      "cost": [
+        "signed_request",
+        1,
+        "paid_ccp"
+      ],
+      "binding": [
+        "named_tuple_at_issue",
+        -1,
+        "receipt"
+      ]
+    }
+  },
+  {
+    "run": 3,
+    "epoch": 3,
+    "uid": 4,
+    "rule": 0,
+    "refs": [
+      [
+        -3,
+        0,
+        2
+      ]
+    ],
+    "status": "accepted",
+    "gain": 1,
+    "credit": {
+      "cost": [
+        "signed_request",
+        1,
+        "paid_ccp"
+      ],
+      "binding": [
+        "table_atom_tuple",
+        1,
+        "check_passed_all_named_atoms"
+      ],
+      "condition": [
+        "required_query_checks",
+        1,
+        "check_returned_instance"
+      ],
+      "structure": [
+        "this_instantiation",
+        1,
+        "check_returned_instance"
+      ],
+      "timing": [
+        "this_admission",
+        1,
+        "receipt"
+      ],
+      "contribution": [
+        "immediate_signed_ops",
+        1,
+        "replay_origin"
+      ],
+      "novelty": [
+        "some_new_operation",
+        1,
+        "replay_origin"
+      ]
+    }
+  },
+  {
+    "run": 4,
+    "epoch": 4,
+    "uid": 5,
+    "rule": 1,
+    "refs": [
+      [
+        -1,
+        0,
+        0
+      ]
+    ],
+    "status": "accepted",
+    "gain": 1,
+    "credit": {
+      "cost": [
+        "signed_request",
+        1,
+        "paid_ccp"
+      ],
+      "binding": [
+        "table_atom_tuple",
+        1,
+        "check_passed_all_named_atoms"
+      ],
+      "condition": [
+        "required_query_checks",
+        1,
+        "check_returned_instance"
+      ],
+      "structure": [
+        "this_instantiation",
+        1,
+        "check_returned_instance"
+      ],
+      "timing": [
+        "this_admission",
+        1,
+        "receipt"
+      ],
+      "contribution": [
+        "immediate_signed_ops",
+        1,
+        "replay_origin"
+      ],
+      "novelty": [
+        "some_new_operation",
+        1,
+        "replay_origin"
+      ]
+    }
+  },
+  {
+    "run": 4,
+    "epoch": 4,
+    "uid": 6,
+    "rule": 2,
+    "refs": [
+      [
+        5,
+        0,
+        4
+      ]
+    ],
+    "status": "pending_port",
+    "gain": 0,
+    "credit": {
+      "cost": [
+        "signed_request",
+        1,
+        "paid_ccp"
+      ],
+      "timing": [
+        "pending_reference_at_issue",
+        -1,
+        "receipt"
+      ]
+    }
+  },
+  {
+    "run": 5,
+    "epoch": 5,
+    "uid": 7,
+    "rule": 2,
+    "refs": [
+      [
+        5,
+        0,
+        4
+      ]
+    ],
+    "status": "accepted",
+    "gain": 1,
+    "credit": {
+      "cost": [
+        "signed_request",
+        1,
+        "paid_ccp"
+      ],
+      "binding": [
+        "table_atom_tuple",
+        1,
+        "check_passed_all_named_atoms"
+      ],
+      "condition": [
+        "required_query_checks",
+        1,
+        "check_returned_instance"
+      ],
+      "structure": [
+        "this_instantiation",
+        1,
+        "check_returned_instance"
+      ],
+      "timing": [
+        "this_admission",
+        1,
+        "receipt"
+      ],
+      "contribution": [
+        "immediate_signed_ops",
+        1,
+        "replay_origin"
+      ],
+      "novelty": [
+        "some_new_operation",
+        1,
+        "replay_origin"
+      ]
+    }
+  }
+]

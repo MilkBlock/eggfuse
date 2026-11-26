@@ -1,0 +1,17 @@
+{
+  "counts": {
+    "A_steps": 800,
+    "E_pairs": 650,
+    "E_local": 800,
+    "E_edges": 800,
+    "E_steps": 800
+  },
+  "steps": 400,
+  "programs": 16,
+  "seeds": [
+    9633,
+    5003
+  ],
+  "seconds": 26.980479666031897,
+  "initial": "/Volumes/Extreme SSD/eggfuse-experiments/credit-scaling-1126/weights/9633/mixed-n480-u1920.pt"
+}

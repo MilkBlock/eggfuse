@@ -1,0 +1,421 @@
+{
+  "empty": [
+    {
+      "run": 4,
+      "request": 1,
+      "rule": 1,
+      "refs": [
+        [
+          -1,
+          0,
+          0
+        ]
+      ],
+      "status": "accepted",
+      "gain": 2,
+      "state": "60b64ed3c44dc4d777ab9bf7f81c5c2fc0a2f5ede55bf449398f7aa3da8c2961"
+    },
+    {
+      "run": 5,
+      "request": 2,
+      "rule": 1,
+      "refs": [
+        [
+          -1,
+          0,
+          0
+        ]
+      ],
+      "status": "untriggered_rule",
+      "gain": 0,
+      "state": "60b64ed3c44dc4d777ab9bf7f81c5c2fc0a2f5ede55bf449398f7aa3da8c2961"
+    },
+    {
+      "run": 6,
+      "request": 3,
+      "rule": 4,
+      "refs": [
+        [
+          -1,
+          0,
+          0
+        ]
+      ],
+      "status": "accepted",
+      "gain": 1,
+      "state": "492dda05dbd35a623be808d0bd7f457c4f10674cb6dae612aa9550b2fec7c65e"
+    },
+    {
+      "run": 7,
+      "request": 4,
+      "rule": 1,
+      "refs": [
+        [
+          -1,
+          0,
+          0
+        ]
+      ],
+      "status": "watermark",
+      "gain": 0,
+      "state": "7bf32278630cdc61079ce257fe206bc64f71559e75c95be429f2011b9d89f0cc"
+    },
+    {
+      "run": 7,
+      "request": 5,
+      "rule": 1,
+      "refs": [
+        [
+          3,
+          1,
+          6
+        ]
+      ],
+      "status": "accepted",
+      "gain": 2,
+      "state": "7bf32278630cdc61079ce257fe206bc64f71559e75c95be429f2011b9d89f0cc"
+    }
+  ],
+  "left": [
+    {
+      "run": 1,
+      "request": 1,
+      "rule": 2,
+      "refs": [
+        [
+          -1,
+          0,
+          0
+        ]
+      ],
+      "status": "accepted",
+      "gain": 1,
+      "state": "c6b3df73e57c0df15a254de45f2cd9dec57aacccc82fad6a2d22572e884ac02b"
+    },
+    {
+      "run": 4,
+      "request": 2,
+      "rule": 1,
+      "refs": [
+        [
+          -1,
+          0,
+          0
+        ]
+      ],
+      "status": "accepted",
+      "gain": 1,
+      "state": "ebf9251fd825b6db111023506caf41efcd023e09f6157674461cb81ed8439a79"
+    },
+    {
+      "run": 5,
+      "request": 3,
+      "rule": 1,
+      "refs": [
+        [
+          -1,
+          0,
+          0
+        ]
+      ],
+      "status": "untriggered_rule",
+      "gain": 0,
+      "state": "ebf9251fd825b6db111023506caf41efcd023e09f6157674461cb81ed8439a79"
+    },
+    {
+      "run": 6,
+      "request": 4,
+      "rule": 4,
+      "refs": [
+        [
+          -1,
+          0,
+          0
+        ]
+      ],
+      "status": "accepted",
+      "gain": 1,
+      "state": "07362f7a583774c2bfd2eda9d768d5c95d423ed5693e0272cca72f22d1361955"
+    },
+    {
+      "run": 7,
+      "request": 5,
+      "rule": 1,
+      "refs": [
+        [
+          -1,
+          0,
+          0
+        ]
+      ],
+      "status": "watermark",
+      "gain": 0,
+      "state": "755b7043297b477994f8482c3fa6a1338cd7f1238e2201cbdd475e7f5f6ef71e"
+    },
+    {
+      "run": 7,
+      "request": 6,
+      "rule": 1,
+      "refs": [
+        [
+          4,
+          1,
+          6
+        ]
+      ],
+      "status": "accepted",
+      "gain": 2,
+      "state": "755b7043297b477994f8482c3fa6a1338cd7f1238e2201cbdd475e7f5f6ef71e"
+    }
+  ],
+  "full": [
+    {
+      "run": 1,
+      "request": 1,
+      "rule": 2,
+      "refs": [
+        [
+          -1,
+          0,
+          0
+        ]
+      ],
+      "status": "accepted",
+      "gain": 1,
+      "state": "c6b3df73e57c0df15a254de45f2cd9dec57aacccc82fad6a2d22572e884ac02b"
+    },
+    {
+      "run": 2,
+      "request": 2,
+      "rule": 3,
+      "refs": [
+        [
+          -1,
+          0,
+          0
+        ]
+      ],
+      "status": "accepted",
+      "gain": 1,
+      "state": "8d148bbeeaee6c93a3852e26c0e1186c28b84fff4594128389cd23583ed23471"
+    },
+    {
+      "run": 4,
+      "request": 3,
+      "rule": 1,
+      "refs": [
+        [
+          -1,
+          0,
+          0
+        ]
+      ],
+      "status": "accepted",
+      "gain": 0,
+      "state": "8d148bbeeaee6c93a3852e26c0e1186c28b84fff4594128389cd23583ed23471"
+    },
+    {
+      "run": 5,
+      "request": 4,
+      "rule": 1,
+      "refs": [
+        [
+          -1,
+          0,
+          0
+        ]
+      ],
+      "status": "untriggered_rule",
+      "gain": 0,
+      "state": "8d148bbeeaee6c93a3852e26c0e1186c28b84fff4594128389cd23583ed23471"
+    },
+    {
+      "run": 6,
+      "request": 5,
+      "rule": 4,
+      "refs": [
+        [
+          -1,
+          0,
+          0
+        ]
+      ],
+      "status": "accepted",
+      "gain": 1,
+      "state": "4a69adfd4cd4218e76d451ff08d540fc8cdf88ace74f53d73e37e2b0b97a6343"
+    },
+    {
+      "run": 7,
+      "request": 6,
+      "rule": 1,
+      "refs": [
+        [
+          -1,
+          0,
+          0
+        ]
+      ],
+      "status": "watermark",
+      "gain": 0,
+      "state": "a507388b379c10575ad7b50ddb40058f488fdf48332595058cd7a293ebec5073"
+    },
+    {
+      "run": 7,
+      "request": 7,
+      "rule": 1,
+      "refs": [
+        [
+          5,
+          1,
+          6
+        ]
+      ],
+      "status": "accepted",
+      "gain": 2,
+      "state": "a507388b379c10575ad7b50ddb40058f488fdf48332595058cd7a293ebec5073"
+    }
+  ],
+  "cleared": [
+    {
+      "run": 1,
+      "request": 1,
+      "rule": 2,
+      "refs": [
+        [
+          -1,
+          0,
+          0
+        ]
+      ],
+      "status": "accepted",
+      "gain": 1,
+      "state": "c6b3df73e57c0df15a254de45f2cd9dec57aacccc82fad6a2d22572e884ac02b"
+    },
+    {
+      "run": 2,
+      "request": 2,
+      "rule": 3,
+      "refs": [
+        [
+          -1,
+          0,
+          0
+        ]
+      ],
+      "status": "accepted",
+      "gain": 1,
+      "state": "8d148bbeeaee6c93a3852e26c0e1186c28b84fff4594128389cd23583ed23471"
+    },
+    {
+      "run": 3,
+      "request": 3,
+      "rule": 0,
+      "refs": [
+        [
+          -1,
+          0,
+          0
+        ]
+      ],
+      "status": "accepted",
+      "gain": 2,
+      "state": "57d42629f6b754ab5bae856017195440d8b59cf2fd6580f46c6998f61b337b99"
+    },
+    {
+      "run": 4,
+      "request": 4,
+      "rule": 1,
+      "refs": [
+        [
+          -1,
+          0,
+          0
+        ]
+      ],
+      "status": "accepted",
+      "gain": 2,
+      "state": "8c31603a768381cf774e83216488cc50d399a123c97560d3ac01d115aedb5f54"
+    },
+    {
+      "run": 5,
+      "request": 5,
+      "rule": 1,
+      "refs": [
+        [
+          -1,
+          0,
+          0
+        ]
+      ],
+      "status": "untriggered_rule",
+      "gain": 0,
+      "state": "8c31603a768381cf774e83216488cc50d399a123c97560d3ac01d115aedb5f54"
+    },
+    {
+      "run": 6,
+      "request": 6,
+      "rule": 4,
+      "refs": [
+        [
+          -1,
+          0,
+          0
+        ]
+      ],
+      "status": "accepted",
+      "gain": 1,
+      "state": "607e10afec1e8f86f680fe785eeae86b35e452dbfad588bee76bdf16b798cbe7"
+    },
+    {
+      "run": 7,
+      "request": 7,
+      "rule": 1,
+      "refs": [
+        [
+          -1,
+          0,
+          0
+        ]
+      ],
+      "status": "watermark",
+      "gain": 0,
+      "state": "617344ce39abb8e23ceef314e0c38b03c21879b12d4b428c2623152ab6cb61a5"
+    },
+    {
+      "run": 7,
+      "request": 8,
+      "rule": 1,
+      "refs": [
+        [
+          6,
+          1,
+          6
+        ]
+      ],
+      "status": "accepted",
+      "gain": 2,
+      "state": "617344ce39abb8e23ceef314e0c38b03c21879b12d4b428c2623152ab6cb61a5"
+    }
+  ],
+  "delayed_draft": {
+    "generated_run": 4,
+    "generate_dirty": true,
+    "issue_dirty": false,
+    "issue_epoch": 5,
+    "issued": {
+      "run": 5,
+      "request": 1,
+      "rule": 1,
+      "refs": [
+        [
+          -1,
+          0,
+          0
+        ]
+      ],
+      "status": "untriggered_rule",
+      "gain": 0,
+      "state": "57d42629f6b754ab5bae856017195440d8b59cf2fd6580f46c6998f61b337b99"
+    }
+  }
+}

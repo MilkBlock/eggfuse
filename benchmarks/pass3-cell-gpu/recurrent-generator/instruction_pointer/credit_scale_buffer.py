@@ -51,7 +51,8 @@ class Lane:
         self.scratch = tempfile.TemporaryDirectory()
         self.tmp = Path(self.scratch.name)
         self.scheduler = self.tmp / "scheduler"
-        self.rng = np.random.default_rng(42761 + idx * 11 + branch)
+        self.seed = 42761 + idx * 11 + branch + getattr(a, "rollout_seed", 0)
+        self.rng = np.random.default_rng(self.seed)
         self.shuffle = random.Random(73255 + 31 * idx + branch)
         self.m = conditioned(a, self.program.parent, self.scheduler)
         if self.m.menu:
@@ -62,7 +63,11 @@ class Lane:
             [a.runtime_binary, "online-ccp-v0.1", self.program, "-", "audit", "--ept"],
             stdin=-1,
             stdout=-1,
-            env=dict(os.environ, EGGFUSE_QUERY_OBSERVER=str(self.scheduler)),
+            env=dict(
+                os.environ,
+                EGGFUSE_QUERY_OBSERVER=str(self.scheduler),
+                EGGFUSE_ADMISSION_OBSERVER=str(self.tmp / "admission.csv"),
+            ),
         )
         self.client = Client(self.proc, 512, self.program_sha)
         self.events = []
@@ -203,6 +208,7 @@ class Lane:
             "omitted": gains,
             "stable": stable,
             "known_bindings": len(exact),
+            "accepted_effects": base["ept"]["signed_external"],
             "random_count": len(rand),
             "assisted": [encode(c) for c in assist],
             "assisted_response": assist_replies,
@@ -224,6 +230,13 @@ class Lane:
             self.scratch.cleanup()
 
     def save(self):
+        self.proc.wait(timeout=20)
+        # This observer is written inside native admission, independently of the
+        # generation observer. Neither stream feeds proposals back to the actor.
+        admissions = [
+            list(map(int, line.split(",")))
+            for line in (self.tmp / "admission.csv").read_text().splitlines()
+        ]
         signed = list(self.client.offline_tape(self.client.run))
         final = self.replay(signed, "--ept-origins")
         assert (
@@ -232,12 +245,17 @@ class Lane:
         )
         obj = {
             "idx": self.idx,
+            "rollout_seed": self.seed,
+            "slot_budget": self.a.cap,
             "branch": self.branch,
             "signature": self.signature,
             "program": self.program_sha,
             "checkpoint": self.a.policy_sha,
             "events": self.events,
+            "admissions": admissions,
             "origins": final["ept"]["origins"],
+            "repair_events": list(offline_repairs(self.repairs)),
+            "signed_external": final["ept"]["signed_external"],
             "terminal": final["state_sha"],
             "scheduler": [
                 json.loads(s) for s in self.scheduler.read_text().splitlines()
@@ -254,7 +272,9 @@ class Lane:
 
 
 def shard(a, i, b):
-    return a.out / "buffer" / f"{i:04d}-{b}-{a.policy_sha[:12]}.json.gz"
+    seed = getattr(a, "rollout_seed", 0)
+    suffix = f"-s{seed}" if seed else ""
+    return a.out / "buffer" / f"{i:04d}-{b}-{a.policy_sha[:12]}{suffix}.json.gz"
 
 
 @torch.no_grad()
@@ -342,6 +362,7 @@ if __name__ == "__main__":
     p.add_argument("--checkpoint", type=Path, required=True)
     p.add_argument("--first", type=int, default=0)
     p.add_argument("--stop", type=int, default=128)
+    p.add_argument("--rollout-seed", type=int, default=0)
     p.add_argument("--cap", type=int, default=160)
     p.add_argument("--lanes", type=int, default=4)
     p.add_argument("--branches", type=int, nargs="+", default=[0, 1])

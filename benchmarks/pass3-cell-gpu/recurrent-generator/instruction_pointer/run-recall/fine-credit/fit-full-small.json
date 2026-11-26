@@ -1,0 +1,29 @@
+{
+  "counts": {
+    "A_optimizer_slots": 359424,
+    "A_optimizer_complete": 109440,
+    "A_steps": 776,
+    "E_optimizer_slots": 344576,
+    "E_optimizer_complete": 113792,
+    "E_pairs": 648,
+    "E_local": 795,
+    "E_edges": 795,
+    "E_steps": 795,
+    "E_censored_steps": 5,
+    "E_censored_slots": 40960,
+    "E_censored_complete": 1168,
+    "E_censored_goal": 1408,
+    "A_censored_steps": 24,
+    "A_censored_slots": 196608,
+    "A_censored_complete": 1746,
+    "A_censored_goal": 5760
+  },
+  "steps": 400,
+  "programs": 16,
+  "seeds": [
+    9633,
+    5003
+  ],
+  "seconds": 92.06441962503595,
+  "initial": "/Volumes/Extreme SSD/eggfuse-experiments/credit-scaling-1126/weights/9633/mixed-n480-u1920.pt"
+}

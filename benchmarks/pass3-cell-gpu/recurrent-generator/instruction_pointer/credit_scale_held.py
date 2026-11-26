@@ -15,7 +15,7 @@ from types import SimpleNamespace
 import numpy as np
 import torch
 
-from ccp_v01 import Client, read_repairs
+from ccp_v01 import Client, offline_repairs, read_repairs
 from cell_transaction import memory_frame
 from credit_scale_buffer import submit
 from discovery_sampling import Domain
@@ -36,6 +36,7 @@ def trial(a, d, arm, seed, initial, gold):
         if arm != "factored":
             cfg = SimpleNamespace(**(vars(a) | {"out": a.out / "weights" / str(seed)}))
             page = setup(cfg, m, arm, 128)[2]
+        repairs = []
         rng = np.random.default_rng(108 + seed)
         rand = random.Random(108 + seed)
         with subprocess.Popen(
@@ -51,9 +52,9 @@ def trial(a, d, arm, seed, initial, gold):
                     if "role" in h:
                         break
                     rows, hs, ret, acc = memory_frame(proc.stdout, h)
-                    desc, _ = read_repairs(proc.stdout, h)
+                    desc, repair_ops = read_repairs(proc.stdout, h)
                     if len(desc):
-                        raise ValueError("unexpected synthetic repair")
+                        repairs.append((desc, repair_ops))
                     if h.get("final_publication"):
                         continue
                     txn.run = h["run"]
@@ -119,7 +120,7 @@ def trial(a, d, arm, seed, initial, gold):
                 {
                     "schema": "cell-token-replay/v2",
                     "program_sha256": hashlib.sha256(program.read_bytes()).hexdigest(),
-                    "repair_events": [],
+                    "repair_events": list(offline_repairs(repairs)),
                     "requests": list(txn.offline_tape(txn.run)),
                 }
             )

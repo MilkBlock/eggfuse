@@ -91,7 +91,17 @@ def coefficients(first, second, credit):
     return coeff
 
 
-def coverage_gradient(net, m, credit, gate, budget, rng, marginal=None):
+class IncompleteBudget(RuntimeError):
+    def __init__(self, slots, delivered, goal):
+        super().__init__(
+            f"complete-token sampling delivered {delivered}/{goal} in {slots} slots"
+        )
+        self.slots, self.delivered, self.goal = slots, delivered, goal
+
+
+def coverage_gradient(
+    net, m, credit, gate, budget, rng, marginal=None, *, local=None, max_slots=2**21
+):
     if not credit and marginal is None:
         return next(net.parameters()).sum() * 0, 0, 0, 0
     with torch.no_grad():
@@ -105,12 +115,13 @@ def coverage_gradient(net, m, credit, gate, budget, rng, marginal=None):
         # Rejection sampling of complete tokens. A numerical safety stop fails the
         # experiment explicitly rather than silently substituting shorter pages.
         while len(draws) < goal:
-            if slots >= 2**21:
-                raise RuntimeError("could not fill training budget")
+            if slots >= max_slots:
+                raise IncompleteBudget(slots, len(draws), goal)
             page.cap = 256
             draws.extend(i.cell for i in page.sample(m, (), 1, rng, Counter()))
             slots += 256
         coeff = Counter()
+        scoped = [Counter(), Counter()]
         discovery = 0
         for start in range(0, goal, 2 * budget):
             x = draws[start : start + budget]
@@ -121,10 +132,20 @@ def coverage_gradient(net, m, credit, gate, budget, rng, marginal=None):
                 for c, d, h, k in zip(x, y, marginal(x), marginal(y), strict=True):
                     coeff[c] += h - k
                     coeff[d] += k - h
+            if local:
+                for idx, values in enumerate(local):
+                    for c, d in zip(x, y, strict=True):
+                        diff = values(c) - values(d)
+                        scoped[idx][c] += diff
+                        scoped[idx][d] -= diff
             discovery += sum(
                 len({credit[c] for c in draws if c in credit}) for draws in (x, y)
             )
-        items = [c for c, n in coeff.items() if n]
+        items = list(
+            dict.fromkeys(
+                c for counter in (coeff, *scoped) for c, n in counter.items() if n
+            )
+        )
         total = len(items)
         if total > 32:
             items = [items[i] for i in rng.choice(total, 32, replace=False)]
@@ -138,7 +159,16 @@ def coverage_gradient(net, m, credit, gate, budget, rng, marginal=None):
     scores = raw.clamp_min(1e-30).log().sum(1)
     scale = total / (len(items) * 2 * groups)
     w = scores.new_tensor([coeff[c] for c in items])
-    return -(w * scores).sum() * scale, discovery / (2 * groups), slots, goal
+    loss = (w * scores).sum()
+    if local:
+        log_fields = raw.clamp_min(1e-30).log()
+        for counter, factor in zip(
+            scoped, (log_fields[:, 0], log_fields[:, 1:].sum(1)), strict=True
+        ):
+            loss = (
+                loss + (scores.new_tensor([counter[c] for c in items]) * factor).sum()
+            )
+    return -loss * scale, discovery / (2 * groups), slots, goal
 
 
 def train(a):
