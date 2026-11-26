@@ -1,0 +1,7 @@
+case,run,mode,productive,ops
+fact,3,oracle,2,2
+fact,3,stream,2,2
+loopfact,3,oracle,2,2
+loopfact,3,stream,2,2
+sum-divisors,3,oracle,2,2
+sum-divisors,3,stream,2,2

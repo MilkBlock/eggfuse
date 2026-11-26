@@ -27,7 +27,7 @@ def choices(a, m, arm, cap, seed):
 
 
 @torch.no_grad()
-def frozen(a, case, source):
+def frozen(a, case, source, arms=ARMS, draws=5):
     base = a.archive / source / case
     dest = a.out / "frozen" / source / case
     dest.mkdir(exist_ok=True, parents=True)
@@ -35,7 +35,7 @@ def frozen(a, case, source):
     pages = {
         (seed, arm): choices(a, m, arm, 256, seed)[2]
         for seed in a.seeds
-        for arm in ARMS
+        for arm in arms
     }
 
     def update(frame):
@@ -73,7 +73,7 @@ def frozen(a, case, source):
         goal = min(256, dom.size)
         batches = {}
         effort = {}
-        for draw in range(5):
+        for draw in range(draws):
             batches[0, "factored", draw] = list(
                 dom.draw("factored", random.Random(seed_for(r, draw)), goal)
             )
@@ -177,7 +177,7 @@ def frozen(a, case, source):
     print("scored", case, source, len(result), flush=True)
 
 
-def independent(a):
+def independent(a, arms=ARMS):
     root = a.out
     for fit_seed in a.seeds:
         draw = {9633: 536, 5003: 1129, 1777: 3449}[fit_seed]
@@ -191,7 +191,7 @@ def independent(a):
                     "pages": 2,
                     "seconds": 300,
                     "blocks": 2 if draw == 536 else 1,
-                    "arms": ["factored", *ARMS],
+                    "arms": ["factored", *arms],
                 }
             )
         )
