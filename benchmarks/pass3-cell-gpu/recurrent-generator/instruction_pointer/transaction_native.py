@@ -114,6 +114,8 @@ def execute(
                     repairs.extend(frame["repair_events"])
                 t = perf_counter()
                 publication = memory_frame(proc.stdout, frame)
+                if observe := getattr(study, "record_publication", None):
+                    observe(frame, publication)
                 repair_types = None
                 if protocol == "ccp-v0.1":
                     desc, ops = read_repairs(proc.stdout, frame)

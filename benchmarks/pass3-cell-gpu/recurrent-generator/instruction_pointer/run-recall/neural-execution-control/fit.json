@@ -1,0 +1,1 @@
+{"exit_labels":17,"train":{"n":281,"counts":[136,36,109],"loss":0.3647456765174866,"correct":234},"held":{"n":99,"counts":[50,15,34],"loss":0.553062379360199,"correct":65},"seconds":0.3558876250172034,"seed":8301,"updates":160}
