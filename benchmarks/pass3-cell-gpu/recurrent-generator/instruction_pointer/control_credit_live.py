@@ -1,5 +1,6 @@
 """Two live CCP clients restore the same real exit and allocate one neural page before/after publication."""
 
+import hashlib
 import random
 from collections import Counter
 from pathlib import Path
@@ -129,11 +130,22 @@ def branch(a, sh, e, now, seed):
 
 def run(a):
     a.pages = 6
-    for idx in range(a.programs):
+    policy_sha = hashlib.sha256(a.checkpoint.read_bytes()).hexdigest()
+    for idx in range(a.first, a.programs):
         cohort = "shuffle" if idx % 2 else ""
-        sh = read(a.out / cohort / "experience" / f"{idx}.json")
+        sh = read((a.source or a.out) / cohort / "experience" / f"{idx}.json")
         path = a.out / "live" / f"{idx}.json"
         if path.exists():
+            prior = read(path)
+            for pair in prior:
+                if (
+                    pair.get("checkpoint", sh["checkpoint_sha256"]) != policy_sha
+                    or pair.get("slots_per_page", 16) != a.cap
+                    or pair.get("selection", [0, 2]) != [a.skip, a.pairs_per_program]
+                ):
+                    raise ValueError(
+                        "saved pairs belong to another policy or sampling budget"
+                    )
             continue
         eligible = [e for e in sh["history"][:-3] if e["reason"] == "exploration_seal"]
         rng = random.Random(9083 + idx)
@@ -142,7 +154,7 @@ def run(a):
         result = []
         with TemporaryDirectory() as t:
             f = Forks(a, idx, Path(t), sh["tape"]["program_sha256"])
-            for e in eligible[:2]:
+            for e in eligible[a.skip : a.skip + a.pairs_per_program]:
                 arms = {}
                 for now in (True, False) if idx % 2 else (False, True):
                     b = branch(a, sh, e, now, 98311 * idx + e["run"])
@@ -158,6 +170,9 @@ def run(a):
                 result.append(
                     dict(
                         idx=idx,
+                        checkpoint=policy_sha,
+                        selection=[a.skip, a.pairs_per_program],
+                        slots_per_page=a.cap,
                         signature=sh["signature"],
                         cohort=cohort or "neural",
                         run=e["run"],
@@ -176,7 +191,12 @@ def run(a):
 
 
 if __name__ == "__main__":
-    a = arguments().parse_args()
+    p = arguments()
+    p.add_argument("--first", type=int, default=0)
+    p.add_argument("--source", type=Path)
+    p.add_argument("--skip", type=int, default=0)
+    p.add_argument("--pairs-per-program", type=int, default=2)
+    a = p.parse_args()
     torch.set_num_threads(1)
     (a.out / "live").mkdir(exist_ok=True)
     run(a)

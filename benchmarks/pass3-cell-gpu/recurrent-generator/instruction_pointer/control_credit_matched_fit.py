@@ -23,7 +23,7 @@ def train(a):
             split = int(idx >= 3 * a.programs // 4)
             sigs[split].add(sh["signature"])
             live = read(a.out / "live" / f"{idx}.json") if a.use_live else []
-            for r in records(sh, comp, live):
+            for r in records(sh, comp, live, historical=True):
                 count[r["kind"]] += 1
                 if r["kind"] == "cell":
                     continue

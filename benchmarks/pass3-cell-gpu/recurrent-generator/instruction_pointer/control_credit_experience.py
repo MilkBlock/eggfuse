@@ -7,7 +7,11 @@ from collections import defaultdict
 from execution_control import CONTINUE, SEAL, SUBMIT
 
 
-def records(shard, allocation, live=()):
+def records(shard, allocation, live=(), *, dual=(), historical=False):
+    """Privileged evidence stays out of x. Only a live policy twin can label a preference."""
+    paired = {t["state"]: t for t in dual}
+    if len(paired) != len(dual):
+        raise ValueError("reused decision identity")
     exits = {
         p["run"]: p
         for p in live
@@ -59,7 +63,53 @@ def records(shard, allocation, live=()):
                     CONTINUE if twin["gained"] else SEAL,
                     "live_ccp_terminal_fact_sets",
                 ]
+            fields = {}
+            if not historical:
+                for key in ("timing", "allocation", "omission", "live_allocation"):
+                    credit.pop(key, None)
+                t = paired.get(state)
+                if t and (t["program"], t["run"], t["epoch"], t["stage"]) != (
+                    shard["program"],
+                    w["run"],
+                    w["epoch"],
+                    w["stage"],
+                ):
+                    raise ValueError("paired evidence belongs to another window")
+                teacher = [p for p in pairs[state] if p["origin"] == "offline_teacher"]
+                policy = [p for p in pairs[state] if p["origin"] == "frozen_neural"]
+                fields = dict(
+                    teacher_potential=t["teacher_potential"] if t else None,
+                    policy_realization=t["policy_realization"] if t else None,
+                    realization_checkpoint=t["checkpoint"] if t else None,
+                    slots_per_page=t["slots_per_page"] if t else None,
+                    sampled_teacher_trials=teacher,
+                    observed_policy_trials=policy,
+                    control_effect=t["control_effect"] if t else None,
+                )
+                if t and bool(t["control_effect"]["gained"]) != bool(
+                    t["control_effect"]["lost"]
+                ):
+                    credit["realized_allocation"] = [
+                        "policy_and_page_budget_only",
+                        CONTINUE if t["control_effect"]["gained"] else SEAL,
+                        "paired_live_terminal_fact_dominance",
+                    ]
+                fields["masks"] = {
+                    "teacher_witness": bool(t and t["teacher_potential"]["witnesses"]),
+                    "realized_continue": bool(
+                        t
+                        and t["policy_realization"]["continue"]["first_page_ops"]
+                        is not None
+                    ),
+                    "realized_seal": bool(
+                        t
+                        and t["policy_realization"]["seal"]["first_page_ops"]
+                        is not None
+                    ),
+                    "realized_allocation": "realized_allocation" in credit,
+                }
             yield dict(
+                **fields,
                 **meta,
                 state=state,
                 kind="control",

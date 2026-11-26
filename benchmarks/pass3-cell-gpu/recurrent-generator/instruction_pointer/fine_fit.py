@@ -31,7 +31,9 @@ def scope_loss(factors, index, record, budget, arm):
     zero = p.sum() * 0
     groups = defaultdict(list)
     for c, i in index.items():
-        if c in record["self_positive"] or (arm == "E" and c in record["positive"]):
+        if c in record["self_positive"] or (
+            arm in ("E", "witness") and c in record["positive"]
+        ):
             groups[record["positive"][c]].append(i)
     discovery = zero
     for ids in groups.values():
@@ -147,7 +149,7 @@ def update(
         credit = {
             c: s
             for c, s in record["positive"].items()
-            if c in record["self_positive"] or arm == "E"
+            if c in record["self_positive"] or arm in ("E", "witness")
         }
 
         def marginal(items):
@@ -187,11 +189,11 @@ def update(
             return
         update_count[arm + "_optimizer_slots"] += slots
         update_count[arm + "_optimizer_complete"] += used
-    if arm in "CDE" and pare:
+    if arm in ("C", "D", "E", "witness") and pare:
         x, y, c = pare
         loss = loss + 0.05 * F.softplus(logs(y, c).sum() - logs(x, c).sum())
         update_count[arm + "_pairs"] += 1
-    if arm in "DE" and edit:
+    if arm in ("D", "E", "witness") and edit:
         k2, bad, good, slot = edit
         # Same conditioning prefix; target only the changed parent.
         loss = loss + 0.05 * F.softplus(
@@ -309,7 +311,7 @@ if __name__ == "__main__":
     p.add_argument("--programs", type=int, default=80)
     p.add_argument("--steps", type=int, default=400)
     p.add_argument("--initial", type=Path, required=True)
-    p.add_argument("--arms", nargs="+", choices=ARMS, default=ARMS)
+    p.add_argument("--arms", nargs="+", choices=(*ARMS, "witness"), default=ARMS)
     p.add_argument("--tag", default="fine")
     p.add_argument("--objective", choices=["complete", "slot"], default="slot")
     p.add_argument("--slot-limit", type=int, default=8192)
