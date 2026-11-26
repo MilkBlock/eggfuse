@@ -26,11 +26,11 @@ class Frozen:
     def __init__(self, program, actor, scorer):
         self.actor = actor
         self.cat = actor.catalog_type(program, integer_parameters=True)
-        self.nodes = actor.template_graph(self.cat)
+        self.nodes = actor.template_graph(self.cat).cpu()
         self.types = self.nodes[[self.cat.roots["initial", i] for i in range(len(self.cat.tables))]]
         rules = range(len(program["recipe"]["rules"]))
         layouts = [[(r, 0, [(-1, i) for i in range(len(self.cat.inputs["generated", r]))])] for r in rules]
-        self.graphs = GraphBank(layouts, self.cat, self.nodes).encode(scorer)
+        self.graphs = GraphBank(layouts, self.cat, self.nodes).encode(scorer).cpu()
 
     def ports(self, rows):
         if not rows:

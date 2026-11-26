@@ -1,0 +1,72 @@
+{
+  "small": {
+    "branch_decisions": 5172,
+    "kinds": {
+      "accepted_remove": 46,
+      "duplicate": 47,
+      "empty": 46,
+      "empty_multi": 44,
+      "keep": 47,
+      "keep_multi": 44,
+      "partial": 44,
+      "published_completion": 25,
+      "published_window": 35,
+      "rejected_keep": 46,
+      "repair": 46
+    },
+    "plans": 470,
+    "rate_sites": 8046,
+    "sources": [
+      "sum",
+      "sum-roll",
+      "grammar-benefit-fork-17118"
+    ],
+    "windows_limit": 12
+  },
+  "large": {
+    "branch_decisions": 26723,
+    "kinds": {
+      "accepted_remove": 46,
+      "duplicate": 47,
+      "empty": 46,
+      "empty_multi": 44,
+      "keep": 47,
+      "keep_multi": 44,
+      "partial": 44,
+      "published_completion": 235,
+      "published_window": 315,
+      "rejected_keep": 46,
+      "repair": 46
+    },
+    "plans": 960,
+    "rate_sites": 17779,
+    "sources": [
+      "sum",
+      "sum-roll",
+      "grammar-benefit-fork-17118"
+    ],
+    "windows_limit": 256
+  },
+  "held": {
+    "branch_decisions": 6851,
+    "kinds": {
+      "accepted_remove": 12,
+      "duplicate": 12,
+      "empty": 12,
+      "empty_multi": 12,
+      "keep": 12,
+      "keep_multi": 12,
+      "partial": 12,
+      "published_completion": 58,
+      "published_window": 80,
+      "rejected_keep": 12,
+      "repair": 12
+    },
+    "plans": 246,
+    "rate_sites": 4492,
+    "sources": [
+      "dot"
+    ],
+    "windows_limit": 64
+  }
+}

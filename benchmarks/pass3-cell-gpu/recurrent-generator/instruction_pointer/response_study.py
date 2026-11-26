@@ -31,15 +31,15 @@ OLD = Path("run-recall/discrete-computation-flow")
 HELD = "response-held-merge6"
 
 
-def memory(a, d, layout=None, bare=False):
+def memory(a, d, layout=None, bare=False, encoder_device="cpu"):
     prog = read(d / "program.json")
-    enc, scorer = load_enc(prog, a.actor)
+    enc, scorer = load_enc(prog, a.actor, encoder_device)
     ct = native(binary(a.data), "receipt-contract", d / "program.json")
     menu = {layout[0][0]: layout} if layout else linked(prog, read(BASE / "menu.json"))
     return ResponseMemory(enc, ct, {} if bare else menu, scorer)
 
 
-def train(a):
+def training_examples(a, sources=TRAIN, window_limit=12):
     rng = np.random.default_rng(123)
     net = Marks()
     records, addresses = [], []
@@ -65,7 +65,7 @@ def train(a):
                 )
 
     with torch.no_grad():
-        for case in TRAIN:
+        for case in sources:
             suff = read(OLD / "suffix-audit.json")[case]
             assert all(suff["checks"].values())
             d = folder(a.data, case.removesuffix("-roll"))
@@ -103,7 +103,7 @@ def train(a):
                     by_run[q["run"]].append(from_q(q))
             # Choose verified transitions in short consecutive windows. Only the actual
             # preceding Response and current unissued draft reach the encoder.
-            windows = [r for r in sorted(by_run) if r - 1 in by_run][:12]
+            windows = [r for r in sorted(by_run) if r - 1 in by_run][:window_limit]
             selected = {v for r in windows for v in (r - 1, r)}
             with frames.open() as source:
                 for frame in map(json.loads, source):
@@ -167,6 +167,11 @@ def train(a):
                 sigs.add(m.enc.cat.int_bake.key(u))
                 add(m, "native_fold", seq, [h])
                 add(m, "native_activate", [], [h])
+    return records, addresses, counts, sigs
+
+
+def train(a):
+    records, addresses, counts, sigs = training_examples(a)
     output = a.out / ("composition" if a.macro else "primitive")
     output.mkdir(exist_ok=True, parents=True)
     torch.save(marks_fit(addresses).state_dict(), output / "marks.pt")

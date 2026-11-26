@@ -17,12 +17,14 @@ from ripsat_policy import CellScorer, GraphBank
 from rule_read import load_actor
 
 
-def load_enc(program, actor_path):
+def load_enc(program, actor_path, device="cpu"):
     scorer = CellScorer(WIDTH).eval()
     scorer.load_state_dict(
         torch.load("run-recall/parameterized-deep-ripsat/event-gnn.pt", weights_only=True)["model"]
     )
-    return Frozen(program, load_actor(actor_path, True).eval(), scorer), scorer
+    # The host stores the compiled graph vectors; the encoder can compute them on Metal.
+    actor = load_actor(actor_path, True).eval().to(device)
+    return Frozen(program, actor, scorer.to(device)), scorer
 
 
 def from_q(q):
@@ -41,7 +43,7 @@ class Memory:
         ]
         self.menu = menu
         self.codes = (
-            dict(zip(menu, GraphBank(list(menu.values()), enc.cat, enc.nodes).encode(scorer))) if menu else {}
+            dict(zip(menu, GraphBank(list(menu.values()), enc.cat, enc.nodes).encode(scorer).cpu())) if menu else {}
         )
         self.rows = defaultdict(list)
         self.index = {}
