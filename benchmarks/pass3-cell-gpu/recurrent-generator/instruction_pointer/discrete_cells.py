@@ -17,9 +17,10 @@ from ripsat_policy import CellScorer, GraphBank
 from rule_read import load_actor
 
 
-def load_enc(program, actor_path, device="cpu"):
+def load_enc(program, actor_path, device="cpu", scorer_path=None):
     scorer = CellScorer(WIDTH).eval()
     scorer.load_state_dict(
+        torch.load(scorer_path, weights_only=True) if scorer_path is not None else
         torch.load("run-recall/parameterized-deep-ripsat/event-gnn.pt", weights_only=True)["model"]
     )
     # The host stores the compiled graph vectors; the encoder can compute them on Metal.

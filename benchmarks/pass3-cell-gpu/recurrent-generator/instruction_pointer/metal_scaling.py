@@ -249,20 +249,41 @@ def execute_one(a, size, dataset, device, case, block):
         initial = target.match(
             snapshot(a.data, d, "reference", "-", 0, Path(tmp) / "ref.json")[0]
         )
+        counter = getattr(a, "wait_counter", None)
+        start_waits = counter() if counter else 0
         t = perf_counter()
         m = memory(a, d, encoder_device=device if a.device_gnn else "cpu")
-        marks, rates = models(size)
+        if getattr(a, "model_sizes", None):
+            m_size, r_size = a.model_sizes
+            marks, rates = models(m_size)[0], models(r_size)[1]
+        else:
+            marks, rates = models(size)
         weights = torch.load(
             prefix / "weights.pt", weights_only=True, map_location="cpu"
         )
         for net, sd in zip((marks, rates), weights, strict=True):
             net.load_state_dict(sd)
         del weights
-        marks.choice = Inference(marks.choice, device, counts, "mark")
-        rates = Inference(rates, device, counts, "rate")
-        for key in ("dynamic", "age", "next_read"):
-            original = getattr(m.enc.actor, key)
-            setattr(m.enc.actor, key, Inference(original, device, counts, key))
+        if getattr(a, "stream_device", False):
+            from resident_stream import StreamPage
+
+            marks.device_stream = StreamPage(m, marks, rates, counts)
+            if getattr(a, "profile_index", False):
+                marks.device_stream.publication_events = []
+        elif getattr(a, "resident", False):
+            from resident_page import Page
+
+            marks.resident_page = Page(m, marks, rates, counts)
+        else:
+            marks.choice = Inference(marks.choice, device, counts, "mark")
+            rates = Inference(rates, device, counts, "rate")
+            for key in ("dynamic", "age", "next_read"):
+                original = getattr(m.enc.actor, key)
+                setattr(m.enc.actor, key, Inference(original, device, counts, key))
+        if getattr(a, "matched", False):
+            from page_reference import ScalarPage
+
+            marks.resident_page = ScalarPage(marks, rates, counts)
         pol = ResponsePolicy(m, marks, {"flow": rates}, "empty", 4, 536, 2)
         setup = perf_counter() - t
         r = execute(a.data, case, study=pol, seconds=a.seconds, series=tmp)
@@ -271,6 +292,15 @@ def execute_one(a, size, dataset, device, case, block):
         graph = read(Path(tmp) / (case + "-stream-multi") / "state.json")
         facts = sorted(target.match(graph) - initial)
         wall = r["wall"] + setup + r["runtime_setup_seconds"]
+        if getattr(a, "profile_index", False):
+            torch.mps.synchronize()
+            intervals = marks.device_stream.publication_events
+            counts["profiled_publications"] = len(intervals)
+            counts["publication_mps_interval_seconds"] = (
+                sum(start.elapsed_time(end) for start, end in intervals) / 1000
+            )
+        if counter:
+            counts["metal_command_buffer_waits"] = counter() - start_waits
         r.pop("trace", None)
         r.update(
             size=size,
@@ -310,6 +340,12 @@ def main():
         action="store_true",
         help="Also encode the frozen Recipe and Higher graphs on the inference device.",
     )
+    p.add_argument(
+        "--resident-stream",
+        dest="stream_device",
+        action="store_true",
+        help="Keep 100K/1M D4 drafts on MPS until CCP issue or Seal.",
+    )
     p.add_argument("--timing-prefix", default="")
     p.add_argument("--seconds", type=int, default=300)
     p.add_argument("--updates", type=int, default=192)
@@ -323,6 +359,8 @@ def main():
     p.add_argument("--devices", nargs="+", choices=["cpu", "mps"], default=["mps"])
     p.add_argument("--blocks", type=int, default=2)
     a = p.parse_args()
+    if a.stream_device and (a.devices != ["mps"] or set(a.sizes) - {"100K", "1M"}):
+        p.error("--resident-stream supports --devices mps --sizes 100K 1M")
     a.out.mkdir(exist_ok=True, parents=True)
     a.macro = False
     torch.set_num_threads(1)

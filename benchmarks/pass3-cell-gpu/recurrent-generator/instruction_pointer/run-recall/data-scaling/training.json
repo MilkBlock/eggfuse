@@ -1,0 +1,4902 @@
+[
+  {
+    "budget": "passes",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6175740771251184,
+              "accuracy_denominator": 6851,
+              "loss": 0.3300004791272085,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6292706656852124,
+              "accuracy_denominator": 26723,
+              "loss": 0.3266948136163901,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.532470703125,
+              "accuracy_denominator": 4096,
+              "loss": 10.210004568099976,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.8642714538736019,
+              "accuracy_denominator": 501,
+              "loss": 0.6907887144235787,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.8635922375234585,
+              "accuracy_denominator": 2060,
+              "loss": 0.7311159315451197,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.9682565182447433,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 20
+      },
+      {
+        "epoch": 39,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6441395419685532,
+              "accuracy_denominator": 6851,
+              "loss": 0.32331816093223215,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6526213374849128,
+              "accuracy_denominator": 26723,
+              "loss": 0.3160516123471358,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.5390625,
+              "accuracy_denominator": 4096,
+              "loss": 10.051005005836487,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9900199547261297,
+              "accuracy_denominator": 501,
+              "loss": 0.39648128390837345,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9990291268212124,
+              "accuracy_denominator": 2060,
+              "loss": 0.3736865566787849,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.37468262016773224,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 780
+      },
+      {
+        "epoch": 79,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6451612906705861,
+              "accuracy_denominator": 6851,
+              "loss": 0.320938919242534,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6608165250505975,
+              "accuracy_denominator": 26723,
+              "loss": 0.3075230698276279,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.537353515625,
+              "accuracy_denominator": 4096,
+              "loss": 10.016736388206482,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9860279455394326,
+              "accuracy_denominator": 501,
+              "loss": 0.39969450266875883,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9961165064457551,
+              "accuracy_denominator": 2060,
+              "loss": 0.3239283614882906,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.38099202513694763,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1580
+      }
+    ],
+    "epochs": 79,
+    "n": 10000,
+    "seconds": 12.98796116601443,
+    "seed": 243,
+    "size": "100K",
+    "steps": 1580
+  },
+  {
+    "budget": "passes",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.5994745296051059,
+              "accuracy_denominator": 6851,
+              "loss": 0.32689067818808426,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6279609324452727,
+              "accuracy_denominator": 26723,
+              "loss": 0.32030255203541846,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.536376953125,
+              "accuracy_denominator": 4096,
+              "loss": 10.070421934127808,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9520958086211763,
+              "accuracy_denominator": 501,
+              "loss": 0.46815562773381036,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9524271861152741,
+              "accuracy_denominator": 2060,
+              "loss": 0.4827337248321309,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.3974282443523407,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 196
+      },
+      {
+        "epoch": 4,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6362574809642625,
+              "accuracy_denominator": 6851,
+              "loss": 0.32448952065960474,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6475320883716728,
+              "accuracy_denominator": 26723,
+              "loss": 0.31684919564112735,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.5341796875,
+              "accuracy_denominator": 4096,
+              "loss": 10.043243288993835,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9900199547261297,
+              "accuracy_denominator": 501,
+              "loss": 0.39271181989871456,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.997572817646184,
+              "accuracy_denominator": 2060,
+              "loss": 0.37104370099955664,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.3855850510299206,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 784
+      },
+      {
+        "epoch": 8,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6568384180276381,
+              "accuracy_denominator": 6851,
+              "loss": 0.3176959463669912,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6634734125144109,
+              "accuracy_denominator": 26723,
+              "loss": 0.3088831803131143,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.540771484375,
+              "accuracy_denominator": 4096,
+              "loss": 10.072334289550781,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9860279455394326,
+              "accuracy_denominator": 501,
+              "loss": 0.3996267167482082,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9961165053751863,
+              "accuracy_denominator": 2060,
+              "loss": 0.323581236789349,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.38611671701073647,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1568
+      }
+    ],
+    "epochs": 8,
+    "n": 100000,
+    "seconds": 10.234051208011806,
+    "seed": 243,
+    "size": "100K",
+    "steps": 1568
+  },
+  {
+    "budget": "passes",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.653043351622676,
+              "accuracy_denominator": 6851,
+              "loss": 0.3174775998890965,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.671818283873083,
+              "accuracy_denominator": 26723,
+              "loss": 0.30361500707513284,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.554931640625,
+              "accuracy_denominator": 4096,
+              "loss": 9.8802250623703,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9481037798042069,
+              "accuracy_denominator": 501,
+              "loss": 0.3999913376858581,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9776699081207942,
+              "accuracy_denominator": 2060,
+              "loss": 0.31660239346481056,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1669,
+              "loss": 0.3841851130127907,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1954
+      },
+      {
+        "epoch": 2,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6269157790055399,
+              "accuracy_denominator": 6851,
+              "loss": 0.31659151747041925,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6895183923871415,
+              "accuracy_denominator": 26723,
+              "loss": 0.2870118850202603,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.56982421875,
+              "accuracy_denominator": 4096,
+              "loss": 9.762533783912659,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.7664670758618566,
+              "accuracy_denominator": 501,
+              "loss": 0.4973721089342092,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9233009723494354,
+              "accuracy_denominator": 2060,
+              "loss": 0.28298606676007987,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1669,
+              "loss": 0.37961147353053093,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 3908
+      },
+      {
+        "epoch": 4,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6089621955783606,
+              "accuracy_denominator": 6851,
+              "loss": 0.3218424740415858,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.713318115440898,
+              "accuracy_denominator": 26723,
+              "loss": 0.2682230200292161,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.578125,
+              "accuracy_denominator": 4096,
+              "loss": 9.598841667175293,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.49700598629886755,
+              "accuracy_denominator": 501,
+              "loss": 0.6799574127281289,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.775728158320038,
+              "accuracy_denominator": 2060,
+              "loss": 0.26203281898945485,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 0.9766327204498579,
+              "accuracy_denominator": 1669,
+              "loss": 0.3767855390906334,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 7816
+      }
+    ],
+    "epochs": 4,
+    "n": 1000000,
+    "seconds": 56.869259375002,
+    "seed": 243,
+    "size": "100K",
+    "steps": 7816
+  },
+  {
+    "budget": "passes",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6187417898155828,
+              "accuracy_denominator": 6851,
+              "loss": 0.3264767344094353,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6335740746756057,
+              "accuracy_denominator": 26723,
+              "loss": 0.32083951977695285,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.539306640625,
+              "accuracy_denominator": 4096,
+              "loss": 10.17316460609436,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.8742514995043863,
+              "accuracy_denominator": 501,
+              "loss": 0.5905957300757522,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.8946601990646529,
+              "accuracy_denominator": 2060,
+              "loss": 0.617501179765403,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.42545517534017563,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 20
+      },
+      {
+        "epoch": 39,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6442855060700865,
+              "accuracy_denominator": 6851,
+              "loss": 0.3229196795215225,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6493282939633562,
+              "accuracy_denominator": 26723,
+              "loss": 0.31660370391914866,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.541259765625,
+              "accuracy_denominator": 4096,
+              "loss": 10.058837890625,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9560878253030681,
+              "accuracy_denominator": 501,
+              "loss": 0.3854695446690799,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9747572856331335,
+              "accuracy_denominator": 2060,
+              "loss": 0.3361946801995235,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.3797491379082203,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 780
+      },
+      {
+        "epoch": 79,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6464749675060846,
+              "accuracy_denominator": 6851,
+              "loss": 0.3215707224262072,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6625378886699516,
+              "accuracy_denominator": 26723,
+              "loss": 0.3032447227156591,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.545654296875,
+              "accuracy_denominator": 4096,
+              "loss": 10.04215407371521,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.8043912217288673,
+              "accuracy_denominator": 501,
+              "loss": 0.41405232194236724,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.8611650521315417,
+              "accuracy_denominator": 2060,
+              "loss": 0.29864719996743117,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.38475681841373444,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1580
+      }
+    ],
+    "epochs": 79,
+    "n": 10000,
+    "seconds": 12.253650458005723,
+    "seed": 243,
+    "size": "1M",
+    "steps": 1580
+  },
+  {
+    "budget": "passes",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6295431326852369,
+              "accuracy_denominator": 6851,
+              "loss": 0.3241622681696734,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6403472663528909,
+              "accuracy_denominator": 26723,
+              "loss": 0.3186583592051879,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.5322265625,
+              "accuracy_denominator": 4096,
+              "loss": 10.10099196434021,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9860279457773753,
+              "accuracy_denominator": 501,
+              "loss": 0.4320535751691474,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9883495135793409,
+              "accuracy_denominator": 2060,
+              "loss": 0.422261906397134,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.4067901074886322,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 196
+      },
+      {
+        "epoch": 4,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6326083786434334,
+              "accuracy_denominator": 6851,
+              "loss": 0.3246440148678962,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6439770983261418,
+              "accuracy_denominator": 26723,
+              "loss": 0.3169023080167534,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.5380859375,
+              "accuracy_denominator": 4096,
+              "loss": 10.045195460319519,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9620758333130035,
+              "accuracy_denominator": 501,
+              "loss": 0.3915692498505378,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.975728163238868,
+              "accuracy_denominator": 2060,
+              "loss": 0.34046690213283126,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.3858404792845249,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 784
+      },
+      {
+        "epoch": 8,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6558166694039064,
+              "accuracy_denominator": 6851,
+              "loss": 0.3169375065990894,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6720428096629347,
+              "accuracy_denominator": 26723,
+              "loss": 0.3046757704547497,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.542236328125,
+              "accuracy_denominator": 4096,
+              "loss": 10.064546704292297,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.8602794401659937,
+              "accuracy_denominator": 501,
+              "loss": 0.4125787093250762,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9334951407701066,
+              "accuracy_denominator": 2060,
+              "loss": 0.3013354752139141,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.3862134590744972,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1568
+      }
+    ],
+    "epochs": 8,
+    "n": 100000,
+    "seconds": 12.894336375000421,
+    "seed": 243,
+    "size": "1M",
+    "steps": 1568
+  },
+  {
+    "budget": "passes",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6480805724663484,
+              "accuracy_denominator": 6851,
+              "loss": 0.3168987029661246,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.677543688879012,
+              "accuracy_denominator": 26723,
+              "loss": 0.2948113882612585,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.554443359375,
+              "accuracy_denominator": 4096,
+              "loss": 9.853435635566711,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.7105788496915928,
+              "accuracy_denominator": 501,
+              "loss": 0.4226239995284228,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.8053398021216531,
+              "accuracy_denominator": 2060,
+              "loss": 0.2962773384009964,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1669,
+              "loss": 0.3860499672591686,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1954
+      },
+      {
+        "epoch": 2,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6301269890391693,
+              "accuracy_denominator": 6851,
+              "loss": 0.3156880753599037,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.7140665344058346,
+              "accuracy_denominator": 26723,
+              "loss": 0.2710776747999419,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.5751953125,
+              "accuracy_denominator": 4096,
+              "loss": 9.656312823295593,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.5948103790035743,
+              "accuracy_denominator": 501,
+              "loss": 0.516526557695498,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.802912616295722,
+              "accuracy_denominator": 2060,
+              "loss": 0.26943576343647846,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 0.9928100572295214,
+              "accuracy_denominator": 1669,
+              "loss": 0.3766702562570572,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 3908
+      },
+      {
+        "epoch": 4,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.590132827628983,
+              "accuracy_denominator": 6851,
+              "loss": 0.3330295530679782,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.7735658422075105,
+              "accuracy_denominator": 26723,
+              "loss": 0.23165442234798983,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.592529296875,
+              "accuracy_denominator": 4096,
+              "loss": 9.364617228507996,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.43113771898898773,
+              "accuracy_denominator": 501,
+              "loss": 0.7702276268194426,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.7043689308091274,
+              "accuracy_denominator": 2060,
+              "loss": 0.2531131236786091,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 0.9388855586443353,
+              "accuracy_denominator": 1669,
+              "loss": 0.37383412942290306,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 7816
+      }
+    ],
+    "epochs": 4,
+    "n": 1000000,
+    "seconds": 63.31486337498063,
+    "seed": 243,
+    "size": "1M",
+    "steps": 7816
+  },
+  {
+    "budget": "passes",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6136330467056244,
+              "accuracy_denominator": 6851,
+              "loss": 0.3277343619550132,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6242936795683842,
+              "accuracy_denominator": 26723,
+              "loss": 0.3270586635459483,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.533447265625,
+              "accuracy_denominator": 4096,
+              "loss": 10.202226638793945,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.8642714538736019,
+              "accuracy_denominator": 501,
+              "loss": 0.720067984154571,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.8635922375234585,
+              "accuracy_denominator": 2060,
+              "loss": 0.7704858205265948,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.8984980508685112,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 20
+      },
+      {
+        "epoch": 39,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6463290033610506,
+              "accuracy_denominator": 6851,
+              "loss": 0.3237959128403347,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6555775924410215,
+              "accuracy_denominator": 26723,
+              "loss": 0.31570448329253936,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.546630859375,
+              "accuracy_denominator": 4096,
+              "loss": 10.036455154418945,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 501,
+              "loss": 0.3981722457293372,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9990291271394897,
+              "accuracy_denominator": 2060,
+              "loss": 0.3706592279258655,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.377575870603323,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 780
+      },
+      {
+        "epoch": 79,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6339220554963322,
+              "accuracy_denominator": 6851,
+              "loss": 0.3225252635765034,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6592822661345596,
+              "accuracy_denominator": 26723,
+              "loss": 0.3085676622773048,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.54443359375,
+              "accuracy_denominator": 4096,
+              "loss": 10.029706597328186,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9860279455394326,
+              "accuracy_denominator": 501,
+              "loss": 0.3923898774096619,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9990291268212124,
+              "accuracy_denominator": 2060,
+              "loss": 0.3243022935394511,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.37115204706788063,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1580
+      }
+    ],
+    "epochs": 79,
+    "n": 10000,
+    "seconds": 10.102832375006983,
+    "seed": 536,
+    "size": "100K",
+    "steps": 1580
+  },
+  {
+    "budget": "passes",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6202014307439144,
+              "accuracy_denominator": 6851,
+              "loss": 0.324704219134876,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6398233731465796,
+              "accuracy_denominator": 26723,
+              "loss": 0.31905412199307814,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.53564453125,
+              "accuracy_denominator": 4096,
+              "loss": 10.051816463470459,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9520958086211763,
+              "accuracy_denominator": 501,
+              "loss": 0.47690577606797746,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.951941749685019,
+              "accuracy_denominator": 2060,
+              "loss": 0.48529816859862956,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.40617674961686134,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 196
+      },
+      {
+        "epoch": 4,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6445774342731531,
+              "accuracy_denominator": 6851,
+              "loss": 0.3228551281784385,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6508251318553114,
+              "accuracy_denominator": 26723,
+              "loss": 0.31653576865705846,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.53173828125,
+              "accuracy_denominator": 4096,
+              "loss": 10.037398338317871,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9940119787842452,
+              "accuracy_denominator": 501,
+              "loss": 0.40134268773284776,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9985436908249716,
+              "accuracy_denominator": 2060,
+              "loss": 0.36983666028227935,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.38575349748134613,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 784
+      },
+      {
+        "epoch": 8,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6442855060700865,
+              "accuracy_denominator": 6851,
+              "loss": 0.32032198800716655,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6608165251197418,
+              "accuracy_denominator": 26723,
+              "loss": 0.3090010607188607,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.541259765625,
+              "accuracy_denominator": 4096,
+              "loss": 10.025618553161621,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9840319337483175,
+              "accuracy_denominator": 501,
+              "loss": 0.3870064896633972,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9990291268212124,
+              "accuracy_denominator": 2060,
+              "loss": 0.32213239627729895,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.38751229271292686,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1568
+      }
+    ],
+    "epochs": 8,
+    "n": 100000,
+    "seconds": 10.991240749979625,
+    "seed": 536,
+    "size": "100K",
+    "steps": 1568
+  },
+  {
+    "budget": "passes",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6450153265342523,
+              "accuracy_denominator": 6851,
+              "loss": 0.31838283552434077,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6691988175270314,
+              "accuracy_denominator": 26723,
+              "loss": 0.3040900614404109,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.563720703125,
+              "accuracy_denominator": 4096,
+              "loss": 9.876774430274963,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9860279455394326,
+              "accuracy_denominator": 501,
+              "loss": 0.3993287866861285,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9985436899569428,
+              "accuracy_denominator": 2060,
+              "loss": 0.3128264562414569,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1669,
+              "loss": 0.3849225230515003,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1954
+      },
+      {
+        "epoch": 2,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6594657716725346,
+              "accuracy_denominator": 6851,
+              "loss": 0.31346322024909096,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6934850128700788,
+              "accuracy_denominator": 26723,
+              "loss": 0.2874700166916538,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.56005859375,
+              "accuracy_denominator": 4096,
+              "loss": 9.820574641227722,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.8602794501595868,
+              "accuracy_denominator": 501,
+              "loss": 0.5145038268639652,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9893203862951797,
+              "accuracy_denominator": 2060,
+              "loss": 0.2796002418560069,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1669,
+              "loss": 0.3811487816274166,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 3908
+      },
+      {
+        "epoch": 4,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6153846156108189,
+              "accuracy_denominator": 6851,
+              "loss": 0.3199585314224,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.7270890245161759,
+              "accuracy_denominator": 26723,
+              "loss": 0.26561940516517474,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.56591796875,
+              "accuracy_denominator": 4096,
+              "loss": 9.670366883277893,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.6147704499210426,
+              "accuracy_denominator": 501,
+              "loss": 0.6822180123581235,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9334951474249942,
+              "accuracy_denominator": 2060,
+              "loss": 0.263556397482879,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1669,
+              "loss": 0.38091856613755226,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 7816
+      }
+    ],
+    "epochs": 4,
+    "n": 1000000,
+    "seconds": 52.846244375017704,
+    "seed": 536,
+    "size": "100K",
+    "steps": 7816
+  },
+  {
+    "budget": "passes",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.5718873161031389,
+              "accuracy_denominator": 6851,
+              "loss": 0.3341121440855295,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6126183437778266,
+              "accuracy_denominator": 26723,
+              "loss": 0.325424512909526,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.52001953125,
+              "accuracy_denominator": 4096,
+              "loss": 10.321379661560059,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.8822355238263478,
+              "accuracy_denominator": 501,
+              "loss": 0.6079151582087714,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9101941760014561,
+              "accuracy_denominator": 2060,
+              "loss": 0.6561149058673155,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.42702075466513634,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 20
+      },
+      {
+        "epoch": 39,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6413662242308235,
+              "accuracy_denominator": 6851,
+              "loss": 0.3251995285520274,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6546420686210972,
+              "accuracy_denominator": 26723,
+              "loss": 0.31580633631978605,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.538818359375,
+              "accuracy_denominator": 4096,
+              "loss": 10.040219902992249,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9760479055003016,
+              "accuracy_denominator": 501,
+              "loss": 0.38144924698422134,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9820388357905508,
+              "accuracy_denominator": 2060,
+              "loss": 0.3331319815691146,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.37287216633558273,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 780
+      },
+      {
+        "epoch": 79,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6263319226690077,
+              "accuracy_denominator": 6851,
+              "loss": 0.3230801006204594,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.667477453983513,
+              "accuracy_denominator": 26723,
+              "loss": 0.3023586013589849,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.5283203125,
+              "accuracy_denominator": 4096,
+              "loss": 10.038032174110413,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.7764470897272914,
+              "accuracy_denominator": 501,
+              "loss": 0.4161757996954057,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.8932038885007785,
+              "accuracy_denominator": 2060,
+              "loss": 0.2979183817232887,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.3711933270096779,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1580
+      }
+    ],
+    "epochs": 79,
+    "n": 10000,
+    "seconds": 12.180296542006545,
+    "seed": 536,
+    "size": "1M",
+    "steps": 1580
+  },
+  {
+    "budget": "passes",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.634943804128764,
+              "accuracy_denominator": 6851,
+              "loss": 0.32419155520464343,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6436403098677561,
+              "accuracy_denominator": 26723,
+              "loss": 0.3194887408488249,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.531494140625,
+              "accuracy_denominator": 4096,
+              "loss": 10.105571627616882,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9620758497310494,
+              "accuracy_denominator": 501,
+              "loss": 0.4332896671106112,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9577669943420632,
+              "accuracy_denominator": 2060,
+              "loss": 0.4190011619915739,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.39559677615761757,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 196
+      },
+      {
+        "epoch": 4,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6502700338762462,
+              "accuracy_denominator": 6851,
+              "loss": 0.3226482180709683,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6543052800422665,
+              "accuracy_denominator": 26723,
+              "loss": 0.3164808346728867,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.5302734375,
+              "accuracy_denominator": 4096,
+              "loss": 10.041789054870605,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9760479046675021,
+              "accuracy_denominator": 501,
+              "loss": 0.39552007509223164,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9868932070662675,
+              "accuracy_denominator": 2060,
+              "loss": 0.3376272802498299,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.38742582499980927,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 784
+      },
+      {
+        "epoch": 8,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6469128597410835,
+              "accuracy_denominator": 6851,
+              "loss": 0.31958962218063,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6673651910629368,
+              "accuracy_denominator": 26723,
+              "loss": 0.30138892417797514,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.54345703125,
+              "accuracy_denominator": 4096,
+              "loss": 10.010431408882141,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.7924151546702889,
+              "accuracy_denominator": 501,
+              "loss": 0.39150123296855305,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.856796123564822,
+              "accuracy_denominator": 2060,
+              "loss": 0.29530963322188747,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.38750920444726944,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1568
+      }
+    ],
+    "epochs": 8,
+    "n": 100000,
+    "seconds": 11.977024583000457,
+    "seed": 536,
+    "size": "1M",
+    "steps": 1568
+  },
+  {
+    "budget": "passes",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6540651002464077,
+              "accuracy_denominator": 6851,
+              "loss": 0.3158541092636324,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6825580960578406,
+              "accuracy_denominator": 26723,
+              "loss": 0.29721384288481967,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.55078125,
+              "accuracy_denominator": 4096,
+              "loss": 9.886459469795227,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.7205588679589673,
+              "accuracy_denominator": 501,
+              "loss": 0.42238913133806066,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.8218446584870515,
+              "accuracy_denominator": 2060,
+              "loss": 0.2883584561959153,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1669,
+              "loss": 0.3879828527569771,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1954
+      },
+      {
+        "epoch": 2,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6454532188649527,
+              "accuracy_denominator": 6851,
+              "loss": 0.31242606423794134,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.7085656550581599,
+              "accuracy_denominator": 26723,
+              "loss": 0.27362870318341903,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.574462890625,
+              "accuracy_denominator": 4096,
+              "loss": 9.664954423904419,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.5868263525401285,
+              "accuracy_denominator": 501,
+              "loss": 0.5140946388244629,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.7757281610687959,
+              "accuracy_denominator": 2060,
+              "loss": 0.2668121055382783,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 0.9880167854053664,
+              "accuracy_denominator": 1669,
+              "loss": 0.3784399889409542,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 3908
+      },
+      {
+        "epoch": 4,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6088162315638287,
+              "accuracy_denominator": 6851,
+              "loss": 0.32851893388995324,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.7679152789709387,
+              "accuracy_denominator": 26723,
+              "loss": 0.23677238297713168,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.58642578125,
+              "accuracy_denominator": 4096,
+              "loss": 9.441475987434387,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.4171656653017341,
+              "accuracy_denominator": 501,
+              "loss": 0.8231131962217423,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.6902912699337145,
+              "accuracy_denominator": 2060,
+              "loss": 0.2539242889300906,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 0.9185140855373773,
+              "accuracy_denominator": 1669,
+              "loss": 0.37886689975857735,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 7816
+      }
+    ],
+    "epochs": 4,
+    "n": 1000000,
+    "seconds": 62.05640100000892,
+    "seed": 536,
+    "size": "1M",
+    "steps": 7816
+  },
+  {
+    "budget": "passes",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6228287844671122,
+              "accuracy_denominator": 6851,
+              "loss": 0.32505476469106875,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6325262881826864,
+              "accuracy_denominator": 26723,
+              "loss": 0.32354409037109033,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.533447265625,
+              "accuracy_denominator": 4096,
+              "loss": 10.207027792930603,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.8642714538736019,
+              "accuracy_denominator": 501,
+              "loss": 0.712047799410799,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.8635922375234585,
+              "accuracy_denominator": 2060,
+              "loss": 0.7494632589487219,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.9861925840377808,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 20
+      },
+      {
+        "epoch": 39,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.632608378678234,
+              "accuracy_denominator": 6851,
+              "loss": 0.3249229497630097,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.650114133883231,
+              "accuracy_denominator": 26723,
+              "loss": 0.31644860777215045,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.5283203125,
+              "accuracy_denominator": 4096,
+              "loss": 10.085434436798096,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9880239506681522,
+              "accuracy_denominator": 501,
+              "loss": 0.3965301383434413,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9990291271394897,
+              "accuracy_denominator": 2060,
+              "loss": 0.36727853677220296,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.3711828626692295,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 780
+      },
+      {
+        "epoch": 79,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6493942493366475,
+              "accuracy_denominator": 6851,
+              "loss": 0.3184285951633381,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6645586200202603,
+              "accuracy_denominator": 26723,
+              "loss": 0.30619745705761436,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.54541015625,
+              "accuracy_denominator": 4096,
+              "loss": 10.011979460716248,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9860279455394326,
+              "accuracy_denominator": 501,
+              "loss": 0.3931586040799313,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9990291268212124,
+              "accuracy_denominator": 2060,
+              "loss": 0.32176622553843687,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.37150031700730324,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1580
+      }
+    ],
+    "epochs": 79,
+    "n": 10000,
+    "seconds": 11.067428167007165,
+    "seed": 8201,
+    "size": "100K",
+    "steps": 1580
+  },
+  {
+    "budget": "passes",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6234126407949442,
+              "accuracy_denominator": 6851,
+              "loss": 0.3245017417650678,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6345095985334478,
+              "accuracy_denominator": 26723,
+              "loss": 0.31940093395399777,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.537109375,
+              "accuracy_denominator": 4096,
+              "loss": 10.122024059295654,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9520958086211763,
+              "accuracy_denominator": 501,
+              "loss": 0.46520641863608675,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9533980624189654,
+              "accuracy_denominator": 2060,
+              "loss": 0.47636736449651434,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.39444344118237495,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 196
+      },
+      {
+        "epoch": 4,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6381550141623935,
+              "accuracy_denominator": 6851,
+              "loss": 0.32497465131996567,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6479062978608324,
+              "accuracy_denominator": 26723,
+              "loss": 0.3170656180710099,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.524658203125,
+              "accuracy_denominator": 4096,
+              "loss": 10.050994753837585,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9920159667551874,
+              "accuracy_denominator": 501,
+              "loss": 0.4063345030015786,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9990291271394897,
+              "accuracy_denominator": 2060,
+              "loss": 0.37005727156146917,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.38606132194399834,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 784
+      },
+      {
+        "epoch": 8,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6488103930175156,
+              "accuracy_denominator": 6851,
+              "loss": 0.3195311886831681,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6666541930016379,
+              "accuracy_denominator": 26723,
+              "loss": 0.3088486647606342,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.542236328125,
+              "accuracy_denominator": 4096,
+              "loss": 10.030576229095459,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9860279455394326,
+              "accuracy_denominator": 501,
+              "loss": 0.3952788543596142,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.998058253960702,
+              "accuracy_denominator": 2060,
+              "loss": 0.3230163337112752,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.38609474152326584,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1568
+      }
+    ],
+    "epochs": 8,
+    "n": 100000,
+    "seconds": 9.849382749991491,
+    "seed": 8201,
+    "size": "100K",
+    "steps": 1568
+  },
+  {
+    "budget": "passes",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6457451470158184,
+              "accuracy_denominator": 6851,
+              "loss": 0.3190823055465558,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6665793511876713,
+              "accuracy_denominator": 26723,
+              "loss": 0.30115824193180585,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.556396484375,
+              "accuracy_denominator": 4096,
+              "loss": 9.883758306503296,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9840319366036299,
+              "accuracy_denominator": 501,
+              "loss": 0.40152049957393027,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9990291268212124,
+              "accuracy_denominator": 2060,
+              "loss": 0.3117521742620689,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1669,
+              "loss": 0.3812251277267933,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1954
+      },
+      {
+        "epoch": 2,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6569843821291714,
+              "accuracy_denominator": 6851,
+              "loss": 0.3136951958366666,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6977135801669505,
+              "accuracy_denominator": 26723,
+              "loss": 0.28380666140493277,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.56591796875,
+              "accuracy_denominator": 4096,
+              "loss": 9.778247237205505,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.8502994098825131,
+              "accuracy_denominator": 501,
+              "loss": 0.4474691136292949,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9228155272967608,
+              "accuracy_denominator": 2060,
+              "loss": 0.28012364526241934,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1669,
+              "loss": 0.38245389610528946,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 3908
+      },
+      {
+        "epoch": 4,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6162604001678179,
+              "accuracy_denominator": 6851,
+              "loss": 0.31832876591382453,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.735246791120231,
+              "accuracy_denominator": 26723,
+              "loss": 0.2603160687019844,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.580810546875,
+              "accuracy_denominator": 4096,
+              "loss": 9.560407757759094,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.4910179597888878,
+              "accuracy_denominator": 501,
+              "loss": 0.592226590826648,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.7810679602680854,
+              "accuracy_denominator": 2060,
+              "loss": 0.2629964036466307,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 0.9958058728508924,
+              "accuracy_denominator": 1669,
+              "loss": 0.37973861768841743,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 7816
+      }
+    ],
+    "epochs": 4,
+    "n": 1000000,
+    "seconds": 54.78746216598665,
+    "seed": 8201,
+    "size": "100K",
+    "steps": 7816
+  },
+  {
+    "budget": "passes",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.5911545763223158,
+              "accuracy_denominator": 6851,
+              "loss": 0.32958055392979985,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6254537290398716,
+              "accuracy_denominator": 26723,
+              "loss": 0.32075024118404905,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.524169921875,
+              "accuracy_denominator": 4096,
+              "loss": 10.207461833953857,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.8662674647129462,
+              "accuracy_denominator": 501,
+              "loss": 0.6098964668055463,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.8699029184660865,
+              "accuracy_denominator": 2060,
+              "loss": 0.6575911499564087,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.422842588275671,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 20
+      },
+      {
+        "epoch": 39,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6250182458596096,
+              "accuracy_denominator": 6851,
+              "loss": 0.32573648087909807,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6542304382974443,
+              "accuracy_denominator": 26723,
+              "loss": 0.3157585500584602,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.51953125,
+              "accuracy_denominator": 4096,
+              "loss": 10.13697099685669,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9780439097962218,
+              "accuracy_denominator": 501,
+              "loss": 0.38255990465307027,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9868932040281666,
+              "accuracy_denominator": 2060,
+              "loss": 0.3360108861944758,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.3742157369852066,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 780
+      },
+      {
+        "epoch": 79,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.650124069783413,
+              "accuracy_denominator": 6851,
+              "loss": 0.3171827623229395,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6728286494757473,
+              "accuracy_denominator": 26723,
+              "loss": 0.297819626541885,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.5419921875,
+              "accuracy_denominator": 4096,
+              "loss": 10.011569619178772,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.8263472989647688,
+              "accuracy_denominator": 501,
+              "loss": 0.4232184003103147,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.921844660512452,
+              "accuracy_denominator": 2060,
+              "loss": 0.2952165141878392,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.371911458671093,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1580
+      }
+    ],
+    "epochs": 79,
+    "n": 10000,
+    "seconds": 12.231739749986446,
+    "seed": 8201,
+    "size": "1M",
+    "steps": 1580
+  },
+  {
+    "budget": "passes",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6110056929824266,
+              "accuracy_denominator": 6851,
+              "loss": 0.3255777668516195,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6323391835039053,
+              "accuracy_denominator": 26723,
+              "loss": 0.3205767752983896,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.537841796875,
+              "accuracy_denominator": 4096,
+              "loss": 10.155005931854248,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9680638674966352,
+              "accuracy_denominator": 501,
+              "loss": 0.43722086493664375,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9635922341960148,
+              "accuracy_denominator": 2060,
+              "loss": 0.41542513435133294,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.3928676061332226,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 196
+      },
+      {
+        "epoch": 4,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6407823678246903,
+              "accuracy_denominator": 6851,
+              "loss": 0.3256748244373002,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6476069303440021,
+              "accuracy_denominator": 26723,
+              "loss": 0.31684163947825045,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.526611328125,
+              "accuracy_denominator": 4096,
+              "loss": 10.062408804893494,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9740518888313613,
+              "accuracy_denominator": 501,
+              "loss": 0.383570195347202,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9781553362179728,
+              "accuracy_denominator": 2060,
+              "loss": 0.33351467546940117,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.3863456957042217,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 784
+      },
+      {
+        "epoch": 8,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6393227269224591,
+              "accuracy_denominator": 6851,
+              "loss": 0.3196763627121282,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6695730269782733,
+              "accuracy_denominator": 26723,
+              "loss": 0.30371118077652604,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.5439453125,
+              "accuracy_denominator": 4096,
+              "loss": 10.02007508277893,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.8842315232444428,
+              "accuracy_denominator": 501,
+              "loss": 0.41253655912592546,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9611650454766542,
+              "accuracy_denominator": 2060,
+              "loss": 0.30705600447872816,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.38525446876883507,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1568
+      }
+    ],
+    "epochs": 8,
+    "n": 100000,
+    "seconds": 13.014754417003132,
+    "seed": 8201,
+    "size": "1M",
+    "steps": 1568
+  },
+  {
+    "budget": "passes",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6394686909717916,
+              "accuracy_denominator": 6851,
+              "loss": 0.31868171303433374,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6812483629004281,
+              "accuracy_denominator": 26723,
+              "loss": 0.2957320346944869,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.551025390625,
+              "accuracy_denominator": 4096,
+              "loss": 9.861991882324219,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.6986027950060344,
+              "accuracy_denominator": 501,
+              "loss": 0.4484907902810017,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.8237864103132081,
+              "accuracy_denominator": 2060,
+              "loss": 0.29130128248137716,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 0.9994008365400256,
+              "accuracy_denominator": 1669,
+              "loss": 0.38024361431598663,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1954
+      },
+      {
+        "epoch": 2,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6550868489136401,
+              "accuracy_denominator": 6851,
+              "loss": 0.3135281252310304,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.71911836253291,
+              "accuracy_denominator": 26723,
+              "loss": 0.270474460038829,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.570068359375,
+              "accuracy_denominator": 4096,
+              "loss": 9.681104898452759,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.5628742573860877,
+              "accuracy_denominator": 501,
+              "loss": 0.5083631096957538,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.8024271829903704,
+              "accuracy_denominator": 2060,
+              "loss": 0.26606713416615424,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 0.9682444531879002,
+              "accuracy_denominator": 1669,
+              "loss": 0.3780643790960312,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 3908
+      },
+      {
+        "epoch": 4,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6051671292429996,
+              "accuracy_denominator": 6851,
+              "loss": 0.32794205730213005,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.7717322156742715,
+              "accuracy_denominator": 26723,
+              "loss": 0.23247071118064927,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.591552734375,
+              "accuracy_denominator": 4096,
+              "loss": 9.388177514076233,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.45309381680693217,
+              "accuracy_denominator": 501,
+              "loss": 0.692799974485641,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.7165048564087997,
+              "accuracy_denominator": 2060,
+              "loss": 0.24972208003281604,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 0.8699820281646437,
+              "accuracy_denominator": 1669,
+              "loss": 0.37454763799905777,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 7816
+      }
+    ],
+    "epochs": 4,
+    "n": 1000000,
+    "seconds": 62.002581417007605,
+    "seed": 8201,
+    "size": "1M",
+    "steps": 7816
+  },
+  {
+    "budget": "iso1568",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6175740771251184,
+              "accuracy_denominator": 6851,
+              "loss": 0.3300004791272085,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6292706656852124,
+              "accuracy_denominator": 26723,
+              "loss": 0.3266948136163901,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.532470703125,
+              "accuracy_denominator": 4096,
+              "loss": 10.210004568099976,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.8642714538736019,
+              "accuracy_denominator": 501,
+              "loss": 0.6907887144235787,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.8635922375234585,
+              "accuracy_denominator": 2060,
+              "loss": 0.7311159315451197,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.9682565182447433,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 20
+      },
+      {
+        "epoch": 39,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6441395419685532,
+              "accuracy_denominator": 6851,
+              "loss": 0.32331816093223215,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6526213374849128,
+              "accuracy_denominator": 26723,
+              "loss": 0.3160516123471358,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.5390625,
+              "accuracy_denominator": 4096,
+              "loss": 10.051005005836487,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9900199547261297,
+              "accuracy_denominator": 501,
+              "loss": 0.39648128390837345,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9990291268212124,
+              "accuracy_denominator": 2060,
+              "loss": 0.3736865566787849,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.37468262016773224,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 780
+      },
+      {
+        "epoch": 79,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6493942493192472,
+              "accuracy_denominator": 6851,
+              "loss": 0.3201024418607313,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6639973056894958,
+              "accuracy_denominator": 26723,
+              "loss": 0.30736108646128557,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.5439453125,
+              "accuracy_denominator": 4096,
+              "loss": 10.010100841522217,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9700598709597559,
+              "accuracy_denominator": 501,
+              "loss": 0.3967433801831653,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9873786461584776,
+              "accuracy_denominator": 2060,
+              "loss": 0.3274992936718336,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.3711293339729309,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1568
+      }
+    ],
+    "epochs": 79,
+    "n": 10000,
+    "seconds": 15.138547792012105,
+    "seed": 243,
+    "size": "100K",
+    "steps": 1568
+  },
+  {
+    "budget": "iso1568",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.5994745296051059,
+              "accuracy_denominator": 6851,
+              "loss": 0.32689067818808426,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6279609324452727,
+              "accuracy_denominator": 26723,
+              "loss": 0.32030255203541846,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.536376953125,
+              "accuracy_denominator": 4096,
+              "loss": 10.070421934127808,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9520958086211763,
+              "accuracy_denominator": 501,
+              "loss": 0.46815562773381036,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9524271861152741,
+              "accuracy_denominator": 2060,
+              "loss": 0.4827337248321309,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.3974282443523407,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 196
+      },
+      {
+        "epoch": 4,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6362574809642625,
+              "accuracy_denominator": 6851,
+              "loss": 0.32448952065960474,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6475320883716728,
+              "accuracy_denominator": 26723,
+              "loss": 0.31684919564112735,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.5341796875,
+              "accuracy_denominator": 4096,
+              "loss": 10.043243288993835,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9900199547261297,
+              "accuracy_denominator": 501,
+              "loss": 0.39271181989871456,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.997572817646184,
+              "accuracy_denominator": 2060,
+              "loss": 0.37104370099955664,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.3855850510299206,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 784
+      },
+      {
+        "epoch": 8,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6568384180276381,
+              "accuracy_denominator": 6851,
+              "loss": 0.3176959463669912,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6634734125144109,
+              "accuracy_denominator": 26723,
+              "loss": 0.3088831803131143,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.540771484375,
+              "accuracy_denominator": 4096,
+              "loss": 10.072334289550781,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9860279455394326,
+              "accuracy_denominator": 501,
+              "loss": 0.3996267167482082,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9961165053751863,
+              "accuracy_denominator": 2060,
+              "loss": 0.323581236789349,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.38611671701073647,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1568
+      }
+    ],
+    "epochs": 8,
+    "n": 100000,
+    "seconds": 14.047658333001891,
+    "seed": 243,
+    "size": "100K",
+    "steps": 1568
+  },
+  {
+    "budget": "iso1568",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6558166693865061,
+              "accuracy_denominator": 6851,
+              "loss": 0.320036180418541,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6649702504063663,
+              "accuracy_denominator": 26723,
+              "loss": 0.3097456972379017,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.533447265625,
+              "accuracy_denominator": 4096,
+              "loss": 9.949068188667297,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9840319366036299,
+              "accuracy_denominator": 501,
+              "loss": 0.40658000240241904,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9961165053751863,
+              "accuracy_denominator": 2060,
+              "loss": 0.3237586004124194,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1669,
+              "loss": 0.3830675855278969,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1568
+      }
+    ],
+    "epochs": 1,
+    "n": 1000000,
+    "seconds": 16.064365541998995,
+    "seed": 243,
+    "size": "100K",
+    "steps": 1568
+  },
+  {
+    "budget": "iso1568",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6187417898155828,
+              "accuracy_denominator": 6851,
+              "loss": 0.3264767344094353,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6335740746756057,
+              "accuracy_denominator": 26723,
+              "loss": 0.32083951977695285,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.539306640625,
+              "accuracy_denominator": 4096,
+              "loss": 10.17316460609436,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.8742514995043863,
+              "accuracy_denominator": 501,
+              "loss": 0.5905957300757522,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.8946601990646529,
+              "accuracy_denominator": 2060,
+              "loss": 0.617501179765403,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.42545517534017563,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 20
+      },
+      {
+        "epoch": 39,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6442855060700865,
+              "accuracy_denominator": 6851,
+              "loss": 0.3229196795215225,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6493282939633562,
+              "accuracy_denominator": 26723,
+              "loss": 0.31660370391914866,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.541259765625,
+              "accuracy_denominator": 4096,
+              "loss": 10.058837890625,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9560878253030681,
+              "accuracy_denominator": 501,
+              "loss": 0.3854695446690799,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9747572856331335,
+              "accuracy_denominator": 2060,
+              "loss": 0.3361946801995235,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.3797491379082203,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 780
+      },
+      {
+        "epoch": 79,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6472047879702505,
+              "accuracy_denominator": 6851,
+              "loss": 0.3206212406627559,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6672529282248877,
+              "accuracy_denominator": 26723,
+              "loss": 0.30316596337007656,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.545166015625,
+              "accuracy_denominator": 4096,
+              "loss": 10.02571427822113,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.7664670699132893,
+              "accuracy_denominator": 501,
+              "loss": 0.4185298074184535,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.8305825254581507,
+              "accuracy_denominator": 2060,
+              "loss": 0.3066285052251035,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.37097008526325226,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1568
+      }
+    ],
+    "epochs": 79,
+    "n": 10000,
+    "seconds": 17.07976837499882,
+    "seed": 243,
+    "size": "1M",
+    "steps": 1568
+  },
+  {
+    "budget": "iso1568",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6295431326852369,
+              "accuracy_denominator": 6851,
+              "loss": 0.3241622681696734,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6403472663528909,
+              "accuracy_denominator": 26723,
+              "loss": 0.3186583592051879,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.5322265625,
+              "accuracy_denominator": 4096,
+              "loss": 10.10099196434021,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9860279457773753,
+              "accuracy_denominator": 501,
+              "loss": 0.4320535751691474,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9883495135793409,
+              "accuracy_denominator": 2060,
+              "loss": 0.422261906397134,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.4067901074886322,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 196
+      },
+      {
+        "epoch": 4,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6326083786434334,
+              "accuracy_denominator": 6851,
+              "loss": 0.3246440148678962,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6439770983261418,
+              "accuracy_denominator": 26723,
+              "loss": 0.3169023080167534,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.5380859375,
+              "accuracy_denominator": 4096,
+              "loss": 10.045195460319519,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9620758333130035,
+              "accuracy_denominator": 501,
+              "loss": 0.3915692498505378,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.975728163238868,
+              "accuracy_denominator": 2060,
+              "loss": 0.34046690213283126,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.3858404792845249,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 784
+      },
+      {
+        "epoch": 8,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6558166694039064,
+              "accuracy_denominator": 6851,
+              "loss": 0.3169375065990894,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6720428096629347,
+              "accuracy_denominator": 26723,
+              "loss": 0.3046757704547497,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.542236328125,
+              "accuracy_denominator": 4096,
+              "loss": 10.064546704292297,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.8602794401659937,
+              "accuracy_denominator": 501,
+              "loss": 0.4125787093250762,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9334951407701066,
+              "accuracy_denominator": 2060,
+              "loss": 0.3013354752139141,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.3862134590744972,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1568
+      }
+    ],
+    "epochs": 8,
+    "n": 100000,
+    "seconds": 17.273685207997914,
+    "seed": 243,
+    "size": "1M",
+    "steps": 1568
+  },
+  {
+    "budget": "iso1568",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6526054593615768,
+              "accuracy_denominator": 6851,
+              "loss": 0.31955755726122853,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6652321970887033,
+              "accuracy_denominator": 26723,
+              "loss": 0.30389486326253445,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.5341796875,
+              "accuracy_denominator": 4096,
+              "loss": 9.931337833404541,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.8203592698969051,
+              "accuracy_denominator": 501,
+              "loss": 0.41888851883127826,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9276698999034548,
+              "accuracy_denominator": 2060,
+              "loss": 0.30096049776257666,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1669,
+              "loss": 0.38252710178494453,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1568
+      }
+    ],
+    "epochs": 1,
+    "n": 1000000,
+    "seconds": 17.359641624992946,
+    "seed": 243,
+    "size": "1M",
+    "steps": 1568
+  },
+  {
+    "budget": "iso1568",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6136330467056244,
+              "accuracy_denominator": 6851,
+              "loss": 0.3277343619550132,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6242936795683842,
+              "accuracy_denominator": 26723,
+              "loss": 0.3270586635459483,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.533447265625,
+              "accuracy_denominator": 4096,
+              "loss": 10.202226638793945,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.8642714538736019,
+              "accuracy_denominator": 501,
+              "loss": 0.720067984154571,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.8635922375234585,
+              "accuracy_denominator": 2060,
+              "loss": 0.7704858205265948,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.8984980508685112,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 20
+      },
+      {
+        "epoch": 39,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6463290033610506,
+              "accuracy_denominator": 6851,
+              "loss": 0.3237959128403347,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6555775924410215,
+              "accuracy_denominator": 26723,
+              "loss": 0.31570448329253936,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.546630859375,
+              "accuracy_denominator": 4096,
+              "loss": 10.036455154418945,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 501,
+              "loss": 0.3981722457293372,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9990291271394897,
+              "accuracy_denominator": 2060,
+              "loss": 0.3706592279258655,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.377575870603323,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 780
+      },
+      {
+        "epoch": 79,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6401985114968584,
+              "accuracy_denominator": 6851,
+              "loss": 0.32085252752131466,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6633985705175465,
+              "accuracy_denominator": 26723,
+              "loss": 0.30851314865833085,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.545166015625,
+              "accuracy_denominator": 4096,
+              "loss": 10.019882678985596,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9860279455394326,
+              "accuracy_denominator": 501,
+              "loss": 0.39158026909513094,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9990291268212124,
+              "accuracy_denominator": 2060,
+              "loss": 0.32247145822464174,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.3703810088336468,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1568
+      }
+    ],
+    "epochs": 79,
+    "n": 10000,
+    "seconds": 15.042873541999143,
+    "seed": 536,
+    "size": "100K",
+    "steps": 1568
+  },
+  {
+    "budget": "iso1568",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6202014307439144,
+              "accuracy_denominator": 6851,
+              "loss": 0.324704219134876,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6398233731465796,
+              "accuracy_denominator": 26723,
+              "loss": 0.31905412199307814,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.53564453125,
+              "accuracy_denominator": 4096,
+              "loss": 10.051816463470459,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9520958086211763,
+              "accuracy_denominator": 501,
+              "loss": 0.47690577606797746,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.951941749685019,
+              "accuracy_denominator": 2060,
+              "loss": 0.48529816859862956,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.40617674961686134,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 196
+      },
+      {
+        "epoch": 4,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6445774342731531,
+              "accuracy_denominator": 6851,
+              "loss": 0.3228551281784385,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6508251318553114,
+              "accuracy_denominator": 26723,
+              "loss": 0.31653576865705846,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.53173828125,
+              "accuracy_denominator": 4096,
+              "loss": 10.037398338317871,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9940119787842452,
+              "accuracy_denominator": 501,
+              "loss": 0.40134268773284776,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9985436908249716,
+              "accuracy_denominator": 2060,
+              "loss": 0.36983666028227935,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.38575349748134613,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 784
+      },
+      {
+        "epoch": 8,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6442855060700865,
+              "accuracy_denominator": 6851,
+              "loss": 0.32032198800716655,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6608165251197418,
+              "accuracy_denominator": 26723,
+              "loss": 0.3090010607188607,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.541259765625,
+              "accuracy_denominator": 4096,
+              "loss": 10.025618553161621,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9840319337483175,
+              "accuracy_denominator": 501,
+              "loss": 0.3870064896633972,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9990291268212124,
+              "accuracy_denominator": 2060,
+              "loss": 0.32213239627729895,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.38751229271292686,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1568
+      }
+    ],
+    "epochs": 8,
+    "n": 100000,
+    "seconds": 14.922486750001553,
+    "seed": 536,
+    "size": "100K",
+    "steps": 1568
+  },
+  {
+    "budget": "iso1568",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6432637574115542,
+              "accuracy_denominator": 6851,
+              "loss": 0.31950842061367823,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6665793512188978,
+              "accuracy_denominator": 26723,
+              "loss": 0.30885767058462,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.553955078125,
+              "accuracy_denominator": 4096,
+              "loss": 9.887497544288635,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9860279455394326,
+              "accuracy_denominator": 501,
+              "loss": 0.39130241655568193,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9995145635697448,
+              "accuracy_denominator": 2060,
+              "loss": 0.32262881182129943,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1669,
+              "loss": 0.38337747007608414,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1568
+      }
+    ],
+    "epochs": 1,
+    "n": 1000000,
+    "seconds": 15.871955957991304,
+    "seed": 536,
+    "size": "100K",
+    "steps": 1568
+  },
+  {
+    "budget": "iso1568",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.5718873161031389,
+              "accuracy_denominator": 6851,
+              "loss": 0.3341121440855295,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6126183437778266,
+              "accuracy_denominator": 26723,
+              "loss": 0.325424512909526,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.52001953125,
+              "accuracy_denominator": 4096,
+              "loss": 10.321379661560059,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.8822355238263478,
+              "accuracy_denominator": 501,
+              "loss": 0.6079151582087714,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9101941760014561,
+              "accuracy_denominator": 2060,
+              "loss": 0.6561149058673155,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.42702075466513634,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 20
+      },
+      {
+        "epoch": 39,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6413662242308235,
+              "accuracy_denominator": 6851,
+              "loss": 0.3251995285520274,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6546420686210972,
+              "accuracy_denominator": 26723,
+              "loss": 0.31580633631978605,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.538818359375,
+              "accuracy_denominator": 4096,
+              "loss": 10.040219902992249,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9760479055003016,
+              "accuracy_denominator": 501,
+              "loss": 0.38144924698422134,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9820388357905508,
+              "accuracy_denominator": 2060,
+              "loss": 0.3331319815691146,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.37287216633558273,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 780
+      },
+      {
+        "epoch": 79,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6504159979951798,
+              "accuracy_denominator": 6851,
+              "loss": 0.3202595838254915,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6663548253911281,
+              "accuracy_denominator": 26723,
+              "loss": 0.301992240252263,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.54736328125,
+              "accuracy_denominator": 4096,
+              "loss": 10.027894020080566,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.8063872193623921,
+              "accuracy_denominator": 501,
+              "loss": 0.4109363477660696,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9038835018583872,
+              "accuracy_denominator": 2060,
+              "loss": 0.30077491529508876,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.3709750510752201,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1568
+      }
+    ],
+    "epochs": 79,
+    "n": 10000,
+    "seconds": 11.759910915978253,
+    "seed": 536,
+    "size": "1M",
+    "steps": 1568
+  },
+  {
+    "budget": "iso1568",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.634943804128764,
+              "accuracy_denominator": 6851,
+              "loss": 0.32419155520464343,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6436403098677561,
+              "accuracy_denominator": 26723,
+              "loss": 0.3194887408488249,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.531494140625,
+              "accuracy_denominator": 4096,
+              "loss": 10.105571627616882,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9620758497310494,
+              "accuracy_denominator": 501,
+              "loss": 0.4332896671106112,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9577669943420632,
+              "accuracy_denominator": 2060,
+              "loss": 0.4190011619915739,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.39559677615761757,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 196
+      },
+      {
+        "epoch": 4,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6502700338762462,
+              "accuracy_denominator": 6851,
+              "loss": 0.3226482180709683,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6543052800422665,
+              "accuracy_denominator": 26723,
+              "loss": 0.3164808346728867,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.5302734375,
+              "accuracy_denominator": 4096,
+              "loss": 10.041789054870605,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9760479046675021,
+              "accuracy_denominator": 501,
+              "loss": 0.39552007509223164,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9868932070662675,
+              "accuracy_denominator": 2060,
+              "loss": 0.3376272802498299,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.38742582499980927,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 784
+      },
+      {
+        "epoch": 8,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6469128597410835,
+              "accuracy_denominator": 6851,
+              "loss": 0.31958962218063,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6673651910629368,
+              "accuracy_denominator": 26723,
+              "loss": 0.30138892417797514,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.54345703125,
+              "accuracy_denominator": 4096,
+              "loss": 10.010431408882141,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.7924151546702889,
+              "accuracy_denominator": 501,
+              "loss": 0.39150123296855305,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.856796123564822,
+              "accuracy_denominator": 2060,
+              "loss": 0.29530963322188747,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.38750920444726944,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1568
+      }
+    ],
+    "epochs": 8,
+    "n": 100000,
+    "seconds": 17.49312812500284,
+    "seed": 536,
+    "size": "1M",
+    "steps": 1568
+  },
+  {
+    "budget": "iso1568",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6512917824999779,
+              "accuracy_denominator": 6851,
+              "loss": 0.3187351835142033,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6704337088504032,
+              "accuracy_denominator": 26723,
+              "loss": 0.3061517755843313,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.557373046875,
+              "accuracy_denominator": 4096,
+              "loss": 9.880403757095337,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.7844311263033016,
+              "accuracy_denominator": 501,
+              "loss": 0.41321139745250146,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.863592237957473,
+              "accuracy_denominator": 2060,
+              "loss": 0.2952013884440174,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1669,
+              "loss": 0.3835969381034374,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1568
+      }
+    ],
+    "epochs": 1,
+    "n": 1000000,
+    "seconds": 16.837523000023793,
+    "seed": 536,
+    "size": "1M",
+    "steps": 1568
+  },
+  {
+    "budget": "iso1568",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6228287844671122,
+              "accuracy_denominator": 6851,
+              "loss": 0.32505476469106875,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6325262881826864,
+              "accuracy_denominator": 26723,
+              "loss": 0.32354409037109033,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.533447265625,
+              "accuracy_denominator": 4096,
+              "loss": 10.207027792930603,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.8642714538736019,
+              "accuracy_denominator": 501,
+              "loss": 0.712047799410799,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.8635922375234585,
+              "accuracy_denominator": 2060,
+              "loss": 0.7494632589487219,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.9861925840377808,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 20
+      },
+      {
+        "epoch": 39,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.632608378678234,
+              "accuracy_denominator": 6851,
+              "loss": 0.3249229497630097,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.650114133883231,
+              "accuracy_denominator": 26723,
+              "loss": 0.31644860777215045,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.5283203125,
+              "accuracy_denominator": 4096,
+              "loss": 10.085434436798096,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9880239506681522,
+              "accuracy_denominator": 501,
+              "loss": 0.3965301383434413,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9990291271394897,
+              "accuracy_denominator": 2060,
+              "loss": 0.36727853677220296,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.3711828626692295,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 780
+      },
+      {
+        "epoch": 79,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6457451470158184,
+              "accuracy_denominator": 6851,
+              "loss": 0.3185048759279417,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.666654193084165,
+              "accuracy_denominator": 26723,
+              "loss": 0.3063902864666554,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.54443359375,
+              "accuracy_denominator": 4096,
+              "loss": 10.01307475566864,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9860279455394326,
+              "accuracy_denominator": 501,
+              "loss": 0.3908171517208284,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9990291268212124,
+              "accuracy_denominator": 2060,
+              "loss": 0.32173793015676594,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.3715158887207508,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1568
+      }
+    ],
+    "epochs": 79,
+    "n": 10000,
+    "seconds": 14.972295166982803,
+    "seed": 8201,
+    "size": "100K",
+    "steps": 1568
+  },
+  {
+    "budget": "iso1568",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6234126407949442,
+              "accuracy_denominator": 6851,
+              "loss": 0.3245017417650678,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6345095985334478,
+              "accuracy_denominator": 26723,
+              "loss": 0.31940093395399777,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.537109375,
+              "accuracy_denominator": 4096,
+              "loss": 10.122024059295654,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9520958086211763,
+              "accuracy_denominator": 501,
+              "loss": 0.46520641863608675,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9533980624189654,
+              "accuracy_denominator": 2060,
+              "loss": 0.47636736449651434,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.39444344118237495,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 196
+      },
+      {
+        "epoch": 4,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6381550141623935,
+              "accuracy_denominator": 6851,
+              "loss": 0.32497465131996567,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6479062978608324,
+              "accuracy_denominator": 26723,
+              "loss": 0.3170656180710099,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.524658203125,
+              "accuracy_denominator": 4096,
+              "loss": 10.050994753837585,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9920159667551874,
+              "accuracy_denominator": 501,
+              "loss": 0.4063345030015786,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9990291271394897,
+              "accuracy_denominator": 2060,
+              "loss": 0.37005727156146917,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.38606132194399834,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 784
+      },
+      {
+        "epoch": 8,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6488103930175156,
+              "accuracy_denominator": 6851,
+              "loss": 0.3195311886831681,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6666541930016379,
+              "accuracy_denominator": 26723,
+              "loss": 0.3088486647606342,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.542236328125,
+              "accuracy_denominator": 4096,
+              "loss": 10.030576229095459,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9860279455394326,
+              "accuracy_denominator": 501,
+              "loss": 0.3952788543596142,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.998058253960702,
+              "accuracy_denominator": 2060,
+              "loss": 0.3230163337112752,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.38609474152326584,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1568
+      }
+    ],
+    "epochs": 8,
+    "n": 100000,
+    "seconds": 14.798481458012247,
+    "seed": 8201,
+    "size": "100K",
+    "steps": 1568
+  },
+  {
+    "budget": "iso1568",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.657276310332238,
+              "accuracy_denominator": 6851,
+              "loss": 0.3165231895018731,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.67047112965367,
+              "accuracy_denominator": 26723,
+              "loss": 0.30587163414979407,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.54150390625,
+              "accuracy_denominator": 4096,
+              "loss": 9.922787547111511,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9860279455394326,
+              "accuracy_denominator": 501,
+              "loss": 0.38940907764014693,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9990291268212124,
+              "accuracy_denominator": 2060,
+              "loss": 0.3259979356923795,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1669,
+              "loss": 0.38222821429371834,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1568
+      }
+    ],
+    "epochs": 1,
+    "n": 1000000,
+    "seconds": 16.11271700001089,
+    "seed": 8201,
+    "size": "100K",
+    "steps": 1568
+  },
+  {
+    "budget": "iso1568",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.5911545763223158,
+              "accuracy_denominator": 6851,
+              "loss": 0.32958055392979985,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6254537290398716,
+              "accuracy_denominator": 26723,
+              "loss": 0.32075024118404905,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.524169921875,
+              "accuracy_denominator": 4096,
+              "loss": 10.207461833953857,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.8662674647129462,
+              "accuracy_denominator": 501,
+              "loss": 0.6098964668055463,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.8699029184660865,
+              "accuracy_denominator": 2060,
+              "loss": 0.6575911499564087,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.422842588275671,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 20
+      },
+      {
+        "epoch": 39,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6250182458596096,
+              "accuracy_denominator": 6851,
+              "loss": 0.32573648087909807,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6542304382974443,
+              "accuracy_denominator": 26723,
+              "loss": 0.3157585500584602,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.51953125,
+              "accuracy_denominator": 4096,
+              "loss": 10.13697099685669,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9780439097962218,
+              "accuracy_denominator": 501,
+              "loss": 0.38255990465307027,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9868932040281666,
+              "accuracy_denominator": 2060,
+              "loss": 0.3360108861944758,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.3742157369852066,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 780
+      },
+      {
+        "epoch": 79,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6511458184506455,
+              "accuracy_denominator": 6851,
+              "loss": 0.3168210357214444,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6767204281313354,
+              "accuracy_denominator": 26723,
+              "loss": 0.2980161814497727,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.54638671875,
+              "accuracy_denominator": 4096,
+              "loss": 10.011294722557068,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.818363277974005,
+              "accuracy_denominator": 501,
+              "loss": 0.42855679715782535,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9223301017747342,
+              "accuracy_denominator": 2060,
+              "loss": 0.29749611603345394,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1622,
+              "loss": 0.3708607070147991,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1568
+      }
+    ],
+    "epochs": 79,
+    "n": 10000,
+    "seconds": 15.60778329099412,
+    "seed": 8201,
+    "size": "1M",
+    "steps": 1568
+  },
+  {
+    "budget": "iso1568",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6110056929824266,
+              "accuracy_denominator": 6851,
+              "loss": 0.3255777668516195,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6323391835039053,
+              "accuracy_denominator": 26723,
+              "loss": 0.3205767752983896,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.537841796875,
+              "accuracy_denominator": 4096,
+              "loss": 10.155005931854248,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9680638674966352,
+              "accuracy_denominator": 501,
+              "loss": 0.43722086493664375,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9635922341960148,
+              "accuracy_denominator": 2060,
+              "loss": 0.41542513435133294,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.3928676061332226,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 196
+      },
+      {
+        "epoch": 4,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6407823678246903,
+              "accuracy_denominator": 6851,
+              "loss": 0.3256748244373002,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6476069303440021,
+              "accuracy_denominator": 26723,
+              "loss": 0.31684163947825045,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.526611328125,
+              "accuracy_denominator": 4096,
+              "loss": 10.062408804893494,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.9740518888313613,
+              "accuracy_denominator": 501,
+              "loss": 0.383570195347202,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9781553362179728,
+              "accuracy_denominator": 2060,
+              "loss": 0.33351467546940117,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.3863456957042217,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 784
+      },
+      {
+        "epoch": 8,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6393227269224591,
+              "accuracy_denominator": 6851,
+              "loss": 0.3196763627121282,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6695730269782733,
+              "accuracy_denominator": 26723,
+              "loss": 0.30371118077652604,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.5439453125,
+              "accuracy_denominator": 4096,
+              "loss": 10.02007508277893,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.8842315232444428,
+              "accuracy_denominator": 501,
+              "loss": 0.41253655912592546,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9611650454766542,
+              "accuracy_denominator": 2060,
+              "loss": 0.30705600447872816,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1652,
+              "loss": 0.38525446876883507,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1568
+      }
+    ],
+    "epochs": 8,
+    "n": 100000,
+    "seconds": 17.813455124996835,
+    "seed": 8201,
+    "size": "1M",
+    "steps": 1568
+  },
+  {
+    "budget": "iso1568",
+    "curve": [
+      {
+        "epoch": 1,
+        "metrics": {
+          "mark": {
+            "held": {
+              "accuracy": 0.6628229458337977,
+              "accuracy_denominator": 6851,
+              "loss": 0.3167961013872177,
+              "rows": 6851
+            },
+            "historical_train": {
+              "accuracy": 0.6759345881110898,
+              "accuracy_denominator": 26723,
+              "loss": 0.3031799120915149,
+              "rows": 26723
+            },
+            "train": {
+              "accuracy": 0.54248046875,
+              "accuracy_denominator": 4096,
+              "loss": 9.936421275138855,
+              "rows": 4096
+            }
+          },
+          "rate": {
+            "held": {
+              "accuracy": 0.8003992039762333,
+              "accuracy_denominator": 501,
+              "loss": 0.4100112419821617,
+              "rows": 2270
+            },
+            "historical_train": {
+              "accuracy": 0.9145631105575747,
+              "accuracy_denominator": 2060,
+              "loss": 0.3055345206897451,
+              "rows": 8855
+            },
+            "train": {
+              "accuracy": 1.0,
+              "accuracy_denominator": 1669,
+              "loss": 0.3804890923202038,
+              "rows": 4096
+            }
+          }
+        },
+        "updates": 1568
+      }
+    ],
+    "epochs": 1,
+    "n": 1000000,
+    "seconds": 16.881236374989385,
+    "seed": 8201,
+    "size": "1M",
+    "steps": 1568
+  },
+  {
+    "arm": "frozen",
+    "budget": "fine",
+    "epochs": 2,
+    "last_batch_loss": [
+      0.8520960807800293,
+      0.9119040369987488
+    ],
+    "seed": 243,
+    "visits": 20000
+  },
+  {
+    "arm": "joint",
+    "budget": "fine",
+    "epochs": 2,
+    "last_batch_loss": [
+      0.8513277769088745,
+      0.9142106175422668
+    ],
+    "seed": 243,
+    "visits": 20000
+  },
+  {
+    "arm": "wide_mark",
+    "budget": "fine",
+    "epochs": 2,
+    "last_batch_loss": [
+      0.8436307311058044,
+      0.8873469233512878
+    ],
+    "seed": 243,
+    "visits": 20000
+  },
+  {
+    "arm": "wide_rate",
+    "budget": "fine",
+    "epochs": 2,
+    "last_batch_loss": [
+      0.8451640009880066,
+      0.8992552757263184
+    ],
+    "seed": 243,
+    "visits": 20000
+  },
+  {
+    "arm": "frozen",
+    "budget": "fine",
+    "epochs": 2,
+    "last_batch_loss": [
+      0.8057805299758911,
+      0.9440120458602905
+    ],
+    "seed": 8201,
+    "visits": 20000
+  },
+  {
+    "arm": "joint",
+    "budget": "fine",
+    "epochs": 2,
+    "last_batch_loss": [
+      0.8100185990333557,
+      0.9436347484588623
+    ],
+    "seed": 8201,
+    "visits": 20000
+  },
+  {
+    "arm": "wide_mark",
+    "budget": "fine",
+    "epochs": 2,
+    "last_batch_loss": [
+      0.8128834962844849,
+      0.9390851855278015
+    ],
+    "seed": 8201,
+    "visits": 20000
+  },
+  {
+    "arm": "wide_rate",
+    "budget": "fine",
+    "epochs": 2,
+    "last_batch_loss": [
+      0.7987775802612305,
+      0.9294910430908203
+    ],
+    "seed": 8201,
+    "visits": 20000
+  }
+]

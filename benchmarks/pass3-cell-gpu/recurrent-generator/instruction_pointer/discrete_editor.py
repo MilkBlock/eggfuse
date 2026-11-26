@@ -45,6 +45,9 @@ def features(state, event, vectors, t):
 
 
 def sampler(net, marks, m, source, method, steps, rng, stats):
+    page = getattr(marks, "resident_page", None)
+    if page is not None and method == "flow":
+        return page.sample(m, source, steps, rng, stats)
     items = source
     next_uid = max((v.uid for v in items), default=-1) + 1
 

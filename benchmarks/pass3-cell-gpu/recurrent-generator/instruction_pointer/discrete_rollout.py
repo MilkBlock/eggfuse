@@ -122,6 +122,34 @@ class Policy:
                 stats["instantiated"] += 1
         return resp
 
+    def advance_event(self, stats):
+        m = self.m
+        # FIFO new publications and round-robin old named evidence. No semantic key is used.
+        queue = self.revisit if self.revisit and (self.turn % 3 == 2 or not self.events) else self.events
+        self.turn += 1
+        if queue:
+            key = queue.popleft()
+            if key in m.pub.live:
+                self.revisit.append(key)
+                m.last = key
+                m.event = m.key(key)
+                stats["event_reads"] += 1
+            else:
+                m.last = None
+                m.event = ZERO
+                stats["retired_events"] += 1
+
+    def consume_reply(self, after, resp):
+        m = self.m
+        if len(resp):
+            item = next(v for v in reversed(after) if v.uid in resp)
+            c = item.cell
+            m.receipt = m.graph((c.rule, c.higher)) * (1 if resp[item.uid][1] == 0 else -1)
+            if hasattr(m, "observe_reply"):
+                m.observe_reply(after, resp)
+            else:
+                m.state = (m.pub.total.float() / 16).asinh().tanh() + 0.1 * m.receipt
+
     def run_snapshot(self, frame, pub, rd, model, txn, stats, deadline):
         m = self.m
         tick = perf_counter()
@@ -141,25 +169,23 @@ class Policy:
         stats["memory_seconds"] += perf_counter() - tick
         self.resume_programs(frame, pub, txn, stats)
         self.resume_local(frame, txn, stats)
+        stream = getattr(self.marks, "device_stream", None)
+        if stream is None:
+            self.generate_pages(txn, stats, deadline)
+        else:
+            stream.run(self, txn, stats, deadline)
+        stats["unresolved_local_requests"] = sum(len(p[0]) for p in self.partial)
+        stats["never_serviced_events"] = len(self.events)
+        stats["open_instances"] = len(self.waiting)
+
+    def generate_pages(self, txn, stats, deadline):
+        m = self.m
         signed = set()
         for _ in range(self.waves) if self.waves else itertools.count():
             stats["stream_pages"] += 1
             if perf_counter() >= deadline:
                 raise TimeoutError
-            # FIFO new publications and round-robin old named evidence. No semantic key is used.
-            queue = self.revisit if self.revisit and (self.turn % 3 == 2 or not self.events) else self.events
-            self.turn += 1
-            if queue:
-                key = queue.popleft()
-                if key in m.pub.live:
-                    self.revisit.append(key)
-                    m.last = key
-                    m.event = m.key(key)
-                    stats["event_reads"] += 1
-                else:
-                    m.last = None
-                    m.event = ZERO
-                    stats["retired_events"] += 1
+            self.advance_event(stats)
             if not m.ids or self.arm == "noop":
                 break
             src = []
@@ -202,17 +228,7 @@ class Policy:
                 and resp[after[0].uid][1] == 0
             ):
                 stats["deleted_twin_with_accepted_survivor"] += 1
-            if len(resp):
-                item = next(v for v in reversed(after) if v.uid in resp)
-                c = item.cell
-                m.receipt = m.graph((c.rule, c.higher)) * (1 if resp[item.uid][1] == 0 else -1)
-                if hasattr(m, "observe_reply"):
-                    m.observe_reply(after, resp)
-                else:
-                    m.state = (m.pub.total.float() / 16).asinh().tanh() + 0.1 * m.receipt
-        stats["unresolved_local_requests"] = sum(len(p[0]) for p in self.partial)
-        stats["never_serviced_events"] = len(self.events)
-        stats["open_instances"] = len(self.waiting)
+            self.consume_reply(after, resp)
 
 
 @torch.no_grad()

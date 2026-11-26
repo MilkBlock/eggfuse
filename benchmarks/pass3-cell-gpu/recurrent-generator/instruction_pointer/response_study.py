@@ -33,7 +33,7 @@ HELD = "response-held-merge6"
 
 def memory(a, d, layout=None, bare=False, encoder_device="cpu"):
     prog = read(d / "program.json")
-    enc, scorer = load_enc(prog, a.actor, encoder_device)
+    enc, scorer = load_enc(prog, a.actor, encoder_device, getattr(a, "scorer_path", None))
     ct = native(binary(a.data), "receipt-contract", d / "program.json")
     menu = {layout[0][0]: layout} if layout else linked(prog, read(BASE / "menu.json"))
     return ResponseMemory(enc, ct, {} if bare else menu, scorer)

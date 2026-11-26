@@ -1,0 +1,38 @@
+[
+  {
+    "lengths": [
+      2281,
+      2588,
+      2566,
+      2565
+    ],
+    "plans": 10000,
+    "program_runs": 73,
+    "programs": 16,
+    "witnessed_named_requests": 13039
+  },
+  {
+    "lengths": [
+      22823,
+      25929,
+      25644,
+      25604
+    ],
+    "plans": 100000,
+    "program_runs": 287,
+    "programs": 64,
+    "witnessed_named_requests": 64871
+  },
+  {
+    "lengths": [
+      229877,
+      257750,
+      256753,
+      255620
+    ],
+    "plans": 1000000,
+    "program_runs": 960,
+    "programs": 210,
+    "witnessed_named_requests": 230281
+  }
+]

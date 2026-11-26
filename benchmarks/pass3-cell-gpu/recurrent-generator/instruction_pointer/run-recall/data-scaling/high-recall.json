@@ -1,0 +1,34 @@
+[
+  {
+    "all_new_arms_union": 68,
+    "case": "fact",
+    "facts_outside_historical": [],
+    "historical_cold_eps": 137.35852425451108,
+    "historical_covered": 1109,
+    "historical_ept": 0.0069599286487863924
+  },
+  {
+    "all_new_arms_union": 6,
+    "case": "grammar-benefit-left-17119",
+    "facts_outside_historical": [],
+    "historical_cold_eps": 1726.725336187957,
+    "historical_covered": 233,
+    "historical_ept": 0.1267682263329706
+  },
+  {
+    "all_new_arms_union": 82,
+    "case": "loopfact",
+    "facts_outside_historical": [],
+    "historical_cold_eps": 23.460739848039733,
+    "historical_covered": 1049,
+    "historical_ept": 0.007902564822734874
+  },
+  {
+    "all_new_arms_union": 156,
+    "case": "sum-divisors",
+    "facts_outside_historical": [],
+    "historical_cold_eps": 16.01394477012185,
+    "historical_covered": 3137,
+    "historical_ept": 0.001275322032800305
+  }
+]

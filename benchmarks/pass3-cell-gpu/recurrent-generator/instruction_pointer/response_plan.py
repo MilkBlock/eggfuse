@@ -107,6 +107,8 @@ class ResponseMemory(Memory):
             rules.append(self.enc.graphs[rid])
         self.outcome = torch.stack(rules).mean(0) if rules else ZERO
         self.refresh()
+        if publish := getattr(self, "on_page_publication", None):
+            publish(frame)
 
     def reply(self, outcomes):
         # Include the actual signed token, preserving the identity of a wrong binding.

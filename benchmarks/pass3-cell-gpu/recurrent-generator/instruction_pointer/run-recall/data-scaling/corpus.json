@@ -1,0 +1,2102 @@
+[
+  {
+    "counter": "bed0517c7045d14b2ce21c51153a250e15f901c33c3fb8e1d20a39e4268215cc",
+    "counter_accepted": 131,
+    "id": 0,
+    "plans": 4988,
+    "reference": "7c3d706003b51bfb743dc64ad254066a1269db373b45a18f25c0a5f5686b7f55",
+    "requests": 1158,
+    "runs": 5,
+    "signature": "0c352907a19e4b52e640a38b3c8bdf1388d7c3c71aa7e1583590761d9032c8e0"
+  },
+  {
+    "counter": "eacc4e975f93d1f4be67d0fc6265b3cdfec9b4e371278604780752b089699f0b",
+    "counter_accepted": 120,
+    "id": 1,
+    "plans": 3523,
+    "reference": "9d86c9a48294004b2ddcfcab28a856bf9cb8b0906c29d12ecd377faaac58168c",
+    "requests": 800,
+    "runs": 5,
+    "signature": "edcaf0b93590c387caab4ef07c5d39321fda1a96b6c128a88ecc842ae76c5b9e"
+  },
+  {
+    "counter": "d416baf9f909d87207f954ccb52ec0c7bae0a264019955a99f8103b24974d24a",
+    "counter_accepted": 119,
+    "id": 2,
+    "plans": 3271,
+    "reference": "fe529d3eb69674b14752d40bd79551a683b5ca73d9c249db5e5b9c69957e968b",
+    "requests": 735,
+    "runs": 3,
+    "signature": "50b20a601f0a6a2482f997adb5d26422e738ebe6af56ded6dd04bb7f9a1a77e9"
+  },
+  {
+    "counter": "ddca0d25afad5b5edefd804b3a10cd754c2ab11e927c40b6f9bba6dfc0eed823",
+    "counter_accepted": 103,
+    "id": 3,
+    "plans": 3902,
+    "reference": "48b0cb28cf79511bf904ecd3b7eb12b2631d75818e5a23866e9439862847821e",
+    "requests": 906,
+    "runs": 4,
+    "signature": "03fac6230a65d6dba7011e15156b2ca3be9d38c36c452011af78f9bf1c73654f"
+  },
+  {
+    "counter": "9a1aee44cfe7b63f26d9e6ac87f8ba966665a1d27af5fd035f2b2bc2e65e49d0",
+    "counter_accepted": 71,
+    "id": 4,
+    "plans": 5275,
+    "reference": "00608337fd8142c8a10477fd499e8e3e8251f14d8b5f05863a6e38a66580ae15",
+    "requests": 1276,
+    "runs": 6,
+    "signature": "1a9039c74766e72c2f1749911f67e4cf6e1a5ab8d0e5d98b97e49c6cb17a79e1"
+  },
+  {
+    "counter": "53bee262a923769c8e6f31d4273d2183b02c18c4cfd1977855a42782afefeed8",
+    "counter_accepted": 144,
+    "id": 5,
+    "plans": 5456,
+    "reference": "21d5571967698e7b9533e1fc3550ec1c104cc682eca56b76fa83ef9634146501",
+    "requests": 1265,
+    "runs": 5,
+    "signature": "030e6b168d526465f17b3ec36f81019ce1a0b0ca4c01685031712e12fa14d51c"
+  },
+  {
+    "counter": "72efb65ee0ec0c38b13d5b17e771af3e56ed18235f999d06492e3e8e6c6040dc",
+    "counter_accepted": 120,
+    "id": 6,
+    "plans": 5574,
+    "reference": "cf40ab11f4d19d35feeb63efc6f280746d8f06e081db1738bfe92e981dd574be",
+    "requests": 1314,
+    "runs": 6,
+    "signature": "7475c0f3cae6ca21daadcb956180f178281b5376ae0af9e29e431ccba58770e3"
+  },
+  {
+    "counter": "80bc650617257574ba864c46c61aadf8727d9a3ab50a0d60ff56c333fda0ea49",
+    "counter_accepted": 71,
+    "id": 7,
+    "plans": 3531,
+    "reference": "14cc525ba44bed298a238089381405b13d1dc1897df2004ec2ce7d74fd0463cb",
+    "requests": 837,
+    "runs": 4,
+    "signature": "633d76b4673bbae853b5810ed95dd8b58b75254c46fb503e45caff1ccecc671d"
+  },
+  {
+    "counter": "db288d885f22a4b1f97f82f3c161df199fe124632679870826df2237cec949cf",
+    "counter_accepted": 99,
+    "id": 8,
+    "plans": 2441,
+    "reference": "5d62a1f77343957e14d2f988ff7bec57236e3b1e7444a63f730921a00790458c",
+    "requests": 542,
+    "runs": 3,
+    "signature": "22b6b07b1d12fa3e9d1f1f7e98f5a5fb17ad0869fbc289a8e5eb75b3b5943565"
+  },
+  {
+    "counter": "7af04a6cad3e4745b789960f09d792e01f72c300f5eb43a00aab5c4002090fa9",
+    "counter_accepted": 185,
+    "id": 9,
+    "plans": 4098,
+    "reference": "0e21d122d01f101fc71163f26b8430b8b31ddef5419cc51db9b8e11c5fdda62f",
+    "requests": 892,
+    "runs": 3,
+    "signature": "49411c8e173d5c6d4d18c8069ca0eefd0c269004a0510e4f7e096649d0702c4b"
+  },
+  {
+    "counter": "462b487fd413de26b4b837e4f2538c07211ad6b86a41342ecee2077867a69bde",
+    "counter_accepted": 90,
+    "id": 10,
+    "plans": 4885,
+    "reference": "530774d1e3cb27f7ce1bc1887d1b3a8b1dcdf472dc2703030fa222dea64f0f8a",
+    "requests": 1163,
+    "runs": 5,
+    "signature": "34bf169f9e1ca83f22f5a5fc35a0e77adc841c09e9cf70dff4e97cefabce9002"
+  },
+  {
+    "counter": "6f99cdab1f529482dc4e79d1ed52ac9fcf700daaaa9893a420435c844dc1a6d8",
+    "counter_accepted": 145,
+    "id": 11,
+    "plans": 4999,
+    "reference": "2773cd0b427e7f0bb038e032343a9e9124f49e37415b4213167721c35ba267e8",
+    "requests": 1150,
+    "runs": 5,
+    "signature": "28f35caa1c9dfee42650c92375172f413947b1ba11409e10471ffdf6281ca5bc"
+  },
+  {
+    "counter": "166acfdc03b3472d59be7db486436da54955d7af21539b5137d9bc695110aa4a",
+    "counter_accepted": 139,
+    "id": 12,
+    "plans": 5161,
+    "reference": "e794d0aac7ba0e320962a73a9e60f2c125957ab20acaea9a8c0e52efaca7ae88",
+    "requests": 1194,
+    "runs": 4,
+    "signature": "cca92fbf66df2e1ef7c88108749cd5bd84776719c3a2a9e18e3199665a44b32d"
+  },
+  {
+    "counter": "03d7a05806214102084b10826ba1124521922424a88d387aa6b9a73c1e1d338f",
+    "counter_accepted": 258,
+    "id": 13,
+    "plans": 7109,
+    "reference": "20e8e68e66909a6fda48e0d6c56dcb669f66b18432f7ed1d572ef53202c8f486",
+    "requests": 1593,
+    "runs": 5,
+    "signature": "cb41e7e75f966d6764a36532e9fa7ccc9fb9f7db5e2e7267b0d7c59c73979591"
+  },
+  {
+    "counter": "b4d4a952cc89645349f5e281ae8ed58d75743995f3064f36ae3b5afb3ef8ad19",
+    "counter_accepted": 210,
+    "id": 14,
+    "plans": 4063,
+    "reference": "4f1f496370767d7cfeca5b95b567a7c4c811ab11131e5eba46382752b247b869",
+    "requests": 866,
+    "runs": 4,
+    "signature": "9413eac6764f42cbb81bc0879c586e918ea55b64322c147408d855e02ce5910b"
+  },
+  {
+    "counter": "819fcf5b0dd8ece831e2f5b4ff751b5aa1e8673026e5e995a5910a0cb7cc54b3",
+    "counter_accepted": 93,
+    "id": 15,
+    "plans": 5637,
+    "reference": "eb2767887a1c5f492587dfd0be582f390a4189f58de7a1ad7bd149f6aa762514",
+    "requests": 1350,
+    "runs": 6,
+    "signature": "07ba7a1d5ad2505bf4bb1e7372b437078550dc44b6870a3da9be729f29a7dc7b"
+  },
+  {
+    "counter": "98a1b3ce7fcd2da38ab5f59ac85cb82beef07006d448aea5029beb95ab88c293",
+    "counter_accepted": 83,
+    "id": 16,
+    "plans": 3339,
+    "reference": "26a404c67523b9e6184ae19de9e791c699e8cee21f7f582fb7c106ca1567ae90",
+    "requests": 783,
+    "runs": 6,
+    "signature": "f04c230c844567985542b0519475c64e85d35ee49e62d6c94f23afc08ffb1f67"
+  },
+  {
+    "counter": "30af51d2e1a33811fba8173335d6f6491dbefdaaed85dbaf9c77596efe5f964a",
+    "counter_accepted": 174,
+    "id": 17,
+    "plans": 3285,
+    "reference": "e92ecc7ce5f9671835ff72d3a674e1e20507a68ececfa766b7c8b87f6730959b",
+    "requests": 697,
+    "runs": 3,
+    "signature": "fcd07557ad8fbf23a2cdcc93e94d3367b13c6143284511e74cb2352740669040"
+  },
+  {
+    "counter": "d5b567ed08b061cc2c826623e3b69e08bd9b9f82a12e5cb47a16da08ad128ab8",
+    "counter_accepted": 195,
+    "id": 18,
+    "plans": 5627,
+    "reference": "97aa4d3b60d3d710982e2ed7d4601f6ef64121c17d9e38aaf45c580b3711d5c5",
+    "requests": 1271,
+    "runs": 6,
+    "signature": "a9475937e22ff014fb92bd0e545ef95722d1619fde63f2001202b19e37702cf3"
+  },
+  {
+    "counter": "0e780085f658747b1c31a869f9944e98effca87cf6de4735c5d2f6b9937c7497",
+    "counter_accepted": 199,
+    "id": 19,
+    "plans": 5599,
+    "reference": "974d435f16cd3f62c9dd497e57acfc9805dec376fda46fe6de30f4662246cef7",
+    "requests": 1258,
+    "runs": 4,
+    "signature": "87a0dbef81922f0a30f9fcf2d69ee63544d225917cbab54f6f45ccf7299c5b72"
+  },
+  {
+    "counter": "a84c817100ec5e9fec500c9f2177cdee6273c496d968e5f3bd7a745dc8b41269",
+    "counter_accepted": 135,
+    "id": 20,
+    "plans": 3713,
+    "reference": "f87bb5a90d7362ae679acf9e5f53be29a61b2c11cb78d5e934853a6f376a19f2",
+    "requests": 835,
+    "runs": 4,
+    "signature": "e56f7cbac693150d716ac2fa7f7a439645663c180baa1737383cabd625bddd7f"
+  },
+  {
+    "counter": "5ed31bb6f63ab53d3700c7cba34e39907aad814b0ac7516bbeafbe9ca3e04ceb",
+    "counter_accepted": 109,
+    "id": 21,
+    "plans": 4586,
+    "reference": "268154c3403a92b79f417af582b2e07bce7d9b58b6697b23c06c556966f35496",
+    "requests": 1074,
+    "runs": 5,
+    "signature": "07bd8d300d6286f839f18c176522805cd30482630e0f5f5793fce93c4370d0d8"
+  },
+  {
+    "counter": "a83047ca0d2164cbcaa70266f58cb43a49667f82921e2fae7c6e3d7f26621b2e",
+    "counter_accepted": 135,
+    "id": 22,
+    "plans": 4807,
+    "reference": "3020580729a7326649194a452212005107559f7d38abba3fc94145053d04de1b",
+    "requests": 1108,
+    "runs": 4,
+    "signature": "c5e444fe3477038d531937a1209965bd75c8ca5d16817ee7505205a2cb0faa40"
+  },
+  {
+    "counter": "909d2c4c1d5d886ad9f870f9040134e8cb0b7368de6d57fd14829c68cff280e8",
+    "counter_accepted": 82,
+    "id": 23,
+    "plans": 3351,
+    "reference": "fd2091925c32f20ada8d3ee68e4937bed20c0fd729cb3f88380d1e4f0eca4efb",
+    "requests": 784,
+    "runs": 4,
+    "signature": "2401151a7f8f73faa7edd37b1dd6e67948d6b67d779666b36ddc6e80da323c5a"
+  },
+  {
+    "counter": "2735536ade5c3fc62822c85f9d1a993f41f8b5e1884cf23f7af06a4841dab090",
+    "counter_accepted": 118,
+    "id": 24,
+    "plans": 3665,
+    "reference": "320e931ee73b579d9728adf44bfe07834aa5ff755c9b34a8029bcea993a80d06",
+    "requests": 834,
+    "runs": 3,
+    "signature": "726a94b4ee84e1eb8f39a41a33394d44acbf9c6098ea63a88676364bf35c76ed"
+  },
+  {
+    "counter": "7abd8c5da53e6dacda187c4cc02dfe47fd1b4c880a0085166c0c43df6e9b622a",
+    "counter_accepted": 126,
+    "id": 25,
+    "plans": 5475,
+    "reference": "ffe708c9d0d4b7c0154895dbaf6634126a1d4d8d3434229475c655c96f93b400",
+    "requests": 1285,
+    "runs": 6,
+    "signature": "93f7abc52c4264e7418ed83c9de7b4cb3dd6ce444b4123128614dfefa6c667cd"
+  },
+  {
+    "counter": "c56e591f903d15b055e6103b06a94672973833aa1ae08ab1cd775c1a28113f5a",
+    "counter_accepted": 101,
+    "id": 26,
+    "plans": 3952,
+    "reference": "05772c142e3212a0bd9206248f6c72a68d163e1af5e78f3864090c4e0f629b44",
+    "requests": 920,
+    "runs": 4,
+    "signature": "488dba5d5facc1f6824078c57074f474b3b7307d5e0de364d9894182204b1b8a"
+  },
+  {
+    "counter": "50a529a38861539e49de4e817ade61c4493fa0b4086bd727f44587a3d3299595",
+    "counter_accepted": 110,
+    "id": 27,
+    "plans": 3343,
+    "reference": "7b5c7e12e0c0b8adda4e28d347be4559c2d324706793003d043733cbf43c3b48",
+    "requests": 761,
+    "runs": 4,
+    "signature": "f17af657e3defc82a858c5fd62c60afd6c863cffc6de59168524cbcb0e4e9286"
+  },
+  {
+    "counter": "a56f1d8e078776214e99740d05a163ab580bb4dd7d84b19c512b2c4eb03d7ae7",
+    "counter_accepted": 165,
+    "id": 28,
+    "plans": 5760,
+    "reference": "5af1157294e212f04472adbe4ceee5eaf59d56b546f0450f0136189f30f1fb61",
+    "requests": 1326,
+    "runs": 5,
+    "signature": "c5a0bda510c8e1435972b7def1fe07e497bb08847332394cd995f7ef5cedf43f"
+  },
+  {
+    "counter": "102152d099504373e468f4daa14c5f49c21ab83f0e2950402b133c24738c92d9",
+    "counter_accepted": 100,
+    "id": 29,
+    "plans": 4906,
+    "reference": "8cea3674f0c03ccf0e67a523811ae9184b7c953efc0c7f8cd0b9ca6a5bfb6404",
+    "requests": 1161,
+    "runs": 5,
+    "signature": "b1ab4a3cd5503a61419c5911d29967d147ceb76da94b9d11d428c21bd6cc138a"
+  },
+  {
+    "counter": "f271c33ef6ea962d37626e1c9eb7a3e77fc204e31554818f58c1cb76491b561a",
+    "counter_accepted": 103,
+    "id": 30,
+    "plans": 3053,
+    "reference": "3178b3b3eaef2a9ae80a3499ec5626376886d5a75ac6154126d3e60163378d09",
+    "requests": 692,
+    "runs": 3,
+    "signature": "acb11aeeb3a8e46725bb5f2d58d46ef544bf0749a17289bf3179cb688ff78604"
+  },
+  {
+    "counter": "0c2959c052bc480709391554e04e31777917c2177e6eac5d6f5b0e8b4b019bf9",
+    "counter_accepted": 177,
+    "id": 31,
+    "plans": 5451,
+    "reference": "6cdaf8fa22aadc9b54376051a1a199cbd0268022ec9281ff69ea7e3596da1c62",
+    "requests": 1239,
+    "runs": 5,
+    "signature": "8d56da822dd843b4b7ae23c3449d88a39ef6b910d75b46762845516b9d47742a"
+  },
+  {
+    "counter": "f8f29e141561ad3f8850bf89a699b406b7bdcbb69fdcdcde06b18b82d6ca09dd",
+    "counter_accepted": 213,
+    "id": 32,
+    "plans": 5109,
+    "reference": "84d0798014138ae754a4e9ee22631d4323eec14a086b77e2bba20ecb7ea31d34",
+    "requests": 1124,
+    "runs": 3,
+    "signature": "7b45f2730ade9e14f43f0522db69911f4e79eac24fa128a353f35ec790bc08a7"
+  },
+  {
+    "counter": "7453d910dc24bb45f24eebe3915346a1ca8291c15b5e45e4f75960d36c858952",
+    "counter_accepted": 179,
+    "id": 33,
+    "plans": 3736,
+    "reference": "cb0dc3a287c3189bf558194bd33545d05ddec616ddc978ce099c12a002098de0",
+    "requests": 806,
+    "runs": 3,
+    "signature": "77cf8a6329b6ef053c4a88d15741633fdf2742b1a1c33c8dc4a04200bbb7be79"
+  },
+  {
+    "counter": "1b6443005ca595a2d1cff1e250cb8361cfdbb6ea0211deacd6f576f12c562680",
+    "counter_accepted": 87,
+    "id": 34,
+    "plans": 4716,
+    "reference": "eb8e2bbedd070da742336106bb1bd1694ca9a822f2323cc33c9528fb264d8839",
+    "requests": 1123,
+    "runs": 5,
+    "signature": "299d8e1700993a5421813cf567bd3e9b6ff9628231eab68b025294590362a82a"
+  },
+  {
+    "counter": "ec5b2761123225e6fc03b71371e12d69ef1cefa05d532007e2bf6827258943b8",
+    "counter_accepted": 132,
+    "id": 35,
+    "plans": 2765,
+    "reference": "51813324efa0b37ea8da60ede2928aa976456afd9c490916b126262539313fd2",
+    "requests": 600,
+    "runs": 4,
+    "signature": "38143884d92de796ce7dcb0d97806358bfdb4ef1c05dfd3a47d91b33e0770463"
+  },
+  {
+    "counter": "efbc9837fc52ca1efa8e0eb87039c2883c3ecc31fe34704d50e065336cf88bf8",
+    "counter_accepted": 126,
+    "id": 36,
+    "plans": 4990,
+    "reference": "c856323366ea83e4ccfd718df560c0579d636756a44163a8593b4ea31c0a3fc8",
+    "requests": 1162,
+    "runs": 5,
+    "signature": "f496d8bd8e9c31ca783f6952efa670607ddbb89d106b3ed348f61d9dd8124647"
+  },
+  {
+    "counter": "682476bc1239b4258291edba39ccbc12c5274136c3dffe2ce7c532e553eeb737",
+    "counter_accepted": 202,
+    "id": 37,
+    "plans": 3882,
+    "reference": "421ecf331791f85ffb3a8f9825908de2512e9c4ac8e13df2e4bd13415a24ceba",
+    "requests": 825,
+    "runs": 3,
+    "signature": "5ec8e8137d9a4cf35ffb95764863a6c7fa6bd09ac437530a2ba544575ae5bc36"
+  },
+  {
+    "counter": "df9a11e565ae45179e52fecc9cbfddece7fece549d3a6b94eefeac258292ed44",
+    "counter_accepted": 177,
+    "id": 38,
+    "plans": 4348,
+    "reference": "62a4130d41d444d7513e2c12ca43caab2719552d7edc44822468d27dedd8a1dc",
+    "requests": 962,
+    "runs": 4,
+    "signature": "54b8941a8f44f92acf846519d65986496418f2211b17120f272f8bf5eab1459d"
+  },
+  {
+    "counter": "a32c1f7935fe85e3dd708e1f9b234a8adfcf14c337d1884b632e49acfe0aa5e0",
+    "counter_accepted": 69,
+    "id": 39,
+    "plans": 4709,
+    "reference": "2da2d16bc2ff1d74f066966257674f789d3aafe9742839e501705d86d27ea75c",
+    "requests": 1135,
+    "runs": 5,
+    "signature": "ecf97632587763504d0df1a2e3f97cc9c6902961dd3f6774318fb8ccb12c176c"
+  },
+  {
+    "counter": "53a06cbe80e3550cb5dfa158b72ca19005908f994709935fe954e585cc9b7c33",
+    "counter_accepted": 159,
+    "id": 40,
+    "plans": 6047,
+    "reference": "2573b2cf01b3f0ae8a36e2995ca312db4f2975ae90080e678787a9398f1c6c8b",
+    "requests": 1403,
+    "runs": 6,
+    "signature": "a9877943e91192d6e83ad1a65acd969141648fc2b0f0904c07123ad9ebe0c6f8"
+  },
+  {
+    "counter": "fbd47d07d088200ed08a4c39e0628148b617f21b846c08060182fd228aeaf560",
+    "counter_accepted": 217,
+    "id": 41,
+    "plans": 3985,
+    "reference": "0257366d7406c9ea5ab4d432c90ca48b44574c69922702feeb048a5d36f059b4",
+    "requests": 840,
+    "runs": 3,
+    "signature": "ecb1e3c064b71f3f521ca8743fa887d740e4b5e9ed2b68bcb246891001735649"
+  },
+  {
+    "counter": "e878aeeda24c6ba632f1680273aac9648accb29d43048f3aa35dd29fb5ffd7a2",
+    "counter_accepted": 151,
+    "id": 42,
+    "plans": 4062,
+    "reference": "5cf831fd2f590989857aa30da4d6403b8da3dd743c7a9fc86fc0ea51f0d8afa0",
+    "requests": 910,
+    "runs": 4,
+    "signature": "f73248a46b18822c9f829b515c019a7da56c89eacd7470924bbe3cadc0256f48"
+  },
+  {
+    "counter": "ce029cf7f7b319a9ccc479766b59569531853e636072f5ab8a68d990fe2d8dea",
+    "counter_accepted": 82,
+    "id": 43,
+    "plans": 3240,
+    "reference": "ede94f40b759d3faea3a551da3f8fd2ecec0090f7358a59e124a8a1d6e45d471",
+    "requests": 756,
+    "runs": 4,
+    "signature": "ec2463321de4da9b842ac0f75b8009987d1f50aca2ba5f86c28d103ca8112c20"
+  },
+  {
+    "counter": "b5f95c976acce32876981723ec04b9f5760d6f060e86148cebe09c9de91f3931",
+    "counter_accepted": 147,
+    "id": 44,
+    "plans": 4144,
+    "reference": "a626d3fa8d70cde8d83f6c7030750f0f5588a0d3581892dbdbb6501d4233df73",
+    "requests": 934,
+    "runs": 4,
+    "signature": "c9e133b65c8501221bdf890afe5bb520b2dd77c24ada84d319c43d0446da899d"
+  },
+  {
+    "counter": "fba4cc55357546cfafd679bc8a1655f3d01ecab2d11003eb4ab66353718d371e",
+    "counter_accepted": 117,
+    "id": 45,
+    "plans": 4619,
+    "reference": "85b104065ae5b2949a387178c4f49fab2a1f0e9932c0dd76a870f4a11ca032ed",
+    "requests": 1076,
+    "runs": 5,
+    "signature": "ed4dc180897abf3b3c2725ec443e5ff4b33364ddeb1ad5e40454b8244305be5f"
+  },
+  {
+    "counter": "8ee2e01e2e468d5678c66f60fbddf33d47ece24e2eb25a01b97355e392671a45",
+    "counter_accepted": 81,
+    "id": 46,
+    "plans": 2430,
+    "reference": "cc69941916749d390a8bd9927c1c1359ef3bf63d143d21681da066254a45f673",
+    "requests": 553,
+    "runs": 3,
+    "signature": "95c5f2586294ab97cfac9e27292a68124585ded06517d9fd87bf91834a1493e2"
+  },
+  {
+    "counter": "296e1c1e9eac10424b6ac8c93c12c29fe68612c903dc24750774a698590d1a75",
+    "counter_accepted": 67,
+    "id": 47,
+    "plans": 3939,
+    "reference": "89babec12effe075179309ec7e8d0d9dfc226dd77dcec93db5779434f3d01a2f",
+    "requests": 945,
+    "runs": 6,
+    "signature": "6117b5a05c36076c6bca729d3cbcb105df530b003ef034aef802d08bc377bad1"
+  },
+  {
+    "counter": "bfd0c4a39b7a685348231316bbeedf66d9eb80cafbfba8bc92f5ef60775b543b",
+    "counter_accepted": 114,
+    "id": 48,
+    "plans": 3492,
+    "reference": "9d58c3fe9cab71ad6aeb6e0a58529a325f4432a83a1211f3104e169c1cd40a6c",
+    "requests": 794,
+    "runs": 3,
+    "signature": "a658bb0a5128e24f8f6b583c3a63a5b4325dd3ad6d0b7c0e431dba34434628bb"
+  },
+  {
+    "counter": "c63b94b83a02833e9fa1bc52d045098dd5ac8bea7f8858a093458cd892d65f5e",
+    "counter_accepted": 184,
+    "id": 49,
+    "plans": 5909,
+    "reference": "8c8ed5561d00a7105893d05c7fc2fe9229ba059d32e167f5be9ba29e65656457",
+    "requests": 1350,
+    "runs": 6,
+    "signature": "e0e80e341d0a5e885f16a10f75cfd574a8a7446fb531a3daecb903016a617d4c"
+  },
+  {
+    "counter": "425555e433e07d7d918d834c4504f67489fd40705532f0c4616e8dedc0360e82",
+    "counter_accepted": 150,
+    "id": 50,
+    "plans": 4145,
+    "reference": "bad8f8332821aef4e66e8b0c1dd982d851763c845b7e11312c3befc880c5d5c4",
+    "requests": 933,
+    "runs": 5,
+    "signature": "2204e9bfe90f042f58800893ba90e9cf41869934ab6e42a881d3dfad651e2241"
+  },
+  {
+    "counter": "f12579ff0b3898cfff60cf68e7a40f9c17c5848363f97c57e3109a88d7208916",
+    "counter_accepted": 82,
+    "id": 51,
+    "plans": 4399,
+    "reference": "dabff0a0d5604ad558eec9ed957c99aae5572b6387b23c8a7b196e14c534e449",
+    "requests": 1046,
+    "runs": 4,
+    "signature": "c4233498e2e9f738296dc88e79ca5a250b56e4c675410f8b2f978b27d699702d"
+  },
+  {
+    "counter": "a6a0d33bd7cb3f003caf21667e7e1fb531ea50881f4f8c116deda30f8283a1e6",
+    "counter_accepted": 123,
+    "id": 52,
+    "plans": 7117,
+    "reference": "9efc905559f8c71959903c04aecb7cb330be27cf4b35594cb3a1bc8c3ed7e668",
+    "requests": 1698,
+    "runs": 6,
+    "signature": "b3b8486092a0560c413e03abce16c8722112b5af5598f72b0c1e5b4f5c116265"
+  },
+  {
+    "counter": "4e1d68dd77319b3ad3f6488c851141609708d118496412aad764022da5e85137",
+    "counter_accepted": 252,
+    "id": 53,
+    "plans": 9334,
+    "reference": "f8e590a2af2aa8155e2d2fceabc07397040e63d149b34e94c94533e4eaf31b2e",
+    "requests": 2155,
+    "runs": 6,
+    "signature": "b47dab6712f198cf4f7566201bbdc91e5e36e8d17188376f8812f64255b8062c"
+  },
+  {
+    "counter": "1d471ced1d8bf77acb67714c180ac502cdcc2f8bfb5db517b2645ef3d7e1d3db",
+    "counter_accepted": 71,
+    "id": 54,
+    "plans": 3717,
+    "reference": "fb4f51f739f578a8e278d78fde0db85fa414e88a2f3ba4b0ca2b30ba265f1a95",
+    "requests": 885,
+    "runs": 5,
+    "signature": "8713babb5311048b062a52d3435958fea9d38c82d320a3ffc970046290a323c5"
+  },
+  {
+    "counter": "55c1725ba6e0dbc18c94e99e1348d8c05593b184c60595cc8d20c92061208371",
+    "counter_accepted": 120,
+    "id": 55,
+    "plans": 3200,
+    "reference": "74a4e015f5c131c394829889c69f3e56b46a39949c1b34565e80435660f7d755",
+    "requests": 716,
+    "runs": 3,
+    "signature": "981a08e57dc06b980ec1ba79a1b43f6ee8aa89e6deab8f344019f27bdbad7978"
+  },
+  {
+    "counter": "31a66795890fd53d951ab078fa0d7362c9021e02185e24f738443543ae218db7",
+    "counter_accepted": 144,
+    "id": 56,
+    "plans": 4954,
+    "reference": "1e4cc9ad6cffc6700b4a7ace9ece3a58ffc2f3a2ad052d6f8a0fc330f2660071",
+    "requests": 1141,
+    "runs": 6,
+    "signature": "3b5f0abe95b797b1e41ead7f45045b769a86516e1a0b0b0542488b3b9399f06a"
+  },
+  {
+    "counter": "ed543fa0cfad121da634a05217d7bb2d28ed19bfe1893ed21cfcfa15adbad370",
+    "counter_accepted": 78,
+    "id": 57,
+    "plans": 4645,
+    "reference": "26928279c1e7892341ffc3b7e626c5b1ebb6027d355c5406d5a86f340e18370c",
+    "requests": 1112,
+    "runs": 5,
+    "signature": "69a9e33705b268b54df597b1808b7b243278962cbf82d215a0cf043184dfd81c"
+  },
+  {
+    "counter": "106d11d5d1650910021b18a04d0e0fca13e7f272a29310c596a4062301008ead",
+    "counter_accepted": 141,
+    "id": 58,
+    "plans": 5139,
+    "reference": "1300c44c2a67bfc671c6f6d29a30bf37910dbfb2dfcf850a5ebd35a4e12b307c",
+    "requests": 1188,
+    "runs": 5,
+    "signature": "edd8a86650ecc60e641b2d50ff39c3cc306cadfc3fb87735464ab56751811c7f"
+  },
+  {
+    "counter": "89c51b4204f8cb5b8e19a250de7649610a77089e927a15aab2ab0e1fe5365190",
+    "counter_accepted": 105,
+    "id": 59,
+    "plans": 4965,
+    "reference": "9c977aa73d99dc38fa42e5507a3d58dd7e1a4e3f9b942f4f49be2def716eb5c0",
+    "requests": 1172,
+    "runs": 5,
+    "signature": "b32f5ac15136aebe728fc5d54e691a61c262b2e86b375df4b801d655198400e0"
+  },
+  {
+    "counter": "3eaf0f704e450c75bcf945ff836968f590dca42eef67c444543b4a315cff25b5",
+    "counter_accepted": 99,
+    "id": 60,
+    "plans": 6327,
+    "reference": "d7c0764200f00339d14051b4ad14cf24eaaf1b78cbd47ed2a7119002cf612dc0",
+    "requests": 1518,
+    "runs": 6,
+    "signature": "3a5597898799c8db74d7b8f8ed32fd6fadf48be1fd7712ea055f85321f0ee25b"
+  },
+  {
+    "counter": "5e7fbefc0f37961ff94fe8e2f5aefabef93a35ef9df9e6351d9bda2d59dc5ee5",
+    "counter_accepted": 175,
+    "id": 61,
+    "plans": 4220,
+    "reference": "fb28fa2d37488fc7cff5d3ffd36e519522d41ef0c1a74838000a95948724be8a",
+    "requests": 930,
+    "runs": 3,
+    "signature": "fbcbbd98f6fdd298c89b1c7e7c9a04d96df4ddd5ef137aa50a51a320b9726cd6"
+  },
+  {
+    "counter": "bb2df7d8c8675f64509139d76a4626b9dc4b1709e334f740356c1f4671d610a0",
+    "counter_accepted": 117,
+    "id": 62,
+    "plans": 3500,
+    "reference": "cc838ad5ffc418eb8bec8c862bc323af6aeedced3a1a7b54fff54d1610bdb410",
+    "requests": 795,
+    "runs": 4,
+    "signature": "746babf8f9e001452814c5e99d324cc6cb8212741bf2fc108d22785ea53ee5e0"
+  },
+  {
+    "counter": "002f99c6cd1dbd039867efe694d73c2502c43d8d65e9d7cad8a51940613e2e40",
+    "counter_accepted": 141,
+    "id": 63,
+    "plans": 4197,
+    "reference": "89b2ef695a77d7b1bb1ec1cc1e61a63e39583c4c97550bca2e9f5f5f31974fd7",
+    "requests": 951,
+    "runs": 4,
+    "signature": "d8aebbcdecf7c56e25aa13f415d5beb7c764d2d41f9d0a3db6e56083bf4023ae"
+  },
+  {
+    "counter": "7a01b46af884acf300323b3d12ba6bf7fadce800578b903a4aff0f36a1368179",
+    "counter_accepted": 147,
+    "id": 64,
+    "plans": 6063,
+    "reference": "7294d655e0231c5e0ba1173f04c97d87fc3a0f1974f7c44a46c82a27a06e2e39",
+    "requests": 1415,
+    "runs": 5,
+    "signature": "4d0597448ce4ce356e0fb72ad5e7a534d8ffa11a9955e90de82fb7d0477db43d"
+  },
+  {
+    "counter": "72908ad0fe5a03c4c54c453a2e6b55b92215b692a3a994b97be6cea667b69758",
+    "counter_accepted": 110,
+    "id": 65,
+    "plans": 6238,
+    "reference": "a0326ea49f30a8aca80657e69c198ff5b343329ee9665a0be0334608b160017c",
+    "requests": 1488,
+    "runs": 6,
+    "signature": "aaaddb47dd2a3c59941002571ef9e170eb30c925fa9328a113f4a1f4c671ff2b"
+  },
+  {
+    "counter": "c861e2629efbf593f7e9dad6168f7a17c4eb348f4e1abe6f8e671e3286ca83ed",
+    "counter_accepted": 126,
+    "id": 66,
+    "plans": 5527,
+    "reference": "0622475422fdd63a5d90390fe95c6eb41fa321b384ece071341b1fc90a1323ff",
+    "requests": 1298,
+    "runs": 6,
+    "signature": "b723cb40e9ad6e68d6ac5907e94d468dc671fac3f7c720ce914122c979a33ec9"
+  },
+  {
+    "counter": "58c0fb9395c3822550659943c8322052576ae09a9ff448f20d470167dc8506c7",
+    "counter_accepted": 161,
+    "id": 67,
+    "plans": 4388,
+    "reference": "e24f7ea404d435ae30958a0d3c6c4ae05c85e75f09f3f868a7889f792f19cb12",
+    "requests": 984,
+    "runs": 4,
+    "signature": "ec23e48bcab02370e9f69c9d529b69a69e85bd3b309f24a57be8a02cd77ef541"
+  },
+  {
+    "counter": "c8fe56aa257f44335d64820f47ec2f25f2d701b5eb8cf3ab155f21e5d5f3a609",
+    "counter_accepted": 131,
+    "id": 68,
+    "plans": 5131,
+    "reference": "c46cf8d0dd0c9597ef6066efd451f14c074f566824aae2ec3c7acc7b53d62252",
+    "requests": 1195,
+    "runs": 6,
+    "signature": "4caed966a107d467c82315c9835fe755adb91913bf0fcbfedea9e12925122914"
+  },
+  {
+    "counter": "018676432de3f9e145ee5cd407c2d4a8d01a870c918bf35970c5f3305893646f",
+    "counter_accepted": 126,
+    "id": 69,
+    "plans": 2549,
+    "reference": "af934728e4ff29d516c83f47314f4d177d6a76fe23c441b06063edeb3ed9d16f",
+    "requests": 549,
+    "runs": 3,
+    "signature": "515d42e5d4a53666c1bc98eba37970baff36035a2120ebb147b1b4f634240bcc"
+  },
+  {
+    "counter": "3a61008d006f2bdad2894cc3fecd62d6ac0f61cd8fe75333374ab931775e6802",
+    "counter_accepted": 115,
+    "id": 70,
+    "plans": 3607,
+    "reference": "b75a6fa7fc5fbd8003d5c6904f739bb51e3f21a2cb3506f2bdc32734d92f906c",
+    "requests": 823,
+    "runs": 4,
+    "signature": "3f2cb0650325fa9d0a61957b47963a807eaee29e7f6edf7af0c861839a5ed9a6"
+  },
+  {
+    "counter": "05cf225081747bff34438b56e1e5bd8eda880df0b0a66350df3b8f796688375b",
+    "counter_accepted": 174,
+    "id": 71,
+    "plans": 4334,
+    "reference": "acb04004b1b373cf307b98dd1d7062915022ce91a6b0ce3b0c0fb3e4529c1e60",
+    "requests": 959,
+    "runs": 3,
+    "signature": "0ef20457d7704161a0bbddf6da43fa9eb4adaeea5fdc78eeb585d7c72390a208"
+  },
+  {
+    "counter": "45036117928782c865463514f35fc1483ce0d43790de9d49c18f771d0e102a5c",
+    "counter_accepted": 138,
+    "id": 72,
+    "plans": 3652,
+    "reference": "8614e3a21c11ee09ff25e0a01948554880d165611689aa923173be3be6d94e12",
+    "requests": 816,
+    "runs": 3,
+    "signature": "32465358a2acce0d27acb7ff2f92bb8cd4f583b0bb63683a0aeb51d497e73744"
+  },
+  {
+    "counter": "00c9ef422a4db592a9bf7f5e42ff133ddfdd56026c8d9311ae1094b21eb1ed57",
+    "counter_accepted": 165,
+    "id": 73,
+    "plans": 5375,
+    "reference": "6d4121b74691b1a04088efaba3b99c831de0b064ca5ab013a68f2efa4920bde4",
+    "requests": 1229,
+    "runs": 5,
+    "signature": "51b86191db72119ee5e0638e495ca55d7b9e0bf9dc303605c5ad8218bf04869c"
+  },
+  {
+    "counter": "b9d5c8a986c55c2044da7a2d9e34a9a3b078479c9e1a1a6e000b7081d0f0daec",
+    "counter_accepted": 97,
+    "id": 74,
+    "plans": 4133,
+    "reference": "7a8d09538ff682ef48536eae1b6ed4cbf32309b4d0e696236fa8200add07b0b7",
+    "requests": 970,
+    "runs": 5,
+    "signature": "96b946f58e5f34a217195d394de050a30f4cee4c1bcd2a75cee006a478fcf222"
+  },
+  {
+    "counter": "47d09fea5a972a6d76e8e6fad2331735cae2bd5a098375512ae6421af71cadf5",
+    "counter_accepted": 293,
+    "id": 75,
+    "plans": 4274,
+    "reference": "3c2f26ff945294c7bbf207faf9687917f7d3039758dab7670729a1f36b98aaf4",
+    "requests": 855,
+    "runs": 3,
+    "signature": "32d099f2bf0c7b5d74221ec545b0a6245e29baba0697514961631bcd7c018939"
+  },
+  {
+    "counter": "1f59af668938d35d90907caf8525d99e612f9e6e910f375126c424e8927640f1",
+    "counter_accepted": 198,
+    "id": 76,
+    "plans": 7414,
+    "reference": "f5e6b6faf4f38a20d6eb8c501d7da1767f514d298e166e80fb9018553ef56b28",
+    "requests": 1716,
+    "runs": 6,
+    "signature": "dbc0088ef13462428488a7675de61425ea4a931a50f9d2ea29b02251f9703647"
+  },
+  {
+    "counter": "c60723fdaf17330076e39d2bbcc034d00f8875e6a75679e26060380659f2b1be",
+    "counter_accepted": 115,
+    "id": 77,
+    "plans": 3828,
+    "reference": "52b26adf93dc1f44e6299c48fe26031394ab8ebc376f61c2a865623deaaaad1b",
+    "requests": 880,
+    "runs": 5,
+    "signature": "1714c5a8d7bfd75305acdaf13a5564859d194b7d7b3a1ce5196c8a55565f6588"
+  },
+  {
+    "counter": "738ae99e8c4161e18d3a7d05d7b3d8664e92dc72c7bc1d75136aeabd6bd86351",
+    "counter_accepted": 172,
+    "id": 78,
+    "plans": 5718,
+    "reference": "195ec9969e99b69950b5a657e4993912f904f8b3e972e19c3de6b01773b0d313",
+    "requests": 1311,
+    "runs": 6,
+    "signature": "21af54cd7448c45569139938251307c4a9153673a4c9a600bc1c0455f921c932"
+  },
+  {
+    "counter": "01d6bc8f6893d379cc3f7ded8c73376cf174f7ca478014747141055260ec1c55",
+    "counter_accepted": 148,
+    "id": 79,
+    "plans": 5932,
+    "reference": "ccfbb7c328ea736ca098c9e2473b2c80f0210a11fc2e96ea106690f43a896f52",
+    "requests": 1381,
+    "runs": 5,
+    "signature": "209f50020d211b047f80eba8002b736f0cc8aaf95eab34da55e143c2532c4d8d"
+  },
+  {
+    "counter": "cd453414cf7374eb41d03be32ef9bad4805bd42f657115f9c3b2c74ab6f27380",
+    "counter_accepted": 147,
+    "id": 80,
+    "plans": 2900,
+    "reference": "5ef8555f37d84fc9d0738895b277e35c126d5fe18fbea07b46865c7f29241cce",
+    "requests": 621,
+    "runs": 3,
+    "signature": "44a30f4bf2c8556726a5dce60df18ef66b4b764677a05b79698f8b4cc749d814"
+  },
+  {
+    "counter": "674dc93bedefc8651b07fc352739d6184ce6b601c28cfa28e1f89e48b1b94730",
+    "counter_accepted": 84,
+    "id": 81,
+    "plans": 4748,
+    "reference": "2a00ae8b325313207dd8665af16a0b40d54aa0df776206ec8b9a50f853bdd0fa",
+    "requests": 1133,
+    "runs": 5,
+    "signature": "aaa07d6feb2030b11f0e0077a7974cd96e6832b92c388c2793dfb38c94aa1dff"
+  },
+  {
+    "counter": "a028f8afceb76f6adc4e4936dabe4836e7e0fc2925804925574f838d64b8a717",
+    "counter_accepted": 121,
+    "id": 82,
+    "plans": 4444,
+    "reference": "755feadcaf5b89ea75946afc0a4a5b68c1184924e6e54a1230cd1a41e0e30da2",
+    "requests": 1031,
+    "runs": 6,
+    "signature": "fae31b25fdfeb10d513c7df6d8591dd3c611cdffb8983ca8133f57a182e92d5b"
+  },
+  {
+    "counter": "80c5fb047238f1ea1cb49e281593166a09521c93929edd608c5d7dfbb1224a7b",
+    "counter_accepted": 233,
+    "id": 83,
+    "plans": 5589,
+    "reference": "f9e840b0cae885f48e92b60394d9548cae5c4092a5c101667b7eb6eb8e4d6f08",
+    "requests": 1230,
+    "runs": 4,
+    "signature": "bad3ba12f18b4a7da0ac92b7aac8ddad5682ea69e21ce37ab486d38fed84993e"
+  },
+  {
+    "counter": "aac8aadbb6fdb401e8fc9df6366f211a06a85274ed8c7e505a6b3dfb8ad96539",
+    "counter_accepted": 84,
+    "id": 84,
+    "plans": 6021,
+    "reference": "23bbfa4cded606510a540cbe14de4e7456a6408cd89e63c7a2749aba6ad5a605",
+    "requests": 1453,
+    "runs": 6,
+    "signature": "9add2dd49d39a353e6694d8244b2bb5e8431e5dc6b49b745b6abf683bca96362"
+  },
+  {
+    "counter": "b5cebcfe88d0c6cf3c88436a957c9372617edfbd4620832da3d70906b4d49458",
+    "counter_accepted": 102,
+    "id": 85,
+    "plans": 3375,
+    "reference": "f95806c0c557718dad6e56bdba306a6d43086763c72fe3141909903a0b6be340",
+    "requests": 775,
+    "runs": 4,
+    "signature": "2feacf3e27c6dd2efa0dbc8b24bc51bbe2c43e44a976ff29974982fe57473bd1"
+  },
+  {
+    "counter": "5e50ffe9de1ba4a3430e7db1d9306c603e7f895666c1eb9f2b62aafb73fbd2f5",
+    "counter_accepted": 144,
+    "id": 86,
+    "plans": 4441,
+    "reference": "acb5181cbddc31245ec1bc761c37b57bbd7589435dcce8d736f5de0f5d075a74",
+    "requests": 1010,
+    "runs": 4,
+    "signature": "40bd7115a5e012d02a42cfb7ea6a1427d41aa051bb26887c5bf7c03f79fc188a"
+  },
+  {
+    "counter": "c9231fa0b8c78c636fd7ac3a567d3faec3f00ab5e234379990c370125407c93b",
+    "counter_accepted": 156,
+    "id": 87,
+    "plans": 6701,
+    "reference": "1ef7498fc58a749649b2445141f0929d50ee49da76f4fbd1dd3696d73b32b0c2",
+    "requests": 1569,
+    "runs": 6,
+    "signature": "d387cc258ff68d157916001a6861e297e85a1b634de40f3abe0146292a6d572f"
+  },
+  {
+    "counter": "e3e063e3bcf45af9af666dc09641be57c2e3b9e0f83ebe24dda2e196ef7484e9",
+    "counter_accepted": 162,
+    "id": 88,
+    "plans": 4134,
+    "reference": "d012a4d2fcfd6888fed0a0610512f302fcbee842cfb45d5b881fc890614a2bab",
+    "requests": 921,
+    "runs": 5,
+    "signature": "62e593d4869957920435eebe535b3f6cc8527a3734a30dabc7e14c97022c4f29"
+  },
+  {
+    "counter": "21864985fc9746b5937b449123bcf5b4f024e6a4c19d1d98e0134045ce9f982b",
+    "counter_accepted": 163,
+    "id": 89,
+    "plans": 4208,
+    "reference": "7844dafa8dea6fa393fd146394a205a1a9572269ffc2c32487bdc8959e22dd41",
+    "requests": 938,
+    "runs": 4,
+    "signature": "d8f370b01aef95d921b39b5181d84e710647e1ffd2bf0d6a7df84ecb95272784"
+  },
+  {
+    "counter": "20a6713533e8122e30d1589d631049eae27dcfafdf9ca8b036d252ffce2ab246",
+    "counter_accepted": 155,
+    "id": 90,
+    "plans": 2880,
+    "reference": "a3df9eefd3c2ae746cf71ae4a4b814f90a70d2e712294dbb7fbe36c6cb02a694",
+    "requests": 610,
+    "runs": 3,
+    "signature": "7b31ce35c6e15e3449ac4680b86ceab36d4ee4fd06e16c6d8d13569f16b50939"
+  },
+  {
+    "counter": "dd24826a2f023850cf045c90b942a1cbc2611c35a0f1898137c17266f924ca60",
+    "counter_accepted": 187,
+    "id": 91,
+    "plans": 4624,
+    "reference": "98fd035d58e7774854ca5e63e86a5be874cd5e705edbb434dd30bcb9e2d87877",
+    "requests": 1022,
+    "runs": 3,
+    "signature": "120cb243b078a90a57723de90a86349e361efda4b2cc769f17be05b4a7b1a4ff"
+  },
+  {
+    "counter": "a2192743fda2df3a6b50254679f6408c8a7a8864989934ced9d8fe2a6926c72c",
+    "counter_accepted": 156,
+    "id": 92,
+    "plans": 4694,
+    "reference": "d7c5980e33e5c68ca94dae9360dc0e710977be49f634c34c32ae403ca2700bb4",
+    "requests": 1066,
+    "runs": 5,
+    "signature": "3a804ec8fff378fafdda6d4c02ddc18e393bebe113f6ddfd3c21e2e4c8f76c2a"
+  },
+  {
+    "counter": "fe344f4f1345d08a0ed9c91b44c1702321139fc789179f1e2de6569b77faf89a",
+    "counter_accepted": 207,
+    "id": 93,
+    "plans": 4541,
+    "reference": "52a88fc9d3ca8f7a29cdf53b89c7c3da7a79455f7a659684bbbea1ccae564c32",
+    "requests": 986,
+    "runs": 3,
+    "signature": "925a046e589e7c37ba6ff659801b26674fa76575872e558d7a4ed6643f1120e7"
+  },
+  {
+    "counter": "2f94a7f69b9dcf1314837fb8d08a00b7d02ef7f5bbe2e4d2fa5c57d564bd6f60",
+    "counter_accepted": 141,
+    "id": 94,
+    "plans": 6184,
+    "reference": "5cd268b1143dd570851d8fedaf0447c5b8d88a195df95a17947d02d3b46be85d",
+    "requests": 1451,
+    "runs": 6,
+    "signature": "3703ef7e41ca007b82586cd7c534e3ac1c190228f68935be249722eeaff5c65b"
+  },
+  {
+    "counter": "6d0109e9360f994c438156e200fca4366601255ccdad29905bfa6f0770ed17c3",
+    "counter_accepted": 83,
+    "id": 95,
+    "plans": 3117,
+    "reference": "97b359c7dfb801a3e3c0412e111f1416983915302511f9dca00eb9dc1067821f",
+    "requests": 726,
+    "runs": 5,
+    "signature": "ec72d681db89d62ea6ce0f492d9b5962e64e7035375d936d36dd7f6fad872fbe"
+  },
+  {
+    "counter": "527a82889452b8fa4bab23ae414526600c11137762e1a9fd6c81f5dad69111dd",
+    "counter_accepted": 90,
+    "id": 96,
+    "plans": 4716,
+    "reference": "bcfd445bb19a991074c9a838f569150f0dc6d0ed9fe239d40b03fcb11c733f31",
+    "requests": 1119,
+    "runs": 4,
+    "signature": "a51d8caf9291ec78a2e909610ff5f0a7e116b9941d6ecdba8638d2ef46ee55e5"
+  },
+  {
+    "counter": "b154c341c75b0923ccbbc323b3461cbb397fad199cec4582ee99ca959e0d8dc8",
+    "counter_accepted": 179,
+    "id": 97,
+    "plans": 4377,
+    "reference": "0209d6effd24dd9fef70d0d2ec724fe9c9ea4e4185d212d4606dc1a6723b12b5",
+    "requests": 966,
+    "runs": 3,
+    "signature": "42bf1cf33ada1678e05a48794f3553c605329c21bb079be86d80e2bfc48ad0cc"
+  },
+  {
+    "counter": "1369b30049e17abb062b674751d66d86a5a601f37946d430735014c98d3d3019",
+    "counter_accepted": 159,
+    "id": 98,
+    "plans": 3891,
+    "reference": "c24db7fd2e5bd116d3d1284d40a6af67984e399b8bc82b1f3725e9b757920705",
+    "requests": 861,
+    "runs": 4,
+    "signature": "c329cc808721d7e2108474177ed8c0a2f59b1d91dd83e6cb923a8a0994d40794"
+  },
+  {
+    "counter": "e44447391c2cdb1f40b248e9f93dc3d9f131794e77f7e000faa5f9b24603703c",
+    "counter_accepted": 195,
+    "id": 99,
+    "plans": 4551,
+    "reference": "e2a740b199abcf33f5b347b6fc60958461f0e94828c5c508e32a4dbb420b390d",
+    "requests": 999,
+    "runs": 4,
+    "signature": "68ee3f2a5741723acbcd9d121f26d4c075eb84eb3a61a9a2e1f975e2ebd627b1"
+  },
+  {
+    "counter": "a8aa290b840944a2fe95abbea9dae79789ab888560d23643c815fbd3153fac52",
+    "counter_accepted": 187,
+    "id": 100,
+    "plans": 6000,
+    "reference": "c4b8999ec8d7a0e4155dcfef659f4c57dbaa2388d2d0d94c3eb87e42fb48efd4",
+    "requests": 1371,
+    "runs": 6,
+    "signature": "ba31600e9f4194668c7d276b0982a5b89c2c0608a701b3257c5cae81fa588c53"
+  },
+  {
+    "counter": "ca2f7266f20f959a475428670b310a09cfad0282d54617ce6f3c41c36264370c",
+    "counter_accepted": 121,
+    "id": 101,
+    "plans": 4380,
+    "reference": "8bc12db630b09c1a332b42ceeb6fbe07612b9ff3df270e3601a89607fd03236c",
+    "requests": 1012,
+    "runs": 4,
+    "signature": "8f0609323075b9cd6488d1159dad89e3dd7c72da75394ceef45fbd9128888052"
+  },
+  {
+    "counter": "ec862ac461ae470f4f12893338f586e2b7d80536fc84a07d4382ab5e2a5d3372",
+    "counter_accepted": 82,
+    "id": 102,
+    "plans": 4992,
+    "reference": "66c0cffcad67205da8979582ef03a5cc0983160bc61752c5e57eca0e58558f9f",
+    "requests": 1197,
+    "runs": 6,
+    "signature": "47d5f19ae2605694a936b3f06b513e9292393697045ae823f70f314a37133abe"
+  },
+  {
+    "counter": "31f492d476702cb0fee6c2d7bd9d701fe04e47f3a77fb5346fdc59c118d87de1",
+    "counter_accepted": 165,
+    "id": 103,
+    "plans": 6431,
+    "reference": "5258cf459022805563ec43b60fece4af3fdff1e3a1bef0c5e42de4757d46a40d",
+    "requests": 1495,
+    "runs": 6,
+    "signature": "09ba86cfb31434d69111deb3c06079c7e2dadf4548ec2a44623102a7adf71e79"
+  },
+  {
+    "counter": "f837c881b00bd0182950101133c9b6e694fe08f4444e0dbaf74a9c2549e11c35",
+    "counter_accepted": 213,
+    "id": 104,
+    "plans": 5170,
+    "reference": "0599837bfe324e8ea57a4eb548d0eaf80a1ce62568a4be89b0077d37ff64a16d",
+    "requests": 1139,
+    "runs": 3,
+    "signature": "3d9da4c2ab705ee0e450550b43ddbb5ea54924d3731108ad7ff8a71c9ccbf4f4"
+  },
+  {
+    "counter": "ea4a3dc742efb79383eae1e11a4421de79f6f911f4cee9cfb7afb8d903012beb",
+    "counter_accepted": 165,
+    "id": 105,
+    "plans": 3700,
+    "reference": "3ca9cfd990f692aa540323eeea1eff4e24b4d7bcca1e23862e1167887f7f39f4",
+    "requests": 809,
+    "runs": 4,
+    "signature": "6b62e647da113a0dbc43a323404e5c692532b59d504469b5cb5bf993e5db6fe0"
+  },
+  {
+    "counter": "13eb3fce83e276a4710ba70f7724859eb240e8caaf9caa7ed2fb80d8465d5c1a",
+    "counter_accepted": 124,
+    "id": 106,
+    "plans": 4340,
+    "reference": "41c1512207190f81fb27f55f6e70c128737873df21dbdedc2200a9ccc3f78bb2",
+    "requests": 1001,
+    "runs": 5,
+    "signature": "9880ff36bc91e6461a321d4c26b0d8020fa6438aea918d3ebc1bc36976ba5664"
+  },
+  {
+    "counter": "04d14491a6e861df3b1944df5a3c8edc515546fd97a9a834d464677c486b3f6f",
+    "counter_accepted": 135,
+    "id": 107,
+    "plans": 4970,
+    "reference": "f8a1dc37538857af1c87cb2d5cbb901bbf5fab08374bcc865af35b7fd1b3b416",
+    "requests": 1152,
+    "runs": 6,
+    "signature": "4c12f23f0bea27f17aced117d93fea30bb002243be98ecbb3f8f662a41629f4e"
+  },
+  {
+    "counter": "80a776c8a423ff5919e256b314f0b7257971e7f10a958406a0c4ab0e226d56c8",
+    "counter_accepted": 133,
+    "id": 108,
+    "plans": 3142,
+    "reference": "5567dbfb52ff470a9c189baa54f2c46e485a0d15ff05118bdfa3116bcfbd8cbf",
+    "requests": 692,
+    "runs": 3,
+    "signature": "ba7a3887f877a8023ad2950ef391a5b4d293d61910a3422be17906f93090439d"
+  },
+  {
+    "counter": "a09fcc1248caa040ec6a4cc698c7e1be0b442ae7acc00daa7fc9e0942dcaf332",
+    "counter_accepted": 126,
+    "id": 109,
+    "plans": 3513,
+    "reference": "3ec8cc499dac239d9ed153a4a559b77afd4d8639c0c8198c6959dc28f9d1797a",
+    "requests": 790,
+    "runs": 3,
+    "signature": "9f3f312f30514480ebd32e3622716f1c6863fdb0602357c3efaf8ad676f9feb5"
+  },
+  {
+    "counter": "a1d4b0d524eee026d4d29171c07fee1658711fdcde0027d76756bd0ee01b7d19",
+    "counter_accepted": 230,
+    "id": 110,
+    "plans": 5736,
+    "reference": "1b5032f48f9b5178e5fa5356344fb5e47c1532286a472591b66017c55f233548",
+    "requests": 1269,
+    "runs": 4,
+    "signature": "30669b39d3f607aecf0f08447632a6f015b5d0fe2246aee7695a383b7419b169"
+  },
+  {
+    "counter": "3074ee37e46cd1f9c1b940bc3c6957a959bb493e8e0c020da0e3bc175cdefac8",
+    "counter_accepted": 155,
+    "id": 111,
+    "plans": 5512,
+    "reference": "ec858340577e5c9cb3aa0fe5211b83a7777732da254469029291b8494eb08009",
+    "requests": 1271,
+    "runs": 5,
+    "signature": "94d7e9050ddf4c2e90522fd700d66476b320326428bf2e95e260b41575576884"
+  },
+  {
+    "counter": "461405064de3d2e6564fcda8fd3339663484a7a21f009885d5f33a20aa9ff036",
+    "counter_accepted": 93,
+    "id": 112,
+    "plans": 5496,
+    "reference": "853f99874a9949c782f3f5d3b7dff092f4342773e7cf6be72dfedcd342796130",
+    "requests": 1315,
+    "runs": 6,
+    "signature": "7d9256233e9f66850c51e05bd48830e2d9018b79650e86b0dc3c99f5e8d00d6a"
+  },
+  {
+    "counter": "d43f07de6cce45a05373734d3a670301f38c5b4fda930b574f8862ef4b81f389",
+    "counter_accepted": 103,
+    "id": 113,
+    "plans": 2909,
+    "reference": "561249fd18d6896924034005096065f75fdcb85be6e46c1d0f55db36fc6a174c",
+    "requests": 656,
+    "runs": 3,
+    "signature": "70af171bd226e11ca091bf7dd5756b258049e5be5e0ac99b5b9492ef8c534abd"
+  },
+  {
+    "counter": "0affb7bbbc9db6ec182c93644975021b676d0ae25086ddb4328813b4cccf5b11",
+    "counter_accepted": 135,
+    "id": 114,
+    "plans": 5495,
+    "reference": "1a0f198ad0c267e7d212ef6bcdf107b618ce8a3129bfe49b66da79a83294b6c3",
+    "requests": 1282,
+    "runs": 5,
+    "signature": "4d4a32fbe0f6663a03447b00eae89ad0bc617444f68ac22356f38d2cded463fd"
+  },
+  {
+    "counter": "ff75f6e8be7bcceac39b54a496c9e66f8ce23f5b1dda1fdad63c3944380c7ffb",
+    "counter_accepted": 81,
+    "id": 115,
+    "plans": 4672,
+    "reference": "81845ffe6d32a885565c2dd03bc8ae7bbdcfc8ceb5d3cfd1b8a60f00239f9ade",
+    "requests": 1115,
+    "runs": 4,
+    "signature": "1ddfe9a068ee39fbef1b9168f2a8426d8fdd6cb8923e8d627339d5b619348508"
+  },
+  {
+    "counter": "70c65c78c967024b143636e1ad71c8d4ad587fd2e75d288cb1afb01ecd92a2e1",
+    "counter_accepted": 168,
+    "id": 116,
+    "plans": 3591,
+    "reference": "dff37a313150cfa35b7eaf557f840187d110a90e2d34618cb8f69490ddb1eb11",
+    "requests": 778,
+    "runs": 3,
+    "signature": "750f2f8e9cea55cb8624fcb49819ab3f4cbd484d5024b65b8a1658d462948137"
+  },
+  {
+    "counter": "21adeea652a5c5dce9d8c598043b1fd3507646ba5741d3eca1d7f29d54914de6",
+    "counter_accepted": 156,
+    "id": 117,
+    "plans": 3520,
+    "reference": "cefe30357cfd21a489bf54974f714ff6df28175e8fdd9c834829c8459b1ecdba",
+    "requests": 769,
+    "runs": 3,
+    "signature": "e46f23be01a88eacbe519b0a5bf0fc2f57f201c81d742b21eaf011620065be49"
+  },
+  {
+    "counter": "8dbbfa2b0634db418f6cdd720f827f6a5e90a4e7f625504fbb6eef69370a8242",
+    "counter_accepted": 136,
+    "id": 118,
+    "plans": 7654,
+    "reference": "a3716e0b9ecbe38cbdcb4fe122c6d02b8dcc5b3485d3bbdbaf33182707e1e146",
+    "requests": 1822,
+    "runs": 6,
+    "signature": "6f8cb5d1f5bcb68d54130f1040a83690efc5d94ec2fd564cf2645b2aa66aa341"
+  },
+  {
+    "counter": "182138bb3e1838bd36d6f7cafccb3b56cb14dff098bbc01334e0a416f9f047ee",
+    "counter_accepted": 106,
+    "id": 119,
+    "plans": 3716,
+    "reference": "28cf06049860a135c46d950c5785eac588ab31e0089c8cf79c7e3fc17326928e",
+    "requests": 857,
+    "runs": 4,
+    "signature": "fe8d731a68f789fffb9dc75bf378e48bf7390b10999eae348c7d6b11f1094378"
+  },
+  {
+    "counter": "82bea871f511e56241e81de265c4dafb5c16403ea0b7437de99c740cadbd5dca",
+    "counter_accepted": 130,
+    "id": 120,
+    "plans": 6358,
+    "reference": "c27eca9a1754136f3dde614dd9aaf393f006b68abc7fa46570b04a629f1a345e",
+    "requests": 1501,
+    "runs": 5,
+    "signature": "ecfde733bcebb16a57e986b172fc1b35b60061045452e685b6f1a77d121e978b"
+  },
+  {
+    "counter": "116f713fb88f8c8724b0c2b5c7ffc42a8c7b5849c59ef4e51158bb05b7dbe07e",
+    "counter_accepted": 101,
+    "id": 121,
+    "plans": 4372,
+    "reference": "d59c56cc973a3b8578b905667401fec4c048f33923518ee7fc4e44970ce68198",
+    "requests": 1028,
+    "runs": 6,
+    "signature": "60650a5ea9f2e9bfd992a4c8bed756646d08028672a9a9ee34e8015a3239bb18"
+  },
+  {
+    "counter": "c1a3a4407df2c83c2b630557dd99988c3ee1e16e70266c07ffd2f009c6dbd2d6",
+    "counter_accepted": 102,
+    "id": 122,
+    "plans": 6736,
+    "reference": "71a90079249b63b0f7f4c415654148766fe2c33c5ab40c21c94ff84a7fd6a6d4",
+    "requests": 1618,
+    "runs": 6,
+    "signature": "34ae79d199a3b4420eccfe3c0fd954448b0e1d3aa6c80c75496ac291cd7620a8"
+  },
+  {
+    "counter": "9eefb5865e51f461863fe2500e7a6197a036116ba33168899c32e6921ad48de5",
+    "counter_accepted": 152,
+    "id": 123,
+    "plans": 3540,
+    "reference": "0d0bed1cdd335dc10ccb0f407203d64249fc29d68838d3730e0efcd23b2b9526",
+    "requests": 777,
+    "runs": 3,
+    "signature": "316a18ea74f9aa4c27b9150bfb89aae816699ad312c8a5c6460a331b69ffb687"
+  },
+  {
+    "counter": "2a324b0abc6435963d0f495ef3b766360321f839ab17965b4a92ba850450c9a9",
+    "counter_accepted": 144,
+    "id": 124,
+    "plans": 5152,
+    "reference": "7257df1182efa22ff3e2522e3d9a5ef4d2e49e8dcde11df39e5fd149969b3571",
+    "requests": 1189,
+    "runs": 5,
+    "signature": "5a18e53089dc943b6a9a53a4b67a4856feb95a3ba89c6f2147ccdb92f791ad11"
+  },
+  {
+    "counter": "29608f0294ed640bb2a2883143ee0e4dd4c39f54dccad810816ce27750551ffe",
+    "counter_accepted": 120,
+    "id": 125,
+    "plans": 6373,
+    "reference": "9322eed65d2a091db9e800ba9d7ed19a11fc500437a4fba1574df0711e7453b0",
+    "requests": 1514,
+    "runs": 6,
+    "signature": "21e6bc06116ddb551ab26b667dc98bc4b0ff881bc653d85d32aec4a57d49d921"
+  },
+  {
+    "counter": "68312e76a4033945eadf8fe47c398643911c71fbf1b5d9223962b13705350071",
+    "counter_accepted": 84,
+    "id": 126,
+    "plans": 4578,
+    "reference": "b9341242daaa8bacc74ccca8f74c10f3341de2d4914f70a3028fd1583b61b726",
+    "requests": 1092,
+    "runs": 6,
+    "signature": "c2b90047af69df1cb40800e08d65c1a6cf355870759f04abc96619ac4a54b723"
+  },
+  {
+    "counter": "e6442995152eeb8a096f9b8fa4d67ecf5a542db2c9a3fbe133051d7da8edf4b5",
+    "counter_accepted": 131,
+    "id": 127,
+    "plans": 5579,
+    "reference": "e2c5696bf6da8c4fd57a3cafddd4199e3a8ecda868eab75eaed00ed7eeb6ef4e",
+    "requests": 1307,
+    "runs": 6,
+    "signature": "bc28e0b998fc0ee0325356deea503e43c62532a499c2bde36a095b7275769e45"
+  },
+  {
+    "counter": "b117846c04a1449cd0ed9a2ebf15d2cceebd865539a924919cfc074adfa4c3c9",
+    "counter_accepted": 248,
+    "id": 128,
+    "plans": 6438,
+    "reference": "de54989c25bac124fa8a7c11a0314ae0dd0d77ccfdc8f00eac0934773a9f6cee",
+    "requests": 1431,
+    "runs": 4,
+    "signature": "6cf5ee67fcddf6ab0fbea9ade999966fe45880c2599839a0c10b6236c2535299"
+  },
+  {
+    "counter": "a230816ede446d95cd7407ece401f6129a889324e2bf7bd1b62b6ad2e4e771f8",
+    "counter_accepted": 85,
+    "id": 129,
+    "plans": 5965,
+    "reference": "ad41decc508b75cd8b44e0ac51b0bef51336681ecfc06e883f4aa915eea7d6fd",
+    "requests": 1438,
+    "runs": 6,
+    "signature": "16616702e8e713d83a8fc50760f6593810aa9ca668adc361f483f655caa1ae3c"
+  },
+  {
+    "counter": "81d6424d7991d230ae40142b91e5135b44044b162d778c67fc6b10544bc67f66",
+    "counter_accepted": 82,
+    "id": 130,
+    "plans": 4737,
+    "reference": "85d16320b00f2306a1ab2a4e80b4702c1745fec0bb00958888e1fe1ca6aa72ea",
+    "requests": 1134,
+    "runs": 6,
+    "signature": "c2e096f1ef1fd1978083a0c2b904faa7331f8ea143f5639370403c1b5b6f4c0d"
+  },
+  {
+    "counter": "369217c88e1cf71a43101844ffbbf170bd014121063afc47641563107aa33980",
+    "counter_accepted": 171,
+    "id": 131,
+    "plans": 5400,
+    "reference": "9b6ed4f885b731dabcf79dab22680e905cf49128efc98707d7b278b98ed8f4de",
+    "requests": 1231,
+    "runs": 5,
+    "signature": "573337f2650581da33fd0c631e787ed1e28e60932393a2603c689fdb3bae0ed4"
+  },
+  {
+    "counter": "aa9a644065ef822427e1637acf687c1fa327010940b413dbbc6d186701126de0",
+    "counter_accepted": 78,
+    "id": 132,
+    "plans": 4924,
+    "reference": "fdee4816a3e4427c5a3f867b15ae5ea56458c39d3ce3e4b6c95723ccfc192ef7",
+    "requests": 1183,
+    "runs": 6,
+    "signature": "53e2cd827fcad5e85d33691103b06637f9780c4fbe3c69cf9e5c4e4d8f35d910"
+  },
+  {
+    "counter": "16f511eaae7ff3d0f741925eb5250456be66d56c7da819121662d6d01ecb0d8a",
+    "counter_accepted": 202,
+    "id": 133,
+    "plans": 7026,
+    "reference": "a3172927f2633c21689386e6d3686da1cfaccb5ec7757100065fc118ea9cc4d5",
+    "requests": 1614,
+    "runs": 5,
+    "signature": "0d40d128091f55a3af83a73c899298052c22c26d48bb029adffbcac2b3668c09"
+  },
+  {
+    "counter": "18a30b2171cd3b47f229fd2ed807cb83908af7b0c446e9a16aafab7dbe4a71e4",
+    "counter_accepted": 104,
+    "id": 134,
+    "plans": 2805,
+    "reference": "96d4d8e9077da300c76f2095a81ab6d21ef65f507d737f47afb9fe0a5410fd29",
+    "requests": 630,
+    "runs": 3,
+    "signature": "834bcee7720d07365e5505d07522e46d3eb27545b536c801068d0e95cb2d2bf7"
+  },
+  {
+    "counter": "683abb4e8ba59b54f334e0e0af2ae8a5a4c7371211184841e02d033e2ea20a37",
+    "counter_accepted": 133,
+    "id": 135,
+    "plans": 3962,
+    "reference": "66dc924160415c59f6206af70af7a5741843d252626b55dccccb5fd8669b2ce6",
+    "requests": 900,
+    "runs": 5,
+    "signature": "d9bb62a88f5f31273a77065d8d3a9e3e28af81f09e39d506ff42616894190c2d"
+  },
+  {
+    "counter": "7e1a6372cf6e6c16b8b7df9d822850ed2279811abd3d04f3a0dfd25f267edcf3",
+    "counter_accepted": 93,
+    "id": 136,
+    "plans": 4925,
+    "reference": "f2df403031ed944e52b7ba2da56ad4c78e4c6b01c090662a4b408a418127ccb1",
+    "requests": 1172,
+    "runs": 6,
+    "signature": "b66176a666e0fa8fff4b1053eeba75a7fc7a9049ded586a9a037217347f6478f"
+  },
+  {
+    "counter": "016c1a3faa21b564d8687a861b9f5162f1bb9f088679dd93626d38de96561d6b",
+    "counter_accepted": 178,
+    "id": 137,
+    "plans": 4416,
+    "reference": "0ddb36465216eba9f05f26dff961447230051980aec835630629a93791ec78ec",
+    "requests": 978,
+    "runs": 4,
+    "signature": "e687cdcfeed86109b78c9ddde62c700c989aafde74fc25333ce6f0c35cc7266d"
+  },
+  {
+    "counter": "c3d25983c316a91069d878b051852ffcc5d28e7c13d21fe17cdb4add85fe37d1",
+    "counter_accepted": 191,
+    "id": 138,
+    "plans": 6109,
+    "reference": "1b4ba6900bbf524188bfae92e33bdd4fa10c6437d18000d87ab137020df13af7",
+    "requests": 1393,
+    "runs": 5,
+    "signature": "32dd87eb055cda2c28a83e232ebf92f359a5edefa313e4a668ab14abc3a0cba5"
+  },
+  {
+    "counter": "cf24f29b6e9076c9c09a1befe271b026c02ee28fdda5d7768e04febd929aee0d",
+    "counter_accepted": 131,
+    "id": 139,
+    "plans": 3168,
+    "reference": "3bbd4e9b60a0a101aa4b8aa0255510fb9138cee5fdf15cc3b2e627ef4689901d",
+    "requests": 700,
+    "runs": 3,
+    "signature": "acb7a742370d4201b86d90cfd6b8c63da4e32998d6c794af7f75e7b315daba1f"
+  },
+  {
+    "counter": "a6c4b113ea00298ea17b2c638f89d86da562788e395cf77560a9468a1bfeac64",
+    "counter_accepted": 90,
+    "id": 140,
+    "plans": 4879,
+    "reference": "3c99089212f13f7bb04cb0918cd7c3c2b5645b9f0423f530f218279cab12e1a4",
+    "requests": 1160,
+    "runs": 4,
+    "signature": "2228d6dc2db332f9bf6cfd2ffc20bc1300e95b098f92e617bbdb68adb4724063"
+  },
+  {
+    "counter": "3b60dbf04e960b6573f2762c3be0ea4e95c6f321da2f110cc85d428b2c71e67c",
+    "counter_accepted": 112,
+    "id": 141,
+    "plans": 5731,
+    "reference": "77cea6d167bb743d228a1d319b0df1d1903f17d8b0af3b5eb8fbd43231762a90",
+    "requests": 1358,
+    "runs": 5,
+    "signature": "35eb22cff69e703e5873f1e5bb0e1a4c12a15a5feda51528b12229b8bab9c46a"
+  },
+  {
+    "counter": "a8770fea17f67e4271d0a020175e5476f67ec9ea8300c0533ab55b3b478fb9bc",
+    "counter_accepted": 174,
+    "id": 142,
+    "plans": 4429,
+    "reference": "6f4ce7c1351ef6d705e2048fce4b6b961cbb8c4a225a4663519f617c54b06fae",
+    "requests": 983,
+    "runs": 3,
+    "signature": "d166f706736a4650e59cb997d2e1ca176ff6f6a314d69125852562b82e458f8e"
+  },
+  {
+    "counter": "ddd67d0ece64d84c583723ee514e4e8ddfe6163ab9a113030d20397cc96c00ca",
+    "counter_accepted": 145,
+    "id": 143,
+    "plans": 4390,
+    "reference": "cbc8d5c0c4164578f04d0615a60ae8faf53bec8a81d2feaf33ef44fd90f29729",
+    "requests": 995,
+    "runs": 3,
+    "signature": "c072bc0e8c3254208edd5bd1966d00b594ed2abe2dfe33006970f453be30b564"
+  },
+  {
+    "counter": "23380934712401945879b4f65d8d636c2f4367202d1f8041a826ad53cc016d87",
+    "counter_accepted": 138,
+    "id": 144,
+    "plans": 4319,
+    "reference": "ee9a7380b8eb03277005a1c597e66b3c1ae8ba093e6052a0d47271af79cbe1a1",
+    "requests": 987,
+    "runs": 6,
+    "signature": "6c0b50cc601a274d132ba25ea8e16ab7be51fbbd24b5faa718b47ae712bb608a"
+  },
+  {
+    "counter": "a5171cb9ce4108aa9431d722ec5bf0169bc08df09d1c5c0a79e6f87413ef22d0",
+    "counter_accepted": 199,
+    "id": 145,
+    "plans": 7221,
+    "reference": "78b7cd27aadf277d805c40ef88a2103770a4146e6d341ebd6b3ae235e912ebaf",
+    "requests": 1665,
+    "runs": 5,
+    "signature": "778b3184e560525db563abdda18975a59e91531dc76e492a43a851540c13099a"
+  },
+  {
+    "counter": "b4aba90ec7c47836f46dee5762ebc5ddb3718beb381776cd814c4e3ad1705d1f",
+    "counter_accepted": 139,
+    "id": 146,
+    "plans": 4027,
+    "reference": "202f4082f2fec0f7ac173a46865e88d8ac08bcdaf44f6dbfe6dd02ade3e28ab6",
+    "requests": 910,
+    "runs": 4,
+    "signature": "871131ff94b2a684ac9256916b2faa78c741a6bba819c0f51a07bc130762b4e2"
+  },
+  {
+    "counter": "295f71ae2ab4898fd5ea689a044f8a99156bdf7d54ec61c9fe43a749378416c5",
+    "counter_accepted": 156,
+    "id": 147,
+    "plans": 4668,
+    "reference": "535dd811e971f536225f6910c5c334fd22b1ec1057b1d7831768ec565a499a86",
+    "requests": 1056,
+    "runs": 3,
+    "signature": "24d2623fa4ec6ccc8c9ad7f2246d2ef148ad0c5c11473465d852ae83ef35aae8"
+  },
+  {
+    "counter": "304ace1f20f4cacacf59cb6e244a135965b4a15db325e50c2b1b6bb75da6a88f",
+    "counter_accepted": 186,
+    "id": 148,
+    "plans": 5424,
+    "reference": "fe3086d7192bb75301b7096dd4ff596915bea6e96517010976cc466bb03df6c1",
+    "requests": 1224,
+    "runs": 4,
+    "signature": "81fc0a598a04ab1d88c99663b67723bf7cd4a9d280fbbe01028cdae3eeff7a41"
+  },
+  {
+    "counter": "81510bb07b3dcd3f1570beb959e7e16d2395a73fe651130021be9825c173cfd5",
+    "counter_accepted": 129,
+    "id": 149,
+    "plans": 4320,
+    "reference": "6960e475a8a56b37ad9e5872684463455bec1754a00c525a0ae37b8480668e75",
+    "requests": 991,
+    "runs": 4,
+    "signature": "e322da403d54cc3e9ed0054dea9a516ef6f7fddd772f246210b8f3deed3762bc"
+  },
+  {
+    "counter": "03b4e5f8a7025ccf6469d25098a49cf04e817b70cf6c2c054e00018fbef83722",
+    "counter_accepted": 178,
+    "id": 150,
+    "plans": 6394,
+    "reference": "2dcd52d4989e07701c1a444ab80b8fa6c3c2b2b02e3e69876f8ae3a4e68c073d",
+    "requests": 1474,
+    "runs": 5,
+    "signature": "0e2b3c40847a6505cff4aa73c3d813f1bfaabc557f32f7bca4e54ef302b11ce0"
+  },
+  {
+    "counter": "8c70230a5c83180f6e761a635bbb67f6b472a0c2e03e91baccb07ab9b4dc623d",
+    "counter_accepted": 126,
+    "id": 151,
+    "plans": 5590,
+    "reference": "9af88afb1db0fb21417ff0865921c36f4f9bbc027d2ea19a57d6bb5c180d7872",
+    "requests": 1314,
+    "runs": 6,
+    "signature": "35533ab8589044b72b8f89e8b84fe8fc8b272019320333e7a23c529085bb5a13"
+  },
+  {
+    "counter": "593790838317ada6e032f54602e1b022ae7e2ab8fca89ef3f5be2692bff18cd1",
+    "counter_accepted": 108,
+    "id": 152,
+    "plans": 6059,
+    "reference": "71c3f5e6901a91ea11cb0a10e343d5eb8424b592dc0a7558dffffbe5c3838a3b",
+    "requests": 1443,
+    "runs": 5,
+    "signature": "7c254f0cd56a8d42696a37f1be6f8338164905550b6b041aac8a103a68387cd2"
+  },
+  {
+    "counter": "0dc52f022a82cc18863eaec3fe237ac4727b0daab6d3a01d1514351652fe9ebb",
+    "counter_accepted": 159,
+    "id": 153,
+    "plans": 7315,
+    "reference": "d45b5f980c48802d5069d5c10cc628055176d2e5d92d58d70f27891d7fcb5aee",
+    "requests": 1720,
+    "runs": 6,
+    "signature": "b76ae077a9ed7d448f86561cd1f8d179dbf03bdc0fa02c55ff9ac8f85a205f14"
+  },
+  {
+    "counter": "7d1cce7e758c912e5c745981689dc87a3e9a003faa190eb7232d90718ebb795e",
+    "counter_accepted": 103,
+    "id": 154,
+    "plans": 2558,
+    "reference": "416d0c33da4bb38445cef9abe1609836c44b01298027c57d5e96cd7790d5e457",
+    "requests": 569,
+    "runs": 3,
+    "signature": "26ab37ef9dc220816e435849f8edd4cca283781569f4db9355051c577e5ca1e7"
+  },
+  {
+    "counter": "60341690d2e10cc24344ab376cabf23613456d3d8f865aa1eba50e0b98f399da",
+    "counter_accepted": 172,
+    "id": 155,
+    "plans": 3868,
+    "reference": "3b894f832a58153124d4f903ef5fe5d4b6537dec120e217c2d0afe1785e41ab0",
+    "requests": 846,
+    "runs": 4,
+    "signature": "c3f6f5a6a743cbdd111431ec5ee45ef98eeefc381430bf4aab569c8283e720f6"
+  },
+  {
+    "counter": "9ab9cce2dded5b5b35c84fed9f9262c3800d64b5d0d23903b7c9ce4d6481ec3c",
+    "counter_accepted": 217,
+    "id": 156,
+    "plans": 4373,
+    "reference": "71e6c8167f611b7bf9ad821d66763c6484f1244e9b12d161a1d333c606d95dbc",
+    "requests": 938,
+    "runs": 4,
+    "signature": "a7d6f783f7f9e2d9deb4371235fc51a875345f4716d9ae070d2e9198da0c4c81"
+  },
+  {
+    "counter": "80b89ac3c896dcea00c5414fda03e88fb0df4bfc2b21d9b2cb0fdb6418bb3748",
+    "counter_accepted": 150,
+    "id": 157,
+    "plans": 5591,
+    "reference": "7ea140ed1259eb991ba168fd9fae9ff13eb611b12448624e325a56aacfb491e7",
+    "requests": 1296,
+    "runs": 6,
+    "signature": "62c7a6ff15c492d54fa332c372a2f4387aa68e4656f478e6cf821068a2e6d2ea"
+  },
+  {
+    "counter": "22821ddb7fe22c17219b7721424daf75e096bf7d869a4623e8ca6930fedddebc",
+    "counter_accepted": 114,
+    "id": 158,
+    "plans": 4646,
+    "reference": "ab7ee5fcde1012c04a91ebb664b860c2bc8161153ca4e961d70fd3cc10c5b9d1",
+    "requests": 1085,
+    "runs": 5,
+    "signature": "55c2a9a1398740ebec20be0cf4850e4849673b5f407ad1876b6b5cd41567ab9a"
+  },
+  {
+    "counter": "4ee38e85a422e8e47e72b7eee4b8301c8ff77282d06c3e19113f2a95c0cc4e27",
+    "counter_accepted": 153,
+    "id": 159,
+    "plans": 3913,
+    "reference": "7333119eac5eca085895451cc83829d37d0e51b01542c1878ff686eacbfd83e1",
+    "requests": 871,
+    "runs": 4,
+    "signature": "31f68e95d68a5672af86e0afded13d5ddd00abef9bdea0ba7f52059eb116b51f"
+  },
+  {
+    "counter": "8bac52db527213a579fbb9675440a5316596a1b73bb8941167ba4d38b59cf08b",
+    "counter_accepted": 94,
+    "id": 160,
+    "plans": 3527,
+    "reference": "a158f7310b4193a6bb87e81454d9b462bc251c4882b6b7cc8a2fdb67a8faa47c",
+    "requests": 819,
+    "runs": 4,
+    "signature": "e07dc1e1766697ffc98e722e98b1e7ed9ba231051ada745b2662d4cded4c809a"
+  },
+  {
+    "counter": "826cbba30a11fd6a656561de972388d1262a8c0bfaecf0e3542657a81cae0218",
+    "counter_accepted": 148,
+    "id": 161,
+    "plans": 4175,
+    "reference": "bb6f5099018624136f2132f7f2381f47c278f97b0dd9ff6585f0225e7216a70f",
+    "requests": 939,
+    "runs": 3,
+    "signature": "401dab05aec0ac4ff09d473185b74c7403c48530f093c2081c465e42a49c5d55"
+  },
+  {
+    "counter": "1db5734712a21db4e9202eeda3302057de970564a7fab3ace239da7267677ac1",
+    "counter_accepted": 113,
+    "id": 162,
+    "plans": 5129,
+    "reference": "d68b033cfb22b27ba7a181a720bdba294356f38396b880a9eca4db348f2602d7",
+    "requests": 1205,
+    "runs": 4,
+    "signature": "ab6272fa86c0d3e6481e89ac1dfcf5c822ed26899196a58564b94b594dbc85e6"
+  },
+  {
+    "counter": "a2434acfe3ff47eef2a7e41df08e8aacc644e58d4e00b1eb823a061031575ed0",
+    "counter_accepted": 144,
+    "id": 163,
+    "plans": 5798,
+    "reference": "1d3a0b9fe3290fe1fcffdb5f99c9ef97a6bdbfd4654c0c95dd20257169522544",
+    "requests": 1352,
+    "runs": 6,
+    "signature": "8f92b46e2ae607ce5ad40e0d66b326ddad820fcce26b755e242084da7d7e992d"
+  },
+  {
+    "counter": "e9d60255fe97d3a18232177efe2e025fa99642a0c5d447b5a709013bf8ac4f07",
+    "counter_accepted": 132,
+    "id": 164,
+    "plans": 5714,
+    "reference": "a773e31d436992cee78f4ef12a09b33312702aca56afc12d97707e84900a9a58",
+    "requests": 1340,
+    "runs": 6,
+    "signature": "620849e58216a7d2c4302a6a6f36ef1ffdbbeac5cf7fdcfad44d430c67b41f59"
+  },
+  {
+    "counter": "005f10608e3bad911292d1bcd08331f6332e821021850784db56ca0bf29f67a0",
+    "counter_accepted": 74,
+    "id": 165,
+    "plans": 3569,
+    "reference": "449624a09e6c66a18d65e8e1bef8727969a3fca1ea032e2343e26ffc11eaea01",
+    "requests": 846,
+    "runs": 5,
+    "signature": "a387cdb27bcf955b0fb2b546948bd5d0b0d0704fa6f45461ca69c681a6fd7874"
+  },
+  {
+    "counter": "d3ae08248f76c5f031867cb8405505bc110591404dc082f45c0a55d381c5f58f",
+    "counter_accepted": 207,
+    "id": 166,
+    "plans": 5629,
+    "reference": "d250bbbf38a7e44abd95fb192738844e38dad814371cf46ec321333fa7369cd4",
+    "requests": 1260,
+    "runs": 4,
+    "signature": "3642624950071a7523432ff4483a5827f43faed9102d3378d8c061a8b9f2acb6"
+  },
+  {
+    "counter": "071c384fa9ce8c0deaa10e8e096497b4254f70f2ec583136c7c9d0385a6f58db",
+    "counter_accepted": 111,
+    "id": 167,
+    "plans": 3235,
+    "reference": "79d93c9e155d797c7bc4c23287e5efbe831c03cd113be6c107c07dc129bcc106",
+    "requests": 733,
+    "runs": 4,
+    "signature": "7900add98b8683dcab6e1f9d72f2aad64224a78dd4c11067d7df5f6c95ec19e0"
+  },
+  {
+    "counter": "5f21dcba8864c4e46eec288aa83334fdc831de91a87f3fdb1f7fff0cadfea460",
+    "counter_accepted": 103,
+    "id": 168,
+    "plans": 4839,
+    "reference": "609ed0873fa4d271aaeaaefdeef8f6ed26972460304c38cb675cfb9b01628393",
+    "requests": 1143,
+    "runs": 6,
+    "signature": "1075b7f7cf46d6410d16e609ffff58799d3c2e511b3d3221e9f61243e4fe090e"
+  },
+  {
+    "counter": "286a5afcaa565300711511c8e7ce15afd2bedb6e5343280ab3430e276ecada8e",
+    "counter_accepted": 126,
+    "id": 169,
+    "plans": 5725,
+    "reference": "5bc952817ea01cfb030b9b7f6e423395e0381b07ad54b3ff3b1df864a3f6cbb8",
+    "requests": 1346,
+    "runs": 5,
+    "signature": "5c96bd5f2df1192e70bb09b0c77272c49051fa4dcae86f4cee692a93fe55ea2c"
+  },
+  {
+    "counter": "9979c3d29de56a442f9ce351a6cfe5606286afd321ebb7b61962bb5dfeb332fc",
+    "counter_accepted": 144,
+    "id": 170,
+    "plans": 3120,
+    "reference": "4573ff89935d589631932583be318257a7a6e0a370cd260530fd08c15cd01281",
+    "requests": 678,
+    "runs": 3,
+    "signature": "f5d1bcca610d4142d6c40b105bc0a5f024dbefd88c13e6dc8bec79fa1da5cd11"
+  },
+  {
+    "counter": "88d9fda39b041310848f0a252481a9cbf38e131ca617d44326d35e01cfaf42f5",
+    "counter_accepted": 156,
+    "id": 171,
+    "plans": 5410,
+    "reference": "a21f2f133cddc651111d8b500de854cc04bd21a0fee92c31e7c5f4acfec91608",
+    "requests": 1246,
+    "runs": 6,
+    "signature": "e8913fc94ccfe2354ada3cf0d5cd8b20cd2971b30ce871c6d053b33aa7b4703b"
+  },
+  {
+    "counter": "dd0eb8d1d40db56e1aea50fb8cb8ab38de1fa7b85d405bb30652095588bcdbe4",
+    "counter_accepted": 170,
+    "id": 172,
+    "plans": 4799,
+    "reference": "da2c625ad366e6ae66831a37ddf91a3db15b9e22411d4533bd2551ef398bd4dc",
+    "requests": 1080,
+    "runs": 4,
+    "signature": "eefb084c6461f343c2e0c1eaf04ab339d3e7b3cca25827e0a69d8a30be6e7a48"
+  },
+  {
+    "counter": "8b8648fd3e8e5234f67f370a5de53a95dee4380412ad4ba880b8a7c1469458f1",
+    "counter_accepted": 81,
+    "id": 173,
+    "plans": 4029,
+    "reference": "a2dc2fdc26409bdc5f48d946535bb45d1f0ac87bcbf5ceeee090cfe1d3f0724f",
+    "requests": 957,
+    "runs": 6,
+    "signature": "f995d3abe825e73fb1d97c789ec9c6b0814ff8d085e71e81807e758b6024e362"
+  },
+  {
+    "counter": "8a1473c4fcaac4f1c6e7dea60925dd67497c096fcfaf3120de6fdd038cc7d3ad",
+    "counter_accepted": 120,
+    "id": 174,
+    "plans": 3980,
+    "reference": "c57878af76973c34f76f8f04230269f9a53e049886890638efbff8e024f89806",
+    "requests": 914,
+    "runs": 5,
+    "signature": "1fb1d7c0488f87ff106d10c736f97656d936670558da005fdde207a74cc149cf"
+  },
+  {
+    "counter": "442ab7fadc146719687e93734d44e02cb0313076f440ba87e64809d0bebd7390",
+    "counter_accepted": 219,
+    "id": 175,
+    "plans": 7831,
+    "reference": "d188c04b3e1a8c1165c83041c3fb638767791c07ae32239dd5cbb4c53a50f273",
+    "requests": 1804,
+    "runs": 6,
+    "signature": "eefe648b87339e31ab8f2f092593f9d0e5a9932bed1356114d3f5d8e1c3044c2"
+  },
+  {
+    "counter": "7d29083e14258aab144e077df0dbe0aab93a88459e7ea5f2b8dafcf7e58f848f",
+    "counter_accepted": 193,
+    "id": 176,
+    "plans": 6579,
+    "reference": "922e1f3fea903f0343e987fb97d7bf8869b39657f3c795146cb9df31b373a2df",
+    "requests": 1509,
+    "runs": 5,
+    "signature": "11c5e0fc3a7f1c01364f0b53027f44a1e229c872bd8f73230c2ee5826192cf48"
+  },
+  {
+    "counter": "de451be528f5eaa5de896d546d16d2f6b8550d713d4aff7d2302180a7bb2981c",
+    "counter_accepted": 159,
+    "id": 177,
+    "plans": 5804,
+    "reference": "4ee360d9508f082202e400889fe8ec186d7d7280876ee41ec2213d5a41084234",
+    "requests": 1341,
+    "runs": 5,
+    "signature": "4cf53db25695f21691f334ab7a1dffc34f658b51072767c86ecb04bfc99f6d72"
+  },
+  {
+    "counter": "d0f23882f70e205ac6981d757e16df103559971f8527bcef9519670d489f6772",
+    "counter_accepted": 199,
+    "id": 178,
+    "plans": 5290,
+    "reference": "a712bd601a7baa3b12761a67b6d2298f60fb9566fabe5b3b656a3542e9ad5b37",
+    "requests": 1181,
+    "runs": 4,
+    "signature": "9aa92e18f523b819cfe67341ed3ceffb98f4985558ad70a3e31b2f62d888e779"
+  },
+  {
+    "counter": "78856935f69a4f8041840ec2a6419a2c458996425ef751e38115a5afdfacd393",
+    "counter_accepted": 141,
+    "id": 179,
+    "plans": 3593,
+    "reference": "fecb6620788801b77e23123374170c77dde01951ecb89ab35d01edeccd6b6c43",
+    "requests": 800,
+    "runs": 4,
+    "signature": "9ae88a1117de5368a4dfc48ff2070db393cb51a6037ea141e58f6fd24cf4c985"
+  },
+  {
+    "counter": "75b5d75f3259a3503dc9051227ed7c99e10edfd442e0a51324747db107568053",
+    "counter_accepted": 103,
+    "id": 180,
+    "plans": 4758,
+    "reference": "36ec12832d64308e2a2854b798b8ad1e71c931ba2b640081d14b0361d6e616ca",
+    "requests": 1120,
+    "runs": 4,
+    "signature": "0d1c86963de14ddd7dad6ce43059894ed366b6af0791322160fe946a21b36c66"
+  },
+  {
+    "counter": "c78d0c563817d67b44f5a5bb3c3b7e196d8669629e1ac740376af3a03313e7bc",
+    "counter_accepted": 86,
+    "id": 181,
+    "plans": 4502,
+    "reference": "d9c8e1a18ecaf0c2837889f3c97df5728292c0a81d7e7bbfece3ad86ba538c9f",
+    "requests": 1070,
+    "runs": 5,
+    "signature": "877a4414e27d44d0a838942d3884ac6ae2dcc6cadc81e4a3d101f3826aeb9b03"
+  },
+  {
+    "counter": "a8c6e136ebd03dedef820dfec5f9c2afc1e78f667827c0c3ccc0595f80a94b16",
+    "counter_accepted": 123,
+    "id": 182,
+    "plans": 2860,
+    "reference": "c26adec2575632713edc6eb3566e13e61a0328301f8b2d1651e36dcde4219459",
+    "requests": 629,
+    "runs": 3,
+    "signature": "bff2077e75d8d0bdcfd36f73bd5c7cb20579c31048ba43b185ec5bcf479adcf8"
+  },
+  {
+    "counter": "2494e2c4d9cde1a6bb36738fe157b1e240a46cb0423e2fb29590e223a1ee3c7c",
+    "counter_accepted": 230,
+    "id": 183,
+    "plans": 4213,
+    "reference": "f29d292c5a5020cf661a689aa424e881b20bcfde39216d8078f0475728bd71dd",
+    "requests": 887,
+    "runs": 3,
+    "signature": "5a0ad5692f0ddf1674bf4d2451c66b94ac0a9d9f3caad8a7b53d757c43b68586"
+  },
+  {
+    "counter": "81cd2b4376e5df3ffa383e3c22ed4c5b723e214d79d683a72102840ed4c26e6f",
+    "counter_accepted": 167,
+    "id": 184,
+    "plans": 5100,
+    "reference": "9023273141e98ae7ffc2f091cb348cd880f59c9ec967895e884b917dc0c24189",
+    "requests": 1159,
+    "runs": 5,
+    "signature": "1c51cb26596b7524725b1ed85c5dc13e1aa6c4ac6abb103ecec1255ff72e5351"
+  },
+  {
+    "counter": "0a426586541225c90d4d53613741346548fbe54ad3101e2012cc6ead48473d88",
+    "counter_accepted": 90,
+    "id": 185,
+    "plans": 4178,
+    "reference": "e56f1748b440d66c86f01a9cc0e1746f8e0c270f278b3b897787ca57bb54ddb9",
+    "requests": 986,
+    "runs": 5,
+    "signature": "6c210597bd08442c93ebb489364e3dd69d2ec811a40de4765b9c8b3880a81c72"
+  },
+  {
+    "counter": "b1708d42f4e7e200de0d08615726722fbe475d5fb4ae78f05ec808f23c7069be",
+    "counter_accepted": 101,
+    "id": 186,
+    "plans": 2770,
+    "reference": "7b1c2c23a12af0124fa1cc22953777e054d953f6d2cb71f8be7e72994c3111a9",
+    "requests": 623,
+    "runs": 3,
+    "signature": "2fded2ef7d3cc159f33ec9bff4160843e86c476daf6c9d2f5c174f248c9f02a5"
+  },
+  {
+    "counter": "887aa83d2cf94cc248ee2e74fd35768cc6e910c6b8ca7c5989aba5af4e9aadf0",
+    "counter_accepted": 189,
+    "id": 187,
+    "plans": 6465,
+    "reference": "f324b698c96b16c5928ae85dd9a06ef4824eb6ed68c8cb2badabdd255ade976e",
+    "requests": 1484,
+    "runs": 5,
+    "signature": "3b397f7988ab016d366776887bc970e9ffdcc51aef4d25a3a1b850cb8f68f9fe"
+  },
+  {
+    "counter": "dfec1daef21c0f2c244a29b5c32bc9711f33c3abbfe175f85c585d42972b4c2c",
+    "counter_accepted": 121,
+    "id": 188,
+    "plans": 5193,
+    "reference": "c97de3ddceea6a63f15c7abc7194b9e2b717010414d2e90ba0168983de0a19c8",
+    "requests": 1218,
+    "runs": 6,
+    "signature": "bd540718686ef347d8766aefb541db2204aa9025151aa9c38b769007c9425b22"
+  },
+  {
+    "counter": "96f2baeaca6d861702ca3f1d218fab7db056ba2c3e416e7901bff9e11244370d",
+    "counter_accepted": 99,
+    "id": 189,
+    "plans": 3788,
+    "reference": "cd060f8bb36f5ad715c8ac9a2a556db63b4417e6f2f01e5cb3cfcb45a2433c85",
+    "requests": 882,
+    "runs": 5,
+    "signature": "fa24bde2b41e8ed265fb4f7b7a8eead3c6556c95e481d3aeabf9c121175e4f34"
+  },
+  {
+    "counter": "1dbb92be0de81664f5a37c8360a63f9c56c22d0d7701120b9ce2184033dc70f5",
+    "counter_accepted": 171,
+    "id": 190,
+    "plans": 4684,
+    "reference": "5c166b6947dd06bbb3f726f0fd6d92ef95f6708f40cb3bf89a735db774d42ad9",
+    "requests": 1051,
+    "runs": 4,
+    "signature": "eb264fcc8ba3e7bf2015d5c948787292b9e8900b7b6077c4992f76ede8b23f4c"
+  },
+  {
+    "counter": "f512fbc18ba1b4b1ca74e984d0c19465c3deb406b8ac139f8a73a3f39f180010",
+    "counter_accepted": 199,
+    "id": 191,
+    "plans": 4213,
+    "reference": "4cd7b49c4d79cbe85a55131d22e451479549fc09c52f3c5cd20363f1074292ae",
+    "requests": 910,
+    "runs": 3,
+    "signature": "7145340f977016699c70e8672781bfcc9c110f985da047e35650f7e916fe9ad3"
+  },
+  {
+    "counter": "36e8ced1d443a1d23e8de5bd2e71cb9e34f5a7656a8520d2697ecba48e33ec0f",
+    "counter_accepted": 137,
+    "id": 192,
+    "plans": 5967,
+    "reference": "c17db0e4197b30838fde18922e88861121d9b2a5dff3d7d5b39380a6ec9c4ddf",
+    "requests": 1397,
+    "runs": 4,
+    "signature": "c533c30538162ae4900baae8f6e9a3147f9917d9a8c5acf935e3556dd6ba9fc0"
+  },
+  {
+    "counter": "90c7637585a36023dd1437968733a217ae4e617abcd9516d494833890b9d3526",
+    "counter_accepted": 117,
+    "id": 193,
+    "plans": 5678,
+    "reference": "58c2443fffc81aea1e7e6d817ad82b86381a70a38dfef12c82462bdc26a62df4",
+    "requests": 1343,
+    "runs": 6,
+    "signature": "99cf8c22ab21bef0614b8b62ec3bc22ce1ab3098a582e91e8f8460d3a9b5383e"
+  },
+  {
+    "counter": "3fbf785283615926d2b61e88653581876dfb6d7e67228d618a693f59b52ce5aa",
+    "counter_accepted": 104,
+    "id": 194,
+    "plans": 3802,
+    "reference": "8cc337903427683f964cf814f346f6b06b623488f6ee3119f7e54cfd4d9bce80",
+    "requests": 880,
+    "runs": 4,
+    "signature": "e391ad6e1197332e052fb9d9b92f3c40677eedd31644819f17bfd2ea91159246"
+  },
+  {
+    "counter": "4fb90116cd8f8972611962699677d41056d75a63b8273748a80b52865bec472f",
+    "counter_accepted": 117,
+    "id": 195,
+    "plans": 7396,
+    "reference": "b4e327ef0e327dca3e4472c66d1b0e12428ea8bc8169e02a757cd28c6f02d545",
+    "requests": 1772,
+    "runs": 6,
+    "signature": "ab4ab71545048b0d81d16d8437b7bc12f6a86e4bfb89911a04def808ecbb76f8"
+  },
+  {
+    "counter": "bffe162b436c01087e16298133e4640f0cfa8d0b28ddbca18ad47b880be026e8",
+    "counter_accepted": 201,
+    "id": 196,
+    "plans": 4339,
+    "reference": "f7041d7d63273e8ecd4bb9613b90fed79dc95d1a726e2d81dd0732eaee8c3cfb",
+    "requests": 940,
+    "runs": 3,
+    "signature": "eb5bf25b32b316c5966ca97efc5eb1327c0dc2358b4bc005e018e44a2783125f"
+  },
+  {
+    "counter": "7aa088538536c978008cace7369a702ccc04a5c4f5fff357d731c8bbf12e408a",
+    "counter_accepted": 81,
+    "id": 197,
+    "plans": 4422,
+    "reference": "1b971daba87dbc55eb8cbbaa9acc6bf9f00e1f720a283c292ba10ceeb5a9f5fb",
+    "requests": 1054,
+    "runs": 5,
+    "signature": "a49dcf44ad6f3a73363a79051a77cb0a0efef90adc0effd4c12023a3b7c116cd"
+  },
+  {
+    "counter": "da87c035246b4b0d081dda662a9996f9bc24ab2eefe4b4937e0fa0eb6e106287",
+    "counter_accepted": 150,
+    "id": 198,
+    "plans": 6091,
+    "reference": "9453baf73f100f73ab5b071106d7fd50d6086b1b86f7cae6e312adb7417963ac",
+    "requests": 1421,
+    "runs": 6,
+    "signature": "42ee4a697ebe6446e09f0b471e28cec5ca5e650fe60c3f7485e3e9e8c70fcbd6"
+  },
+  {
+    "counter": "38d55e48445d298c7bb56a113b7902259abb6f9feddd5037addd398db9512555",
+    "counter_accepted": 106,
+    "id": 199,
+    "plans": 4072,
+    "reference": "97fd760e78ea486714e65ed2745f2f7ef7fb6ad6b1ec7406c090c1bd572bfa41",
+    "requests": 946,
+    "runs": 4,
+    "signature": "d5ddccb6d421beb089c2bbf7e46cb44b5931ca44558a6476dbe10aaa41da977b"
+  },
+  {
+    "counter": "2257abbc926eba432c294cf2ef9f3ca9f1ef3550517375900bf6be02faad42b2",
+    "counter_accepted": 249,
+    "id": 200,
+    "plans": 7468,
+    "reference": "4be24efed8c5956149a2e01442fb4d172abb65d44c49e00429baf5bfdd1e1870",
+    "requests": 1688,
+    "runs": 4,
+    "signature": "a4715dd8da71bf9825bd4aa7a908447b23f103790bed9860c44783ee8188782e"
+  },
+  {
+    "counter": "169a6ca32a40d0f2468457ecad9e63e710bc01bde0cd88982fff4a97566dbe56",
+    "counter_accepted": 150,
+    "id": 201,
+    "plans": 4565,
+    "reference": "10db32f56600ac0ea3660f0601c923ba171f13f2aee21d0bbcd3876390229d78",
+    "requests": 1038,
+    "runs": 5,
+    "signature": "4d2ff13ea04a6e63e054f9151c8f5edae30226683b5d25edf0a5374d1bc39666"
+  },
+  {
+    "counter": "7e4afc436c227e3a3df7b2cb09d7feb34a551ad8c1bca5b2977a6a3a24bbecdd",
+    "counter_accepted": 72,
+    "id": 202,
+    "plans": 5567,
+    "reference": "f8cd883d9ca7ae4b2986913c5605345d7790d2ae9ea8bdd52c295733676095e2",
+    "requests": 1347,
+    "runs": 5,
+    "signature": "cecd144997eb532006702254a402b09231a20704d300cdd47dbc93c28abe85c7"
+  },
+  {
+    "counter": "ba1db77578c2028a631b2cca2fa9c9f2779abb4f4e4a805cfdd360774a7b3771",
+    "counter_accepted": 144,
+    "id": 203,
+    "plans": 4579,
+    "reference": "1ae642f5eba9a6022d099437e91935228c951773a75ebd0b633f8044b56119fd",
+    "requests": 1046,
+    "runs": 5,
+    "signature": "92959df089c0b604e7e9adf92bb082fc52eadc76ee06b91c8d0b008bfa900adb"
+  },
+  {
+    "counter": "67ae25fa64cc8691c32fc7e5bb5d36b737c5e5d130839b78bc972e89c8aab1c9",
+    "counter_accepted": 115,
+    "id": 204,
+    "plans": 7846,
+    "reference": "cd58e5b32003087b359c1ae88611aec5642146a690a92bc89566e145833c54b0",
+    "requests": 1886,
+    "runs": 6,
+    "signature": "a36cf8bf6aba27a0edffdd7cde1fbac80c10fddbfc75869ee033e35ea15ee002"
+  },
+  {
+    "counter": "892a4466596715d90b974cc18db8b5a50dbdf129b28c267154bb09be46471539",
+    "counter_accepted": 90,
+    "id": 205,
+    "plans": 6179,
+    "reference": "f186477a534906290131387204ad7daa8c618f41bf3e47cf839565537165f823",
+    "requests": 1488,
+    "runs": 6,
+    "signature": "4ef1aee3709d07ddf674f8601ee76b087449cd6bb7787960deff41f9172c3e58"
+  },
+  {
+    "counter": "02bb890e17068b9693b9f9070e5fa78f5d769d1209382ce48a1f871abe03fd2c",
+    "counter_accepted": 210,
+    "id": 206,
+    "plans": 4246,
+    "reference": "8d752929b223c54eb42e4c0804d51c7aad478ce117beef6df3706b7818bd3bea",
+    "requests": 910,
+    "runs": 3,
+    "signature": "a3b62b014b650ca4aecd6e8424f122255962a0ebbe78425d5a9ce0bf1e44c045"
+  },
+  {
+    "counter": "b4e75ad8ada2d8768e49acac941596127b757ff0d68bdf6b28ac60f696a42d13",
+    "counter_accepted": 114,
+    "id": 207,
+    "plans": 2799,
+    "reference": "90c2781527c720856d27a7fe42791e5ae66c689c70d1c08d105435fce8d78e35",
+    "requests": 621,
+    "runs": 3,
+    "signature": "984baa6d9739c27d50d1fdf69cbea94f946357cf20839b569cd8ad57461574dd"
+  },
+  {
+    "counter": "4e569ab33b832e509205f2afeb05ddf7f582a3243b0153479b18fc3a04ab1af0",
+    "counter_accepted": 172,
+    "id": 208,
+    "plans": 4652,
+    "reference": "839dec84442fb7f86fb91dc9dff4e5940088392c091b4cef5b5686e032c300fa",
+    "requests": 1043,
+    "runs": 5,
+    "signature": "edd3b03fef9c3bcde6501c08ba1f4d25a5e5209d828952d529b692f0b74fa44b"
+  },
+  {
+    "counter": "ec45a499e5de98153c9f6d857b1e9e25027ce3205b04b42ea813e5be3233ae02",
+    "counter_accepted": 152,
+    "id": 209,
+    "plans": 6328,
+    "reference": "3d59a8e6321cdc8cef360a44c69b8d484321f5e4b63a52bbbf9aca4927a0c22d",
+    "requests": 1479,
+    "runs": 6,
+    "signature": "679a973ea66fc78843168515cdb32f05fcb83a6972f524fbe9a2a9c87d0b0bb6"
+  }
+]
