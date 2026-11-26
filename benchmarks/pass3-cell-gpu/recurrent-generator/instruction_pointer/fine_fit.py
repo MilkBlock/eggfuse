@@ -212,14 +212,13 @@ def update(
     update_count[arm + "_steps"] += 1
 
 
-def fit(a):
+def fit(a, step=update, seeds=(9633, 5003), observe=None):
     if not 0 < a.programs <= 256:
         raise ValueError("programs from 256 onwards are reserved for evaluation")
     signatures = split_check(a.previous, [*range(a.programs), *range(256, 264)])
     if len(set(signatures.values())) != len(signatures):
         raise ValueError("evaluation shares a normalized program graph")
     start = perf_counter()
-    seeds = (9633, 5003)
     cfg = {}
     for seed in seeds:
         for arm in a.arms:
@@ -264,9 +263,11 @@ def fit(a):
                 rng.choice([4, 16, 64, 256], size=repeat),
                 strict=True,
             ):
+                if observe is not None:
+                    observe(idx, seed, data, rec, batches, k, pare, edit)
                 for arm in a.arms:
                     net, opt = cfg[seed, arm]
-                    update(
+                    step(
                         net,
                         opt,
                         samplers[seed, arm],

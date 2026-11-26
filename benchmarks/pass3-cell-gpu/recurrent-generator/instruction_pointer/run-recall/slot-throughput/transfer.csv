@@ -1,0 +1,8 @@
+arm,slots,template_changed,initial_complete_now_empty_domain,same_template_completeness_changed,initial_incomplete_now_complete
+conservative,14848,1073,215,5,151
+dual-witness,14848,11669,3507,15,623
+initial,14848,0,0,0,0
+isolate-binding,14848,5890,1091,103,1039
+isolate-edit,14848,1916,382,117,375
+isolate-inactive,14848,12408,3845,13,362
+isolate-no-inactive,14848,9695,1689,73,2128

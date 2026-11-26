@@ -220,6 +220,9 @@ kernel void draw(device const int2 *job, device int *control, constant int *c, d
   q[lane] = tanh(q[lane] + graphs[32 * tid + lane]);
   int anchor = 0, producer = -1, owner = 0;
   bool useProjection = false, success = true;
+#ifdef TRACE_ADDRESS_SLOTS
+  int failure = 0;
+#endif
   for (int i = 0; i < c[Slots]; i++) {
     int tab = roles[rid * c[Slots] + i];
     if (tab < 0)
@@ -304,6 +307,9 @@ kernel void draw(device const int2 *job, device int *control, constant int *c, d
         lo = 0;
         hi = local ? nlocal : sizes[tab];
         if (hi == 0) {
+#ifdef TRACE_ADDRESS_SLOTS
+          failure = 1 + 3*i;
+#endif
           success = false;
           break;
         }
@@ -381,6 +387,9 @@ kernel void draw(device const int2 *job, device int *control, constant int *c, d
       }
     }
     if (localId < 0 && (picked <= 0 || rowmeta[5 * picked] != tab)) {
+#ifdef TRACE_ADDRESS_SLOTS
+      failure = 1 + 3*i + (picked <= 0 ? 1 : 2);
+#endif
       success = false;
       break;
     }
@@ -411,6 +420,10 @@ kernel void draw(device const int2 *job, device int *control, constant int *c, d
     threadgroup_barrier(mem_flags::mem_threadgroup);
   }
   if (lane == 0) {
+#ifdef TRACE_ADDRESS_SLOTS
+    // Word zero is unused in the generated mark; apply_jobs allocates the actual UID.
+    result[0] = (tid+1)*(1+3*c[Slots]) + failure;
+#endif
     result[1] = success ? tid : -1;
     perjob[g * 4] = visits;
     perjob[g * 4 + 1] = pivots;

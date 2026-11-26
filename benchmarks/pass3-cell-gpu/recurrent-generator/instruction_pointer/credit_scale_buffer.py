@@ -59,6 +59,10 @@ class Lane:
             raise ValueError("training family must contain only primitive recipes")
         cfg = SimpleNamespace(**(vars(a) | {"out": a.checkpoint.parent}))
         self.page = setup(cfg, self.m, a.checkpoint.stem, a.cap)[2]
+        if getattr(a, "record_slot_attempts", False):
+            from throughput_slots import SlotLog, instrument
+
+            instrument(self.page, SlotLog(retain_page=True))
         self.proc = subprocess.Popen(
             [a.runtime_binary, "online-ccp-v0.1", self.program, "-", "audit", "--ept"],
             stdin=-1,
@@ -214,6 +218,15 @@ class Lane:
             "assisted_response": assist_replies,
             "issue_seconds": issue_seconds,
         }
+        if observer := getattr(self.page, "slot_observer", None):
+            slots = observer.last_page
+            if slots is None or sum(raw[1] == 0 for raw in slots) != len(replies):
+                raise ValueError("slot trace does not match submitted page")
+            event["slot_attempts"] = slots
+            event["attempt_schema"] = "named-slot-attempt/v1"
+            # A typed lookup failure is observable. No counterfactual value or abandonment label.
+            event["unsubmitted_credit_mask"] = False
+            observer.last_page = None
         self.events.append(event)
         self.client.seal()
         self.advance()
@@ -274,6 +287,8 @@ class Lane:
 def shard(a, i, b):
     seed = getattr(a, "rollout_seed", 0)
     suffix = f"-s{seed}" if seed else ""
+    if getattr(a, "record_slot_attempts", False):
+        suffix += "-slots"
     return a.out / "buffer" / f"{i:04d}-{b}-{a.policy_sha[:12]}{suffix}.json.gz"
 
 
@@ -351,8 +366,10 @@ def collect(a):
             )
     metrics = dict(totals, episodes=len(todo), wall=perf_counter() - started)
     branches = "-".join(map(str, a.branches))
+    trace_suffix = "-slots" if getattr(a, "record_slot_attempts", False) else ""
     metric_path = (
-        a.out / f"collection-{a.first}-{a.stop}-b{branches}-{a.policy_sha[:12]}.json"
+        a.out
+        / f"collection-{a.first}-{a.stop}-b{branches}-{a.policy_sha[:12]}{trace_suffix}.json"
     )
     metric_path.write_text(json.dumps(metrics) + "\n")
 
@@ -362,6 +379,7 @@ if __name__ == "__main__":
     p.add_argument("--checkpoint", type=Path, required=True)
     p.add_argument("--first", type=int, default=0)
     p.add_argument("--stop", type=int, default=128)
+    p.add_argument("--record-slot-attempts", action="store_true")
     p.add_argument("--rollout-seed", type=int, default=0)
     p.add_argument("--cap", type=int, default=160)
     p.add_argument("--lanes", type=int, default=4)

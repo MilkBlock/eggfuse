@@ -25,9 +25,11 @@ from transaction_native import execute
 
 
 @cache
-def code(width, arm):
+def code(width, arm, trace_slots=False):
     dense = arm.startswith("direct")
     flags = f"#define MARK_H {width}\n#define SET_PAGE 1\n"
+    if trace_slots:
+        flags += "#define TRACE_ADDRESS_SLOTS 1\n"
     if arm == "semantic-mlp":
         flags += "#define SEMANTIC_ADDRESS 1\n"
     if dense:
@@ -72,7 +74,12 @@ class AddressPage(Page):
                 2 * cap,
             ]
         )
+        observer = getattr(self, "slot_observer", None)
+        if observer is not None:
+            _generated.zero_()
         self.apply_marks(cfg, ctl, self.upload(m.context()), buffers, cap)
+        if observer is not None:
+            return torch.cat((ctl, draft.flatten(), _generated[:cap].flatten()))
         return torch.cat((ctl, draft.flatten()))
 
     def sample(self, m, source, steps, rng, stats):
@@ -87,7 +94,13 @@ class AddressPage(Page):
         stats["template_reads"] += int(reply[15])
         stats["template_scores"] += int(reply[14])
         stats["edit_forward_calls"] -= 1
-        return self.unpack(reply, 1, self.cap, stats, 16)
+        observer = getattr(self, "slot_observer", None)
+        if observer is None:
+            return self.unpack(reply, 1, self.cap, stats, 16)
+        end = 16 + self.cap * self.stride
+        items = self.unpack(reply[:end], 1, self.cap, stats, 16)
+        observer.draw(self, reply[end:].reshape(self.cap, self.stride), items)
+        return items
 
 
 def setup(a, m, arm, cap):

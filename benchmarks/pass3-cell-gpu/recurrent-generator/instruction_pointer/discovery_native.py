@@ -66,6 +66,9 @@ def configure(a, m, arm, cap, neural_setup=setup):
                 page.cap = min(1024 - attempts, max(16, goal - len(draws)))
                 draws.extend(x.cell for x in generate(mem, source, steps, rng, stats))
                 attempts += page.cap
+            observer = getattr(page, "slot_observer", None)
+            if observer is not None:
+                observer.quota(goal, len(draws))
             page.count["neural_slot_attempts"] += attempts
             page.count["complete_shortfall"] += max(0, goal - len(draws))
         return tuple(Item(i, c) for i, c in enumerate(draws[:goal]))
