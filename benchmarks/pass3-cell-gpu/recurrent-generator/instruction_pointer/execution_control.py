@@ -49,8 +49,12 @@ def window(memory, balance, mode, choose, generate, submit, deadline, capture=Fa
         rows.append(row)
         if action == SEAL:
             return rows, balance, "neural_seal"
+        if capture:
+            started = perf_counter()
         if action == CONTINUE:
             cells = generate()
+            if capture:
+                row["generation_seconds"] = perf_counter() - started
             draft.extend(cells)
             if capture:
                 from discovery_sampling import encode
@@ -61,6 +65,8 @@ def window(memory, balance, mode, choose, generate, submit, deadline, capture=Fa
             balance -= 1
         else:
             response = submit(draft)
+            if capture:
+                row["submit_seconds"] = perf_counter() - started
             if len(response) != len(draft):
                 raise ValueError("incomplete admission response")
             last = [int(r[1]) for r in response]

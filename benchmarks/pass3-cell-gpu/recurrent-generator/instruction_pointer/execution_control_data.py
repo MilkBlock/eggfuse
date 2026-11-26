@@ -172,7 +172,15 @@ def collect(a):
                 if origins.get(q["token"], 0)
                 for p in q["parents"]
             }
+            scheduler = {
+                r[0]: r
+                for r in map(json.loads, lane.scheduler.read_text().splitlines())
+                if not r[3]
+            }
             for event in history:
+                run = event["run"]
+                event["stage"] = rep["schedule"][run - 1][:3]
+                event["rules"] = scheduler[run][-1]
                 event["exit"] = exit_audit(
                     a.runtime_binary, lane.program, tape, event["run"]
                 )
@@ -181,7 +189,7 @@ def collect(a):
                     row["ops"] = sum(origins.get(i, 0) for i in ids)
                     row["later_used"] = sum(i in used for i in ids)
             save(
-                dest,
+                dest.with_suffix(".tmp"),
                 {
                     "behavior": "randomized_controls_frozen_neural_cells",
                     "idx": idx,
@@ -195,6 +203,7 @@ def collect(a):
                     "history": history,
                 },
             )
+            dest.with_suffix(".tmp").replace(dest)
         finally:
             lane.close()
         print("native collection", idx, len(history), flush=True)
@@ -231,11 +240,6 @@ def supervision(events):
 
 
 def train(a):
-    torch.manual_seed(a.seed)
-    rates = models("1M")[1]
-    rates.load_state_dict(
-        torch.load(a.previous / "s243/1M-n1000000/weights.pt", weights_only=True)[1]
-    )
     train, held = [], []
     signatures = [set(), set()]
     for idx in range(a.programs):
@@ -247,6 +251,19 @@ def train(a):
             signatures[split].add(sh["signature"])
             (held if split else train).extend(supervision(sh["history"]))
     assert signatures[0].isdisjoint(signatures[1])
+
+    suffix = "-no-exit-credit" if a.no_exit_credit else ""
+    if a.extra_experience:
+        suffix += "-shuffle"
+    fit_actions(a, train, held, suffix)
+
+
+def fit_actions(a, train, held, suffix):
+    torch.manual_seed(a.seed)
+    rates = models("1M")[1]
+    rates.load_state_dict(
+        torch.load(a.previous / "s243/1M-n1000000/weights.pt", weights_only=True)[1]
+    )
 
     def tensors(rows):
         f, m, y, early = zip(*rows)
@@ -280,9 +297,6 @@ def train(a):
             "correct": int((pred.argmax(1) == y).sum()),
         }
 
-    suffix = "-no-exit-credit" if a.no_exit_credit else ""
-    if a.extra_experience:
-        suffix += "-shuffle"
     torch.save(rates.state_dict(), a.out / f"rates{suffix}.pt")
     save(
         a.out / f"fit{suffix}.json",

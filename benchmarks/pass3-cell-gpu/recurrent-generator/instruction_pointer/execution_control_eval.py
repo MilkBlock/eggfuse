@@ -112,7 +112,7 @@ def run(a):
                     vars(a)
                     | {
                         "pages": 6
-                        if arm in ("C", "C-no-exit-credit", "C-shuffle")
+                        if arm == "C" or (arm.startswith("C-") and arm != "C-no-bank")
                         else 2
                     }
                 )
@@ -131,8 +131,16 @@ def run(a):
                     if arm == "C-no-exit-credit"
                     else "rates.pt"
                 )
-                if arm == "C-shuffle":
-                    weights = "rates-shuffle.pt"
+                if arm in (
+                    "C-shuffle",
+                    "C-paired",
+                    "C-paired-small",
+                    "C-raw",
+                    "C-matched",
+                    "C-matched-2",
+                    "C-live",
+                ):
+                    weights = f"rates-{arm[2:]}.pt"
                 rates.load_state_dict(torch.load(a.out / weights, weights_only=True))
             pol = Controlled(
                 mem,
