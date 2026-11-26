@@ -1,0 +1,17 @@
+arm,budget,discovered
+coverage,4,23.5
+coverage,16,69.0
+coverage,64,153.0
+coverage,256,257.5
+factored,4,16.5
+factored,16,55.0
+factored,64,148.0
+factored,256,286.5
+failure,4,20.0
+failure,16,62.5
+failure,64,149.0
+failure,256,238.5
+original,4,19.5
+original,16,62.0
+original,64,158.5
+original,256,291.0

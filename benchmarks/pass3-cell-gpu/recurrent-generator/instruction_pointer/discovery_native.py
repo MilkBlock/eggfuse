@@ -14,10 +14,10 @@ from discrete_draft import Item
 from query_environment import online_memory, setup
 
 
-def configure(a, m, arm, cap):
+def configure(a, m, arm, cap, neural_setup=setup):
     args = SimpleNamespace(**(vars(a) | {"out": a.contract}))
     if arm in ("A", "D"):
-        marks, rates, page = setup(args, m, arm, cap)
+        marks, rates, page = neural_setup(args, m, arm, cap)
         publish = page.publication
         generate = page.sample
     else:
