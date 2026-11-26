@@ -131,7 +131,7 @@ class Marks(nn.Module):
         )
 
     def draw(
-        self, m, rng, stats, hint=None, target=None, records=None, prefix=(), weight=1.0, oracle_key=None, diagnostic_refs=()
+        self, m, rng, stats, hint=None, target=None, records=None, prefix=(), weight=1.0, oracle_key=None, diagnostic_refs=(), stop_after=None
     ):
         if diagnostic_refs and oracle_key is None:
             raise ValueError("offline prefix prompt requires a named rule")
@@ -177,6 +177,8 @@ class Marks(nn.Module):
         r, high = k
         if (audit := getattr(m, "on_template_draw", None)) is not None:
             audit(k)
+        if stop_after == 0:
+            return Cell(r, (), high)
         route_audit = high and getattr(m, "audit_routes", False)
         if route_audit:
             stats[f"routed_root/{r}"] += 1
@@ -197,6 +199,8 @@ class Marks(nn.Module):
         refs = []
         projection_plan = {}
         for i, tab in enumerate(m.roles[r]):
+            if i == stop_after:
+                break
             tick = perf_counter()
             slot = m.enc.nodes[m.enc.cat.inputs["generated", r][i]]
             key = (q + slot).tanh()

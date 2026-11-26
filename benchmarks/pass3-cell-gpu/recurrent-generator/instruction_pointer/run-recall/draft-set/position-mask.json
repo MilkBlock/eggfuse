@@ -1,0 +1,194 @@
+[
+ {
+  "case": "fact",
+  "arm": "relative",
+  "device": "cpu",
+  "counts": {
+   "outside_current_opcodes": 980,
+   "in_current_opcodes": 253,
+   "deferred_by_position_sampler": 126,
+   "later_selected_with_earlier_admissible_deferred": 0,
+   "multiple_selected": 0
+  }
+ },
+ {
+  "case": "grammar-benefit-left-17119",
+  "arm": "relative",
+  "device": "cpu",
+  "counts": {
+   "outside_current_opcodes": 0,
+   "in_current_opcodes": 5,
+   "deferred_by_position_sampler": 1,
+   "later_selected_with_earlier_admissible_deferred": 0,
+   "multiple_selected": 0
+  }
+ },
+ {
+  "case": "loopfact",
+  "arm": "relative",
+  "device": "cpu",
+  "counts": {
+   "outside_current_opcodes": 617,
+   "in_current_opcodes": 208,
+   "deferred_by_position_sampler": 62,
+   "later_selected_with_earlier_admissible_deferred": 1,
+   "multiple_selected": 2
+  }
+ },
+ {
+  "case": "sum-divisors",
+  "arm": "relative",
+  "device": "cpu",
+  "counts": {
+   "outside_current_opcodes": 840,
+   "in_current_opcodes": 194,
+   "deferred_by_position_sampler": 68,
+   "later_selected_with_earlier_admissible_deferred": 0,
+   "multiple_selected": 0
+  }
+ },
+ {
+  "case": "fact",
+  "arm": "set",
+  "device": "cpu",
+  "counts": {
+   "outside_current_opcodes": 0,
+   "in_current_opcodes": 273,
+   "deferred_by_position_sampler": 0,
+   "later_selected_with_earlier_admissible_deferred": 0,
+   "multiple_selected": 62
+  }
+ },
+ {
+  "case": "grammar-benefit-left-17119",
+  "arm": "set",
+  "device": "cpu",
+  "counts": {
+   "outside_current_opcodes": 0,
+   "in_current_opcodes": 4,
+   "deferred_by_position_sampler": 0,
+   "later_selected_with_earlier_admissible_deferred": 0,
+   "multiple_selected": 1
+  }
+ },
+ {
+  "case": "loopfact",
+  "arm": "set",
+  "device": "cpu",
+  "counts": {
+   "outside_current_opcodes": 0,
+   "in_current_opcodes": 254,
+   "deferred_by_position_sampler": 0,
+   "later_selected_with_earlier_admissible_deferred": 0,
+   "multiple_selected": 62
+  }
+ },
+ {
+  "case": "sum-divisors",
+  "arm": "set",
+  "device": "cpu",
+  "counts": {
+   "outside_current_opcodes": 0,
+   "in_current_opcodes": 316,
+   "deferred_by_position_sampler": 0,
+   "later_selected_with_earlier_admissible_deferred": 0,
+   "multiple_selected": 81
+  }
+ },
+ {
+  "case": "fact",
+  "arm": "relative",
+  "device": "mps",
+  "counts": {
+   "outside_current_opcodes": 912,
+   "in_current_opcodes": 167,
+   "deferred_by_position_sampler": 69,
+   "later_selected_with_earlier_admissible_deferred": 2,
+   "multiple_selected": 2
+  }
+ },
+ {
+  "case": "grammar-benefit-left-17119",
+  "arm": "relative",
+  "device": "mps",
+  "counts": {
+   "outside_current_opcodes": 0,
+   "in_current_opcodes": 1,
+   "deferred_by_position_sampler": 0,
+   "later_selected_with_earlier_admissible_deferred": 0,
+   "multiple_selected": 0
+  }
+ },
+ {
+  "case": "loopfact",
+  "arm": "relative",
+  "device": "mps",
+  "counts": {
+   "outside_current_opcodes": 380,
+   "in_current_opcodes": 255,
+   "deferred_by_position_sampler": 47,
+   "later_selected_with_earlier_admissible_deferred": 2,
+   "multiple_selected": 5
+  }
+ },
+ {
+  "case": "sum-divisors",
+  "arm": "relative",
+  "device": "mps",
+  "counts": {
+   "outside_current_opcodes": 834,
+   "in_current_opcodes": 94,
+   "deferred_by_position_sampler": 21,
+   "later_selected_with_earlier_admissible_deferred": 1,
+   "multiple_selected": 0
+  }
+ },
+ {
+  "case": "fact",
+  "arm": "set",
+  "device": "mps",
+  "counts": {
+   "outside_current_opcodes": 126,
+   "in_current_opcodes": 301,
+   "deferred_by_position_sampler": 0,
+   "later_selected_with_earlier_admissible_deferred": 0,
+   "multiple_selected": 82
+  }
+ },
+ {
+  "case": "grammar-benefit-left-17119",
+  "arm": "set",
+  "device": "mps",
+  "counts": {
+   "outside_current_opcodes": 0,
+   "in_current_opcodes": 1,
+   "deferred_by_position_sampler": 0,
+   "later_selected_with_earlier_admissible_deferred": 0,
+   "multiple_selected": 0
+  }
+ },
+ {
+  "case": "loopfact",
+  "arm": "set",
+  "device": "mps",
+  "counts": {
+   "outside_current_opcodes": 132,
+   "in_current_opcodes": 306,
+   "deferred_by_position_sampler": 1,
+   "later_selected_with_earlier_admissible_deferred": 0,
+   "multiple_selected": 74
+  }
+ },
+ {
+  "case": "sum-divisors",
+  "arm": "set",
+  "device": "mps",
+  "counts": {
+   "outside_current_opcodes": 0,
+   "in_current_opcodes": 329,
+   "deferred_by_position_sampler": 0,
+   "later_selected_with_earlier_admissible_deferred": 0,
+   "multiple_selected": 81
+  }
+ }
+]

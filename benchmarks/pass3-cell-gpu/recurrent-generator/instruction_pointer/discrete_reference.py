@@ -31,8 +31,14 @@ class Reference:
         self.prefix = Prefix().eval()
         self.prefix.load_state_dict(torch.load("run-recall/structural-reach/prefix.pt", weights_only=True))
 
+    def make_stream(self, rd, model, rule, watermark, stats, order):
+        return AnchorStream(rd, model, rule, watermark, stats, order=order)
+
+    def scheduled_rules(self, frame, stats):
+        return frame["rules"]
+
     def run_snapshot(self, frame, pub, rd, model, txn, stats, deadline):
-        for r, wm in frame["rules"]:
+        for r, wm in self.scheduled_rules(frame, stats):
             order = list(rd.order(r))
             semi = rd.iface.rules[r]["metadata"]["seminaive"]
             for anchor in order if semi and order else [None]:
@@ -50,7 +56,7 @@ class Reference:
                     if not order and semi and wm:
                         continue
                     seq = order
-                stream = AnchorStream(rd, model, r, wm, stats, order=tuple(seq))
+                stream = self.make_stream(rd, model, r, wm, stats, tuple(seq))
                 stream.prefix = self.prefix
                 stream.semi = False
                 if anchor is not None:

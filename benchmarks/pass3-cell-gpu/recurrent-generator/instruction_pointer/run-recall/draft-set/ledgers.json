@@ -1,0 +1,2348 @@
+[
+ {
+  "track": "paired",
+  "case": "sum-divisors",
+  "arm": "fifo",
+  "zero_primitive": [
+   375,
+   574
+  ],
+  "zero_higher": [],
+  "first_574": null,
+  "early_pages": [
+   {
+    "run": 1,
+    "rules": [
+     375
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 1,
+    "rules": [
+     375,
+     375
+    ],
+    "uids": [
+     1,
+     0
+    ],
+    "higher": [
+     false,
+     false
+    ],
+    "issued": [
+     1
+    ]
+   },
+   {
+    "run": 2,
+    "rules": [
+     375
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "issued": []
+   },
+   {
+    "run": 2,
+    "rules": [
+     375
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "issued": []
+   },
+   {
+    "run": 3,
+    "rules": [
+     375
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "issued": []
+   },
+   {
+    "run": 3,
+    "rules": [
+     375
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "issued": []
+   },
+   {
+    "run": 4,
+    "rules": [
+     375
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "issued": []
+   },
+   {
+    "run": 4,
+    "rules": [
+     375
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "issued": []
+   },
+   {
+    "run": 5,
+    "rules": [
+     375,
+     574
+    ],
+    "uids": [
+     0,
+     1
+    ],
+    "higher": [
+     false,
+     false
+    ],
+    "issued": []
+   },
+   {
+    "run": 5,
+    "rules": [
+     375,
+     574
+    ],
+    "uids": [
+     0,
+     1
+    ],
+    "higher": [
+     false,
+     false
+    ],
+    "issued": []
+   }
+  ],
+  "early_receipts": [
+   [
+    1,
+    1,
+    0,
+    375,
+    0,
+    false
+   ],
+   [
+    1,
+    2,
+    1,
+    375,
+    1,
+    false
+   ]
+  ],
+  "blocked_pages": 406,
+  "nonhead_pages": 0
+ },
+ {
+  "track": "paired",
+  "case": "sum-divisors",
+  "arm": "page",
+  "zero_primitive": [
+   375,
+   574
+  ],
+  "zero_higher": [],
+  "first_574": [
+   2,
+   4,
+   0,
+   574,
+   0,
+   false
+  ],
+  "early_pages": [
+   {
+    "run": 1,
+    "rules": [
+     375
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 1,
+    "rules": [
+     375,
+     375
+    ],
+    "uids": [
+     1,
+     0
+    ],
+    "higher": [
+     false,
+     false
+    ],
+    "selected": [
+     0,
+     1
+    ],
+    "issued": [
+     1,
+     0
+    ]
+   },
+   {
+    "run": 2,
+    "rules": [],
+    "uids": [],
+    "higher": [],
+    "selected": [],
+    "issued": []
+   },
+   {
+    "run": 2,
+    "rules": [
+     574
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 3,
+    "rules": [
+     574
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 3,
+    "rules": [],
+    "uids": [],
+    "higher": [],
+    "selected": [],
+    "issued": []
+   },
+   {
+    "run": 4,
+    "rules": [],
+    "uids": [],
+    "higher": [],
+    "selected": [],
+    "issued": []
+   },
+   {
+    "run": 4,
+    "rules": [
+     297,
+     289
+    ],
+    "uids": [
+     1,
+     0
+    ],
+    "higher": [
+     false,
+     true
+    ],
+    "selected": [
+     0,
+     1
+    ],
+    "issued": [
+     1,
+     0
+    ]
+   },
+   {
+    "run": 5,
+    "rules": [
+     558
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 5,
+    "rules": [],
+    "uids": [],
+    "higher": [],
+    "selected": [],
+    "issued": []
+   }
+  ],
+  "early_receipts": [
+   [
+    1,
+    1,
+    0,
+    375,
+    0,
+    false
+   ],
+   [
+    1,
+    2,
+    1,
+    375,
+    1,
+    false
+   ],
+   [
+    1,
+    3,
+    0,
+    375,
+    1,
+    false
+   ],
+   [
+    2,
+    4,
+    0,
+    574,
+    0,
+    false
+   ],
+   [
+    3,
+    5,
+    0,
+    574,
+    2,
+    false
+   ],
+   [
+    4,
+    6,
+    1,
+    297,
+    9,
+    false
+   ],
+   [
+    4,
+    7,
+    0,
+    289,
+    9,
+    true
+   ],
+   [
+    5,
+    8,
+    0,
+    558,
+    0,
+    false
+   ],
+   [
+    7,
+    9,
+    0,
+    300,
+    2,
+    false
+   ],
+   [
+    8,
+    10,
+    0,
+    553,
+    2,
+    false
+   ],
+   [
+    8,
+    11,
+    1,
+    557,
+    2,
+    false
+   ],
+   [
+    10,
+    12,
+    0,
+    307,
+    2,
+    false
+   ]
+  ],
+  "blocked_pages": 0,
+  "nonhead_pages": 81
+ },
+ {
+  "track": "paired",
+  "case": "sum-divisors",
+  "arm": "set",
+  "zero_primitive": [
+   375,
+   574
+  ],
+  "zero_higher": [],
+  "first_574": [
+   2,
+   4,
+   0,
+   574,
+   0,
+   false
+  ],
+  "early_pages": [
+   {
+    "run": 1,
+    "rules": [
+     375
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 1,
+    "rules": [
+     375,
+     375
+    ],
+    "uids": [
+     1,
+     0
+    ],
+    "higher": [
+     false,
+     false
+    ],
+    "selected": [
+     0,
+     1
+    ],
+    "issued": [
+     1,
+     0
+    ]
+   },
+   {
+    "run": 2,
+    "rules": [],
+    "uids": [],
+    "higher": [],
+    "selected": [],
+    "issued": []
+   },
+   {
+    "run": 2,
+    "rules": [
+     574
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 3,
+    "rules": [
+     574
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 3,
+    "rules": [],
+    "uids": [],
+    "higher": [],
+    "selected": [],
+    "issued": []
+   },
+   {
+    "run": 4,
+    "rules": [],
+    "uids": [],
+    "higher": [],
+    "selected": [],
+    "issued": []
+   },
+   {
+    "run": 4,
+    "rules": [
+     297,
+     289
+    ],
+    "uids": [
+     1,
+     0
+    ],
+    "higher": [
+     false,
+     true
+    ],
+    "selected": [
+     0,
+     1
+    ],
+    "issued": [
+     1,
+     0
+    ]
+   },
+   {
+    "run": 5,
+    "rules": [
+     558
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 5,
+    "rules": [],
+    "uids": [],
+    "higher": [],
+    "selected": [],
+    "issued": []
+   }
+  ],
+  "early_receipts": [
+   [
+    1,
+    1,
+    0,
+    375,
+    0,
+    false
+   ],
+   [
+    1,
+    2,
+    1,
+    375,
+    1,
+    false
+   ],
+   [
+    1,
+    3,
+    0,
+    375,
+    1,
+    false
+   ],
+   [
+    2,
+    4,
+    0,
+    574,
+    0,
+    false
+   ],
+   [
+    3,
+    5,
+    0,
+    574,
+    2,
+    false
+   ],
+   [
+    4,
+    6,
+    1,
+    297,
+    9,
+    false
+   ],
+   [
+    4,
+    7,
+    0,
+    289,
+    9,
+    true
+   ],
+   [
+    5,
+    8,
+    0,
+    558,
+    0,
+    false
+   ],
+   [
+    7,
+    9,
+    0,
+    300,
+    2,
+    false
+   ],
+   [
+    8,
+    10,
+    0,
+    553,
+    2,
+    false
+   ],
+   [
+    8,
+    11,
+    1,
+    557,
+    2,
+    false
+   ],
+   [
+    10,
+    12,
+    0,
+    307,
+    2,
+    false
+   ]
+  ],
+  "blocked_pages": 0,
+  "nonhead_pages": 81
+ },
+ {
+  "track": "fixture",
+  "case": "response-held-join",
+  "arm": "page",
+  "zero_primitive": [],
+  "zero_higher": [],
+  "first_574": null,
+  "early_pages": [
+   {
+    "run": 1,
+    "rules": [
+     0
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 1,
+    "rules": [
+     0
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     true
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 2,
+    "rules": [
+     1
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 2,
+    "rules": [],
+    "uids": [],
+    "higher": [],
+    "selected": [],
+    "issued": []
+   },
+   {
+    "run": 3,
+    "rules": [
+     2
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 3,
+    "rules": [],
+    "uids": [],
+    "higher": [],
+    "selected": [],
+    "issued": []
+   },
+   {
+    "run": 4,
+    "rules": [
+     3
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 4,
+    "rules": [],
+    "uids": [],
+    "higher": [],
+    "selected": [],
+    "issued": []
+   },
+   {
+    "run": 5,
+    "rules": [
+     4
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 5,
+    "rules": [
+     4
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   }
+  ],
+  "early_receipts": [
+   [
+    1,
+    1,
+    0,
+    0,
+    0,
+    false
+   ],
+   [
+    1,
+    2,
+    0,
+    0,
+    1,
+    true
+   ],
+   [
+    2,
+    3,
+    0,
+    1,
+    0,
+    false
+   ],
+   [
+    3,
+    4,
+    0,
+    2,
+    0,
+    false
+   ],
+   [
+    4,
+    5,
+    0,
+    3,
+    0,
+    false
+   ],
+   [
+    5,
+    6,
+    0,
+    4,
+    0,
+    false
+   ],
+   [
+    5,
+    7,
+    0,
+    4,
+    1,
+    false
+   ],
+   [
+    6,
+    8,
+    0,
+    4,
+    2,
+    false
+   ]
+  ],
+  "blocked_pages": 0,
+  "nonhead_pages": 0
+ },
+ {
+  "track": "fixture",
+  "case": "response-held-merge6",
+  "arm": "page",
+  "zero_primitive": [],
+  "zero_higher": [],
+  "first_574": null,
+  "early_pages": [
+   {
+    "run": 1,
+    "rules": [
+     0
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 1,
+    "rules": [
+     0
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     true
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 2,
+    "rules": [
+     1
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 2,
+    "rules": [],
+    "uids": [],
+    "higher": [],
+    "selected": [],
+    "issued": []
+   },
+   {
+    "run": 3,
+    "rules": [
+     2
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 3,
+    "rules": [],
+    "uids": [],
+    "higher": [],
+    "selected": [],
+    "issued": []
+   },
+   {
+    "run": 4,
+    "rules": [
+     3
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 4,
+    "rules": [],
+    "uids": [],
+    "higher": [],
+    "selected": [],
+    "issued": []
+   },
+   {
+    "run": 5,
+    "rules": [
+     4
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 5,
+    "rules": [
+     4
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   }
+  ],
+  "early_receipts": [
+   [
+    1,
+    1,
+    0,
+    0,
+    0,
+    false
+   ],
+   [
+    1,
+    2,
+    0,
+    0,
+    1,
+    true
+   ],
+   [
+    2,
+    3,
+    0,
+    1,
+    0,
+    false
+   ],
+   [
+    3,
+    4,
+    0,
+    2,
+    0,
+    false
+   ],
+   [
+    4,
+    5,
+    0,
+    3,
+    0,
+    false
+   ],
+   [
+    5,
+    6,
+    0,
+    4,
+    0,
+    false
+   ],
+   [
+    5,
+    7,
+    0,
+    4,
+    1,
+    false
+   ],
+   [
+    6,
+    8,
+    0,
+    5,
+    0,
+    false
+   ],
+   [
+    7,
+    9,
+    0,
+    5,
+    2,
+    false
+   ]
+  ],
+  "blocked_pages": 0,
+  "nonhead_pages": 0
+ },
+ {
+  "track": "fixture",
+  "case": "response-held-permit",
+  "arm": "page",
+  "zero_primitive": [],
+  "zero_higher": [],
+  "first_574": null,
+  "early_pages": [
+   {
+    "run": 1,
+    "rules": [],
+    "uids": [],
+    "higher": [],
+    "selected": [],
+    "issued": []
+   },
+   {
+    "run": 1,
+    "rules": [],
+    "uids": [],
+    "higher": [],
+    "selected": [],
+    "issued": []
+   },
+   {
+    "run": 2,
+    "rules": [
+     4
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 2,
+    "rules": [
+     5
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 3,
+    "rules": [
+     2
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 3,
+    "rules": [
+     2
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 4,
+    "rules": [
+     0
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 4,
+    "rules": [
+     0
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 5,
+    "rules": [
+     1
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 5,
+    "rules": [
+     1
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   }
+  ],
+  "early_receipts": [
+   [
+    2,
+    1,
+    0,
+    4,
+    0,
+    false
+   ],
+   [
+    2,
+    2,
+    0,
+    5,
+    0,
+    false
+   ],
+   [
+    3,
+    3,
+    0,
+    2,
+    0,
+    false
+   ],
+   [
+    3,
+    4,
+    0,
+    2,
+    9,
+    false
+   ],
+   [
+    4,
+    5,
+    0,
+    0,
+    0,
+    false
+   ],
+   [
+    4,
+    6,
+    0,
+    0,
+    1,
+    false
+   ],
+   [
+    5,
+    7,
+    0,
+    1,
+    0,
+    false
+   ],
+   [
+    5,
+    8,
+    0,
+    1,
+    1,
+    false
+   ],
+   [
+    6,
+    9,
+    0,
+    3,
+    0,
+    false
+   ],
+   [
+    7,
+    10,
+    0,
+    3,
+    2,
+    false
+   ]
+  ],
+  "blocked_pages": 0,
+  "nonhead_pages": 0
+ },
+ {
+  "track": "fixture",
+  "case": "response-held-join",
+  "arm": "set",
+  "zero_primitive": [],
+  "zero_higher": [],
+  "first_574": null,
+  "early_pages": [
+   {
+    "run": 1,
+    "rules": [
+     0
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 1,
+    "rules": [
+     0
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     true
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 2,
+    "rules": [
+     1
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 2,
+    "rules": [],
+    "uids": [],
+    "higher": [],
+    "selected": [],
+    "issued": []
+   },
+   {
+    "run": 3,
+    "rules": [
+     2
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 3,
+    "rules": [],
+    "uids": [],
+    "higher": [],
+    "selected": [],
+    "issued": []
+   },
+   {
+    "run": 4,
+    "rules": [
+     3
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 4,
+    "rules": [],
+    "uids": [],
+    "higher": [],
+    "selected": [],
+    "issued": []
+   },
+   {
+    "run": 5,
+    "rules": [
+     4
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 5,
+    "rules": [
+     4
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   }
+  ],
+  "early_receipts": [
+   [
+    1,
+    1,
+    0,
+    0,
+    0,
+    false
+   ],
+   [
+    1,
+    2,
+    0,
+    0,
+    1,
+    true
+   ],
+   [
+    2,
+    3,
+    0,
+    1,
+    0,
+    false
+   ],
+   [
+    3,
+    4,
+    0,
+    2,
+    0,
+    false
+   ],
+   [
+    4,
+    5,
+    0,
+    3,
+    0,
+    false
+   ],
+   [
+    5,
+    6,
+    0,
+    4,
+    0,
+    false
+   ],
+   [
+    5,
+    7,
+    0,
+    4,
+    1,
+    false
+   ],
+   [
+    6,
+    8,
+    0,
+    4,
+    2,
+    false
+   ]
+  ],
+  "blocked_pages": 0,
+  "nonhead_pages": 0
+ },
+ {
+  "track": "fixture",
+  "case": "response-held-merge6",
+  "arm": "set",
+  "zero_primitive": [],
+  "zero_higher": [],
+  "first_574": null,
+  "early_pages": [
+   {
+    "run": 1,
+    "rules": [
+     0
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 1,
+    "rules": [
+     0
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     true
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 2,
+    "rules": [
+     1
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 2,
+    "rules": [],
+    "uids": [],
+    "higher": [],
+    "selected": [],
+    "issued": []
+   },
+   {
+    "run": 3,
+    "rules": [
+     2
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 3,
+    "rules": [],
+    "uids": [],
+    "higher": [],
+    "selected": [],
+    "issued": []
+   },
+   {
+    "run": 4,
+    "rules": [
+     3
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 4,
+    "rules": [],
+    "uids": [],
+    "higher": [],
+    "selected": [],
+    "issued": []
+   },
+   {
+    "run": 5,
+    "rules": [
+     4
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 5,
+    "rules": [
+     4
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   }
+  ],
+  "early_receipts": [
+   [
+    1,
+    1,
+    0,
+    0,
+    0,
+    false
+   ],
+   [
+    1,
+    2,
+    0,
+    0,
+    1,
+    true
+   ],
+   [
+    2,
+    3,
+    0,
+    1,
+    0,
+    false
+   ],
+   [
+    3,
+    4,
+    0,
+    2,
+    0,
+    false
+   ],
+   [
+    4,
+    5,
+    0,
+    3,
+    0,
+    false
+   ],
+   [
+    5,
+    6,
+    0,
+    4,
+    0,
+    false
+   ],
+   [
+    5,
+    7,
+    0,
+    4,
+    1,
+    false
+   ],
+   [
+    6,
+    8,
+    0,
+    5,
+    0,
+    false
+   ],
+   [
+    7,
+    9,
+    0,
+    5,
+    2,
+    false
+   ]
+  ],
+  "blocked_pages": 0,
+  "nonhead_pages": 0
+ },
+ {
+  "track": "fixture",
+  "case": "response-held-permit",
+  "arm": "set",
+  "zero_primitive": [],
+  "zero_higher": [],
+  "first_574": null,
+  "early_pages": [
+   {
+    "run": 1,
+    "rules": [],
+    "uids": [],
+    "higher": [],
+    "selected": [],
+    "issued": []
+   },
+   {
+    "run": 1,
+    "rules": [],
+    "uids": [],
+    "higher": [],
+    "selected": [],
+    "issued": []
+   },
+   {
+    "run": 2,
+    "rules": [
+     4
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 2,
+    "rules": [
+     5
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 3,
+    "rules": [
+     2
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 3,
+    "rules": [
+     2
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 4,
+    "rules": [
+     0
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 4,
+    "rules": [
+     0
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 5,
+    "rules": [
+     1
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 5,
+    "rules": [
+     1
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [
+     0
+    ],
+    "issued": [
+     0
+    ]
+   }
+  ],
+  "early_receipts": [
+   [
+    2,
+    1,
+    0,
+    4,
+    0,
+    false
+   ],
+   [
+    2,
+    2,
+    0,
+    5,
+    0,
+    false
+   ],
+   [
+    3,
+    3,
+    0,
+    2,
+    0,
+    false
+   ],
+   [
+    3,
+    4,
+    0,
+    2,
+    9,
+    false
+   ],
+   [
+    4,
+    5,
+    0,
+    0,
+    0,
+    false
+   ],
+   [
+    4,
+    6,
+    0,
+    0,
+    1,
+    false
+   ],
+   [
+    5,
+    7,
+    0,
+    1,
+    0,
+    false
+   ],
+   [
+    5,
+    8,
+    0,
+    1,
+    1,
+    false
+   ],
+   [
+    6,
+    9,
+    0,
+    3,
+    0,
+    false
+   ],
+   [
+    7,
+    10,
+    0,
+    3,
+    2,
+    false
+   ]
+  ],
+  "blocked_pages": 0,
+  "nonhead_pages": 0
+ },
+ {
+  "track": "cut5",
+  "case": "sum-divisors",
+  "arm": "set",
+  "zero_primitive": [
+   375,
+   574
+  ],
+  "zero_higher": [],
+  "first_574": [
+   5,
+   3,
+   1,
+   574,
+   2,
+   false
+  ],
+  "early_pages": [
+   {
+    "run": 1,
+    "rules": [
+     375
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "issued": [
+     0
+    ]
+   },
+   {
+    "run": 1,
+    "rules": [
+     375,
+     375
+    ],
+    "uids": [
+     1,
+     0
+    ],
+    "higher": [
+     false,
+     false
+    ],
+    "issued": [
+     1
+    ]
+   },
+   {
+    "run": 2,
+    "rules": [
+     375
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "issued": []
+   },
+   {
+    "run": 2,
+    "rules": [
+     375
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "issued": []
+   },
+   {
+    "run": 3,
+    "rules": [
+     375
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "issued": []
+   },
+   {
+    "run": 3,
+    "rules": [
+     375
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "issued": []
+   },
+   {
+    "run": 4,
+    "rules": [
+     375
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "issued": []
+   },
+   {
+    "run": 4,
+    "rules": [
+     375
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "issued": []
+   },
+   {
+    "run": 5,
+    "rules": [
+     375,
+     574
+    ],
+    "uids": [
+     0,
+     1
+    ],
+    "higher": [
+     false,
+     false
+    ],
+    "selected": [
+     1
+    ],
+    "issued": [
+     1
+    ]
+   },
+   {
+    "run": 5,
+    "rules": [
+     375
+    ],
+    "uids": [
+     0
+    ],
+    "higher": [
+     false
+    ],
+    "selected": [],
+    "issued": []
+   }
+  ],
+  "early_receipts": [
+   [
+    1,
+    1,
+    0,
+    375,
+    0,
+    false
+   ],
+   [
+    1,
+    2,
+    1,
+    375,
+    1,
+    false
+   ],
+   [
+    5,
+    3,
+    1,
+    574,
+    2,
+    false
+   ]
+  ],
+  "blocked_pages": 0,
+  "nonhead_pages": 1
+ }
+]
