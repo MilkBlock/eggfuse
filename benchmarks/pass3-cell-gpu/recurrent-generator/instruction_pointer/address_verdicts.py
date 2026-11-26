@@ -8,7 +8,7 @@ from recursive_train import binary, folder, read
 
 
 class Probes:
-    def __init__(self, a, case, name):
+    def __init__(self, a, case, name, tape_path=None):
         self.data = a.data
         self.case = case
         self.d = folder(a.data, case)
@@ -16,7 +16,8 @@ class Probes:
         self.out.mkdir(exist_ok=True, parents=True)
         self.rows = []
         self.info = []
-        self.tape = read(self.d / "tape.json")
+        self.tape_path = tape_path or self.d / "tape.json"
+        self.tape = read(self.tape_path)
         self.in_run = {(q["run"], q["token"]) for q in self.tape["requests"]}
 
     def add(self, r, cell, meta):
@@ -43,7 +44,7 @@ class Probes:
                     binary(self.data),
                     "replay",
                     self.d / "program.json",
-                    self.d / "tape.json",
+                    self.tape_path,
                     "audit",
                     "--recall",
                     p,

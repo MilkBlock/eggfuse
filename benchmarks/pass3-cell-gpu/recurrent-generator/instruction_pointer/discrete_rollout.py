@@ -159,6 +159,7 @@ class Policy:
         ]
         m.update(
             dict(
+                run=frame["run"], epoch=frame["epoch"],
                 updates=updates,
                 retired=[dict(token=int(t), op=int(o)) for t, o in retired],
                 rules=frame["rules"],

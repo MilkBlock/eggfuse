@@ -113,7 +113,7 @@ def setup(a, m, arm, cap):
 
 
 @torch.no_grad()
-def native(a):
+def native(a, configure=setup, native_memory=None):
     jobs = list(product(a.cases, a.arms))
     for b in range(a.blocks):
         for case, arm in jobs if b % 2 == 0 else reversed(jobs):
@@ -125,13 +125,25 @@ def native(a):
                 continue
             d = folder(a.data, case)
             start = perf_counter()
-            m = memory(a, d)
-            marks, rates, page = setup(a, m, arm, a.cap)
+            m = native_memory(a, d, dest, arm) if native_memory else memory(a, d)
+            marks, rates, page = configure(a, m, arm, a.cap)
             pol = Dispatch(
                 m, marks, {"flow": rates}, "empty", 1, 536, a.pages, mode="page"
             )
             setup_time = perf_counter() - start
-            x = execute(a.data, case, study=pol, series=str(dest), seconds=a.seconds)
+            try:
+                x = execute(
+                    a.data,
+                    case,
+                    study=pol,
+                    series=str(dest),
+                    seconds=a.seconds,
+                    observer_path=getattr(m, "observer_path", None),
+                    runtime_binary=getattr(a, "runtime_binary", None),
+                )
+            finally:
+                if close := getattr(m, "close_observer", None):
+                    close()
             work = dest / (case + "-stream-multi")
             tmp = dest / "ref.json"
             target = Target(
@@ -168,15 +180,15 @@ def native(a):
 
 
 @torch.no_grad()
-def frozen(a):
+def frozen(a, configure=setup, frozen_memory=None):
     for case, arm in product(a.cases, a.arms):
         dest = a.out / f"sample-{case}-{arm}.json"
         if dest.exists() and (a.out / f"semantic-sample-{case}-{arm}.json").exists():
             continue
 
         def mem(a, d, arm=arm):
-            m = memory(a, d)
-            m.page = setup(a, m, arm, 256)[2]
+            m = frozen_memory(a, d, case, arm) if frozen_memory else memory(a, d)
+            m.page = configure(a, m, arm, 256)[2]
             return m
 
         probe = Probes(a, case, arm)

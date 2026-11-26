@@ -102,6 +102,7 @@ pub(crate) fn value_hash(value: &Value) -> u64 {
 /// Optional diagnostic exporter. Normal reference, capture and replay clocks do
 /// not scan token memory. Each record describes the snapshot before any RHS.
 struct MemoryExport {
+    query_observer: Option<BufWriter<std::fs::File>>,
     writer: Box<dyn Write>,
     previous: BTreeMap<Address, PortObservation>,
     accepted: Vec<Request>,
@@ -336,7 +337,11 @@ impl History {
             )),
             None => Box::new(std::io::stdout()),
         };
+        let query_observer = std::env::var_os("EGGFUSE_QUERY_OBSERVER")
+            .map(std::fs::File::create).transpose().map_err(|e| e.to_string())?
+            .map(BufWriter::new);
         self.memory = Some(MemoryExport {
+            query_observer,
             writer,
             previous: BTreeMap::new(),
             accepted: Vec::new(),
@@ -398,6 +403,14 @@ impl History {
             self.verify_time+=tick.elapsed();
         }
         let memory = self.memory.as_mut().expect("enabled observation");
+        // Observe raw scheduler state at the same boundary as the publication.
+        // Keep every scheduled rule in order, including clean rules.
+        if let Some(writer) = &mut memory.query_observer {
+            let flags: Vec<_> = rules.iter().map(|&(rid, wm)| (rid, wm, dirty[rid])).collect();
+            serde_json::to_writer(&mut *writer, &(run, graph.epoch, check_dirty, terminal, flags))
+                .map_err(|e| e.to_string())?;
+            writer.write_all(b"\n").and_then(|()| writer.flush()).map_err(|e| e.to_string())?;
+        }
         let updates: Vec<_> = visible
             .iter()
             .filter(|(a, row)| memory.previous.get(a) != Some(*row))

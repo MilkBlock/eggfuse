@@ -67,12 +67,16 @@ def snapshots(a, case, source, make_memory=memory):
         for r in rng.choice(runs, min(len(runs), 8), replace=False)
     }
     m = make_memory(a, d)
-    with frames.open() as f:
-        for line in f:
-            frame = json.loads(line)
-            m.update(frame)
-            if frame["run"] in selected:
-                yield m, frame["run"], group[frame["run"]]
+    try:
+        with frames.open() as f:
+            for line in f:
+                frame = json.loads(line)
+                m.update(frame)
+                if frame["run"] in selected:
+                    yield m, frame["run"], group[frame["run"]]
+    finally:
+        if close := getattr(m, "close_observer", None):
+            close()
 
 
 @torch.no_grad()

@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import os
 import subprocess
 from collections import Counter
 from pathlib import Path
@@ -28,6 +29,8 @@ def execute(
     limit=None,
     capacity=256,
     protocol="ccp-v0.1",
+    observer_path=None,
+    runtime_binary=None,
 ):
     init = perf_counter()
     root = Path(root).resolve()
@@ -42,7 +45,7 @@ def execute(
         study = Study(bits=8, symmetric=True)
     mode = {"ccp-v0.1": "online-ccp-v0.1", "ctx1": "online-transactions"}[protocol]
     cmd = [
-        binary(root),
+        runtime_binary or binary(root),
         mode,
         d / "program.json",
         "-",
@@ -64,7 +67,15 @@ def execute(
     deadline = start + seconds
     with (
         TemporaryFile() as stderr,
-        subprocess.Popen(cmd, stdin=-1, stdout=-1, stderr=stderr) as proc,
+        subprocess.Popen(
+            cmd,
+            stdin=-1,
+            stdout=-1,
+            stderr=stderr,
+            env=None
+            if observer_path is None
+            else {**os.environ, "EGGFUSE_QUERY_OBSERVER": str(observer_path)},
+        ) as proc,
     ):
         if protocol == "ccp-v0.1":
             digest = hashlib.sha256((d / "program.json").read_bytes()).hexdigest()
@@ -185,7 +196,7 @@ def execute(
     replay = json.loads(
         subprocess.check_output(
             [
-                binary(root),
+                runtime_binary or binary(root),
                 "replay",
                 d / "program.json",
                 tape,

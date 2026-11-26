@@ -19,31 +19,36 @@ def signature(row):
 
 
 @torch.no_grad()
+def propose(a, case, source, probe):
+    owners = {(q["run"], from_q(q)): q["token"] for q in probe.tape["requests"]}
+    rng = np.random.default_rng(243)
+    for m, r, g in snapshots(a, case, source):
+        group = defaultdict(list)
+        for addr, (row, key) in m.pub.live.items():
+            group[row["table"], key.numpy().tobytes()].append(addr)
+        for c in g:
+            for j, ref in enumerate(c.refs):
+                row, key = m.pub.live[ref[:2]]
+                matches = group[row["table"], key.numpy().tobytes()]
+                if len(matches) < 2:
+                    continue
+                i = int(rng.integers(len(matches) - 1))
+                other = matches[i] if matches[i] != ref[:2] else matches[-1]
+                alt = m.pub.live[other][0]
+                changed = (*other, alt["version"])
+                probe.add(
+                    r,
+                    Cell(c.rule, c.refs[:j] + (changed,) + c.refs[j + 1 :]),
+                    (owners[r, c], j, signature(row) == signature(alt)),
+                )
+
+
+@torch.no_grad()
 def run(a):
     rows = []
     for case in CASES:
         probe = Probes(a, case, "same-key")
-        owners = {(q["run"], from_q(q)): q["token"] for q in probe.tape["requests"]}
-        rng = np.random.default_rng(243)
-        for m, r, g in snapshots(a, case, "teacher"):
-            group = defaultdict(list)
-            for addr, (row, key) in m.pub.live.items():
-                group[row["table"], key.numpy().tobytes()].append(addr)
-            for c in g:
-                for j, ref in enumerate(c.refs):
-                    row, key = m.pub.live[ref[:2]]
-                    matches = group[row["table"], key.numpy().tobytes()]
-                    if len(matches) < 2:
-                        continue
-                    i = int(rng.integers(len(matches) - 1))
-                    other = matches[i] if matches[i] != ref[:2] else matches[-1]
-                    alt = m.pub.live[other][0]
-                    changed = (*other, alt["version"])
-                    probe.add(
-                        r,
-                        Cell(c.rule, c.refs[:j] + (changed,) + c.refs[j + 1 :]),
-                        (owners[r, c], j, signature(row) == signature(alt)),
-                    )
+        propose(a, case, "teacher", probe)
         for r, meta, owner, reason in probe.check():
             gold, j, identical = meta
             rows.append(

@@ -1,0 +1,83 @@
+[
+  {
+    "case": "sum",
+    "source": "teacher",
+    "held": false,
+    "augmented_groups": 1014,
+    "verified_variants": 1374,
+    "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "rechecked": 1374
+  },
+  {
+    "case": "dot",
+    "source": "teacher",
+    "held": false,
+    "augmented_groups": 1349,
+    "verified_variants": 2088,
+    "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+    "rechecked": 2088
+  },
+  {
+    "case": "grammar-benefit-fork-17118",
+    "source": "teacher",
+    "held": false,
+    "augmented_groups": 0,
+    "verified_variants": 0,
+    "state_sha": "12000b574e7ad820aa2b9e7f26525ca388220d36867ef4b3b9cdac55af7dce2b",
+    "rechecked": 0
+  },
+  {
+    "case": "sum",
+    "source": "stream",
+    "held": false,
+    "augmented_groups": 548,
+    "verified_variants": 678,
+    "state_sha": "3a3e3bac4123075a0cc7ef1bad5d6bc1d62dab4e3af173265d92c4439f6f59f6",
+    "rechecked": 678
+  },
+  {
+    "case": "grammar-benefit-fork-17118",
+    "source": "stream",
+    "held": false,
+    "augmented_groups": 0,
+    "verified_variants": 0,
+    "state_sha": "12000b574e7ad820aa2b9e7f26525ca388220d36867ef4b3b9cdac55af7dce2b",
+    "rechecked": 0
+  },
+  {
+    "case": "fact",
+    "source": "teacher",
+    "held": true,
+    "augmented_groups": 582,
+    "verified_variants": 722,
+    "state_sha": "a61d7797258b0de68e0897e6ab839d116af9d95699691ae489d46cc98f0ff36d",
+    "rechecked": 722
+  },
+  {
+    "case": "loopfact",
+    "source": "teacher",
+    "held": true,
+    "augmented_groups": 480,
+    "verified_variants": 645,
+    "state_sha": "54133e1468cf9facf6d9c0e1fe0904600589719a0c4414fe54457834ef953724",
+    "rechecked": 645
+  },
+  {
+    "case": "sum-divisors",
+    "source": "teacher",
+    "held": true,
+    "augmented_groups": 2980,
+    "verified_variants": 3781,
+    "state_sha": "a08e7ecdcd82898e2cb021f5563e1023eaf999dab38d735ca8eb6887316f3d7e",
+    "rechecked": 3781
+  },
+  {
+    "case": "grammar-benefit-left-17119",
+    "source": "teacher",
+    "held": true,
+    "augmented_groups": 0,
+    "verified_variants": 0,
+    "state_sha": "b22a87ff503ef956505d0f443029100fe79bef8366a75916012c0f4d017f86a0",
+    "rechecked": 0
+  }
+]
