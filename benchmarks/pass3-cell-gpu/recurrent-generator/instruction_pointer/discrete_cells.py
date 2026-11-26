@@ -131,8 +131,10 @@ class Marks(nn.Module):
         )
 
     def draw(
-        self, m, rng, stats, hint=None, target=None, records=None, prefix=(), weight=1.0, oracle_key=None
+        self, m, rng, stats, hint=None, target=None, records=None, prefix=(), weight=1.0, oracle_key=None, diagnostic_refs=()
     ):
+        if diagnostic_refs and oracle_key is None:
+            raise ValueError("offline prefix prompt requires a named rule")
         train = records is not None
         stats["mark_draws"] += 1
 
@@ -199,6 +201,14 @@ class Marks(nn.Module):
             slot = m.enc.nodes[m.enc.cat.inputs["generated", r][i]]
             key = (q + slot).tanh()
             wanted = target.refs[i] if train else None
+            if i < len(diagnostic_refs):
+                ref = diagnostic_refs[i]
+                entry = m.pub.live.get(ref[:2])
+                if entry is None or entry[0]["table"] != tab or entry[0]["version"] != ref[2]:
+                    return None
+                refs.append(ref)
+                q = m.enc.actor.next_read((entry[1] + slot)[None], q[None])[0]
+                continue
             if i == 1 and hasattr(m, "owner_contract"):
                 contract = m.owner_contract(r, refs[0])
                 if contract:

@@ -1,0 +1,139 @@
+[
+  {
+    "case": "dot",
+    "source": "teacher",
+    "requests": 6704,
+    "credited": 3655,
+    "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+    "counts": {
+      "runs": 1535,
+      "repair_events": 8,
+      "retired": 716,
+      "versioned_updates": 19618,
+      "max_target_length": 278,
+      "teacher_run_exhausted": 7801,
+      "examples": 7801,
+      "prefix_nonempty": 5040
+    },
+    "rows": {
+      "editor": 11548,
+      "flow": 223029,
+      "marks": 217427
+    }
+  },
+  {
+    "case": "grammar-benefit-fork-17118",
+    "source": "stream",
+    "requests": 72,
+    "credited": 72,
+    "state_sha": "12000b574e7ad820aa2b9e7f26525ca388220d36867ef4b3b9cdac55af7dce2b",
+    "counts": {
+      "runs": 6,
+      "repair_events": 0,
+      "retired": 0,
+      "versioned_updates": 147,
+      "max_target_length": 32,
+      "stream_evidence_exhausted": 65,
+      "examples": 65,
+      "prefix_nonempty": 60,
+      "unknown_stream_tail": 6
+    },
+    "rows": {
+      "editor": 95,
+      "flow": 2450,
+      "marks": 1838
+    }
+  },
+  {
+    "case": "grammar-benefit-fork-17118",
+    "source": "teacher",
+    "requests": 72,
+    "credited": 72,
+    "state_sha": "12000b574e7ad820aa2b9e7f26525ca388220d36867ef4b3b9cdac55af7dce2b",
+    "counts": {
+      "runs": 6,
+      "repair_events": 0,
+      "retired": 0,
+      "versioned_updates": 147,
+      "max_target_length": 32,
+      "teacher_run_exhausted": 70,
+      "examples": 70,
+      "prefix_nonempty": 64
+    },
+    "rows": {
+      "editor": 102,
+      "flow": 2250,
+      "marks": 1630
+    }
+  },
+  {
+    "case": "sum",
+    "source": "rejected",
+    "requests": 2228,
+    "credited": 1306,
+    "state_sha": "3a3e3bac4123075a0cc7ef1bad5d6bc1d62dab4e3af173265d92c4439f6f59f6",
+    "counts": {
+      "runs": 881,
+      "repair_events": 0,
+      "retired": 212,
+      "versioned_updates": 6685,
+      "actual_rejection/1": 837,
+      "max_target_length": 115,
+      "stream_evidence_exhausted": 2114,
+      "examples": 2114,
+      "prefix_nonempty": 2042,
+      "actual_rejection/9": 166,
+      "actual_rejection/12": 54
+    },
+    "rows": {
+      "editor": 3171,
+      "flow": 92414,
+      "marks": 84575
+    }
+  },
+  {
+    "case": "sum",
+    "source": "stream",
+    "requests": 2228,
+    "credited": 1306,
+    "state_sha": "3a3e3bac4123075a0cc7ef1bad5d6bc1d62dab4e3af173265d92c4439f6f59f6",
+    "counts": {
+      "runs": 881,
+      "repair_events": 0,
+      "retired": 212,
+      "versioned_updates": 6685,
+      "max_target_length": 131,
+      "stream_evidence_exhausted": 1952,
+      "examples": 1952,
+      "prefix_nonempty": 1528,
+      "unknown_stream_tail": 880
+    },
+    "rows": {
+      "editor": 2890,
+      "flow": 66419,
+      "marks": 68841
+    }
+  },
+  {
+    "case": "sum",
+    "source": "teacher",
+    "requests": 7265,
+    "credited": 3529,
+    "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "counts": {
+      "runs": 1428,
+      "repair_events": 1,
+      "retired": 1201,
+      "versioned_updates": 18338,
+      "max_target_length": 172,
+      "teacher_run_exhausted": 7669,
+      "examples": 7669,
+      "prefix_nonempty": 5116
+    },
+    "rows": {
+      "editor": 11353,
+      "flow": 244171,
+      "marks": 202708
+    }
+  }
+]

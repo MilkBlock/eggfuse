@@ -1,0 +1,138 @@
+{
+  "counts": {
+    "ends_before_all_witnessed_run_ends": 995325,
+    "ends_a_witnessed_run": 4675
+  },
+  "expected_zero_draws": {
+    "ends_before_all_witnessed_run_ends": 354930.45833520836,
+    "ends_a_witnessed_run": 1684.3055555556182
+  },
+  "next_native": {
+    "2": {
+      "count": 1,
+      "rules": {
+        "574": 1
+      },
+      "first": [
+        {
+          "token": 2,
+          "run": 2,
+          "rule": 574,
+          "parents": []
+        }
+      ]
+    },
+    "3": {
+      "count": 36,
+      "rules": {
+        "279": 3,
+        "280": 2,
+        "281": 1,
+        "288": 1,
+        "289": 25,
+        "297": 1,
+        "298": 1,
+        "299": 2
+      },
+      "first": [
+        {
+          "token": 2,
+          "run": 3,
+          "rule": 279,
+          "parents": [
+            {
+              "address": {
+                "token": 1,
+                "op": 30
+              },
+              "version": 1
+            },
+            {
+              "address": {
+                "token": 1,
+                "op": 28
+              },
+              "version": 1
+            }
+          ]
+        }
+      ]
+    },
+    "4": {
+      "count": 39,
+      "rules": {
+        "532": 14,
+        "534": 4,
+        "541": 4,
+        "544": 5,
+        "546": 1,
+        "548": 2,
+        "551": 2,
+        "553": 1,
+        "557": 3,
+        "558": 2,
+        "560": 1
+      },
+      "first": [
+        {
+          "token": 2,
+          "run": 4,
+          "rule": 532,
+          "parents": [
+            {
+              "address": {
+                "token": 1,
+                "op": 310
+              },
+              "version": 1
+            },
+            {
+              "address": {
+                "token": -211,
+                "op": 0
+              },
+              "version": 0
+            },
+            {
+              "address": {
+                "token": -161,
+                "op": 0
+              },
+              "version": 0
+            }
+          ]
+        }
+      ]
+    },
+    "5": {
+      "count": 0,
+      "rules": {},
+      "first": []
+    },
+    "9": {
+      "count": 0,
+      "rules": {},
+      "first": []
+    },
+    "17": {
+      "count": 0,
+      "rules": {},
+      "first": []
+    },
+    "65": {
+      "count": 0,
+      "rules": {},
+      "first": []
+    },
+    "129": {
+      "count": 0,
+      "rules": {},
+      "first": []
+    },
+    "208": {
+      "count": 0,
+      "rules": {},
+      "first": []
+    }
+  }
+}

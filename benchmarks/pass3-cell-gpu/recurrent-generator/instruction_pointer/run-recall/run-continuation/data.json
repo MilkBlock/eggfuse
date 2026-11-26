@@ -1,0 +1,149 @@
+[
+  {
+    "case": "sum",
+    "source": "teacher",
+    "requests": 7265,
+    "credited": 3529,
+    "state_sha": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "counts": {
+      "runs": 1428,
+      "repair_events": 1,
+      "retired": 1201,
+      "versioned_updates": 18338,
+      "teacher_run_exhausted": 3873,
+      "examples": 7673,
+      "prefix_nonempty": 5120,
+      "page_budget": 3800
+    },
+    "rows": {
+      "editor": 11359,
+      "flow": 35370,
+      "marks": 200811
+    },
+    "requests_with_earlier_signed_parent": 7261,
+    "revised_named_versions": 1648
+  },
+  {
+    "case": "dot",
+    "source": "teacher",
+    "requests": 6704,
+    "credited": 3655,
+    "state_sha": "29380a66905942d1a3e27f820ec4dabaa10a87f3df85c1fd71ccba64398ee7f1",
+    "counts": {
+      "runs": 1535,
+      "repair_events": 8,
+      "retired": 716,
+      "versioned_updates": 19618,
+      "teacher_run_exhausted": 4260,
+      "examples": 7767,
+      "prefix_nonempty": 5006,
+      "page_budget": 3507
+    },
+    "rows": {
+      "editor": 11497,
+      "flow": 34807,
+      "marks": 211878
+    },
+    "requests_with_earlier_signed_parent": 6700,
+    "revised_named_versions": 3314
+  },
+  {
+    "case": "grammar-benefit-fork-17118",
+    "source": "teacher",
+    "requests": 72,
+    "credited": 72,
+    "state_sha": "12000b574e7ad820aa2b9e7f26525ca388220d36867ef4b3b9cdac55af7dce2b",
+    "counts": {
+      "runs": 6,
+      "repair_events": 0,
+      "retired": 0,
+      "versioned_updates": 147,
+      "page_budget": 51,
+      "examples": 74,
+      "prefix_nonempty": 68,
+      "teacher_run_exhausted": 23
+    },
+    "rows": {
+      "editor": 108,
+      "flow": 404,
+      "marks": 1708
+    },
+    "requests_with_earlier_signed_parent": 46,
+    "revised_named_versions": 0
+  },
+  {
+    "case": "grammar-benefit-fork-17118",
+    "source": "stream",
+    "requests": 72,
+    "credited": 72,
+    "state_sha": "12000b574e7ad820aa2b9e7f26525ca388220d36867ef4b3b9cdac55af7dce2b",
+    "counts": {
+      "runs": 6,
+      "repair_events": 0,
+      "retired": 0,
+      "versioned_updates": 147,
+      "page_budget": 55,
+      "examples": 65,
+      "prefix_nonempty": 60,
+      "stream_evidence_exhausted": 10,
+      "unknown_stream_tail": 6
+    },
+    "rows": {
+      "editor": 95,
+      "flow": 396,
+      "marks": 1785
+    },
+    "requests_with_earlier_signed_parent": 46,
+    "revised_named_versions": 0
+  },
+  {
+    "case": "sum",
+    "source": "stream",
+    "requests": 2228,
+    "credited": 1306,
+    "state_sha": "3a3e3bac4123075a0cc7ef1bad5d6bc1d62dab4e3af173265d92c4439f6f59f6",
+    "counts": {
+      "runs": 881,
+      "repair_events": 0,
+      "retired": 212,
+      "versioned_updates": 6685,
+      "stream_evidence_exhausted": 603,
+      "examples": 2008,
+      "prefix_nonempty": 1584,
+      "unknown_stream_tail": 880,
+      "page_budget": 1405
+    },
+    "rows": {
+      "editor": 2974,
+      "flow": 11907,
+      "marks": 70081
+    },
+    "requests_with_earlier_signed_parent": 2224,
+    "revised_named_versions": 540
+  },
+  {
+    "case": "sum",
+    "source": "rejected",
+    "requests": 2228,
+    "credited": 1306,
+    "state_sha": "3a3e3bac4123075a0cc7ef1bad5d6bc1d62dab4e3af173265d92c4439f6f59f6",
+    "counts": {
+      "runs": 881,
+      "repair_events": 0,
+      "retired": 212,
+      "versioned_updates": 6685,
+      "actual_rejection/1": 840,
+      "page_budget": 1622,
+      "examples": 2114,
+      "prefix_nonempty": 2042,
+      "actual_rejection/9": 161,
+      "stream_evidence_exhausted": 492,
+      "actual_rejection/12": 56
+    },
+    "rows": {
+      "editor": 3171,
+      "flow": 12901,
+      "marks": 84295
+    }
+  }
+]

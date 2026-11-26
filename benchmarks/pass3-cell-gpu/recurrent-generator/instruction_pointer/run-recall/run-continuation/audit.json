@@ -1,0 +1,103 @@
+[
+  {
+    "case": "s243-w2-set-aside",
+    "dispatch": {
+      "issued": 74,
+      "empty": 99,
+      "unscheduled": 413
+    },
+    "after_run1_attempts": 430,
+    "after_run1_completed_marks": 74,
+    "after_run1_insert": 440.6388309599339,
+    "after_run1_delete": 6.5390037811162574e-06,
+    "signed_ops": 210,
+    "paid": 74,
+    "verdicts": {
+      "accepted": 6,
+      "duplicate": 1,
+      "untriggered_rule": 60,
+      "binding": 7
+    },
+    "runs": 294,
+    "termination": "schedule_end"
+  },
+  {
+    "case": "s243-w2",
+    "dispatch": {
+      "issued": 2,
+      "unscheduled": 412
+    },
+    "after_run1_attempts": 4,
+    "after_run1_completed_marks": 1,
+    "after_run1_insert": 3.2110229689674403,
+    "after_run1_delete": 9.468773904762684e-05,
+    "signed_ops": 199,
+    "paid": 2,
+    "verdicts": {
+      "accepted": 1,
+      "duplicate": 1
+    },
+    "runs": 208,
+    "termination": "schedule_end"
+  },
+  {
+    "case": "s243-w8",
+    "dispatch": {
+      "issued": 305,
+      "empty": 996,
+      "unscheduled": 1067
+    },
+    "after_run1_attempts": 2433,
+    "after_run1_completed_marks": 301,
+    "after_run1_insert": 2356.4948755868895,
+    "after_run1_delete": 0.7040842610308858,
+    "signed_ops": 216,
+    "paid": 307,
+    "verdicts": {
+      "accepted": 10,
+      "duplicate": 7,
+      "binding": 12,
+      "untriggered_rule": 278
+    },
+    "runs": 297,
+    "termination": "schedule_end"
+  },
+  {
+    "case": "s536-w2",
+    "dispatch": {
+      "issued": 2,
+      "unscheduled": 412
+    },
+    "after_run1_attempts": 25,
+    "after_run1_completed_marks": 1,
+    "after_run1_insert": 23.656558420667608,
+    "after_run1_delete": 0.0001230310391590813,
+    "signed_ops": 199,
+    "paid": 2,
+    "verdicts": {
+      "accepted": 1,
+      "duplicate": 1
+    },
+    "runs": 208,
+    "termination": "schedule_end"
+  },
+  {
+    "case": "s8201-w2",
+    "dispatch": {
+      "issued": 2,
+      "unscheduled": 412
+    },
+    "after_run1_attempts": 11,
+    "after_run1_completed_marks": 2,
+    "after_run1_insert": 13.81021439192401,
+    "after_run1_delete": 0.00011304276379828003,
+    "signed_ops": 199,
+    "paid": 2,
+    "verdicts": {
+      "accepted": 1,
+      "duplicate": 1
+    },
+    "runs": 208,
+    "termination": "schedule_end"
+  }
+]

@@ -56,10 +56,11 @@ kernel void jobs(device const float *logits, device int *control, device int2 *j
     float3 small = exp(-abs(v));
     float3 rates = (max(v, 0.f) + select(log(1.f + small), small - small * small * .5f, small < .0001f)) /
                    float(4 - c[Leap]);
-    int add = poisson(rates.x, s);
+    bool editor = c[Leap] < 0;
+    int add = editor ? int(rint(rates.x * (4 - c[Leap]))) : poisson(rates.x, s);
     float total = rates.y + rates.z;
-    if (i < n && rand_unit(s) < (1.f - exp(-total))) {
-      int op = rand_unit(s) * total > rates.y ? 2 : 1;
+    if (i < n && (editor ? max(v.y, v.z) > 0.f : rand_unit(s) < (1.f - exp(-total)))) {
+      int op = editor ? (v.z > v.y ? 2 : 1) : (rand_unit(s) * total > rates.y ? 2 : 1);
       if (count < c[JobCap])
         job[count] = int2(i, op);
       count++;
@@ -445,7 +446,7 @@ kernel void rate_features(device const float *draft, device const float *se, dev
   } else
     switch (k) {
     case 160:
-      v = c[Leap] * .25f;
+      v = max(c[Leap], 0) * .25f;
       break;
     case 161:
       v = float(i < n);

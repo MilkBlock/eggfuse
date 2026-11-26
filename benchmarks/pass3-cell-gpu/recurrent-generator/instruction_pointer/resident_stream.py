@@ -16,6 +16,7 @@ class StreamPage(Page):
         self.dynamic = self.upload(m.enc.actor.dynamic.weight)
         self.physical_count = 1
         self.pending = 0
+        self.edit_steps = 4
         self.saved = None
         self.schedules = {}
         self.publication_events = None
@@ -129,11 +130,16 @@ class StreamPage(Page):
                 )
             for last, event, seed in events:
                 base = self.cfg(cap, self.rows.get(last, 0), seed)
-                config = self.integers([base[:9] + [i] + base[10:] for i in range(4)])
+                config = self.integers(
+                    [
+                        base[:9] + [i] + base[10:]
+                        for i in ([0, 1, 2, 3] if self.edit_steps == 4 else [-1])
+                    ]
+                )
                 se = self.upload(torch.cat((m.state, event)))
                 ctx = self.upload((m.state + event).tanh())
                 self.lib.page_begin(ctl, draft, config[0], threads=1)
-                self.leaps(4, config, ctl, se, ctx, buffers, cap)
+                self.leaps(self.edit_steps, config, ctl, se, ctx, buffers, cap)
                 self.lib.page_end(
                     ctl,
                     draft,
@@ -147,8 +153,12 @@ class StreamPage(Page):
             report = torch.cat((ctl, request)).cpu()
             self.count["boundary_readbacks"] += 1
             self.count["download_bytes"] += report.numel() * report.element_size()
-            self.count["rate_scored_padded_sites"] += len(events) * 4 * (cap + 1)
-            self.count["allocated_mark_lanes"] += len(events) * 4 * 2 * cap
+            self.count["rate_scored_padded_sites"] += (
+                len(events) * self.edit_steps * (cap + 1)
+            )
+            self.count["allocated_mark_lanes"] += (
+                len(events) * self.edit_steps * 2 * cap
+            )
             if int(report[2]) == 1:
                 # The authoritative tail remains in saved. Replay all unissued edits.
                 cap *= 2
@@ -188,7 +198,7 @@ class StreamPage(Page):
             "device_pivot_visits": pivots,
             "blocked_dependent_delete": blocked,
             "sampled_edits": ins + sub + delete,
-            "edit_forward_calls": 4 * used,
+            "edit_forward_calls": self.edit_steps * used,
             "device_local_scan_steps": scans,
             "owner_projection_reads": reads,
             "stream_pages": used,
@@ -207,8 +217,12 @@ class StreamPage(Page):
         return used, Item(uid, Cell(t // 2, refs, bool(t % 2)))
 
     def run(self, policy, txn, stats, deadline):
-        if policy.arm != "empty" or not policy.waves or policy.steps != 4:
-            raise ValueError("expected fixed scheduled D4 stream")
+        if (policy.arm, policy.steps) not in {
+            ("empty", 4),
+            ("supervised-empty", 1),
+        } or not policy.waves:
+            raise ValueError("expected D4 or single-step supervised stream")
+        self.edit_steps = policy.steps
         m = self.m
         events = []
         # FIFO/revisit selection depends only on this publication. It is unchanged by
