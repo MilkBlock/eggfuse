@@ -85,6 +85,7 @@ class Catalog:
         self.tables = {t['name']: i for i, t in enumerate(recipe['tables'])}
         self.nodes, self.edges = [], []
         self.outputs, self.inputs, self.atoms, self.roots = {}, {}, {}, {}
+        self.query_nodes = {}
         self.field_links = {}
         self.seminaive = [r['metadata']['seminaive'] for r in recipe['rules']]
         merges = {m['table']: m for m in program['merge_programs']['programs']}
@@ -104,8 +105,9 @@ class Catalog:
             self.roots[tmpl] = root
             slots = [self.slot_node(('slot', s['sort']['kind']), s['sort']) for s in rule['slots']]
             atoms = []
-            for atom in rule['query']:
+            for pc, atom in enumerate(rule['query']):
                 n = self.operation(root, slots, atom, 'query')
+                self.query_nodes[rid, pc] = n
                 if 'table' in atom['call']:
                     atoms.append((self.tables[atom['call']['table']], n))
             slots_by_atom = [tuple(arg.get('slot') for arg in atom['args'])

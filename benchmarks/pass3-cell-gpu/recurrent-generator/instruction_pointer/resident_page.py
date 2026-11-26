@@ -224,64 +224,66 @@ class Page:
             )
             logits = self.rates(features)
             self.lib.jobs(logits, ctl, jobs, c, threads=1)
-            self.lib.draw(
-                jobs,
-                ctl,
-                c,
-                draft,
-                embeds,
-                generated,
-                self.vocab,
-                self.graphs,
-                self.roles,
-                self.slot,
-                self.outputs,
-                self.locals,
-                self.tabrows.data,
-                self.sizes_gpu,
-                self.meta.data,
-                self.key.data,
-                self.ownerpc.data,
-                self.proj,
-                self.weights,
-                self.gru,
-                ctx,
-                perjob,
-                self.member.data,
-                self.order,
-                threads=2 * cap * 32,
-                group_size=32,
-            )
-            self.lib.edit_vectors(
-                generated,
-                ctl,
-                c,
-                jobs,
-                self.roles,
-                self.slot,
-                self.graphs,
-                self.idvec.data,
-                self.key.data,
-                encoded,
-                threads=2 * cap * 32,
-            )
-            self.lib.apply_jobs(
-                draft,
-                embeds,
-                ctl,
-                c,
-                jobs,
-                generated,
-                encoded,
-                self.roles,
-                self.outputs,
-                perjob,
-                threads=1,
-            )
+            self.apply_marks(c, ctl, ctx, buffers, cap)
 
-    def sample(self, m, source, steps, rng, stats):
-        if steps != 4:
-            raise ValueError("device page requires the four-step policy")
+    def apply_marks(self, c, ctl, ctx, buffers, cap):
+        draft, embeds, jobs, generated, encoded, perjob, _ = buffers
+        self.lib.draw(
+            jobs,
+            ctl,
+            c,
+            draft,
+            embeds,
+            generated,
+            self.vocab,
+            self.graphs,
+            self.roles,
+            self.slot,
+            self.outputs,
+            self.locals,
+            self.tabrows.data,
+            self.sizes_gpu,
+            self.meta.data,
+            self.key.data,
+            self.ownerpc.data,
+            self.proj,
+            self.weights,
+            self.gru,
+            ctx,
+            perjob,
+            self.member.data,
+            self.order,
+            threads=2 * cap * 32,
+            group_size=32,
+        )
+        self.lib.edit_vectors(
+            generated,
+            ctl,
+            c,
+            jobs,
+            self.roles,
+            self.slot,
+            self.graphs,
+            self.idvec.data,
+            self.key.data,
+            encoded,
+            threads=2 * cap * 32,
+        )
+        self.lib.apply_jobs(
+            draft,
+            embeds,
+            ctl,
+            c,
+            jobs,
+            generated,
+            encoded,
+            self.roles,
+            self.outputs,
+            perjob,
+            threads=1,
+        )
+
+    def pack_source(self, m, source):
         incoming = torch.zeros((len(source), self.stride), dtype=torch.int32)
         for i, item in enumerate(source):
             cell = item.cell
@@ -303,6 +305,12 @@ class Page:
             if source
             else None
         )
+        return src, old
+
+    def sample(self, m, source, steps, rng, stats):
+        if steps != 4:
+            raise ValueError("device page requires the four-step policy")
+        src, old = self.pack_source(m, source)
         se = self.upload(torch.cat((m.state, m.event)))
         ctx = self.upload(m.context())
         seed = int(rng.integers(1, 2**31))
@@ -346,6 +354,10 @@ class Page:
                 cap *= 2
                 continue
             break
+        return self.unpack(reply, steps, cap, stats)
+
+    def unpack(self, reply, steps, cap, stats, header=14):
+        m = self.m
         (
             n,
             _,
@@ -379,7 +391,7 @@ class Page:
         self.count["useful_mark_lanes"] += draws
         self.count["pages"] += 1
         ret = []
-        for row in reply[14:].reshape(-1, self.stride)[:n].tolist():
+        for row in reply[header:].reshape(-1, self.stride)[:n].tolist():
             uid, t = row[:2]
             rid = t // 2
             refs = []

@@ -70,9 +70,12 @@ class Memory:
         # Only native scheduling determines the legal static template vocabulary.
         rules = tuple(k for k, _ in f["rules"])
         if rules not in self.options:
-            ids = [(r, h) for r in rules for h in ((False, True) if r in self.menu else (False,))]
+            ids = self.template_options(rules)
             self.options[rules] = (ids, {v: i for i, v in enumerate(ids)})
         self.ids, self.ids_index = self.options[rules]
+
+    def template_options(self, rules):
+        return [(r, h) for r in rules for h in ((False, True) if r in self.menu else (False,))]
 
     def graph(self, key):
         r, h = key

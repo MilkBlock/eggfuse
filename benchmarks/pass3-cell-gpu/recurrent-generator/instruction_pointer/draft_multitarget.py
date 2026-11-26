@@ -16,7 +16,7 @@ from recursive_train import binary, folder, read
 from response_study import memory
 
 
-def snapshots(a, case, source):
+def snapshots(a, case, source, make_memory=memory):
     d = folder(a.data, case)
     tape = (
         d / "tape.json"
@@ -66,7 +66,7 @@ def snapshots(a, case, source):
         for runs in bins.values()
         for r in rng.choice(runs, min(len(runs), 8), replace=False)
     }
-    m = memory(a, d)
+    m = make_memory(a, d)
     with frames.open() as f:
         for line in f:
             frame = json.loads(line)

@@ -116,6 +116,9 @@ class Dispatch(ResponsePolicy):
         self.journal[-1]["issued"] = [i.uid for i in issued]
         return issued
 
+    def wire_request(self, cell):
+        return 0, cell.rule, -1, [(*r, -1) for r in cell.refs]
+
     def issue(self, items, txn, stats):
         replies = {}
         for pos in range(0, len(items), txn.capacity):
@@ -123,8 +126,9 @@ class Dispatch(ResponsePolicy):
             refs, ops = [], []
             for item in batch:
                 c = item.cell
-                refs.extend([(*r, -1) for r in c.refs])
-                ops.append([0, 0, c.rule, -1, len(refs)])
+                kind, rule, pc, operands = self.wire_request(c)
+                refs.extend(operands)
+                ops.append([kind, 0, rule, pc, len(refs)])
             ticket = txn.enqueue(
                 np.array(ops),
                 np.array(refs, np.int64).reshape(-1, 4),

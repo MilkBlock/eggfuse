@@ -146,6 +146,12 @@ kernel void draw(device const int2 *job, device int *control, constant int *c, d
     visits++;
     pivots += 2;
   }
+#ifdef SET_PAGE
+  if (lane == 0) {
+    atomic_fetch_add_explicit((device atomic_int *)(control+14), visits, memory_order_relaxed);
+    atomic_fetch_add_explicit((device atomic_int *)(control+15), pivots+1, memory_order_relaxed);
+  }
+#endif
   tid = vocab[lo];
   rid = tid / 2;
   q[lane] = tanh(q[lane] + graphs[32 * tid + lane]);
