@@ -173,10 +173,24 @@ class CellKV(nn.Module):
             owner_logits = query @ keys.T / math.sqrt(32) + (
                 messages * query[:, None]
             ).sum(-1) / math.sqrt(32)
-            read = (owner_logits.softmax(1)[:, :, None] * context_values).sum(1)
-        tlog = (self.actor.query(ctx + read) * self.actor.input_role(codes[menu])).sum(
-            1
-        ) / math.sqrt(32)
+            owner_weights = owner_logits.softmax(1)
+            interface = self.read_interface(query, ports)
+            if interface is not None:
+                # Reuse neural owner and public-port selection. Only the payload
+                # being read changes, after the address weights are known.
+                context_values = context_values + torch.stack(
+                    [
+                        torch.einsum(
+                            "qp,qpd->qd",
+                            port_logits[:, ix].softmax(1),
+                            interface[:, ix],
+                        )
+                        for ix in siblings
+                    ],
+                    1,
+                )
+            read = (owner_weights[:, :, None] * context_values).sum(1)
+        tlog = self.template_readout(ctx, read, codes[menu])
         return dict(
             ports=ports,
             refs=refs,
@@ -194,6 +208,14 @@ class CellKV(nn.Module):
             fields=fields,
             memo={},
         )
+
+    def read_interface(self, query, ports):
+        return None
+
+    def template_readout(self, ctx, read, codes):
+        return (self.actor.query(ctx + read) * self.actor.input_role(codes)).sum(
+            -1
+        ) / math.sqrt(32)
 
     def instance_embedding(self, w, ports, positions, siblings, group, source, value):
         """Encode published Cell instances before the shared attention projections."""
