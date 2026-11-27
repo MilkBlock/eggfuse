@@ -1,0 +1,198 @@
+{
+ "archive_sha": "e14aed85c52c58cdab10f6d0e647dacfd72e2bf1f7ce6b7e7246a991e1455133",
+ "calibration": [],
+ "config": {
+  "arm": "B",
+  "name": "decoder"
+ },
+ "connected": 10624,
+ "effect_identity_scope": "only exact native counterfactual gain sets",
+ "exposures": 30000,
+ "forward_observed": 18880,
+ "gradient_tensors": [
+  "actor.input_content.weight",
+  "actor.input_role.bias",
+  "actor.input_role.weight",
+  "actor.lanes.weight",
+  "actor.latent.weight",
+  "actor.next_read.bias_hh",
+  "actor.next_read.bias_ih",
+  "actor.next_read.weight_hh",
+  "actor.next_read.weight_ih",
+  "actor.query.bias",
+  "actor.query.weight"
+ ],
+ "learning_curve": [
+  {
+   "cumulative_train_ce": 6.785673283580616,
+   "exposures": 11036,
+   "lr": 0.001,
+   "seconds": 198.3155150419916,
+   "steps": 283
+  },
+  {
+   "cumulative_train_ce": 6.777909821836112,
+   "exposures": 12022,
+   "lr": 0.001,
+   "seconds": 208.513627874956,
+   "steps": 310
+  },
+  {
+   "cumulative_train_ce": 6.754452074303773,
+   "exposures": 13298,
+   "lr": 0.001,
+   "seconds": 214.82818166696234,
+   "steps": 336
+  },
+  {
+   "cumulative_train_ce": 6.777067422951776,
+   "exposures": 14032,
+   "lr": 0.001,
+   "seconds": 222.07815079198917,
+   "steps": 345
+  },
+  {
+   "cumulative_train_ce": 6.787185543944157,
+   "exposures": 15025,
+   "lr": 0.001,
+   "seconds": 239.72319787496235,
+   "steps": 358
+  },
+  {
+   "cumulative_train_ce": 6.786417681787566,
+   "exposures": 16191,
+   "lr": 0.001,
+   "seconds": 272.7290244169999,
+   "steps": 374
+  },
+  {
+   "cumulative_train_ce": 6.77061737287456,
+   "exposures": 17007,
+   "lr": 0.001,
+   "seconds": 280.59749920800095,
+   "steps": 388
+  },
+  {
+   "cumulative_train_ce": 6.773130213513871,
+   "exposures": 18057,
+   "lr": 0.001,
+   "seconds": 307.9186998750083,
+   "steps": 401
+  },
+  {
+   "cumulative_train_ce": 6.7637330249473635,
+   "exposures": 19022,
+   "lr": 0.001,
+   "seconds": 323.9471692919615,
+   "steps": 413
+  },
+  {
+   "cumulative_train_ce": 6.761913862438019,
+   "exposures": 20245,
+   "lr": 0.001,
+   "seconds": 344.77197254198836,
+   "steps": 427
+  },
+  {
+   "cumulative_train_ce": 6.744843970962254,
+   "exposures": 21199,
+   "lr": 0.001,
+   "seconds": 354.8237712919945,
+   "steps": 445
+  },
+  {
+   "cumulative_train_ce": 6.720700803695492,
+   "exposures": 22120,
+   "lr": 0.001,
+   "seconds": 358.05762766697444,
+   "steps": 458
+  },
+  {
+   "cumulative_train_ce": 6.701972871692412,
+   "exposures": 23009,
+   "lr": 0.001,
+   "seconds": 378.08958008297486,
+   "steps": 475
+  },
+  {
+   "cumulative_train_ce": 6.678245824956191,
+   "exposures": 24013,
+   "lr": 0.001,
+   "seconds": 386.62957870797254,
+   "steps": 498
+  },
+  {
+   "cumulative_train_ce": 6.654508643540738,
+   "exposures": 25249,
+   "lr": 0.001,
+   "seconds": 394.6129709579982,
+   "steps": 518
+  },
+  {
+   "cumulative_train_ce": 6.659946716798029,
+   "exposures": 26099,
+   "lr": 0.001,
+   "seconds": 406.8458532500081,
+   "steps": 525
+  },
+  {
+   "cumulative_train_ce": 6.626936690578672,
+   "exposures": 27051,
+   "lr": 0.001,
+   "seconds": 420.32160624995595,
+   "steps": 550
+  },
+  {
+   "cumulative_train_ce": 6.6134442059359815,
+   "exposures": 28023,
+   "lr": 0.001,
+   "seconds": 423.59862154198345,
+   "steps": 560
+  },
+  {
+   "cumulative_train_ce": 6.600285562243468,
+   "exposures": 29006,
+   "lr": 0.001,
+   "seconds": 430.96112599998014,
+   "steps": 579
+  },
+  {
+   "cumulative_train_ce": 6.58061081311504,
+   "exposures": 30000,
+   "lr": 0.001,
+   "seconds": 458.1951497499831,
+   "steps": 607
+  }
+ ],
+ "registered": 32874,
+ "seconds": 458.19515929196496,
+ "seed": 71,
+ "sources": {
+  "autonomous": 15120,
+  "branch": 396,
+  "continuous": 248,
+  "foundation": 408,
+  "shuffle": 13410,
+  "teacher": 418
+ },
+ "state_pool": 7638,
+ "states": 493,
+ "steps": 607,
+ "targets": 28277,
+ "tokens_per_s": 65.47428402857439,
+ "train_ce": 6.58061081311504,
+ "verified_distinct_effects": 100,
+ "weights_sha": "2f3af7347be9ce77b14659c5f931838144ebc4c8f861db2822b03a557f24de8a",
+ "inner_area": {
+  "foundation185510": 0.28,
+  "foundation185511": 0.30923076923076925,
+  "loopfact": 0.04460431654676259
+ },
+ "val_ce": 6.557619662527998,
+ "free_known_hit": 0.12980769230769232,
+ "free_parents_2": 0.06380208333333333,
+ "free_higher": 0.4375,
+ "free_parents_0": 1.0,
+ "free_parents_1": 0.15104166666666666,
+ "free_parents_3": 0.00390625
+}
