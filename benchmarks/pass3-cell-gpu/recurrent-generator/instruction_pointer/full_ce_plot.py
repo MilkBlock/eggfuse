@@ -88,7 +88,9 @@ def plot():
     paid.set_ylabel("sum-divisors coverage (%)")
     for ax in (fit, learn, paid):
         ax.grid(alpha=0.22)
-    fig.savefig(REPORT / "learning-curves.svg", metadata={"Date": None})
+    output = REPORT / "learning-curves.svg"
+    fig.savefig(output, metadata={"Date": None})
+    output.write_text("\n".join(line.rstrip() for line in output.read_text().splitlines()) + "\n")
     plt.close(fig)
 
 
