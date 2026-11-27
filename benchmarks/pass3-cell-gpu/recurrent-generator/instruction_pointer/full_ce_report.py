@@ -7,7 +7,7 @@ import os
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
-from statistics import mean
+from statistics import mean, median
 
 from scaling_campaign import REPORT, grid
 
@@ -325,6 +325,30 @@ def report():
             "higher-counterfactual.csv 单列 6 对发布后更换入口时的 Higher 排序翻转、完整目标概率、给定 Higher 家族的条件概率。逐请求重放恢复相关版本、原生回执和规则状态。给定目标概率属于离线诊断，自主发现与完成数量见 native.csv。继承的最近一段触发训练为 8,192 次曝光、512 次更新、5.25 秒，训练过最初的两个基础验证程序。",
         ]
     )
+    timing = raw / "paired-native-timing.json"
+    if timing.exists():
+        timed = read(timing)
+        csv_table(
+            REPORT / "paired-timing.csv",
+            [{k: v for k, v in r.items() if k != "facts"} for r in timed],
+        )
+        lines.extend(
+            [
+                "",
+                "## 串行交替计时",
+                "",
+                "固定 256 枚付费上限，两枚生成种子，每种方法按正反序各重复两次。同方法同种子的完整终图、事实、操作和付费数须一致。此表的 EPS 已含推理及原生执行。历史高召回 Stream 沿调度表逐规则访问半朴素单源 anchor，再使用学习过的前缀模型；它作为既有系统对照单列。",
+                "",
+                "| 方法 | 种子 | 次数 | 命中事实 | 实付 | 墙钟中位秒 [最短, 最长] | EPS 中位数 |",
+                "|---|---:|---:|---:|---:|---:|---:|",
+            ]
+        )
+        for method, seed in sorted({(r["method"], r["seed"]) for r in timed}):
+            sample = [r for r in timed if r["method"] == method and r["seed"] == seed]
+            sec = [r["wall"] for r in sample]
+            lines.append(
+                f"| {method} | {seed} | {len(sample)} | {sample[0]['covered']} | {sample[0]['paid']} | {median(sec):.3f} [{min(sec):.3f}, {max(sec):.3f}] | {median(r['eps'] for r in sample):.1f} |"
+            )
     (REPORT / "README.md").write_text("\n".join(lines) + "\n")
 
 

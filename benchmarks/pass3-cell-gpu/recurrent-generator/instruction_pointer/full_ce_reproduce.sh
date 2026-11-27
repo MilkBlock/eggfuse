@@ -12,4 +12,5 @@ size_pid=$!
 "${PYTHON:-python3}" scaling_campaign.py --workers "${CELL_WORKERS:-3}" --hours "${CELL_HOURS:-8}"
 wait "$size_pid"
 sh partner_index_reproduce.sh scaling_counterfactual.py evaluate
+sh partner_index_reproduce.sh scaling_timing.py evaluate
 "${PYTHON:-python3}" full_ce_report.py
