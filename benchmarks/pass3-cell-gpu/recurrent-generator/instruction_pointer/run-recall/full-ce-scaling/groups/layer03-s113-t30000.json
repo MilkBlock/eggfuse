@@ -1,0 +1,280 @@
+{
+ "archive_sha": "e14aed85c52c58cdab10f6d0e647dacfd72e2bf1f7ce6b7e7246a991e1455133",
+ "calibration": [],
+ "config": {
+  "arm": "D",
+  "encoder_lr": 0.3,
+  "name": "layer03"
+ },
+ "connected": 18880,
+ "effect_identity_scope": "only exact native counterfactual gain sets",
+ "exposures": 30000,
+ "forward_observed": 18880,
+ "gradient_tensors": [
+  "actor.age.weight",
+  "actor.dynamic.weight",
+  "actor.input_content.weight",
+  "actor.input_role.bias",
+  "actor.input_role.weight",
+  "actor.lanes.weight",
+  "actor.latent.weight",
+  "actor.msg.weight",
+  "actor.next_read.bias_hh",
+  "actor.next_read.bias_ih",
+  "actor.next_read.weight_hh",
+  "actor.next_read.weight_ih",
+  "actor.query.bias",
+  "actor.query.weight",
+  "actor.static.weight",
+  "actor.update.bias",
+  "actor.update.weight",
+  "graph.edge.bias",
+  "graph.edge.weight",
+  "graph.message.weight",
+  "graph.step.bias",
+  "graph.step.weight"
+ ],
+ "learning_curve": [
+  {
+   "cumulative_train_ce": 7.71225427967352,
+   "exposures": 1136,
+   "lr": 0.001,
+   "seconds": 15.754951959010214,
+   "steps": 17
+  },
+  {
+   "cumulative_train_ce": 7.458231265472799,
+   "exposures": 2315,
+   "lr": 0.001,
+   "seconds": 26.196023708966095,
+   "steps": 42
+  },
+  {
+   "cumulative_train_ce": 7.242670566320101,
+   "exposures": 3002,
+   "lr": 0.001,
+   "seconds": 56.85913729202002,
+   "steps": 65
+  },
+  {
+   "cumulative_train_ce": 7.283049483813109,
+   "exposures": 4032,
+   "lr": 0.001,
+   "seconds": 81.15473004197702,
+   "steps": 79
+  },
+  {
+   "cumulative_train_ce": 7.029466410975445,
+   "exposures": 5072,
+   "lr": 0.001,
+   "seconds": 95.14450429199496,
+   "steps": 111
+  },
+  {
+   "cumulative_train_ce": 6.998088005352433,
+   "exposures": 6003,
+   "lr": 0.001,
+   "seconds": 124.99170579196652,
+   "steps": 125
+  },
+  {
+   "cumulative_train_ce": 7.039174168423576,
+   "exposures": 7023,
+   "lr": 0.001,
+   "seconds": 137.42766200000187,
+   "steps": 140
+  },
+  {
+   "cumulative_train_ce": 6.951725442778908,
+   "exposures": 8268,
+   "lr": 0.001,
+   "seconds": 153.22824366699206,
+   "steps": 167
+  },
+  {
+   "cumulative_train_ce": 6.905525429637173,
+   "exposures": 9006,
+   "lr": 0.001,
+   "seconds": 170.68709412496537,
+   "steps": 197
+  },
+  {
+   "cumulative_train_ce": 6.805243385112286,
+   "exposures": 10000,
+   "lr": 0.001,
+   "seconds": 201.8232153339777,
+   "steps": 230
+  },
+  {
+   "cumulative_train_ce": 6.753067547624761,
+   "exposures": 11000,
+   "lr": 0.001,
+   "seconds": 219.46002366702305,
+   "steps": 259
+  },
+  {
+   "cumulative_train_ce": 6.690420831891864,
+   "exposures": 12022,
+   "lr": 0.001,
+   "seconds": 245.98881029203767,
+   "steps": 284
+  },
+  {
+   "cumulative_train_ce": 6.660335343560129,
+   "exposures": 13110,
+   "lr": 0.001,
+   "seconds": 258.4734286670573,
+   "steps": 308
+  },
+  {
+   "cumulative_train_ce": 6.639994871709416,
+   "exposures": 14028,
+   "lr": 0.001,
+   "seconds": 270.1399400840164,
+   "steps": 323
+  },
+  {
+   "cumulative_train_ce": 6.61312634096613,
+   "exposures": 15231,
+   "lr": 0.001,
+   "seconds": 282.76929404202383,
+   "steps": 344
+  },
+  {
+   "cumulative_train_ce": 6.613002520989561,
+   "exposures": 16288,
+   "lr": 0.001,
+   "seconds": 296.5703941670363,
+   "steps": 360
+  },
+  {
+   "cumulative_train_ce": 6.598296668537893,
+   "exposures": 17207,
+   "lr": 0.001,
+   "seconds": 308.46494725102093,
+   "steps": 379
+  },
+  {
+   "cumulative_train_ce": 6.583354119713179,
+   "exposures": 18042,
+   "lr": 0.001,
+   "seconds": 318.15260375104845,
+   "steps": 388
+  },
+  {
+   "cumulative_train_ce": 6.577494876664767,
+   "exposures": 19050,
+   "lr": 0.001,
+   "seconds": 327.32720600103494,
+   "steps": 405
+  },
+  {
+   "cumulative_train_ce": 6.554056650521652,
+   "exposures": 20017,
+   "lr": 0.001,
+   "seconds": 355.1448954170337,
+   "steps": 428
+  },
+  {
+   "cumulative_train_ce": 6.555862153984188,
+   "exposures": 21183,
+   "lr": 0.001,
+   "seconds": 374.08690370904515,
+   "steps": 439
+  },
+  {
+   "cumulative_train_ce": 6.5583432169933165,
+   "exposures": 22028,
+   "lr": 0.001,
+   "seconds": 381.0123583760578,
+   "steps": 446
+  },
+  {
+   "cumulative_train_ce": 6.545642188631856,
+   "exposures": 23033,
+   "lr": 0.001,
+   "seconds": 396.783952042053,
+   "steps": 470
+  },
+  {
+   "cumulative_train_ce": 6.521342767479814,
+   "exposures": 24246,
+   "lr": 0.001,
+   "seconds": 428.1333473340492,
+   "steps": 503
+  },
+  {
+   "cumulative_train_ce": 6.488159554486996,
+   "exposures": 25038,
+   "lr": 0.001,
+   "seconds": 436.94849500100827,
+   "steps": 524
+  },
+  {
+   "cumulative_train_ce": 6.470460943500431,
+   "exposures": 26108,
+   "lr": 0.001,
+   "seconds": 449.514362084039,
+   "steps": 545
+  },
+  {
+   "cumulative_train_ce": 6.444737911498998,
+   "exposures": 27292,
+   "lr": 0.001,
+   "seconds": 488.49157570902025,
+   "steps": 572
+  },
+  {
+   "cumulative_train_ce": 6.435989130240652,
+   "exposures": 28031,
+   "lr": 0.001,
+   "seconds": 500.2784155840054,
+   "steps": 588
+  },
+  {
+   "cumulative_train_ce": 6.412776363871567,
+   "exposures": 29005,
+   "lr": 0.001,
+   "seconds": 517.1117768340046,
+   "steps": 618
+  },
+  {
+   "cumulative_train_ce": 6.391168420125544,
+   "exposures": 30000,
+   "lr": 0.001,
+   "seconds": 530.9066558340564,
+   "steps": 642
+  }
+ ],
+ "registered": 32874,
+ "seconds": 530.9066612920142,
+ "seed": 113,
+ "sources": {
+  "autonomous": 15363,
+  "branch": 353,
+  "continuous": 222,
+  "foundation": 418,
+  "shuffle": 13256,
+  "teacher": 388
+ },
+ "state_pool": 7638,
+ "states": 529,
+ "steps": 642,
+ "targets": 29006,
+ "tokens_per_s": 56.507107910441384,
+ "train_ce": 6.391168420125544,
+ "verified_distinct_effects": 87,
+ "weights_sha": "73a8b069fb780f5b87dcfc792f8bd07dc7ecd742f468c8ed3ecf7dd61261f188",
+ "inner_area": {
+  "loopfact": 0.04802158273381295,
+  "foundation185511": 0.30615384615384617,
+  "foundation185510": 0.3707692307692308
+ },
+ "val_ce": 6.0348678290337405,
+ "free_known_hit": 0.15625,
+ "free_parents_0": 1.0,
+ "free_parents_3": 0.00390625,
+ "free_parents_1": 0.23307291666666666,
+ "free_parents_2": 0.061197916666666664,
+ "free_higher": 0.515625
+}
