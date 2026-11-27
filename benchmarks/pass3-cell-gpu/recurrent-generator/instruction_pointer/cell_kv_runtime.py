@@ -152,10 +152,14 @@ def teacher_labels(w, requests):
     return paths
 
 
-def native(a, w, *, teacher=None, policy=None, seed=0, slots=6, receipt_log=None):
+def native(a, w, *, teacher=None, policy=None, seed=0, slots=6, receipt_log=None, branch=None, reference=None):
     offline = teacher is not None
     if offline == (policy is not None):
         raise ValueError("choose offline replay or independent policy")
+    if branch is not None and not offline:
+        raise ValueError("counterfactual replay requires an offline prefix")
+    witnessed = False
+    branch_owners = set()
     rows = []
     refs_of = lambda q: tuple(
         (p["address"]["token"], p["address"]["op"], p["version"]) for p in q["parents"]
@@ -209,7 +213,7 @@ def native(a, w, *, teacher=None, policy=None, seed=0, slots=6, receipt_log=None
                 client.run = f["run"]
                 client.epoch = f["epoch"]
                 state = mem.snapshot(w, f)
-                if offline:
+                if offline and (branch is None or f["run"] < branch[0]["run"]):
                     valid = {p[0] for p in state["ports"]}
                     targets = []
                     req = grouped[f["run"]]
@@ -243,7 +247,15 @@ def native(a, w, *, teacher=None, policy=None, seed=0, slots=6, receipt_log=None
                             mem.begin(uid, q["rule"], refs_of(q))
                 else:
                     pending = mem.suffix(w, client, dict(f["rules"]), pending, stats)
-                    decisions = policy.generate(w, state, rng, slots)
+                    if branch is None:
+                        decisions = policy.generate(w, state, rng, slots)
+                    elif f["run"] == branch[0]["run"]:
+                        if state != branch[0]:
+                            raise ValueError("branch decision state differs from replay")
+                        witnessed = True
+                        decisions = branch[1]
+                    else:
+                        decisions = []
                     cells = [
                         Cell(w.layouts[tid][0][0], refs) for tid, refs in decisions
                     ]
@@ -262,6 +274,8 @@ def native(a, w, *, teacher=None, policy=None, seed=0, slots=6, receipt_log=None
                         mem.begin(uid, tid, refs)
                         if higher:
                             pending.append((uid, tid, [uid]))
+                            if branch is not None:
+                                branch_owners.add(uid)
                             stats["higher_opened"] += 1
                         if tid in w.finals and any(
                             mem.instances.get(mem.owned.get(ref[0], (-1, 0))[0], (-1,))[
@@ -277,15 +291,22 @@ def native(a, w, *, teacher=None, policy=None, seed=0, slots=6, receipt_log=None
         finally:
             client.close()
     elapsed = perf_counter() - start
-    if offline:
+    if branch is not None and not witnessed:
+        raise ValueError("unreached branch")
+    if offline and branch is None:
         assert f["state_sha"] == read(w.dir / "capture.json")["state_sha"]
         if teacher == "higher":
             assert mem.completed == set(paths)
         return rows
+    if branch is not None:
+        stats["branch_higher_completed"] = len(branch_owners & mem.completed)
     stats["higher_completed"] = len(mem.completed)
     stats["awaiting_final_publication"] = len(mem.wait_exports)
-    actual = logical_rows(read(export))
-    ref = logical_rows(read(w.dir / "reference.json"))
+    if reference is None:
+        actual = logical_rows(read(export))
+        ref = logical_rows(read(w.dir / "reference.json"))
+    else:
+        actual, ref = reference(read(export))
     if actual - ref:
         raise ValueError("unexpected logical facts")
     ops = sum(f["ept"]["signed_external"]) + sum(f["ept"]["signed_internal"])

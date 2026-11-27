@@ -1,0 +1,6 @@
+kind,states,trace_occurrences,signed_candidates,verified_named,effect_classes,unlabeled,trace_unverified,extra_verified
+single,36,48,72,48,48,24,0,0
+mixed,36,216,312,216,216,96,0,0
+arity,36,276,372,276,276,96,0,0
+fork,36,120,228,120,120,108,0,0
+aliases,36,396,492,396,300,96,0,0

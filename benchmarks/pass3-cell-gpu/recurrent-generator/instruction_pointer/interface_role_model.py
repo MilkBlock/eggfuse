@@ -96,7 +96,7 @@ class RoleRead(OperandRead):
                 w.roles[body[0][0]][0] if w.roles[body[0][0]] else -1
                 for body in w.layouts
             ]
-            self.root_table = w.roles[w.root][0]
+            self.root_table = w.roles[w.root][0] if w.roles[w.root] else None
 
     def read_interface(self, query, ports):
         if self.arm_name == "C":

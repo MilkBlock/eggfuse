@@ -71,6 +71,7 @@ class CellKV(nn.Module):
             [
                 GraphBank(layouts, w.cat, nodes).encode(self.graph)
                 for layouts in (w.layouts[: w.primitives], w.layouts[w.primitives :])
+                if layouts
             ]
         )
         types = nodes[[w.cat.roots["initial", i] for i in range(len(w.tabs))]]

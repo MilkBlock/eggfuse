@@ -136,7 +136,7 @@ class World:
             self.roles.append([x["table"] for x in r["inputs"]])
             self.layouts.append([(rid, 0, [(-1, j) for j in range(len(r["inputs"]))])])
         self.primitives = len(self.layouts)
-        self.root = self.outnames[entry_table]
+        self.root = self.outnames[entry_table] if entry_table is not None else 0
         self.export_pc = {}
         for side in sides:
             body = list(self.layouts[self.root])
