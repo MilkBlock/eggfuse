@@ -34,4 +34,10 @@ sh partner_index_reproduce.sh scaling_timing.py evaluate
 sh partner_index_reproduce.sh scaling_batch.py evaluate
 "${PYTHON:-python3}" full_ce_verify.py
 "${PYTHON:-python3}" full_ce_report.py
-"${PLOT_PYTHON:-python3}" full_ce_plot.py
+plot_python=${PLOT_PYTHON:-python3}
+if [ -z "${PLOT_PYTHON:-}" ] && ! "$plot_python" -c 'import matplotlib' 2>/dev/null; then
+    if command -v python3.8 >/dev/null && python3.8 -c 'import matplotlib' 2>/dev/null; then
+        plot_python=python3.8
+    fi
+fi
+"$plot_python" full_ce_plot.py

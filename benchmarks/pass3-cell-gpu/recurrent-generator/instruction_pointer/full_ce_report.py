@@ -325,6 +325,8 @@ def report():
     lines = [
         "# 完整 Cell CE 夜间消融",
         "",
+        "[实验结论与外层对照](findings.md) · [学习曲线](learning-curves.svg) · [逐检查点矩阵](matrix.csv) · [核验清单](integrity.json)",
+        "",
         f"截止 {datetime.now().astimezone().isoformat(timespec='minutes')}，已完成原生验证的训练检查点 {len(matrix)} 个，含基线、诊断与采样对照的独立执行记录 {len(runs)} 条。外层配置锁定记录为 {state['locked']}。各程序的实际付费数和预算缺口在 native.csv 中逐行报告。",
         "",
         "## 数据、模型与训练预算",
@@ -382,7 +384,7 @@ def report():
         "export CELL_DATA=/tmp/dfm-local/data",
         "export CELL_REPLAY=/tmp/cost-audit-build/release/examples/cell_token_replay",
         "export CELL_COMPILER=/tmp/cost-audit-build/release/eggfuse-cell-compiler",
-        "export PYTHON=/tmp/prefix-ml/bin/python PLOT_PYTHON=python3",
+        "export PYTHON=/tmp/prefix-ml/bin/python PLOT_PYTHON=/opt/homebrew/bin/python3.8",
         "sh full_ce_reproduce.sh",
         "```",
     ]
