@@ -52,13 +52,25 @@ class Page:
         p = lp.detach().double().exp().numpy()
         return p / p.sum(), child
 
-    def draws(self, rng, budget, unique):
+    def draws(self, rng, budget, unique, end_probability=None):
         if not self.m.get("has_complete_domain", True):
             return []
+        self.ended = False
         adjusted = {}
         logs = []
         root = ("root", None, None, ())
         for _ in range(budget):
+            if end_probability is not None:
+                if not 0 <= end_probability <= 1:
+                    raise ValueError("invalid neural boundary probability")
+                # END competes with the remaining mass of complete, named leaves.
+                left = adjusted[root].sum() if root in adjusted else 1.0
+                if left <= 0:
+                    return logs
+                total = end_probability + (1 - end_probability) * left
+                if rng.random() * total < end_probability:
+                    self.ended = True
+                    return logs
             path = []
             key = root
             while key[0] != "emit":

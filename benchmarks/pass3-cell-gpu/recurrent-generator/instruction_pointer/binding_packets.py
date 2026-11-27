@@ -12,7 +12,7 @@ from discovery_states import cli
 F = 4
 
 
-def public_view(m, program, exact=None, *, key=None, limit=None):
+def public_view(m, program, exact=None, *, key=None, limit=None, visible=None):
     if key is None:
         (key,) = m.ids
     rule, higher = key
@@ -35,7 +35,7 @@ def public_view(m, program, exact=None, *, key=None, limit=None):
         raw = []
         rows = []
         for addr in m.rows[tab]:
-            if addr not in m.pub.live:
+            if addr not in m.pub.live or (visible is not None and addr not in visible):
                 continue
             v = m.pub.live[addr][0]
             addresses.append((*addr, v["version"]))

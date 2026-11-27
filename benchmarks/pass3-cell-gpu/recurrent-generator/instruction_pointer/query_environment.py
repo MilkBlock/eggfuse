@@ -21,6 +21,9 @@ class QueryMemory(ResponseMemory):
         if self.reader is None:
             self.reader = self.observer_path.open()
         record = json.loads(self.reader.readline())
+        self.update_observed(frame, record)
+
+    def update_observed(self, frame, record):
         run, epoch, enabled, terminal, rules = record
         if (
             run != frame["run"]

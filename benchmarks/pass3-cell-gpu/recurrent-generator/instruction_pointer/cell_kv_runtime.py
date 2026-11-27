@@ -241,6 +241,8 @@ def native(
                     publication_log.append({k: f.get(k) for k in ("run", "epoch", "rules", "accepted", "updates", "retired", "final_publication")})
                 if f.get("final_publication"):
                     continue
+                if policy is not None and hasattr(policy, "observe_publication"):
+                    policy.observe_publication(f)
                 client.run = f["run"]
                 client.epoch = f["epoch"]
                 state = mem.snapshot(w, f)
