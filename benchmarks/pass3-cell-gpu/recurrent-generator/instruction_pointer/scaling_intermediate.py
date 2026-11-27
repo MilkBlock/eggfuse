@@ -4,7 +4,7 @@ import argparse
 import json
 import time
 
-from scaling_campaign import REPORT, Campaign, grid
+from scaling_campaign import REPORT, SEEDS, Campaign, grid
 
 
 def run(hours):
@@ -13,6 +13,11 @@ def run(hours):
         return
     for name in ("initial", "factorized-random"):
         c.evaluate_frozen("outer", name)
+    for name in ("decoder", "layer01", "layer03"):
+        for seed in SEEDS:
+            tag = f"{name}-s{seed}-t100000"
+            if (c.disk / "fits" / (tag + ".pt")).exists():
+                c.evaluate_frozen("outer", tag)
     names = {g["name"] for g in grid()} | {"layer-lr-interaction"}
     for p in sorted((c.disk / "fits").glob("*-t*.json")):
         if time.time() > c.state["end"] - 600:
