@@ -26,8 +26,11 @@ def get(a, arm, seed):
     return net
 
 
-def train(a, arm, seed):
+def train(a, arm, seed, *, condition_on_types=False, output=None):
     net = load(a, "transition", seed).train()
+    net.condition_on_types = condition_on_types
+    destination = folder(a) if output is None else output
+    label = "structured" if condition_on_types else arm
     pools = defaultdict(list)
     for i in range(12):
         w = world(a, net.actor, i, True)
@@ -68,8 +71,8 @@ def train(a, arm, seed):
         opt.step()
         if step % 30 == 0 or step == 419:
             curve.append([step + 1, float(ce.detach()), (step + 1) * 16])
-    torch.save(net.state_dict(), folder(a) / f"{arm}-{seed}.pt")
-    store(folder(a) / f"curve-{arm}-{seed}.json", curve)
+    torch.save(net.state_dict(), destination / f"{label}-{seed}.pt")
+    store(destination / f"curve-{label}-{seed}.json", curve)
 
 
 if __name__ == "__main__":
