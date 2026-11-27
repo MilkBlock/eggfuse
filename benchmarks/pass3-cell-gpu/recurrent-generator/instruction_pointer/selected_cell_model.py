@@ -13,7 +13,19 @@ def typed_distribution(logp, tables, expected):
     return logp.masked_fill(~allowed, -torch.inf).log_softmax(0)
 
 
+def constructible_roots(logp, declarations, public_tables):
+    """Condition on a nonempty typed address domain for every required slot."""
+    present = set(public_tables.tolist())
+    support = [all(table in present for table in roles) for roles in declarations]
+    if not any(support):
+        return logp.new_full(logp.shape, -torch.inf), False
+    allowed = logp.new_tensor(support, dtype=torch.bool)
+    return logp.masked_fill(~allowed, -torch.inf).log_softmax(0), True
+
+
 class SelectedCell(RoleRead):
+    condition_on_types = False
+
     def __init__(self, a, mode, typed):
         super().__init__(a, "C")
         self.mode = mode
@@ -35,6 +47,12 @@ class SelectedCell(RoleRead):
             groups.setdefault(w.layouts[t][0][0], []).append(j)
         m["families"] = groups
         m["root_lp"] = torch.stack([m["lp"][js].logsumexp(0) for js in groups.values()])
+        if self.condition_on_types:
+            if not self.typed:
+                raise ValueError("root and parent addressing must use the same type declarations")
+            m["root_lp"], m["has_complete_domain"] = constructible_roots(
+                m["root_lp"], (w.roles[rid] for rid in groups), m["tables"]
+            )
         return m
 
     def address(self, w, m, tid, prefix):
@@ -133,6 +151,9 @@ class SelectedCell(RoleRead):
         if not state["menu"]:
             return []
         m = self.state(w, state)
+
+        if not m.get("has_complete_domain", True):
+            return []
 
         def draw(lp):
             return self.sample(lp, rng)

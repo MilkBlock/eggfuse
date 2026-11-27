@@ -53,6 +53,8 @@ class Page:
         return p / p.sum(), child
 
     def draws(self, rng, budget, unique):
+        if not self.m.get("has_complete_domain", True):
+            return []
         adjusted = {}
         logs = []
         root = ("root", None, None, ())
