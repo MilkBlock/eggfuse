@@ -127,6 +127,7 @@ def report():
             {
                 "model": tag,
                 "name": c["name"],
+                "validation_used_for_curriculum": c["name"] == "adaptive",
                 "seed": g["seed"],
                 "registered": g["registered"],
                 "forward": g.get(
@@ -237,7 +238,7 @@ def report():
         "",
         "训练分配到 fact、历史原生程序、基础与真实反事实。loopfact 和本轮新生成的两个完整基础程序用于内部验证。初测的基础程序 10/11 已被继承权重训练过；初测移入 seen-foundation，排除于超参数选择。对应历史连续程序也排除于内层验证。sum-divisors 为外层留出，仅在配置锁定后执行。继承权重来自既有实验，无法追溯其一生中所有预训练程序。每个训练步仅使用完整 Cell Token CE。局部组反向 4,160，Decoder 组 10,624，端到端与分层组通常 18,880。实际梯度张量清单保存在每组 JSON。",
         "",
-        "中心为 AdamW、学习率 0.001、衰减 0、梯度裁剪 2，每步一个真实状态内抽到的完整目标集合。半批量将同一集合依次拆成两次更新；2/4 倍累积多个状态再更新。调度在预设曝光档位重启，分层倍率只作用于 Decoder 组以外的现有可训练参数。随机初始化使用同架构的原生 reset_parameters。小/大上下文分档综合同类型域、目录、父数、有效目标数、内部步数、回执数及 epoch。自适应课程用内部基础程序自由生成探针调整保留比例。",
+        "中心为 AdamW、学习率 0.001、衰减 0、梯度裁剪 2，每步一个真实状态内抽到的完整目标集合。半批量将同一集合依次拆成两次更新；2/4 倍累积多个状态再更新。调度在预设曝光档位重启，分层倍率只作用于 Decoder 组以外的现有可训练参数。随机初始化使用同架构的原生 reset_parameters。小/大上下文分档综合同类型域、目录、父数、有效目标数、内部步数、回执数及 epoch。正式自适应课程 adaptive-train 与 fixedblock-adaptive 均仅用训练池基础状态的自由生成探针调整保留比例。早期 adaptive 行曾读取验证集探针，单列方法诊断，排除于正式选择。",
         "",
         "## 原生验证与预算",
         "",
@@ -317,7 +318,7 @@ def report():
     ce_only = [
         p["config"]
         for p in paired
-        if p["exposures"] == 10000
+        if p["config"] != "adaptive" and p["exposures"] == 10000
         and p["seed"] == 71
         and p["validation_ce_delta"] < 0
         and mean(

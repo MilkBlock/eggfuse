@@ -38,7 +38,8 @@ def grid():
             cfg(s, sampling=s, block=16)
             for s in ("trajectory", "state", "effect", "mixed", "teacher-self")
         ],
-        *[cfg(s, curriculum=s) for s in ("strict", "retain", "adaptive")],
+        *[cfg(s, curriculum=s) for s in ("strict", "retain")],
+        cfg("adaptive-train", curriculum="adaptive"),
         cfg("limited-states", state_limit=400),
         cfg("limited-targets", target_limit=4),
         cfg("random-init", random_init=True),
@@ -68,6 +69,9 @@ class Campaign:
         self.plan = self.disk / "campaign.json"
         if self.plan.exists():
             self.state = json.loads(self.plan.read_text())
+            if not self.state["locked"] and self.state["queue"] != grid():
+                self.state["queue"] = grid()
+                self.flush()
         else:
             # Archive creation is the start of this phase including preparation.
             start = (self.disk / "archive.jsonl").stat().st_birthtime

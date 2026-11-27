@@ -146,9 +146,8 @@ def train(a, cfg, seed, milestones):
                 n.eval()
                 hits = slots = 0
                 with torch.no_grad():
-                    for k, w, s, ts in data.val:
-                        if not w.dir.name.startswith("foundation-"):
-                            continue
+                    for k in sorted(data.collections["foundation"])[:16]:
+                        w, s, ts = data.row(k)
                         n.prepare(w)
                         draws = Page(n, w, s).draws(
                             np.random.default_rng(417), 16, False
