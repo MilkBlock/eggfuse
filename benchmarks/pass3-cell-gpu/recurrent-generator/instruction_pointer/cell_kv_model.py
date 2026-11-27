@@ -115,28 +115,9 @@ class CellKV(nn.Module):
         generated = [i for i, p in enumerate(ports) if p[2] >= 0]
         if generated:
             source[generated] = codes[[ports[i][2] for i in generated]]
-        siblings = []
-        parent_vectors = []
-        for i, p in enumerate(ports):
-            hits = [positions[r] for r in p[6] if r in positions]
-            parent_vectors.append(
-                value[hits].mean(0) if hits else torch.zeros_like(value[i])
-            )
-        for members in member_lists:
-            siblings.append(torch.tensor(members))
-        owner_values = (
-            torch.stack(
-                [
-                    (
-                        source[ix[0]]
-                        + value[ix].mean(0)
-                        + torch.stack([parent_vectors[i] for i in ix.tolist()]).mean(0)
-                    ).tanh()
-                    for ix in siblings
-                ]
-            )
-            if siblings
-            else value
+        siblings = [torch.tensor(ix) for ix in member_lists]
+        owner_values, value = self.instance_embedding(
+            w, ports, positions, siblings, group, source, value
         )
         keys = self.actor.input_content(owner_values)
         vals = self.actor.latent(owner_values)
@@ -213,6 +194,30 @@ class CellKV(nn.Module):
             fields=fields,
             memo={},
         )
+
+    def instance_embedding(self, w, ports, positions, siblings, group, source, value):
+        """Encode published Cell instances before the shared attention projections."""
+        parent_vectors = []
+        for i, p in enumerate(ports):
+            hits = [positions[r] for r in p[6] if r in positions]
+            parent_vectors.append(
+                value[hits].mean(0) if hits else torch.zeros_like(value[i])
+            )
+        owner_values = (
+            torch.stack(
+                [
+                    (
+                        source[ix[0]]
+                        + value[ix].mean(0)
+                        + torch.stack([parent_vectors[i] for i in ix.tolist()]).mean(0)
+                    ).tanh()
+                    for ix in siblings
+                ]
+            )
+            if siblings
+            else value
+        )
+        return owner_values, value
 
     def domains(self, m, tabs):
         if self.arm == "U":

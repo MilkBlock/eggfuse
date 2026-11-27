@@ -11,7 +11,7 @@ import numpy as np
 from completion_context import read
 
 
-def program(depth, jobs, seed, fork=False, flip=False):
+def program(depth, jobs, seed, fork=False, flip=False, common=False):
     rng = np.random.default_rng(seed)
     names = ["Seed", "Noise", "Permit", "Mid", "DoneL", "DoneR"] + [
         f"{s}{j}" for j in range(depth) for s in "LR"
@@ -39,6 +39,15 @@ def program(depth, jobs, seed, fork=False, flip=False):
         lines.append(
             f"(rule (({s}{depth - 1} x y) (Permit x)) ((Done{s} x y)) :ruleset finish)"
         )
+    if common:
+        # Both branch bodies now publish the identical terminal relation and op.
+        lines = [line for line in lines if ":ruleset finish)" not in line]
+        lines.extend(["(relation Common (i64 i64))", "(ruleset export)"])
+        for side in "LR":
+            lines.append(
+                f"(rule (({side}{depth - 1} x y)) ((Common x y)) :ruleset export)"
+            )
+        lines.append("(rule ((Common x y) (Permit x)) ((DoneL x y)) :ruleset finish)")
     inputs = []
     for i in range(jobs):
         x, y = rng.choice(2**27, 2, replace=False).tolist()
@@ -53,6 +62,7 @@ def program(depth, jobs, seed, fork=False, flip=False):
             + [
                 "(run-schedule (run root) "
                 + " ".join(f"(run step{j})" for j in range(depth))
+                + (" (run export)" if common else "")
                 + " (run finish) (run finish))"
             ]
         )
@@ -60,11 +70,11 @@ def program(depth, jobs, seed, fork=False, flip=False):
     )
 
 
-def make(a, name, depth, jobs, seed, fork=False, flip=False):
+def make(a, name, depth, jobs, seed, fork=False, flip=False, common=False):
     d = a.out / "worlds" / name
     d.mkdir(exist_ok=True, parents=True)
     egg = d / "world.egg"
-    source = program(depth, jobs, seed, fork, flip)
+    source = program(depth, jobs, seed, fork, flip, common)
     if (d / "capture.json").exists() and egg.read_text() != source:
         raise ValueError(f"cached native source mismatch in {d}")
     if not (d / "capture.json").exists():
@@ -138,9 +148,21 @@ class World:
                 wires = [producers[self.tabs[t]] for t in self.roles[rid]]
                 body.append((rid, len(body), wires))
                 src = dest
+            if "Common" in self.outnames:
+                (rid,) = [
+                    i
+                    for i, outputs in enumerate(self.outputs)
+                    if "Common" in outputs and self.roles[i] == [self.tabs.index(src)]
+                ]
+                body.append(
+                    (rid, len(body), [(len(body) - 1, self.outputs[body[-1][0]][src])])
+                )
+                src = "Common"
             self.export_pc[len(self.layouts)] = self.outputs[body[-1][0]][src]
             self.layouts.append(body)
-        self.finals = {self.outnames["DoneL"], self.outnames["DoneR"]}
+        self.finals = {
+            self.outnames[n] for n in ("DoneL", "DoneR") if n in self.outnames
+        }
 
     def menu(self, rules):
         return [i for i, body in enumerate(self.layouts) if body[0][0] in rules]

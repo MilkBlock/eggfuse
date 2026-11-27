@@ -1,0 +1,9 @@
+when,v,trajectories,mean_ept_diff,median_wall_ratio
+before,current,16,0.0,1.0
+before,structure,7,0.0,0.9621330936644992
+before,mixed,8,0.0,0.9862685444242894
+before,interface,8,0.0,1.0322793923412763
+after,current,32,0.0,1.0
+after,structure,8,-0.001851851851851851,0.9658556359074648
+after,mixed,12,0.0013199870128462454,0.9818663574075223
+after,interface,9,0.0,1.048898904364035
