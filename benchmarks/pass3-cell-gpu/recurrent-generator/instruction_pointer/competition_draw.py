@@ -52,11 +52,21 @@ class Page:
         p = lp.detach().double().exp().numpy()
         return p / p.sum(), child
 
-    def draws(self, rng, budget, unique, end_probability=None):
+    def set_leaf_factor(self, path, adjusted, factor):
+        remaining = factor
+        for parent, i in reversed(path):
+            base = self.base[parent][0]
+            if parent not in adjusted:
+                adjusted[parent] = base.copy()
+            adjusted[parent][i] = base[i] * remaining
+            remaining = adjusted[parent].sum()
+
+    def draws(self, rng, budget, unique, end_probability=None, *, adjusted=None):
         if not self.m.get("has_complete_domain", True):
             return []
         self.ended = False
-        adjusted = {}
+        if adjusted is None:
+            adjusted = {}
         logs = []
         root = ("root", None, None, ())
         for _ in range(budget):
@@ -96,14 +106,7 @@ class Page:
                 continue
             logs.append((key[2], tuple(self.m["refs"][i] for i in key[3])))
             if unique:
-                remaining = 0.0
-                for parent, i in reversed(path):
-                    base = self.base[parent][0]
-                    if parent not in adjusted:
-                        adjusted[parent] = base.copy()
-                    # Absolute probability on the original edge times conditional remaining mass.
-                    adjusted[parent][i] = base[i] * remaining
-                    remaining = adjusted[parent].sum()
+                self.set_leaf_factor(path, adjusted, 0.0)
         return logs
 
 

@@ -1,0 +1,166 @@
+{
+ "fact": [
+  {
+   "cross_binding": 6,
+   "cross_duplicate": 8,
+   "cross_effective_ops": 0,
+   "cross_guard": 4,
+   "cross_productive": 0,
+   "cross_run_change": 928,
+   "cross_submit": 1034,
+   "cross_untriggered_rule": 1011,
+   "cross_watermark": 5,
+   "first_name": 668,
+   "previous_productive": 19,
+   "version_changed": 3,
+   "version_changed_productive": 0
+  },
+  [
+   [
+    {
+     "check": true,
+     "dirty": true,
+     "effective_ops": 72,
+     "epoch": 1,
+     "kind": "first_name",
+     "native_duplicate_new_refs": false,
+     "page": 0,
+     "refs": [],
+     "rid": 375,
+     "run": 1,
+     "status": "accepted",
+     "tid": 375,
+     "uid": 1,
+     "wm": 0
+    },
+    {
+     "changed_run": false,
+     "check": true,
+     "dirty": true,
+     "effective_ops": 0,
+     "epoch": 1,
+     "kind": "cross_submit",
+     "native_duplicate_new_refs": false,
+     "page": 1,
+     "previous_uid": 1,
+     "refs": [],
+     "rid": 375,
+     "run": 1,
+     "status": "duplicate",
+     "tid": 375,
+     "uid": 2,
+     "wm": 0
+    }
+   ]
+  ]
+ ],
+ "loopfact": [
+  {
+   "cross_binding": 3,
+   "cross_duplicate": 11,
+   "cross_effective_ops": 0,
+   "cross_productive": 0,
+   "cross_run_change": 671,
+   "cross_submit": 739,
+   "cross_untriggered_rule": 718,
+   "cross_watermark": 7,
+   "first_name": 703,
+   "previous_productive": 18,
+   "version_changed": 1,
+   "version_changed_productive": 0
+  },
+  [
+   [
+    {
+     "check": true,
+     "dirty": true,
+     "effective_ops": 52,
+     "epoch": 1,
+     "kind": "first_name",
+     "native_duplicate_new_refs": false,
+     "page": 0,
+     "refs": [],
+     "rid": 375,
+     "run": 1,
+     "status": "accepted",
+     "tid": 375,
+     "uid": 1,
+     "wm": 0
+    },
+    {
+     "changed_run": false,
+     "check": true,
+     "dirty": true,
+     "effective_ops": 0,
+     "epoch": 1,
+     "kind": "cross_submit",
+     "native_duplicate_new_refs": false,
+     "page": 1,
+     "previous_uid": 1,
+     "refs": [],
+     "rid": 375,
+     "run": 1,
+     "status": "duplicate",
+     "tid": 375,
+     "uid": 2,
+     "wm": 0
+    }
+   ]
+  ]
+ ],
+ "sum-divisors": [
+  {
+   "cross_binding": 4,
+   "cross_duplicate": 12,
+   "cross_effective_ops": 0,
+   "cross_guard": 1,
+   "cross_productive": 0,
+   "cross_run_change": 674,
+   "cross_submit": 744,
+   "cross_untriggered_rule": 722,
+   "cross_watermark": 5,
+   "first_name": 710,
+   "previous_productive": 19,
+   "version_changed": 3,
+   "version_changed_productive": 0
+  },
+  [
+   [
+    {
+     "check": true,
+     "dirty": true,
+     "effective_ops": 199,
+     "epoch": 1,
+     "kind": "first_name",
+     "native_duplicate_new_refs": false,
+     "page": 0,
+     "refs": [],
+     "rid": 375,
+     "run": 1,
+     "status": "accepted",
+     "tid": 375,
+     "uid": 1,
+     "wm": 0
+    },
+    {
+     "changed_run": false,
+     "check": true,
+     "dirty": true,
+     "effective_ops": 0,
+     "epoch": 1,
+     "kind": "cross_submit",
+     "native_duplicate_new_refs": false,
+     "page": 1,
+     "previous_uid": 1,
+     "refs": [],
+     "rid": 375,
+     "run": 1,
+     "status": "duplicate",
+     "tid": 375,
+     "uid": 2,
+     "wm": 0
+    }
+   ]
+  ]
+ ]
+}

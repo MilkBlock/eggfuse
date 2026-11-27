@@ -1,0 +1,78 @@
+{
+ "ce_parameters": 4160,
+ "new_exposures": 0,
+ "new_seconds": 0,
+ "new_trainable": 0,
+ "prior_sweep": {
+  "fact": {
+   "checkpoint_sha256": "e0d27cf066e10404863b43618b038ce344b39513d5a86bf52842bb1823272864",
+   "curve": [
+    {
+     "epoch": 1,
+     "exposures": 16942,
+     "loss": 6.826492828087097,
+     "seconds": 190.06858737498987,
+     "steps": 630
+    },
+    {
+     "epoch": 2,
+     "exposures": 33884,
+     "loss": 6.294551517069867,
+     "seconds": 372.4443627499859,
+     "steps": 1260
+    }
+   ],
+   "exposures": 33884,
+   "seconds": 372.45773979095975,
+   "states": 630,
+   "targets": 16942
+  },
+  "loopfact": {
+   "checkpoint_sha256": "accae65edb0a2fdf5bfca02c9c894acf4e73fbac19ec156faf22768df2a9867b",
+   "curve": [
+    {
+     "epoch": 1,
+     "exposures": 17017,
+     "loss": 6.802470590579718,
+     "seconds": 199.00955604098272,
+     "steps": 640
+    },
+    {
+     "epoch": 2,
+     "exposures": 34034,
+     "loss": 6.276211026253653,
+     "seconds": 390.2529322079499,
+     "steps": 1280
+    }
+   ],
+   "exposures": 34034,
+   "seconds": 390.2667979580001,
+   "states": 640,
+   "targets": 17017
+  },
+  "sum-divisors": {
+   "checkpoint_sha256": "8f9af4958e4d02be537c4c764499bfdf9b5a89743f13bb686b86197ba890a462",
+   "curve": [
+    {
+     "epoch": 1,
+     "exposures": 16350,
+     "loss": 6.662426425459188,
+     "seconds": 169.06183433398837,
+     "steps": 622
+    },
+    {
+     "epoch": 2,
+     "exposures": 32700,
+     "loss": 6.1373789355787665,
+     "seconds": 331.4131575420033,
+     "steps": 1244
+    }
+   ],
+   "exposures": 32700,
+   "seconds": 331.4268833340029,
+   "states": 622,
+   "targets": 16350
+  }
+ },
+ "total_parameters": 32874
+}

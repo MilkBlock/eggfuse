@@ -380,6 +380,7 @@ def native(
         pending=len(pending),
         **({"completed_owners": sorted(mem.completed)} if publication_log is not None else {}),
         stats=dict(stats),
+        transport=dict(client.costs),
         receipts=f["counts"],
         facts=sorted(actual),
     )
