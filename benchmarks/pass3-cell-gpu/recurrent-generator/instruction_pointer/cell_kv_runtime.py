@@ -77,12 +77,12 @@ class Instances:
             response=(len(f["accepted"]), len(f["updates"]), len(f["retired"])),
         )
 
-    def suffix(self, w, client, scheduled, pending, stats):
+    def suffix(self, w, client, scheduled, pending, stats, paid_limit=None):
         remaining = []
         for owner, tid, uids in pending:
             j = len(uids)
             rid, _, wires = w.layouts[tid][j]
-            if rid not in scheduled:
+            if rid not in scheduled or (paid_limit is not None and stats["paid"] >= paid_limit):
                 remaining.append((owner, tid, uids))
                 continue
             refs = []
@@ -152,12 +152,18 @@ def teacher_labels(w, requests):
     return paths
 
 
-def native(a, w, *, teacher=None, policy=None, seed=0, slots=6, receipt_log=None, branch=None, reference=None):
+def native(
+    a, w, *, teacher=None, policy=None, seed=0, slots=6, receipt_log=None,
+    branch=None, reference=None, paid_limit=None, publication_log=None,
+    diagnostic_followup=None,
+):
     offline = teacher is not None
     if offline == (policy is not None):
         raise ValueError("choose offline replay or independent policy")
     if branch is not None and not offline:
         raise ValueError("counterfactual replay requires an offline prefix")
+    if paid_limit is not None and (offline or paid_limit < 0):
+        raise ValueError("paid cap requires a policy and a nonnegative budget")
     witnessed = False
     branch_owners = set()
     rows = []
@@ -208,6 +214,8 @@ def native(a, w, *, teacher=None, policy=None, seed=0, slots=6, receipt_log=None
                     break
                 unpack(proc.stdout, f)
                 mem.update(f)
+                if publication_log is not None:
+                    publication_log.append({k: f.get(k) for k in ("run", "epoch", "rules", "accepted", "updates", "retired", "final_publication")})
                 if f.get("final_publication"):
                     continue
                 client.run = f["run"]
@@ -246,9 +254,12 @@ def native(a, w, *, teacher=None, policy=None, seed=0, slots=6, receipt_log=None
                         else:
                             mem.begin(uid, q["rule"], refs_of(q))
                 else:
-                    pending = mem.suffix(w, client, dict(f["rules"]), pending, stats)
+                    pending = mem.suffix(w, client, dict(f["rules"]), pending, stats, paid_limit)
                     if branch is None:
-                        decisions = policy.generate(w, state, rng, slots)
+                        available = slots if paid_limit is None else min(slots, paid_limit - stats["paid"])
+                        decisions = policy.generate(w, state, rng, available) if available else []
+                        if paid_limit is not None and len(decisions) > available:
+                            raise ValueError("generated page exceeded its slot budget")
                     elif f["run"] == branch[0]["run"]:
                         if state != branch[0]:
                             raise ValueError("branch decision state differs from replay")
@@ -256,35 +267,43 @@ def native(a, w, *, teacher=None, policy=None, seed=0, slots=6, receipt_log=None
                         decisions = branch[1]
                     else:
                         decisions = []
-                    cells = [
-                        Cell(w.layouts[tid][0][0], refs) for tid, refs in decisions
-                    ]
-                    replies = submit(client, cells, 64)
-                    if receipt_log is not None:
-                        receipt_log.append((state, decisions, replies))
-                    stats["paid"] += len(cells)
-                    stats["neural_tokens"] += len(cells)
-                    for (tid, refs), (uid, status, *_) in zip(
-                        decisions, replies, strict=True
-                    ):
-                        higher = tid >= w.primitives
-                        stats["higher_selected"] += int(higher)
-                        if status:
-                            continue
-                        mem.begin(uid, tid, refs)
-                        if higher:
-                            pending.append((uid, tid, [uid]))
-                            if branch is not None:
-                                branch_owners.add(uid)
-                            stats["higher_opened"] += 1
-                        if tid in w.finals and any(
-                            mem.instances.get(mem.owned.get(ref[0], (-1, 0))[0], (-1,))[
-                                0
-                            ]
-                            >= w.primitives
-                            for ref in refs
+                    batches = [decisions]
+                    if diagnostic_followup is not None and f["run"] == diagnostic_followup[0]["run"]:
+                        if state != diagnostic_followup[0] or paid_limit is not None or publication_log is None:
+                            raise ValueError("same-window probe requires the exact audited snapshot")
+                        batches.append(diagnostic_followup[1])
+                    for batch_i, decisions in enumerate(batches):
+                        if batch_i:
+                            state = mem.snapshot(w, f)
+                        cells = [
+                            Cell(w.layouts[tid][0][0], refs) for tid, refs in decisions
+                        ]
+                        replies = submit(client, cells, 64)
+                        if receipt_log is not None:
+                            receipt_log.append((state, decisions, replies))
+                        stats["paid"] += len(cells)
+                        stats["neural_tokens"] += len(cells)
+                        for (tid, refs), (uid, status, *_) in zip(
+                            decisions, replies, strict=True
                         ):
-                            stats["accepted_consumer_of_higher"] += 1
+                            higher = tid >= w.primitives
+                            stats["higher_selected"] += int(higher)
+                            if status:
+                                continue
+                            mem.begin(uid, tid, refs)
+                            if higher:
+                                pending.append((uid, tid, [uid]))
+                                if branch is not None:
+                                    branch_owners.add(uid)
+                                stats["higher_opened"] += 1
+                            if tid in w.finals and any(
+                                mem.instances.get(mem.owned.get(ref[0], (-1, 0))[0], (-1,))[
+                                    0
+                                ]
+                                >= w.primitives
+                                for ref in refs
+                            ):
+                                stats["accepted_consumer_of_higher"] += 1
                 client.seal()
             if proc.wait() != 0 or "role" not in f:
                 raise RuntimeError("native run incomplete")
@@ -321,6 +340,7 @@ def native(a, w, *, teacher=None, policy=None, seed=0, slots=6, receipt_log=None
         graph=f["state_sha"],
         reference_graph=f["state_sha"] == read(w.dir / "capture.json")["state_sha"],
         pending=len(pending),
+        **({"completed_owners": sorted(mem.completed)} if publication_log is not None else {}),
         stats=dict(stats),
         receipts=f["counts"],
         facts=sorted(actual),
