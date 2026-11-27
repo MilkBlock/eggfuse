@@ -37,6 +37,7 @@ def report():
     rawhash = {}
     facts = {}
     rates = defaultdict(list)
+    contributions = []
     blank_path = raw / "zero-paid.json"
     blank = read(blank_path) if blank_path.exists() else {}
     blank_facts = {
@@ -46,6 +47,10 @@ def report():
     for p in sorted((raw / "eval").glob("*.json")):
         r = read(p)
         rawhash[p.name] = hashlib.sha256(p.read_bytes()).hexdigest()
+        ledgers = {}
+        if r["mode"] == "outer":
+            with gzip.open(raw / (p.stem + "-ledger.json.gz"), "rt") as f:
+                ledgers = {(v["case"], v["cap"], v["seed"]): v for v in json.load(f)}
         for x in r["runs"]:
             graph = x["graph"]
             facts[graph] = x["facts"]
@@ -81,6 +86,24 @@ def report():
             }
             runs.append(z)
             rates[r["mode"], r["model"], x["case"], x["cap"]].append(z)
+            if ledgers:
+                ledger = ledgers[x["case"], x["cap"], x["seed"]]
+                issued = sorted(ledger["generated"], key=lambda t: t["uid"])
+                higher = {t["uid"]: t["effective_ops"] for t in ledger["higher"]}
+                ops = [higher.get(t["uid"], t["effective_ops"]) for t in issued]
+                if sum(ops) != x["ops"]:
+                    raise ValueError("native signed operations do not partition by issued Cell")
+                first = ops[0] if ops else 0
+                contributions.append(
+                    dict(
+                        model=r["model"], case=x["case"], seed=x["seed"], cap=x["cap"],
+                        paid=x["paid"], first_rule=issued[0]["rid"] if issued else "",
+                        first_effective_ops=first, later_effective_ops=sum(ops) - first,
+                        positive_later_requests=sum(v > 0 for v in ops[1:]),
+                        total_effective_ops=x["ops"],
+                    )
+                )
+    csv_table(REPORT / "request-contribution.csv", contributions)
     audit = (
         read(raw / "forward-replay.json")
         if (raw / "forward-replay.json").exists()
