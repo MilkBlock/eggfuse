@@ -1,0 +1,15 @@
+arm,paid,trials,ops
+linear,1,6,1.0
+linear,128,6,8.0
+linear,16,6,7.0
+linear,32,6,7.833333333333333
+linear,4,6,3.5
+linear,64,6,8.0
+linear,8,6,5.0
+refined,1,6,0.8333333333333334
+refined,128,6,8.0
+refined,16,6,7.0
+refined,32,6,8.0
+refined,4,6,3.0
+refined,64,6,8.0
+refined,8,6,5.166666666666667

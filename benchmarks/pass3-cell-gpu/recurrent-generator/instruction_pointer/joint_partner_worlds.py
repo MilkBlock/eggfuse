@@ -14,7 +14,7 @@ ARMS = ("independent", "cell", "tensor", "wide", "dense")
 SIZES = (4, 8, 16, 32, 64, 128, 256, 512, 1024)
 
 
-def world(i, n, kind, flip, held, counts=None, *, parity=False, near=False):
+def world(i, n, kind, flip, held, counts=None, *, parity=False, near=False, partners=1):
     # Deterministic streams per semantic row; adding rows cannot alter earlier values.
     rng = random.Random(7927 * i)
     val = rng.sample(range(1 << 20), 80)
@@ -45,6 +45,11 @@ def world(i, n, kind, flip, held, counts=None, *, parity=False, near=False):
         right = [
             [(x, u)[p], (y, v)[q], (z, w)[p ^ q ^ flip]] for p in (0, 1) for q in (0, 1)
         ]
+    if partners != 1:
+        if kind != "two" or not 1 < partners < n:
+            raise ValueError("multiple distinct outputs require a two-field world")
+        right.extend([*right[0][:2], 2**20 + j] for j in range(1, partners))
+    result_field = d if partners != 1 else c
     schemas = [[a, b, c], [*[a, b, c][:width], *[d, e, f][: 3 - width]]]
     data = [left, right]
     if kind == "chain":
@@ -87,7 +92,7 @@ def world(i, n, kind, flip, held, counts=None, *, parity=False, near=False):
                 + ")"
             )
     program += [
-        "(rule (" + " ".join(atoms) + f") ((Result {a} {b} {c})) :ruleset probe)",
+        "(rule (" + " ".join(atoms) + f") ((Result {a} {b} {result_field})) :ruleset probe)",
         "(run-schedule (run warm) (run probe))",
     ]
     return "\n".join(program) + "\n"

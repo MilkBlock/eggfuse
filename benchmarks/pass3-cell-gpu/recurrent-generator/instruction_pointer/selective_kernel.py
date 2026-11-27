@@ -64,7 +64,7 @@ class SparseMap(nn.Module):
             (-math.log(2) * torch.arange(22, dtype=torch.float32)).repeat(4, 1)
         )
 
-    def forward(self, fields, variant):
+    def forward(self, fields, variant, *, fixed_order=False):
         # B x N x fields x H x bits. Each head compares lossy learned feature coordinates.
         if variant == "mixed-sparse":
             # Each projected bit is an interaction across ALL aligned fields; a
@@ -86,22 +86,39 @@ class SparseMap(nn.Module):
                 ],
                 -1,
             ).unsqueeze(2)
-        t = ((selected + 1) * 0.5 * self.logits.softmax(-1)).sum(-1) * self.resolution
+        terms = (selected + 1) * 0.5 * self.logits.softmax(-1)
+        if fixed_order:
+            # MPS reduction order can vary with row-batch size. A fixed binary
+            # tree makes publication-segment and full-bank encodings agree.
+            parts = list(terms.unbind(-1))
+            while len(parts) > 1:
+                parts = [a + b for a, b in zip(parts[::2], parts[1::2])] + (
+                    parts[-1:] if len(parts) % 2 else []
+                )
+            total = parts[0]
+        else:
+            total = terms.sum(-1)
+        t = total * self.resolution
         t = t.flatten(2).transpose(1, 2)
         lo = t.floor()
         frac = t - lo
         return torch.stack((lo, lo + 1), -1).int(), torch.stack((1 - frac, frac), -1)
 
 
-def build_index(sparse, weights):
+def build_index(sparse, weights, *, named=False):
     ids, values = sparse
     ids = ids.flatten(2)
     order = ids.argsort(-1)
     weights = (values * weights[:, None, :, None]).flatten(2)
     sorted_weights = weights.gather(-1, order)
-    return ids.gather(-1, order).contiguous(), nn.functional.pad(
+    summary = ids.gather(-1, order).contiguous(), nn.functional.pad(
         sorted_weights.cumsum(-1), (1, 0)
     )
+    if named:
+        # Two entries per row; offsets resolve through this publication's immutable
+        # role bank of (owner, op, version), even when equal feature bins collide.
+        return (*summary, (order // 2).int())
+    return summary
 
 
 def read_index(sparse, index):

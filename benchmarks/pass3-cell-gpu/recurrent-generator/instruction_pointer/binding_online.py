@@ -106,7 +106,7 @@ def trial(a, d, arm, net, seed, *, generate=None, address_seed=None):
     return dict(
         arm=arm,
         seed=seed,
-        size=int(d.name[:4]),
+        size=int(d.name.split("-", 1)[0]),
         paid=paid,
         ops=ops,
         seconds=wall,
