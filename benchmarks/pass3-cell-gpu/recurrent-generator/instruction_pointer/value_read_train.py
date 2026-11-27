@@ -36,12 +36,20 @@ def load(a):
     )
 
 
-def training(a):
+def training(
+    a,
+    *,
+    factory=ValueRead,
+    variants="ABC",
+    features=lane_products,
+    destination=output,
+    seeds=SEEDS,
+):
     data = load(a)
     pools = range(72001, 72033) if mode() == "rich" else range(71001, 71007)
-    for seed in SEEDS:
-        for variant in "ABC":
-            net = ValueRead(a, variant).train()
+    for seed in seeds:
+        for variant in variants:
+            net = factory(a, variant).train()
             initial = fixed_digest(net)
             rng = np.random.default_rng(seed)
             opt = torch.optim.AdamW(
@@ -78,7 +86,7 @@ def training(a):
                             first.append((s, (t, (m["refs"][0],))))
                             others.append(rows[1:])
                     codes = net.cache[1][s["menu"]]
-                    lanes, role = lane_products(words)
+                    lanes, role = features(words)
                     V = torch.stack(values)
                     E = torch.stack(external)
                     prob = net.singleton(codes, V, E, lanes, role)
@@ -145,7 +153,7 @@ def training(a):
                 opt.step()
                 losses.append(float(loss.detach()))
                 if step + 1 in (SINGLE, STEPS):
-                    path = output(a) / f"{variant}-{seed}-{step + 1}.pt"
+                    path = destination(a) / f"{variant}-{seed}-{step + 1}.pt"
                     torch.save(net.state_dict(), path)
                     assert fixed_digest(net) == initial
                     save(

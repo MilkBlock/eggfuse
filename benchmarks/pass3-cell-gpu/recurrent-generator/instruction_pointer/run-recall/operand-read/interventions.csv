@@ -1,0 +1,7 @@
+seed,mode,n,both,neither
+71,intact,64,64,0
+71,other_operand_nodes,64,0,64
+71,zero_operand_nodes,64,0,0
+113,intact,64,64,0
+113,other_operand_nodes,64,0,64
+113,zero_operand_nodes,64,0,0
