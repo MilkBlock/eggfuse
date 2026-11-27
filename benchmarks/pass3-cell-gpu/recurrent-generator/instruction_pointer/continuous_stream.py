@@ -2,6 +2,7 @@
 
 from collections import Counter
 from contextlib import contextmanager
+from inspect import unwrap
 
 import torch
 from time import perf_counter
@@ -69,9 +70,29 @@ class Stream:
         from incremental_kv import InferenceCache
 
         n = self.net
-        if (not self.incremental or not isinstance(n, CellKV) or n.training
-                or torch.is_grad_enabled() or type(n).instance_embedding is not CellKV.instance_embedding
-                or "published_kv" in vars(n) or "response_kv" in vars(n)):
+
+        def baseline_method(name):
+            method = unwrap(getattr(n, name))
+            return getattr(method, "__func__", method) is getattr(CellKV, name)
+
+        if (
+            not self.incremental
+            or not isinstance(n, CellKV)
+            or n.training
+            or torch.is_grad_enabled()
+            or any(torch.is_inference(p) for p in n.parameters())
+            or not all(
+                baseline_method(name)
+                for name in (
+                    "receipt_vectors",
+                    "instance_embedding",
+                    "response_kv",
+                    "published_kv",
+                )
+            )
+            or "published_kv" in vars(n)
+            or "response_kv" in vars(n)
+        ):
             yield
             return
         self.memory_cache = InferenceCache(n)

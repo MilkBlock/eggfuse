@@ -1,6 +1,7 @@
 """Frozen-weight, fixed-schedule native EggCC experiments."""
 
 import json
+from functools import wraps
 import os
 import subprocess
 from collections import Counter
@@ -43,6 +44,7 @@ def instrument(n, arm):
     calls = Counter()
 
     def wrap(name, func):
+        @wraps(func)
         def measured(*args, **kw):
             start = perf_counter()
             out = func(*args, **kw)

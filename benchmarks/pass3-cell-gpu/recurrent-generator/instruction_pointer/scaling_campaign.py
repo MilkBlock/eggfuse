@@ -130,6 +130,9 @@ class Campaign:
             self.state["groups"][tag] = self.summarize(met, result)
             self.flush()
             self.checkpoint(tag)
+            from full_ce_report import report
+
+            report()
         return tag
 
     def summarize(self, m, r):
@@ -247,6 +250,10 @@ class Campaign:
                 candidates = list(dict.fromkeys(["center", "local", *ranks[:2]]))
             self.stage([(by[n], s, cap) for n in candidates for s in SEEDS])
         ranked = self.order(candidates, 100000, SEEDS)
+        selection_cap = 100000
+        if not ranked:
+            selection_cap = 30000
+            ranked = self.order(by, selection_cap, SEEDS)
         if not ranked:
             return
         candidate = ranked[0]
@@ -255,11 +262,11 @@ class Campaign:
         def area(n, s, t):
             return mean(curves[f"{n}-s{s}-t{t}"]["inner_area"].values())
 
-        stable = all(
+        stable = selection_cap == 100000 and all(
             area(candidate, s, 100000) > area(candidate, s, 30000) for s in SEEDS
         )
         # Precommit the search result before ever evaluating the outer workload.
-        bestcap = 100000
+        bestcap = selection_cap
         if stable:
             # Admit a longer rung only if both seeds and formal tests fit the remaining budget.
             for cap in (250000, 500000, 1000000):
@@ -306,6 +313,11 @@ class Campaign:
                 ]
             )
         )
+        names = [
+            name
+            for name in names
+            if name == "sweep" or (self.disk / "fits" / (name + ".pt")).exists()
+        ]
         for name in names:
             self.evaluate_frozen("outer", name)
         for name in ("sweep", names[-1]):
@@ -325,4 +337,44 @@ if __name__ == "__main__":
     parser.add_argument("--workers", type=int, default=3)
     parser.add_argument("--hours", type=float, default=8)
     args = parser.parse_args()
-    Campaign(args.workers, args.hours).run()
+    campaign = Campaign(args.workers, args.hours)
+    try:
+        campaign.run()
+    finally:
+        from full_ce_report import report
+
+        report()
+        files = [
+            str(REPORT / name)
+            for name in (
+                "matrix.csv",
+                "native.csv",
+                "baselines.csv",
+                "facts.json",
+                "evidence.json",
+                "README.md",
+                "paired-training.csv",
+            )
+        ]
+        files = [f for f in files if Path(f).is_file()]
+        subprocess.run(["git", "add", "--", *files], check=True)
+        if (
+            subprocess.run(
+                ["git", "diff", "--cached", "--quiet", "--", *files], check=False
+            ).returncode
+            == 1
+        ):
+            subprocess.run(
+                [
+                    "git",
+                    "-c",
+                    "core.hooksPath=/dev/null",
+                    "commit",
+                    "--only",
+                    "-m",
+                    "results(pretraining): summarize overnight scaling and native controls",
+                    "--",
+                    *files,
+                ],
+                check=True,
+            )

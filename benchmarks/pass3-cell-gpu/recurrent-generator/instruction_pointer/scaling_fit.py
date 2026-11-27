@@ -93,7 +93,7 @@ def train(a, cfg, seed, milestones):
         ]
         sampler.rng.setstate(saved["rng"])
         sampler.retention = saved.get("retention", 0.25)
-    forward = set()
+    forward = set(connected)
     handles = []
     for name, module in n.named_modules():
         names = tuple(f"{name}.{k}" for k, _ in module.named_parameters(recurse=False))
@@ -111,7 +111,8 @@ def train(a, cfg, seed, milestones):
     horizon = cfg.get("horizon", 10000)
     half_pending = None
     for cap in milestones:
-        if cap <= emitted:
+        alias = dst / f"{base}-t{cap}.json"
+        if cap < emitted or (cap == emitted and alias.exists()):
             continue
         while emitted < cap:
             if cfg.get("curriculum") == "adaptive" and emitted // 2500 > len(
@@ -214,12 +215,12 @@ def train(a, cfg, seed, milestones):
             tmp,
         )
         tmp.replace(resume)
-        stem = dst / f"{base}-t{emitted}"
-        tmp = stem.with_suffix(".tmp")
+        stem = f"{base}-t{emitted}"
+        tmp = dst / (stem + ".weights.tmp")
         torch.save(n.state_dict(), tmp)
-        tmp.replace(stem.with_suffix(".pt"))
+        tmp.replace(dst / (stem + ".pt"))
         atomic(
-            stem.with_suffix(".json"),
+            dst / (stem + ".json"),
             {
                 "config": cfg,
                 "seed": seed,

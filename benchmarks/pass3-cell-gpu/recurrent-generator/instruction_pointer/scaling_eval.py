@@ -1,5 +1,6 @@
 """Free complete-token draws and fixed-schedule CCP validation. Oracle is explicit and offline."""
 
+import json
 import os
 from collections import Counter, defaultdict
 
@@ -62,7 +63,11 @@ class OfflineInactiveWindow(Sampling):
 
 def frozen(a, model, case="loopfact"):
     n, w, ref = setup(a, case)
-    if model != "sweep":
+    if model == "initial":
+        from joint_cell_train import fitted
+
+        n = fitted(a, "sum-divisors", "sweep", 0)
+    elif model != "sweep":
         n.load_state_dict(
             torch.load(directory(a) / "fits" / (model + ".pt"), weights_only=True)
         )
@@ -106,6 +111,10 @@ def evaluate(a):
     d = directory(a)
     model = os.environ.get("CELL_MODEL", "sweep")
     mode = os.getenv("CELL_EVAL", "validation")
+    if mode in ("outer", "timing", "intervention") and not json.loads(
+        (d / "campaign.json").read_text()
+    ).get("locked"):
+        raise ValueError("outer execution requires a locked configuration")
     temp = float(os.getenv("CELL_TEMP", "1"))
     unique = int(os.getenv("CELL_UNIQUE", "1"))
     slots = int(os.getenv("CELL_SLOTS", "6"))
@@ -113,6 +122,7 @@ def evaluate(a):
         "validation": ["loopfact", "foundation10", "foundation11"],
         "outer": ["sum-divisors"],
         "intervention": ["loopfact", "sum-divisors"],
+        "inner-intervention": ["loopfact"],
         "selection": ["loopfact"],
         "timing": ["sum-divisors"],
     }[mode]
@@ -136,7 +146,9 @@ def evaluate(a):
         for cap in map(int, os.getenv("CELL_CAPS", "16 32 64 128 256").split()):
             for draw in (193, 307):
                 policy = (
-                    OfflineInactiveWindow if mode == "intervention" else Sampling
+                    OfflineInactiveWindow
+                    if mode in ("intervention", "inner-intervention")
+                    else Sampling
                 )(n, temp, unique)
                 trace = Ledger()
                 r = native(
