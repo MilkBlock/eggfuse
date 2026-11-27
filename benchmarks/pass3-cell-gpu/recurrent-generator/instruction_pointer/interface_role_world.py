@@ -4,7 +4,7 @@ from cell_kv_world import World, compile_world
 from value_read_world import filler_values, program
 
 
-def mixed(a, actor, pool, swap, depth=2):
+def mixed(a, actor, pool, swap, depth=2, *, extra_rules=False):
     bits = (0, 0, 1)
     first = program((swap, 0, 0), pool, bits, depth)
     second = program((1 - swap, 1, 1), pool + 100, bits, depth)
@@ -28,8 +28,17 @@ def mixed(a, actor, pool, swap, depth=2):
         "(rule ((Seed x y z)) ((Bonus x (+ y z))) :ruleset root)",
         schedule,
     ]
+    if extra_rules:
+        lines[-1:-1] = [
+            "(relation StartMark (i64))",
+            "(relation Together (i64 i64))",
+            "(rule () ((StartMark 17)) :ruleset root)",
+            "(rule ((Seed x y z) (Noise u v w)) ((Together x u)) :ruleset root)",
+        ]
     d = compile_world(
-        a, f"interface-mixed-{pool}-{swap}-{depth}", "\n".join(lines) + "\n"
+        a,
+        f"interface-mixed-{pool}-{swap}-{depth}" + ("-arity" if extra_rules else ""),
+        "\n".join(lines) + "\n",
     )
     w = World(d, actor)
     alt = World(d, actor, sides="PQ", entry_table="MidAlt")

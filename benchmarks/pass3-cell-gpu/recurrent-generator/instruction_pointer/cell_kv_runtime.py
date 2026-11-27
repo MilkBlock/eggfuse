@@ -152,7 +152,7 @@ def teacher_labels(w, requests):
     return paths
 
 
-def native(a, w, *, teacher=None, policy=None, seed=0, slots=6):
+def native(a, w, *, teacher=None, policy=None, seed=0, slots=6, receipt_log=None):
     offline = teacher is not None
     if offline == (policy is not None):
         raise ValueError("choose offline replay or independent policy")
@@ -248,6 +248,8 @@ def native(a, w, *, teacher=None, policy=None, seed=0, slots=6):
                         Cell(w.layouts[tid][0][0], refs) for tid, refs in decisions
                     ]
                     replies = submit(client, cells, 64)
+                    if receipt_log is not None:
+                        receipt_log.append((state, decisions, replies))
                     stats["paid"] += len(cells)
                     stats["neural_tokens"] += len(cells)
                     for (tid, refs), (uid, status, *_) in zip(

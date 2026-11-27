@@ -1,0 +1,9 @@
+policy,seed,both,conflicts
+frozen,71,64,64
+frozen,113,64,64
+mixed,71,64,64
+mixed,113,64,64
+curriculum,71,64,64
+curriculum,113,64,64
+diverse,71,64,64
+diverse,113,64,64

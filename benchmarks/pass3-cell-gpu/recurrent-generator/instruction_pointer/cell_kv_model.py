@@ -378,21 +378,22 @@ class CellKV(nn.Module):
             prefix.append(i)
         return -torch.stack(terms).sum()
 
+    @staticmethod
+    def sample(lp, rng):
+        return int(
+            torch.searchsorted(
+                lp.detach().exp().cumsum(0), torch.tensor(rng.random())
+            ).clamp_max(len(lp) - 1)
+        )
+
     def generate(self, w, state, rng, slots):
         if not state["menu"]:
             return []
         m = self.state(w, state)
 
-        def sample(lp):
-            return int(
-                torch.searchsorted(
-                    lp.detach().exp().cumsum(0), torch.tensor(rng.random())
-                ).clamp_max(len(lp) - 1)
-            )
-
         out = []
         for _ in range(slots):
-            tid = m["menu"][sample(m["lp"])]
+            tid = m["menu"][self.sample(m["lp"], rng)]
             rid = w.layouts[tid][0][0]
             choices = []
             for j in range(len(w.roles[rid])):
@@ -415,7 +416,7 @@ class CellKV(nn.Module):
                     m["memo"][key] = self.address(w, m, tid, choices)
                 if m["memo"][key] is None:
                     break
-                choices.append(sample(m["memo"][key]))
+                choices.append(self.sample(m["memo"][key], rng))
             else:
                 out.append((tid, tuple(m["refs"][i] for i in choices)))
         return out
