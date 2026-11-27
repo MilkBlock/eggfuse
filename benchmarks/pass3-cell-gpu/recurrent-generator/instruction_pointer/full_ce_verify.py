@@ -6,8 +6,12 @@ import json
 import math
 import os
 import pickle
+import platform
+import sys
 from collections import Counter
 from pathlib import Path
+
+import torch
 
 from int_parameters import digest
 from scaling_campaign import REPORT
@@ -121,6 +125,25 @@ def run():
             indent=1,
         )
         + "\n"
+    )
+    binaries = {}
+    for key in ("CELL_REPLAY", "CELL_COMPILER"):
+        path = Path(os.environ[key]).resolve()
+        binaries[key] = {"path": str(path), "sha256": checksum(path)}
+    (REPORT / "runtime.json").write_text(
+        json.dumps(
+            {
+                "python": sys.version,
+                "executable": sys.executable,
+                "torch": str(torch.__version__),
+                "os": platform.platform(),
+                "neural_device": "cpu",
+                "torch_threads_per_trial": 1,
+                "native": binaries,
+                "artifact_root": os.environ["ARTIFACT_ROOT"],
+                "cell_data": os.environ["CELL_DATA"],
+            }, indent=2
+        ) + "\n"
     )
 
 

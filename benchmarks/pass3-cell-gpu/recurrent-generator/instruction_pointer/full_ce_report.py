@@ -340,6 +340,18 @@ def report():
         f"10K 筛选尚未完成的配置：{', '.join(queued) or '无'}。训练每档的继续条件、队列、运行状态与离线干预见 scaling_campaign.py 及移动盘 campaign.json。",
         "",
         "复现时设置 ARTIFACT_ROOT、PARTNER_INDEX_OUT、CELL_DATA、CELL_REPLAY、CELL_COMPILER、PYTHON 后运行 `sh full_ce_reproduce.sh`。",
+        "",
+        "本次命令在 instruction_pointer 目录运行。runtime.json 记录 Python、PyTorch、系统版本及两份原生可执行文件的 SHA-256。完整重跑需要原始归档、继承权重和三个 EggCC 工作负载；已有检查点将按配置和语料摘要恢复。",
+        "",
+        "```sh",
+        "export ARTIFACT_ROOT='/Volumes/Extreme SSD/eggfuse-experiments'",
+        'export PARTNER_INDEX_OUT="$ARTIFACT_ROOT/conditional-value"',
+        "export CELL_DATA=/tmp/dfm-local/data",
+        "export CELL_REPLAY=/tmp/cost-audit-build/release/examples/cell_token_replay",
+        "export CELL_COMPILER=/tmp/cost-audit-build/release/eggfuse-cell-compiler",
+        "export PYTHON=/tmp/prefix-ml/bin/python PLOT_PYTHON=python3",
+        "sh full_ce_reproduce.sh",
+        "```",
     ]
     paired = []
     for g in matrix:
