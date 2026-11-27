@@ -103,7 +103,7 @@ class Historical:
         return probs
 
 
-def run(a, case):
+def run(a, case, *, joint=False):
     d = folder(a)
     ir, align = egg(a, case)
     archive = Path(os.environ["ARTIFACT_ROOT"]) / "multi-association" / case / "audit-0"
@@ -121,10 +121,24 @@ def run(a, case):
         ("rel", 113),
         ("rel_off", 71),
     ]
-    nets = {(arm, seed): fitted(a, case, arm, seed) for arm, seed in arms}
-    w = World(ir, nets["base", 0].actor, entry_table=None, sides="")
+    load = fitted
+    if joint:
+        from joint_cell_train import fitted as load
+        from joint_cell_corpus import folder as output
+
+        arms = [
+            (arm, seed)
+            for arm in ("small", "expanded", "feedback", "replay", "sweep")
+            for seed in (71, 113)
+        ]
+    nets = {(arm, seed): load(a, case, arm, seed) for arm, seed in arms}
+    w = World(ir, next(iter(nets.values())).actor, entry_table=None, sides="")
     for n in nets.values():
         n.prepare(w)
+    if joint:
+        scratch = output(a)
+    else:
+        scratch = d
     for s, rid, gold, z in ds:
         r = s["run"]
         arity = len(w.roles[rid])
@@ -133,11 +147,11 @@ def run(a, case):
         prefix = [q for q in tape["requests"] if q["run"] < r]
 
         def replay(cells, prefix=prefix, r=r):
-            export = d / f"branch-{case}.json"
+            export = scratch / f"branch-{case}.json"
             gains, verdict = fork(
                 a,
                 a.data / case,
-                d / f"decisions-{case}.json",
+                scratch / f"decisions-{case}.json",
                 tape,
                 prefix,
                 r,
@@ -224,10 +238,12 @@ def run(a, case):
                         **verdict,
                     )
                 )
-    (d / f"audit-{case}.json").write_text(json.dumps(rows, separators=(",", ":")))
+    ((output(a) if joint else d) / f"audit-{case}.json").write_text(
+        json.dumps(rows, separators=(",", ":"))
+    )
 
 
 if __name__ == "__main__":
     torch.set_num_threads(1)
     with torch.no_grad():
-        run(args(), os.environ["TR_CASE"])
+        run(args(), os.environ["TR_CASE"], joint=os.getenv("JC_DIAGNOSTIC") == "1")

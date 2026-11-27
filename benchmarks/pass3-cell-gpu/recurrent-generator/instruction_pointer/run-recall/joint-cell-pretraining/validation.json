@@ -1,0 +1,20 @@
+{
+  "baseline": "13cd6499",
+  "runtime": "CCP v0.1 Rust native",
+  "cpu": [
+    "cargo cell-compile --case sum-bits",
+    "cargo cell-run",
+    "cargo cell-bench --repeat 5"
+  ],
+  "semantic_status": "pass",
+  "input_sha256": {
+    "native_source": "11c4c3d97e34e7f20b2dafa8c315013993d5244313415c8fb9aa38ce7205b8e7",
+    "native_legacy": "a0b3aadbd654dac2d4aa67c2a0839f646848597186e1d8d2bf3a364875b111ba",
+    "native_values": "a0b3aadbd654dac2d4aa67c2a0839f646848597186e1d8d2bf3a364875b111ba",
+    "cpu_legacy": "a5ae28845f4faec3d13e4960ec597409a37b4db66d2643d2659430c33a40e9b8",
+    "cpu_values": "4d1b811487bd88df44c3bf54d469489be7bf254d9e97942aed438e180ba11b5b"
+  },
+  "regressions": 35,
+  "independent_trials": 234,
+  "timing_trials": 12
+}

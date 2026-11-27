@@ -30,6 +30,20 @@ def public_values(rows):
     return torch.from_numpy(out.astype(np.float32))
 
 
+def owner_reduce(logits, payload, group, owners):
+    # Per Recipe, each public port belongs to exactly one Cell owner.
+    index = group.unsqueeze(0).expand_as(logits)
+    peak = logits.new_full((len(logits), owners), -torch.inf)
+    peak.scatter_reduce_(1, index, logits.detach(), reduce="amax")
+    exp = (logits - peak.gather(1, index)).exp()
+    den = exp.new_zeros(peak.shape).scatter_add(1, index, exp)
+    weights = exp / den.gather(1, index)
+    weighted = payload * weights.unsqueeze(-1)
+    return weighted.new_zeros((len(logits), owners, payload.size(-1))).index_add(
+        1, group, weighted
+    )
+
+
 class CellKV(nn.Module):
     rule_condition = "none"
 
@@ -198,13 +212,16 @@ class CellKV(nn.Module):
                 )
                 pv = pv + torch.einsum("qpf,pfd->qpd", weights, fields)
             port_logits = query @ ext_keys.T / math.sqrt(32)
-            messages = torch.stack(
-                [
-                    torch.einsum("qp,qpd->qd", port_logits[:, ix].softmax(1), pv[:, ix])
-                    for ix in siblings
-                ],
-                1,
-            )
+            if getattr(self, "grouped_training_reduction", False):
+                messages = owner_reduce(port_logits, pv, group, len(siblings))
+            else:
+                messages = torch.stack(
+                    [
+                        torch.einsum("qp,qpd->qd", port_logits[:, ix].softmax(1), pv[:, ix])
+                        for ix in siblings
+                    ],
+                    1,
+                )
             context_values = vals[None] + messages
             owner_logits = query @ keys.T / math.sqrt(32) + (
                 messages * query[:, None]
