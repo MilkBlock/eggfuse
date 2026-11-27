@@ -131,6 +131,14 @@ class Pool:
         return w, s, sorted(ts)
 
 
+def verified_forks(d):
+    merged = pickle.loads((d / "fork-effects.pkl").read_bytes())
+    egg = pickle.loads((d / "egg-fork-effects.pkl").read_bytes())
+    if merged.keys() & egg.keys():
+        raise ValueError("overlapping native program populations")
+    return {**merged, **egg}
+
+
 class Sampler:
     def __init__(self, pool, seed, cfg):
         self.pool, self.cfg, self.rng = pool, cfg, random.Random(seed)
@@ -151,6 +159,13 @@ class Sampler:
             for prog in layout.sample(eligible, 32):
                 selected = layout.sample(programs[prog], 8)
                 self.keys.extend(selected[: cfg["states_per_program"]])
+        self.domain_rng = random.Random(seed)
+        if cfg.get("verified_forks"):
+            proven = verified_forks(directory(pool.arch.a))
+            self.keys = sorted(proven)
+            if not set(self.keys) <= set(pool.keys):
+                raise ValueError("effect fork outside training partition")
+            pool.effects.update(proven)
         self.groups = defaultdict(list)
         for k in self.keys:
             self.groups[pool.records[k]].append(k)
@@ -180,6 +195,8 @@ class Sampler:
     def sample_key(self):
 
         mode = self.cfg.get("sampling", "mixed")
+        if self.cfg.get("verified_forks"):
+            return self.domain_rng.choice(self.keys)
         if mode == "trajectory":
             key = self.rng.choices(self.keys, cum_weights=self.cum, k=1)[0]
         elif mode in ("state", "effect"):
@@ -224,11 +241,25 @@ class Sampler:
         w, s, targets = self.pool.row(key)
         if not targets:
             raise ValueError("unverified empty target group")
+        if self.cfg.get("verified_forks"):
+            available = self.pool.effects[key]
+            types = {p[0]: p[3] for p in s["ports"]}
+            for tid, refs in available:
+                if tid not in s["menu"] or [types[r] for r in refs] != w.roles[tid]:
+                    raise ValueError(
+                        "native fork target is not constructible in the saved snapshot"
+                    )
+            targets = sorted(available)
         if mode == "effect" and key in self.pool.effects:
             groups = defaultdict(list)
             for t in targets:
-                groups[self.pool.effects[key][t]].append(t)
-            targets = [self.rng.choice(g) for g in groups.values()]
+                effect = self.pool.effects[key].get(t)
+                groups[
+                    ("proven", effect) if effect is not None else ("named", t)
+                ].append(t)
+            targets = [
+                g[0] if len(g) == 1 else self.rng.choice(g) for g in groups.values()
+            ]
         if self.cfg.get("names_per_state"):
             # Across controls keep the same random order of verified names, independent of CE draws.
             layout = random.Random(digest(key))

@@ -1,19 +1,48 @@
 """Compare nested native-state and target pools, with the same programs, steps and exposure."""
 
+import argparse
 import json
 import subprocess
 import time
 
 from scaling_campaign import REPORT, Campaign, save
+from scaling_pool import verified_forks
 
 
-def run():
+def run(effects):
     campaign = Campaign(1, 8)
     dest = REPORT / "size-controls"
     dest.mkdir(exist_ok=True)
-    for seed in (71, 113):
+    configs = []
+    if effects:
+        proven = verified_forks(campaign.disk)
+        for sampling in ("state", "effect"):
+            configs.append(
+                (
+                    {
+                        "name": f"fork-{sampling}",
+                        "verified_forks": True,
+                        "sampling": sampling,
+                        "block": 16,
+                    },
+                    len(proven),
+                    sum(map(len, proven.values())),
+                    len({k[0] for k in proven}),
+                )
+            )
+    else:
         for states, names in ((2, 16), (8, 16), (2, 64), (8, 4)):
-            name = f"size-{32 * states}x{names}"
+            cfg = {
+                "name": f"size-{32 * states}x{names}",
+                "sampling": "state",
+                "block": 16,
+                "states_per_program": states,
+                "names_per_state": names,
+            }
+            configs.append((cfg, 32 * states, 32 * states * names, 32))
+    for seed in (71, 113):
+        for cfg, state_count, name_count, prog_count in configs:
+            name = cfg["name"]
             tag = f"{name}-s{seed}-t10000"
             evidence = dest / (tag + ".json")
             if evidence.exists():
@@ -21,13 +50,6 @@ def run():
             if time.time() > campaign.state["end"] - 900:
                 return
             fit = campaign.disk / "fits" / (tag + ".json")
-            cfg = {
-                "name": name,
-                "sampling": "state",
-                "block": 16,
-                "states_per_program": states,
-                "names_per_state": names,
-            }
             if not fit.exists():
                 campaign.call(
                     "scaling_fit.py",
@@ -45,11 +67,11 @@ def run():
             )
             group = campaign.summarize(json.loads(fit.read_text()), r)
             assert (
-                group["state_pool"] == 32 * states
+                group["state_pool"] == state_count
                 and group["exposures"] == 10000
                 and group["steps"] == 625
             )
-            group.update(available_names=32 * states * names, programs=32)
+            group.update(available_names=name_count, programs=prog_count)
             save(evidence, group)
             subprocess.run(["git", "add", "--", str(evidence)], check=True)
             subprocess.run(
@@ -69,4 +91,6 @@ def run():
 
 
 if __name__ == "__main__":
-    run()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--effects", action="store_true")
+    run(parser.parse_args().effects)

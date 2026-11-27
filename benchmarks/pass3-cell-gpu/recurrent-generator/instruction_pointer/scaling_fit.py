@@ -1,9 +1,11 @@
 """Matched complete-token budgets. Each milestone is a durable inference checkpoint."""
 
+import gzip
 import itertools
 import json
 import math
 import os
+import pickle
 from collections import Counter, defaultdict
 from time import perf_counter, time
 
@@ -20,6 +22,14 @@ def atomic(path, obj):
     tmp = path.with_suffix(".tmp")
     tmp.write_text(json.dumps(obj, sort_keys=True))
     tmp.replace(path)
+
+
+def save_seen(d, stem, seen):
+    dest = d / (stem + ".seen.gz")
+    tmp = d / (stem + ".seen.tmp")
+    with gzip.open(tmp, "wb", compresslevel=3) as f:
+        pickle.dump(dict(seen), f, protocol=5)
+    tmp.replace(dest)
 
 
 def model(a, cfg, seed):
@@ -94,6 +104,8 @@ def train(a, cfg, seed, milestones):
             "progress"
         ]
         sampler.rng.setstate(saved["rng"])
+        if "domain_rng" in saved:
+            sampler.domain_rng.setstate(saved["domain_rng"])
         sampler.retention = saved.get("retention", 0.25)
     forward = set(connected)
     handles = []
@@ -222,6 +234,7 @@ def train(a, cfg, seed, milestones):
                 "opt": opt.state_dict(),
                 "progress": progress,
                 "rng": sampler.rng.getstate(),
+                "domain_rng": sampler.domain_rng.getstate(),
                 "curve": curve,
                 "retention": sampler.retention,
             },
@@ -229,6 +242,7 @@ def train(a, cfg, seed, milestones):
         )
         tmp.replace(resume)
         stem = f"{base}-t{emitted}"
+        save_seen(dst, stem, seen)
         tmp = dst / (stem + ".weights.tmp")
         torch.save(n.state_dict(), tmp)
         tmp.replace(dst / (stem + ".pt"))

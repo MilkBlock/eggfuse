@@ -1,6 +1,8 @@
 """Build the ablation matrix only from finished, natively evaluated checkpoints."""
 
 import csv
+import gzip
+import pickle
 import hashlib
 import json
 import os
@@ -77,9 +79,45 @@ def report():
     grouped = dict(state["groups"])
     for path in sorted((REPORT / "size-controls").glob("*.json")):
         grouped[path.stem] = read(path)
+    forks = {}
+    fork_stats = []
+    for label in ("fork-effects", "egg-fork-effects"):
+        fp = raw / (label + ".jsonl")
+        if not fp.exists():
+            continue
+        records = [json.loads(line) for line in fp.read_text().splitlines()]
+        for r in records:
+            forks[r["program"], r["state"]] = {
+                (t[0], tuple(map(tuple, t[1]))): sig
+                for t, _, _, _, _, _, sig in r["tokens"]
+                if sig
+            }
+        sigs = [[t[-1] for t in r["tokens"] if t[-1]] for r in records]
+        fork_stats.append(
+            {
+                "corpus": label,
+                "states": len(records),
+                "native_blank_and_singleton_forks": sum(
+                    1 + len(r["tokens"]) for r in records
+                ),
+                "complete_candidates": sum(len(r["tokens"]) for r in records),
+                "proven_productive_names": sum(map(len, sigs)),
+                "proven_state_effects": sum(len(set(v)) for v in sigs),
+            }
+        )
+    csv_table(REPORT / "native-effect-audit.csv", fork_stats)
     matrix = []
     for tag, g in sorted(grouped.items()):
         c = g["config"]
+        member_path = raw / "fits" / (tag + ".seen.gz")
+        audited = None
+        if member_path.exists():
+            with gzip.open(member_path, "rb") as f:
+                members = pickle.load(f)
+            audited = sum(
+                len({group[t] for t in members.get(key, ()) if t in group})
+                for key, group in forks.items()
+            )
         matrix.append(
             {
                 "model": tag,
@@ -98,6 +136,7 @@ def report():
                 "training_states": g["states"],
                 "state_named_tokens": g["targets"],
                 "state_effect_sets_proven": g["verified_distinct_effects"],
+                "offline_fork_state_effects_seen": audited,
                 "exposures": g["exposures"],
                 "steps": g["steps"],
                 "state_batch": c.get("batch", 1),
@@ -325,6 +364,23 @@ def report():
             "higher-counterfactual.csv 单列 6 对发布后更换入口时的 Higher 排序翻转、完整目标概率、给定 Higher 家族的条件概率。逐请求重放恢复相关版本、原生回执和规则状态。给定目标概率属于离线诊断，自主发现与完成数量见 native.csv。继承的最近一段触发训练为 8,192 次曝光、512 次更新、5.25 秒，训练过最初的两个基础验证程序。",
         ]
     )
+    if fork_stats:
+        lines.extend(
+            [
+                "",
+                "## 单请求反事实效果核验",
+                "",
+                "在同一起点分别执行空分支与单个具名请求，走完原生调度。要求请求被接受、有署名有效操作，且完整导出行集严格增加。保留终图摘要、可见端口、版本、退役及后续发布，才将不同物理引用合并到同一效果。在当前核验条件下未确认的目标保留 Unknown。",
+                "",
+                "| 训练来源 | 状态 | 空与单请求原生分支 | 完整候选 | 可证明新增的具名目标 | 不同状态与效果 |",
+                "|---|---:|---:|---:|---:|---:|",
+            ]
+        )
+        for row in fork_stats:
+            lines.append("| " + " | ".join(str(v) for v in row.values()) + " |")
+        lines.append(
+            "fork-state 与 fork-effect 固定相同状态流和曝光，分别均匀采样已核验具名目标和不同效果。旧地址审计的同 Key 建议在 fact 的完整实际批前状态重新执行后才纳入。该对照独立于主筛选。matrix.csv 保留训练当时已知效果数，并另列此次离线核验覆盖到的效果数；两列可能重叠。"
+        )
     timing = raw / "paired-native-timing.json"
     if timing.exists():
         timed = read(timing)
