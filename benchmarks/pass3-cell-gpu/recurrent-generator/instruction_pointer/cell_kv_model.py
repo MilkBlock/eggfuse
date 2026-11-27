@@ -129,8 +129,8 @@ class CellKV(nn.Module):
             row = row.index_add(0, torch.tensor(owners), readings)
         return row.tanh()
 
-    def state(self, w, s):
-        nodes, codes, types = self.cache
+    def published_kv(self, w, s):
+        _, codes, types = self.cache
         ports = s["ports"]
         refs = [p[0] for p in ports]
         positions = {ref: i for i, ref in enumerate(refs)}
@@ -164,12 +164,22 @@ class CellKV(nn.Module):
         )
         keys = self.actor.input_content(owner_values)
         vals = self.actor.latent(owner_values)
-        read_keys, read_vals = keys, vals
+        return refs, positions, group, siblings, tables, value, owner_values, keys, vals, self.actor.input_content(value)
+
+    def response_kv(self, records, epoch, codes, positions, value):
+        receipt = self.receipt_vectors(records, epoch, codes, positions, value)
+        return self.actor.input_content(receipt), self.actor.latent(receipt)
+
+    def state(self, w, s):
+        _, codes, _ = self.cache
+        ports = s["ports"]
+        refs, positions, group, siblings, tables, value, owner_values, keys, vals, ext_keys = self.published_kv(w, s)
         records = s.get("request_receipts", ())
+        read_keys, read_vals = keys, vals
         if records:
-            receipt = self.receipt_vectors(records, s["epoch"], codes, positions, value)
-            read_keys = torch.cat((keys, self.actor.input_content(receipt)))
-            read_vals = torch.cat((vals, self.actor.latent(receipt)))
+            rk, rv = self.response_kv(records, s["epoch"], codes, positions, value)
+            read_keys = torch.cat((keys, rk))
+            read_vals = torch.cat((vals, rv))
         menu = s["menu"]
         runtime = keys.new_zeros(32)
         runtime[:5] = (
@@ -177,13 +187,12 @@ class CellKV(nn.Module):
         )
         q = self.actor.query(self.actor.lanes.weight[0] + runtime)
         ctx = self.actor.next_read(
-            ((read_keys @ q) / math.sqrt(32)).softmax(0) @ read_vals, self.actor.lanes.weight[0]
+            self.context_read(q, read_keys, read_vals), self.actor.lanes.weight[0]
         )
         # Each template can read all named Cell owners before template selection.
         score_codes = menu_codes(w, s, codes, self.rule_condition)
         query = self.actor.query(ctx + score_codes)
         read = ((query @ read_keys.T) / math.sqrt(32)).softmax(1) @ read_vals
-        ext_keys = self.actor.input_content(value)
         fields = None
         if self.arm == "D" and ports:
             width = max(len(p[4]) for p in ports)
@@ -246,8 +255,7 @@ class CellKV(nn.Module):
                 rv = read_vals[len(vals):]
                 owner_logits = torch.cat((owner_logits, query @ rk.T / math.sqrt(32)), dim=1)
                 context_values = torch.cat((context_values, rv.expand(len(query), -1, -1)), dim=1)
-            owner_weights = owner_logits.softmax(1)
-            read = (owner_weights[:, :, None] * context_values).sum(1)
+            read = self.owner_read(owner_logits, context_values)
         tlog = self.template_readout(ctx, read, score_codes)
         return dict(
             ports=ports,
@@ -267,6 +275,12 @@ class CellKV(nn.Module):
             fields=fields,
             memo={},
         )
+
+    def context_read(self, q, keys, vals):
+        return ((keys @ q) / math.sqrt(32)).softmax(0) @ vals
+
+    def owner_read(self, logits, values):
+        return (logits.softmax(1)[:, :, None] * values).sum(1)
 
     def read_interface(self, query, ports):
         return None

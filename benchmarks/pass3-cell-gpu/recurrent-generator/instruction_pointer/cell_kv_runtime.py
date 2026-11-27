@@ -4,6 +4,7 @@ import hashlib
 import json
 import os
 import subprocess
+import threading
 from collections import Counter, defaultdict
 from time import perf_counter
 
@@ -199,7 +200,7 @@ def native(
         for owner, (tid, chain) in paths.items():
             if teacher == "higher":
                 owners.update((uid, (owner, tid, j)) for j, uid in enumerate(chain))
-    export = a.out / f"kv-export-{os.getpid()}.json"
+    export = a.out / f"kv-export-{os.getpid()}-{threading.get_ident()}.json"
     ir = w.dir / "program.json"
     cmd = [
         a.runtime_binary,
@@ -345,6 +346,8 @@ def native(
                 raise RuntimeError("native run incomplete")
             if execution_trace is not None:
                 execution_trace.finish(f["ept"], audit_path, mem.completed)
+                if hasattr(execution_trace, "response_history"):
+                    execution_trace.response_history(mem.receipts)
         finally:
             client.close()
     elapsed = perf_counter() - start
@@ -381,6 +384,7 @@ def native(
         **({"completed_owners": sorted(mem.completed)} if publication_log is not None else {}),
         stats=dict(stats),
         transport=dict(client.costs),
+        native_verify_seconds=f.get("verify_seconds"),
         receipts=f["counts"],
         facts=sorted(actual),
     )
