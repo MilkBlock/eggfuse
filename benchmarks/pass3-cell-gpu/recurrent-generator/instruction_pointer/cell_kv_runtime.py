@@ -17,8 +17,9 @@ from discrete_draft import Cell
 
 
 class Instances:
-    def __init__(self, w):
+    def __init__(self, w, receipt_memory=False):
         self.world = w
+        self.receipts = [] if receipt_memory else None
         self.live = {}
         self.exposed = {}
         self.wait_exports = {}
@@ -51,6 +52,10 @@ class Instances:
         self.instances[uid] = (template, tuple(refs))
         self.owned[uid] = (uid, 0)
 
+    def acknowledge(self, client, tid, refs, reply):
+        if self.receipts is not None:
+            self.receipts.append((client.run, client.epoch, tid, tuple(refs), tuple(reply)))
+
     def snapshot(self, w, f):
         ports = []
         for uid, op in self.exposed:
@@ -71,6 +76,7 @@ class Instances:
         # Addresses are carried for emission. Tensor order has no positional ID embedding.
         return dict(
             ports=ports,
+            **({"request_receipts": tuple(self.receipts)} if self.receipts is not None else {}),
             menu=w.menu(dict(f["rules"])),
             epoch=f["epoch"],
             run=f["run"],
@@ -95,7 +101,9 @@ class Instances:
             if len(refs) != len(wires):
                 remaining.append((owner, tid, uids))
                 continue
-            uid, status, *_ = submit(client, [Cell(rid, tuple(refs))], 32)[0]
+            reply = submit(client, [Cell(rid, tuple(refs))], 32)[0]
+            self.acknowledge(client, rid, refs, reply)
+            uid, status, *_ = reply
             stats["paid"] += 1
             stats["internal"] += 1
             if status != 0:
@@ -155,7 +163,7 @@ def teacher_labels(w, requests):
 def native(
     a, w, *, teacher=None, policy=None, seed=0, slots=6, receipt_log=None,
     branch=None, reference=None, paid_limit=None, publication_log=None,
-    diagnostic_followup=None,
+    diagnostic_followup=None, receipt_memory=False, submit_pages=1,
 ):
     offline = teacher is not None
     if offline == (policy is not None):
@@ -164,6 +172,8 @@ def native(
         raise ValueError("counterfactual replay requires an offline prefix")
     if paid_limit is not None and (offline or paid_limit < 0):
         raise ValueError("paid cap requires a policy and a nonnegative budget")
+    if submit_pages < 1 or (submit_pages != 1 and (offline or diagnostic_followup is not None)):
+        raise ValueError("multiple pages require an independent policy")
     witnessed = False
     branch_owners = set()
     rows = []
@@ -199,7 +209,7 @@ def native(
         cmd += ["--address-seed", str(seed * 11 + 513)]
     digest = hashlib.sha256(ir.read_bytes()).hexdigest()
     rng = np.random.default_rng(seed)
-    mem = Instances(w)
+    mem = Instances(w, receipt_memory)
     stats = Counter()
     pending = []
     start = perf_counter()
@@ -236,7 +246,10 @@ def native(
                     replies = submit(
                         client, [Cell(q["rule"], refs_of(q)) for q in req], 64
                     )
-                    for q, (uid, status, *_) in zip(req, replies, strict=True):
+                    for q, reply in zip(req, replies, strict=True):
+                        uid, status, *_ = reply
+                        template = owners[uid][1] if uid in owners and owners[uid][2] == 0 else q["rule"]
+                        mem.acknowledge(client, template, refs_of(q), reply)
                         if status or q["token"] != uid:
                             raise ValueError(
                                 ("teacher replay mismatch", uid, status, q)
@@ -256,10 +269,7 @@ def native(
                 else:
                     pending = mem.suffix(w, client, dict(f["rules"]), pending, stats, paid_limit)
                     if branch is None:
-                        available = slots if paid_limit is None else min(slots, paid_limit - stats["paid"])
-                        decisions = policy.generate(w, state, rng, available) if available else []
-                        if paid_limit is not None and len(decisions) > available:
-                            raise ValueError("generated page exceeded its slot budget")
+                        decisions = None
                     elif f["run"] == branch[0]["run"]:
                         if state != branch[0]:
                             raise ValueError("branch decision state differs from replay")
@@ -267,14 +277,21 @@ def native(
                         decisions = branch[1]
                     else:
                         decisions = []
-                    batches = [decisions]
+                    batches = [decisions] * submit_pages
                     if diagnostic_followup is not None and f["run"] == diagnostic_followup[0]["run"]:
                         if state != diagnostic_followup[0] or paid_limit is not None or publication_log is None:
                             raise ValueError("same-window probe requires the exact audited snapshot")
                         batches.append(diagnostic_followup[1])
                     for batch_i, decisions in enumerate(batches):
-                        if batch_i:
+                        if batch_i or receipt_memory:
                             state = mem.snapshot(w, f)
+                        if decisions is None:
+                            available = slots // submit_pages + int(batch_i < slots % submit_pages)
+                            if paid_limit is not None:
+                                available = min(available, paid_limit - stats["paid"])
+                            decisions = policy.generate(w, state, rng, available) if available else []
+                            if paid_limit is not None and len(decisions) > available:
+                                raise ValueError("generated page exceeded its slot budget")
                         cells = [
                             Cell(w.layouts[tid][0][0], refs) for tid, refs in decisions
                         ]
@@ -283,9 +300,11 @@ def native(
                             receipt_log.append((state, decisions, replies))
                         stats["paid"] += len(cells)
                         stats["neural_tokens"] += len(cells)
-                        for (tid, refs), (uid, status, *_) in zip(
+                        for (tid, refs), reply in zip(
                             decisions, replies, strict=True
                         ):
+                            mem.acknowledge(client, tid, refs, reply)
+                            uid, status, *_ = reply
                             higher = tid >= w.primitives
                             stats["higher_selected"] += int(higher)
                             if status:

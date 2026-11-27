@@ -1,0 +1,1 @@
+{"token":[574,[]],"run":2,"immediate":[1129],"next_publication":[[7,0,1],[7,1,2]],"rescheduled":[6,9,14,17,22,34,43,46,66,69,74,86,95,98,118,121,126,138,147,150,170,173,178,190,199,202,220,223,228,240,249,252],"retry":{"run":6,"status":"untriggered_rule","gained":[]},"original":39,"intervened":40,"gained":[1129,1198],"lost":[293]}
