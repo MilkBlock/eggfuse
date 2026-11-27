@@ -14,6 +14,7 @@ from ccp_v01 import Client
 from completion_context import read
 from credit_scale_buffer import submit
 from discrete_draft import Cell
+from rule_publication import publication_observer, read_rule_frame
 
 
 class Instances:
@@ -77,13 +78,14 @@ class Instances:
         return dict(
             ports=ports,
             **({"request_receipts": tuple(self.receipts)} if self.receipts is not None else {}),
+            **({"rule_state": f["rule_state"], "check_dirty": f["check_dirty"]} if "rule_state" in f else {}),
             menu=w.menu(dict(f["rules"])),
             epoch=f["epoch"],
             run=f["run"],
             response=(len(f["accepted"]), len(f["updates"]), len(f["retired"])),
         )
 
-    def suffix(self, w, client, scheduled, pending, stats, paid_limit=None):
+    def suffix(self, w, client, scheduled, pending, stats, paid_limit=None, execution_trace=None):
         remaining = []
         for owner, tid, uids in pending:
             j = len(uids)
@@ -106,6 +108,8 @@ class Instances:
             uid, status, *_ = reply
             stats["paid"] += 1
             stats["internal"] += 1
+            if execution_trace is not None:
+                execution_trace.step(owner, j, rid, reply)
             if status != 0:
                 stats["higher_rejected"] += 1
                 continue
@@ -163,8 +167,10 @@ def teacher_labels(w, requests):
 def native(
     a, w, *, teacher=None, policy=None, seed=0, slots=6, receipt_log=None,
     branch=None, reference=None, paid_limit=None, publication_log=None,
-    diagnostic_followup=None, receipt_memory=False, submit_pages=1,
+    diagnostic_followup=None, receipt_memory=False, submit_pages=1, rule_state=None, execution_trace=None,
 ):
+    if rule_state is None:
+        rule_state = getattr(getattr(policy, "net", None), "rule_condition", "none") != "none"
     offline = teacher is not None
     if offline == (policy is not None):
         raise ValueError("choose offline replay or independent policy")
@@ -203,7 +209,7 @@ def native(
         "audit",
         "--export",
         export,
-        "--ept",
+        "--ept-origins" if execution_trace is not None else "--ept",
     ]
     if not offline:
         cmd += ["--address-seed", str(seed * 11 + 513)]
@@ -215,7 +221,12 @@ def native(
     start = perf_counter()
     if policy is not None:
         policy.prepare(w)
-    with subprocess.Popen(cmd, stdin=-1, stdout=-1) as proc:
+    if execution_trace is not None and (offline or not rule_state):
+        raise ValueError("attribution requires a signed, observed run")
+    with (
+        publication_observer(rule_state, execution_trace is not None) as (reader, audit_path, env),
+        subprocess.Popen(cmd, stdin=-1, stdout=-1, env=env) as proc,
+    ):
         client = Client(proc, 64, digest)
         try:
             for line in iter(proc.stdout.readline, b""):
@@ -223,6 +234,8 @@ def native(
                 if "role" in f:
                     break
                 unpack(proc.stdout, f)
+                if reader is not None:
+                    f["rule_state"], f["check_dirty"] = read_rule_frame(reader, f)
                 mem.update(f)
                 if publication_log is not None:
                     publication_log.append({k: f.get(k) for k in ("run", "epoch", "rules", "accepted", "updates", "retired", "final_publication")})
@@ -267,7 +280,7 @@ def native(
                         else:
                             mem.begin(uid, q["rule"], refs_of(q))
                 else:
-                    pending = mem.suffix(w, client, dict(f["rules"]), pending, stats, paid_limit)
+                    pending = mem.suffix(w, client, dict(f["rules"]), pending, stats, paid_limit, execution_trace)
                     if branch is None:
                         decisions = None
                     elif f["run"] == branch[0]["run"]:
@@ -307,6 +320,8 @@ def native(
                             uid, status, *_ = reply
                             higher = tid >= w.primitives
                             stats["higher_selected"] += int(higher)
+                            if execution_trace is not None:
+                                execution_trace.entry(w, state, tid, refs, reply)
                             if status:
                                 continue
                             mem.begin(uid, tid, refs)
@@ -326,6 +341,8 @@ def native(
                 client.seal()
             if proc.wait() != 0 or "role" not in f:
                 raise RuntimeError("native run incomplete")
+            if execution_trace is not None:
+                execution_trace.finish(f["ept"], audit_path, mem.completed)
         finally:
             client.close()
     elapsed = perf_counter() - start

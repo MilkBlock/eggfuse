@@ -70,7 +70,7 @@ class SelectedCell(RoleRead):
             return m["lp"][js].log_softmax(0)
         ts = [m["menu"][j] for j in js]
         p = m["ports"][first]
-        codes = self.cache[1][ts]
+        codes = m["score_codes"][js]
         query = self.actor.query(m["ctx"] + codes)
         fields, roles = words([p[4]])
         self.port_types = self.type_codes[[p[3]]]

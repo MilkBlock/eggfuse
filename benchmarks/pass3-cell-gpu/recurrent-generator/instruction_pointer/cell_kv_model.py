@@ -13,6 +13,7 @@ from binding_model import bit_lanes
 from head_joint_index import PostingIndex
 from partner_index import EXPLORE
 from ripsat_policy import CellScorer, GraphBank
+from rule_publication import menu_codes
 from rule_read import load_actor
 
 
@@ -30,6 +31,8 @@ def public_values(rows):
 
 
 class CellKV(nn.Module):
+    rule_condition = "none"
+
     def __init__(self, a, arm, train_graph):
         super().__init__()
         self.arm = arm
@@ -163,7 +166,8 @@ class CellKV(nn.Module):
             ((read_keys @ q) / math.sqrt(32)).softmax(0) @ read_vals, self.actor.lanes.weight[0]
         )
         # Each template can read all named Cell owners before template selection.
-        query = self.actor.query(ctx + codes[menu])
+        score_codes = menu_codes(w, s, codes, self.rule_condition)
+        query = self.actor.query(ctx + score_codes)
         read = ((query @ read_keys.T) / math.sqrt(32)).softmax(1) @ read_vals
         ext_keys = self.actor.input_content(value)
         fields = None
@@ -227,7 +231,7 @@ class CellKV(nn.Module):
                 context_values = torch.cat((context_values, rv.expand(len(query), -1, -1)), dim=1)
             owner_weights = owner_logits.softmax(1)
             read = (owner_weights[:, :, None] * context_values).sum(1)
-        tlog = self.template_readout(ctx, read, codes[menu])
+        tlog = self.template_readout(ctx, read, score_codes)
         return dict(
             ports=ports,
             refs=refs,
@@ -239,6 +243,7 @@ class CellKV(nn.Module):
             vals=vals,
             ctx=ctx,
             menu=menu,
+            score_codes=score_codes,
             lp=tlog.log_softmax(0),
             ext=value,
             ek=ext_keys,
