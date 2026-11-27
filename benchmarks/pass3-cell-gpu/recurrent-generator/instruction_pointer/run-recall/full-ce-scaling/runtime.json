@@ -1,0 +1,20 @@
+{
+  "python": "3.14.3 (main, Feb  3 2026, 15:32:20) [Clang 17.0.0 (clang-1700.6.3.2)]",
+  "executable": "/private/tmp/prefix-ml/bin/python",
+  "torch": "2.15.0",
+  "os": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "neural_device": "cpu",
+  "torch_threads_per_trial": 1,
+  "native": {
+    "CELL_REPLAY": {
+      "path": "/private/tmp/cost-audit-build/release/examples/cell_token_replay",
+      "sha256": "7f875acb2b5c5b954467afb4299c7bded406761a1422b305a625dc2a55ca49e4"
+    },
+    "CELL_COMPILER": {
+      "path": "/private/tmp/cost-audit-build/release/eggfuse-cell-compiler",
+      "sha256": "01b4d7cd33c4f73a5ebbc81a28ae822ba2dda668b5acefd4601ebbf98d12e4f4"
+    }
+  },
+  "artifact_root": "/Volumes/Extreme SSD/eggfuse-experiments",
+  "cell_data": "/tmp/dfm-local/data"
+}

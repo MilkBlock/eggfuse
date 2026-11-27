@@ -1,0 +1,45 @@
+{
+ "registered_groups_verified": 98,
+ "same_state_targets_steps_and_source_counts_as_center": [
+  "decoder-s113-t10000",
+  "decoder-s113-t100000",
+  "decoder-s113-t30000",
+  "decoder-s71-t10000",
+  "decoder-s71-t100000",
+  "decoder-s71-t30000",
+  "layer01-s113-t10000",
+  "layer01-s113-t100000",
+  "layer01-s113-t30000",
+  "layer01-s71-t10000",
+  "layer01-s71-t100000",
+  "layer01-s71-t30000",
+  "layer03-s113-t10000",
+  "layer03-s113-t100000",
+  "layer03-s113-t30000",
+  "layer03-s71-t10000",
+  "layer03-s71-t100000",
+  "layer03-s71-t30000",
+  "local-s113-t10000",
+  "local-s113-t100000",
+  "local-s113-t30000",
+  "local-s71-t10000",
+  "local-s71-t100000",
+  "local-s71-t30000"
+ ],
+ "native_trials": {
+  "inner-intervention": 10,
+  "intervention": 40,
+  "outer": 130,
+  "selection": 330,
+  "validation": 3030
+ },
+ "artifacts": 769,
+ "manifest_sha256": "bc9801021827ee0c38120e24f9dfc88067d6a5187671b1b803ec776ef6d16a3d",
+ "configuration_lock": {
+  "name": "local",
+  "cap": 100000,
+  "stable": false,
+  "outer": "sum-divisors",
+  "time": 1795814186.143428
+ }
+}
