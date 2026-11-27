@@ -1,0 +1,4 @@
+case,table,publications,retired,upserts,segment_rows,fresh_rows,new_versions,cross_bin,maintenance_s
+fact,205,21,0,178,624,784,116,116,0.11611466493923217
+sum-divisors,223,104,553,5040,14149,245945,886,886,0.6054531629779376
+dynamic-0,47,5,4,133,229,353,29,29,0.008414457959588617

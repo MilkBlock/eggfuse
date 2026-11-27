@@ -71,7 +71,23 @@ def unpack(pipe, f):
 
 
 @torch.no_grad()
-def execute(a, d, dest, net, arm, seed, block, draw, reference, *, parent_policy=None, address_seed=None):
+def execute(
+    a,
+    d,
+    dest,
+    net,
+    arm,
+    seed,
+    block,
+    draw,
+    reference,
+    *,
+    parent_policy=None,
+    address_seed=None,
+    template_policy=None,
+    audit_slots=False,
+    paid_limit=None,
+):
     dest.mkdir(exist_ok=True, parents=True)
     observer = dest / "observer.jsonl"
     export = dest / "graph.json"
@@ -80,6 +96,7 @@ def execute(a, d, dest, net, arm, seed, block, draw, reference, *, parent_policy
     ir = d / "program.json"
     digest = hashlib.sha256(ir.read_bytes()).hexdigest()
     program = read(ir)
+    events = []
     stats = Counter()
     count_by_rule = Counter()
     with subprocess.Popen(
@@ -91,12 +108,24 @@ def execute(a, d, dest, net, arm, seed, block, draw, reference, *, parent_policy
             "audit",
             "--export",
             export,
-            "--ept",
-            *(["--address-seed", str(address_seed)] if address_seed is not None else []),
+            "--ept-origins" if audit_slots else "--ept",
+            *(
+                ["--address-seed", str(address_seed)]
+                if address_seed is not None
+                else []
+            ),
         ],
         stdin=-1,
         stdout=-1,
-        env=dict(os.environ, EGGFUSE_QUERY_OBSERVER=str(observer)),
+        env=dict(
+            os.environ,
+            EGGFUSE_QUERY_OBSERVER=str(observer),
+            **(
+                {"EGGFUSE_ADMISSION_OBSERVER": str(dest / "admit.csv")}
+                if audit_slots
+                else {}
+            ),
+        ),
     ) as proc:
         client = Client(proc, 32, digest)
         try:
@@ -109,16 +138,18 @@ def execute(a, d, dest, net, arm, seed, block, draw, reference, *, parent_policy
                     continue
                 m.update(f)
                 r = client.run = f["run"]
+                m.current_probe_run = r
                 client.epoch = f["epoch"]
                 rng = np.random.default_rng(draw + 47311 * r)
-                if m.ids:
+                if m.ids and (paid_limit is None or stats["paid"] < paid_limit):
                     # Common random numbers independent of success in a previous run.
-                    templates = choose_templates(
-                        net,
-                        m,
-                        rng.random(
-                            (a.slots, max(1, (len(m.ids) - 1).bit_length()))
-                        ).astype(np.float32),
+                    noise = rng.random(
+                        (a.slots, max(1, (len(m.ids) - 1).bit_length()))
+                    ).astype(np.float32)
+                    templates = (
+                        choose_templates(net, m, noise)
+                        if template_policy is None
+                        else template_policy(net, m, program, noise)
                     )
                     stats["attempts"] += len(templates)
                     cells = [None] * len(templates)
@@ -146,8 +177,35 @@ def execute(a, d, dest, net, arm, seed, block, draw, reference, *, parent_policy
                                 rid, tuple(z["addrs"][j][p] for j, p in enumerate(ix))
                             )
                     signed = [c for c in cells if c is not None]
+                    if paid_limit is not None:
+                        signed = signed[: paid_limit - stats["paid"]]
                     count_by_rule.update(c.rule for c in signed)
-                    submit(client, signed, 32)
+                    replies = iter(submit(client, signed, 32))
+                    if audit_slots:
+                        from cell_transaction import STATUS
+
+                        for slot, (rid, cell) in enumerate(
+                            zip(templates, cells, strict=True)
+                        ):
+                            reply = next(replies, None) if cell is not None else None
+                            unsent = (
+                                "empty_domain" if cell is None else "budget_unsubmitted"
+                            )
+                            events.append(
+                                dict(
+                                    run=r,
+                                    epoch=client.epoch,
+                                    slot=slot,
+                                    rule=rid,
+                                    dirty=bool(m.rule_features[m.rule_index[rid], 0]),
+                                    watermark=dict(f["rules"])[rid],
+                                    epoch_at_submit=client.epoch if reply else None,
+                                    refs=cell.refs if cell is not None else None,
+                                    status=STATUS[reply[1]] if reply else unsent,
+                                    uid=reply[0] if reply else None,
+                                )
+                            )
+                        assert next(replies, None) is None
                     stats["paid"] += len(signed)
                 client.seal()
             if proc.wait() != 0 or "role" not in f:
@@ -156,6 +214,21 @@ def execute(a, d, dest, net, arm, seed, block, draw, reference, *, parent_policy
             client.close()
             m.close_observer()
     wall = perf_counter() - t
+    if audit_slots:
+        origins = dict(f["ept"]["origins"])
+        for event in events:
+            event["gain"] = origins.get(event["uid"], 0)
+        write(dest / "slots.json", events)
+        write(
+            dest / "accepted.json",
+            dict(
+                schema="cell-token-replay/permuted-v1",
+                address_seed=address_seed,
+                program_sha256=digest,
+                requests=list(client.offline_tape(client.run)),
+                repair_events=[],
+            ),
+        )
     target, initial = reference
     facts = sorted(target.match(read(export)) - initial)
     ops = sum(f["ept"]["signed_external"]) + sum(f["ept"]["signed_internal"])

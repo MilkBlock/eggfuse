@@ -12,30 +12,30 @@ from selective_worlds import args
 ARMS = ("wide", "positive", "field-sparse", "joint-sparse", "mixed-sparse")
 
 
-def pack(states):
-    # Acyclic rooted tree of direct Recipe variable wires; reject unsupported graphs.
-    def tree(z):
-        slots = z["slots"]
-        edges = []
-        for j, child in enumerate(slots[1:], 1):
-            choices = []
-            for i, parent in enumerate(slots[:j]):
-                shared = [
-                    (a, b)
-                    for a, s in enumerate(parent)
-                    for b, t in enumerate(child)
-                    if s is not None and s == t
-                ]
-                if shared:
-                    choices.append((i, shared))
-            if len(choices) != 1:
-                raise ValueError(
-                    "requires exactly one earlier connected role per child"
-                )
-            edges.append(choices[0])
-        return edges
+def role_tree(slots):
+    """Read one earlier producer role per child from static Recipe slots."""
+    edges = []
+    for j, child in enumerate(slots[1:], 1):
+        choices = []
+        for i, parent in enumerate(slots[:j]):
+            shared = [
+                (a, b)
+                for a, s in enumerate(parent)
+                for b, t in enumerate(child)
+                if s is not None and s == t
+            ]
+            if shared:
+                choices.append((i, shared))
+        if len(choices) != 1:
+            raise ValueError(
+                "requires exactly one earlier connected role per child"
+            )
+        edges.append(choices[0])
+    return edges
 
-    trees = [tree(z) for z in states]
+
+def pack(states):
+    trees = [role_tree(z["slots"]) for z in states]
     parents = [p for p, _ in trees[0]]
     assert all([p for p, _ in t] == parents for t in trees)
     return collate(states), [

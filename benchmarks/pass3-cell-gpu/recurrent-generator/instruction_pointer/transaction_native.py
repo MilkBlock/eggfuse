@@ -31,6 +31,7 @@ def execute(
     protocol="ccp-v0.1",
     observer_path=None,
     runtime_binary=None,
+    address_seed=None,
 ):
     init = perf_counter()
     root = Path(root).resolve()
@@ -54,6 +55,10 @@ def execute(
     ]
     if limit is not None:
         cmd.insert(-1, str(limit))
+    if address_seed is not None:
+        if protocol != "ccp-v0.1":
+            raise ValueError("address permutation requires CCP v0.1")
+        cmd.extend(["--address-seed", str(address_seed)])
     trace = []
     repairs = []
     repair_blocks = []
@@ -194,6 +199,8 @@ def execute(
         if protocol == "ccp-v0.1"
         else (end["runtime_events"] if end else repairs),
     }
+    if address_seed is not None:
+        schema.update(schema="cell-token-replay/permuted-v1", address_seed=address_seed)
     tape.write_text(json.dumps(schema))
     replay = json.loads(
         subprocess.check_output(

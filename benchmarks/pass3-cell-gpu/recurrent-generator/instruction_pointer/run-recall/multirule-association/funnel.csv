@@ -1,0 +1,4 @@
+case,slots,paid,empty,empty_dirty,stale,inactive,binding,guard,watermark,duplicates,accepted,positive,ops
+sum-divisors,2312,742,1570,208,0,660,37,11,0,20,14,11,223
+fact,2408,541,1867,203,0,485,27,1,2,14,12,11,94
+loopfact,2424,745,1679,206,0,646,49,15,5,15,15,14,79

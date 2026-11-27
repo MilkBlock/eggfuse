@@ -26,7 +26,8 @@ class AnchorStream(CellStream):
 
 
 class Reference:
-    def __init__(self, original_order=False):
+    def __init__(self, original_order=False, run_request_cap=None):
+        self.run_request_cap = run_request_cap
         self.original_order = original_order
         self.prefix = Prefix().eval()
         self.prefix.load_state_dict(torch.load("run-recall/structural-reach/prefix.pt", weights_only=True))
@@ -38,6 +39,7 @@ class Reference:
         return frame["rules"]
 
     def run_snapshot(self, frame, pub, rd, model, txn, stats, deadline):
+        remaining = self.run_request_cap
         for r, wm in self.scheduled_rules(frame, stats):
             order = list(rd.order(r))
             semi = rd.iface.rules[r]["metadata"]["seminaive"]
@@ -62,7 +64,14 @@ class Reference:
                 if anchor is not None:
                     stream.roles[seq.index(anchor)] = roots
                 for paths in stream.path_batches("stream", 0.0, deadline):
-                    txn.proofs_from_paths(stream, paths)
+                    if remaining is None:
+                        txn.proofs_from_paths(stream, paths)
+                    else:
+                        chunk = paths[:remaining]
+                        txn.proofs_from_paths(stream, chunk)
+                        remaining -= len(chunk)
+                        if remaining == 0:
+                            return
 
 
 if __name__ == "__main__":
