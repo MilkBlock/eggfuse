@@ -1,0 +1,209 @@
+{
+ "archive_sha": "e14aed85c52c58cdab10f6d0e647dacfd72e2bf1f7ce6b7e7246a991e1455133",
+ "calibration": [],
+ "config": {
+  "arm": "C",
+  "name": "center"
+ },
+ "connected": 18880,
+ "effect_identity_scope": "only exact native counterfactual gain sets",
+ "exposures": 30000,
+ "forward_observed": 18880,
+ "gradient_tensors": [
+  "actor.age.weight",
+  "actor.dynamic.weight",
+  "actor.input_content.weight",
+  "actor.input_role.bias",
+  "actor.input_role.weight",
+  "actor.lanes.weight",
+  "actor.latent.weight",
+  "actor.msg.weight",
+  "actor.next_read.bias_hh",
+  "actor.next_read.bias_ih",
+  "actor.next_read.weight_hh",
+  "actor.next_read.weight_ih",
+  "actor.query.bias",
+  "actor.query.weight",
+  "actor.static.weight",
+  "actor.update.bias",
+  "actor.update.weight",
+  "graph.edge.bias",
+  "graph.edge.weight",
+  "graph.message.weight",
+  "graph.step.bias",
+  "graph.step.weight"
+ ],
+ "learning_curve": [
+  {
+   "cumulative_train_ce": 6.550909728576045,
+   "exposures": 11036,
+   "lr": 0.001,
+   "seconds": 242.52702304098057,
+   "steps": 283
+  },
+  {
+   "cumulative_train_ce": 6.533882072046362,
+   "exposures": 12022,
+   "lr": 0.001,
+   "seconds": 254.94474604097195,
+   "steps": 310
+  },
+  {
+   "cumulative_train_ce": 6.504699491998687,
+   "exposures": 13298,
+   "lr": 0.001,
+   "seconds": 265.1624615829787,
+   "steps": 336
+  },
+  {
+   "cumulative_train_ce": 6.517906681712008,
+   "exposures": 14032,
+   "lr": 0.001,
+   "seconds": 272.63088804099243,
+   "steps": 345
+  },
+  {
+   "cumulative_train_ce": 6.510714727029229,
+   "exposures": 15025,
+   "lr": 0.001,
+   "seconds": 292.34298299998045,
+   "steps": 358
+  },
+  {
+   "cumulative_train_ce": 6.495952178268832,
+   "exposures": 16191,
+   "lr": 0.001,
+   "seconds": 329.68850887496956,
+   "steps": 374
+  },
+  {
+   "cumulative_train_ce": 6.477639329479353,
+   "exposures": 17007,
+   "lr": 0.001,
+   "seconds": 339.4422812499688,
+   "steps": 388
+  },
+  {
+   "cumulative_train_ce": 6.469491895902406,
+   "exposures": 18057,
+   "lr": 0.001,
+   "seconds": 371.34839858295163,
+   "steps": 401
+  },
+  {
+   "cumulative_train_ce": 6.453367969200396,
+   "exposures": 19022,
+   "lr": 0.001,
+   "seconds": 389.32491708296584,
+   "steps": 413
+  },
+  {
+   "cumulative_train_ce": 6.4482945156571425,
+   "exposures": 20245,
+   "lr": 0.001,
+   "seconds": 411.05598174995976,
+   "steps": 427
+  },
+  {
+   "cumulative_train_ce": 6.429350784892379,
+   "exposures": 21199,
+   "lr": 0.001,
+   "seconds": 423.47265766595956,
+   "steps": 445
+  },
+  {
+   "cumulative_train_ce": 6.4126739546860385,
+   "exposures": 22120,
+   "lr": 0.001,
+   "seconds": 427.3948135409737,
+   "steps": 458
+  },
+  {
+   "cumulative_train_ce": 6.387988288492402,
+   "exposures": 23009,
+   "lr": 0.001,
+   "seconds": 449.3126332909451,
+   "steps": 475
+  },
+  {
+   "cumulative_train_ce": 6.369863794931389,
+   "exposures": 24013,
+   "lr": 0.001,
+   "seconds": 459.8863614159636,
+   "steps": 498
+  },
+  {
+   "cumulative_train_ce": 6.352386362186284,
+   "exposures": 25249,
+   "lr": 0.001,
+   "seconds": 470.40582662494853,
+   "steps": 518
+  },
+  {
+   "cumulative_train_ce": 6.354178167061557,
+   "exposures": 26099,
+   "lr": 0.001,
+   "seconds": 484.97217345796525,
+   "steps": 525
+  },
+  {
+   "cumulative_train_ce": 6.32336218975445,
+   "exposures": 27051,
+   "lr": 0.001,
+   "seconds": 503.9479764579446,
+   "steps": 550
+  },
+  {
+   "cumulative_train_ce": 6.315631432538188,
+   "exposures": 28023,
+   "lr": 0.001,
+   "seconds": 507.42211499996483,
+   "steps": 560
+  },
+  {
+   "cumulative_train_ce": 6.304327369213776,
+   "exposures": 29006,
+   "lr": 0.001,
+   "seconds": 517.4945363749866,
+   "steps": 579
+  },
+  {
+   "cumulative_train_ce": 6.287225234274815,
+   "exposures": 30000,
+   "lr": 0.001,
+   "seconds": 551.1176107079955,
+   "steps": 607
+  }
+ ],
+ "registered": 32874,
+ "seconds": 551.1176124999765,
+ "seed": 71,
+ "sources": {
+  "autonomous": 15120,
+  "branch": 396,
+  "continuous": 248,
+  "foundation": 408,
+  "shuffle": 13410,
+  "teacher": 418
+ },
+ "state_pool": 7638,
+ "states": 493,
+ "steps": 607,
+ "targets": 28277,
+ "tokens_per_s": 54.43484170994676,
+ "train_ce": 6.287225234274815,
+ "verified_distinct_effects": 100,
+ "weights_sha": "cd0c44058e72f5beca2f4288062abf8b499b388b9d4d15f200812f8c5defa8d7",
+ "inner_area": {
+  "loopfact": 0.047212230215827336,
+  "foundation185511": 0.30615384615384617,
+  "foundation185510": 0.34
+ },
+ "val_ce": 5.981556998433877,
+ "free_known_hit": 0.15985576923076922,
+ "free_parents_0": 1.0,
+ "free_parents_3": 0.005208333333333333,
+ "free_parents_1": 0.22135416666666666,
+ "free_parents_2": 0.0859375,
+ "free_higher": 0.484375
+}
