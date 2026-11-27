@@ -53,6 +53,7 @@ def frozen(
     *,
     fit_seed=9633,
     states=8,
+    first_runs=False,
     destination="paired",
     native_trial=historical_native_trial,
 ):
@@ -76,6 +77,8 @@ def frozen(
             0, len(all_runs) - 1, min(states, len(all_runs)), dtype=int
         )
     }
+    if first_runs:
+        selected = set(all_runs[:states])
     contexts = (
         read(a.archive / "dirty" / case / "contexts.json")
         if source == "rollout"
@@ -173,6 +176,8 @@ def frozen(
                     proposed=len(part),
                     hit=len(hits),
                     reference_owners=len(gold),
+                    visible_ports=len(m.pub.live),
+                    visible_owners=len({o for o, _ in m.pub.live}),
                     distinct=len(set(hits)),
                     seconds=sum(t for _, t in waves[:end]),
                     censored=kind == "complete" and count < budget,

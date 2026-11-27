@@ -1213,11 +1213,12 @@ impl Executor {
     }
     #[cfg(feature = "cell-token-replay")]
     pub fn start_tokens(&mut self, packets: Option<Vec<crate::cell_tokens::Request>>) -> Result<()> {
+        self.start_tokens_with_initial_names(packets, None)
+    }
+    #[cfg(feature = "cell-token-replay")]
+    pub fn start_tokens_with_initial_names(&mut self, packets: Option<Vec<crate::cell_tokens::Request>>, seed: Option<u64>) -> Result<()> {
         if !self.steps.is_empty() || self.token_history.is_some() { return Err("token history already started".into()); }
-        self.token_history = Some(match packets {
-            Some(packets) => crate::cell_tokens::History::replay(&self.graph, packets)?,
-            None => crate::cell_tokens::History::capture(&self.graph)?,
-        });
+        self.token_history = Some(crate::cell_tokens::History::with_initial_names(&self.graph, packets, seed)?);
         self.graph.token_merge=Some(Default::default());
         self.stage_spine.token_history = true;
         Ok(())

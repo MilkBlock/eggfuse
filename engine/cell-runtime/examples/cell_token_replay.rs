@@ -9,6 +9,8 @@ use std::{env, fs, time::Instant};
 struct Tape {
     schema: String,
     program_sha256: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    address_seed: Option<u64>,
     repair_events: Vec<eggfuse_cell_runtime::cell_tokens::RepairEvent>,
     requests: Vec<eggfuse_cell_runtime::cell_tokens::Request>,
 }
@@ -23,6 +25,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let [role, program, tape, audit, rest @ ..] = args.as_slice() else {
         return Err("expected reference|capture|replay|online PROGRAM TAPE audit|time".into());
     };
+    let (rest, mut address_seed) = match rest {
+        [rest @ .., flag, seed] if flag == "--address-seed" && role == "capture" =>
+            (rest, Some(seed.parse::<u64>()?)),
+        _ => (rest, None),
+    };
+    let schema = |seed: Option<u64>| if seed.is_some() { "cell-token-replay/permuted-v1" } else { "cell-token-replay/v2" };
     #[cfg(feature = "cell-token-ept")]
     let (rest, ept, origins) = match rest {
         [rest @ .., flag] if flag == "--ept-origins" => (rest, true, true),
@@ -79,7 +87,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let p = Program::parse(serde_json::from_slice(&compiled)?)?;
     let packets = if role == "replay" || role == "shadow-waves" {
         let saved: Tape = serde_json::from_slice(&fs::read(tape)?)?;
-        if saved.schema != "cell-token-replay/v2" || saved.program_sha256 != digest {
+        address_seed = saved.address_seed;
+        if saved.schema != schema(address_seed) || saved.program_sha256 != digest {
             return Err("tape schema or compiled program digest differs".into());
         }
         Some(saved.requests)
@@ -96,7 +105,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         engine.graph.token_ept=Some(ledger);
     }
     match role.as_str() {
-        "replay" | "capture" | "shadow-waves" => engine.start_tokens(packets)?,
+        "replay" | "capture" | "shadow-waves" => engine.start_tokens_with_initial_names(packets, address_seed)?,
         "online" | "online-waves" | "online-transactions" | "online-ccp-v0.1" => engine.start_tokens(Some(Vec::new()))?,
         "assist" => engine.start_token_assist()?,
         "reference" => (),
@@ -114,7 +123,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     if let Some(path) = recall_path {
         let probes: Tape = serde_json::from_slice(&fs::read(path)?)?;
-        if probes.schema != "cell-token-replay/v2" || probes.program_sha256 != digest {
+        if probes.address_seed != address_seed || probes.schema != schema(address_seed) || probes.program_sha256 != digest {
             return Err("recall tape/program mismatch".into());
         }
         engine.audit_token_recall(probes.requests)?;
@@ -246,7 +255,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             fs::write(
                 tape,
                 serde_json::to_vec(&Tape {
-                    schema: "cell-token-replay/v2".into(),
+                    schema: schema(address_seed).into(),
+                    address_seed,
                     program_sha256: digest,
                     repair_events: h.repair_events.clone(),
                     requests: h.tape.clone(),

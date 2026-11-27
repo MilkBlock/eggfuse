@@ -202,7 +202,7 @@ pub struct History {
     pub verify_time: Duration,
 }
 impl History {
-    fn new(g: &Graph, teacher: bool) -> Result<Self> {
+    fn new(g: &Graph, teacher: bool, mut address_seed: Option<u64>) -> Result<Self> {
         // Preserve every original PC. Append the statically ordered merge-program
         // blocks; a Set that does not execute its merge contributes no result.
         let merge_offsets = (0..g.program.rules.len())
@@ -245,6 +245,18 @@ impl History {
                 }
             }
             initial.sort();
+            // Offline naming experiment. Permute physical handles independently of
+            // field contents, preserving ownership, versions and the repair namespace.
+            if let Some(state) = &mut address_seed {
+                for end in (1..initial.len()).rev() {
+                    *state = state.wrapping_add(0x9e3779b97f4a7c15);
+                    let mut x = *state;
+                    x = (x ^ (x >> 30)).wrapping_mul(0xbf58476d1ce4e5b9);
+                    x = (x ^ (x >> 27)).wrapping_mul(0x94d049bb133111eb);
+                    let slot = (((x ^ (x >> 31)) as u128 * (end + 1) as u128) >> 64) as usize;
+                    initial.swap(slot, end);
+                }
+            }
             for (_, witness) in initial {
                 history.bind(Address { token: id, op: 0 }, witness);
                 id -= 2;
@@ -276,10 +288,14 @@ impl History {
         self.higher.as_ref().map(|h| serde_json::json!({"counts":h.counts, "outstanding":h.remaining()}))
     }
     pub fn capture(g: &Graph) -> Result<Self> {
-        Self::new(g, true)
+        Self::new(g, true, None)
     }
     pub fn replay(g: &Graph, tape: Vec<Request>) -> Result<Self> {
-        let mut h = Self::new(g, false)?;
+        Self::with_initial_names(g, Some(tape), None)
+    }
+    pub(crate) fn with_initial_names(g: &Graph, tape: Option<Vec<Request>>, seed: Option<u64>) -> Result<Self> {
+        let mut h = Self::new(g, tape.is_none(), seed)?;
+        let Some(tape) = tape else { return Ok(h); };
         let mut ids = BTreeSet::new();
         for packet in tape {
             if packet.closed_branch.is_some() || packet.side.is_some() || packet.unit.is_some() || packet.token <= 0 || !ids.insert(packet.token) {
