@@ -118,7 +118,7 @@ def compile_world(a, name, source):
 
 
 class World:
-    def __init__(self, d, actor, sides="LR"):
+    def __init__(self, d, actor, sides="LR", *, entry_table="Mid"):
         self.dir = d
         self.prog = read(d / "program.json")
         self.contract = read(d / "contract.json")
@@ -136,11 +136,11 @@ class World:
             self.roles.append([x["table"] for x in r["inputs"]])
             self.layouts.append([(rid, 0, [(-1, j) for j in range(len(r["inputs"]))])])
         self.primitives = len(self.layouts)
-        self.root = self.outnames["Mid"]
+        self.root = self.outnames[entry_table]
         self.export_pc = {}
         for side in sides:
             body = list(self.layouts[self.root])
-            src = "Mid"
+            src = entry_table
             while (dest := f"{side}{len(body) - 1}") in self.outnames:
                 rid = self.outnames[dest]
                 producers = {

@@ -128,9 +128,9 @@ def teacher_labels(w, requests):
             by_parent[p["address"]["token"]].append(q)
     paths = {}
     for q in requests:
-        if q["rule"] != w.root:
-            continue
         for tid in range(w.primitives, len(w.layouts)):
+            if q["rule"] != w.layouts[tid][0][0]:
+                continue
             chain = [q]
             for rid, _, wires in w.layouts[tid][1:]:
                 expected = [
@@ -163,7 +163,8 @@ def native(a, w, *, teacher=None, policy=None, seed=0, slots=6):
     if offline:
         tape = read(w.dir / "teacher.json")["requests"]
         paths = teacher_labels(w, tape)
-        if set(paths) != {q["token"] for q in tape if q["rule"] == w.root}:
+        roots = {layout[0][0] for layout in w.layouts[w.primitives:]}
+        if set(paths) != {q["token"] for q in tape if q["rule"] in roots}:
             raise ValueError("incomplete Higher witness in the controlled corpus")
         grouped = defaultdict(list)
         for q in tape:

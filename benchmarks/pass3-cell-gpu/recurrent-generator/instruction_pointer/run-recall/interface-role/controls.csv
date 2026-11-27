@@ -1,0 +1,9 @@
+seed,mode,n,both,neither
+71,intact,64,64,0
+71,remove,64,0,0
+71,exchange,64,0,64
+71,hard,64,64,0
+113,intact,64,64,0
+113,remove,64,0,0
+113,exchange,64,0,64
+113,hard,64,64,0
