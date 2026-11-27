@@ -18,7 +18,7 @@ from query_environment import conditioned
 from recursive_train import folder
 
 
-def fork(a, d, path, tape, base, run, cells):
+def fork(a, d, path, tape, base, run, cells, *, export=None):
     start = max((q["token"] for q in base), default=0) + 1
     req = [
         {
@@ -32,7 +32,7 @@ def fork(a, d, path, tape, base, run, cells):
         for j, c in enumerate(cells)
     ]
     write(path, dict(tape, requests=base + req))
-    rep = native(a, d, "replay", path, run, "--ept-origins")
+    rep = native(a, d, "replay", path, run, *(("--export", export) if export is not None else ()), "--ept-origins")
     orig = dict(rep["ept"]["origins"])
     receipts = rep["counts"]
     verdict = {

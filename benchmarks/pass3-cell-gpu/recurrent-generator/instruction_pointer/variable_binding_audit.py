@@ -198,7 +198,7 @@ def diagnostic(
     return rows
 
 
-def run(a, case):
+def run(a, case, visit=None):
     work = directory(a)
     base = Path(os.environ["ARTIFACT_ROOT"]) / "multi-association"
     archive = base / case / "audit-0"
@@ -251,6 +251,9 @@ def run(a, case):
                     s = mem.snapshot(w, f)
                     prefix = [q for q in tape["requests"] if q["run"] < r]
                     for rid in rules[r]:
+                        if visit is not None:
+                            visit(w, s, model, oldmem, case, rid, tape, prefix, archive)
+                            continue
                         rows.extend(
                             diagnostic(
                                 a,
@@ -286,7 +289,8 @@ def run(a, case):
             oldmem.close_observer()
             if proc.poll() is None:
                 proc.kill()
-    (work / f"binding-{case}.json").write_text(json.dumps(rows))
+    if visit is None:
+        (work / f"binding-{case}.json").write_text(json.dumps(rows))
 
 
 if __name__ == "__main__":
