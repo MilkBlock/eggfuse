@@ -14,10 +14,13 @@ CELL_MODEL=factorized-random sh partner_index_reproduce.sh scaling_eval.py evalu
 effect_pid=$!
 "${PYTHON:-python3}" scaling_size_control.py --frequency &
 frequency_pid=$!
+"${PYTHON:-python3}" scaling_size_control.py --curriculum &
+curriculum_pid=$!
 "${PYTHON:-python3}" scaling_campaign.py --workers "${CELL_WORKERS:-3}" --hours "${CELL_HOURS:-8}"
 wait "$size_pid"
 wait "$effect_pid"
 wait "$frequency_pid"
+wait "$curriculum_pid"
 "${PYTHON:-python3}" scaling_intermediate.py
 sh partner_index_reproduce.sh scaling_postfit.py evaluate
 sh partner_index_reproduce.sh scaling_counterfactual.py evaluate

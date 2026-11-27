@@ -157,6 +157,18 @@ def report():
                 "frozen_seen_probe_ce": sum(r[2] * r[3] for r in probed) / postfit_count
                 if postfit_count
                 else None,
+                "graph_relative_drift": postfit.get(tag, {})
+                .get("drift", {})
+                .get("graph", {})
+                .get("relative_l2"),
+                "instance_relative_drift": postfit.get(tag, {})
+                .get("drift", {})
+                .get("instance", {})
+                .get("relative_l2"),
+                "decoder_relative_drift": postfit.get(tag, {})
+                .get("drift", {})
+                .get("decoder", {})
+                .get("relative_l2"),
                 "native_receipt_pairs": len(shifts),
                 "completed_probability_shift": mean(r[3] - r[2] for r in shifts)
                 if shifts

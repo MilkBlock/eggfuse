@@ -17,7 +17,7 @@ from joint_cell_sweep import complete_ce
 from partner_index_worlds import args
 from scaling_archive import directory
 from scaling_eval import frozen
-from scaling_fit import atomic, save_seen
+from scaling_fit import atomic, model, save_seen
 from scaling_pool import Pool
 from scaling_transitions import Replay
 from state_transition_corpus import world
@@ -82,9 +82,46 @@ def collect(a):
         ),
     ]
     for name in names:
-        if name in results:
+        if name in results and (
+            "drift" in results[name] or name in ("initial", "sweep")
+        ):
             continue
         n = frozen(a, name)[0]
+        drift = {}
+        if name not in ("initial", "sweep"):
+            stats = json.loads((d / "fits" / (name + ".json")).read_text())
+            base = model(a, stats["config"], stats["seed"])[0]
+            weights = dict(n.named_parameters())
+            for group in ("graph", "instance", "decoder"):
+                originals = []
+                changed = []
+                for k, p in base.named_parameters():
+                    if k not in stats["gradient_tensors"]:
+                        continue
+                    kind = (
+                        "graph"
+                        if k.startswith("graph.")
+                        else (
+                            "instance"
+                            if k.split(".")[1]
+                            in ("age", "dynamic", "static", "msg", "update")
+                            else "decoder"
+                        )
+                    )
+                    if kind == group:
+                        originals.append(p.flatten().double())
+                        changed.append((weights[k] - p).flatten().double())
+                if originals:
+                    x, delta = torch.cat(originals), torch.cat(changed)
+                    drift[group] = {
+                        "elements": x.numel(),
+                        "changed": int(torch.count_nonzero(delta)),
+                        "relative_l2": float(delta.norm() / x.norm()),
+                    }
+            if name in results:
+                results[name]["drift"] = drift
+                atomic(out, results)
+                continue
         seen_probe = []
         members = d / "fits" / (name + ".seen.gz")
         if members.exists():
@@ -117,7 +154,7 @@ def collect(a):
                     sum(q[t] for t in others),
                 ]
             )
-        results[name] = {"seen": seen_probe, "changes": changes}
+        results[name] = {"seen": seen_probe, "changes": changes, "drift": drift}
         atomic(out, results)
 
 

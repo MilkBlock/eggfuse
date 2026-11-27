@@ -9,12 +9,30 @@ from scaling_campaign import REPORT, Campaign, save
 from scaling_pool import verified_forks
 
 
-def run(effects, frequency):
+def run(effects, frequency, curriculum):
     campaign = Campaign(1, 8)
     dest = REPORT / "size-controls"
     dest.mkdir(exist_ok=True)
     configs = []
-    if frequency:
+    if curriculum:
+        counts = json.loads((campaign.disk / "inventory.json").read_text())
+        for schedule in ("all", "strict", "retain", "adaptive"):
+            conf = {
+                "name": "mixed" if schedule == "all" else "fixedblock-" + schedule,
+                "sampling": "mixed",
+                "block": 16,
+            }
+            if schedule != "all":
+                conf["curriculum"] = schedule
+            configs.append(
+                (
+                    conf,
+                    counts["counts"]["states"],
+                    counts["counts"]["state_named_token"],
+                    counts["programs"],
+                )
+            )
+    elif frequency:
         info = json.loads((campaign.disk / "issued-frequency.json").read_text())
         for sampling in ("trajectory", "state"):
             configs.append(
@@ -110,5 +128,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--effects", action="store_true")
     parser.add_argument("--frequency", action="store_true")
+    parser.add_argument("--curriculum", action="store_true")
     options = parser.parse_args()
-    run(options.effects, options.frequency)
+    run(options.effects, options.frequency, options.curriculum)
