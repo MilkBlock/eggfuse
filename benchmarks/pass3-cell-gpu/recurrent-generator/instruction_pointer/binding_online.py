@@ -20,7 +20,7 @@ from query_environment import conditioned
 
 
 @torch.no_grad()
-def trial(a, d, arm, net, seed):
+def trial(a, d, arm, net, seed, *, generate=None):
     ir = d / "program.json"
     digest = hashlib.sha256(ir.read_bytes()).hexdigest()
     observer = a.out / f"live-{seed}.jsonl"
@@ -69,6 +69,10 @@ def trial(a, d, arm, net, seed):
                 client.run = f["run"]
                 client.epoch = f["epoch"]
                 if m.ids:
+                    if generate is not None:
+                        paid += generate(client, public_view(m, program), program, rng)
+                        client.seal()
+                        continue
                     if arm == "random":
                         cells = list(
                             Domain(m).draw("factored", random.Random(seed), 32)
