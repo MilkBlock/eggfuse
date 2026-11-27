@@ -39,6 +39,7 @@ def run():
     for p in raw.iterdir():
         if p.is_file() and not p.name.startswith("."):
             record(p)
+    matched_controls = []
     for name, m in groups.items():
         base = raw / "fits"
         if record(base / (name + ".pt")) != m["weights_sha"]:
@@ -60,6 +61,16 @@ def run():
         ):
             raise ValueError(f"training membership mismatch: {name}")
         record(exposures)
+        if m["config"]["name"] in ("local", "decoder", "layer01", "layer03"):
+            reference = f"center-s{m['seed']}-t{m['exposures']}"
+            original = base / (reference + ".seen.gz")
+            if original.exists():
+                with gzip.open(original, "rb") as f:
+                    matching = seen == pickle.load(f)
+                control = json.loads((base / (reference + ".json")).read_text())
+                if not matching or any(control[k] != m[k] for k in ("steps", "sources", "exposures")):
+                    raise ValueError(f"parameter-only comparison changed the training data: {name}")
+                matched_controls.append(name)
     for p in (raw / "fits").glob("*-resume.pt"):
         record(p)
     counts = Counter()
@@ -117,6 +128,7 @@ def run():
         json.dumps(
             {
                 "registered_groups_verified": len(groups),
+                "same_state_targets_steps_and_source_counts_as_center": sorted(matched_controls),
                 "native_trials": counts,
                 "artifacts": len(manifest),
                 "manifest_sha256": checksum(REPORT / "artifacts.sha256"),
