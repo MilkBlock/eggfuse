@@ -206,7 +206,7 @@ def report():
     paired_exec = []
     history = {}
     for row in runs:
-        if row["phase"] != "outer" or row["model"] == "sweep":
+        if row["phase"] != "outer" or row["model"] in ("sweep", "initial", "factorized-random"):
             continue
         case, budget, seed = row["case"], row["budget"], row["generation_seed"]
         actual = {json.dumps(f, sort_keys=True) for f in facts[row["graph"]]}
@@ -214,11 +214,11 @@ def report():
             v
             for v in runs
             if v["phase"] == "outer"
-            and v["model"] == "sweep"
+            and v["model"] in ("sweep", "initial", "factorized-random")
             and (v["case"], v["budget"], v["generation_seed"]) == (case, budget, seed)
         ]
         comparisons = [
-            ("sweep", v["paid"], v["graph"], facts[v["graph"]]) for v in frozen
+            (v["model"], v["paid"], v["graph"], facts[v["graph"]]) for v in frozen
         ]
         for method in ("random", "history"):
             key = (case, budget, seed, method)

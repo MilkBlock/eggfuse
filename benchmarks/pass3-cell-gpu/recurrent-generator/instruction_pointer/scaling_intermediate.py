@@ -11,6 +11,8 @@ def run(hours):
     c = Campaign(1, hours)
     if not c.state["locked"]:
         return
+    for name in ("initial", "factorized-random"):
+        c.evaluate_frozen("outer", name)
     names = {g["name"] for g in grid()} | {"layer-lr-interaction"}
     for p in sorted((c.disk / "fits").glob("*-t*.json")):
         if time.time() > c.state["end"] - 600:
