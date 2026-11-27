@@ -1,0 +1,198 @@
+{
+  "initial_file": "current-71.pt",
+  "initial_sha256": "0ccf7dc359fe93a2877e96190d598969830017757fd3d6f8baa37c5c2c1b0cb0",
+  "nonzero_seed_values": {
+    "fit": 104,
+    "test": 116,
+    "publish": 16
+  },
+  "worlds": 48,
+  "records": 384,
+  "verified_targets": 1552,
+  "weights": {
+    "A-113.pt": {
+      "sha256": "eb143a4b0f38d4928516c4e2c8d3175ab2530a328846818028ac2952503eae21",
+      "training": {
+        "arm": "A",
+        "seed": 113,
+        "updates": 0,
+        "complete_targets": 0,
+        "trainable": 0,
+        "frozen_sha": "1b29e93c9a3dbd8442f1ac6fa93792a9955fd89bc76058d0eb3eefe67067bb30",
+        "additional_targets": {},
+        "ce90": []
+      }
+    },
+    "A-71.pt": {
+      "sha256": "7f13d1dbafdf5eb48aad745ff969075c33399163580d32be58c42d0d8c912970",
+      "training": {
+        "arm": "A",
+        "seed": 71,
+        "updates": 0,
+        "complete_targets": 0,
+        "trainable": 0,
+        "frozen_sha": "1b29e93c9a3dbd8442f1ac6fa93792a9955fd89bc76058d0eb3eefe67067bb30",
+        "additional_targets": {},
+        "ce90": []
+      }
+    },
+    "B-113.pt": {
+      "sha256": "993aad6797b551a3b83401d6d6702166f435ccae65c3235a2be75b7a58b682a1",
+      "training": {
+        "arm": "B",
+        "seed": 113,
+        "updates": 720,
+        "complete_targets": 4320,
+        "trainable": 10304,
+        "frozen_sha": "82907467e3f79ebed4e7124fa2c664bb2440557f4b5b2e65dab6211adf52fc50",
+        "additional_targets": {
+          "entry": 761,
+          "later": 2119
+        },
+        "ce90": [
+          0.7546337882677714,
+          0.7492958618534936,
+          1.7628900133901173,
+          1.5029620591137145,
+          2.1141086091597874,
+          1.9943399075004788,
+          1.997456458542082,
+          2.028935633103053
+        ]
+      }
+    },
+    "B-71.pt": {
+      "sha256": "44c575268a58a3869ba459e1d99175c55816c1d4a948a599885b57947671dc50",
+      "training": {
+        "arm": "B",
+        "seed": 71,
+        "updates": 720,
+        "complete_targets": 4320,
+        "trainable": 10304,
+        "frozen_sha": "82907467e3f79ebed4e7124fa2c664bb2440557f4b5b2e65dab6211adf52fc50",
+        "additional_targets": {
+          "later": 2145,
+          "entry": 735
+        },
+        "ce90": [
+          0.7613386253515879,
+          0.7602461142672433,
+          1.621515723069509,
+          1.4398674961593416,
+          1.8924931863943735,
+          2.000158201323615,
+          1.924156994289822,
+          1.7309509562121497
+        ]
+      }
+    },
+    "C-113.pt": {
+      "sha256": "8c8fc017251c6869f83e09c7488fddbec10632d5c5b99ce6e82f04793138bb61",
+      "training": {
+        "arm": "C",
+        "seed": 113,
+        "updates": 720,
+        "complete_targets": 4320,
+        "trainable": 8576,
+        "frozen_sha": "dc8ea49d16f63f04afbd0c5384890e320ebc5b8f89c875da23d6531aeed0c301",
+        "additional_targets": {
+          "entry": 761,
+          "later": 2119
+        },
+        "ce90": [
+          0.7580715709262424,
+          0.7515035089519289,
+          2.0978632397121855,
+          1.7594529194964303,
+          2.4681562814447613,
+          2.376713600423601,
+          2.4559357447756662,
+          2.4909502145316864
+        ]
+      }
+    },
+    "C-71.pt": {
+      "sha256": "c4efa0ed32f9edbf636cab8a8caa149a52ee8ef420461a0df45a1faa42e7eea5",
+      "training": {
+        "arm": "C",
+        "seed": 71,
+        "updates": 720,
+        "complete_targets": 4320,
+        "trainable": 8576,
+        "frozen_sha": "dc8ea49d16f63f04afbd0c5384890e320ebc5b8f89c875da23d6531aeed0c301",
+        "additional_targets": {
+          "later": 2145,
+          "entry": 735
+        },
+        "ce90": [
+          0.7630594879388809,
+          0.7659101108709971,
+          1.9340173840522765,
+          1.7907286074426438,
+          2.1475331836276585,
+          2.422606669531928,
+          2.505004076162974,
+          2.2611398335960176
+        ]
+      }
+    },
+    "D-113.pt": {
+      "sha256": "9013dfd271764b06fa22c23b80795df98702dd422ccc0e6b235daf51ccb27a45",
+      "training": {
+        "arm": "D",
+        "seed": 113,
+        "updates": 720,
+        "complete_targets": 4320,
+        "trainable": 18880,
+        "frozen_sha": "681fd2633b56291f47f0d85c051070c718f17b4dd349d809276ff768afecf54a",
+        "additional_targets": {
+          "entry": 761,
+          "later": 2119
+        },
+        "ce90": [
+          0.7554570605357488,
+          0.7142512612872653,
+          1.801829821533627,
+          1.3797048777341843,
+          1.9962561106516254,
+          1.8885079208347533,
+          1.853064471317662,
+          1.8921516063312689
+        ]
+      }
+    },
+    "D-71.pt": {
+      "sha256": "41d27223e035e44c6907ddc6f5474bb2bcb45b5a47f1d0a79ecf59536db266a3",
+      "training": {
+        "arm": "D",
+        "seed": 71,
+        "updates": 720,
+        "complete_targets": 4320,
+        "trainable": 18880,
+        "frozen_sha": "681fd2633b56291f47f0d85c051070c718f17b4dd349d809276ff768afecf54a",
+        "additional_targets": {
+          "later": 2145,
+          "entry": 735
+        },
+        "ce90": [
+          0.7590854267279307,
+          0.7171644147899415,
+          1.6085487434433565,
+          1.3174707370913692,
+          1.738243925323089,
+          1.921915322376622,
+          1.890881141109599,
+          1.6510845586657523
+        ]
+      }
+    },
+    "fit-one-113.pt": {
+      "sha256": "b71fef1d24d09a16eb91a621b052f4cdf715c3da84532f59af2c6b931b45d730",
+      "training": "one-pair CE capacity diagnostic"
+    },
+    "fit-one-71.pt": {
+      "sha256": "897d6c32f2c6d919e0fcd8e450a7797c49520f6e7134e5fe8c3886c886995756",
+      "training": "one-pair CE capacity diagnostic"
+    }
+  }
+}

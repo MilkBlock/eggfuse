@@ -71,10 +71,13 @@ def program(depth, jobs, seed, fork=False, flip=False, common=False):
 
 
 def make(a, name, depth, jobs, seed, fork=False, flip=False, common=False):
+    return compile_world(a, name, program(depth, jobs, seed, fork, flip, common))
+
+
+def compile_world(a, name, source):
     d = a.out / "worlds" / name
     d.mkdir(exist_ok=True, parents=True)
     egg = d / "world.egg"
-    source = program(depth, jobs, seed, fork, flip, common)
     if (d / "capture.json").exists() and egg.read_text() != source:
         raise ValueError(f"cached native source mismatch in {d}")
     if not (d / "capture.json").exists():
@@ -115,7 +118,7 @@ def make(a, name, depth, jobs, seed, fork=False, flip=False, common=False):
 
 
 class World:
-    def __init__(self, d, actor):
+    def __init__(self, d, actor, sides="LR"):
         self.dir = d
         self.prog = read(d / "program.json")
         self.contract = read(d / "contract.json")
@@ -135,7 +138,7 @@ class World:
         self.primitives = len(self.layouts)
         self.root = self.outnames["Mid"]
         self.export_pc = {}
-        for side in "LR":
+        for side in sides:
             body = list(self.layouts[self.root])
             src = "Mid"
             while (dest := f"{side}{len(body) - 1}") in self.outnames:
