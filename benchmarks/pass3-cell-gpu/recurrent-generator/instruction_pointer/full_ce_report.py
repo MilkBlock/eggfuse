@@ -37,12 +37,20 @@ def report():
     rawhash = {}
     facts = {}
     rates = defaultdict(list)
+    blank_path = raw / "zero-paid.json"
+    blank = read(blank_path) if blank_path.exists() else {}
+    blank_facts = {
+        case: {json.dumps(f, sort_keys=True) for f in trial["facts"]}
+        for case, trial in blank.items()
+    }
     for p in sorted((raw / "eval").glob("*.json")):
         r = read(p)
         rawhash[p.name] = hashlib.sha256(p.read_bytes()).hexdigest()
         for x in r["runs"]:
             graph = x["graph"]
             facts[graph] = x["facts"]
+            actual = {json.dumps(f, sort_keys=True) for f in x["facts"]}
+            zero = blank_facts.get(x["case"])
             z = {
                 "model": r["model"],
                 "phase": r["mode"],
@@ -52,6 +60,8 @@ def report():
                 "paid": x["paid"],
                 "shortfall": x["shortfall"],
                 "covered": x["covered"],
+                "new_reference_facts_vs_zero_paid": len(actual - zero) if zero is not None else "",
+                "lost_reference_facts_vs_zero_paid": len(zero - actual) if zero is not None else "",
                 "reference": x["reference"],
                 "coverage": x["coverage"],
                 "ops": x["ops"],
@@ -449,6 +459,12 @@ def report():
         )
     if state["locked"]:
         best = state["locked"]
+        if blank:
+            lines.append(
+                "固定原生调度、零付费请求的终图已覆盖 "
+                + "、".join(f"{case} {v['covered']}/{v['reference']} 个参考事实" for case, v in blank.items())
+                + "。native.csv 逐次列出相对该事实集合新获得及丢失的事实；CCP 的 Coverage、EPT、EPS 沿用原定义。"
+            )
         lines.append(
             f"内部验证锁定 {best['name']}，单模型曝光 {best['cap']:,}。适用范围为当前训练池、固定生成、固定退出及预算。外层独立结果在上表和 native.csv 中单列。"
         )

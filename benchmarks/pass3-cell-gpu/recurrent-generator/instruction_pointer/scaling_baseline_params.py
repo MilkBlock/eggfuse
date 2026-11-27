@@ -1,13 +1,16 @@
 """Account for the frozen historical Stream modules used in a real native control run."""
 
+import json
 from unittest.mock import patch
 
 import torch
 
 from competition_egg import egg
+from cell_kv_runtime import native
 from continuous_trials import CappedReference, reference
 from partner_index_worlds import args
 from scaling_archive import directory
+from scaling_eval import Sampling, frozen
 from scaling_fit import atomic
 
 
@@ -53,6 +56,18 @@ def run(a):
             "this_phase_training_seconds": 0,
         },
     )
+    d = directory(a)
+    if json.loads((d / "campaign.json").read_text())["locked"]:
+        blank = {}
+        for case in ("loopfact", "sum-divisors"):
+            net, w, ref = frozen(a, "sweep", case)
+            trial = native(a, w, policy=Sampling(net, 1, True), seed=193, slots=6,
+                           submit_pages=2, receipt_memory=True, rule_state=True,
+                           reference=ref, paid_limit=0)
+            if trial["stats"].get("paid", 0) or trial["stats"].get("neural_tokens", 0):
+                raise ValueError("zero-budget native run issued a request")
+            blank[case] = {k: trial[k] for k in ("graph", "facts", "ops", "covered", "reference")}
+        atomic(d / "zero-paid.json", blank)
 
 
 if __name__ == "__main__":
