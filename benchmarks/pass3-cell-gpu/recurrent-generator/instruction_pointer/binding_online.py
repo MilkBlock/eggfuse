@@ -20,7 +20,7 @@ from query_environment import conditioned
 
 
 @torch.no_grad()
-def trial(a, d, arm, net, seed, *, generate=None):
+def trial(a, d, arm, net, seed, *, generate=None, address_seed=None):
     ir = d / "program.json"
     digest = hashlib.sha256(ir.read_bytes()).hexdigest()
     observer = a.out / f"live-{seed}.jsonl"
@@ -29,8 +29,11 @@ def trial(a, d, arm, net, seed, *, generate=None):
     m = conditioned(a, d, observer)
     rng = np.random.default_rng(seed)
     paid = 0
+    command = [a.runtime_binary, "online-ccp-v0.1", ir, "-", "audit", "--ept"]
+    if address_seed is not None:
+        command.extend(["--address-seed", str(address_seed)])
     with subprocess.Popen(
-        [a.runtime_binary, "online-ccp-v0.1", ir, "-", "audit", "--ept"],
+        command,
         stdin=-1,
         stdout=-1,
         env=dict(os.environ, EGGFUSE_QUERY_OBSERVER=str(observer)),

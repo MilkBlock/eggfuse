@@ -14,7 +14,7 @@ ARMS = ("independent", "cell", "tensor", "wide", "dense")
 SIZES = (4, 8, 16, 32, 64, 128, 256, 512, 1024)
 
 
-def world(i, n, kind, flip, held, counts=None, *, parity=False):
+def world(i, n, kind, flip, held, counts=None, *, parity=False, near=False):
     # Deterministic streams per semantic row; adding rows cannot alter earlier values.
     rng = random.Random(7927 * i)
     val = rng.sample(range(1 << 20), 80)
@@ -63,6 +63,11 @@ def world(i, n, kind, flip, held, counts=None, *, parity=False):
             rows.append(
                 [2**21 + role * 2**23 + j * 16 + q for q in extra.sample(range(16), 3)]
             )
+            if near:
+                if kind != "two":
+                    raise ValueError("one-field near misses require the double-variable fixture")
+                q = j % 2
+                rows[-1][q] = (x, y)[q]
         perm = np.roll(np.arange(3), (role + i) % 3)
         if held and role == 1:
             perm = perm[::-1]

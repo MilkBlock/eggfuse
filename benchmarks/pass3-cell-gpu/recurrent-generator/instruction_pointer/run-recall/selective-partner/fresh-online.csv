@@ -1,0 +1,5 @@
+domain,arm,worlds,completed,coverage,ept,eps
+fresh,wide,24,0,0.0,0.0,0.0
+fresh,mixed-sparse,24,23,0.9583333333333334,0.9583333333333334,1.762528382097543
+fresh-near,wide,24,0,0.0,0.0,0.0
+fresh-near,mixed-sparse,24,5,0.20833333333333334,0.20833333333333334,0.3889022176558455

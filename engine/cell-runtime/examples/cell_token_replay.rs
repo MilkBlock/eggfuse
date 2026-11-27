@@ -26,7 +26,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         return Err("expected reference|capture|replay|online PROGRAM TAPE audit|time".into());
     };
     let (rest, mut address_seed) = match rest {
-        [rest @ .., flag, seed] if flag == "--address-seed" && role == "capture" =>
+        [rest @ .., flag, seed] if flag == "--address-seed" && matches!(role.as_str(), "capture" | "online-ccp-v0.1") =>
             (rest, Some(seed.parse::<u64>()?)),
         _ => (rest, None),
     };
@@ -106,7 +106,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     match role.as_str() {
         "replay" | "capture" | "shadow-waves" => engine.start_tokens_with_initial_names(packets, address_seed)?,
-        "online" | "online-waves" | "online-transactions" | "online-ccp-v0.1" => engine.start_tokens(Some(Vec::new()))?,
+        "online-ccp-v0.1" => engine.start_tokens_with_initial_names(Some(Vec::new()), address_seed)?,
+        "online" | "online-waves" | "online-transactions" => engine.start_tokens(Some(Vec::new()))?,
         "assist" => engine.start_token_assist()?,
         "reference" => (),
         "anchor-census" => engine.enable_anchor_census(),
