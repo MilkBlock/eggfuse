@@ -17,11 +17,14 @@ if [ "${1:-all}" != finish ]; then
     frequency_pid=$!
     "${PYTHON:-python3}" scaling_size_control.py --curriculum &
     curriculum_pid=$!
+    "${PYTHON:-python3}" -u scaling_size_control.py --parameters &
+    parameter_pid=$!
     "${PYTHON:-python3}" scaling_campaign.py --workers "${CELL_WORKERS:-3}" --hours "${CELL_HOURS:-8}"
     wait "$size_pid"
     wait "$effect_pid"
     wait "$frequency_pid"
     wait "$curriculum_pid"
+    wait "$parameter_pid"
 fi
 "${PYTHON:-python3}" scaling_intermediate.py
 sh partner_index_reproduce.sh scaling_baseline_params.py evaluate

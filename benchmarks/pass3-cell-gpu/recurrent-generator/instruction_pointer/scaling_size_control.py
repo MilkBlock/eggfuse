@@ -5,8 +5,67 @@ import json
 import subprocess
 import time
 
-from scaling_campaign import REPORT, Campaign, save
+from scaling_campaign import REPORT, SEEDS, Campaign, grid, save
 from scaling_pool import verified_forks
+
+
+def checkpoint(evidence, group):
+    save(evidence, group)
+    subprocess.run(["git", "add", "--", str(evidence)], check=True)
+    subprocess.run(
+        [
+            "git", "-c", "core.hooksPath=/dev/null", "commit", "--only", "-m",
+            f"results(pretraining): validate matched control {evidence.stem}",
+            "--", str(evidence),
+        ],
+        check=True,
+    )
+
+
+def parameter_controls():
+    """Complete matched 100K parameter regimes without entering the promotion ranking."""
+    campaign = Campaign(1, 8)
+    while not (campaign.log / "center-s71-t100000.log").exists():
+        if time.time() >= campaign.state["end"] - 1500:
+            return
+        time.sleep(30)
+    campaign.state = json.loads(campaign.plan.read_text())
+    configs = {c["name"]: c for c in grid()}
+    names = {
+        g["config"]["name"] for g in campaign.state["groups"].values()
+        if g["exposures"] == 30000
+    }
+    ranks = campaign.order(names, 30000, SEEDS)
+    layer = next((n for n in ranks if n in ("layer01", "layer03", "layer-lr-interaction")), None)
+    promoted = {"center", "local", layer, *ranks[:2]}
+    dest = REPORT / "size-controls"
+    dest.mkdir(exist_ok=True)
+    for cap in (10000, 30000, 100000):
+        for name in ("decoder", "layer01", "layer03"):
+            if name in promoted:
+                continue
+            for seed in SEEDS:
+                tag = f"{name}-s{seed}-t{cap}"
+                evidence = dest / (tag + ".json")
+                if tag in campaign.state["groups"] or evidence.exists():
+                    continue
+                if time.time() >= campaign.state["end"] - 1500:
+                    return
+                cfg = configs[name]
+                fit = campaign.disk / "fits" / (tag + ".json")
+                if not fit.exists():
+                    campaign.call(
+                        "scaling_fit.py", "train", tag,
+                        CELL_CFG=json.dumps(cfg), CELL_SEED=seed, CELL_MILESTONES=cap,
+                    )
+                if not fit.exists():
+                    return
+                campaign.call("scaling_eval.py", "evaluate", tag + "-val", CELL_MODEL=tag)
+                val = campaign.disk / "eval" / f"validation-{tag}-T1-U1-N6.json"
+                group = campaign.summarize(
+                    json.loads(fit.read_text()), json.loads(val.read_text())
+                )
+                checkpoint(evidence, group)
 
 
 def run(effects, frequency, curriculum):
@@ -106,22 +165,7 @@ def run(effects, frequency, curriculum):
                 and group["steps"] == 625
             )
             group.update(available_names=name_count, programs=prog_count)
-            save(evidence, group)
-            subprocess.run(["git", "add", "--", str(evidence)], check=True)
-            subprocess.run(
-                [
-                    "git",
-                    "-c",
-                    "core.hooksPath=/dev/null",
-                    "commit",
-                    "--only",
-                    "-m",
-                    f"results(pretraining): validate nested native corpus {tag}",
-                    "--",
-                    str(evidence),
-                ],
-                check=True,
-            )
+            checkpoint(evidence, group)
 
 
 if __name__ == "__main__":
@@ -129,5 +173,9 @@ if __name__ == "__main__":
     parser.add_argument("--effects", action="store_true")
     parser.add_argument("--frequency", action="store_true")
     parser.add_argument("--curriculum", action="store_true")
+    parser.add_argument("--parameters", action="store_true")
     options = parser.parse_args()
-    run(options.effects, options.frequency, options.curriculum)
+    if options.parameters:
+        parameter_controls()
+    else:
+        run(options.effects, options.frequency, options.curriculum)

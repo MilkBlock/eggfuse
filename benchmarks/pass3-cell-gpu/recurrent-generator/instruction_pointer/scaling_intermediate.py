@@ -4,7 +4,7 @@ import argparse
 import json
 import time
 
-from scaling_campaign import Campaign, grid
+from scaling_campaign import REPORT, Campaign, grid
 
 
 def run(hours):
@@ -17,7 +17,7 @@ def run(hours):
     for p in sorted((c.disk / "fits").glob("*-t*.json")):
         if time.time() > c.state["end"] - 600:
             return
-        if p.stem in c.state["groups"]:
+        if p.stem in c.state["groups"] or (REPORT / "size-controls" / p.name).exists():
             continue
         g = json.loads(p.read_text())
         conf = g["config"]
