@@ -1,0 +1,116 @@
+"""Verify durable training weights, actual exposure sets and the native metrics in the report."""
+
+import gzip
+import hashlib
+import json
+import math
+import os
+import pickle
+from collections import Counter
+from pathlib import Path
+
+from scaling_campaign import REPORT
+
+
+def checksum(path):
+    with path.open("rb") as f:
+        return hashlib.file_digest(f, "sha256").hexdigest()
+
+
+def run():
+    raw = Path(os.environ["PARTNER_INDEX_OUT"]) / "full-ce-scaling"
+    state = json.loads((raw / "campaign.json").read_text())
+    groups = dict(state["groups"])
+    for p in (REPORT / "size-controls").glob("*.json"):
+        groups[p.stem] = json.loads(p.read_text())
+    manifest = {}
+
+    def record(p):
+        key = str(p.relative_to(raw))
+        if key not in manifest:
+            manifest[key] = checksum(p)
+        return manifest[key]
+
+    for p in raw.iterdir():
+        if p.is_file() and not p.name.startswith("."):
+            record(p)
+    for name, m in groups.items():
+        base = raw / "fits"
+        if record(base / (name + ".pt")) != m["weights_sha"]:
+            raise ValueError(f"weight digest mismatch: {name}")
+        config = json.loads((base / (name + ".json")).read_text())
+        if any(
+            config[k] != m[k]
+            for k in ("config", "steps", "exposures", "targets", "states", "train_ce")
+        ):
+            raise ValueError(f"fit metadata mismatch: {name}")
+        record(base / (name + ".json"))
+        exposures = base / (name + ".seen.gz")
+        with gzip.open(exposures, "rb") as f:
+            seen = pickle.load(f)
+        if (
+            len(seen) != m["states"]
+            or sum(map(len, seen.values())) != m["targets"]
+            or not (m["targets"] <= m["exposures"])
+        ):
+            raise ValueError(f"training membership mismatch: {name}")
+        record(exposures)
+    for p in (raw / "fits").glob("*-resume.pt"):
+        record(p)
+    counts = Counter()
+    for p in sorted((raw / "eval").glob("*.json")):
+        result = json.loads(p.read_text())
+        record(p)
+        rows = result["runs"]
+        for case in {r["case"] for r in rows}:
+            pairs = [(r["cap"], r["seed"]) for r in rows if r["case"] == case]
+            if len(set(pairs)) != len(pairs):
+                raise ValueError(f"duplicate paired native measurement: {p.name}")
+            if result["mode"] in ("validation", "outer", "selection") and set(
+                pairs
+            ) != {(c, s) for c in (16, 32, 64, 128, 256) for s in (193, 307)}:
+                raise ValueError(f"incomplete paid-budget curve: {p.name}")
+        for r in rows:
+            n, cap = r["paid"], r["cap"]
+            if not (
+                0 <= n <= cap and cap - n == r["shortfall"] and n == r["stats"]["paid"]
+            ):
+                raise ValueError("native paid budget or truncation differs")
+            if not (r["covered"] == len(r["facts"]) and r["covered"] <= r["reference"]):
+                raise ValueError("reference fact count differs")
+            for measured, expected in (
+                (r["ept"], r["ops"] / max(1, n)),
+                (r["eps"], r["ops"] / r["wall"]),
+                (r["coverage"], r["covered"] / r["reference"]),
+            ):
+                if not math.isclose(measured, expected):
+                    raise ValueError("native metric cannot be reconstructed")
+            if result["mode"] not in ("intervention", "inner-intervention") and r[
+                "intervention"
+            ].get("intervened_pages", 0):
+                raise ValueError("offline intervention in autonomous measurement")
+            counts[result["mode"]] += 1
+    for p in (raw / "logs").glob("*.log"):
+        record(p)
+    for p in (raw / "seen-foundation").glob("*.json"):
+        record(p)
+    (REPORT / "artifacts.sha256").write_text(
+        "".join(f"{h}  {k}\n" for k, h in sorted(manifest.items()))
+    )
+    (REPORT / "integrity.json").write_text(
+        json.dumps(
+            {
+                "registered_groups_verified": len(groups),
+                "native_trials": counts,
+                "artifacts": len(manifest),
+                "manifest_sha256": checksum(REPORT / "artifacts.sha256"),
+                "configuration_lock": state["locked"],
+            },
+            indent=1,
+        )
+        + "\n"
+    )
+
+
+if __name__ == "__main__":
+    run()
