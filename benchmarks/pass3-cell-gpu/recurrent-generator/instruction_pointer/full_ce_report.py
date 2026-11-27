@@ -382,6 +382,15 @@ def report():
             "higher-counterfactual.csv 单列 6 对发布后更换入口时的 Higher 排序翻转、完整目标概率、给定 Higher 家族的条件概率。逐请求重放恢复相关版本、原生回执和规则状态。给定目标概率属于离线诊断，自主发现与完成数量见 native.csv。继承的最近一段触发训练为 8,192 次曝光、512 次更新、5.25 秒，训练过最初的两个基础验证程序。",
         ]
     )
+    issued_file = raw / "issued-frequency.json"
+    if issued_file.exists():
+        counts = read(issued_file)
+        lines.extend(
+            [
+                "",
+                f"原轨迹签发频率专项对照来自 {counts['programs']} 个程序、{counts['states']:,} 个状态、{counts['state_named_tokens']:,} 个不同具名目标和 {counts['productive_occurrences']:,} 次真实签发且有贡献的记录。issued-trajectory 和 issued-state 使用完全相同的目标域；前者按真实出现次数，后者对状态及其具名目标均衡。主筛选的 trajectory 还计入离线遗漏标签的记录频率，应区别解读。",
+            ]
+        )
     if fork_stats:
         lines.extend(
             [

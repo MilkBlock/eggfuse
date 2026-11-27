@@ -201,7 +201,7 @@ def native(
         for owner, (tid, chain) in paths.items():
             if teacher == "higher":
                 owners.update((uid, (owner, tid, j)) for j, uid in enumerate(chain))
-    export = a.out / f"kv-export-{os.getpid()}-{threading.get_ident()}.json"
+    export = getattr(a, "native_export_dir", a.out) / f"kv-export-{os.getpid()}-{threading.get_ident()}.json"
     ir = w.dir / "program.json"
     cmd = [
         a.runtime_binary,

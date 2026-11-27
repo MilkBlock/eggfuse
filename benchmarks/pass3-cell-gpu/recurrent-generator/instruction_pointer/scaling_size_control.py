@@ -9,12 +9,28 @@ from scaling_campaign import REPORT, Campaign, save
 from scaling_pool import verified_forks
 
 
-def run(effects):
+def run(effects, frequency):
     campaign = Campaign(1, 8)
     dest = REPORT / "size-controls"
     dest.mkdir(exist_ok=True)
     configs = []
-    if effects:
+    if frequency:
+        info = json.loads((campaign.disk / "issued-frequency.json").read_text())
+        for sampling in ("trajectory", "state"):
+            configs.append(
+                (
+                    {
+                        "name": "issued-" + sampling,
+                        "executed_frequency": True,
+                        "sampling": sampling,
+                        "block": 16,
+                    },
+                    info["states"],
+                    info["state_named_tokens"],
+                    info["programs"],
+                )
+            )
+    elif effects:
         proven = verified_forks(campaign.disk)
         for sampling in ("state", "effect"):
             configs.append(
@@ -93,4 +109,6 @@ def run(effects):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--effects", action="store_true")
-    run(parser.parse_args().effects)
+    parser.add_argument("--frequency", action="store_true")
+    options = parser.parse_args()
+    run(options.effects, options.frequency)

@@ -159,6 +159,15 @@ class Sampler:
             for prog in layout.sample(eligible, 32):
                 selected = layout.sample(programs[prog], 8)
                 self.keys.extend(selected[: cfg["states_per_program"]])
+        self.issued_counts = {}
+        if cfg.get("executed_frequency"):
+            with gzip.open(
+                directory(pool.arch.a) / "issued-frequency.pkl.gz", "rb"
+            ) as f:
+                self.issued_counts = pickle.load(f)
+            self.keys = sorted(self.issued_counts)
+            if not set(self.keys) <= set(pool.keys):
+                raise ValueError("archived requests outside training partition")
         self.domain_rng = random.Random(seed)
         if cfg.get("verified_forks"):
             proven = verified_forks(directory(pool.arch.a))
@@ -169,7 +178,10 @@ class Sampler:
         self.groups = defaultdict(list)
         for k in self.keys:
             self.groups[pool.records[k]].append(k)
-        self.weights = [pool.freq[k] for k in self.keys]
+        self.weights = [
+            sum(self.issued_counts[k].values()) if self.issued_counts else pool.freq[k]
+            for k in self.keys
+        ]
         import itertools
 
         self.cum = list(itertools.accumulate(self.weights))
@@ -241,6 +253,11 @@ class Sampler:
         w, s, targets = self.pool.row(key)
         if not targets:
             raise ValueError("unverified empty target group")
+        if self.issued_counts:
+            issued = self.issued_counts[key]
+            if not issued.keys() <= set(targets):
+                raise ValueError("issued token outside native positive set")
+            targets = sorted(issued)
         if self.cfg.get("verified_forks"):
             available = self.pool.effects[key]
             types = {p[0]: p[3] for p in s["ports"]}
@@ -267,7 +284,9 @@ class Sampler:
             targets = targets[: self.cfg["names_per_state"]]
         if self.cfg.get("block"):
             weights = None
-            if mode == "trajectory" and key in self.pool.locs:
+            if mode == "trajectory" and self.issued_counts:
+                weights = [self.issued_counts[key][t] for t in targets]
+            elif mode == "trajectory" and key in self.pool.locs:
                 visits = Counter()
                 for path, i, phase in self.pool.locs[key]:
                     visits.update(self.pool.arch.rows(path)[i, phase][2])

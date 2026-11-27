@@ -58,7 +58,11 @@ def run(a):
     pairs = recover(a, n.actor)
     state = json.loads((d / "campaign.json").read_text())
     models = ["initial", "sweep", *state["groups"]]
-    models.extend(sorted(p.stem for p in (d / "fits").glob("size-*-t10000.json")))
+    models.extend(
+        sorted(
+            p.stem for p in (d / "fits").glob("*-t10000.json") if p.stem not in models
+        )
+    )
     for name in models:
         if name in scores:
             continue

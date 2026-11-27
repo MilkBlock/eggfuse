@@ -29,6 +29,10 @@ from rule_publication import publication_observer, read_rule_frame
 def directory(a):
     d = a.out / "full-ce-scaling"
     d.mkdir(exist_ok=True)
+    if not hasattr(a, "native_export_dir"):
+        # The native graph is read back on the same volume; the persisted trial includes facts and digest.
+        a._export_scratch = tempfile.TemporaryDirectory(dir=d, prefix=".native-")
+        a.native_export_dir = Path(a._export_scratch.name)
     return d
 
 
