@@ -92,12 +92,21 @@ def train(a, cfg, seed, milestones):
     emitted = step = 0
     elapsed = weighted = 0.0
     curve = []
+    calibration = []
+    half_pending = None
+    forward = set()
     resume = dst / (base + "-resume.pt")
     if resume.exists():
         saved = torch.load(resume, weights_only=False)
         if saved["config"] != cfg or saved["bank"] != data.catalogue_digest:
             raise ValueError("incompatible resumption")
         curve = saved.get("curve", [])
+        calibration = saved.get("calibration", [])
+        forward.update(saved.get("forward", ()))
+        if pending := saved.get("half_pending"):
+            key, targets = pending
+            w, snapshot, _ = data.row(key)
+            half_pending = (key, w, snapshot, targets)
         n.load_state_dict(saved["model"])
         opt.load_state_dict(saved["opt"])
         seen, effects, connected, counts, emitted, step, elapsed, weighted = saved[
@@ -107,7 +116,7 @@ def train(a, cfg, seed, milestones):
         if "domain_rng" in saved:
             sampler.domain_rng.setstate(saved["domain_rng"])
         sampler.retention = saved.get("retention", 0.25)
-    forward = set(connected)
+    forward.update(connected)
     handles = []
     for name, module in n.named_modules():
         names = tuple(f"{name}.{k}" for k, _ in module.named_parameters(recurse=False))
@@ -119,11 +128,9 @@ def train(a, cfg, seed, milestones):
             )
     # CellKV.state indexes the active lane parameter directly before the first GRU.
     forward.add("actor.lanes.weight")
-    calibration = []
     start = perf_counter()
     batch = cfg.get("batch", 1)
     horizon = cfg.get("horizon", 10000)
-    half_pending = None
     for cap in milestones:
         alias = dst / f"{base}-t{cap}.json"
         if cap < emitted or (cap == emitted and alias.exists()):
@@ -236,6 +243,11 @@ def train(a, cfg, seed, milestones):
                 "rng": sampler.rng.getstate(),
                 "domain_rng": sampler.domain_rng.getstate(),
                 "curve": curve,
+                "forward": forward,
+                "calibration": calibration,
+                "half_pending": (half_pending[0], half_pending[3])
+                if half_pending is not None
+                else None,
                 "retention": sampler.retention,
             },
             tmp,
@@ -276,6 +288,8 @@ def train(a, cfg, seed, milestones):
             },
         )
         print(base, emitted, round(wall, 2), flush=True)
+        elapsed = wall
+        start = perf_counter()
         if emitted < cap:
             break
 

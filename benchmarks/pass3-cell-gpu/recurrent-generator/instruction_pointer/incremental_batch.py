@@ -269,14 +269,16 @@ class Batch:
 
 
 @torch.no_grad()
-def trial(a, case, device, capacity, cap):
-    n, _, _ = setup(a, case)
+def trial(a, case, device, capacity, cap, setup_world=setup):
+    n, _, _ = setup_world(a, case)
     start = perf_counter()
     service = Batch(n, device, capacity)
 
     def one(seed):
         with torch.no_grad():
-            return run_one(a, case, "cache", seed, cap, worker=service)
+            return run_one(
+                a, case, "cache", seed, cap, worker=service, setup_world=setup_world
+            )
 
     try:
         with ThreadPoolExecutor(max_workers=capacity) as pool:

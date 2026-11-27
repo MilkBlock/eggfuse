@@ -54,10 +54,10 @@ class Pages:
         self.previous = elapsed
 
 
-def run_one(a, case, arm, seed, cap, checkpoint=None, worker=None):
+def run_one(a, case, arm, seed, cap, checkpoint=None, worker=None, setup_world=setup):
     if worker is not None and checkpoint is not None:
         raise ValueError("shared batch worker uses the frozen sweep weights")
-    n, w, align = setup(a, case)
+    n, w, align = setup_world(a, case)
     if checkpoint:
         n.load_state_dict(
             torch.load(output(a) / (checkpoint + ".pt"), weights_only=True)

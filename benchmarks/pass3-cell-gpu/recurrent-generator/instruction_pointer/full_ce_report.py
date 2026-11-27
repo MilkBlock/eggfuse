@@ -399,6 +399,33 @@ def report():
         lines.append(
             "fork-state 与 fork-effect 固定相同状态流和曝光，分别均匀采样已核验具名目标和不同效果。旧地址审计的同 Key 建议在 fact 的完整实际批前状态重新执行后才纳入。该对照独立于主筛选。matrix.csv 保留训练当时已知效果数，并另列此次离线核验覆盖到的效果数；两列可能重叠。"
         )
+    packed = []
+    for pp in sorted(raw.glob("packed-*.json")):
+        for sample in read(pp):
+            packed.append(
+                {
+                    "model": sample["model"],
+                    "capacity": sample["capacity"],
+                    "rep": sample["rep"],
+                    "matched_seeds": sum(sample["matched"]),
+                    "sessions": len(sample["runs"]),
+                    "actual_batch_mean": sample["metrics"]["parent_items"]
+                    / sample["metrics"]["parent_batches"],
+                    "candidate_rows": sample["metrics"]["parent_rows"],
+                    "wall": sample["wall"],
+                    "eps": sample["throughput"],
+                    "paid": sum(r["stats"]["paid"] for r in sample["runs"]),
+                    "ops": sum(r["ops"] for r in sample["runs"]),
+                }
+            )
+    if packed:
+        csv_table(REPORT / "physical-batch.csv", packed)
+        lines.extend(
+            [
+                "",
+                "纯工程批容量 1/2/4 的实测见 physical-batch.csv。每个原生会话仍每 Run 有 6 个生成槽和两页，在四个独立地址种子上各最多签发 128 枚付费请求。逐个种子相对此权重串行路径核验请求、回执、有效操作归属和终图。聚合 EPS 为四个会话的总有效操作除以整批墙钟，尚未匹配的会话不能支持等价加速结论。",
+            ]
+        )
     timing = raw / "paired-native-timing.json"
     if timing.exists():
         timed = read(timing)

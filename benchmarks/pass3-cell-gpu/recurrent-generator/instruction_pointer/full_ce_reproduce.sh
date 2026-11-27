@@ -18,4 +18,5 @@ wait "$effect_pid"
 sh partner_index_reproduce.sh scaling_postfit.py evaluate
 sh partner_index_reproduce.sh scaling_counterfactual.py evaluate
 sh partner_index_reproduce.sh scaling_timing.py evaluate
+sh partner_index_reproduce.sh scaling_batch.py evaluate
 "${PYTHON:-python3}" full_ce_report.py

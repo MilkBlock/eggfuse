@@ -128,6 +128,7 @@ class Campaign:
         )
         with lock:
             self.state["groups"][tag] = self.summarize(met, result)
+            self.state["errors"].pop(tag, None)
             self.flush()
             self.checkpoint(tag)
             from full_ce_report import report
