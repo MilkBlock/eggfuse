@@ -22,6 +22,7 @@ wait "$effect_pid"
 wait "$frequency_pid"
 wait "$curriculum_pid"
 "${PYTHON:-python3}" scaling_intermediate.py
+sh partner_index_reproduce.sh scaling_baseline_params.py evaluate
 sh partner_index_reproduce.sh scaling_postfit.py evaluate
 sh partner_index_reproduce.sh scaling_counterfactual.py evaluate
 sh partner_index_reproduce.sh scaling_timing.py evaluate

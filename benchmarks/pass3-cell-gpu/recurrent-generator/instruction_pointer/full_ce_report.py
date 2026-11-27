@@ -318,7 +318,8 @@ def report():
     ce_only = [
         p["config"]
         for p in paired
-        if p["config"] != "adaptive" and p["exposures"] == 10000
+        if p["config"] != "adaptive"
+        and p["exposures"] == 10000
         and p["seed"] == 71
         and p["validation_ce_delta"] < 0
         and mean(
@@ -395,6 +396,16 @@ def report():
             "higher-counterfactual.csv 单列 6 对发布后更换入口时的 Higher 排序翻转、完整目标概率、给定 Higher 家族的条件概率。逐请求重放恢复相关版本、原生回执和规则状态。给定目标概率属于离线诊断，自主发现与完成数量见 native.csv。继承的最近一段触发训练为 8,192 次曝光、512 次更新、5.25 秒，训练过最初的两个基础验证程序。",
         ]
     )
+    history_file = raw / "historical-parameters.json"
+    if history_file.exists():
+        history = read(history_file)
+        mods = history["components"]
+        lines.extend(
+            [
+                "",
+                f"历史高召回 Stream 实测含 FieldEncoder、Compose 与 Prefix，注册 {sum(v['registered'] for v in mods.values()):,} 个参数；loopfact 的 256 预算运行有 {sum(v['forward_observed'] for v in mods.values()):,} 个参数参与模块前向，实付 {history['paid']}。该对照与因子化随机在本轮的训练曝光及训练时间均为零，因子化随机使用零个学习参数。",
+            ]
+        )
     issued_file = raw / "issued-frequency.json"
     if issued_file.exists():
         counts = read(issued_file)
