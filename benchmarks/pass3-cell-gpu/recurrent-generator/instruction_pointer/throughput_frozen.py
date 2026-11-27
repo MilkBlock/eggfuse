@@ -35,14 +35,33 @@ def recovery(a):
             torch.save(sd, dest / (name + ".pt"))
 
 
+def historical_native_trial(arm, kind, budget):
+    return arm in {
+        "factored",
+        "initial",
+        "dual-witness",
+        "conservative",
+        "isolate-no-inactive",
+    }
+
+
 @torch.no_grad()
-def frozen(a, case, source):
+def frozen(
+    a,
+    case,
+    source,
+    *,
+    fit_seed=9633,
+    states=8,
+    destination="paired",
+    native_trial=historical_native_trial,
+):
     base = a.archive / source / case
-    dest = a.out / "paired" / source / case
+    dest = a.out / destination / source / case
     dest.mkdir(parents=True, exist_ok=True)
     m = conditioned(a, folder(a.data, case), base / "scheduler.jsonl")
     pages = {
-        arm: choices(a, m, arm, 64, 9633)[2] for arm in a.arms if arm != "factored"
+        arm: choices(a, m, arm, 64, fit_seed)[2] for arm in a.arms if arm != "factored"
     }
 
     def publish(frame):
@@ -53,7 +72,9 @@ def frozen(a, case, source):
     all_runs = sorted(s["run"] for s in read(base / "states.json"))
     selected = {
         all_runs[i]
-        for i in np.linspace(0, len(all_runs) - 1, min(8, len(all_runs)), dtype=int)
+        for i in np.linspace(
+            0, len(all_runs) - 1, min(states, len(all_runs)), dtype=int
+        )
     }
     contexts = (
         read(a.archive / "dirty" / case / "contexts.json")
@@ -151,17 +172,12 @@ def frozen(a, case, source):
                     completed=count,
                     proposed=len(part),
                     hit=len(hits),
+                    reference_owners=len(gold),
                     distinct=len(set(hits)),
                     seconds=sum(t for _, t in waves[:end]),
                     censored=kind == "complete" and count < budget,
                 )
-                if arm in (
-                    "factored",
-                    "initial",
-                    "dual-witness",
-                    "conservative",
-                    "isolate-no-inactive",
-                ):
+                if native_trial(arm, kind, budget):
                     key = tuple(names[Cell(c.rule, c.refs)] for c in part)
                     if key not in cache:
                         rows = [packet(c, r, next_id + i) for i, c in enumerate(part)]
