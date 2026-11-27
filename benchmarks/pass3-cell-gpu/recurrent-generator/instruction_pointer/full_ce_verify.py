@@ -9,6 +9,7 @@ import pickle
 from collections import Counter
 from pathlib import Path
 
+from int_parameters import digest
 from scaling_campaign import REPORT
 
 
@@ -62,6 +63,17 @@ def run():
         result = json.loads(p.read_text())
         record(p)
         rows = result["runs"]
+        if result["mode"] == "outer":
+            artifact = raw / (p.stem + "-ledger.json.gz")
+            with gzip.open(artifact, "rt") as f:
+                ledgers = {(v["case"], v["cap"], v["seed"]): v for v in json.load(f)}
+            if len(ledgers) != len(rows):
+                raise ValueError("missing held-out native ledger")
+            for r in rows:
+                entry = ledgers[r["case"], r["cap"], r["seed"]]
+                if (digest(entry["responses"]) != r["response_sha"]
+                        or len(entry["generated"]) != r["stats"].get("neural_tokens", 0)):
+                    raise ValueError("held-out named requests or native responses differ")
         for case in {r["case"] for r in rows}:
             pairs = [(r["cap"], r["seed"]) for r in rows if r["case"] == case]
             if len(set(pairs)) != len(pairs):

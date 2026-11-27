@@ -1,5 +1,6 @@
 """Free complete-token draws and fixed-schedule CCP validation. Oracle is explicit and offline."""
 
+import gzip
 import json
 import os
 from collections import Counter, defaultdict
@@ -60,6 +61,12 @@ class OfflineInactiveWindow(Sampling):
                 self.count["withheld_slots"] += slots
                 return []
         return super().generate(w, s, rng, slots)
+
+
+class HeldoutLedger(Ledger):
+    def response_history(self, records):
+        super().response_history(records)
+        self.responses = records
 
 
 def frozen(a, model, case="loopfact"):
@@ -136,6 +143,7 @@ def evaluate(a):
         return
     runs = []
     probes_data = []
+    ledgers = []
     for case in cases:
         n, w, ref = frozen(
             a,
@@ -159,7 +167,7 @@ def evaluate(a):
                     if mode in ("intervention", "inner-intervention")
                     else Sampling
                 )(n, temp, unique)
-                trace = Ledger()
+                trace = HeldoutLedger() if mode == "outer" else Ledger()
                 r = native(
                     a,
                     w,
@@ -178,6 +186,18 @@ def evaluate(a):
                     for v in trace.entries.values()
                     if v["effective_ops"] > 0
                 }
+                if mode == "outer":
+                    ledgers.append(
+                        dict(
+                            case=case,
+                            cap=cap,
+                            seed=draw,
+                            responses=trace.responses,
+                            generated=list(trace.entries.values()),
+                            higher=list(trace.higher.values()),
+                            steps=trace.steps,
+                        )
+                    )
                 runs.append(
                     dict(
                         r,
@@ -194,6 +214,12 @@ def evaluate(a):
                         intervention=dict(policy.count),
                     )
                 )
+    if ledgers:
+        file = out.parent / (dest.stem + "-ledger.json.gz")
+        tmp = file.with_suffix(".tmp")
+        with gzip.open(tmp, "wt", compresslevel=3) as f:
+            json.dump(ledgers, f, separators=(",", ":"))
+        tmp.replace(file)
     atomic(
         dest,
         {
