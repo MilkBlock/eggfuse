@@ -85,8 +85,10 @@ def execute(
     parent_policy=None,
     address_seed=None,
     template_policy=None,
+    page_policy=None,
     audit_slots=False,
     paid_limit=None,
+    slot_limit=None,
 ):
     dest.mkdir(exist_ok=True, parents=True)
     observer = dest / "observer.jsonl"
@@ -140,42 +142,64 @@ def execute(
                 r = client.run = f["run"]
                 m.current_probe_run = r
                 client.epoch = f["epoch"]
+                if page_policy is not None:
+                    page_policy.publish(m, program, f, stats)
                 rng = np.random.default_rng(draw + 47311 * r)
-                if m.ids and (paid_limit is None or stats["paid"] < paid_limit):
-                    # Common random numbers independent of success in a previous run.
-                    noise = rng.random(
-                        (a.slots, max(1, (len(m.ids) - 1).bit_length()))
-                    ).astype(np.float32)
-                    templates = (
-                        choose_templates(net, m, noise)
-                        if template_policy is None
-                        else template_policy(net, m, program, noise)
-                    )
-                    stats["attempts"] += len(templates)
-                    cells = [None] * len(templates)
-                    for rid in dict.fromkeys(templates):
-                        idx = [i for i, rule in enumerate(templates) if rule == rid]
-                        if not m.roles[rid]:
-                            for i in idx:
-                                cells[i] = Cell(rid, ())
-                            continue
-                        z = public_view(m, program, key=(rid, False))
-                        if any(not b for b in z["addrs"]):
-                            stats["empty_domain"] += len(idx)
-                            continue
-                        k = len(z["banks"])
-                        noise = tensor(rng.random((1, len(idx), k)).astype(np.float32))
-                        if parent_policy is None:
-                            _, chosen = net(collate([z]), draws=len(idx), noise=noise)
-                            stats["parent_candidate_scores"] += len(idx) * sum(
-                                len(b) for b in z["addrs"]
+                slots = (
+                    a.slots
+                    if slot_limit is None
+                    else min(a.slots, slot_limit - stats["attempts"])
+                )
+                if (
+                    m.ids
+                    and slots > 0
+                    and (paid_limit is None or stats["paid"] < paid_limit)
+                ):
+                    if page_policy is not None:
+                        templates, cells = page_policy.generate(m, slots, rng, stats)
+                        stats["attempts"] += len(templates)
+                    else:
+                        # Common random numbers independent of success in a previous run.
+                        noise = rng.random(
+                            (slots, max(1, (len(m.ids) - 1).bit_length()))
+                        ).astype(np.float32)
+                        templates = (
+                            choose_templates(net, m, noise)
+                            if template_policy is None
+                            else template_policy(net, m, program, noise)
+                        )
+                        stats["attempts"] += len(templates)
+                        cells = [None] * len(templates)
+                        for rid in dict.fromkeys(templates):
+                            idx = [i for i, rule in enumerate(templates) if rule == rid]
+                            if not m.roles[rid]:
+                                for i in idx:
+                                    cells[i] = Cell(rid, ())
+                                continue
+                            z = public_view(m, program, key=(rid, False))
+                            if any(not b for b in z["addrs"]):
+                                stats["empty_domain"] += len(idx)
+                                continue
+                            k = len(z["banks"])
+                            noise = tensor(
+                                rng.random((1, len(idx), k)).astype(np.float32)
                             )
-                        else:
-                            chosen = parent_policy(z, noise, rng, stats)
-                        for i, ix in zip(idx, chosen[0].cpu().tolist(), strict=True):
-                            cells[i] = Cell(
-                                rid, tuple(z["addrs"][j][p] for j, p in enumerate(ix))
-                            )
+                            if parent_policy is None:
+                                _, chosen = net(
+                                    collate([z]), draws=len(idx), noise=noise
+                                )
+                                stats["parent_candidate_scores"] += len(idx) * sum(
+                                    len(b) for b in z["addrs"]
+                                )
+                            else:
+                                chosen = parent_policy(z, noise, rng, stats)
+                            for i, ix in zip(
+                                idx, chosen[0].cpu().tolist(), strict=True
+                            ):
+                                cells[i] = Cell(
+                                    rid,
+                                    tuple(z["addrs"][j][p] for j, p in enumerate(ix)),
+                                )
                     signed = [c for c in cells if c is not None]
                     if paid_limit is not None:
                         signed = signed[: paid_limit - stats["paid"]]
@@ -191,18 +215,27 @@ def execute(
                             unsent = (
                                 "empty_domain" if cell is None else "budget_unsubmitted"
                             )
+                            if rid is None:
+                                unsent = "no_static_role"
                             events.append(
                                 dict(
                                     run=r,
                                     epoch=client.epoch,
                                     slot=slot,
                                     rule=rid,
-                                    dirty=bool(m.rule_features[m.rule_index[rid], 0]),
-                                    watermark=dict(f["rules"])[rid],
+                                    dirty=bool(m.rule_features[m.rule_index[rid], 0])
+                                    if rid is not None
+                                    else None,
+                                    watermark=dict(f["rules"]).get(rid),
                                     epoch_at_submit=client.epoch if reply else None,
                                     refs=cell.refs if cell is not None else None,
                                     status=STATUS[reply[1]] if reply else unsent,
                                     uid=reply[0] if reply else None,
+                                    **(
+                                        page_policy.events[slot]
+                                        if page_policy is not None
+                                        else {}
+                                    ),
                                 )
                             )
                         assert next(replies, None) is None

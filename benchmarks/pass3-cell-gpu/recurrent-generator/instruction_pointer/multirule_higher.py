@@ -29,7 +29,7 @@ from selective_trials import inputs
 
 
 @torch.no_grad()
-def trial(a, d, model, block):
+def trial(a, d, model, block, interface=None):
     ir = d / "program.json"
     prog = read(ir)
     layout = read(d / "layouts.json")[0]
@@ -72,6 +72,8 @@ def trial(a, d, model, block):
                 if f.get("final_publication"):
                     continue
                 m.update(f)
+                if interface is not None and layout[0][0] not in issued:
+                    interface.publish(m, prog, f)
                 client.run = f["run"]
                 client.epoch = f["epoch"]
                 for rid, _ in f["rules"]:
@@ -80,34 +82,40 @@ def trial(a, d, model, block):
                     j = rmap[rid]
                     issued.add(rid)
                     if j == 0:
-                        z = public_view(m, prog, key=(rid, False))
-                        assert [len(b) for b in z["addrs"]] == [8, 8]
-                        assert z["wires"][1, 0].sum() == 1
-                        data = inputs(z, False)
-                        u = noise(np.random.default_rng(419), 32, 2)
-                        torch.mps.synchronize()
-                        t = perf_counter()
-                        st = index(model, data)
-                        torch.mps.synchronize()
-                        build_ms = (perf_counter() - t) * 1000
-                        idx_bytes = sum(
-                            x.nbytes
-                            for x in (
-                                *st[1][0].index.dictionaries,
-                                st[1][0].index.keys,
-                                st[1][0].index.owners,
-                                st[1][0].index.ends,
+                        if interface is not None:
+                            cells, idx_bytes, build_ms, address_ms = interface.bind(
+                                rid, code[0]
                             )
-                        )
-                        t = perf_counter()
-                        sel = draw(data, st, u)[0].cpu().tolist()
-                        address_ms = (perf_counter() - t) * 1000
-                        cells = [
-                            Cell(
-                                rid, tuple(z["addrs"][i][p] for i, p in enumerate(row))
+                        else:
+                            z = public_view(m, prog, key=(rid, False))
+                            assert [len(b) for b in z["addrs"]] == [8, 8]
+                            assert z["wires"][1, 0].sum() == 1
+                            data = inputs(z, False)
+                            u = noise(np.random.default_rng(419), 32, 2)
+                            torch.mps.synchronize()
+                            t = perf_counter()
+                            st = index(model, data)
+                            torch.mps.synchronize()
+                            build_ms = (perf_counter() - t) * 1000
+                            idx_bytes = sum(
+                                x.nbytes
+                                for x in (
+                                    *st[1][0].index.dictionaries,
+                                    st[1][0].index.keys,
+                                    st[1][0].index.owners,
+                                    st[1][0].index.ends,
+                                )
                             )
-                            for row in sel
-                        ]
+                            t = perf_counter()
+                            sel = draw(data, st, u)[0].cpu().tolist()
+                            address_ms = (perf_counter() - t) * 1000
+                            cells = [
+                                Cell(
+                                    rid,
+                                    tuple(z["addrs"][i][p] for i, p in enumerate(row)),
+                                )
+                                for row in sel
+                            ]
                         batch = [{} for _ in cells]
                     else:
                         batch = []

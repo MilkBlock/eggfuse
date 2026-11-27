@@ -1,0 +1,8 @@
+{
+  "fact-evidence.pt": "0526ccbb436271ae5a9042ace860bda27cecf33368e504dd5591a61bd7183775",
+  "fact-rule.pt": "f2cce65c6be8fc8cb849d9543ba54a445d8c28dddfbf75b33310d0bdbd5a50c9",
+  "loopfact-evidence.pt": "687df05f66b782f7066bbef80a4b4a342eb2f5b3a97b14b83345e4fcf1bf2626",
+  "loopfact-rule.pt": "a88020acc59307481f50a640fc833170f825bcbc643304f025298ad3907c0d50",
+  "sum-divisors-evidence.pt": "1fdc0d1ea7c42963cb8c6c681fed10fd5b3eefc2cd64d48934bd9c26e8be4de3",
+  "sum-divisors-rule.pt": "a56fd0888402fdebba296de241985f306072129ef360ec260d664933a6cafe47"
+}
