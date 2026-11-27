@@ -1,0 +1,139 @@
+{
+ "archive_sha": "e14aed85c52c58cdab10f6d0e647dacfd72e2bf1f7ce6b7e7246a991e1455133",
+ "calibration": [],
+ "config": {
+  "block": 16,
+  "executed_frequency": true,
+  "name": "issued-state",
+  "sampling": "state"
+ },
+ "connected": 18880,
+ "effect_identity_scope": "only exact native counterfactual gain sets",
+ "exposures": 10000,
+ "forward_observed": 18880,
+ "gradient_tensors": [
+  "actor.age.weight",
+  "actor.dynamic.weight",
+  "actor.input_content.weight",
+  "actor.input_role.bias",
+  "actor.input_role.weight",
+  "actor.lanes.weight",
+  "actor.latent.weight",
+  "actor.msg.weight",
+  "actor.next_read.bias_hh",
+  "actor.next_read.bias_ih",
+  "actor.next_read.weight_hh",
+  "actor.next_read.weight_ih",
+  "actor.query.bias",
+  "actor.query.weight",
+  "actor.static.weight",
+  "actor.update.bias",
+  "actor.update.weight",
+  "graph.edge.bias",
+  "graph.edge.weight",
+  "graph.message.weight",
+  "graph.step.bias",
+  "graph.step.weight"
+ ],
+ "learning_curve": [
+  {
+   "cumulative_train_ce": 5.208474866218037,
+   "exposures": 1008,
+   "lr": 0.001,
+   "seconds": 18.43479137500981,
+   "steps": 63
+  },
+  {
+   "cumulative_train_ce": 4.9742130076885225,
+   "exposures": 2000,
+   "lr": 0.001,
+   "seconds": 31.3004973330535,
+   "steps": 125
+  },
+  {
+   "cumulative_train_ce": 4.973943198258255,
+   "exposures": 3008,
+   "lr": 0.001,
+   "seconds": 46.077442042005714,
+   "steps": 188
+  },
+  {
+   "cumulative_train_ce": 4.8181583340167995,
+   "exposures": 4000,
+   "lr": 0.001,
+   "seconds": 60.33810462499969,
+   "steps": 250
+  },
+  {
+   "cumulative_train_ce": 4.781109695272229,
+   "exposures": 5008,
+   "lr": 0.001,
+   "seconds": 72.5102930420544,
+   "steps": 313
+  },
+  {
+   "cumulative_train_ce": 4.742054093748331,
+   "exposures": 6000,
+   "lr": 0.001,
+   "seconds": 85.89721200003987,
+   "steps": 375
+  },
+  {
+   "cumulative_train_ce": 4.6466095388428945,
+   "exposures": 7008,
+   "lr": 0.001,
+   "seconds": 100.00455358304316,
+   "steps": 438
+  },
+  {
+   "cumulative_train_ce": 4.555031098309905,
+   "exposures": 8000,
+   "lr": 0.001,
+   "seconds": 111.29340445803246,
+   "steps": 500
+  },
+  {
+   "cumulative_train_ce": 4.539599956051309,
+   "exposures": 9008,
+   "lr": 0.001,
+   "seconds": 128.2049908330082,
+   "steps": 563
+  },
+  {
+   "cumulative_train_ce": 4.464624395748973,
+   "exposures": 10000,
+   "lr": 0.001,
+   "seconds": 140.30536912503885,
+   "steps": 625
+  }
+ ],
+ "registered": 32874,
+ "seconds": 140.3053738330491,
+ "seed": 113,
+ "sources": {
+  "autonomous": 3744,
+  "shuffle": 6256
+ },
+ "state_pool": 5273,
+ "states": 593,
+ "steps": 625,
+ "targets": 5432,
+ "tokens_per_s": 71.27310755680043,
+ "train_ce": 4.464624395748973,
+ "verified_distinct_effects": 0,
+ "weights_sha": "b50697cbb9876bfa2750744335a525ee85724eeb4b2af4e00e7c8a58afe735ae",
+ "inner_area": {
+  "foundation185510": 0.2923076923076923,
+  "foundation185511": 0.3030769230769231,
+  "loopfact": 0.0460431654676259
+ },
+ "val_ce": 6.786496687205587,
+ "free_known_hit": 0.14943910256410256,
+ "free_parents_1": 0.21614583333333334,
+ "free_parents_3": 0.00390625,
+ "free_parents_0": 1.0,
+ "free_parents_2": 0.059895833333333336,
+ "free_higher": 0.46875,
+ "available_names": 273745,
+ "programs": 680
+}
