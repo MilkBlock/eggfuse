@@ -1,0 +1,128 @@
+{
+ "archive_sha": "e14aed85c52c58cdab10f6d0e647dacfd72e2bf1f7ce6b7e7246a991e1455133",
+ "calibration": [],
+ "config": {
+  "arm": "B",
+  "name": "decoder"
+ },
+ "connected": 10624,
+ "effect_identity_scope": "only exact native counterfactual gain sets",
+ "exposures": 10000,
+ "forward_observed": 18880,
+ "gradient_tensors": [
+  "actor.input_content.weight",
+  "actor.input_role.bias",
+  "actor.input_role.weight",
+  "actor.lanes.weight",
+  "actor.latent.weight",
+  "actor.next_read.bias_hh",
+  "actor.next_read.bias_ih",
+  "actor.next_read.weight_hh",
+  "actor.next_read.weight_ih",
+  "actor.query.bias",
+  "actor.query.weight"
+ ],
+ "learning_curve": [
+  {
+   "cumulative_train_ce": 7.791979954853444,
+   "exposures": 1136,
+   "lr": 0.001,
+   "seconds": 14.126216665958054,
+   "steps": 17
+  },
+  {
+   "cumulative_train_ce": 7.55363168451235,
+   "exposures": 2315,
+   "lr": 0.001,
+   "seconds": 21.325428707990795,
+   "steps": 42
+  },
+  {
+   "cumulative_train_ce": 7.340468998415163,
+   "exposures": 3002,
+   "lr": 0.001,
+   "seconds": 48.146954166004434,
+   "steps": 65
+  },
+  {
+   "cumulative_train_ce": 7.396348677028621,
+   "exposures": 4032,
+   "lr": 0.001,
+   "seconds": 71.31043070799205,
+   "steps": 79
+  },
+  {
+   "cumulative_train_ce": 7.14251084053413,
+   "exposures": 5072,
+   "lr": 0.001,
+   "seconds": 81.16049129096791,
+   "steps": 111
+  },
+  {
+   "cumulative_train_ce": 7.129378733159541,
+   "exposures": 6003,
+   "lr": 0.001,
+   "seconds": 109.77286766597535,
+   "steps": 125
+  },
+  {
+   "cumulative_train_ce": 7.183216538105733,
+   "exposures": 7023,
+   "lr": 0.001,
+   "seconds": 120.83482345798984,
+   "steps": 140
+  },
+  {
+   "cumulative_train_ce": 7.097023137905024,
+   "exposures": 8268,
+   "lr": 0.001,
+   "seconds": 133.2731117910007,
+   "steps": 167
+  },
+  {
+   "cumulative_train_ce": 7.058596229761038,
+   "exposures": 9006,
+   "lr": 0.001,
+   "seconds": 145.77894987497712,
+   "steps": 197
+  },
+  {
+   "cumulative_train_ce": 6.956904330873489,
+   "exposures": 10000,
+   "lr": 0.001,
+   "seconds": 171.80518124997616,
+   "steps": 230
+  }
+ ],
+ "registered": 32874,
+ "seconds": 171.8051842909772,
+ "seed": 113,
+ "sources": {
+  "autonomous": 5622,
+  "branch": 93,
+  "continuous": 81,
+  "foundation": 125,
+  "shuffle": 3929,
+  "teacher": 150
+ },
+ "state_pool": 7638,
+ "states": 208,
+ "steps": 230,
+ "targets": 9895,
+ "tokens_per_s": 58.20546126863982,
+ "train_ce": 6.956904330873489,
+ "verified_distinct_effects": 57,
+ "weights_sha": "a30f22e30484fb4c70e5e431f1c47138fa7affbebee071ba98106e3c941467cb",
+ "inner_area": {
+  "foundation185510": 0.3553846153846154,
+  "foundation185511": 0.33384615384615385,
+  "loopfact": 0.04505395683453237
+ },
+ "val_ce": 6.543744882848378,
+ "free_known_hit": 0.13421474358974358,
+ "free_parents_2": 0.049479166666666664,
+ "free_higher": 0.328125,
+ "free_parents_0": 1.0,
+ "free_parents_1": 0.19140625,
+ "free_parents_3": 0.0013020833333333333
+}
