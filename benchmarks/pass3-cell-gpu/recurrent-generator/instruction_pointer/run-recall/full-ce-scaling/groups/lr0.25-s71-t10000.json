@@ -53,15 +53,15 @@
  "verified_distinct_effects": 74,
  "weights_sha": "dc72bb5d4956a1aece6d1e619396288b1ace796fa4d05abf7005bc6a9df141b4",
  "inner_area": {
-  "foundation11": 0.27692307692307694,
-  "foundation10": 0.30153846153846153,
-  "loopfact": 0.044424460431654676
+  "loopfact": 0.044424460431654676,
+  "foundation185510": 0.3107692307692308,
+  "foundation185511": 0.26769230769230773
  },
- "val_ce": 5.8547232066993615,
- "free_known_hit": 0.2109375,
+ "val_ce": 6.62182761589461,
+ "free_known_hit": 0.1438301282051282,
+ "free_parents_2": 0.053385416666666664,
+ "free_parents_0": 1.0,
  "free_parents_3": 0.0,
- "free_higher": 0.3489583333333333,
- "free_parents_1": 0.3580729166666667,
- "free_parents_2": 0.11328125,
- "free_parents_0": 0.71875
+ "free_higher": 0.34375,
+ "free_parents_1": 0.21875
 }
