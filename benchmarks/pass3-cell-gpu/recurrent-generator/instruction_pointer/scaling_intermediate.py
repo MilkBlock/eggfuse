@@ -11,6 +11,7 @@ def run(hours):
     c = Campaign(1, hours)
     if not c.state["locked"]:
         return
+    selection = c.state["locked"]
     for name in ("initial", "factorized-random"):
         c.evaluate_frozen("outer", name)
     for name in ("decoder", "layer01", "layer03"):
@@ -18,6 +19,13 @@ def run(hours):
             tag = f"{name}-s{seed}-t100000"
             if (c.disk / "fits" / (tag + ".pt")).exists():
                 c.evaluate_frozen("outer", tag)
+    for seed in SEEDS:
+        name = f"{selection['name']}-s{seed}-t{selection['cap']}"
+        for temperature in (0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0):
+            for unique in (0, 1):
+                c.evaluate_frozen("selection", name, CELL_TEMP=temperature, CELL_UNIQUE=unique)
+        for slots in (4, 12):
+            c.evaluate_frozen("selection", name, CELL_SLOTS=slots)
     names = {g["name"] for g in grid()} | {"layer-lr-interaction"}
     for p in sorted((c.disk / "fits").glob("*-t*.json")):
         if time.time() > c.state["end"] - 600:
