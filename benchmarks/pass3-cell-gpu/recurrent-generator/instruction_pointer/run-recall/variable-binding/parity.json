@@ -1,0 +1,1 @@
+[{"layout":"eq10","goals":1,"max_error":2.9802322387695312e-08},{"layout":"two","goals":1,"max_error":1.862645149230957e-08},{"layout":"chain","goals":1,"max_error":2.9802322387695312e-08},{"layout":"four","goals":1,"max_error":7.450580596923828e-09},{"layout":"guard","goals":1,"max_error":1.4901161193847656e-08},{"layout":"merge","goals":1,"max_error":5.960464477539063e-08}]

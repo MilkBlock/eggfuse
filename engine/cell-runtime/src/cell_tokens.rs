@@ -102,6 +102,7 @@ pub(crate) fn value_hash(value: &Value) -> u64 {
 /// Optional diagnostic exporter. Normal reference, capture and replay clocks do
 /// not scan token memory. Each record describes the snapshot before any RHS.
 struct MemoryExport {
+    export_field_values: bool,
     query_observer: Option<BufWriter<std::fs::File>>,
     admission_observer: Option<BufWriter<std::fs::File>>,
     writer: Box<dyn Write>,
@@ -361,6 +362,7 @@ impl History {
             .map(std::fs::File::create).transpose().map_err(|e| e.to_string())?
             .map(BufWriter::new);
         self.memory = Some(MemoryExport {
+            export_field_values: path.is_some() && std::env::var_os("EGGFUSE_REPLAY_FIELD_VALUES").is_some(),
             query_observer,
             admission_observer,
             writer,
@@ -382,6 +384,8 @@ impl History {
         if self.memory.is_none() {
             return Ok(());
         }
+        let mut field_values = Vec::new();
+        let export_fields = self.memory.as_ref().is_some_and(|m| m.export_field_values);
         let mut visible = BTreeMap::new();
         for (&address, &original) in &self.returns {
             let Some(witness) = self.resolve(address) else {
@@ -393,16 +397,16 @@ impl History {
             if row.hidden || (!terminal && row.epoch >= graph.epoch) {
                 continue;
             }
-            let hashes = row.values.iter().map(value_hash).collect();
-            visible.insert(
-                address,
-                PortObservation {
-                    table: row.table,
-                    version: row.epoch,
-                    forwarded: witness != original,
-                    hashes,
-                },
-            );
+            let observation = PortObservation {
+                table: row.table,
+                version: row.epoch,
+                forwarded: witness != original,
+                hashes: row.values.iter().map(value_hash).collect(),
+            };
+            if export_fields && self.memory.as_ref().and_then(|m| m.previous.get(&address)) != Some(&observation) {
+                field_values.push((address, row.epoch, row.values.clone()));
+            }
+            visible.insert(address, observation);
         }
         let mut preverified=Vec::new();
         if self.verified_layouts && !terminal {
@@ -452,6 +456,7 @@ impl History {
             "accepted":memory.accepted,
             "repair_events":&self.repair_events[self.repair_events.partition_point(|e| e.visible_from_run < run)..],
         }) };
+        if export_fields { frame["observed_fields"] = serde_json::json!(field_values); }
         if self.waves.as_ref().and_then(|w|w.transactions.as_ref()).is_some_and(|m|m.ccp) {
             frame["typed_repairs"]=serde_json::json!(repairs.len());
             frame["typed_repair_ops"]=serde_json::json!(repairs.iter().map(|e| e.operations.len()).sum::<usize>());

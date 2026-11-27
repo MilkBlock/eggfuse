@@ -1,0 +1,14 @@
+split,snapshots,layouts,native_new_targets,nonempty_warm_prefix
+train,4096,5,5853,205
+cross-guard,24,1,24,0
+density-16,16,1,16,0
+density-32,16,1,16,0
+density-4,16,1,16,0
+density-64,16,1,16,0
+density-8,16,1,16,0
+noise,48,1,86,0
+subset-0,8,1,32,0
+subset-1,8,1,24,8
+subset-2,8,1,16,8
+subset-3,8,1,8,8
+test,624,8,1028,78
