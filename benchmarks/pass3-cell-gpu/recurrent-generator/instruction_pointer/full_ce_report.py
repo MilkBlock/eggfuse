@@ -106,9 +106,14 @@ def report():
             }
         )
     csv_table(REPORT / "native-effect-audit.csv", fork_stats)
+    postfile = raw / "postfit.json"
+    postfit = read(postfile) if postfile.exists() else {}
     matrix = []
     for tag, g in sorted(grouped.items()):
         c = g["config"]
+        probed = postfit.get(tag, {}).get("seen", [])
+        postfit_count = sum(r[2] for r in probed)
+        shifts = postfit.get(tag, {}).get("changes", [])
         member_path = raw / "fits" / (tag + ".seen.gz")
         audited = None
         if member_path.exists():
@@ -148,6 +153,19 @@ def report():
                 "seconds": g["seconds"],
                 "tokens_s": g["tokens_per_s"],
                 "train_ce": g["train_ce"],
+                "frozen_seen_probe_tokens": postfit_count,
+                "frozen_seen_probe_ce": sum(r[2] * r[3] for r in probed) / postfit_count
+                if postfit_count
+                else None,
+                "native_receipt_pairs": len(shifts),
+                "completed_probability_shift": mean(r[3] - r[2] for r in shifts)
+                if shifts
+                else None,
+                "remaining_probability_shift": mean(r[5] - r[4] for r in shifts)
+                if shifts
+                else None,
+                "free_zero": g.get("free_parents_0"),
+                "free_one": g.get("free_parents_1"),
                 "validation_ce": g["val_ce"],
                 "free_known_hit": g["free_known_hit"],
                 "free_two": g.get("free_parents_2"),
@@ -201,7 +219,7 @@ def report():
         "",
         "## 数据、模型与训练预算",
         "",
-        "注册参数 32,874。冻结比较本轮训练曝光 0、训练时间 0。各模型单列前向/反向参数、实际完整 Token 曝光、实测训练墙钟及吞吐。训练计时按进程计，各阶段累计曝光包含重复的完整 Token；嵌套检查点不能相加。原生评估和语料核验耗时另计。历史初始化的全部训练曝光与耗时缺乏完整记录。",
+        "注册参数 32,874。冻结比较本轮训练曝光 0、训练时间 0。各模型单列前向/反向参数、实际完整 Token 曝光、实测训练墙钟及吞吐。训练计时按进程计，各阶段累计曝光包含重复的完整 Token；嵌套检查点不能相加。原生评估和语料核验耗时另计。train_ce 为沿优化轨迹的曝光加权均值。frozen_seen_probe_ce 为检查点冻结后在真实曝光过的状态和目标上的 CE，按来源最多抽 8 个状态、每状态最多 32 个目标。另在公开端口完全一致的原生 Submit 前后比较已完成与其他有效 Token 的概率变化。历史初始化的全部训练曝光与耗时缺乏完整记录。",
         "",
         f"逐条重放 {len(archive):,} 条归档，共 {sum(r['generated'] for r in archive):,} 枚生成请求；核对 Recipe、发布帧、回执、来源贡献及终图。训练主池 {inv['programs']} 个程序，{inv['counts']['states']:,} 个决策状态，{inv['counts']['state_named_token']:,} 个不同状态与完整具名 Token。具有可跨绑定比较的原生反事实新增效果集合的目标只有 {inv['counts']['effect_identity_known_targets']} 个，对应 {inv['counts']['state_verified_effect_sets']} 个状态与效果集合。其余保留具名监督，效果身份未知。",
         "",
