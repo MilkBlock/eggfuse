@@ -452,6 +452,32 @@ def report():
         lines.append(
             f"内部验证锁定 {best['name']}，单模型曝光 {best['cap']:,}。适用范围为当前训练池、固定生成、固定退出及预算。外层独立结果在上表和 native.csv 中单列。"
         )
+        rungs = []
+        for cap in (10000, 30000, 100000, 250000, 500000, 1000000):
+            for seed in (71, 113):
+                row = grouped.get(f"{best['name']}-s{seed}-t{cap}")
+                by_case = row["inner_area"] if row else {}
+                rungs.append(
+                    {
+                        "name": best["name"], "seed": seed, "planned_exposures": cap,
+                        "native_validated": bool(row), "selected": cap == best["cap"],
+                        "training_seconds": row["seconds"] if row else "",
+                        "inner_mean_budget_coverage": mean(by_case.values()) if row else "",
+                        "loopfact_mean_budget_coverage": by_case.get("loopfact", ""),
+                    }
+                )
+        csv_table(REPORT / "promotion.csv", rungs)
+        lines.extend(["", "## 曝光晋级与未运行档位", "",
+                      "promotion.csv 逐训练种子保留获选配置各档的实际训练时间、内部跨程序 Coverage 与 loopfact Coverage。空记录表示该曝光没有完成原生验收。"])
+        if not best["stable"]:
+            lines.append("30K 至 100K 的双种子原生晋级条件未满足，250K、500K 和 1M 留在条件队列。")
+        elif best["cap"] < 1000000:
+            further = sorted({r["planned_exposures"] for r in rungs
+                              if r["native_validated"] and r["planned_exposures"] > best["cap"]})
+            if further:
+                lines.append(f"{further[0]:,} 档有原生结果，未通过继续晋级的双种子条件。")
+            else:
+                lines.append("下一档仅在两枚种子的实测吞吐与剩余原生验收时间均允许时启动。")
     skills_path = raw / "higher-counterfactual.json"
     if skills_path.exists():
         summaries = []
