@@ -1,0 +1,279 @@
+{
+ "archive_sha": "e14aed85c52c58cdab10f6d0e647dacfd72e2bf1f7ce6b7e7246a991e1455133",
+ "calibration": [],
+ "config": {
+  "lr": 0.004,
+  "name": "lr4"
+ },
+ "connected": 18880,
+ "effect_identity_scope": "only exact native counterfactual gain sets",
+ "exposures": 30000,
+ "forward_observed": 18880,
+ "gradient_tensors": [
+  "actor.age.weight",
+  "actor.dynamic.weight",
+  "actor.input_content.weight",
+  "actor.input_role.bias",
+  "actor.input_role.weight",
+  "actor.lanes.weight",
+  "actor.latent.weight",
+  "actor.msg.weight",
+  "actor.next_read.bias_hh",
+  "actor.next_read.bias_ih",
+  "actor.next_read.weight_hh",
+  "actor.next_read.weight_ih",
+  "actor.query.bias",
+  "actor.query.weight",
+  "actor.static.weight",
+  "actor.update.bias",
+  "actor.update.weight",
+  "graph.edge.bias",
+  "graph.edge.weight",
+  "graph.message.weight",
+  "graph.step.bias",
+  "graph.step.weight"
+ ],
+ "learning_curve": [
+  {
+   "cumulative_train_ce": 8.039003052884832,
+   "exposures": 1136,
+   "lr": 0.004,
+   "seconds": 15.709998542035464,
+   "steps": 17
+  },
+  {
+   "cumulative_train_ce": 7.566201859219382,
+   "exposures": 2315,
+   "lr": 0.004,
+   "seconds": 26.223717667046003,
+   "steps": 42
+  },
+  {
+   "cumulative_train_ce": 7.250142750033685,
+   "exposures": 3002,
+   "lr": 0.004,
+   "seconds": 56.72976512502646,
+   "steps": 65
+  },
+  {
+   "cumulative_train_ce": 7.0648896879759535,
+   "exposures": 4032,
+   "lr": 0.004,
+   "seconds": 81.79438662505709,
+   "steps": 79
+  },
+  {
+   "cumulative_train_ce": 6.836861142698802,
+   "exposures": 5072,
+   "lr": 0.004,
+   "seconds": 95.54140850005206,
+   "steps": 111
+  },
+  {
+   "cumulative_train_ce": 6.740954137092148,
+   "exposures": 6003,
+   "lr": 0.004,
+   "seconds": 124.80234620801639,
+   "steps": 125
+  },
+  {
+   "cumulative_train_ce": 6.686918102601305,
+   "exposures": 7023,
+   "lr": 0.004,
+   "seconds": 137.21959879202768,
+   "steps": 140
+  },
+  {
+   "cumulative_train_ce": 6.594217874860165,
+   "exposures": 8268,
+   "lr": 0.004,
+   "seconds": 153.33544137503486,
+   "steps": 167
+  },
+  {
+   "cumulative_train_ce": 6.520557769819931,
+   "exposures": 9006,
+   "lr": 0.004,
+   "seconds": 170.62568908301182,
+   "steps": 197
+  },
+  {
+   "cumulative_train_ce": 6.42848724170085,
+   "exposures": 10000,
+   "lr": 0.004,
+   "seconds": 201.82048279204173,
+   "steps": 230
+  },
+  {
+   "cumulative_train_ce": 6.362777899227867,
+   "exposures": 11000,
+   "lr": 0.004,
+   "seconds": 219.77949912502663,
+   "steps": 259
+  },
+  {
+   "cumulative_train_ce": 6.304459024506873,
+   "exposures": 12022,
+   "lr": 0.004,
+   "seconds": 247.2669360000291,
+   "steps": 284
+  },
+  {
+   "cumulative_train_ce": 6.2816034867670485,
+   "exposures": 13110,
+   "lr": 0.004,
+   "seconds": 260.1869782920112,
+   "steps": 308
+  },
+  {
+   "cumulative_train_ce": 6.266125009783565,
+   "exposures": 14028,
+   "lr": 0.004,
+   "seconds": 271.7354832080309,
+   "steps": 323
+  },
+  {
+   "cumulative_train_ce": 6.239581051187257,
+   "exposures": 15231,
+   "lr": 0.004,
+   "seconds": 284.61167141702026,
+   "steps": 344
+  },
+  {
+   "cumulative_train_ce": 6.23366936180301,
+   "exposures": 16288,
+   "lr": 0.004,
+   "seconds": 298.50247950002085,
+   "steps": 360
+  },
+  {
+   "cumulative_train_ce": 6.214859760455416,
+   "exposures": 17207,
+   "lr": 0.004,
+   "seconds": 310.8196375420084,
+   "steps": 379
+  },
+  {
+   "cumulative_train_ce": 6.206011410397388,
+   "exposures": 18042,
+   "lr": 0.004,
+   "seconds": 320.772364458011,
+   "steps": 388
+  },
+  {
+   "cumulative_train_ce": 6.197490153906285,
+   "exposures": 19050,
+   "lr": 0.004,
+   "seconds": 330.28505695803324,
+   "steps": 405
+  },
+  {
+   "cumulative_train_ce": 6.178957551315675,
+   "exposures": 20017,
+   "lr": 0.004,
+   "seconds": 358.40443454199703,
+   "steps": 428
+  },
+  {
+   "cumulative_train_ce": 6.171706301895041,
+   "exposures": 21183,
+   "lr": 0.004,
+   "seconds": 377.4223105420242,
+   "steps": 439
+  },
+  {
+   "cumulative_train_ce": 6.174600012941952,
+   "exposures": 22028,
+   "lr": 0.004,
+   "seconds": 384.6374902080279,
+   "steps": 446
+  },
+  {
+   "cumulative_train_ce": 6.165967748653127,
+   "exposures": 23033,
+   "lr": 0.004,
+   "seconds": 400.5085924580344,
+   "steps": 470
+  },
+  {
+   "cumulative_train_ce": 6.142259873300843,
+   "exposures": 24246,
+   "lr": 0.004,
+   "seconds": 432.00536491698585,
+   "steps": 503
+  },
+  {
+   "cumulative_train_ce": 6.118314712359232,
+   "exposures": 25038,
+   "lr": 0.004,
+   "seconds": 441.00270941702183,
+   "steps": 524
+  },
+  {
+   "cumulative_train_ce": 6.10831781524829,
+   "exposures": 26108,
+   "lr": 0.004,
+   "seconds": 453.6495682920213,
+   "steps": 545
+  },
+  {
+   "cumulative_train_ce": 6.0883458811576405,
+   "exposures": 27292,
+   "lr": 0.004,
+   "seconds": 493.08478933299193,
+   "steps": 572
+  },
+  {
+   "cumulative_train_ce": 6.0818526822538574,
+   "exposures": 28031,
+   "lr": 0.004,
+   "seconds": 505.01683849998517,
+   "steps": 588
+  },
+  {
+   "cumulative_train_ce": 6.06492260105014,
+   "exposures": 29005,
+   "lr": 0.004,
+   "seconds": 522.4192650000332,
+   "steps": 618
+  },
+  {
+   "cumulative_train_ce": 6.049965963364454,
+   "exposures": 30000,
+   "lr": 0.004,
+   "seconds": 536.6172802500078,
+   "steps": 642
+  }
+ ],
+ "registered": 32874,
+ "seconds": 536.617286416993,
+ "seed": 113,
+ "sources": {
+  "autonomous": 15363,
+  "branch": 353,
+  "continuous": 222,
+  "foundation": 418,
+  "shuffle": 13256,
+  "teacher": 388
+ },
+ "state_pool": 7638,
+ "states": 529,
+ "steps": 642,
+ "targets": 29006,
+ "tokens_per_s": 55.905765168898576,
+ "train_ce": 6.049965963364454,
+ "verified_distinct_effects": 87,
+ "weights_sha": "2b5b5e7d0e90fbd86508fe05b766db2e6e067b10e88fead8ddc816372c79275a",
+ "inner_area": {
+  "loopfact": 0.04388489208633094,
+  "foundation185511": 0.34615384615384615,
+  "foundation185510": 0.34307692307692306
+ },
+ "val_ce": 5.914399615428265,
+ "free_known_hit": 0.16025641025641027,
+ "free_parents_0": 1.0,
+ "free_parents_3": 0.009114583333333334,
+ "free_parents_1": 0.21354166666666666,
+ "free_parents_2": 0.08854166666666667,
+ "free_higher": 0.515625
+}
