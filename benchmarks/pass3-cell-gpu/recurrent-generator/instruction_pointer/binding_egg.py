@@ -71,7 +71,7 @@ def unpack(pipe, f):
 
 
 @torch.no_grad()
-def execute(a, d, dest, net, arm, seed, block, draw, reference):
+def execute(a, d, dest, net, arm, seed, block, draw, reference, *, parent_policy=None, address_seed=None):
     dest.mkdir(exist_ok=True, parents=True)
     observer = dest / "observer.jsonl"
     export = dest / "graph.json"
@@ -92,6 +92,7 @@ def execute(a, d, dest, net, arm, seed, block, draw, reference):
             "--export",
             export,
             "--ept",
+            *(["--address-seed", str(address_seed)] if address_seed is not None else []),
         ],
         stdin=-1,
         stdout=-1,
@@ -133,10 +134,13 @@ def execute(a, d, dest, net, arm, seed, block, draw, reference):
                             continue
                         k = len(z["banks"])
                         noise = tensor(rng.random((1, len(idx), k)).astype(np.float32))
-                        _, chosen = net(collate([z]), draws=len(idx), noise=noise)
-                        stats["parent_candidate_scores"] += len(idx) * sum(
-                            len(b) for b in z["addrs"]
-                        )
+                        if parent_policy is None:
+                            _, chosen = net(collate([z]), draws=len(idx), noise=noise)
+                            stats["parent_candidate_scores"] += len(idx) * sum(
+                                len(b) for b in z["addrs"]
+                            )
+                        else:
+                            chosen = parent_policy(z, noise, rng, stats)
                         for i, ix in zip(idx, chosen[0].cpu().tolist(), strict=True):
                             cells[i] = Cell(
                                 rid, tuple(z["addrs"][j][p] for j, p in enumerate(ix))
