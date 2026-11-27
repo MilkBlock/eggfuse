@@ -354,6 +354,7 @@ if __name__ == "__main__":
                 "evidence.json",
                 "README.md",
                 "paired-training.csv",
+                "higher-counterfactual.csv",
             )
         ]
         files = [f for f in files if Path(f).is_file()]

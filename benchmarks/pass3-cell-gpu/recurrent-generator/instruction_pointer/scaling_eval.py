@@ -119,7 +119,7 @@ def evaluate(a):
     unique = int(os.getenv("CELL_UNIQUE", "1"))
     slots = int(os.getenv("CELL_SLOTS", "6"))
     cases = {
-        "validation": ["loopfact", "foundation10", "foundation11"],
+        "validation": ["loopfact", "foundation185510", "foundation185511"],
         "outer": ["sum-divisors"],
         "intervention": ["loopfact", "sum-divisors"],
         "inner-intervention": ["loopfact"],

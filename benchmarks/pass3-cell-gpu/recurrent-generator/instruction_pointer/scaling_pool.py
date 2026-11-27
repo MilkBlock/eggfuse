@@ -48,13 +48,15 @@ class Pool:
         groups = build(a, "sum-divisors", n)
         for src, rows in groups.items():
             for w, s, ts in rows:
+                # These original programs occurred in the inherited checkpoint's training set.
+                if w.dir.name.startswith("foundation-252205-"):
+                    continue
                 self.add_base(
                     src,
                     w,
                     s,
                     ts,
-                    w.dir == validation_path
-                    or w.dir.name.startswith("foundation-252205-"),
+                    w.dir == validation_path,
                 )
         extra = d / "transitions.pkl.gz"
         if extra.exists():
@@ -63,10 +65,22 @@ class Pool:
             with gzip.open(extra, "rb") as f:
                 data = pickle.load(f)
             for i, rows in data.items():
+                if i >= 10:
+                    continue
                 w = world(a, n.actor, i, True)
                 for s, labels in rows:
-                    key = self.add_base("continuous", w, s, labels, i >= 10)
+                    key = self.add_base("continuous", w, s, labels, False)
                     self.effects[key] = {t: digest(g) for t, g in labels.items()}
+        from foundation_world import world as foundation_world
+
+        for i, (sha, rows) in pickle.loads(
+            (d / "fresh-validation.pkl").read_bytes()
+        ).items():
+            w = foundation_world(a, n.actor, i, True, "multi")
+            for s, targets in rows:
+                key = self.add_base("foundation", w, s, targets, True)
+                if key[0] != sha:
+                    raise ValueError("fresh validation Recipe digest mismatch")
         if extra_egg:
             from continuous_trials import setup
 
@@ -123,6 +137,20 @@ class Sampler:
         self.keys = pool.keys.copy()
         self.rng.shuffle(self.keys)
         self.keys = self.keys[: cfg.get("state_limit", len(self.keys))]
+        if cfg.get("states_per_program"):
+            # Fixed study population independent of training seed and available target limit.
+            with gzip.open(directory(pool.arch.a) / "difficulty.pkl.gz", "rb") as f:
+                dimensions = pickle.load(f)
+            programs = defaultdict(list)
+            for key, dims in sorted(dimensions.items()):
+                if dims[3] >= 64:
+                    programs[key[0]].append(key)
+            layout = random.Random(95321)
+            eligible = sorted(k for k, states in programs.items() if len(states) >= 8)
+            self.keys = []
+            for prog in layout.sample(eligible, 32):
+                selected = layout.sample(programs[prog], 8)
+                self.keys.extend(selected[: cfg["states_per_program"]])
         self.groups = defaultdict(list)
         for k in self.keys:
             self.groups[pool.records[k]].append(k)
@@ -201,6 +229,11 @@ class Sampler:
             for t in targets:
                 groups[self.pool.effects[key][t]].append(t)
             targets = [self.rng.choice(g) for g in groups.values()]
+        if self.cfg.get("names_per_state"):
+            # Across controls keep the same random order of verified names, independent of CE draws.
+            layout = random.Random(digest(key))
+            layout.shuffle(targets)
+            targets = targets[: self.cfg["names_per_state"]]
         if self.cfg.get("block"):
             weights = None
             if mode == "trajectory" and key in self.pool.locs:

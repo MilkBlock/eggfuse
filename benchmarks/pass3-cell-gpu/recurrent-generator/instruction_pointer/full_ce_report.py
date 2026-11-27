@@ -74,8 +74,11 @@ def report():
         if (raw / "forward-replay.json").exists()
         else {}
     )
+    grouped = dict(state["groups"])
+    for path in sorted((REPORT / "size-controls").glob("*.json")):
+        grouped[path.stem] = read(path)
     matrix = []
-    for tag, g in sorted(state["groups"].items()):
+    for tag, g in sorted(grouped.items()):
         c = g["config"]
         matrix.append(
             {
@@ -91,6 +94,7 @@ def report():
                 ),
                 "backward": g["connected"],
                 "pool_states": g["state_pool"],
+                "constrained_pool_names": g.get("available_names", ""),
                 "training_states": g["states"],
                 "state_named_tokens": g["targets"],
                 "state_effect_sets_proven": g["verified_distinct_effects"],
@@ -111,8 +115,8 @@ def report():
                 "free_multi": g.get("free_parents_3"),
                 "free_higher": g.get("free_higher"),
                 "inner_loopfact": g["inner_area"]["loopfact"],
-                "inner_foundation10": g["inner_area"]["foundation10"],
-                "inner_foundation11": g["inner_area"]["foundation11"],
+                "inner_foundation185510": g["inner_area"]["foundation185510"],
+                "inner_foundation185511": g["inner_area"]["foundation185511"],
                 "weight_sha": g["weights_sha"],
             }
         )
@@ -162,7 +166,7 @@ def report():
         "",
         f"逐条重放 {len(archive):,} 条归档，共 {sum(r['generated'] for r in archive):,} 枚生成请求；核对 Recipe、发布帧、回执、来源贡献及终图。训练主池 {inv['programs']} 个程序，{inv['counts']['states']:,} 个决策状态，{inv['counts']['state_named_token']:,} 个不同状态与完整具名 Token。具有可跨绑定比较的原生反事实新增效果集合的目标只有 {inv['counts']['effect_identity_known_targets']} 个，对应 {inv['counts']['state_verified_effect_sets']} 个状态与效果集合。其余保留具名监督，效果身份未知。",
         "",
-        "训练分配到 fact、历史原生程序、基础与真实反事实。loopfact、两个完整基础程序和两份连续状态程序用于内部验证。sum-divisors 为外层留出，仅在配置锁定后执行。继承权重来自既有实验，无法追溯其一生中所有预训练程序。每个训练步仅使用完整 Cell Token CE。局部组反向 4,160，Decoder 组 10,624，端到端与分层组通常 18,880。实际梯度张量清单保存在每组 JSON。",
+        "训练分配到 fact、历史原生程序、基础与真实反事实。loopfact 和本轮新生成的两个完整基础程序用于内部验证。初测的基础程序 10/11 已被继承权重训练过；初测移入 seen-foundation，排除于超参数选择。对应历史连续程序也排除于内层验证。sum-divisors 为外层留出，仅在配置锁定后执行。继承权重来自既有实验，无法追溯其一生中所有预训练程序。每个训练步仅使用完整 Cell Token CE。局部组反向 4,160，Decoder 组 10,624，端到端与分层组通常 18,880。实际梯度张量清单保存在每组 JSON。",
         "",
         "中心为 AdamW、学习率 0.001、衰减 0、梯度裁剪 2，每步一个真实状态内抽到的完整目标集合。半批量将同一集合依次拆成两次更新；2/4 倍累积多个状态再更新。调度在预设曝光档位重启，分层倍率只作用于 Decoder 组以外的现有可训练参数。随机初始化使用同架构的原生 reset_parameters。小/大上下文分档综合同类型域、目录、父数、有效目标数、内部步数、回执数及 epoch。自适应课程用内部基础程序自由生成探针调整保留比例。",
         "",
@@ -176,7 +180,7 @@ def report():
     for g in matrix:
         r = rates["validation", g["model"], "loopfact", 256]
         lines.append(
-            f"| {g['model']} | {g['exposures']:,} | {g['training_states']} | {g['state_named_tokens']} | {g['seconds']:.1f} | {g['train_ce']:.3f} | {g['validation_ce']:.3f} | {mean(x['covered'] for x in r):.1f} | {(g['inner_foundation10'] + g['inner_foundation11']) / 2:.1%} |"
+            f"| {g['model']} | {g['exposures']:,} | {g['training_states']} | {g['state_named_tokens']} | {g['seconds']:.1f} | {g['train_ce']:.3f} | {g['validation_ce']:.3f} | {mean(x['covered'] for x in r):.1f} | {(g['inner_foundation185510'] + g['inner_foundation185511']) / 2:.1%} |"
         )
     lines += [
         "",
@@ -208,7 +212,7 @@ def report():
         base = state["groups"].get(f"center-s{g['seed']}-t{g['exposures']}")
         if not base or g["name"] == "center":
             continue
-        gs = state["groups"][g["model"]]
+        gs = grouped[g["model"]]
         paired.append(
             {
                 "config": g["name"],
@@ -216,10 +220,10 @@ def report():
                 "exposures": g["exposures"],
                 "validation_ce_delta": g["validation_ce"] - base["val_ce"],
                 "loopfact_delta": g["inner_loopfact"] - base["inner_area"]["loopfact"],
-                "foundation10_delta": g["inner_foundation10"]
-                - base["inner_area"]["foundation10"],
-                "foundation11_delta": g["inner_foundation11"]
-                - base["inner_area"]["foundation11"],
+                "foundation185510_delta": g["inner_foundation185510"]
+                - base["inner_area"]["foundation185510"],
+                "foundation185511_delta": g["inner_foundation185511"]
+                - base["inner_area"]["foundation185511"],
                 "free_two_delta": gs.get("free_parents_2", 0)
                 - base.get("free_parents_2", 0),
                 "free_multi_delta": gs.get("free_parents_3", 0)
@@ -248,7 +252,11 @@ def report():
         and p["seed"] == 71
         and p["validation_ce_delta"] < 0
         and mean(
-            [p["loopfact_delta"], p["foundation10_delta"], p["foundation11_delta"]]
+            [
+                p["loopfact_delta"],
+                p["foundation185510_delta"],
+                p["foundation185511_delta"],
+            ]
         )
         <= 0
     ]
@@ -263,7 +271,11 @@ def report():
         if len({p["seed"] for p in ps}) >= 2 and all(
             min(
                 p[k]
-                for k in ("loopfact_delta", "foundation10_delta", "foundation11_delta")
+                for k in (
+                    "loopfact_delta",
+                    "foundation185510_delta",
+                    "foundation185511_delta",
+                )
             )
             > 0
             for p in ps
@@ -286,6 +298,33 @@ def report():
         lines.append(
             f"内部验证锁定 {best['name']}，单模型曝光 {best['cap']:,}。适用范围为当前训练池、固定生成、固定退出及预算。外层独立结果在上表和 native.csv 中单列。"
         )
+    skills_path = raw / "higher-counterfactual.json"
+    if skills_path.exists():
+        summaries = []
+        for name, ss in read(skills_path).items():
+            cases = sorted({x["program"] for x in ss})
+            summaries.append(
+                {
+                    "model": name,
+                    "pairs": len(cases),
+                    "flips": sum(
+                        all(x["wins"] for x in ss if x["program"] == i) for i in cases
+                    ),
+                    "mean_full_probability": mean(x["full"] for x in ss),
+                    "mean_conditional_probability": mean(
+                        x["full"] / x["family"] for x in ss if x["family"]
+                    ),
+                }
+            )
+        csv_table(REPORT / "higher-counterfactual.csv", summaries)
+    lines.extend(
+        [
+            "",
+            "分离状态和目标多样性的补充对照选定同样的 32 个训练程序，每个程序固定抽取 2 或 8 个真实状态，每个状态固定开放 4、16 或 64 个核验具名目标。各组均为 625 次更新，每次 16 枚，池内均匀抽样。比较同为 4,096 个可用具名目标的 64×64 与 256×16，也可在 256 个状态下比较每状态 4 与 16 个目标。该组独立于超参数筛选。",
+            "",
+            "higher-counterfactual.csv 单列 6 对发布后更换入口时的 Higher 排序翻转、完整目标概率、给定 Higher 家族的条件概率。逐请求重放恢复相关版本、原生回执和规则状态。给定目标概率属于离线诊断，自主发现与完成数量见 native.csv。继承的最近一段触发训练为 8,192 次曝光、512 次更新、5.25 秒，训练过最初的两个基础验证程序。",
+        ]
+    )
     (REPORT / "README.md").write_text("\n".join(lines) + "\n")
 
 

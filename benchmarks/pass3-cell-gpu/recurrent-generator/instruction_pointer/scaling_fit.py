@@ -81,11 +81,13 @@ def train(a, cfg, seed, milestones):
     counts = Counter()
     emitted = step = 0
     elapsed = weighted = 0.0
+    curve = []
     resume = dst / (base + "-resume.pt")
     if resume.exists():
         saved = torch.load(resume, weights_only=False)
         if saved["config"] != cfg or saved["bank"] != data.catalogue_digest:
             raise ValueError("incompatible resumption")
+        curve = saved.get("curve", [])
         n.load_state_dict(saved["model"])
         opt.load_state_dict(saved["opt"])
         seen, effects, connected, counts, emitted, step, elapsed, weighted = saved[
@@ -199,6 +201,16 @@ def train(a, cfg, seed, milestones):
             opt.step()
             emitted += count
             step += 1
+            if emitted // 1000 != (emitted - count) // 1000 or emitted == cap:
+                curve.append(
+                    {
+                        "exposures": emitted,
+                        "steps": step,
+                        "cumulative_train_ce": weighted / emitted,
+                        "lr": opt.param_groups[-1]["lr"],
+                        "seconds": elapsed + perf_counter() - start,
+                    }
+                )
         wall = elapsed + perf_counter() - start
         progress = (seen, effects, connected, counts, emitted, step, wall, weighted)
         tmp = resume.with_suffix(".tmp")
@@ -210,6 +222,7 @@ def train(a, cfg, seed, milestones):
                 "opt": opt.state_dict(),
                 "progress": progress,
                 "rng": sampler.rng.getstate(),
+                "curve": curve,
                 "retention": sampler.retention,
             },
             tmp,
@@ -235,6 +248,7 @@ def train(a, cfg, seed, milestones):
                 "tokens_per_s": emitted / wall,
                 "train_ce": weighted / max(1, emitted),
                 "calibration": calibration,
+                "learning_curve": curve,
                 "forward_observed": sum(
                     p.numel() for k, p in n.named_parameters() if k in forward
                 ),
