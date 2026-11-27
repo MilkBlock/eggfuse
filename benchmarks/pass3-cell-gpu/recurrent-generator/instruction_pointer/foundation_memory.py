@@ -19,9 +19,10 @@ class Page:
 
 
 class AssociationMemory:
-    def __init__(self, projection, device, width=32):
+    def __init__(self, projection, device, width=32, compact=False):
         self.device = device
         self.width = width
+        self.compact = compact
         # Reuse the previous field map's coordinate selection and learned bit weights.
         # The single-field dot equals a weighted identity-bit similarity.
         self.coords = projection.coords.to(device)
@@ -84,6 +85,10 @@ class AssociationMemory:
             self.pages[pg] = Page(
                 t, list(refs), keys, torch.stack(fields), keys.mean(0)
             )
+            if self.compact:
+                packed = self.pages[pg]
+                for i, ref in enumerate(refs):
+                    self.rows[ref[:2]] = (pg, ref, packed.keys[i], packed.fields[i])
             stats["maintenance_rows_copied"] += len(refs)
         stats["rows_encoded"] += len(updates)
 
@@ -103,6 +108,11 @@ class AssociationMemory:
         def size(x):
             return x.numel() * x.element_size()
 
-        return sum(size(k) + size(f) for _, _, k, f in self.rows.values()) + sum(
+        row_bytes = (
+            0
+            if self.compact
+            else sum(size(k) + size(f) for _, _, k, f in self.rows.values())
+        )
+        return row_bytes + sum(
             size(p.keys) + size(p.fields) + size(p.mean) for p in self.pages.values()
         )
