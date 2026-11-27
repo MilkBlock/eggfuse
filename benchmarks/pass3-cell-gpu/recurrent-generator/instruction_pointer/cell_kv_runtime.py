@@ -6,6 +6,7 @@ import os
 import subprocess
 import threading
 from collections import Counter, defaultdict
+from contextlib import nullcontext
 from time import perf_counter
 
 import numpy as np
@@ -225,6 +226,7 @@ def native(
     if execution_trace is not None and (offline or not rule_state):
         raise ValueError("attribution requires a signed, observed run")
     with (
+        policy.inference_session() if hasattr(policy, "inference_session") else nullcontext(),
         publication_observer(rule_state, execution_trace is not None) as (reader, audit_path, env),
         subprocess.Popen(cmd, stdin=-1, stdout=-1, env=env) as proc,
     ):

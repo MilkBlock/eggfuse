@@ -66,7 +66,7 @@ def run_one(a, case, arm, seed, cap, checkpoint=None, worker=None):
     cache = InferenceCache(n) if arm != "ref" else None
     if worker:
         worker.install(n)
-    pol = Stream(n, "A")
+    pol = Stream(n, "A", incremental=False)
     pages = Pages(w, pol)
     trace = Ledger()
     r = native(

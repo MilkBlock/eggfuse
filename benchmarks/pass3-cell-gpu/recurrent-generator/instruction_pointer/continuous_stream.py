@@ -1,6 +1,9 @@
 """Fixed-capacity generation with exact-view reuse and reversible named-leaf discount."""
 
 from collections import Counter
+from contextlib import contextmanager
+
+import torch
 from time import perf_counter
 
 from competition_draw import Page
@@ -40,10 +43,12 @@ def named_path(page, token):
 
 
 class Stream:
-    def __init__(self, net, mode):
+    def __init__(self, net, mode, *, incremental=True):
         if mode not in ("A", "B", "C", "iid"):
             raise ValueError(f"unknown stream mode {mode}")
         self.net = net
+        self.incremental = incremental
+        self.memory_cache = None
         self.mode = mode
         self.count = Counter()
         self.time = Counter()
@@ -57,6 +62,24 @@ class Stream:
         self.previous = ()
         self.net.prepare(w)
         self.time["static_prepare"] += perf_counter() - start
+
+    @contextmanager
+    def inference_session(self):
+        from cell_kv_model import CellKV
+        from incremental_kv import InferenceCache
+
+        n = self.net
+        if (not self.incremental or not isinstance(n, CellKV) or n.training
+                or torch.is_grad_enabled() or type(n).instance_embedding is not CellKV.instance_embedding
+                or "published_kv" in vars(n) or "response_kv" in vars(n)):
+            yield
+            return
+        self.memory_cache = InferenceCache(n)
+        try:
+            yield
+        finally:
+            del n.published_kv, n.response_kv
+            self.memory_cache = None
 
     def observe_publication(self, frame):
         # Every new native publication invalidates all cached neural distributions.

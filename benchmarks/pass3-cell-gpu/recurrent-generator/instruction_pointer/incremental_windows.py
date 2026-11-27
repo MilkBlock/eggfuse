@@ -46,7 +46,7 @@ def run(a, case):
             )
         instrument(n, "exact")
         InferenceCache(n)
-        policy = Stream(n, "A")
+        policy = Stream(n, "A", incremental=False)
         log = WindowPages(w, policy)
         trace = Ledger()
         clock = Clock()

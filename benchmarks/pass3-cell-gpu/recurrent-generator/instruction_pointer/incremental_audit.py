@@ -110,7 +110,7 @@ def audit(a, case):
     native(
         a,
         w,
-        policy=Profile(n, "A"),
+        policy=Profile(n, "A", incremental=False),
         seed=193,
         slots=6,
         submit_pages=2,
