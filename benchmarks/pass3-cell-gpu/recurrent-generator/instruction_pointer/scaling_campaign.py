@@ -211,7 +211,27 @@ class Campaign:
                 # Each program and generation-budget point has equal weight.
                 score = mean(mean(g["inner_area"].values()) for g in gs)
                 eligible.append((score, name))
-        return [name for _, name in sorted(eligible, reverse=True)]
+        if len(seeds) == 1 or len(eligible) < 2:
+            return [name for _, name in sorted(eligible, reverse=True)]
+        # Each program votes in its own Coverage scale. Prefer behavior reproduced by both fitting seeds.
+        names = [name for _, name in eligible]
+        groups = self.state["groups"]
+        cases = groups[f"{names[0]}-s{seeds[0]}-t{cap}"]["inner_area"]
+
+        def rank(name, seed, case):
+            scores = {
+                n: groups[f"{n}-s{seed}-t{cap}"]["inner_area"][case] for n in names
+            }
+            others = [v for n, v in scores.items() if n != name]
+            return sum(
+                (v < scores[name]) + 0.5 * (v == scores[name]) for v in others
+            ) / len(others)
+
+        robust = [
+            (mean(min(rank(n, s, c) for s in seeds) for c in cases), avg, n)
+            for avg, n in eligible
+        ]
+        return [name for _, _, name in sorted(robust, reverse=True)]
 
     def evaluate_frozen(self, mode, name, **opts):
         if time.time() > self.state["end"] - 90:
@@ -247,7 +267,19 @@ class Campaign:
         for cap in (30000, 100000):
             if cap == 100000:
                 ranks = self.order(candidates, 30000, SEEDS)
-                candidates = list(dict.fromkeys(["center", "local", *ranks[:2]]))
+                layer = next(
+                    (
+                        n
+                        for n in ranks
+                        if n in ("layer01", "layer03", "layer-lr-interaction")
+                    ),
+                    None,
+                )
+                candidates = list(
+                    dict.fromkeys(
+                        ["center", "local", *([layer] if layer else []), *ranks[:2]]
+                    )
+                )
             self.stage([(by[n], s, cap) for n in candidates for s in SEEDS])
         ranked = self.order(candidates, 100000, SEEDS)
         selection_cap = 100000
@@ -262,8 +294,17 @@ class Campaign:
         def area(n, s, t):
             return mean(curves[f"{n}-s{s}-t{t}"]["inner_area"].values())
 
-        stable = selection_cap == 100000 and all(
-            area(candidate, s, 100000) > area(candidate, s, 30000) for s in SEEDS
+        def egg(s, t):
+            return curves[f"{candidate}-s{s}-t{t}"]["inner_area"]["loopfact"]
+
+        stable = (
+            selection_cap == 100000
+            and all(
+                area(candidate, s, 100000) > area(candidate, s, 30000)
+                and egg(s, 100000) >= egg(s, 30000)
+                for s in SEEDS
+            )
+            and any(egg(s, 100000) > egg(s, 30000) for s in SEEDS)
         )
         # Precommit the search result before ever evaluating the outer workload.
         bestcap = selection_cap
@@ -283,6 +324,7 @@ class Campaign:
                     break
                 if not all(
                     area(candidate, s, cap) >= area(candidate, s, bestcap)
+                    and egg(s, cap) >= egg(s, bestcap)
                     for s in SEEDS
                 ):
                     break

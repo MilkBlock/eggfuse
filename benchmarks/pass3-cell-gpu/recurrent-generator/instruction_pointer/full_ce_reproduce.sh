@@ -9,6 +9,7 @@ for script in scaling_archive scaling_transitions scaling_rollouts scaling_effec
 done
 "${PYTHON:-python3}" scaling_size_control.py &
 size_pid=$!
+CELL_MODEL=factorized-random sh partner_index_reproduce.sh scaling_eval.py evaluate
 "${PYTHON:-python3}" scaling_size_control.py --effects &
 effect_pid=$!
 "${PYTHON:-python3}" scaling_campaign.py --workers "${CELL_WORKERS:-3}" --hours "${CELL_HOURS:-8}"

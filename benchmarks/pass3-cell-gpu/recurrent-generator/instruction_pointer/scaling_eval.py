@@ -13,6 +13,7 @@ from continuous_stream import Stream
 from continuous_trials import instrument, setup
 from foundation_world import world
 from incremental_native import Ledger
+from joint_cell_live import UniformDecoder
 from joint_cell_sweep import complete_ce
 from partner_index_worlds import args
 from scaling_archive import directory
@@ -75,8 +76,8 @@ def frozen(a, model, case="loopfact"):
     return n, w, ref
 
 
-def probes(a, n):
-    pool = Pool(a, n)
+def probes(a, n, pool_model=None):
+    pool = Pool(a, n if pool_model is None else pool_model)
     groups = defaultdict(dict)
     for key, w, s, ts in pool.val:
         for t in ts:
@@ -89,6 +90,8 @@ def probes(a, n):
             n.prepare(w)
             n.physical = ("held", 0)
             page = Page(n, w, s)
+            if "pos" not in page.m:
+                page.m["pos"] = {r: i for i, r in enumerate(page.m["refs"])}
             ce = float(complete_ce(n, w, page.m, sorted(ts)))
             draws = page.draws(np.random.default_rng(307), 32, False)
             valid = [t for t in draws if t in ts]
@@ -135,14 +138,20 @@ def evaluate(a):
     probes_data = []
     for case in cases:
         n, w, ref = frozen(
-            a, model, case if case in ("sum-divisors", "loopfact") else "loopfact"
+            a,
+            "sweep" if model == "factorized-random" else model,
+            case if case in ("sum-divisors", "loopfact") else "loopfact",
         )
         if case.startswith("foundation"):
             w = world(a, n.actor, int(case[10:]), True, "multi")
             ref = None
+        pool_model = n
+        if model == "factorized-random":
+            n = UniformDecoder()
         if mode == "validation" and case == "loopfact":
-            probes_data = probes(a, n)
-        instrument(n, "exact")
+            probes_data = probes(a, n, pool_model)
+        if model != "factorized-random":
+            instrument(n, "exact")
         for cap in map(int, os.getenv("CELL_CAPS", "16 32 64 128 256").split()):
             for draw in (193, 307):
                 policy = (
