@@ -203,6 +203,70 @@ def report():
         ):
             baseline.append(r)
     csv_table(REPORT / "baselines.csv", baseline)
+    paired_exec = []
+    history = {}
+    for row in runs:
+        if row["phase"] != "outer" or row["model"] == "sweep":
+            continue
+        case, budget, seed = row["case"], row["budget"], row["generation_seed"]
+        actual = {json.dumps(f, sort_keys=True) for f in facts[row["graph"]]}
+        frozen = [
+            v
+            for v in runs
+            if v["phase"] == "outer"
+            and v["model"] == "sweep"
+            and (v["case"], v["budget"], v["generation_seed"]) == (case, budget, seed)
+        ]
+        comparisons = [
+            ("sweep", v["paid"], v["graph"], facts[v["graph"]]) for v in frozen
+        ]
+        for method in ("random", "history"):
+            key = (case, budget, seed, method)
+            if key not in history:
+                file = (
+                    raw.parent
+                    / "continuous-cell-stream"
+                    / f"{case}-{budget}-{seed}-{method}.json"
+                )
+                history[key] = read(file)
+            ref = history[key]
+            comparisons.append(
+                (
+                    method,
+                    ref.get("paid", ref.get("stats", {}).get("paid")),
+                    ref["graph"],
+                    ref["facts"],
+                )
+            )
+        for method, paid, graph, ref_facts in comparisons:
+            goal = {json.dumps(f, sort_keys=True) for f in ref_facts}
+            if (
+                graph in facts
+                and {json.dumps(x, sort_keys=True) for x in facts[graph]} != goal
+            ):
+                raise ValueError("reference fact set mismatch for native graph")
+            facts[graph] = ref_facts
+            paired_exec.append(
+                {
+                    "model": row["model"],
+                    "comparison": method,
+                    "case": case,
+                    "cap": budget,
+                    "seed": seed,
+                    "paid": row["paid"],
+                    "reference_paid": paid,
+                    "equal_graph": row["graph"] == graph,
+                    "equal_facts": actual == goal,
+                    "both": len(actual & goal),
+                    "model_only": len(actual - goal),
+                    "comparison_only": len(goal - actual),
+                    "model_graph": row["graph"],
+                    "comparison_graph": graph,
+                }
+            )
+    if paired_exec:
+        csv_table(REPORT / "paired-execution.csv", paired_exec)
+
     (REPORT / "facts.json").write_text(json.dumps(facts, separators=(",", ":")) + "\n")
     (REPORT / "evidence.json").write_text(
         json.dumps(
@@ -364,6 +428,13 @@ def report():
             "",
         ]
     )
+    if paired_exec:
+        lines.extend(
+            [
+                "",
+                "paired-execution.csv 逐预算、地址种子、训练种子比较冻结基线、因子化随机、历史高召回 Stream 的实际付费、共同事实、各自独有事实与完整终图。相同事实数量不代替相同事实集合。原生终图对可由 facts.json 查阅。",
+            ]
+        )
     if state["locked"]:
         best = state["locked"]
         lines.append(
