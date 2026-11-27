@@ -1,0 +1,74 @@
+[
+  {
+    "seed": 71,
+    "conflict": false,
+    "pairs": 64,
+    "correct": 64,
+    "changed": 0,
+    "avg_absolute_field": 0.001056760549545288,
+    "avg_absolute_direct": 0.12381316721439362,
+    "mean_l2": {
+      "root_mean_l2": 0.0,
+      "input_atom_mean_l2": 0.24562202394008636,
+      "code_mean_l2": 0.019007408991456032,
+      "query_mean_l2": 0.017973235808312893,
+      "lane_weights_mean_l2": 0.001142023811553372,
+      "pair_relation_mean_l2": 0.0012584844430421072,
+      "payload_mean_l2": 0.005033952333178604
+    }
+  },
+  {
+    "seed": 71,
+    "conflict": true,
+    "pairs": 64,
+    "correct": 0,
+    "changed": 0,
+    "avg_absolute_field": 0.0008059171959757805,
+    "avg_absolute_direct": 0.008167802356183529,
+    "mean_l2": {
+      "root_mean_l2": 0.0,
+      "input_atom_mean_l2": 0.24562202394008636,
+      "code_mean_l2": 0.019007408991456032,
+      "query_mean_l2": 0.017973211128264666,
+      "lane_weights_mean_l2": 0.0011417319692554884,
+      "pair_relation_mean_l2": 0.0015050561323732836,
+      "payload_mean_l2": 0.0060202444255992305
+    }
+  },
+  {
+    "seed": 113,
+    "conflict": false,
+    "pairs": 64,
+    "correct": 64,
+    "changed": 0,
+    "avg_absolute_field": 0.0003914684057235718,
+    "avg_absolute_direct": 0.12938015162944794,
+    "mean_l2": {
+      "root_mean_l2": 0.0,
+      "input_atom_mean_l2": 0.24562202394008636,
+      "code_mean_l2": 0.019007408991456032,
+      "query_mean_l2": 0.02048605226445943,
+      "lane_weights_mean_l2": 0.0006602238408959238,
+      "pair_relation_mean_l2": 0.0007765526197545114,
+      "payload_mean_l2": 0.0031062147454576916
+    }
+  },
+  {
+    "seed": 113,
+    "conflict": true,
+    "pairs": 64,
+    "correct": 0,
+    "changed": 0,
+    "avg_absolute_field": 0.000306449830532074,
+    "avg_absolute_direct": 0.00659450888633728,
+    "mean_l2": {
+      "root_mean_l2": 0.0,
+      "input_atom_mean_l2": 0.24562202394008636,
+      "code_mean_l2": 0.019007408991456032,
+      "query_mean_l2": 0.020486037945374846,
+      "lane_weights_mean_l2": 0.000660133759083692,
+      "pair_relation_mean_l2": 0.0008529934548278106,
+      "payload_mean_l2": 0.0034119641641154885
+    }
+  }
+]
