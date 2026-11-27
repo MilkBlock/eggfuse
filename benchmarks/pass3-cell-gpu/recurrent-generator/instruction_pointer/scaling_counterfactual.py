@@ -10,6 +10,7 @@ from feedback_stall import folder
 from int_parameters import digest
 from partner_index_worlds import args
 from scaling_archive import directory
+from scaling_campaign import REPORT
 from scaling_eval import frozen
 from scaling_fit import atomic
 from scaling_transitions import Replay
@@ -59,9 +60,7 @@ def run(a):
     state = json.loads((d / "campaign.json").read_text())
     models = ["initial", "sweep", *state["groups"]]
     models.extend(
-        sorted(
-            p.stem for p in (d / "fits").glob("*-t10000.json") if p.stem not in models
-        )
+        sorted(p.stem for p in (REPORT / "size-controls").glob("*.json") if p.stem not in models)
     )
     for name in models:
         if name in scores:
