@@ -42,3 +42,14 @@ cd benchmarks/pass3-cell-gpu/recurrent-generator/instruction_pointer
 - 已启动训练在保存下一份原始检查点时可被导入。带采样日志的训练可以在检查点之间刷新。模型权重与数据不上传。
 - 新训练记录 Git 提交和关键源码摘要。旧投影区分原始训练提交与报告入库提交；缺乏证据的训练提交留空。
 - 运行 `sh partner_index_reproduce.sh swan_logging_bench.py train` 可复现同权重的训练日志对照。设置 `CELL_LOG_BENCH_CONSUMER=1` 会在开启组同时启用真实 SwanLab 写入进程。原始配对计时保存在 `continuation-exposure/swan-logging-cost.json` 和 `swan-logging-sidecar.json`。
+
+## 日志成本实测
+
+在真实完整 Cell CE 优化器上，每次训练处理 2,048 枚 Token、58 个状态和 2,000 个不同具名目标。总参数 32,874，前向连通 18,880，局部反向连通 4,160。两种日志设置各做了四对交替顺序计时。
+
+| 开启项 | 训练循环耗时的配对中位变化 | 四对观测范围 |
+|---|---:|---:|
+| 异步 JSONL | +0.35% | −12.57% 至 +1.61% |
+| 异步 JSONL 和实时 SwanLab 本地写入 | −1.24% | −3.96% 至 +3.83% |
+
+全部 16 次训练的最终权重逐张量哈希一致。机器同时承担研究任务，负耗时差落在计时波动内。原始表给出每次训练秒数、吞吐、曝光和模型哈希。[逐对训练计时](run-recall/swanlab-tracking/paired-training.csv)
