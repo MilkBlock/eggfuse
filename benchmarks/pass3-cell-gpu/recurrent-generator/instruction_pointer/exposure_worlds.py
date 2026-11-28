@@ -97,6 +97,7 @@ def prepare(a):
                            primitive=w.primitives, higher=len(w.layouts)-w.primitives)
     atomic(output(a) / "split.json", dict(development=["fact", "loopfact", "sum-divisors"],
         held=cases, seed=71, address_seeds=[193,307],
+        replication={"seed":113,"curves":{"A-local":[100000,250000],"D-local":[100000,250000]}},
         curves={"A-local":[100000,250000,500000,1000000], "A-center":[100000,250000],
                 "A-layer03":[100000,250000], "B-local":[100000,250000],
                 "C-local":[100000,250000],"D-local":[100000,250000,500000]}))

@@ -191,6 +191,8 @@ def run(a):
                         start=perf_counter()
                         trial.run()
                         print(case,name,seed,unique,round(perf_counter()-start,2),flush=True)
+                    if os.getenv("EXPOSURE_FULL") == "1":
+                        trial.trial(None)
 
 
 if __name__=="__main__":

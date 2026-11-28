@@ -257,8 +257,9 @@ def extend_pool(a, pool, net, rows):
             raise ValueError("test case in training data")
         if case not in worlds:
             worlds[case]=world(a,net.actor,case)[0]
+            worlds[case].scaling_id=sha(worlds[case].dir / "program.json")
         w=worlds[case]
-        if (sha(w.dir / "program.json"), digest(s)) in pool.records:
+        if (w.scaling_id, digest(s)) in pool.records:
             raise ValueError("new state was already in the base corpus")
         key=pool.add_base("egg_rollout",w,s,[t],False)
         pool.effects.setdefault(key,{})[t]=effect
