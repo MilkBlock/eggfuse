@@ -13,6 +13,7 @@ do
     execute learning_effects.py evaluate
     case "$name" in random|history) continue;; esac
     execute learning_probe.py evaluate
+    execute learning_train_probe.py evaluate
 done
 execute learning_timing.py evaluate
 "${PYTHON:-python3}" learning_report.py

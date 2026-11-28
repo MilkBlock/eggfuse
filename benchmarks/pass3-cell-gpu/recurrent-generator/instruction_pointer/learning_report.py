@@ -230,6 +230,44 @@ def run():
         "## 原生独立执行",
         "表中各数对应 seed 193 / 307。覆盖为实际参考事实数；每个模型和每个种子的 EPT、EPS、原生重复率、事实增减集合与终图摘要详见 native CSV。effects CSV 独立重放付费前缀，记录新增参考事实的不同有符号效果集合，以及无法用参考事实定位的有效计算；完整计算机会总数未知。不同终图时 EPS 仅作轨迹观测。历史 Stream 提前结束时保留实际付费量。",
     ]
+    fixed = []
+    for name in models:
+        train = records("train-probe", name)
+        for group in ("all", "1", "2-8", "9+"):
+            subset = [r for r in train if group == "all" or r["group"] == group]
+            fixed.append(
+                {
+                    "model": nick[name],
+                    "group": group,
+                    "states": len(subset),
+                    "targets": sum(int(r["k"]) for r in subset),
+                    **{
+                        k: mean(float(r[k]) for r in subset)
+                        for k in ("ce", "h", "excess")
+                    },
+                }
+            )
+    write_csv("fixed-training-states", fixed)
+    sections.extend(
+        [
+            "### 相同训练状态上的拟合",
+            "共同 100K 起点已经曝光的目标，按目标数分层，各固定抽取 80 个状态。后续检查点分别对完全相同的 240 个状态和标签评分。该诊断与 156 个验证状态的难度和权重不同。",
+            tab(
+                ["模型", "训练 CE−H", "唯一目标", "2–8 个", "≥9 个"],
+                [
+                    [
+                        nick[name],
+                        *[
+                            f"{r['excess']:.3f}"
+                            for r in fixed
+                            if r["model"] == nick[name]
+                        ],
+                    ]
+                    for name in models
+                ],
+            ),
+        ]
+    )
     for cap in ("256", "schedule"):
         table = []
         for name in [*models, "random", "history"]:
