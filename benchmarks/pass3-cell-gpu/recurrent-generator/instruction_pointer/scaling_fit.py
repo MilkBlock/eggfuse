@@ -136,6 +136,10 @@ def train(a, cfg, seed, milestones, *, destination=None, extend_pool=None):
     horizon = cfg.get("horizon", 10000)
     journal = start_log(dst, base, cfg, seed, data.catalogue_digest, sum(p.numel() for p in n.parameters()))
     interval = max(1, int(os.getenv("CELL_LOG_INTERVAL", "1000")))
+    from live_native_check import NativeChecks
+
+    check_interval = int(os.getenv("CELL_NATIVE_CHECK_INTERVAL", "10000" if dst.name == "matched-end-to-end" else "0"))
+    checks = NativeChecks(a, journal) if journal is not None and check_interval > 0 else None
     for cap in milestones:
         alias = dst / f"{base}-t{cap}.json"
         if cap < emitted or (cap == emitted and alias.exists()):
@@ -251,6 +255,8 @@ def train(a, cfg, seed, milestones, *, destination=None, extend_pool=None):
             opt.step()
             emitted += count
             step += 1
+            if checks is not None and emitted // check_interval != (emitted - count) // check_interval:
+                checks.submit(n, emitted)
             if sampled:
                 now = perf_counter()
                 wall_now = elapsed + now - start
@@ -338,6 +344,8 @@ def train(a, cfg, seed, milestones, *, destination=None, extend_pool=None):
         start = perf_counter()
         if emitted < cap:
             break
+    if checks is not None:
+        checks.finish()
     if journal is not None:
         journal.finish()
 
