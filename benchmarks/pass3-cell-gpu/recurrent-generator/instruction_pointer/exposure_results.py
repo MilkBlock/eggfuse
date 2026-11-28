@@ -94,8 +94,12 @@ def export(out, dest):
     schedules=[]
     anchors=[]
     historical=[]
+    final_facts = {}
     for _,v in records("trial"):
         c,r=v["condition"],v["r"]
+        if c["unique"] and v["cap"] in (256, None):
+            key = c["case"], c["program"], c["seed"], v["cap"], c["model"]
+            final_facts[key] = (frozenset(r["facts"]), r["graph"], len(v["requests"]))
         if v["cap"] == 256:
             req = v["requests"]
             first = next((i for i,q in enumerate(req) if q["ops"]>0),None)
@@ -121,6 +125,18 @@ def export(out, dest):
                 eps=r["eps"],wall=r["wall"],graph=r["graph"],pending=r["pending"],
                 higher_completed=r["stats"].get("higher_completed",0),higher_selected=r["stats"].get("higher_selected",0),
                 statuses=json.dumps(r["receipts"],sort_keys=True)))
+    comparisons = []
+    for (case, program, seed, cap, model), (facts, graph, paid) in final_facts.items():
+        base = final_facts.get((case, program, seed, cap, "random"))
+        if base is None or model == "random":
+            continue
+        random_facts, random_graph, random_paid = base
+        comparisons.append(dict(case=case, model=model, seed=seed, horizon=cap or "full",
+            paid=paid, random_paid=random_paid, intersection=len(facts & random_facts),
+            learned_or_stream_only=json.dumps(sorted(facts-random_facts)),
+            random_only=json.dumps(sorted(random_facts-facts)), equal_facts=facts==random_facts,
+            equal_graph=graph==random_graph, program=program))
+    table(dest/"facts-vs-random.csv", comparisons)
     table(dest/"full-schedule.csv",schedules)
     table(dest/"first-success.csv",anchors)
     table(dest/"historical-parity.csv",historical)
