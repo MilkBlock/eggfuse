@@ -33,7 +33,8 @@ def run(a):
     stem = f"{arm}-s{seed}"
     source = directory(a) / "fits"
     out = output(a)
-    dest = out / group
+    batched = os.getenv("CELL_TEACHER_FORCING") == "batched"
+    dest = out / (group + "-batched" if batched else group)
     dest.mkdir(exist_ok=True)
     meta = source / (stem + "-t100000.json")
     weights = source / (stem + "-t100000.pt")
@@ -43,6 +44,8 @@ def run(a):
     receipt = {"start": 100000, "seed": seed, "config": cfg, "data": group,
                "archive": info["archive_sha"], "weights_sha256": sha(weights),
                "initial_optimizer_file_sha256": sha(resume)}
+    if batched:
+        receipt["teacher_forcing"] = "batched"
     extra = out / (group + "-data.pkl.gz")
     if group != "A":
         receipt["added_data_sha256"] = sha(extra)

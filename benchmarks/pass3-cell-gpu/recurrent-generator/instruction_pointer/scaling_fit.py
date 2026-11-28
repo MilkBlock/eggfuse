@@ -190,19 +190,31 @@ def train(a, cfg, seed, milestones, *, destination=None, extend_pool=None):
             if sampled:
                 fwd_seconds = bwd_seconds = 0.0
             opt.zero_grad(set_to_none=True)
+            if os.getenv("CELL_TEACHER_FORCING") == "batched":
+                from teacher_forcing import complete_nll
+                phase_start = perf_counter()
+                loss = complete_nll(n, [(w,s,ts) for _,w,s,ts in examples]).mean()
+                backward_start = perf_counter()
+                loss.backward()
+                if sampled:
+                    fwd_seconds = backward_start - phase_start
+                    bwd_seconds = perf_counter() - backward_start
+                weighted += float(loss.detach()) * count
+            else:
+                for key, w, s, ts in examples:
+                    if sampled:
+                        phase_start = perf_counter()
+                    n.prepare(w)
+                    n.physical = ("held", 0)
+                    loss = complete_ce(n, w, n.state(w, s), ts)
+                    if sampled:
+                        backward_start = perf_counter()
+                        fwd_seconds += backward_start - phase_start
+                    (loss * (len(ts) / count)).backward()
+                    if sampled:
+                        bwd_seconds += perf_counter() - backward_start
+                    weighted += float(loss.detach()) * len(ts)
             for key, w, s, ts in examples:
-                if sampled:
-                    phase_start = perf_counter()
-                n.prepare(w)
-                n.physical = ("held", 0)
-                loss = complete_ce(n, w, n.state(w, s), ts)
-                if sampled:
-                    backward_start = perf_counter()
-                    fwd_seconds += backward_start - phase_start
-                (loss * (len(ts) / count)).backward()
-                if sampled:
-                    bwd_seconds += perf_counter() - backward_start
-                weighted += float(loss.detach()) * len(ts)
                 seen[key].update(ts)
                 for t in ts:
                     if t in data.effects.get(key, {}):
