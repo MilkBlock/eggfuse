@@ -4,6 +4,7 @@ import csv
 import gzip
 import hashlib
 import json
+import math
 import os
 import pickle
 from pathlib import Path
@@ -152,6 +153,9 @@ def run():
             ):
                 row[field] = mean(float(r[field]) for r in selected if r[field])
             row["sampled_states"] = sum(bool(r["actual_recall_16"]) for r in selected)
+            row["known_mass_cost"] = mean(-math.log(float(r["known_mass"])) for r in selected)
+            row["imbalance_within_known"] = row["excess"] - row["known_mass_cost"]
+            assert row["imbalance_within_known"] >= -1e-6
             groups.append(row)
     write_csv("fits", sizes)
     write_csv("validation", groups)
