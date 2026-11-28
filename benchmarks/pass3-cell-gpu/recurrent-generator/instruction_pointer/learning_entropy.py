@@ -42,6 +42,8 @@ def main(a):
     emitted = 100000
     steps = saved["progress"][5]
     h = 0.0
+    update_h = 0.0
+    updates = Counter()
     totals = Counter()
     states = defaultdict(set)
     raw = []
@@ -55,6 +57,8 @@ def main(a):
             g = size_group(m)
             signature.update(repr((key, targets)).encode())
             h += k * math.log(m)
+            update_h += math.log(m)
+            updates[g] += 1
             totals[g] += k
             states[g].add(key)
             emitted += k
@@ -69,6 +73,8 @@ def main(a):
                 increment=cap - 100000,
                 entropy=h / (cap - 100000),
                 steps=steps,
+                update_entropy=update_h / sum(updates.values()),
+                **{"updates_" + g: updates[g] for g in ("1", "2-8", "9+")},
                 order_sha=signature.hexdigest(),
                 **{"targets_" + g: totals[g] for g in ("1", "2-8", "9+")},
                 **{"states_" + g: len(states[g]) for g in ("1", "2-8", "9+")},

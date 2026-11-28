@@ -267,6 +267,41 @@ def run():
                 ),
             ]
         )
+    observed = {}
+    effect_rows = []
+    for name in [*models, "random", "history"]:
+        for row in records("effects", name):
+            if row.get("error"):
+                continue
+            ids = set(json.loads(row["effect_signatures"]))
+            assert len(ids) == int(row["distinct_visible_effects"])
+            key = (row["case"], row["seed"])
+            observed.setdefault(key, set()).update(ids)
+            effect_rows.append((key, ids, row))
+    write_csv(
+        "observed-effect-recall",
+        [
+            {
+                "model": row["model"],
+                "case": key[0],
+                "seed": key[1],
+                "cap": 256,
+                "found": len(ids),
+                "observed_union": len(observed[key]),
+                "observed_recall": len(ids) / len(observed[key])
+                if observed[key]
+                else None,
+                "unresolved": row["unresolved"],
+            }
+            for key, ids, row in effect_rows
+        ],
+    )
+    sections.extend(
+        [
+            "## 付费预算 256 下的不同计算效果",
+            "observed-effect-recall.csv 按程序和生成种子，计算每个策略发现的不同可见效果数，除以全部受测策略在同一初始状态和预算观察到的效果并集。不同轨迹能够进入不同状态，多个请求也可能形成等价效果。这是相对已观察效果的发现率，不是对所有可执行机会的精确召回。内部有效操作未形成可识别的新增参考事实时单列 unresolved。",
+        ]
+    )
     module_rows = []
     for name in models:
         params = records("parameters", name)

@@ -19,7 +19,7 @@ def run(a, name):
         for seed in (193, 307):
             target = Trials(a, db, case, name, seed, True)
             base = Trials(a, db, case, "local-s71-t100000", seed, True)
-            for cap in (256, None):
+            for cap in (16, 32, 64, 128, 256, None):
                 row = {
                     "model": name,
                     "case": case,
@@ -42,7 +42,13 @@ def run(a, name):
                 n = len(events)
                 dup = r["receipts"].get("duplicates", 0)
                 completed = [x for x in events if x["owner"] == x["reply"][0]]
+                first = next((i for i, r in enumerate(events, 1) if r["ops"] > 0), None)
+                tail = events[first:] if first else []
                 row.update(
+                    first_positive_paid=first,
+                    continuation_ept=sum(v["ops"] for v in tail) / len(tail)
+                    if tail
+                    else None,
                     paid=n,
                     covered=len(facts),
                     reference=r["reference"],

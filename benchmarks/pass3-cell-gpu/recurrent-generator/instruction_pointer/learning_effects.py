@@ -1,5 +1,6 @@
 """Offline native prefix differences. No replay evidence reaches the policy."""
 
+import json
 import os
 from collections import defaultdict
 
@@ -8,6 +9,7 @@ import torch
 from exposure_eval import Database, SourcePanic, Trials
 from exposure_train import output
 from exposure_worlds import HELD
+from int_parameters import digest
 from learning_entropy import table
 from partner_index_worlds import args
 
@@ -44,6 +46,9 @@ def run(a, name):
             row.update(
                 productive=len(owners),
                 distinct_visible_effects=len(set(resolved)),
+                effect_signatures=json.dumps(
+                    sorted({digest(sorted(effect)) for effect in resolved})
+                ),
                 unresolved=len(owners) - len(resolved),
             )
     table("effects-" + name.replace("/", "_") + ".csv", rows)

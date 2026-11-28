@@ -14,4 +14,5 @@ do
     case "$name" in random|history) continue;; esac
     execute learning_probe.py evaluate
 done
+execute learning_timing.py evaluate
 "${PYTHON:-python3}" learning_report.py
