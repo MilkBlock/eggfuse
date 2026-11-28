@@ -1,0 +1,45 @@
+{
+  "archive_sha": "e14aed85c52c58cdab10f6d0e647dacfd72e2bf1f7ce6b7e7246a991e1455133",
+  "config": {
+    "arm": "A",
+    "name": "local"
+  },
+  "connected": 4160,
+  "effect_identity_scope": "only exact native counterfactual gain sets",
+  "exposed_names_sha256": "a3fb7c849583e12114328939121bd043810c80f6871496bbbacf1e0e8e42097a",
+  "exposures": 250000,
+  "forward_observed": 18880,
+  "model": "A/local-s71-t250000",
+  "registered": 32874,
+  "results_sha256": "c492816c519be512174cbedf8d3172b64cb83397ec5a6817d21df1d72924d467",
+  "seconds": 3510.176876790996,
+  "seed": 71,
+  "sources": {
+    "autonomous": 122099,
+    "branch": 3030,
+    "continuous": 1989,
+    "foundation": 3963,
+    "shuffle": 115973,
+    "teacher": 2946
+  },
+  "start": {
+    "archive": "e14aed85c52c58cdab10f6d0e647dacfd72e2bf1f7ce6b7e7246a991e1455133",
+    "config": {
+      "arm": "A",
+      "name": "local"
+    },
+    "data": "A",
+    "initial_optimizer_file_sha256": "eee827268a0f6cf147c4a35caaea0d12e3444c6c7b282921e3dbec4c0790b1e7",
+    "seed": 71,
+    "start": 100000,
+    "weights_sha256": "6d0033cfc14f0a02676509f657b02f7c5ff3777a0312f9a1eb417117b0f44aee"
+  },
+  "state_pool": 7638,
+  "states": 2940,
+  "steps": 5212,
+  "targets": 195922,
+  "tokens_per_s": 71.22148221446608,
+  "train_ce": 5.8815024354392325,
+  "verified_distinct_effects": 113,
+  "weights_sha256": "46590ea5d1472a0393bdfadaca7eaad680b3b16940a3665d847a4ad571fb313a"
+}
