@@ -44,6 +44,9 @@ def export(out, dest):
                              observed_replies=len(data["observed_replies"]), stderr=data["stderr"]))
     failures.extend(data for _, data in records("failed_budget"))
     table(dest/"native-failures.csv", failures)
+    table(dest/"timing-failures.csv", [dict(conditions=json.dumps(data["conditions"]),
+                                           cap=data["cap"], stderr=data["stderr"])
+                                      for _, data in records("timing_failure")])
     fits=[]
     curves=[]
     files=[]

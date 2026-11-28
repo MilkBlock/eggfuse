@@ -6,7 +6,7 @@ from time import time
 import torch
 
 from exposure_data import observed
-from exposure_eval import Database, Trials
+from exposure_eval import Database, SourcePanic, Trials
 from exposure_train import output
 from int_parameters import digest
 from partner_index_worlds import args
@@ -23,14 +23,20 @@ def run(a):
                     continue
                 trials=[Trials(a,db,case,n,seed,u) for n,u in zip(names,unique,strict=True)]
                 key=digest([t.condition for t in trials])
-                if db.get("timing",key) is not None:
+                if db.get("timing",key) is not None or db.get("timing_failure",key) is not None:
+                    continue
+                try:
+                    references = [t.trial(256) for t in trials]
+                except SourcePanic as error:
+                    db.put("timing_failure", key, dict(conditions=[t.condition for t in trials],
+                                                       cap=256, stderr=error.evidence["stderr"]))
                     continue
                 rows=[]
                 for rep in range(4):
                     for index in ((0,1) if rep%2==0 else (1,0)):
                         t=trials[index]
                         r,tr=observed(t.w,t.align,a,t.policy,t.seed,256)
-                        ref=t.trial(256)
+                        ref=references[index]
                         if (r["graph"]!=ref["r"]["graph"] or r["facts"]!=ref["r"]["facts"]
                             or [q[-1] for q in tr.responses]!=[tuple(q["reply"]) for q in ref["requests"]]):
                             raise ValueError("timing run does not reproduce the paid-prefix receipts and graph")
