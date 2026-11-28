@@ -1,0 +1,47 @@
+{
+  "archive_sha": "e14aed85c52c58cdab10f6d0e647dacfd72e2bf1f7ce6b7e7246a991e1455133",
+  "config": {
+    "arm": "D",
+    "encoder_lr": 0.3,
+    "name": "layer03"
+  },
+  "connected": 18880,
+  "effect_identity_scope": "only exact native counterfactual gain sets",
+  "exposed_names_sha256": "16480a52d1aac9607bfbf509fd640dde9e269746e47897a6f7f9f35fc26924b2",
+  "exposures": 250000,
+  "forward_observed": 18880,
+  "model": "A/layer03-s71-t250000",
+  "registered": 32874,
+  "results_sha256": "6f50c2022e3983ef12393e45e10221dc071b574eecd61eced884c4d9f0acceaf",
+  "seconds": 4191.2307979589095,
+  "seed": 71,
+  "sources": {
+    "autonomous": 122099,
+    "branch": 3030,
+    "continuous": 1989,
+    "foundation": 3963,
+    "shuffle": 115973,
+    "teacher": 2946
+  },
+  "start": {
+    "archive": "e14aed85c52c58cdab10f6d0e647dacfd72e2bf1f7ce6b7e7246a991e1455133",
+    "config": {
+      "arm": "D",
+      "encoder_lr": 0.3,
+      "name": "layer03"
+    },
+    "data": "A",
+    "initial_optimizer_file_sha256": "f2e80d9f4e890d5fa9c6183dba415929cf585946a60b0efbf838b4ab6d1967de",
+    "seed": 71,
+    "start": 100000,
+    "weights_sha256": "1409a42a176128c2e4807eb64273fa586a492f6af30683a98720c58281a42ff3"
+  },
+  "state_pool": 7638,
+  "states": 2940,
+  "steps": 5212,
+  "targets": 195922,
+  "tokens_per_s": 59.648349626020995,
+  "train_ce": 5.744329339113055,
+  "verified_distinct_effects": 113,
+  "weights_sha256": "8b7338aff0c3b7074c17e9a7829263be9cd47cb9e6a13f9f78d33bd8b5472822"
+}
