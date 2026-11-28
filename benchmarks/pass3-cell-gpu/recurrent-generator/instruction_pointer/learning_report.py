@@ -1,5 +1,6 @@
 """Build a matched report from saved weights' native ledgers and verified target probes."""
 
+import ast
 import csv
 import gzip
 import hashlib
@@ -153,7 +154,9 @@ def run():
             ):
                 row[field] = mean(float(r[field]) for r in selected if r[field])
             row["sampled_states"] = sum(bool(r["actual_recall_16"]) for r in selected)
-            row["known_mass_cost"] = mean(-math.log(float(r["known_mass"])) for r in selected)
+            row["known_mass_cost"] = mean(
+                -math.log(float(r["known_mass"])) for r in selected
+            )
             row["imbalance_within_known"] = row["excess"] - row["known_mass_cost"]
             assert row["imbalance_within_known"] >= -1e-6
             groups.append(row)
@@ -271,6 +274,58 @@ def run():
                 ),
             ]
         )
+    pairs = []
+    for exposure in CAPS:
+        arms = [
+            {
+                (r["case"], r["seed"], r["cap"]): r
+                for r in records("native", prefix + str(exposure))
+            }
+            for prefix in (A, B)
+        ]
+        assert arms[0].keys() == arms[1].keys()
+        for key, left in arms[0].items():
+            right = arms[1][key]
+            pair = {
+                "exposures": exposure,
+                "case": key[0],
+                "seed": key[1],
+                "cap": key[2],
+                "error": left.get("error") or right.get("error"),
+            }
+            if not pair["error"]:
+                added_a, added_b = [
+                    set(ast.literal_eval(r["facts_only_new"])) for r in (left, right)
+                ]
+                lost_a, lost_b = [
+                    set(ast.literal_eval(r["facts_only_100k"])) for r in (left, right)
+                ]
+                only_a = (added_a - added_b) | (lost_b - lost_a)
+                only_b = (added_b - added_a) | (lost_a - lost_b)
+                assert len(only_b) - len(only_a) == int(right["covered"]) - int(
+                    left["covered"]
+                )
+                pair.update(
+                    equal_graph=left["graph"] == right["graph"],
+                    equal_reference_facts=not (only_a or only_b),
+                    equal_paid=left["paid"] == right["paid"],
+                    facts_only_a=sorted(only_a),
+                    facts_only_b=sorted(only_b),
+                )
+                for k in (
+                    "coverage",
+                    "ops",
+                    "ept",
+                    "eps",
+                    "duplicate_rate",
+                    "productive_names",
+                ):
+                    pair["delta_b_minus_a_" + k] = float(right[k]) - float(left[k])
+            pairs.append(pair)
+    with (OUT / "paired-native.csv").open("w", newline="") as f:
+        writer = csv.DictWriter(f, list(dict.fromkeys(k for r in pairs for k in r)))
+        writer.writeheader()
+        writer.writerows(pairs)
     observed = {}
     effect_rows = []
     for name in [*models, "random", "history"]:
