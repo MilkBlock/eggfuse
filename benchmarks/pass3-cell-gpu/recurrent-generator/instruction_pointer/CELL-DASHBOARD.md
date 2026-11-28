@@ -22,7 +22,7 @@ cd benchmarks/pass3-cell-gpu/recurrent-generator/instruction_pointer
 | 实验名称 | 横轴 | 内容 |
 |---|---|---|
 | `fit` | 单个模型累计完整 Token 曝光 | 训练 CE、LR、优化步数、Token/s、时间、实际状态和具名目标数、总参数与前后向连通参数 |
-| `live` | 训练进程实际累计曝光 | CPU 训练采样点的裁剪前梯度范数、采样步前向、反向和优化器的主机耗时、累计计数 |
+| `live` | 训练进程实际累计曝光 | 每个采样点显示总参数 `parameters/total`、实际前向和反向连通参数 `parameters/forward`、`parameters/backward`，以及累计训练 Token、训练秒数和梯度范数 |
 | `probe` | 检查点曝光 | 在固定、离线核验的内部验证目标上，按目标数加权的完整 Token CE、各父数及 Higher 的自由生成命中率 |
 | `native` | 付费请求预算 | 完整调度前缀、首次成功后的预算曲线、Coverage、EPT、EPS、Continuation EPT、付费短缺、原生拒绝、重复和通信耗时 |
 | `complete Cells` | 配置中列出的工作负载序号 | 按生成种子、Primitive / Higher 和外部父数统计的生成、入口接受、有新增贡献的完整实例、签名有效操作 |

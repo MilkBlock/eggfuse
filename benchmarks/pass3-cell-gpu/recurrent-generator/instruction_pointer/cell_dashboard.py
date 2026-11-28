@@ -627,7 +627,10 @@ def journal_worker(path, root, offset=0):
                 if line and line.endswith("\n"):
                     x = json.loads(line)
                     if x.get("kind") == "metrics":
-                        run.log(x["metrics"], step=x["step"])
+                        metrics = dict(x["metrics"])
+                        if header.get("registered") is not None:
+                            metrics["parameters/total"] = header["registered"]
+                        run.log(metrics, step=x["step"])
                     if x.get("kind") in ("finish", "config"):
                         break
                 else:

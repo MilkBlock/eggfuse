@@ -24,6 +24,24 @@ class ProjectionTest(unittest.TestCase):
         if find_spec("swanlab") is None:
             self.skipTest("SwanLab dashboard environment required")
 
+    def test_live_run_displays_parameter_counts_from_its_own_header(self):
+        import sqlite3
+
+        from cell_dashboard import journal_worker
+
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            path = root / "local-s71-live.jsonl"
+            journal = TrainingLog(path, {"registered": 32874, "model": "local-s71"})
+            journal.log({"parameters/forward": 18880, "parameters/backward": 4160,
+                         "train/tokens": 1001, "train/seconds": 7}, 1001)
+            journal.finish()
+            journal_worker(path, root)
+            with sqlite3.connect(root / "runs.swanlab") as db:
+                charts = {r[0] for r in db.execute("select name from chart")}
+                self.assertTrue({"parameters/total", "parameters/forward", "parameters/backward",
+                                 "train/tokens", "train/seconds"} <= charts)
+
     def test_root_and_higher_suffix_not_double_counted(self):
         from cell_dashboard import token_ability
 
