@@ -8,7 +8,7 @@ import pickle
 import sqlite3
 from collections import Counter, defaultdict
 from pathlib import Path
-from statistics import mean
+from int_parameters import digest
 
 
 def read(path):
@@ -150,6 +150,7 @@ def export(out, dest):
         totals["different_names_identical_observed_positive_outcome"]+=positive-len(outcomes)
     table(dest/"fork-identity.csv",[dict(program=k,**v) for k,v in sorted(by_program.items())])
     gains=Counter()
+    selected=[]
     for group in ("B","C","D"):
         path=out/(group+"-data.pkl.gz")
         if not path.exists():
@@ -158,7 +159,13 @@ def export(out, dest):
             data=pickle.load(f)
         for case,s,(t,rs),e in data:
             gains[(group,case,len(rs))]+=1
+            sh=digest(s)
+            observation=fork_states[(case,sh)][(t,rs)]
+            selected.append(dict(arm=group,program=case,state=sh,rule=t,parents=len(rs),
+                                 complete_token_probability=observation["p"],signed_ops=observation["evidence"]["ops"],
+                                 reference_gains=len(observation["gain"]),outcome=e))
     table(dest/"added-targets.csv",[dict(arm=k[0],program=k[1],parents=k[2],states=n) for k,n in sorted(gains.items())])
+    table(dest/"added-state-evidence.csv",selected)
 
 
 if __name__=="__main__":
