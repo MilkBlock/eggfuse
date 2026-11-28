@@ -12,6 +12,7 @@ from time import perf_counter, time
 import torch
 
 from joint_cell_sweep import complete_ce
+from cell_training_log import start_log
 from joint_cell_train import fitted
 from partner_index_worlds import args
 from scaling_archive import directory
@@ -133,6 +134,8 @@ def train(a, cfg, seed, milestones, *, destination=None, extend_pool=None):
     start = perf_counter()
     batch = cfg.get("batch", 1)
     horizon = cfg.get("horizon", 10000)
+    journal = start_log(dst, base, cfg, seed, data.catalogue_digest, sum(p.numel() for p in n.parameters()))
+    interval = max(1, int(os.getenv("CELL_LOG_INTERVAL", "1000")))
     for cap in milestones:
         alias = dst / f"{base}-t{cap}.json"
         if cap < emitted or (cap == emitted and alias.exists()):
@@ -183,12 +186,22 @@ def train(a, cfg, seed, milestones, *, destination=None, extend_pool=None):
                 examples.append((key, w, s, ts))
                 remaining -= len(ts)
             count = sum(len(x[3]) for x in examples)
+            sampled = journal is not None and (emitted//interval != (emitted+count)//interval or emitted+count==cap)
+            if sampled:
+                fwd_seconds = bwd_seconds = 0.0
             opt.zero_grad(set_to_none=True)
             for key, w, s, ts in examples:
+                if sampled:
+                    phase_start = perf_counter()
                 n.prepare(w)
                 n.physical = ("held", 0)
                 loss = complete_ce(n, w, n.state(w, s), ts)
+                if sampled:
+                    backward_start = perf_counter()
+                    fwd_seconds += backward_start - phase_start
                 (loss * (len(ts) / count)).backward()
+                if sampled:
+                    bwd_seconds += perf_counter() - backward_start
                 weighted += float(loss.detach()) * len(ts)
                 seen[key].update(ts)
                 for t in ts:
@@ -199,12 +212,15 @@ def train(a, cfg, seed, milestones, *, destination=None, extend_pool=None):
                 if p.grad is not None:
                     connected.add(k)
             clip = cfg.get("clip", 2.0)
+            norm = None
             if clip:
-                torch.nn.utils.clip_grad_norm_(
+                norm = torch.nn.utils.clip_grad_norm_(
                     n.parameters(), clip, error_if_nonfinite=True
                 )
             elif not math.isfinite(float(loss.detach())):
                 raise ValueError("nonfinite CE")
+            elif sampled and loss.device.type == "cpu":
+                norm = torch.linalg.vector_norm(torch.stack([p.grad.detach().norm() for p in n.parameters() if p.grad is not None]))
             boundaries = (0, 10000, 30000, 100000, 250000, 500000, 1000000)
             left, right = next(
                 (a, b) for a, b in itertools.pairwise(boundaries) if a <= emitted < b
@@ -218,9 +234,25 @@ def train(a, cfg, seed, milestones, *, destination=None, extend_pool=None):
                         (emitted - left) / (right - left),
                     )
                 )
+            if sampled:
+                opt_start = perf_counter()
             opt.step()
             emitted += count
             step += 1
+            if sampled:
+                now = perf_counter()
+                wall_now = elapsed + now - start
+                metrics = {"train/ce":weighted/emitted, "train/lr":opt.param_groups[-1]["lr"],
+                           "train/tokens":emitted,"train/steps":step,"train/states":len(seen),
+                           "train/targets":sum(map(len,seen.values())),"train/seconds":wall_now,
+                           "train/tokens_per_s":emitted/wall_now,
+                           "parameters/forward":sum(p.numel() for k,p in n.named_parameters() if k in forward),
+                           "parameters/backward":sum(p.numel() for k,p in n.named_parameters() if k in connected),
+                           "sample/forward_host_s":fwd_seconds,"sample/backward_host_s":bwd_seconds,
+                           "sample/optimizer_host_s":now-opt_start}
+                if norm is not None and norm.device.type == "cpu":
+                    metrics["train/grad_norm_preclip"] = float(norm)
+                journal.log(metrics, emitted)
             if emitted // 1000 != (emitted - count) // 1000 or emitted == cap:
                 curve.append(
                     {
@@ -264,6 +296,7 @@ def train(a, cfg, seed, milestones, *, destination=None, extend_pool=None):
             {
                 "config": cfg,
                 "seed": seed,
+                **({"training_git_commit": journal.git_commit} if journal is not None else {}),
                 "exposures": emitted,
                 "steps": step,
                 "states": len(seen),
@@ -293,6 +326,8 @@ def train(a, cfg, seed, milestones, *, destination=None, extend_pool=None):
         start = perf_counter()
         if emitted < cap:
             break
+    if journal is not None:
+        journal.finish()
 
 
 if __name__ == "__main__":

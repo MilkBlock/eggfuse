@@ -1,0 +1,34 @@
+#!/bin/bash
+set -eu
+here=$(dirname "$(python3 -c 'import os,sys; print(os.path.realpath(sys.argv[1]))' "$0")")
+venv=${CELL_SWAN_VENV:-"$HOME/.local/share/cell-tracking/venv"}
+logdir=${CELL_SWANLOG:-"$HOME/Library/Application Support/CellFoundation/SwanLab"}
+port=${CELL_SWAN_PORT:-5092}
+if [ ! -x "$venv/bin/swanlab" ]; then
+  uv venv --python 3.12 "$venv"
+  uv pip install --python "$venv/bin/python" --prerelease=allow 'swanlab[dashboard]==0.10.6'
+fi
+export SWANLAB_MODE=local
+case "${1:-open}" in
+  sync) exec "$venv/bin/python" "$here/cell_dashboard.py" sync --logdir "$logdir" ;;
+  watch) exec "$venv/bin/python" "$here/cell_dashboard.py" watch --logdir "$logdir" ;;
+  open) ;;
+  *) echo 'Usage: cell-dashboard [open|sync|watch]' >&2; exit 2 ;;
+esac
+url="http://127.0.0.1:$port"
+if curl -fsS "$url/api/v1/project" 2>/dev/null | "$venv/bin/python" -c 'import json,sys
+try: ok=json.load(sys.stdin)["data"]["name"]=="CellFoundationModel"
+except (ValueError,KeyError): ok=False
+sys.exit(0 if ok else 1)'; then
+  open "$url"
+  exit 0
+fi
+mkdir -p "$logdir"
+"$venv/bin/python" "$here/cell_dashboard.py" sync --logdir "$logdir" >"$logdir/import.log" 2>&1 &
+initial=$!
+"$venv/bin/python" "$here/cell_dashboard.py" watch --logdir "$logdir" >"$logdir/watch.log" 2>&1 &
+watcher=$!
+trap 'kill "$initial" "$watcher" 2>/dev/null || true' EXIT
+printf '%s\n' "$url"
+( for i in {1..30}; do if curl -fsS "$url/" >/dev/null 2>&1; then open "$url"; exit; fi; sleep 1; done ) &
+"$venv/bin/swanlab" watch "$logdir" --host 127.0.0.1 --port "$port"
