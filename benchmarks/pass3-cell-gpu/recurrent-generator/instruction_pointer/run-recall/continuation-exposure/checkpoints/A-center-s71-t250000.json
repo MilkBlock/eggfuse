@@ -1,0 +1,45 @@
+{
+  "archive_sha": "e14aed85c52c58cdab10f6d0e647dacfd72e2bf1f7ce6b7e7246a991e1455133",
+  "config": {
+    "arm": "C",
+    "name": "center"
+  },
+  "connected": 18880,
+  "effect_identity_scope": "only exact native counterfactual gain sets",
+  "exposed_names_sha256": "683ba77c13cd835f9ae0dbdbb1435f118056c7944e468b6b270139aac5c1bc49",
+  "exposures": 250000,
+  "forward_observed": 18880,
+  "model": "A/center-s71-t250000",
+  "registered": 32874,
+  "results_sha256": "581cf07e906a754e16030428063f51fbf902b4485524d13a083cb213bb0d976f",
+  "seconds": 4199.565669125004,
+  "seed": 71,
+  "sources": {
+    "autonomous": 122099,
+    "branch": 3030,
+    "continuous": 1989,
+    "foundation": 3963,
+    "shuffle": 115973,
+    "teacher": 2946
+  },
+  "start": {
+    "archive": "e14aed85c52c58cdab10f6d0e647dacfd72e2bf1f7ce6b7e7246a991e1455133",
+    "config": {
+      "arm": "C",
+      "name": "center"
+    },
+    "data": "A",
+    "initial_optimizer_file_sha256": "5ea98dc5df20089653e1f004071ac2e860fb8b34997e580feca4eabcb9fa9c0f",
+    "seed": 71,
+    "start": 100000,
+    "weights_sha256": "f03407a309d74cc15b87e36ba816c6ccba0cb12a9b4dae9691544f635c8195d9"
+  },
+  "state_pool": 7638,
+  "states": 2940,
+  "steps": 5212,
+  "targets": 195922,
+  "tokens_per_s": 59.52996564334913,
+  "train_ce": 5.718231037965328,
+  "verified_distinct_effects": 113,
+  "weights_sha256": "16d24b4b905bc58d8d31c2f08236d330a61d11f50fe369c123d7d2b687c6de1c"
+}
