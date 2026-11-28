@@ -1,0 +1,70 @@
+{
+  "address_seeds": [
+    193,
+    307
+  ],
+  "curves": {
+    "A-center": [
+      100000,
+      250000
+    ],
+    "A-layer03": [
+      100000,
+      250000
+    ],
+    "A-local": [
+      100000,
+      250000,
+      500000,
+      1000000
+    ],
+    "B-local": [
+      100000,
+      250000
+    ],
+    "C-local": [
+      100000,
+      250000
+    ],
+    "D-local": [
+      100000,
+      250000,
+      500000
+    ]
+  },
+  "development": [
+    "fact",
+    "loopfact",
+    "sum-divisors"
+  ],
+  "held": {
+    "crossed-difference": {
+      "higher": 12,
+      "primitive": 582,
+      "program": "532bb484d8ea120e64f0208742bd412ecd481596b1927ccca09c0199ada7c753",
+      "reference": 374,
+      "source": "fe744cfd34ace6b3c77ed0afed1e1c6361730d9ecdb0233f15bcfe5839928ad4"
+    },
+    "shared-polynomial": {
+      "higher": 12,
+      "primitive": 582,
+      "program": "e3a82afc4e79a8ab2705d772c4020336d2716288bed590c58b790119928f0556",
+      "reference": 635,
+      "source": "47f25a8df37c902d551288eeeed3c90e2868ace9377a12c946808e58cddd678c"
+    }
+  },
+  "replication": {
+    "curves": {
+      "A-local": [
+        100000,
+        250000
+      ],
+      "D-local": [
+        100000,
+        250000
+      ]
+    },
+    "seed": 113
+  },
+  "seed": 71
+}
