@@ -1,0 +1,330 @@
+"""Build a matched report from saved weights' native ledgers and verified target probes."""
+
+import csv
+import gzip
+import hashlib
+import json
+import os
+import pickle
+from pathlib import Path
+from statistics import mean
+
+ROOT = Path(os.environ["PARTNER_INDEX_OUT"])
+OUT = Path("run-recall/matched-learning")
+START = "local-s71-t100000"
+A = "A-batched/local-s71-t"
+B = "matched-end-to-end/full-s71-t"
+CAPS = (250000, 500000, 1000000)
+
+
+def records(kind, name):
+    return list(
+        csv.DictReader((OUT / (kind + "-" + name.replace("/", "_") + ".csv")).open())
+    )
+
+
+def path(name):
+    base = ROOT / ("continuation-exposure" if "/" in name else "full-ce-scaling/fits")
+    return base / name
+
+
+def meta(name):
+    return json.loads(path(name).with_suffix(".json").read_text())
+
+
+def tab(header, rows):
+    return "\n".join(
+        [
+            "| " + " | ".join(map(str, r)) + " |"
+            for r in [header, ["---"] * len(header), *rows]
+        ]
+    )
+
+
+def write_csv(name, rows):
+    with (OUT / (name + ".csv")).open("w", newline="") as f:
+        w = csv.DictWriter(f, list(rows[0]))
+        w.writeheader()
+        w.writerows(rows)
+
+
+def run():
+    models = [START] + [prefix + str(cap) for cap in CAPS for prefix in (A, B)]
+    nick = {
+        name: (
+            "Start"
+            if name == START
+            else ("A" if name.startswith(A) else "B")
+            + str(meta(name)["exposures"] // 1000)
+            + "K"
+        )
+        for name in models
+    }
+    h = {
+        int(r["exposures"]): float(r["entropy"])
+        for r in csv.DictReader((OUT / "sampler-entropy.csv").open())
+    }
+    import torch
+
+    def sampler_state(directory, stem):
+        saved = torch.load(directory / (stem + "-resume.pt"), weights_only=False)
+        assert saved["progress"][4] == 1_000_000
+        return saved["rng"]
+
+    assert sampler_state(path(A + "1000000").parent, "local-s71") == sampler_state(
+        path(B + "1000000").parent, "full-s71"
+    )
+    start = meta(START)
+    sizes = []
+    groups = []
+    for cap in CAPS:
+        with (
+            gzip.open(str(path(A + str(cap))) + ".seen.gz", "rb") as left,
+            gzip.open(str(path(B + str(cap))) + ".seen.gz", "rb") as right,
+        ):
+            assert pickle.load(left) == pickle.load(right), (
+                "training target histories differ"
+            )
+        x, y = (meta(prefix + str(cap)) for prefix in (A, B))
+        for key in (
+            "archive_sha",
+            "steps",
+            "states",
+            "targets",
+            "exposures",
+            "verified_distinct_effects",
+            "seed",
+        ):
+            assert x[key] == y[key], key
+    for name in models:
+        d = meta(name)
+        tok = d["exposures"]
+        delta = tok - start["exposures"]
+        dur = d["seconds"] - start["seconds"]
+        loss = (
+            (d["train_ce"] * tok - start["train_ce"] * start["exposures"]) / delta
+            if delta
+            else None
+        )
+        sizes.append(
+            {
+                "model": nick[name],
+                "registered": d["registered"],
+                "forward": d["forward_observed"],
+                "backward": d["connected"],
+                "states": d["states"],
+                "targets": d["targets"],
+                "exposures": tok,
+                "steps": d["steps"],
+                "cumulative_seconds": d["seconds"],
+                "fork_seconds": dur,
+                "fork_tokens_s": delta / dur if delta else None,
+                "train_ce": d["train_ce"],
+                "fork_ce": loss,
+                "fork_h": h.get(tok),
+                "fork_excess": loss - h[tok] if delta else None,
+                "weights": str(path(name).with_suffix(".pt")),
+                "sha256": hashlib.sha256(
+                    path(name).with_suffix(".pt").read_bytes()
+                ).hexdigest(),
+            }
+        )
+        rows = records("sets", name)
+        for group in ("all", "1", "2-8", "9+"):
+            selected = [r for r in rows if group == "all" or group == r["group"]]
+            row = {
+                "model": nick[name],
+                "group": group,
+                "states": len(selected),
+                "targets": sum(int(r["k"]) for r in selected),
+            }
+            for field in (
+                "ce",
+                "h",
+                "excess",
+                "known_mass",
+                "iid_recall_16",
+                "iid_recall_64",
+                "iid_recall_256",
+                "actual_recall_16",
+                "actual_recall_64",
+                "actual_recall_256",
+            ):
+                row[field] = mean(float(r[field]) for r in selected if r[field])
+            row["sampled_states"] = sum(bool(r["actual_recall_16"]) for r in selected)
+            groups.append(row)
+    write_csv("fits", sizes)
+    write_csv("validation", groups)
+    sections = [
+        "# CPU 批量完整 Cell 训练对照",
+        "共同起点为 local-s71-t100000。训练种子 71，生成种子 193、307。两个分支沿同一采样流，使用相同 AdamW、LR 0.001、无 weight decay、梯度裁剪 2。A 继续既有优化器，B 保留原参数的优化器矩，新开放参数从零矩开始。逐检查点验证两臂的全部状态与目标集合相等；采样程序独立重放记录顺序摘要。真实执行使用原有固定调度、页内具名请求不放回和原生计费。",
+        "## 每个模型的训练规模",
+        tab(
+            [
+                "模型",
+                "总/前向/反向参数",
+                "状态",
+                "具名目标",
+                "曝光",
+                "更新",
+                "累计秒",
+                "分叉后秒",
+                "分叉 Token/s",
+                "分叉 CE−H",
+            ],
+            [
+                [
+                    r["model"],
+                    f"{r['registered']}/{r['forward']}/{r['backward']}",
+                    r["states"],
+                    r["targets"],
+                    r["exposures"],
+                    r["steps"],
+                    round(r["cumulative_seconds"], 1),
+                    round(r["fork_seconds"], 1),
+                    round(r["fork_tokens_s"] or 0),
+                    round(r["fork_excess"], 4) if r["fork_excess"] is not None else "—",
+                ]
+                for r in sizes
+            ],
+        ),
+        "## 冻结验证状态上的集合预测",
+        "每个真实状态的已核验具名目标各占 1/K，H(q|s)=ln K。验证结果等权平均状态，CE−H 等于对该监督分布的 KL。未核验计算的有效性未知。训练分叉列按实际目标曝光加权，不能和等状态权重验证直接相减。",
+        tab(
+            [
+                "模型",
+                "组",
+                "状态/目标",
+                "CE",
+                "H",
+                "CE−H",
+                "已知概率质量",
+                "召回@16/64/256 IID",
+                "实抽页内不放回@16/64/256",
+            ],
+            [
+                [
+                    r["model"],
+                    r["group"],
+                    f"{r['states']}/{r['targets']}",
+                    *[f"{r[k]:.3f}" for k in ("ce", "h", "excess", "known_mass")],
+                    *[
+                        "/".join(
+                            f"{100 * r[f'{prefix}_recall_{b}']:.1f}%"
+                            for b in (16, 64, 256)
+                        )
+                        for prefix in ("iid", "actual")
+                    ],
+                ]
+                for r in groups
+            ],
+        ),
+        "IID 是从完整 Token 概率精确求出的预期不同目标召回。实抽使用按状态签名排序后每组至多 12 个固定状态，每个状态两个生成种子。两列的状态构成不同；跨模型采用相同样本。具名监督目标可能语义等价。",
+        "## 原生独立执行",
+        "表中各数对应 seed 193 / 307。覆盖为实际参考事实数；每个模型和每个种子的 EPT、EPS、原生重复率、事实增减集合与终图摘要详见 native CSV。effects CSV 独立重放付费前缀，记录新增参考事实的不同有符号效果集合，以及无法用参考事实定位的有效计算；完整计算机会总数未知。不同终图时 EPS 仅作轨迹观测。历史 Stream 提前结束时保留实际付费量。",
+    ]
+    for cap in ("256", "schedule"):
+        table = []
+        for name in [*models, "random", "history"]:
+            rr = [r for r in records("native", name) if r["cap"] == cap]
+            for case in dict.fromkeys(r["case"] for r in rr):
+                pair = [r for r in rr if r["case"] == case]
+
+                def both(field, fmt, pair=pair):
+                    return "/".join(
+                        fmt(float(r[field])) if r.get(field) else "失败" for r in pair
+                    )
+
+                table.append(
+                    [
+                        nick.get(name, name),
+                        case,
+                        both("paid", lambda x: str(int(x))),
+                        both("covered", lambda x: str(int(x))),
+                        both("coverage", lambda x: f"{100 * x:.2f}%"),
+                        both("ept", lambda x: f"{x:.2f}"),
+                        both("eps", lambda x: f"{x:.0f}"),
+                        both("duplicate_rate", lambda x: f"{100 * x:.1f}%"),
+                        "/".join(r.get("same_graph_100k") or "—" for r in pair),
+                    ]
+                )
+        sections.extend(
+            [
+                "### " + cap,
+                tab(
+                    [
+                        "模型",
+                        "程序",
+                        "实付",
+                        "参考事实",
+                        "Coverage",
+                        "EPT",
+                        "EPS",
+                        "重复率",
+                        "同100K终图",
+                    ],
+                    table,
+                ),
+            ]
+        )
+    module_rows = []
+    for name in models:
+        params = records("parameters", name)
+        for module in sorted({p["module"] for p in params}):
+            group = [p for p in params if p["module"] == module]
+
+            def norm(key, group=group):
+                return sum(float(p[key]) ** 2 for p in group) ** 0.5
+
+            module_rows.append(
+                {
+                    "model": nick[name],
+                    "module": module,
+                    "count": sum(int(p["count"]) for p in group),
+                    "changed": sum(int(p["changed"]) for p in group),
+                    "nonzero_probe_grad": sum(int(p["nonzero_grad"]) for p in group),
+                    "probe_grad_norm": norm("grad_norm"),
+                    "delta_norm": norm("delta_norm"),
+                    "relative_delta": norm("delta_norm") / norm("start_norm")
+                    if norm("start_norm")
+                    else None,
+                }
+            )
+    write_csv("modules", module_rows)
+    sections.extend(
+        [
+            "## 梯度与权重变化",
+            "modules.csv 包含各里程碑的模块 L2 梯度、相对 100K 权重位移及发生变化的标量数。梯度取固定的 32 次训练状态抽样，每次对该状态全部目标求平均。从未进入当前探针的路径可能在实际训练中有梯度。下列为 1M 检查点，展示有实际权重变化的模块。",
+            tab(
+                [
+                    "模型",
+                    "模块",
+                    "变化/总参数",
+                    "非零探针梯度数",
+                    "梯度 L2",
+                    "位移 L2",
+                    "相对位移",
+                ],
+                [
+                    [
+                        r["model"],
+                        r["module"],
+                        f"{r['changed']}/{r['count']}",
+                        r["nonzero_probe_grad"],
+                        f"{r['probe_grad_norm']:.4f}",
+                        f"{r['delta_norm']:.3f}",
+                        f"{r['relative_delta']:.3f}"
+                        if r["relative_delta"] is not None
+                        else "—",
+                    ]
+                    for r in module_rows
+                    if r["model"] in ("A1000K", "B1000K") and r["changed"]
+                ],
+            ),
+        ]
+    )
+    (OUT / "results.md").write_text("\n\n".join(sections) + "\n")
+
+
+if __name__ == "__main__":
+    run()
