@@ -1,0 +1,54 @@
+         2740660 function calls (2740299 primitive calls) in 9.097 seconds
+
+   Ordered by: cumulative time
+   List reduced from 330 to 45 due to restriction <45>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+       16    0.000    0.000    4.412    0.276 torch/_tensor.py:566(backward)
+       16    0.000    0.000    4.412    0.276 torch/autograd/__init__.py:255(backward)
+       16    0.000    0.000    4.412    0.276 torch/autograd/graph.py:1100(_engine_run_backward)
+       16    4.412    0.276    4.412    0.276 {method 'run_backward' of 'torch._C._EngineBase' objects}
+       16    0.009    0.001    4.334    0.271 joint_cell_sweep.py:17(complete_ce)
+      493    0.056    0.000    4.318    0.009 prefix_attention.py:31(address)
+      493    0.002    0.000    4.095    0.008 selected_cell_model.py:58(address)
+      493    1.444    0.003    4.085    0.008 cell_kv_model.py:403(address)
+   526922    2.206    0.000    2.206    0.000 {method 'logsumexp' of 'torch._C.TensorBase' objects}
+   391400    0.050    0.000    0.235    0.000 {built-in method builtins.len}
+       16    0.001    0.000    0.190    0.012 selected_cell_model.py:40(state)
+       16    0.000    0.000    0.186    0.012 operand_read_model.py:89(state)
+       16    0.004    0.000    0.186    0.012 cell_kv_model.py:173(state)
+   276664    0.121    0.000    0.185    0.000 torch/_tensor.py:1191(__len__)
+       16    0.000    0.000    0.155    0.010 interface_role_model.py:84(prepare)
+       16    0.000    0.000    0.151    0.009 operand_read_model.py:81(prepare)
+     8091    0.143    0.000    0.143    0.000 {built-in method torch.stack}
+       16    0.000    0.000    0.142    0.009 cell_kv_model.py:97(prepare)
+       16    0.001    0.000    0.141    0.009 cell_kv_model.py:83(structure)
+     6645    0.124    0.000    0.124    0.000 {method 'tanh' of 'torch._C.TensorBase' objects}
+       14    0.001    0.000    0.094    0.007 cell_kv_model.py:169(response_kv)
+       14    0.030    0.002    0.093    0.007 cell_kv_model.py:107(receipt_vectors)
+       16    0.007    0.000    0.077    0.005 cell_kv_model.py:132(published_kv)
+     2717    0.035    0.000    0.071    0.000 actor.py:16(rotate)
+     3250    0.002    0.000    0.070    0.000 torch/nn/modules/module.py:1783(_wrapped_call_impl)
+       16    0.005    0.000    0.068    0.004 actor.py:77(template_graph)
+     3250    0.003    0.000    0.068    0.000 torch/nn/modules/module.py:1791(_call_impl)
+       21    0.014    0.001    0.066    0.003 ripsat_policy.py:18(__init__)
+       16    0.030    0.002    0.057    0.004 cell_kv_model.py:293(instance_embedding)
+        2    0.000    0.000    0.049    0.024 /opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/weakref.py:485(__call__)
+        2    0.000    0.000    0.049    0.024 /opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/tempfile.py:957(_cleanup)
+        2    0.000    0.000    0.049    0.024 /opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/tempfile.py:915(_rmtree)
+        2    0.000    0.000    0.049    0.024 /opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/shutil.py:810(rmtree)
+        2    0.000    0.000    0.049    0.024 /opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/shutil.py:714(_rmtree_safe_fd)
+       36    0.000    0.000    0.049    0.001 /opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/shutil.py:733(_rmtree_safe_fd_step)
+     2682    0.001    0.000    0.046    0.000 torch/nn/modules/linear.py:130(forward)
+       12    0.045    0.004    0.045    0.004 {built-in method posix.rmdir}
+     2682    0.043    0.000    0.043    0.000 {built-in method torch._C._nn.linear}
+       44    0.026    0.001    0.034    0.001 cell_kv_model.py:20(public_values)
+   276696    0.027    0.000    0.027    0.000 {built-in method torch._C._get_tracing_state}
+     7066    0.026    0.000    0.026    0.000 {built-in method torch.tensor}
+   278352    0.022    0.000    0.022    0.000 {method 'dim' of 'torch._C.TensorBase' objects}
+    11086    0.020    0.000    0.020    0.000 {method 'mean' of 'torch._C.TensorBase' objects}
+   266023    0.018    0.000    0.018    0.000 {built-in method math.log}
+      552    0.002    0.000    0.017    0.000 torch/nn/modules/rnn.py:1845(forward)
+
+
+targets 632 arm C
