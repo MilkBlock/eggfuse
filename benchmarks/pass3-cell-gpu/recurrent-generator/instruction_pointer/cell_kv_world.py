@@ -84,10 +84,11 @@ def compile_world(a, name, source):
         egg.write_text(source)
         times = {}
         start = perf_counter()
-        with TemporaryDirectory(dir=d) as tmp:
+        with TemporaryDirectory(dir=getattr(a, "compile_scratch", d)) as tmp:
             compiled = Path(tmp) / "compiled"
             subprocess.run(
-                [a.compiler, "compile", "--source", egg, "--output", compiled],
+                [a.compiler, "compile", "--source", egg, "--output", compiled,
+                 *(["--bake-source", a.frozen_bake_source] if hasattr(a, "frozen_bake_source") else [])],
                 check=True,
                 stdout=subprocess.DEVNULL,
             )

@@ -78,11 +78,13 @@ def factor(kind, x):
     return (1 + math.cos(math.pi * x)) / 2
 
 
-def train(a, cfg, seed, milestones):
+def train(a, cfg, seed, milestones, *, destination=None, extend_pool=None):
     n, opt = model(a, cfg, seed)
     data = Pool(a, n, cfg.get("extra_egg", False))
+    if extend_pool is not None:
+        extend_pool(data, n)
     sampler = Sampler(data, seed, cfg)
-    dst = directory(a) / "fits"
+    dst = destination if destination is not None else directory(a) / "fits"
     dst.mkdir(exist_ok=True)
     base = cfg["name"] + f"-s{seed}"
     seen = defaultdict(set)

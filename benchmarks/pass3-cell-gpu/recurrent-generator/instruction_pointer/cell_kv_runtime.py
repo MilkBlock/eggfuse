@@ -236,7 +236,7 @@ def native(
                 f = json.loads(line)
                 if "role" in f:
                     break
-                unpack(proc.stdout, f)
+                unpack(proc.stdout, f, getattr(policy, "observe_native_memory", None))
                 if reader is not None:
                     f["rule_state"], f["check_dirty"] = read_rule_frame(reader, f)
                 mem.update(f)

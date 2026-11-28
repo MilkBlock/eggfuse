@@ -45,9 +45,11 @@ def choose_templates(net, m, noise):
     return [ids[i] for i in lo.cpu().tolist()]
 
 
-def unpack(pipe, f):
+def unpack(pipe, f, publication_observer=None):
     rows, hashes, retired, accepted = memory_frame(pipe, f)
-    read_repairs(pipe, f)
+    desc, _ = read_repairs(pipe, f)
+    if publication_observer is not None:
+        publication_observer(f, (rows, hashes, retired, accepted), zip(desc[:, 0], desc[:, 2]))
     values = []
     offset = 0
     for uid, op, tab, v, fw, end in rows.tolist():
