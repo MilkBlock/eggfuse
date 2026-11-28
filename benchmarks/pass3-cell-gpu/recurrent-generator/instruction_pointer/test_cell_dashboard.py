@@ -42,6 +42,27 @@ class ProjectionTest(unittest.TestCase):
                 self.assertTrue({"parameters/total", "parameters/forward", "parameters/backward",
                                  "train/tokens", "train/seconds"} <= charts)
 
+    def test_resumed_journal_has_its_own_live_run_and_native_metrics(self):
+        import sqlite3
+
+        from cell_dashboard import journal_worker
+
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            path = root / "full-s71-live.jsonl"
+            for step in (10000, 20000):
+                offset = path.stat().st_size if path.exists() else 0
+                j = TrainingLog(path, {"registered": 32874, "model": "full-s71"})
+                j.log({"train/tokens": step, "native_256/loopfact_g193_paid": 256}, step)
+                j.finish()
+                journal_worker(path, root, offset)
+                journal_worker(path, root, offset)
+            with sqlite3.connect(root / "runs.swanlab") as db:
+                names = [r[0] for r in db.execute("select name from experiment order by id")]
+                self.assertEqual(len(names), 2)
+                self.assertIn("resume-", names[1])
+                self.assertIn(("native_256/loopfact_g193_paid",), list(db.execute("select name from chart")))
+
     def test_root_and_higher_suffix_not_double_counted(self):
         from cell_dashboard import token_ability
 

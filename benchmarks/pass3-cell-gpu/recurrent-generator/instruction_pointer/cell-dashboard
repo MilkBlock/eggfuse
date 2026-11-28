@@ -12,15 +12,31 @@ export SWANLAB_MODE=local
 case "${1:-open}" in
   sync) exec "$venv/bin/python" "$here/cell_dashboard.py" sync --logdir "$logdir" ;;
   watch) exec "$venv/bin/python" "$here/cell_dashboard.py" watch --logdir "$logdir" ;;
-  open) ;;
-  *) echo 'Usage: cell-dashboard [open|sync|watch]' >&2; exit 2 ;;
+  open|live) ;;
+  *) echo 'Usage: cell-dashboard [open|live|sync|watch]' >&2; exit 2 ;;
 esac
 url="http://127.0.0.1:$port"
+view=${1:-open}
+open_view() {
+  if [ "$view" = live ] && [ -s "$logdir/runs.swanlab" ]; then
+    local rows
+    rows=$(sqlite3 -readonly "$logdir/runs.swanlab" "SELECT id FROM experiment WHERE status=0 AND name LIKE 'live %' ORDER BY id DESC")
+    if [ -n "$rows" ]; then
+      while IFS= read -r id; do
+        printf '%s/experiment/%s/chart\n' "$url" "$id"
+        open "$url/experiment/$id/chart"
+      done <<< "$rows"
+      return
+    fi
+    echo "SwanLab 当前没有标记为训练中的 live 实验。"
+  fi
+  open "$url"
+}
 if curl -fsS "$url/api/v1/project" 2>/dev/null | "$venv/bin/python" -c 'import json,sys
 try: ok=json.load(sys.stdin)["data"]["name"]=="CellFoundationModel"
 except (ValueError,KeyError): ok=False
 sys.exit(0 if ok else 1)'; then
-  open "$url"
+  open_view
   exit 0
 fi
 mkdir -p "$logdir"
@@ -30,5 +46,5 @@ initial=$!
 watcher=$!
 trap 'kill "$initial" "$watcher" 2>/dev/null || true' EXIT
 printf '%s\n' "$url"
-( for i in {1..30}; do if curl -fsS "$url/" >/dev/null 2>&1; then open "$url"; exit; fi; sleep 1; done ) &
+( for i in {1..30}; do if curl -fsS "$url/" >/dev/null 2>&1; then open_view; exit; fi; sleep 1; done ) &
 "$venv/bin/swanlab" watch "$logdir" --host 127.0.0.1 --port "$port"

@@ -53,3 +53,5 @@ cd benchmarks/pass3-cell-gpu/recurrent-generator/instruction_pointer
 | 异步 JSONL 和实时 SwanLab 本地写入 | −1.24% | −3.96% 至 +3.83% |
 
 全部 16 次训练的最终权重逐张量哈希一致。机器同时承担研究任务，负耗时差落在计时波动内。原始表给出每次训练秒数、吞吐、曝光和模型哈希。[逐对训练计时](run-recall/swanlab-tracking/paired-training.csv)
+
+运行 `cell-dashboard live` 可直接打开 SwanLab 当前标记为运行中的训练曲线。页面按正在运行的训练进程区分续训段。训练结束后，执行 `cell-dashboard sync`，在项目中搜索 `training and native` 可按实验组查看跨续训段的训练与原生曲线。`native_256/loopfact` 包含两个生成种子的 Coverage、EPT、EPS、Continuation EPT 和实际付费数。曲线使用实际曝光横轴，未保存权重且未做过原生检查的位置留空。

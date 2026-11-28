@@ -10,7 +10,7 @@ import torch
 
 
 @torch.no_grad()
-def evaluate(options, weights):
+def evaluate(options, weights, read_width=None):
     from continuous_trials import instrument
     from exposure_data import observed
     from exposure_worlds import world
@@ -26,6 +26,10 @@ def evaluate(options, weights):
     for seed in (193, 307):
         net = make(a, "rel")
         w, align = world(a, net.actor, "loopfact")
+        if read_width is not None:
+            from foundation_fit import WideRead
+
+            net.actor.next_read = WideRead(net.actor.next_read, read_width, jitter=0.0)
         net.load_state_dict(state)
         net.eval()
         instrument(net, "exact")
@@ -61,7 +65,9 @@ class NativeChecks:
     def submit(self, net, exposure):
         snapshot = io.BytesIO()
         torch.save(net.state_dict(), snapshot)
-        future = self.pool.submit(evaluate, self.options, snapshot.getvalue())
+        read = net.actor.next_read
+        width = read.copies * read.weight_hh.shape[1] if hasattr(read, "copies") else None
+        future = self.pool.submit(evaluate, self.options, snapshot.getvalue(), width)
 
         def record(done):
             try:

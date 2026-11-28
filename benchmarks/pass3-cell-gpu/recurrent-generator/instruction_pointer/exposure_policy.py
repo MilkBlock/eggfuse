@@ -73,6 +73,11 @@ def policy(a, case, name, unique=True):
             path = output(a) / group / (tag + ".pt")
         else:
             path = directory(a) / "fits" / (name + ".pt")
+        if name.startswith("read-width-"):
+            from foundation_fit import WideRead
+
+            width = int(name.partition("/")[0].removeprefix("read-width-"))
+            n.actor.next_read = WideRead(n.actor.next_read, width, jitter=0.0)
         n.load_state_dict(torch.load(path, weights_only=True))
         n.eval()
         instrument(n, "exact")

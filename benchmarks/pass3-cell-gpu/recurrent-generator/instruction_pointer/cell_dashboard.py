@@ -609,7 +609,12 @@ def journal_worker(path, root, offset=0):
     """A separate SDK process tails one trainer; file I/O and chart rendering stay off the trainer."""
     while not path.exists() or not path.stat().st_size:
         time.sleep(0.2)
-    with path.open() as f:
+    lock_path = root / ("cell-live-" + signature([str(path), offset]) + ".lock")
+    with lock_path.open("a") as session_lock, path.open() as f:
+        try:
+            fcntl.flock(session_lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            return
         f.seek(offset)
         header = json.loads(f.readline())
         if header.get("kind") != "config":
@@ -619,7 +624,8 @@ def journal_worker(path, root, offset=0):
         sig = signature([str(path), header])
         if sink.has(name, sig):
             return
-        run = init_run(root, name, dict(header, source=str(path)))
+        display = f"{name} resume-{offset}" if offset else name
+        run = init_run(root, display, dict(header, source=str(path)))
         try:
             while True:
                 pos = f.tell()
@@ -700,6 +706,9 @@ def scan(root, art, history=False):
             fits(sink, art)
             native_evidence(sink, art)
             if history:
+                from learning_dashboard import publish as publish_verified_curves
+
+                publish_verified_curves(sink, art)
                 archive(sink)
                 published_curves(sink)
         finally:
@@ -745,9 +754,10 @@ def main():
             return
     try:
         while True:
-            scan(a.logdir, a.artifacts, history=a.command == "sync")
             if a.command == "sync":
+                scan(a.logdir, a.artifacts, history=True)
                 return
+            children = {key: child for key, child in children.items() if child.poll() is None}
             for file in a.artifacts.glob("continuation-exposure/*/*-live.jsonl"):
                 with file.open() as f:
                     f.seek(cursors.get(file, 0))
@@ -772,6 +782,7 @@ def main():
                                 ]
                             )
 
+            scan(a.logdir, a.artifacts)
             time.sleep(30)
     finally:
         for p in children.values():

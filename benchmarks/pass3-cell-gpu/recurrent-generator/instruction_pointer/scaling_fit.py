@@ -41,6 +41,10 @@ def model(a, cfg, seed):
             reset = getattr(child, "reset_parameters", None)
             if reset is not None:
                 reset()
+    if width := cfg.get("read_width"):
+        from foundation_fit import WideRead
+
+        n.actor.next_read = WideRead(n.actor.next_read, width, jitter=0.0)
     n.train()
     n.grouped_training_reduction = True
     arm = cfg.get("arm", "C")
@@ -138,7 +142,8 @@ def train(a, cfg, seed, milestones, *, destination=None, extend_pool=None):
     interval = max(1, int(os.getenv("CELL_LOG_INTERVAL", "1000")))
     from live_native_check import NativeChecks
 
-    check_interval = int(os.getenv("CELL_NATIVE_CHECK_INTERVAL", "10000" if dst.name == "matched-end-to-end" else "0"))
+    tracked = dst.name in {"matched-end-to-end", "B-batched", "C-batched"} or dst.name.startswith("read-width-")
+    check_interval = int(os.getenv("CELL_NATIVE_CHECK_INTERVAL", "10000" if tracked else "0"))
     checks = NativeChecks(a, journal) if journal is not None and check_interval > 0 else None
     for cap in milestones:
         alias = dst / f"{base}-t{cap}.json"
