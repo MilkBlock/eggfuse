@@ -1,0 +1,47 @@
+{
+  "archive_sha": "e14aed85c52c58cdab10f6d0e647dacfd72e2bf1f7ce6b7e7246a991e1455133",
+  "config": {
+    "arm": "A",
+    "name": "local"
+  },
+  "connected": 4160,
+  "effect_identity_scope": "only exact native counterfactual gain sets",
+  "exposed_names_sha256": "b93d0d2d47e1b3ca92c794bd6d6d5875eeca58ef00ff7ec4603cb9b97e487221",
+  "exposures": 250000,
+  "forward_observed": 18880,
+  "model": "D/local-s71-t250000",
+  "registered": 32874,
+  "results_sha256": "8f1e52048d24044033e3250d36954897964ae1fd9aab67e38ea80ced984856b5",
+  "seconds": 3220.521795623994,
+  "seed": 71,
+  "sources": {
+    "autonomous": 122660,
+    "branch": 3481,
+    "continuous": 1941,
+    "egg_rollout": 585,
+    "foundation": 4102,
+    "shuffle": 114404,
+    "teacher": 2827
+  },
+  "start": {
+    "added_data_sha256": "c9138f615f84843d57127ada32760722d47db47c5a969a9b38f1be04f6db2645",
+    "archive": "e14aed85c52c58cdab10f6d0e647dacfd72e2bf1f7ce6b7e7246a991e1455133",
+    "config": {
+      "arm": "A",
+      "name": "local"
+    },
+    "data": "D",
+    "initial_optimizer_file_sha256": "eee827268a0f6cf147c4a35caaea0d12e3444c6c7b282921e3dbec4c0790b1e7",
+    "seed": 71,
+    "start": 100000,
+    "weights_sha256": "6d0033cfc14f0a02676509f657b02f7c5ff3777a0312f9a1eb417117b0f44aee"
+  },
+  "state_pool": 7988,
+  "states": 3299,
+  "steps": 6044,
+  "targets": 192152,
+  "tokens_per_s": 77.62717219914393,
+  "train_ce": 5.873879789357028,
+  "verified_distinct_effects": 409,
+  "weights_sha256": "f97fae1edacb28f084fa91bfd5223d146ff5427f395552a210ee954e0911a82f"
+}
