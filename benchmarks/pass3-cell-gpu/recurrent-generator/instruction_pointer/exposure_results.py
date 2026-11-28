@@ -120,17 +120,35 @@ def export(out, dest):
     (dest/"first-divergence.json").write_text(json.dumps([v for _,v in records("divergence")],indent=2)+"\n")
     # Report all audited singleton forks including failures and possible equivalence aliases.
     counts=Counter()
+    fork_states=defaultdict(dict)
     for p in sorted(out.glob("fork-*.pkl.gz")):
         with gzip.open(p,"rb") as f:
             tape=pickle.load(f)
         for e in tape["examples"]:
             for q in e["table"]:
+                fork_states[(tape["case"],e["sh"])][q["token"]]=q
                 t=(tape["case"],tape["source"],q["evidence"]["status"],q["hard"],q["ordinary"],
                    q["named_repeat"],q["effect"] is not None)
                 counts[t]+=1
     table(dest/"native-forks.csv",[dict(program=k[0],behavior=k[1],receipt=k[2],proposed_hard=k[3],
                    sampled_ordinary=k[4],previously_issued_name=k[5],verified_new_effect=k[6],count=n)
                    for k,n in sorted(counts.items())])
+    by_program=defaultdict(Counter)
+    for (case,_), names in fork_states.items():
+        totals=by_program[case]
+        outcomes=set()
+        positive=0
+        totals["audited_states"]+=1
+        for q in names.values():
+            totals["verified_state_names"]+=1
+            totals["previously_submitted_name"]+=q["named_repeat"]
+            if q["effect"]:
+                positive+=1
+                outcomes.add((q["graph"],tuple(q["gain"]),tuple(q["lost"]),q["evidence"]["ops"]))
+                totals["productive_reissues"]+=q["named_repeat"]
+        totals["different_positive_state_outcomes"]+=len(outcomes)
+        totals["different_names_identical_observed_positive_outcome"]+=positive-len(outcomes)
+    table(dest/"fork-identity.csv",[dict(program=k,**v) for k,v in sorted(by_program.items())])
     gains=Counter()
     for group in ("B","C","D"):
         path=out/(group+"-data.pkl.gz")

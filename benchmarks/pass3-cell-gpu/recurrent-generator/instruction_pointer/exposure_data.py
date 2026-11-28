@@ -235,7 +235,10 @@ def materialize(a):
                     token = min(group_targets, key=lambda t: (group_targets[t]["p"], t))
                 else:
                     token = rng.choice(sorted(group_targets))
-                sets[label].append((k[0], states[k], token, group_targets[token]["effect"]))
+                evidence = group_targets[token]
+                outcome = digest([evidence["gain"], evidence["lost"], evidence["graph"],
+                                  evidence["evidence"]["ops"]])
+                sets[label].append((k[0], states[k], token, outcome))
     if not sets["B"]:
         raise ValueError("no matched native additions")
     sets["D"] = sets["B"] + sets["C"]

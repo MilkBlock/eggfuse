@@ -1,0 +1,90 @@
+{
+  "development": [
+    "fact",
+    "sum-divisors"
+  ],
+  "disjoint_states_per_arm": 175,
+  "max_hard_probability": 0.05,
+  "preexisting_states_excluded": 0,
+  "sha256": {
+    "B-data.pkl.gz": "09d49e0d533eae9af0a4307414fbece88c3a4114a75a553200853b532f885c0e",
+    "C-data.pkl.gz": "4ded269db191762e031a32b6fbf3b974f2b3d1ef588c3f2fba55b7267ae2056c",
+    "D-data.pkl.gz": "c9138f615f84843d57127ada32760722d47db47c5a969a9b38f1be04f6db2645"
+  },
+  "source_tapes": {
+    "fork-fact-history-1151.pkl.gz": "403a40d5ae6cb0b3b0eeca2acb4ccf63256d25393a6a4304a8164f167dd785aa",
+    "fork-fact-history-1459.pkl.gz": "020b4df8a14ee0a4a7e16799bbed8da9108207d5c51bc37987746e9e78db53bd",
+    "fork-fact-history-1663.pkl.gz": "46e35dd04f9d265e7935aa8aff4e618608c166cd254ea8ae9ace027d02971d69",
+    "fork-fact-history-1871.pkl.gz": "f5aed4f3204b9daf60179003927fa0daff26abf6f763a1efc32268274b2977ea",
+    "fork-fact-history-2081.pkl.gz": "9978a1f668d3d9cf44b4a7c976b3d274b77a41a667d8a0b9ae1adc28bff5980b",
+    "fork-fact-history-947.pkl.gz": "1dd70f18b62a44279bab4620051ac79bffbbe4fe78c427469ce99b974413e992",
+    "fork-fact-neural-1151.pkl.gz": "f882a90a95277acdc982749b186386afef4962fae86879d0d1f8d61422f73580",
+    "fork-fact-neural-1459.pkl.gz": "8212138abf8a4e7451b7124ee50c01d06c4f0e6f164f807d1a7b7df5f41d5084",
+    "fork-fact-neural-1663.pkl.gz": "166eb8219d2264817dad35d96fd06a4e9b886d0158058d5d2c2fdfc2994c5737",
+    "fork-fact-neural-1871.pkl.gz": "4a3f4e36452e00d0f3491e77b4776590a5ef065e41e64b8882259b94fece6f3d",
+    "fork-fact-neural-2081.pkl.gz": "865dcd16f48a0c882c3d7b35a6c362892ff0ba7f8adc9117907750ed1ed15eba",
+    "fork-fact-neural-947.pkl.gz": "6cc3e8c5287406decf63652ffa98367ff44c9c9060daeb0e0b77bbe190738b29",
+    "fork-fact-random-1151.pkl.gz": "d185d482223e567ef7fcca3cb1e9f5b402c6ed6261a5437df132d0556b9a3435",
+    "fork-fact-random-1459.pkl.gz": "a8921e438148c9bad0765fb82c6c03f4390ca1cbd927c0d0315c7b5ec4fafa21",
+    "fork-fact-random-1663.pkl.gz": "20c97af69ddef07ba91c2ce33b75c26420c99c5395d0b6872b2c39cd27d10575",
+    "fork-fact-random-1871.pkl.gz": "b7be50a22b75d93bfc07b7f83c0129950f1d147d4ea95d359d65580d83bb509d",
+    "fork-fact-random-2081.pkl.gz": "8fd60436727608434051dbb2dd0be9108c7fdaa8c7b60837445919607f5be730",
+    "fork-fact-random-947.pkl.gz": "dc0af5d19dfd7c05f7f33d4945206d75b21b798266ea13a1cb754ab19dd9da6b",
+    "fork-sum-divisors-history-1151.pkl.gz": "d9778d2cde4a296b3d63234cd4b1711b1d05fcf74390dac4b504f3d32d5548f3",
+    "fork-sum-divisors-history-1459.pkl.gz": "c28fde27f137c86ae6df33b35528a552916df9dbf81674a1ef277f98332a1e64",
+    "fork-sum-divisors-history-1663.pkl.gz": "8ca4c0a200539eab056b0beeb7091b05398245fd7d888924d0ecb5e7dd984a90",
+    "fork-sum-divisors-history-1871.pkl.gz": "b0fc0634bfff221d9c82367dcbe7b29caf600ea86e5dadf5a94fcfd5e495e822",
+    "fork-sum-divisors-history-2081.pkl.gz": "f8f557b5812a26f9d6b63c0ea20302906d7ddbfbf066b293344d2306c64a56b1",
+    "fork-sum-divisors-history-419.pkl.gz": "8de9cd6ba16491ccf79c53b55a3fdb2e02ab0b6d9a379e61624598800a60f15e",
+    "fork-sum-divisors-history-733.pkl.gz": "0590cd2b96dfd9e29b94f8f6617fe013472b92cfa500c74150d08af9b6386d7d",
+    "fork-sum-divisors-history-947.pkl.gz": "1020db57baa396639e01bc6c9929b892226495a7f371d6d4743970a508b24269",
+    "fork-sum-divisors-neural-1151.pkl.gz": "d91cfd0aec4489fa5b5cc8529f02e2933ca46a90564197f879c3ac62ccdd03b7",
+    "fork-sum-divisors-neural-1459.pkl.gz": "5f9411b62b6f5126f79e12720c9bee69c144720a42077eb6317f5c2a624041cc",
+    "fork-sum-divisors-neural-1663.pkl.gz": "3263699715dfef866bcd28cc8adf8234a4fb1199342889621598fb6832260ca2",
+    "fork-sum-divisors-neural-1871.pkl.gz": "8a3abfff90e69b0a5f707a9f95883ce6741db5ef0e487acb55c6e3eef82b4399",
+    "fork-sum-divisors-neural-2081.pkl.gz": "f694b53e64c07acbfe30823844d749a9fb4ac55094f1863253c758713847653d",
+    "fork-sum-divisors-neural-419.pkl.gz": "0450aa3125998f4429933327ec79fcfb51e39d1be4f845481d18ed570caf9c2b",
+    "fork-sum-divisors-neural-733.pkl.gz": "60403f7255a185d8981cfaba74abb5aea1fca05447da04d1d551d03872898a40",
+    "fork-sum-divisors-neural-947.pkl.gz": "9dc2465a571c38c6dc01f6b6726dfbd553b8eeba633ebb1fab4f72465bb4839e",
+    "fork-sum-divisors-random-1151.pkl.gz": "e52757f59690048c51447d002ac514781b079e4cf9400ce12f4f8ae04320f88e",
+    "fork-sum-divisors-random-1459.pkl.gz": "e7583e0fa2cb85076f1bc75d5cd3b62ecdb29bcaf08630ced79b57dfc990c5e0",
+    "fork-sum-divisors-random-1663.pkl.gz": "00475095142f6d539f4bdbc35e51ce1735187c72d892e8c67f360bde6e247695",
+    "fork-sum-divisors-random-1871.pkl.gz": "0ada2bf9d0cb9e4c94b680a32771c46d9d22e3ee4a8b67ee00383dc22d597844",
+    "fork-sum-divisors-random-2081.pkl.gz": "cb33b22dd6a5b44b866b4974d7db73cff7639a033aea56aa277879a968114273",
+    "fork-sum-divisors-random-419.pkl.gz": "b0f3b889854cbce9a74450b908039b01af9707b0c9c72ebcb88800f580200626",
+    "fork-sum-divisors-random-733.pkl.gz": "6b5c72b74aff0958c1e7462cae5ec004e721d7993703f059aeca4558fb2cd156",
+    "fork-sum-divisors-random-947.pkl.gz": "5e299e5fc3916a7e9f5e7a949755eb021f208e5e0ae34d46d3cbb532031f58c0"
+  },
+  "strata": {
+    "fact/history": {
+      "hard": 10,
+      "ordinary": 37,
+      "per_arm": 10
+    },
+    "fact/neural": {
+      "hard": 28,
+      "ordinary": 52,
+      "per_arm": 28
+    },
+    "fact/random": {
+      "hard": 26,
+      "ordinary": 40,
+      "per_arm": 26
+    },
+    "sum-divisors/history": {
+      "hard": 19,
+      "ordinary": 100,
+      "per_arm": 19
+    },
+    "sum-divisors/neural": {
+      "hard": 54,
+      "ordinary": 59,
+      "per_arm": 54
+    },
+    "sum-divisors/random": {
+      "hard": 55,
+      "ordinary": 38,
+      "per_arm": 38
+    }
+  }
+}
