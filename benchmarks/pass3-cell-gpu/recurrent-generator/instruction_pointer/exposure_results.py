@@ -83,8 +83,26 @@ def export(out, dest):
     table(dest/"learning-curve.csv",curves)
     table(dest/"budget-curves.csv",[dict(row,statuses=json.dumps(row["statuses"],sort_keys=True)) for _,rs in records("curve") for row in rs])
     schedules=[]
+    anchors=[]
+    historical=[]
     for _,v in records("trial"):
         c,r=v["condition"],v["r"]
+        if v["cap"] == 256:
+            req = v["requests"]
+            first = next((i for i,q in enumerate(req) if q["ops"]>0),None)
+            if first is not None:
+                anchors.append(dict(**c,total_paid=len(req),first_paid=first+1,first_ops=req[first]["ops"],
+                                    first_run=req[first]["run"],first_template=req[first]["tid"],
+                                    later_paid=len(req)-first-1,later_ops=sum(q["ops"] for q in req[first+1:])))
+        if c["model"]=="history" and c["unique"] and v["cap"] in (16,32,64,128,256):
+            old=out.parent/"continuous-cell-stream"/f'{c["case"]}-{v["cap"]}-{c["seed"]}-history.json'
+            if old.exists():
+                prior=read(old)
+                same=(prior["graph"],prior["facts"],prior["ops"],prior["paid"])==(r["graph"],r["facts"],r["ops"],r["stats"]["paid"])
+                if not same:
+                    raise ValueError("historical stream parity failed: "+old.name)
+                historical.append(dict(program=c["case"],seed=c["seed"],cap=v["cap"],ledger=old.name,
+                                       graph=r["graph"],matched=same))
         if v["cap"] is None:
             req=v["requests"]
             first=next((i for i,x in enumerate(req) if x["ops"]>0),None)
@@ -95,6 +113,9 @@ def export(out, dest):
                 higher_completed=r["stats"].get("higher_completed",0),higher_selected=r["stats"].get("higher_selected",0),
                 statuses=json.dumps(r["receipts"],sort_keys=True)))
     table(dest/"full-schedule.csv",schedules)
+    table(dest/"first-success.csv",anchors)
+    table(dest/"historical-parity.csv",historical)
+    table(dest/"paired-timing.csv",[dict(row,facts=json.dumps(row["facts"])) for _,rows in records("timing") for row in rows])
     (dest/"models.json").write_text(json.dumps(checks,indent=2)+"\n")
     (dest/"first-divergence.json").write_text(json.dumps([v for _,v in records("divergence")],indent=2)+"\n")
     # Report all audited singleton forks including failures and possible equivalence aliases.

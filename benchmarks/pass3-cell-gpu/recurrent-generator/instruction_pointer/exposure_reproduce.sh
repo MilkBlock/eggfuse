@@ -27,10 +27,12 @@ case "${1:-all}" in
     train D local 113 250000 ;;
   evaluate)
     "$PY" exposure_campaign.py --suite development
-    "$PY" exposure_campaign.py --suite held ;;
+    "$PY" exposure_campaign.py --suite held
+    run exposure_timing.py evaluate ;;
   report)
     "$PY" exposure_checkpoint.py "$OUT" "$REPORT/checkpoints" --once
-    "$PY" exposure_results.py "$OUT" "$REPORT" ;;
+    "$PY" exposure_results.py "$OUT" "$REPORT"
+    "${PLOT_PYTHON:-python3}" exposure_plot.py "$REPORT" ;;
   all) for phase in split collect train evaluate report; do bash "$0" "$phase"; done ;;
   *) exit 2 ;;
 esac
