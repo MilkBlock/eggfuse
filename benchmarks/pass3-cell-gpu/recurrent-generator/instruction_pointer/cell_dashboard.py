@@ -648,10 +648,55 @@ def journal_worker(path, root, offset=0):
             )
 
 
+def matched_learning_curves(sink):
+    """Join offline set probes and native outcomes on cumulative training exposure."""
+    from statistics import mean
+
+    directory = REPORT / "matched-learning"
+    curves = defaultdict(dict)
+    for path in sorted(directory.glob("native-*.csv")):
+        tag = path.stem.removeprefix("native-")
+        model, sep, exposure = tag.rpartition("-t")
+        if not sep or not exposure.isdigit():
+            continue
+        arms = ("local", "end-to-end") if model == "local-s71" else (
+            ("local",) if model == "A-batched_local-s71" else
+            ("end-to-end",) if model == "matched-end-to-end_full-s71" else ()
+        )
+        probe = directory / f"sets-{tag}.csv"
+        shared = {}
+        if probe.exists():
+            with probe.open() as f:
+                states = list(csv.DictReader(f))
+            if states:
+                for field in ("ce", "h", "excess", "iid_recall_16", "iid_recall_64", "iid_recall_256"):
+                    shared["validation/" + field] = mean(float(s[field]) for s in states)
+        with path.open() as f:
+            for row in csv.DictReader(f):
+                for arm in arms:
+                    curve = curves[(arm, row["case"], row["seed"])]
+                    metrics = curve.setdefault(int(exposure), shared.copy())
+                    prefix = "native/" + row["cap"] + "/"
+                    metrics[prefix + "execution_failed"] = int(bool(row.get("error")))
+                    for field in ("coverage", "ept", "eps", "continuation_ept", "paid", "first_positive_paid"):
+                        if row.get(field):
+                            metrics[prefix + field] = float(row[field])
+    for (arm, program, seed), points in sorted(curves.items()):
+        sink.publish(
+            f"checkpoint learning {arm} {program} g{seed}",
+            signature(points),
+            dict(source=str(directory), program=program, generation_seed=int(seed),
+                 training_seed=71, arm=arm, step_unit="cumulative complete training token exposures",
+                 continuation="effective ops per paid request strictly after the first positive request"),
+            sorted(points.items()),
+        )
+
+
 def scan(root, art, history=False):
     with projection_lock(root):
         sink = Sink(root)
         try:
+            matched_learning_curves(sink)
             fits(sink, art)
             native_evidence(sink, art)
             if history:
