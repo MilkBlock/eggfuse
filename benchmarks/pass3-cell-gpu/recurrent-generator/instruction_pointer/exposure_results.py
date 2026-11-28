@@ -38,6 +38,12 @@ def export(out, dest):
     def records(kind):
         return [(key,json.loads(gzip.decompress(blob))) for key,blob in
                 db.execute("select key,data from evidence where kind=? order by key",(kind,))]
+    failures = []
+    for _, data in records("native_panic"):
+        failures.append(dict(**data["condition"], mode="trial", budget=data["cap"],
+                             observed_replies=len(data["observed_replies"]), stderr=data["stderr"]))
+    failures.extend(data for _, data in records("failed_budget"))
+    table(dest/"native-failures.csv", failures)
     fits=[]
     curves=[]
     files=[]

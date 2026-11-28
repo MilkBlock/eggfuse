@@ -170,6 +170,7 @@ def native(
     a, w, *, teacher=None, policy=None, seed=0, slots=6, receipt_log=None,
     branch=None, reference=None, paid_limit=None, publication_log=None,
     diagnostic_followup=None, receipt_memory=False, submit_pages=1, rule_state=None, execution_trace=None,
+    native_stderr=None,
 ):
     if rule_state is None:
         rule_state = getattr(getattr(policy, "net", None), "rule_condition", "none") != "none"
@@ -228,7 +229,7 @@ def native(
     with (
         policy.inference_session() if hasattr(policy, "inference_session") else nullcontext(),
         publication_observer(rule_state, execution_trace is not None) as (reader, audit_path, env),
-        subprocess.Popen(cmd, stdin=-1, stdout=-1, env=env) as proc,
+        subprocess.Popen(cmd, stdin=-1, stdout=-1, stderr=native_stderr, env=env) as proc,
     ):
         client = Client(proc, 64, digest)
         try:
@@ -350,6 +351,10 @@ def native(
                 execution_trace.finish(f["ept"], audit_path, mem.completed)
                 if hasattr(execution_trace, "response_history"):
                     execution_trace.response_history(mem.receipts)
+        except Exception:
+            if native_stderr is not None and hasattr(execution_trace, "response_history"):
+                execution_trace.response_history(mem.receipts)
+            raise
         finally:
             client.close()
     elapsed = perf_counter() - start

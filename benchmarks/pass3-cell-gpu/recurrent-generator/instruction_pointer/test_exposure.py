@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 
 from exposure_data import Fork
-from exposure_eval import BUDGETS, Database, Trials
+from exposure_eval import BUDGETS, Database, SourcePanic, Trials, is_source_panic
 from exposure_policy import NamedPaths
 
 
@@ -43,6 +43,33 @@ class ExposureTest(unittest.TestCase):
         self.assertEqual([r["paid_total"] for r in follow],[2+b for b in BUDGETS])
         self.assertTrue(all(r["ops"]==0 and r["continuation_ept"]==0 and r["new_facts"]==0 for r in follow))
         self.assertTrue(all(r["ops"]==199 for r in captured if r["mode"]=="total"))
+
+    def test_source_panic_has_no_score_and_other_caps_still_run(self):
+        native_error = 'Error: "source panic (Run 21, rule 351, op 0, (panic ...))"'
+        self.assertTrue(is_source_panic(native_error))
+        self.assertFalse(is_source_panic("native run incomplete"))
+        self.assertFalse(is_source_panic("No space left on device"))
+        class T(Trials):
+            def trial(self, n):
+                if n is None or n > 32:
+                    raise SourcePanic(dict(stderr=native_error, observed_replies=[]))
+                req = [dict(ops=int(i == 0), name=[1, []], owner=i, complete=True,
+                            reply=[i, "accepted"]) for i in range(n)]
+                return dict(requests=req, r=dict(stats={}, ops=1, facts=[1], reference=1,
+                            coverage=1, wall=1, ept=1/n, eps=1, graph="g", receipts={}))
+            def effect(self, req):
+                return dict(facts=[1], graph="g", ops=1)
+        t = object.__new__(T)
+        with tempfile.TemporaryDirectory() as directory:
+            t.db = Database(Path(directory) / "evidence.db")
+            t.condition = {"model": "test"}
+            t.run()
+            counts = dict(t.db.db.execute("select kind,count(*) from evidence group by kind"))
+            self.assertEqual(counts, {"curve": 1, "failed_budget": 7})
+            from int_parameters import digest
+            curve = t.db.get("curve", digest(t.condition))
+            self.assertEqual([(r["mode"], r["budget"]) for r in curve],
+                             [("total", 16), ("continuation", 16), ("total", 32)])
 
     def test_evidence_database_resumes_by_full_key(self):
         with tempfile.TemporaryDirectory() as d:

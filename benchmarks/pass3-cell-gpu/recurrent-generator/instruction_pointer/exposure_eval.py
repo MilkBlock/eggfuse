@@ -3,7 +3,10 @@ import gzip
 import hashlib
 import json
 import os
+import re
 import sqlite3
+import sys
+import tempfile
 import subprocess
 from collections import defaultdict
 from pathlib import Path
@@ -22,6 +25,7 @@ from exposure_worlds import HELD
 from int_parameters import digest
 from partner_index_worlds import args
 from scaling_archive import directory
+from scaling_eval import HeldoutLedger
 
 BUDGETS = (16, 32, 64, 128, 256)
 
@@ -39,6 +43,17 @@ class Database:
         data = gzip.compress(json.dumps(value, separators=(",", ":")).encode(), compresslevel=2)
         with self.db:
             self.db.execute("INSERT OR REPLACE INTO evidence VALUES(?,?,?)", (kind,key,data))
+
+
+class SourcePanic(RuntimeError):
+    """Only a panic explicitly emitted by the native source program."""
+    def __init__(self, evidence):
+        super().__init__(evidence["stderr"])
+        self.evidence = evidence
+
+
+def is_source_panic(stderr):
+    return re.search(r'^Error: "source panic \(Run [0-9]+, rule [0-9]+, op [0-9]+,', stderr, re.M) is not None
 
 
 class Trials:
@@ -60,7 +75,26 @@ class Trials:
         k=digest([self.condition,cap])
         result=self.db.get("trial",k)
         if result is None:
-            r,tr=observed(self.w,self.align,self.a,self.policy,self.seed,cap)
+            failed = self.db.get("native_panic", k)
+            if failed:
+                raise SourcePanic(failed)
+            tr = HeldoutLedger()
+            with tempfile.TemporaryFile() as err:
+                try:
+                    r, tr = observed(self.w, self.align, self.a, self.policy, self.seed,
+                                     cap, trace=tr, native_stderr=err)
+                except (RuntimeError, OSError, EOFError, ValueError) as exc:
+                    err.seek(0)
+                    message = err.read().decode(errors="replace")
+                    if not is_source_panic(message):
+                        print(message, file=sys.stderr)
+                        raise
+                    failed = dict(condition=self.condition, cap=cap, stderr=message,
+                                  observed_replies=tr.responses)
+                    self.db.put("native_panic", k, failed)
+                    print(self.condition["case"], self.condition["model"], self.seed, cap,
+                          message.strip(), file=sys.stderr, flush=True)
+                    raise SourcePanic(failed) from exc
             requests=tr.responses
             by_uid={v["uid"]:v["effective_ops"] for v in tr.entries.values()}
             owner={u:u for u in by_uid}
@@ -125,17 +159,28 @@ class Trials:
 
     def run(self):
         # First signed positive paid operation may follow zero-credit admissions.
-        probe=self.trial(257)
-        first=next((i for i,r in enumerate(probe["requests"],1) if r["ops"]>0), None)
-        if first is None:
-            probe=self.trial(None)
-            first=next((i for i,r in enumerate(probe["requests"],1) if r["ops"]>0), None)
+        first = None
+        for limit in (257, 1, *BUDGETS, None):
+            try:
+                probe = self.trial(limit)
+            except SourcePanic:
+                continue
+            first = next((i for i, r in enumerate(probe["requests"], 1) if r["ops"] > 0), None)
+            if first is not None or limit is None:
+                break
         anchor=self.trial(first) if first is not None else None
         rows=[]
         for cap in BUDGETS:
             for mode in ("total","continuation"):
                 requested=cap if mode=="total" else (first+cap if first is not None else None)
-                x=self.trial(requested)
+                try:
+                    x=self.trial(requested)
+                except SourcePanic as error:
+                    self.db.put("failed_budget", digest([self.condition, mode, cap]),
+                                dict(**self.condition, mode=mode, budget=cap, first=first,
+                                     cap=requested, observed_replies=len(error.evidence["observed_replies"]),
+                                     stderr=error.evidence["stderr"]))
+                    continue
                 r=x["r"];req=x["requests"]
                 if anchor and len(req)>=first:
                     lhs=[v["reply"] for v in req[:first]]
@@ -192,7 +237,10 @@ def run(a):
                         trial.run()
                         print(case,name,seed,unique,round(perf_counter()-start,2),flush=True)
                     if os.getenv("EXPOSURE_FULL") == "1":
-                        trial.trial(None)
+                        try:
+                            trial.trial(None)
+                        except SourcePanic:
+                            pass  # The failed full schedule is already in the native ledger.
 
 
 if __name__=="__main__":

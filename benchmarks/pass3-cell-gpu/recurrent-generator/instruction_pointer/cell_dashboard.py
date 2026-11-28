@@ -332,7 +332,18 @@ def native_evidence(sink, art):
 
         by_model = defaultdict(dict)
         program_counts = {}
+        for _, failure in rows("native_panic"):
+            condition = failure["condition"]
+            cap = failure["cap"]
+            name = f"native failure {condition['model']} {condition['case']} g{condition['seed']} " + (
+                "schedule" if cap is None else str(cap)
+            ) + (" unique" if condition["unique"] else " iid")
+            sink.publish(name, signature(failure),
+                         dict(condition, source=str(src), paid_cap=cap, diagnostic=failure["stderr"]),
+                         [(0, {"signed_replies_before_failure": len(failure["observed_replies"])})])
         for key, curve in rows("curve"):
+            if not curve:
+                continue
             r = curve[0]
             meta = {
                 k: r[k]
@@ -348,13 +359,13 @@ def native_evidence(sink, art):
             match = db.execute(
                 "SELECT data FROM evidence WHERE kind='trial' AND key=?", (full_key,)
             ).fetchone()
-            if (
-                not match
-            ):  # full-schedule evidence is published atomically after the budget curve
+            if not match and not db.execute(
+                "SELECT 1 FROM evidence WHERE kind='native_panic' AND key=?", (full_key,)
+            ).fetchone():
                 continue
-            sig = signature([key, sha(match[0]), curve])
-            full = json.loads(gzip.decompress(match[0]))
-            if r["unique"]:
+            sig = signature([key, sha(match[0]) if match else "native_panic", curve])
+            full = json.loads(gzip.decompress(match[0])) if match else None
+            if r["unique"] and full:
                 case = r["case"]
                 if case not in program_counts:
                     sources = [

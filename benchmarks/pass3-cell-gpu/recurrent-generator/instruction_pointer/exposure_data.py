@@ -34,11 +34,12 @@ def load(path):
         return pickle.load(f)
 
 
-def observed(w, align, a, pol, seed, limit):
-    trace = HeldoutLedger()
+def observed(w, align, a, pol, seed, limit, *, trace=None, native_stderr=None):
+    if trace is None:
+        trace = HeldoutLedger()
     r = native(a, w, policy=pol, seed=seed, slots=6, submit_pages=2,
                receipt_memory=True, rule_state=True, reference=align, execution_trace=trace,
-               paid_limit=limit)
+               paid_limit=limit, native_stderr=native_stderr)
     return r, trace
 
 
